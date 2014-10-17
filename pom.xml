@@ -79,7 +79,7 @@
 
     <!-- Web/Webjars -->
     <angularjs.version>1.2.14</angularjs.version>
-    <angular-ui-bootstrap.version>0.10.0</angular-ui-bootstrap.version>
+    <angular-ui-bootstrap.version>0.11.2</angular-ui-bootstrap.version>
     <!-- <angular-ui-bootstrap.version>0.8.0</angular-ui-bootstrap.version> -->
     <bootstrap.version>3.1.1</bootstrap.version>
     <jstl.version>1.2</jstl.version>
