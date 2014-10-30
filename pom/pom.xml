@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>se.inera.intyg</groupId>
@@ -100,17 +100,13 @@
     <xalan.version>2.7.1</xalan.version>
     <xml-apis.version>1.4.01</xml-apis.version>
 
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <!-- Uncategorized libraries -->
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - --><!-- Uncategorized libraries --><!-- - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <javax-mail.version>1.4</javax-mail.version>
     <jetty.plugin.version>9.1.1.v20140108</jetty.plugin.version>
     <geronimo-jms-specs.version>1.1.1</geronimo-jms-specs.version>
     <itext.version>5.3.2</itext.version>
 
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <!-- Plugins and plugin dependencies -->
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - --><!-- Plugins and plugin dependencies --><!-- - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <buildnumber-maven-plugin.version>1.2</buildnumber-maven-plugin.version>
     <cobertura-maven-plugin.version>2.5.2</cobertura-maven-plugin.version>
     <cxf-codegen-plugin.version>2.7.5</cxf-codegen-plugin.version>
@@ -155,9 +151,7 @@
     <maven-war-plugin.version>2.3</maven-war-plugin.version>
     <properties-maven-plugin.version>1.0-alpha-2</properties-maven-plugin.version>
 
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <!-- Libraries used in test scope -->
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - --><!-- Libraries used in test scope --><!-- - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <dbunit.version>2.4.9</dbunit.version>
     <easymock.version>2.3</easymock.version>
     <geb-core.version>0.10.0</geb-core.version>
@@ -597,9 +591,7 @@
         <version>${xml-apis.version}</version>
       </dependency>
 
-      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - -->
-      <!-- Uncategorized libraries -->
-      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - -->
+      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - --><!-- Uncategorized libraries --><!-- - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <dependency>
         <groupId>com.itextpdf</groupId>
         <artifactId>itextpdf</artifactId>
@@ -624,9 +616,7 @@
         <version>${geronimo-jms-specs.version}</version>
       </dependency>
 
-      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - -->
-      <!-- Libraries used for testing -->
-      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - -->
+      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - --><!-- Libraries used for testing --><!-- - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
@@ -859,7 +849,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>findbugs-maven-plugin</artifactId>
-          <version>${findbugs-maven-plugin.versions}</version>
+          <version>${findbugs-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
@@ -908,7 +898,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore />
+                    <ignore/>
                   </action>
                 </pluginExecution>
                 <pluginExecution>
@@ -974,9 +964,7 @@
           </configuration>
         </plugin>
 
-        <!-- License Plugin -->
-        <!-- Har bytt namn till com.mycila.license-maven-plugin -->
-        <!-- TODO: Byt till nya pluginen -->
+        <!-- License Plugin --><!-- Har bytt namn till com.mycila.license-maven-plugin --><!-- TODO: Byt till nya pluginen -->
         <plugin>
           <groupId>com.mycila.maven-license-plugin</groupId>
           <artifactId>maven-license-plugin</artifactId>
