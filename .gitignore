@@ -1,3 +1,4 @@
 .project
 *.iml
 .DS_Store
+.settings
