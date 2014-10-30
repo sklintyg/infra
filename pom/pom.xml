@@ -19,7 +19,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- SCM host url -->
-    <scm.host>code.google.com</scm.host>
+    <scm.host>github.com</scm.host>
 
     <!-- Repository host url -->
     <repository.host>repository-callistasoftware.forge.cloudbees.com</repository.host>
@@ -167,7 +167,7 @@
   </properties>
 
   <scm>
-    <connection>scm:git:https://${scm.host}/p/inera-intyg-parent/</connection>
+    <connection>scm:git:https://${scm.host}/sklintyg/common.git</connection>
     <tag>HEAD</tag>
   </scm>
 
