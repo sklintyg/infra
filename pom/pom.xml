@@ -3,13 +3,12 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>se.inera.intyg</groupId>
-  <artifactId>intyg-parent</artifactId>
+
+  <groupId>se.inera.intyg.common</groupId>
+  <artifactId>common-pom</artifactId>
   <version>1.3-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Inera Intyg</name>
-
-  <description>Inera Certificate Root POM - a parent pom for all Inera Certificate projects.</description>
+  <name>Common POM</name>
 
   <properties>
     <system.mode>dev</system.mode>
@@ -17,6 +16,7 @@
     <compiler.source.version>1.7</compiler.source.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <checkstyle.basedir>${project.basedir}</checkstyle.basedir>
 
     <!-- SCM host url -->
     <scm.host>github.com</scm.host>
@@ -913,9 +913,6 @@
                       <goal>karma</goal>
                     </goals>
                   </pluginExecutionFilter>
-                  <action>
-                    <ignore></ignore>
-                  </action>
                 </pluginExecution>
                 <pluginExecution>
                   <pluginExecutionFilter>
@@ -926,9 +923,6 @@
                       <goal>run</goal>
                     </goals>
                   </pluginExecutionFilter>
-                  <action>
-                    <ignore></ignore>
-                  </action>
                 </pluginExecution>
                 <pluginExecution>
                   <pluginExecutionFilter>
@@ -955,9 +949,6 @@
                       <goal>unpack-dependencies</goal>
                     </goals>
                   </pluginExecutionFilter>
-                  <action>
-                    <ignore></ignore>
-                  </action>
                 </pluginExecution>
               </pluginExecutions>
             </lifecycleMappingMetadata>
