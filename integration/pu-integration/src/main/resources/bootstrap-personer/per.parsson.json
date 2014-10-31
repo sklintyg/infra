@@ -1,0 +1,13 @@
+{
+    "personId": "195206142597",
+    "namn": {
+        "fornamn": "Per Peter",
+        "mellannamn": "Svensson",
+        "efternamn": "Pärsson"
+    },
+    "folkbokforingsadress": {
+        "utdelningsadress2": "KUNGSGATAN 5",
+        "postNr": 41234,
+        "postort": "GÖTEBORG"
+    }
+}
