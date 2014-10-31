@@ -10,10 +10,13 @@ $ git clone https://github.com/sklintyg/common.git
 $ cd common/pom
 $ mvn install
 
-$ cd ../util
+$ cd ../web
 $ mvn install
 
-$ cd ../web
+$ cd ../util/logging-util
+$ mvn install
+
+$ cd ../../util/integration-util
 $ mvn install
 ```
 
