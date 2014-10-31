@@ -4,4 +4,6 @@
 .project
 .settings
 .classpath
-
+node
+node_modules
+target
