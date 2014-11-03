@@ -930,6 +930,7 @@
                     <versionRange>[2.8,)</versionRange>
                     <goals>
                       <goal>unpack-dependencies</goal>
+                      <goal>unpack</goal>
                     </goals>
                   </pluginExecutionFilter>
                   <action>
