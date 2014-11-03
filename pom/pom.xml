@@ -890,6 +890,9 @@
                       <goal>karma</goal>
                     </goals>
                   </pluginExecutionFilter>
+                  <action>
+                  	<ignore/>
+                  </action>
                 </pluginExecution>
                 <pluginExecution>
                   <pluginExecutionFilter>
@@ -900,6 +903,9 @@
                       <goal>run</goal>
                     </goals>
                   </pluginExecutionFilter>
+                  <action>
+                    <ignore/>
+                  </action>
                 </pluginExecution>
                 <pluginExecution>
                   <pluginExecutionFilter>
@@ -926,6 +932,9 @@
                       <goal>unpack-dependencies</goal>
                     </goals>
                   </pluginExecutionFilter>
+                  <action>
+                  	<ignore/>
+                  </action>
                 </pluginExecution>
               </pluginExecutions>
             </lifecycleMappingMetadata>
