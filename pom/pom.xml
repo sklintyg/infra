@@ -9,7 +9,7 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Intyg Common POM</name>
+  <name>Intyg Common (POM)</name>
 
   <properties>
     <system.mode>dev</system.mode>
