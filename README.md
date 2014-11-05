@@ -1,9 +1,11 @@
 # Intyg Common
 Intyg Common tillhandahåller hjälpprojekt för de övriga intygsprojekten under [SKL Intyg](http://github.com/sklintyg).
 
-## Utvecklingssetup
-Intyg Common innehåller flera olika underprojekt och byggs med hjälp av Maven enligt följande:
+## Kom igång
+Här hittar du grundläggande instruktioner för hur man kommer igång med projektet. Mer detaljerade instruktioner för att sätta upp sin utvecklingsmiljö och liknande hittar du på projektets [Wiki för utveckling](https://github.com/sklintyg/common/wiki).
 
+### Bygg projektet
+Intyg Common innehåller flera olika underprojekt och byggs med hjälp av Maven enligt följande:
 ```
 $ git clone https://github.com/sklintyg/common.git
 
