@@ -12,12 +12,11 @@
   <name>Intyg Common (POM)</name>
 
   <properties>
-    <system.mode>dev</system.mode>
     <compiler.target.version>1.7</compiler.target.version>
     <compiler.source.version>1.7</compiler.source.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <checkstyle.basedir>${project.basedir}</checkstyle.basedir>
+    <system.mode>dev</system.mode>
 
     <!-- Repository host url -->
     <repository.host>repository-callistasoftware.forge.cloudbees.com</repository.host>
@@ -119,7 +118,7 @@
     <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
     <maven-assembly-plugin.version>2.4</maven-assembly-plugin.version>
     <maven-build-helper-plugin.version>1.8</maven-build-helper-plugin.version>
-    <maven-checkstyle-plugin.version>2.10</maven-checkstyle-plugin.version>
+    <maven-checkstyle-plugin.version>2.13</maven-checkstyle-plugin.version>
     <maven-clean-plugin.version>2.5</maven-clean-plugin.version>
     <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
     <maven-dependency-plugin.version>2.8</maven-dependency-plugin.version>
@@ -942,45 +941,6 @@
           </configuration>
         </plugin>
 
-        <!-- License Plugin --><!-- Har bytt namn till com.mycila.license-maven-plugin --><!-- TODO: Byt till nya pluginen -->
-        <plugin>
-          <groupId>com.mycila.maven-license-plugin</groupId>
-          <artifactId>maven-license-plugin</artifactId>
-          <configuration>
-            <properties>
-              <year>2012-2014</year>
-              <project-name>Inera Certificate</project-name>
-              <project-url>http://code.google.com/p/inera-certificate</project-url>
-            </properties>
-            <strictCheck>true</strictCheck>
-            <header>header.txt</header>
-            <encoding>UTF-8</encoding>
-            <includes>
-              <include>src/main/**</include>
-              <include>src/test/**</include>
-            </includes>
-            <excludes>
-              <exclude>**/NOTICE.txt</exclude>
-              <exclude>**/LICENSE.txt</exclude>
-              <!-- Exclude .properties due to encoding issues (iso-88590-1) -->
-              <exclude>**/*.properties</exclude>
-              <exclude>**/*.xsd</exclude>
-            </excludes>
-            <mapping>
-              <tag>DYNASCRIPT_STYLE</tag>
-            </mapping>
-          </configuration>
-          <executions>
-            <execution>
-              <id>check-headers-for-license</id>
-              <goals>
-                <goal>check</goal>
-              </goals>
-              <phase>validate</phase>
-            </execution>
-          </executions>
-        </plugin>
-
         <!-- Test related plugins -->
         <plugin>
           <groupId>uk.co.javahelp.fitnesse</groupId>
@@ -994,13 +954,19 @@
     <plugins>
 
       <!-- Plugins common for all projects -->
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <configLocation>${checkstyle.basedir}/src/main/resources/checkstyle.xml</configLocation>
-        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>se.inera.intyg.common</groupId>
+            <artifactId>build-tools</artifactId>
+            <version>1.0-SNAPSHOT</version>
+          </dependency>
+        </dependencies>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -1009,6 +975,7 @@
           <target>${compiler.target.version}</target>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
@@ -1023,6 +990,7 @@
           </dependency>
         </dependencies>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -1064,9 +1032,10 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
-          <configLocation>${checkstyle.basedir}/src/main/resources/checkstyle.xml</configLocation>
+          <configLocation>checkstyle/checkstyle.xml</configLocation>
         </configuration>
       </plugin>
+
     </plugins>
   </reporting>
 
