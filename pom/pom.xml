@@ -21,7 +21,7 @@
     <!-- Repository host url -->
     <repository.host>repository-callistasoftware.forge.cloudbees.com</repository.host>
 
-	<common-build-tools.version>0-SNAPSHOT</common-build-tools.version>
+    <common-build-tools.version>0-SNAPSHOT</common-build-tools.version>
 
     <!-- AOP -->
     <aspectj.version>1.7.1</aspectj.version>
@@ -897,7 +897,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                  	<ignore/>
+                    <ignore/>
                   </action>
                 </pluginExecution>
                 <pluginExecution>
@@ -940,7 +940,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                  	<ignore/>
+                    <ignore/>
                   </action>
                 </pluginExecution>
               </pluginExecutions>
