@@ -12,11 +12,11 @@
   <name>Intyg Common (POM)</name>
 
   <properties>
+    <system.mode>dev</system.mode>
     <compiler.target.version>1.7</compiler.target.version>
     <compiler.source.version>1.7</compiler.source.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <system.mode>dev</system.mode>
 
     <!-- Repository host url -->
     <repository.host>repository-callistasoftware.forge.cloudbees.com</repository.host>
@@ -132,15 +132,15 @@
     <maven-jxr-plugin.version>2.3</maven-jxr-plugin.version>
     <maven-mule-plugin.version>1.9</maven-mule-plugin.version>
     <maven-pmd-plugin.version>3.0</maven-pmd-plugin.version>
-    <maven-release-plugin.version>2.4.2</maven-release-plugin.version>
     <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
     <maven-shade-plugin.version>2.3</maven-shade-plugin.version>
     <maven-site-plugin.version>3.0</maven-site-plugin.version>
-    <maven-scm-plugin.version>1.8.1</maven-scm-plugin.version>
+    <maven-scm-plugin.version>1.9.2</maven-scm-plugin.version>
     <maven-scm-provider.version>1.9</maven-scm-provider.version>
     <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
     <maven-surefire-plugin.version>2.15</maven-surefire-plugin.version>
     <maven-verifier-plugin.version>1.0</maven-verifier-plugin.version>
+    <versions-maven-plugin.version>2.1</versions-maven-plugin.version>
     <maven-wagon-ext.version>1.0-beta-2</maven-wagon-ext.version>
     <maven-war-plugin.version>2.3</maven-war-plugin.version>
     <properties-maven-plugin.version>1.0-alpha-2</properties-maven-plugin.version>
@@ -160,8 +160,7 @@
   </properties>
 
   <scm>
-    <connection>scm:git:https://github.com/sklintyg/common.git</connection>
-    <tag>HEAD</tag>
+    <connection>scm:git:git@github.com:sklintyg/common.git</connection>
   </scm>
 
   <distributionManagement>
@@ -781,8 +780,8 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>${maven-release-plugin.version}</version>
+          <artifactId>maven-scm-plugin</artifactId>
+          <version>${maven-scm-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -826,6 +825,12 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>findbugs-maven-plugin</artifactId>
           <version>${findbugs-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>${versions-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
@@ -978,21 +983,6 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <configuration>
-          <pushChanges>false</pushChanges>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.scm</groupId>
-            <artifactId>maven-scm-provider-gitexe</artifactId>
-            <version>${maven-scm-provider.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <argLine>-Dcatalina.base=${project.build.directory}/catalina.base</argLine>
@@ -1004,7 +994,17 @@
           </systemProperties>
         </configuration>
       </plugin>
-
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-plugin</artifactId>
+        <configuration>
+          <tag>${project.artifactId}-${project.version}</tag>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
