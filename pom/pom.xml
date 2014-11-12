@@ -21,7 +21,7 @@
     <!-- Repository host url -->
     <repository.host>repository-callistasoftware.forge.cloudbees.com</repository.host>
 
-    <common-build-tools.version>0-SNAPSHOT</common-build-tools.version>
+    <common-build-tools.version>1.0.1</common-build-tools.version>
 
     <!-- AOP -->
     <aspectj.version>1.7.1</aspectj.version>
