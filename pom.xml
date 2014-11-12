@@ -5,11 +5,19 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>se.inera.intyg.common</groupId>
-  <artifactId>common-pom</artifactId>
+  <artifactId>common</artifactId>
   <version>0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Intyg Common (POM)</name>
+
+  <modules>
+    <module>build/tools</module>
+    <module>support</module>
+    <module>web</module>
+    <module>util/logging-util</module>
+    <module>util/integration-util</module>
+  </modules>
 
   <properties>
     <system.mode>dev</system.mode>
@@ -20,8 +28,6 @@
 
     <!-- Repository host url -->
     <repository.host>repository-callistasoftware.forge.cloudbees.com</repository.host>
-
-    <common-build-tools.version>0-SNAPSHOT</common-build-tools.version>
 
     <!-- AOP -->
     <aspectj.version>1.7.1</aspectj.version>
@@ -183,6 +189,27 @@
 
   <dependencyManagement>
     <dependencies>
+
+      <dependency>
+        <groupId>se.inera.intyg.common</groupId>
+        <artifactId>common-support</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>se.inera.intyg.common</groupId>
+        <artifactId>common-web</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>se.inera.intyg.common</groupId>
+        <artifactId>logging-util</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>se.inera.intyg.common</groupId>
+        <artifactId>integration-util</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <!-- AOP -->
       <dependency>
@@ -969,7 +996,7 @@
           <dependency>
             <groupId>se.inera.intyg.common</groupId>
             <artifactId>common-build-tools</artifactId>
-            <version>${common-build-tools.version}</version>
+            <version>${project.version}</version>
           </dependency>
         </dependencies>
       </plugin>
