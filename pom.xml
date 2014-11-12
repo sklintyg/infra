@@ -26,9 +26,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <!-- Repository host url -->
-    <repository.host>repository-callistasoftware.forge.cloudbees.com</repository.host>
-
     <!-- AOP -->
     <aspectj.version>1.7.1</aspectj.version>
 
@@ -170,22 +167,6 @@
   <scm>
     <connection>scm:git:git@github.com:sklintyg/common.git</connection>
   </scm>
-
-  <distributionManagement>
-    <repository>
-      <id>cloudbees-private-release-repository</id>
-      <name>Callista Software Release Respository</name>
-      <url>dav:https://${repository.host}/release</url>
-      <layout>default</layout>
-    </repository>
-    <snapshotRepository>
-      <uniqueVersion>true</uniqueVersion>
-      <id>cloudbees-private-snapshot-repository</id>
-      <name>Callista Software Snapshot Respository</name>
-      <url>dav:https://${repository.host}/snapshot</url>
-      <layout>default</layout>
-    </snapshotRepository>
-  </distributionManagement>
 
   <dependencyManagement>
     <dependencies>
@@ -1040,7 +1021,7 @@
   <pluginRepositories>
     <pluginRepository>
       <id>thirdparty-plugin</id>
-      <url>https://${repository.host}/3rdparty</url>
+      <url>https://repository-callistasoftware.forge.cloudbees.com/3rdparty</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -1071,7 +1052,7 @@
   <repositories>
     <repository>
       <id>callista-release</id>
-      <url>https://${repository.host}/release/</url>
+      <url>https://repository-callistasoftware.forge.cloudbees.com/release/</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -1081,7 +1062,7 @@
     </repository>
     <repository>
       <id>callista-snapshot</id>
-      <url>https://${repository.host}/snapshot/</url>
+      <url>https://repository-callistasoftware.forge.cloudbees.com/snapshot/</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -1091,7 +1072,7 @@
     </repository>
     <repository>
       <id>thirdparty</id>
-      <url>https://${repository.host}/3rdparty</url>
+      <url>https://repository-callistasoftware.forge.cloudbees.com/3rdparty</url>
       <releases>
         <enabled>true</enabled>
       </releases>
