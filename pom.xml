@@ -1083,7 +1083,7 @@
       <id>callista-snapshot</id>
       <url>https://${repository.host}/snapshot/</url>
       <releases>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
       </releases>
       <snapshots>
         <enabled>true</enabled>
