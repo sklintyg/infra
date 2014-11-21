@@ -9,19 +9,7 @@ Intyg Common innehåller flera olika underprojekt och byggs med hjälp av Maven 
 ```
 $ git clone https://github.com/sklintyg/common.git
 
-$ cd common/pom
-$ mvn install
-
-$ cd ../support
-$ mvn install
-
-$ cd ../web
-$ mvn install
-
-$ cd ../util/logging-util
-$ mvn install
-
-$ cd ../../util/integration-util
+$ cd common
 $ mvn install
 ```
 
