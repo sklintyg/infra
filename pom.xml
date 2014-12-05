@@ -34,15 +34,8 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <groupId>se.inera.intyg.common</groupId>
-            <artifactId>common-build-tools</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-        </dependencies>
         <configuration>
-          <configLocation>checkstyle/checkstyle.xml</configLocation>
+          <configLocation>build/tools/src/main/resources/checkstyle/checkstyle.xml</configLocation>
         </configuration>
       </plugin>
     </plugins>
