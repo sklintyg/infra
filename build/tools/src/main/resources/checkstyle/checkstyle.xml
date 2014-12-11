@@ -39,7 +39,9 @@
     </module>
     <module name="EmptyForIteratorPad"/>
     <module name="MethodParamPad"/>
-    <module name="NoWhitespaceAfter"/>
+    <module name="NoWhitespaceAfter">
+      <property name="tokens" value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS, UNARY_PLUS"/>
+    </module>
     <module name="NoWhitespaceBefore"/>
     <module name="OperatorWrap"/>
     <module name="ParenPad"/>
@@ -93,9 +95,9 @@
     <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
   <module name="NewlineAtEndOfFile">
-    <property name="lineSeparator" value="lf" />
+    <property name="lineSeparator" value="lf"/>
   </module>
-  <module name="Translation"/>
+  <!--<module name="Translation"/>-->
   <module name="FileLength"/>
   <module name="FileTabCharacter"/>
   <module name="RegexpSingleline">
