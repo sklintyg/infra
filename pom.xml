@@ -7,7 +7,7 @@
   <parent>
     <groupId>se.inera.intyg.common</groupId>
     <artifactId>common-pom</artifactId>
-    <version>1.0.1</version>
+    <version>0-SNAPSHOT</version>
   </parent>
 
   <groupId>se.inera.intyg.common</groupId>
@@ -18,7 +18,6 @@
   <name>Intyg Common</name>
 
   <modules>
-    <module>build/tools</module>
     <module>support</module>
     <module>web</module>
     <module>util/logging-util</module>
@@ -29,18 +28,6 @@
     <connection>scm:git:git@github.com:sklintyg/common.git</connection>
   </scm>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <configLocation>build/tools/src/main/resources/checkstyle/checkstyle.xml</configLocation>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
   <repositories>
     <repository>
       <id>callista-release</id>
@@ -49,7 +36,7 @@
         <enabled>true</enabled>
       </releases>
       <snapshots>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
       </snapshots>
     </repository>
     <repository>
