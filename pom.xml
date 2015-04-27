@@ -23,6 +23,7 @@
     <module>util/logging-util</module>
     <module>util/integration-util</module>
     <module>schemas</module>
+    <module>specifications</module>
   </modules>
 
   <scm>
