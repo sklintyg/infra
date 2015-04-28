@@ -17,6 +17,26 @@
 
   <name>Intyg Common</name>
 
+  <properties>
+    <!-- Common -->
+    <common.version>0-SNAPSHOT</common.version>
+    <common.version.range>(,2.2.0]</common.version.range>
+
+    <!-- Schemas -->
+    <rivta-clinicalprocess.version>1.0.RC3.0</rivta-clinicalprocess.version>
+    <rivta-insuranceprocess.version>3.1.0.0</rivta-insuranceprocess.version>
+    <rivta-itintegration-monitoring.version>1.0.0.0</rivta-itintegration-monitoring.version>
+
+    <intyg-clinicalprocess.version>0-SNAPSHOT</intyg-clinicalprocess.version>
+    <intyg-clinicalprocess.version.range>(,1.0.0]</intyg-clinicalprocess.version.range>
+
+    <intyg-insuranceprocess.version>0-SNAPSHOT</intyg-insuranceprocess.version>
+    <intyg-insuranceprocess.version.range>(,1.0.0]</intyg-insuranceprocess.version.range>
+
+    <intyg-transportstyrelsen.version>0-SNAPSHOT</intyg-transportstyrelsen.version>
+    <intyg-transportstyrelsen.version.range>(,1.0.0]</intyg-transportstyrelsen.version.range>
+  </properties>
+
   <modules>
     <module>support</module>
     <module>web</module>
@@ -29,6 +49,98 @@
   <scm>
     <connection>scm:git:git@github.com:sklintyg/common.git</connection>
   </scm>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- RIVTA Schemas -->
+      <dependency>
+        <groupId>se.riv.clinicalprocess.healthcond.certificate</groupId>
+        <artifactId>clinicalprocess-healthcond-certificate-schemas</artifactId>
+        <version>${rivta-clinicalprocess.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>se.riv.insuranceprocess.healthreporting</groupId>
+        <artifactId>insuranceprocess-healthreporting-schemas</artifactId>
+        <version>${rivta-insuranceprocess.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>se.riv.itintegration.monitoring</groupId>
+        <artifactId>itintegration-monitoring-schemas</artifactId>
+        <version>${rivta-itintegration-monitoring.version}</version>
+      </dependency>
+
+      <!-- Intyg Schemas -->
+      <dependency>
+        <groupId>se.inera.intyg.clinicalprocess.healthcond.certificate</groupId>
+        <artifactId>intyg-clinicalprocess-healthcond-certificate-schemas</artifactId>
+        <version>${intyg-clinicalprocess.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>se.inera.intyg.insuranceprocess.healthreporting</groupId>
+        <artifactId>intyg-insuranceprocess-healthreporting-schemas</artifactId>
+        <version>${intyg-insuranceprocess.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>se.inera.intyg.transportstyrelsen</groupId>
+        <artifactId>intyg-transportstyrelsen-schemas</artifactId>
+        <version>${intyg-transportstyrelsen.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <compilerId>groovy-eclipse-compiler</compilerId>
+          <verbose>true</verbose>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-eclipse-compiler</artifactId>
+            <version>${groovy-eclipse-compiler.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-eclipse-batch</artifactId>
+            <version>${groovy-eclipse-batch.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <configuration>
+          <includeProperties>
+            common.version,
+            intyg-clinicalprocess.version,
+            intyg-insuranceprocess.version,
+            intyg-transportstyrelsen.version
+          </includeProperties>
+          <properties>
+            <property>
+              <name>common.version</name>
+              <version>${common.version.range}</version>
+            </property>
+            <property>
+              <name>intyg-clinicalprocess.version</name>
+              <version>${intyg-clinicalprocess.version.range}</version>
+            </property>
+            <property>
+              <name>intyg-insuranceprocess.version</name>
+              <version>${intyg-insuranceprocess.version.range}</version>
+            </property>
+            <property>
+              <name>intyg-transportstyrelsen.version</name>
+              <version>${intyg-transportstyrelsen.version.range}</version>
+            </property>
+          </properties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <repositories>
     <repository>
