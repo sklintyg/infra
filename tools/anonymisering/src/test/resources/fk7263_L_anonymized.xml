@@ -13,7 +13,7 @@ xxxxxxxxx xxx xxxxxx xxxx xxxxxx xx xxxx xxx xxxxxxx xxxxxx xxxxxxxxxxx xx xxxxx
       </patient>
       <skapadAvHosPersonal>
          <ns2:personal-id extension="SE1010" root="1.2.752.129.2.1.4.1"/>
-         <ns2:fullstandigtNamn>xxx xxxxxxxx</ns2:fullstandigtNamn>
+         <ns2:fullstandigtNamn>xx xxxxxx</ns2:fullstandigtNamn>
          <ns2:forskrivarkod>9999999</ns2:forskrivarkod>
          <ns2:enhet>
             <ns2:enhets-id extension="VardenhetY" root="1.2.752.129.2.1.4.1"/>
