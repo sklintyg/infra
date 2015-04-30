@@ -1,0 +1,285 @@
+{
+  "id" : {
+    "root" : "80832895-5a9c-450a-bd74-08af43750788",
+    "extension" : "80832895-5a9c-450a-bd74-08af43750788"
+  },
+  "typ" : {
+    "codeSystem":"f6fb361a-e31d-48b8-8657-99b63912dd9b",
+    "code" : "fk7263"
+  },
+  "kommentarer" : [ "xxxxxxxxx xxx xxxxxxxxx xx xxxx xxx xxxxxx xxx xxxxx xxxxxx xxxx xxxx xxxxxx xxxxx xxxxxxxxx xxxxxxxxxxx" ],
+  "signeringsdatum" : "2011-01-26T00:00:00.000",
+  "skickatdatum" : "2011-03-23T09:29:15.000",
+  "patient" : {
+    "id" : {
+      "root" : "1.2.752.129.2.1.3.1",
+      "extension" : "10101010-1010"
+    },
+    "fornamn" : [ "xxxx" ],
+    "efternamn" :  "xxxxxxxxxx" ,
+    "sysselsattningar" : [ {
+      "sysselsattningstyp" : {
+        "code" : "224375002",
+        "codeSystem" : "1.2.752.116.2.1.1.1",
+        "codeSystemName" : "SNOMED-CT"
+      }
+    }, {
+      "sysselsattningstyp" : {
+        "code" : "73438004",
+        "codeSystem" : "1.2.752.116.2.1.1.1",
+        "codeSystemName" : "SNOMED-CT"
+      }
+    }, {
+      "sysselsattningstyp" : {
+        "code" : "224458009",
+        "codeSystem" : "1.2.752.116.2.1.1.1",
+        "codeSystemName" : "SNOMED-CT"
+      }
+    } ],
+    "arbetsuppgifter" : [ {
+      "typAvArbetsuppgift" : "xxxxxxxxx xxxxxxxxx xx xxxxxx xxxxxxxx xx xxxxxx"
+    } ]
+  },
+  "skapadAv" : {
+    "id" : {
+      "root" : "1.2.752.129.2.1.4.1",
+      "extension" : "SE1010"
+    },
+    "namn" : "xx xxxxxx",
+    "forskrivarkod" : "9999999",
+    "vardenhet" : {
+      "id" : {
+        "root" : "1.2.752.129.2.1.4.1",
+        "extension" : "SE1234567"
+      },
+      "arbetsplatskod" : {
+        "root" : "1.2.752.29.4.71",
+        "extension" : "123456789011"
+      },
+      "namn" : "Kir mott",
+      "postadress" : "Lasarettsvägen 13",
+      "postnummer" : "85150",
+      "postort" : "Sundsvall",
+      "telefonnummer" : "060-1818000",
+      "epost" : "kirmott@vardenhet.se",
+      "vardgivare" : {
+        "id" : {
+          "root" : "1.2.752.129.2.1.4.1",
+          "extension" : "VardgivarId"
+        },
+        "namn" : "Landstinget Norrland"
+      }
+    }
+  },
+  "aktiviteter" : [ {
+    "aktivitetskod" : {
+      "code" : "AKT7",
+      "codeSystem" : "8040b4d1-67dc-42e1-a938-de5374e9526a",
+      "codeSystemName" : "kv_aktiviteter_intyg"
+    }
+  }, {
+    "aktivitetskod" : {
+      "code" : "AKT6",
+      "codeSystem" : "8040b4d1-67dc-42e1-a938-de5374e9526a",
+      "codeSystemName" : "kv_aktiviteter_intyg"
+    }
+  }, {
+    "aktivitetskod" : {
+      "code" : "AKT12",
+      "codeSystem" : "8040b4d1-67dc-42e1-a938-de5374e9526a",
+      "codeSystemName" : "kv_aktiviteter_intyg"
+    },
+    "beskrivning" : "xxx xxxxxx xxxxxxxxxxx xxxxxxxxxxxxx xxxxxxxxxxxxxxxxx xxxxxxxxxxxxx"
+  }, {
+    "aktivitetskod" : {
+      "code" : "AKT1",
+      "codeSystem" : "8040b4d1-67dc-42e1-a938-de5374e9526a",
+      "codeSystemName" : "kv_aktiviteter_intyg"
+    },
+    "beskrivning" : "xxxxxx xx xxxxxxxxx xx xxxxxxxxx"
+  }, {
+    "aktivitetskod" : {
+      "code" : "AKT2",
+      "codeSystem" : "8040b4d1-67dc-42e1-a938-de5374e9526a",
+      "codeSystemName" : "kv_aktiviteter_intyg"
+    },
+    "beskrivning" : "xxxxxxxxx xxxxxxxx xxx xxx xxxxx xxxxx x xxxxxxxx"
+  }, {
+    "aktivitetskod" : {
+      "code" : "AKT5",
+      "codeSystem" : "8040b4d1-67dc-42e1-a938-de5374e9526a",
+      "codeSystemName" : "kv_aktiviteter_intyg"
+    }
+  }, {
+    "aktivitetskod" : {
+      "code" : "AKT9",
+      "codeSystem" : "8040b4d1-67dc-42e1-a938-de5374e9526a",
+      "codeSystemName" : "kv_aktiviteter_intyg"
+    }
+  }, {
+    "aktivitetskod" : {
+      "code" : "AKT10",
+      "codeSystem" : "8040b4d1-67dc-42e1-a938-de5374e9526a",
+      "codeSystemName" : "kv_aktiviteter_intyg"
+    }
+  } ],
+  "observationer" : [ {
+    "observationskategori" : {
+      "code" : "439401001",
+      "codeSystem" : "1.2.752.116.2.1.1.1",
+      "codeSystemName" : "SNOMED-CT"
+    },
+    "observationskod" : {
+      "codeSystemName" : "ICD-10",
+      "code" : "S47"
+    },
+    "beskrivning" : "xxxxxxxxx xx xxxxxxx"
+  }, {
+    "observationskod" : {
+      "code" : "288524001",
+      "codeSystem" : "1.2.752.116.2.1.1.1",
+      "codeSystemName" : "SNOMED-CT"
+    },
+    "beskrivning" : "xxxxxxxxx xxxxxx xxxxx xxxxxxx xxx xxxxxx x xxxxxxx xxxxxxxxx xxx xxxxxx xx xxxxxx xxxx"
+  }, {
+    "observationskategori" : {
+      "code" : "b",
+      "codeSystem" : "1.2.752.116.1.1.3.1.1",
+      "codeSystemName" : "ICF"
+    },
+    "beskrivning" : "xxxxxxxx xxxxxxx xxxxxxxxx x xxxxxxxxx xxx xxxxxxx xxxx xxx xxxxxxxxxxxxxx xx xxxxxx xxxxxx xxxxxxx xxx xxxxxxx xxxxxx xxx xxx xxxxxxxxx xxxx xxx xxxxxxx xxxxx xxxxxxx xxxxxxx"
+  }, {
+    "observationskategori" : {
+      "code" : "d",
+      "codeSystem" : "1.2.752.116.1.1.3.1.1",
+      "codeSystemName" : "ICF"
+    },
+    "beskrivning" : "xxxxxxxxx xxxxxxx xxxx xxxxxxx xxxxx xxxxxx xxxxxx xxxxx xxxxxx xxxxxxxxx xxx xxx xxxxxx xxxxxxxxx xxxxxxxxxxx xxxxxxxxx xxx xxxx xxxxx xxxxx xxxx xxx xxx xxxxxx xxxxxx xxxxx xxx x xxxx xxxx xx xxxxxx xxx xxxxxxx xxxxx xxxxx xxx xxxxxxxx"
+  }, {
+    "observationskod" : {
+      "code" : "302119000",
+      "codeSystem" : "1.2.752.116.2.1.1.1",
+      "codeSystemName" : "SNOMED-CT"
+    },
+    "observationsperiod" : {
+      "from" : "2011-01-26",
+      "tom" : "2011-02-13"
+    },
+    "prognoser" : [{
+      "prognoskod" : {
+        "codeSystem" : "3de65a8b-ae2c-48ce-b6fe-35bdd1f60cf7",
+        "codeSystemName" : "kv_prognos_intyg",
+        "code" : "PRO4"
+      },
+      "beskrivning" : "xxxxxx xxx xxxxxxxxxx xxx xxxxx xxxxxxxxx xxxxxxxxx xxxxxx xxxxxx xxxxx xxxxxx x xxxxx xxxxxxxx xxxxx xxxxxxxxxxxxxxxxx xxxxxx xx xxx xx xxxx xxxxxxxxxx xxx xxxxxxxxx xxxx xxx xxxxxxxxx xx xxxxxxxxx xxx xxx xxxx xxxxxxx"
+    }],
+    "varde" : [ {
+      "quantity" : 0,
+      "unit" : "percent"
+    } ]
+  }, {
+    "observationskod" : {
+      "code" : "302119000",
+      "codeSystem" : "1.2.752.116.2.1.1.1",
+      "codeSystemName" : "SNOMED-CT"
+    },
+    "observationsperiod" : {
+      "from" : "2011-02-14",
+      "tom" : "2011-03-06"
+    },
+    "prognoser" : [{
+      "prognoskod" : {
+        "codeSystem" : "3de65a8b-ae2c-48ce-b6fe-35bdd1f60cf7",
+        "codeSystemName" : "kv_prognos_intyg",
+        "code" : "PRO4"
+      },
+      "beskrivning" : "xxxxxx xxx xxxxxxxxxx xxx xxxxx xxxxxxxxx xxxxxxxxx xxxxxx xxxxxx xxxxx xxxxxx x xxxxx xxxxxxxx xxxxx xxxxxxxxxxxxxxxxx xxxxxx xx xxx xx xxxx xxxxxxxxxx xxx xxxxxxxxx xxxx xxx xxxxxxxxx xx xxxxxxxxx xxx xxx xxxx xxxxxxx"
+    }],
+    "varde" : [ {
+      "quantity" : 25,
+      "unit" : "percent"
+    } ]
+  }, {
+    "observationskod" : {
+      "code" : "302119000",
+      "codeSystem" : "1.2.752.116.2.1.1.1",
+      "codeSystemName" : "SNOMED-CT"
+    },
+    "observationsperiod" : {
+      "from" : "2011-03-07",
+      "tom" : "2011-03-31"
+    },
+    "prognoser" : [{
+      "prognoskod" : {
+        "codeSystem" : "3de65a8b-ae2c-48ce-b6fe-35bdd1f60cf7",
+        "codeSystemName" : "kv_prognos_intyg",
+        "code" : "PRO4"
+      },
+      "beskrivning" : "xxxxxx xxx xxxxxxxxxx xxx xxxxx xxxxxxxxx xxxxxxxxx xxxxxx xxxxxx xxxxx xxxxxx x xxxxx xxxxxxxx xxxxx xxxxxxxxxxxxxxxxx xxxxxx xx xxx xx xxxx xxxxxxxxxx xxx xxxxxxxxx xxxx xxx xxxxxxxxx xx xxxxxxxxx xxx xxx xxxx xxxxxxx"
+    }],
+    "varde" : [ {
+      "quantity" : 50,
+      "unit" : "percent"
+    } ]
+  }, {
+    "observationskod" : {
+      "code" : "302119000",
+      "codeSystem" : "1.2.752.116.2.1.1.1",
+      "codeSystemName" : "SNOMED-CT"
+    },
+    "observationsperiod" : {
+      "from" : "2011-04-01",
+      "tom" : "2011-05-31"
+    },
+    "prognoser" : [{
+      "prognoskod" : {
+        "codeSystem" : "3de65a8b-ae2c-48ce-b6fe-35bdd1f60cf7",
+        "codeSystemName" : "kv_prognos_intyg",
+        "code" : "PRO4"
+      },
+      "beskrivning" : "xxxxxx xxx xxxxxxxxxx xxx xxxxx xxxxxxxxx xxxxxxxxx xxxxxx xxxxxx xxxxx xxxxxx x xxxxx xxxxxxxx xxxxx xxxxxxxxxxxxxxxxx xxxxxx xx xxx xx xxxx xxxxxxxxxx xxx xxxxxxxxx xxxx xxx xxxxxxxxx xx xxxxxxxxx xxx xxx xxxx xxxxxxx"
+    }],
+    "varde" : [ {
+      "quantity" : 75,
+      "unit" : "percent"
+    } ]
+  } ],
+  "vardkontakter" : [ {
+    "vardkontakttyp" : {
+      "code" : "5880005",
+      "codeSystem" : "1.2.752.116.2.1.1.1",
+      "codeSystemName" : "SNOMED-CT"
+    },
+    "vardkontaktstid" : {
+      "from"  : "2011-01-27",
+      "tom"  : "2011-01-27"
+    }
+  }, {
+    "vardkontakttyp" : {
+      "code" : "185317003",
+      "codeSystem" : "1.2.752.116.2.1.1.1",
+      "codeSystemName" : "SNOMED-CT"
+    },
+    "vardkontaktstid" : {
+      "from"  : "2011-01-13",
+      "tom"  : "2011-01-13"
+    }
+  } ],
+  "referenser" : [ {
+    "referenstyp" : {
+      "code" : "419891008",
+      "codeSystem" : "1.2.752.116.2.1.1.1",
+      "codeSystemName" : "SNOMED-CT"
+    },
+    "datum" : "2010-01-15"
+  }, {
+    "referenstyp" : {
+      "code" : "74964007",
+      "codeSystem" : "1.2.752.116.2.1.1.1",
+      "codeSystemName" : "SNOMED-CT"
+    },
+    "datum" : "2010-01-25"
+  } ],
+  "validFromDate" : "2011-01-26",
+  "validToDate" : "2011-05-31"
+}
