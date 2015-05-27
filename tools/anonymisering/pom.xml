@@ -16,7 +16,7 @@
   -->
   <groupId>se.inera.intyg.common</groupId>
   <artifactId>anonymisering</artifactId>
-  <version>1.0.3</version>
+  <version>2.1.1</version>
 
   <name>Intyg Common (Anonymisering)</name>
 
