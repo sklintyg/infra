@@ -45,27 +45,27 @@ class AnonymiseraJson {
     }
     
     void anonymizeJson(def intyg, String personId) {
-        intyg.patient.id.extension = personId ?: anonymiseraPersonId.anonymisera(intyg.patient.id.extension)
-        intyg.patient.anonymize('fornamn')
-        intyg.patient.anonymize('efternamn')
-        intyg.patient.anonymize('fullstandigtNamn')
-        intyg.skapadAv.id.extension = anonymiseraHsaId.anonymisera(intyg.skapadAv.id.extension)
-        intyg.skapadAv.anonymize('namn')
-        intyg.skapadAv.anonymize('forskrivarkod')
-        intyg.patient?.arbetsuppgifter?.each { it.anonymize('typAvArbetsuppgift') }
-        intyg.anonymize('kommentarer')
-        intyg.aktiviteter?.each { it.anonymize('beskrivning') }
-        intyg.observationer?.each {
-            it.anonymize('beskrivning')
-            it.prognoser?.each {prognos -> prognos.anonymize('beskrivning')} 
-        }
-        intyg.vardkontakter?.each {
-            it.vardkontaktstid.from = anonymiseraDatum.anonymiseraDatum(it.vardkontaktstid.from)
-            it.vardkontaktstid.tom = it.vardkontaktstid.from
-        }
-        intyg.referenser?.each {
-            it.datum = anonymiseraDatum.anonymiseraDatum(it.datum)
-        }
+        intyg.grundData.patient.personId = personId ?: anonymiseraPersonId.anonymisera(intyg.grundData.patient.personId)
+        intyg.grundData.patient.anonymize('fornamn')
+        intyg.grundData.patient.anonymize('efternamn')
+        intyg.grundData.patient.anonymize('fullstandigtNamn')
+        intyg.grundData.skapadAv.personId = anonymiseraHsaId.anonymisera(intyg.grundData.skapadAv.personId)
+        intyg.grundData.skapadAv.anonymize('fullstandigtNamn')
+        intyg.grundData.skapadAv.anonymize('forskrivarKod')
+        if (intyg.undersokningAvPatienten) intyg.undersokningAvPatienten = anonymiseraDatum.anonymiseraDatum(intyg.undersokningAvPatienten)
+        if (intyg.telefonkontaktMedPatienten) intyg.telefonkontaktMedPatienten = anonymiseraDatum.anonymiseraDatum(intyg.telefonkontaktMedPatienten)
+        if (intyg.journaluppgifter) intyg.journaluppgifter = anonymiseraDatum.anonymiseraDatum(intyg.journaluppgifter)
+        if (intyg.annanReferens) intyg.annanReferens = anonymiseraDatum.anonymiseraDatum(intyg.annanReferens)
+        intyg.anonymize('kommentar')
+        intyg.anonymize('rekommendationOvrigt')
+        intyg.anonymize('atgardInomSjukvarden')
+        intyg.anonymize('annanAtgard')
+        intyg.anonymize('sjukdomsforlopp')
+        intyg.anonymize('nuvarandeArbetsuppgifter')
+        intyg.anonymize('funktionsnedsattning')
+        intyg.anonymize('aktivitetsbegransning')
+        intyg.anonymize('arbetsformagaPrognos')
+        intyg.anonymize('namnfortydligandeOchAdress')
     }
     
 }
