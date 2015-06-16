@@ -27,6 +27,7 @@
     <rivta-insuranceprocess.version>3.1.0.0</rivta-insuranceprocess.version>
     <rivta-itintegration-monitoring.version>1.0.0.0</rivta-itintegration-monitoring.version>
 
+
     <intyg-clinicalprocess.version>0-SNAPSHOT</intyg-clinicalprocess.version>
     <intyg-clinicalprocess.version.range>(,1.0.0]</intyg-clinicalprocess.version.range>
 
@@ -35,6 +36,9 @@
 
     <intyg-transportstyrelsen.version>0-SNAPSHOT</intyg-transportstyrelsen.version>
     <intyg-transportstyrelsen.version.range>(,1.0.0]</intyg-transportstyrelsen.version.range>
+
+    <intyg-privatepractitioner.version>0-SNAPSHOT</intyg-privatepractitioner.version>
+    <intyg-privatepractitioner.version.range>(,1.0.0]</intyg-privatepractitioner.version.range>
   </properties>
 
   <modules>
@@ -84,6 +88,11 @@
         <groupId>se.inera.intyg.transportstyrelsen</groupId>
         <artifactId>intyg-transportstyrelsen-schemas</artifactId>
         <version>${intyg-transportstyrelsen.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>se.inera.intyg.infrastructure.directory.privatepractitioner</groupId>
+        <artifactId>intyg-infrastructure-directory-privatepractitioner-schemas</artifactId>
+        <version>${intyg-privatepractitioner.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
