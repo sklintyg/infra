@@ -91,7 +91,7 @@
   <repositories>
     <repository>
       <id>inera-release</id>
-      <url>https://jenkins.inera.nordicmedtest.se/nexus/content/repositories/releases/</url>
+      <url>https://build.inera.nordicmedtest.se/nexus/content/repositories/releases/</url>
       <releases>
         <enabled>true</enabled>
       </releases>
