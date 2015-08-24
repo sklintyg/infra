@@ -4,6 +4,8 @@ import org.apache.commons.io.FileUtils
 import org.junit.Test
 import org.skyscreamer.jsonassert.JSONAssert
 import org.springframework.core.io.ClassPathResource
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
 
 class AnonymiseraJsonTest {
 
@@ -22,5 +24,27 @@ class AnonymiseraJsonTest {
         String actual = anonymiseraJson.anonymiseraIntygsJson(json, "10101010-1010")
         JSONAssert.assertEquals(expected, actual, true);
     }
+    @Test
+    void testaAnonymiseringAvTSIntyg() {
+        String json = buildJsonIntyg("/fk7263_L_template.json") { result ->
+            result.funktionsnedsattning = [funktionsnedsattning: false, beskrivning: 'en liten text', ]
+        }
 
+        String expected = buildJsonIntyg("/fk7263_L_anonymized.json") { result ->
+            result.funktionsnedsattning = [funktionsnedsattning: false, beskrivning: 'xx xxxxx xxxx', ]
+        }
+
+        String actual = anonymiseraJson.anonymiseraIntygsJson(json, "10101010-1010")
+
+        JSONAssert.assertEquals(expected, actual, true);
+    }
+
+    def buildJsonIntyg(def file, def clos = null) {
+        def intygString = getClass().getResource( file ).getText( 'UTF-8' )
+        def result = new JsonSlurper().parseText intygString
+
+        if(clos) clos.call result
+
+        return new JsonBuilder(result).toString()
+    }
 }

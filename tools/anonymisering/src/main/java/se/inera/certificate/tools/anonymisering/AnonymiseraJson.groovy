@@ -11,15 +11,26 @@ class AnonymiseraJson {
     
     static {
         LazyMap.metaClass.anonymize = {key->
+            anonymizeField(delegate, key)
+        }
+    }
+
+    private static anonymizeField(Map delegate, String key) {
             def value = delegate[key]
-            if (value) {
+            if (value != null) {
                 if (value instanceof List) {
                     delegate[key] = value.collect {AnonymizeString.anonymize(it)}
-                } else {
+                } else if (value instanceof Map) {
+                    value.each {k, v ->
+                        anonymizeField(value, k)
+                    }
+                } else if (value instanceof Boolean) {
+                    //Do nothing
+                }
+                else {
                     delegate[key] = AnonymizeString.anonymize(value)
                 }
             }
-        }
     }
 
     AnonymiseraJson(AnonymiseraHsaId anonymiseraHsaId, AnonymiseraDatum anonymiseraDatum) {
