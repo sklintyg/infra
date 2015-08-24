@@ -7,7 +7,7 @@
   <parent>
     <groupId>se.inera.intyg.common</groupId>
     <artifactId>common-pom</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.10</version>
   </parent>
 
   <!--
@@ -15,7 +15,7 @@
     thus have a fixed versioning strategy
   -->
   <artifactId>anonymisering</artifactId>
-  <version>2.1.1</version>
+  <version>2.1.2</version>
 
   <name>Intyg Common (Anonymisering)</name>
 
