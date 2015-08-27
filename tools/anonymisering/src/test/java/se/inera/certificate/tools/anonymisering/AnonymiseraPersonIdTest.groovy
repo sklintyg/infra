@@ -17,7 +17,7 @@ class AnonymiseraPersonIdTest {
     void anonymiseringGerEttSlumpmässigtResultat() {
         anonymiseraPersonId.random = [nextInt: {range->501}] as Random
         String personId = "19121212-1212"
-        String förväntatAnonymiseratPersonId = "19121213-5022" // +1 dag, 502 som suffix
+        String förväntatAnonymiseratPersonId = "19121213-5014"
         String anonymiseradPersonId = anonymiseraPersonId.anonymisera(personId)
         assert förväntatAnonymiseratPersonId == anonymiseradPersonId
     }
@@ -70,5 +70,17 @@ class AnonymiseraPersonIdTest {
         assert kontrollSiffraPersonId1 == 8
         assert kontrollSiffraPersonId2 == 2
         assert kontrollSiffraPersonId3 == 0
+    }
+
+    @Test
+    void behallKon() {
+        String templatePersonId = "19980112-"
+
+        for (int i = 1000; i < 1100;i++) {
+            String personId = templatePersonId + i;
+            String anonymiseratId = anonymiseraPersonId.anonymisera(personId);
+
+          assert ((int)personId.charAt(11)) % 2 == ((int)anonymiseratId.charAt(11)) % 2
+        }
     }
 }

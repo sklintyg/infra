@@ -75,7 +75,7 @@ public class AnonymiseraPersonId {
         date = date.plusDays(days);
         int extension = random.nextInt(998);
         // Fix sex if needed
-        if (((nummer.charAt(SEX_INDEX) - '0') & 1) != ((extension / 10) & 1)) {
+        if (((int)(nummer.charAt(SEX_INDEX) - '0') % 2) != extension % 2) {
             extension += 1;
         }
         String suffix = String.format("%1$03d", extension);
