@@ -28,6 +28,7 @@ public class AnonymiseraPersonId {
     private final Set<String> anonymizedSet = Collections.synchronizedSet(new HashSet<String>());
 
     public String anonymisera(String patientId) {
+        patientId = normalisera(patientId);
         String anonymized = actualToAnonymized.get(patientId);
         if (anonymized == null) {
             anonymized = getUniqueRandomPersonid(patientId);

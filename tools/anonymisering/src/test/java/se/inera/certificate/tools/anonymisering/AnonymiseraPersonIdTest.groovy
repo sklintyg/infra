@@ -75,12 +75,20 @@ class AnonymiseraPersonIdTest {
     @Test
     void behallKon() {
         String templatePersonId = "19980112-"
-
         for (int i = 1000; i < 1100;i++) {
             String personId = templatePersonId + i;
             String anonymiseratId = anonymiseraPersonId.anonymisera(personId);
+            assert ((int)personId.charAt(personId.length() - 2)) % 2 == ((int)anonymiseratId.charAt(anonymiseratId.length() - 2)) % 2
+        }
+    }
 
-          assert ((int)personId.charAt(11)) % 2 == ((int)anonymiseratId.charAt(11)) % 2
+    @Test
+    void behallKonMedNormalisering() {
+        String templatePersonId = "19980112"
+        for (int i = 1000; i < 1100;i++) {
+            String personId = templatePersonId + i;
+            String anonymiseratId = anonymiseraPersonId.anonymisera(personId);
+            assert ((int)personId.charAt(personId.length() - 2)) % 2 == ((int)anonymiseratId.charAt(anonymiseratId.length() - 2)) % 2
         }
     }
 }
