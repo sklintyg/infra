@@ -41,6 +41,8 @@
 
     <intyg-privatepractitioner-terms.version>0-SNAPSHOT</intyg-privatepractitioner-terms.version>
     <intyg-privatepractitioner-terms.version.range>(,1.0.0]</intyg-privatepractitioner-terms.version.range>
+
+    <skip-jacoco>true</skip-jacoco>
   </properties>
 
   <modules>
@@ -104,6 +106,9 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+            <skip>${skip-jacoco}</skip>
+        </configuration>
         <executions>
           <execution>
             <id>prepare-unit-test-agent</id>
