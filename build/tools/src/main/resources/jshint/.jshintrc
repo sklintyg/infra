@@ -41,6 +41,11 @@
         "spyOn": false,
         "spyOnEvent": false,
         "waitsFor": false,
-        "xdescribe": false
+        "xdescribe": false,
+        "window": true,
+        "navigator": true,
+        "setTimeout": true,
+        "iid_Invoke": true,
+        "document": true
     }
 }
