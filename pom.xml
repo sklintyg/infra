@@ -60,6 +60,12 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>se.inera.intyg.common</groupId>
+        <artifactId>logging-util</artifactId>
+        <version>${common.version}</version>
+      </dependency>
+
       <!-- RIVTA Schemas -->
       <dependency>
         <groupId>se.riv.clinicalprocess.healthcond.certificate</groupId>
