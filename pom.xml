@@ -42,7 +42,7 @@
     <intyg-privatepractitioner-terms.version>0-SNAPSHOT</intyg-privatepractitioner-terms.version>
     <intyg-privatepractitioner-terms.version.range>(,1.0.0]</intyg-privatepractitioner-terms.version.range>
 
-    <skip-jacoco>true</skip-jacoco>
+    <skip-coverage>true</skip-coverage>
   </properties>
 
   <modules>
@@ -113,7 +113,7 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <configuration>
-            <skip>${skip-jacoco}</skip>
+            <skip>${skip-coverage}</skip>
         </configuration>
         <executions>
           <execution>
