@@ -238,4 +238,36 @@
     </repository>
   </repositories>
 
+  <!-- Overwrite profile configuration from common-pom -->
+  <profiles>
+    <profile>
+      <id>alpha-only</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>versions-maven-plugin</artifactId>
+            <configuration>
+              <rulesUri>file://${project.basedir}/build-tools/src/main/resources/mavenrules/alpha-only-versions.xml</rulesUri>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>beta-only</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>versions-maven-plugin</artifactId>
+            <configuration>
+              <rulesUri>file://${project.basedir}/build-tools/src/main/resources/mavenrules/beta-only-versions.xml</rulesUri>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
