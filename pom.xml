@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -46,6 +46,7 @@
   </properties>
 
   <modules>
+    <module>build-tools</module>
     <module>support</module>
     <module>web</module>
     <module>util/logging-util</module>
@@ -110,10 +111,22 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <configLocation>build-tools/src/main/resources/checkstyle/checkstyle.xml</configLocation>
+          <suppressionsLocation>build-tools/src/main/resources/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
+          <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+          <logViolationsToConsole>true</logViolationsToConsole>
+          <failOnViolation>true</failOnViolation>
+          <violationSeverity>info</violationSeverity>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <configuration>
-            <skip>${skip-coverage}</skip>
+          <skip>${skip-coverage}</skip>
         </configuration>
         <executions>
           <execution>
@@ -224,5 +237,37 @@
       </snapshots>
     </repository>
   </repositories>
+
+  <!-- Overwrite profile configuration from common-pom -->
+  <profiles>
+    <profile>
+      <id>alpha-only</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>versions-maven-plugin</artifactId>
+            <configuration>
+              <rulesUri>file://${project.basedir}/build-tools/src/main/resources/mavenrules/alpha-only-versions.xml</rulesUri>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>beta-only</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>versions-maven-plugin</artifactId>
+            <configuration>
+              <rulesUri>file://${project.basedir}/build-tools/src/main/resources/mavenrules/beta-only-versions.xml</rulesUri>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
