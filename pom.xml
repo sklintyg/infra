@@ -17,10 +17,6 @@
   <name>Intyg Common</name>
 
   <properties>
-    <!-- Common -->
-    <common.version>0-SNAPSHOT</common.version>
-    <common.version.range>(,2.5.0]</common.version.range>
-
     <!-- Schemas -->
     <rivta-clinicalprocess.version>2.0.RC1.0</rivta-clinicalprocess.version>
     <rivta-insuranceprocess.version>3.1.0.0</rivta-insuranceprocess.version>
@@ -52,9 +48,9 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>se.inera.intyg.common</groupId>
+        <groupId>${project.groupId}</groupId>
         <artifactId>logging-util</artifactId>
-        <version>${common.version}</version>
+        <version>${project.version}</version>
       </dependency>
 
       <!-- RIVTA Schemas -->
@@ -151,21 +147,6 @@
             <version>${groovy-eclipse-batch.version}</version>
           </dependency>
         </dependencies>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>versions-maven-plugin</artifactId>
-        <configuration>
-          <includeProperties>
-            common.version,
-          </includeProperties>
-          <properties>
-            <property>
-              <name>common.version</name>
-              <version>${common.version.range}</version>
-            </property>
-          </properties>
-        </configuration>
       </plugin>
     </plugins>
   </build>
