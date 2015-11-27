@@ -37,9 +37,9 @@
 
   <modules>
     <module>build-tools</module>
+    <module>util/logging-util</module>
     <module>support</module>
     <module>web</module>
-    <module>util/logging-util</module>
     <module>util/integration-util</module>
     <module>schemas</module>
     <module>specifications</module>
