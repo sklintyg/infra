@@ -1,4 +1,4 @@
-package se.inera.certificate.tools.anonymisering
+package se.inera.intyg.common.tools.anonymisering
 
 import org.apache.commons.io.FileUtils
 import org.junit.Test
