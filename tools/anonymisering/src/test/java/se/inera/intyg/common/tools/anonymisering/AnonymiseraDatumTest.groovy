@@ -1,4 +1,4 @@
-package se.inera.certificate.tools.anonymisering
+package se.inera.intyg.common.tools.anonymisering
 
 import org.joda.time.LocalDate
 import org.junit.Before
