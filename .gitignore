@@ -7,6 +7,3 @@
 node
 node_modules
 target
-/**/common/**/templates.js
-web/src/main/resources/META-INF/resources/webjars/common/webcert/templates.js
-web/src/main/resources/META-INF/resources/webjars/common/minaintyg/templates.js
