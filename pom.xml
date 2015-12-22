@@ -37,7 +37,7 @@
 
   <properties>
     <!-- Schemas -->
-    <rivta-clinicalprocess.version>2.0.RC1.0</rivta-clinicalprocess.version>
+    <rivta-clinicalprocess.version>2.0.RC3.0</rivta-clinicalprocess.version>
     <rivta-insuranceprocess.version>3.1.0.0</rivta-insuranceprocess.version>
     <rivta-itintegration-monitoring.version>1.0.0.0</rivta-itintegration-monitoring.version>
 
