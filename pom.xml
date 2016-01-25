@@ -64,6 +64,7 @@
     <module>schemas</module>
     <module>specifications</module>
     <module>integration/hsa-integration</module>
+    <module>services</module>
   </modules>
 
   <scm>
