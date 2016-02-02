@@ -183,6 +183,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
                         .stream()
                         .collect(Collectors.joining(" "))
                 );
+                mottagning.setParentHsaId(vardenhet.getId());
             }
 
             mottagning.setPostnummer(member.getHealthCareUnitMemberpostalCode());

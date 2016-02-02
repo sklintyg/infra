@@ -32,8 +32,6 @@
 
   <beans profile="dev,wc-all-stubs,wc-hsa-stub">
 
-    <!-- TODO fix this for the new contracts. Consider if all sub-services (getEmployee, getUnit, getMembers etc should be served through one single common stub like below -->
-    <!-- <jaxws:endpoint address="/hsa" implementor="se.inera.intyg.common.integration.hsa.stub.HsaWebServiceStub"/>         -->
     <jaxws:endpoint address="/hsa-authorization" implementor="se.inera.intyg.common.integration.hsa.stub.GetAuthorizationsForPersonResponderStub"/>
     <jaxws:endpoint address="/hsa-employee" implementor="se.inera.intyg.common.integration.hsa.stub.GetEmployeeResponderStub"/>
     <jaxws:endpoint address="/hsa-healthcare" implementor="se.inera.intyg.common.integration.hsa.stub.GetHealthCareUnitResponderStub"/>
