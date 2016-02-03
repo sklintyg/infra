@@ -31,7 +31,7 @@
 
   <jaxws:client id="getCredentialsForPersonIncludingProtectedPersonResponderInterface"
       serviceClass="se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponderInterface"
-      address="${infrastructure.directory.organization.getcredentialsforpersonincludingprotectedpersonresponderinterface.endpoint.url}" />
+      address="${infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedpersonresponderinterface.endpoint.url}" />
 
   <jaxws:client id="getUnitResponderInterface"
       serviceClass="se.riv.infrastructure.directory.organization.getunit.v1.rivtabp21.GetUnitResponderInterface"

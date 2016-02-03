@@ -22,6 +22,7 @@ package se.inera.intyg.common.integration.hsa.stub;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import se.inera.intyg.common.integration.hsa.model.Mottagning;
+import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.riv.infrastructure.directory.organization.gethealthcareunit.v1.rivtabp21.GetHealthCareUnitResponderInterface;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.GetHealthCareUnitResponseType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.GetHealthCareUnitType;
@@ -40,25 +41,41 @@ public class GetHealthCareUnitResponderStub implements GetHealthCareUnitResponde
     public GetHealthCareUnitResponseType getHealthCareUnit(String logicalAddress, GetHealthCareUnitType parameters) {
         GetHealthCareUnitResponseType responseType = new GetHealthCareUnitResponseType();
 
+        // This is not correct. The getHealthCareUnit query may return both mottagningar and vardenheter.
         Mottagning mottagning = hsaServiceStub.getMottagning(parameters.getHealthCareUnitMemberHsaId());
-        if (mottagning == null) {
-            responseType.setResultText("HsaServiceStub returned NULL Mottagning for hsaId: '" + parameters.getHealthCareUnitMemberHsaId() + "'");
-            responseType.setResultCode(ResultCodeEnum.ERROR);
+        if (mottagning != null) {
+            HealthCareUnitType member = new HealthCareUnitType();
+
+            // Mottagning
+            member.setHealthCareUnitMemberHsaId(mottagning.getId());
+            member.setHealthCareUnitMemberName(mottagning.getNamn());
+            member.setHealthCareUnitMemberStartDate(mottagning.getStart());
+            member.setHealthCareUnitMemberEndDate(mottagning.getEnd());
+
+            // Överordnad enhet, används för att plocka fram överordnad enhets epostadress när egen saknas.
+            member.setHealthCareUnitHsaId(mottagning.getParentHsaId());
+            member.setUnitIsHealthCareUnit(false);
+
+            responseType.setHealthCareUnit(member);
+            responseType.setResultCode(ResultCodeEnum.OK);
             return responseType;
         }
-        HealthCareUnitType member = new HealthCareUnitType();
 
-        // Mottagning
-        member.setHealthCareUnitMemberHsaId(mottagning.getId());
-        member.setHealthCareUnitMemberName(mottagning.getNamn());
-        member.setHealthCareUnitMemberStartDate(mottagning.getStart());
-        member.setHealthCareUnitMemberEndDate(mottagning.getEnd());
+        Vardenhet vardenhet = hsaServiceStub.getVardenhet(parameters.getHealthCareUnitMemberHsaId());
+        if (vardenhet != null) {
+            HealthCareUnitType unit = new HealthCareUnitType();
+            unit.setHealthCareUnitHsaId(vardenhet.getId());
+            unit.setHealthCareProviderStartDate(vardenhet.getStart());
+            unit.setHealthCareProviderEndDate(vardenhet.getEnd());
+            unit.setUnitIsHealthCareUnit(true);
+            unit.setHealthCareProviderHsaId(vardenhet.getVardgivareHsaId());
+            responseType.setHealthCareUnit(unit);
+            responseType.setResultCode(ResultCodeEnum.OK);
+            return responseType;
+        }
 
-        // Överordnad enhet, används för att plocka fram överordnad enhets epostadress när egen saknas.
-        member.setHealthCareUnitHsaId(mottagning.getParentHsaId());
-
-        responseType.setHealthCareUnit(member);
-        responseType.setResultCode(ResultCodeEnum.OK);
+        responseType.setResultText("HsaServiceStub returned NULL Mottagning for hsaId: '" + parameters.getHealthCareUnitMemberHsaId() + "'");
+        responseType.setResultCode(ResultCodeEnum.ERROR);
         return responseType;
     }
 }

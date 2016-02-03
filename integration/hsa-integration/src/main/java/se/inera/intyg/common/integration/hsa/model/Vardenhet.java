@@ -34,6 +34,8 @@ public class Vardenhet extends AbstractVardenhet {
     private LocalDateTime start;
     private LocalDateTime end;
 
+    private String vardgivareHsaId;
+
     private List<Mottagning> mottagningar;
 
     public Vardenhet() {
@@ -47,6 +49,11 @@ public class Vardenhet extends AbstractVardenhet {
         super(id, namn);
         this.start = start;
         this.end = end;
+    }
+
+    public Vardenhet(String id, String namn, LocalDateTime start, LocalDateTime end, String vardgivareHsaId) {
+        this(id, namn, start, end);
+        this.vardgivareHsaId = vardgivareHsaId;
     }
 
     public List<Mottagning> getMottagningar() {
@@ -98,5 +105,13 @@ public class Vardenhet extends AbstractVardenhet {
 
     public void setEnd(LocalDateTime end) {
         this.end = end;
+    }
+
+    public String getVardgivareHsaId() {
+        return vardgivareHsaId;
+    }
+
+    public void setVardgivareHsaId(String vardgivareHsaId) {
+        this.vardgivareHsaId = vardgivareHsaId;
     }
 }
