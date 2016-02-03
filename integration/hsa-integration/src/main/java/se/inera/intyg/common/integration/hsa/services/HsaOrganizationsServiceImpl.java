@@ -59,11 +59,10 @@ import java.util.stream.Collectors;
 @Service
 public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
-    private static final Logger log = LoggerFactory.getLogger(HsaOrganizationsServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HsaOrganizationsServiceImpl.class);
 
     private static final String DEFAULT_ARBETSPLATSKOD = "0000000";
 
-    private static final Logger LOG = LoggerFactory.getLogger(HsaOrganizationsServiceImpl.class);
     private static final String DEFAULT_POSTNR = "XXXXX";
 
     @Autowired
@@ -76,7 +75,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
     public String getVardgivareOfVardenhet(String careUnitHsaId) {
         GetHealthCareUnitResponseType healthCareUnit = organizationUnitService.getHealthCareUnit(careUnitHsaId);
         if (healthCareUnit == null || healthCareUnit.getHealthCareUnit() == null || healthCareUnit.getHealthCareUnit().getHealthCareProviderHsaId() == null) {
-            log.error("Could not look up vardgivarId for vardEnhet {0}. Does vardEnhet exist?", careUnitHsaId);
+            LOG.error("Could not look up vardgivarId for vardEnhet {0}. Does vardEnhet exist?", careUnitHsaId);
             return null;
         }
         return healthCareUnit.getHealthCareUnit().getHealthCareProviderHsaId();
