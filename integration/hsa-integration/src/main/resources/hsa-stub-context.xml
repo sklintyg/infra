@@ -34,7 +34,7 @@
 
     <jaxws:endpoint address="/hsa-authorization" implementor="se.inera.intyg.common.integration.hsa.stub.GetAuthorizationsForPersonResponderStub"/>
     <jaxws:endpoint address="/hsa-employee" implementor="se.inera.intyg.common.integration.hsa.stub.GetEmployeeResponderStub"/>
-    <jaxws:endpoint address="/hsa-healthcare" implementor="se.inera.intyg.common.integration.hsa.stub.GetHealthCareUnitResponderStub"/>
+    <jaxws:endpoint address="/hsa-healthcareunit" implementor="se.inera.intyg.common.integration.hsa.stub.GetHealthCareUnitResponderStub"/>
     <jaxws:endpoint address="/hsa-healthcareunit-members" implementor="se.inera.intyg.common.integration.hsa.stub.GetHealthCareUnitMembersResponderStub"/>
     <jaxws:endpoint address="/hsa-unit" implementor="se.inera.intyg.common.integration.hsa.stub.GetUnitResponderStub"/>
 

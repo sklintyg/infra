@@ -21,6 +21,7 @@ package se.inera.intyg.common.integration.hsa.services;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertThat;
@@ -285,5 +286,31 @@ public class HsaOrganizationsServiceTest {
         assertNotNull(vardenhet);
         assertEquals(CENTRUM_VAST, vardenhet.getId());
         assertEquals(2, vardenhet.getMottagningar().size());
+    }
+
+    @Test
+    public void testGetHsaIdForAktivaUnderenheter() throws IOException {
+        addVardgivare("HsaOrganizationsServiceTest/landstinget-vastmanland.json");
+        List<String> underenheter = service.getHsaIdForAktivaUnderenheter(CENTRUM_VAST);
+        assertTrue(underenheter.contains("dialys"));
+        assertTrue(underenheter.contains("akuten"));
+    }
+
+    @Test
+    public void testGetHsaIdForInAktivaUnderenheter() throws IOException {
+        addVardgivare("HsaOrganizationsServiceTest/landstinget-upp-och-ner.json");
+        List<String> underenheter = service.getHsaIdForAktivaUnderenheter("with-subs");
+        assertTrue(underenheter.contains("mottagning-here-and-now"));
+        assertTrue(underenheter.contains("mottagning-still-open"));
+        assertTrue(underenheter.contains("mottagning-will-shutdown"));
+        assertFalse(underenheter.contains("mottagning-futuro"));
+        assertFalse(underenheter.contains("mottagning-finito"));
+    }
+
+    @Test
+    public void testGetCareGiverIdForCareUnit() throws IOException {
+        addVardgivare("HsaOrganizationsServiceTest/landstinget-vastmanland.json");
+        String vardGivareHsaId = service.getVardgivareOfVardenhet("centrum-vast");
+        assertEquals("vastmanland", vardGivareHsaId);
     }
 }

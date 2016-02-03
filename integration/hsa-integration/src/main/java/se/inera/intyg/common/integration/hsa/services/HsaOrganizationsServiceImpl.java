@@ -35,6 +35,7 @@ import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentials
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersResponseType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMemberType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.GetHealthCareUnitResponseType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitResponseType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
 import se.riv.infrastructure.directory.v1.AddressType;
@@ -42,6 +43,7 @@ import se.riv.infrastructure.directory.v1.CommissionType;
 import se.riv.infrastructure.directory.v1.CredentialInformationType;
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 
+import javax.xml.ws.WebServiceException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,6 +59,8 @@ import java.util.stream.Collectors;
 @Service
 public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
+    private static final Logger log = LoggerFactory.getLogger(HsaOrganizationsServiceImpl.class);
+
     private static final String DEFAULT_ARBETSPLATSKOD = "0000000";
 
     private static final Logger LOG = LoggerFactory.getLogger(HsaOrganizationsServiceImpl.class);
@@ -67,6 +71,16 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
     @Autowired
     private OrganizationUnitService organizationUnitService;
+
+    @Override
+    public String getVardgivareOfVardenhet(String careUnitHsaId) {
+        GetHealthCareUnitResponseType healthCareUnit = organizationUnitService.getHealthCareUnit(careUnitHsaId);
+        if (healthCareUnit == null || healthCareUnit.getHealthCareUnit() == null || healthCareUnit.getHealthCareUnit().getHealthCareProviderHsaId() == null) {
+            log.error("Could not look up vardgivarId for vardEnhet {0}. Does vardEnhet exist?", careUnitHsaId);
+            return null;
+        }
+        return healthCareUnit.getHealthCareUnit().getHealthCareProviderHsaId();
+    }
 
     @Override
     public Vardenhet getVardenhet(String careUnitHsaId) {
@@ -83,6 +97,23 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         vardenhet.setArbetsplatskod(DEFAULT_ARBETSPLATSKOD);
 
         return vardenhet;
+    }
+
+    @Override
+    public List<String> getHsaIdForAktivaUnderenheter(String vardEnhetHsaId) {
+        GetHealthCareUnitMembersResponseType response = organizationUnitService.getHealthCareUnitMembers(vardEnhetHsaId);
+        final LocalDateTime now = LocalDateTime.now();
+        if (response.getResultCode() == ResultCodeEnum.OK) {
+            return response.getHealthCareUnitMembers().getHealthCareUnitMember()
+                    .stream()
+                    .filter(member -> (member.getHealthCareUnitMemberStartDate() == null || member.getHealthCareUnitMemberStartDate().compareTo(now) <= 0) && (member.getHealthCareUnitMemberEndDate() == null || member.getHealthCareUnitMemberEndDate().compareTo(now) >= 0))
+                    .map(HealthCareUnitMemberType::getHealthCareUnitMemberHsaId)
+                    .distinct()
+                    .collect(Collectors.toList());
+        } else {
+            LOG.error("getHealthCareUnitMembers failed with code '{}' and message '{}'", response.getResultCode().value(), response.getResultText());
+            throw new WebServiceException(response.getResultText());
+        }
     }
 
     @Override
