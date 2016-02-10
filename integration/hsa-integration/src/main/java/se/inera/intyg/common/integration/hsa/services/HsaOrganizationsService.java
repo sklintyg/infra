@@ -26,7 +26,8 @@ import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 
 /**
  *
- * @author andreaskaltenbach
+ *
+ * @author eriklupander
  */
 public interface HsaOrganizationsService {
 
@@ -38,5 +39,32 @@ public interface HsaOrganizationsService {
      */
     List<Vardgivare> getAuthorizedEnheterForHosPerson(String hosPersonHsaId);
 
+    /**
+     * Returns the hsaId of the parent care giver of the specified care unit.
+     *
+     * @param vardenhetHsaId
+     *      HsaId of the vårdenhet.
+     * @return
+     *      HsaId of the parent vårdgivare. If no vårdgivare could be found, null is returned.
+     */
+    String getVardgivareOfVardenhet(String vardenhetHsaId);
+
+    /**
+     * Returns a fully recursively populated Vardenhet for the specified.
+     * @param vardenhetHsaId
+     *      HsaId of the vårdenhet.
+     * @return
+     *      The Vardenhet.
+     */
     Vardenhet getVardenhet(String vardenhetHsaId);
+
+    /**
+     * Returns a list of hsaId's for all (any) sub units (mottagningar) on the specified care unit.
+     *
+     * @param vardEnhetHsaId
+     *      HsaId of the vårdenhet.
+     * @return
+     *      A list of hsaId's for mottagningar.
+     */
+    List<String> getHsaIdForAktivaUnderenheter(String vardEnhetHsaId);
 }

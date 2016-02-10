@@ -46,6 +46,7 @@ public class HsaServiceStub {
         for (Vardgivare vg : vardgivare) {
             for (Vardenhet vardenhet : vg.getVardenheter()) {
                 if (vardenhet.getId().equals(hsaIdentity)) {
+                    vardenhet.setVardgivareHsaId(vg.getId());
                     return vardenhet;
                 }
             }
