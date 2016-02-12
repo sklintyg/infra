@@ -44,8 +44,8 @@ import se.riv.infrastructure.directory.v1.CredentialInformationType;
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 
 import javax.xml.ws.WebServiceException;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -74,7 +74,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
     @Override
     public String getVardgivareOfVardenhet(String careUnitHsaId) {
         GetHealthCareUnitResponseType healthCareUnit = organizationUnitService.getHealthCareUnit(careUnitHsaId);
-        if (healthCareUnit == null || healthCareUnit.getHealthCareUnit() == null || healthCareUnit.getHealthCareUnit().getHealthCareProviderHsaId() == null) {
+        if (healthCareUnit == null || healthCareUnit.getHealthCareUnit() == null
+                || healthCareUnit.getHealthCareUnit().getHealthCareProviderHsaId() == null) {
             LOG.error("Could not look up vardgivarId for vardEnhet {0}. Does vardEnhet exist?", careUnitHsaId);
             return null;
         }
@@ -105,7 +106,9 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         if (response.getResultCode() == ResultCodeEnum.OK) {
             return response.getHealthCareUnitMembers().getHealthCareUnitMember()
                     .stream()
-                    .filter(member -> (member.getHealthCareUnitMemberStartDate() == null || member.getHealthCareUnitMemberStartDate().compareTo(now) <= 0) && (member.getHealthCareUnitMemberEndDate() == null || member.getHealthCareUnitMemberEndDate().compareTo(now) >= 0))
+                    .filter(member -> (member.getHealthCareUnitMemberStartDate() == null
+                            || member.getHealthCareUnitMemberStartDate().compareTo(now) <= 0)
+                            && (member.getHealthCareUnitMemberEndDate() == null || member.getHealthCareUnitMemberEndDate().compareTo(now) >= 0))
                     .map(HealthCareUnitMemberType::getHealthCareUnitMemberHsaId)
                     .distinct()
                     .collect(Collectors.toList());
@@ -119,7 +122,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
     public List<Vardgivare> getAuthorizedEnheterForHosPerson(String hosPersonHsaId) {
         List<Vardgivare> vardgivareList = new ArrayList<>();
 
-        GetCredentialsForPersonIncludingProtectedPersonResponseType response = authorizationManagementService.getAuthorizationsForPerson(hosPersonHsaId, null, null);
+        GetCredentialsForPersonIncludingProtectedPersonResponseType response = authorizationManagementService
+                .getAuthorizationsForPerson(hosPersonHsaId, null, null);
 
         if (response.getResultCode() == ResultCodeEnum.OK) {
             List<CredentialInformationType> credentialInformationList = response.getCredentialInformation();
@@ -131,58 +135,49 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
                 LOG.debug("User '{}' has a total of {} medarbetaruppdrag", hosPersonHsaId, commissions.size());
 
-                List<Vardgivare> vardgivare = commissions.stream()
+                vardgivareList.addAll(commissions.stream()
                         .filter(ct -> isActive(ct.getHealthCareProviderStartDate(), ct.getHealthCareProviderEndDate()))
                         .map(ct -> new Vardgivare(ct.getHealthCareProviderHsaId(), ct.getHealthCareProviderName()))
                         .distinct()
-                        .collect(Collectors.toList());
+                        .map(vg -> {
+                            vg.setVardenheter(commissions.stream()
+                                    .filter(ct -> ct.getHealthCareProviderHsaId().equals(vg.getId())
+                                            && isActive(ct.getHealthCareUnitStartDate(), ct.getHealthCareUnitEndDate()))
+                                    .map(ct -> createVardenhet(credentialInformation, ct))
+                                    .distinct()
+                                    .sorted(Comparator.comparing(Vardenhet::getNamn))
+                                    .collect(Collectors.toList()));
 
-                vardgivare.stream().forEach(vg ->
-                    {
-                        commissions.forEach(ct -> {
-                            if (ct.getHealthCareProviderHsaId().equals(vg.getId()) && isActive(ct.getHealthCareUnitStartDate(), ct.getHealthCareUnitEndDate())) {
-                                Vardenhet vardenhet = new Vardenhet(ct.getHealthCareUnitHsaId(), ct.getHealthCareUnitName());
-                                vardenhet.setStart(ct.getHealthCareUnitStartDate());
-                                vardenhet.setEnd(ct.getHealthCareUnitEndDate());
-                                vardenhet.setArbetsplatskod(credentialInformation.getGroupPrescriptionCode().size() > 0 ? credentialInformation.getGroupPrescriptionCode().get(0) : "");
-
-                                // I don't like this, but we need to do an extra call to infrastructure:directory:organization:getUnit for address related stuff.
-                                updateWithContactInformation(vardenhet, getUnit(vardenhet.getId()));
-
-                                // Mottagningar
-                                attachMottagningar(vardenhet);
-
-                                if (!vg.getVardenheter().contains(vardenhet)) {
-                                    vg.getVardenheter().add(vardenhet);
-                                }
-                            }
-                        });
-
-                        vg.setVardenheter(vg.getVardenheter().stream()
-                                .sorted((ve1, ve2) -> ve1.getNamn().compareTo(ve2.getNamn()))
-                                .collect(Collectors.toList())
-                        );
-                        vardgivareList.add(vg);
-                    }
-                );
+                            return vg;
+                        }).collect(Collectors.toList()));
             }
 
-            return vardgivareList.stream()
-                    .sorted((vg1, vg2) -> {
-                        if (vg1.getNamn() == null) {
-                            return -1;
-                        }
-                        if (vg2.getNamn() == null) {
-                            return 1;
-                        }
-
-                        return vg1.getNamn().compareTo(vg2.getNamn());
-                    }).collect(Collectors.toList());
+            vardgivareList.sort(Comparator.nullsLast(Comparator.comparing(Vardgivare::getNamn)));
+            return vardgivareList;
         } else {
-            LOG.error("getAuthorizationsForPerson failed with code '{}' and message '{}'", response.getResultCode().value(), response.getResultText());
+            LOG.error("getAuthorizationsForPerson failed with code '{}' and message '{}'", response.getResultCode().value(),
+                    response.getResultText());
             return vardgivareList; // Empty
         }
     }
+
+    private Vardenhet createVardenhet(CredentialInformationType credentialInformation, CommissionType ct) {
+        Vardenhet vardenhet = new Vardenhet(ct.getHealthCareUnitHsaId(), ct.getHealthCareUnitName());
+        vardenhet.setStart(ct.getHealthCareUnitStartDate());
+        vardenhet.setEnd(ct.getHealthCareUnitEndDate());
+        vardenhet.setArbetsplatskod(
+                credentialInformation.getGroupPrescriptionCode().size() > 0 ? credentialInformation.getGroupPrescriptionCode().get(0) : "");
+
+        // I don't like this, but we need to do an extra call to
+        // infrastructure:directory:organization:getUnit for address related stuff.
+        updateWithContactInformation(vardenhet, getUnit(vardenhet.getId()));
+
+        // Mottagningar
+        attachMottagningar(vardenhet);
+
+        return vardenhet;
+    }
+
     private boolean isActive(LocalDateTime fromDate, LocalDateTime toDate) {
         LocalDateTime now = new LocalDateTime();
 
@@ -195,7 +190,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
     private void attachMottagningar(Vardenhet vardenhet) {
         GetHealthCareUnitMembersResponseType response = organizationUnitService.getHealthCareUnitMembers(vardenhet.getId());
         if (response == null || response.getResultCode() == ResultCodeEnum.ERROR) {
-            LOG.error("Could not fetch mottagningar for unit {}, null or error response: ", vardenhet.getId(), response != null ? response.getResultText() : "Response was null");
+            LOG.error("Could not fetch mottagningar for unit {}, null or error response: ", vardenhet.getId(),
+                    response != null ? response.getResultText() : "Response was null");
             return;
         }
         HealthCareUnitMembersType healthCareUnitMembers = response.getHealthCareUnitMembers();
@@ -207,26 +203,25 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
                 continue;
             }
 
-            Mottagning mottagning = new Mottagning(member.getHealthCareUnitMemberHsaId(), member.getHealthCareUnitMemberName(), member.getHealthCareUnitMemberStartDate(), member.getHealthCareUnitMemberEndDate());
+            Mottagning mottagning = new Mottagning(member.getHealthCareUnitMemberHsaId(), member.getHealthCareUnitMemberName(),
+                    member.getHealthCareUnitMemberStartDate(), member.getHealthCareUnitMemberEndDate());
             if (member.getHealthCareUnitMemberpostalAddress() != null && member.getHealthCareUnitMemberpostalAddress().getAddressLine() != null) {
                 mottagning.setPostadress(member.getHealthCareUnitMemberpostalAddress().getAddressLine()
                         .stream()
-                        .collect(Collectors.joining(" "))
-                );
+                        .collect(Collectors.joining(" ")));
                 mottagning.setParentHsaId(vardenhet.getId());
             }
 
             mottagning.setPostnummer(member.getHealthCareUnitMemberpostalCode());
             mottagning.setTelefonnummer(member.getHealthCareUnitMemberTelephoneNumber().stream().collect(Collectors.joining(", ")));
-            mottagning.setArbetsplatskod(member.getHealthCareUnitMemberPrescriptionCode().size() > 0 ? member.getHealthCareUnitMemberPrescriptionCode().get(0) : DEFAULT_ARBETSPLATSKOD);
+            mottagning.setArbetsplatskod(member.getHealthCareUnitMemberPrescriptionCode().size() > 0
+                    ? member.getHealthCareUnitMemberPrescriptionCode().get(0) : DEFAULT_ARBETSPLATSKOD);
 
             vardenhet.getMottagningar().add(mottagning);
             LOG.debug("Attached mottagning '{}' to vardenhet '{}'", mottagning.getId(), vardenhet.getId());
         }
         vardenhet.setMottagningar(vardenhet.getMottagningar().stream().sorted().collect(Collectors.toList()));
     }
-
-
 
     private UnitType getUnit(String careUnitHsaId) {
         GetUnitResponseType unitResponse = organizationUnitService.getUnit(careUnitHsaId);
