@@ -40,6 +40,7 @@
     <rivta-clinicalprocess.version>2.0.RC3.1</rivta-clinicalprocess.version>
     <rivta-insuranceprocess.version>3.1.0.1</rivta-insuranceprocess.version>
     <rivta-itintegration-monitoring.version>1.0.0.1</rivta-itintegration-monitoring.version>
+    <rivta-ehr-logstore.version>1.2.1</rivta-ehr-logstore.version>
 
     <intyg-clinicalprocess.version>1.0.1</intyg-clinicalprocess.version>
     <intyg-insuranceprocess.version>1.0.1</intyg-insuranceprocess.version>
@@ -65,6 +66,8 @@
     <module>specifications</module>
     <module>integration/hsa-integration</module>
     <module>services</module>
+    <module>loggtjanst/log-messages</module>
+    <module>loggtjanst/loggtjanst-stub</module>
   </modules>
 
   <scm>
@@ -94,6 +97,11 @@
         <groupId>se.riv.itintegration.monitoring</groupId>
         <artifactId>itintegration-monitoring-schemas</artifactId>
         <version>${rivta-itintegration-monitoring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>se.riv.ehr.logstore</groupId>
+        <artifactId>ehr-logstore-schemas</artifactId>
+        <version>${rivta-ehr-logstore.version}</version>
       </dependency>
 
       <!-- Intyg Schemas -->
