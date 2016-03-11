@@ -89,30 +89,11 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
 
                             cit.getCommission().add(miuInfo);
                         }
-                        cit.getGroupPrescriptionCode()
-                                .add(enhet.getArbetsplatskod() != null && enhet.getArbetsplatskod().trim().length() > 0 ? enhet.getArbetsplatskod()
-                                        : DEFAULT_ARBETSPLATSKOD);
                     }
                 }
             }
 
         }
-
-        // Detta är någon slags extragrej som skall lägga till enhet för ett medarbetaruppgrag kopplat till en enhet
-        // som ej skall finnas.
-//        for (Medarbetaruppdrag.Uppdrag uppdrag : medarbetaruppdrag.getUppdrag()) {
-//            if (uppdrag.getEnhet().endsWith("-finns-ej")) {
-//                for (String andamal : uppdrag.getAndamal()) {
-//                    CommissionType miuInfo = new CommissionType();
-//                    miuInfo.setCommissionHsaId(medarbetaruppdrag.getHsaId());
-//                    miuInfo.setCommissionPurpose(andamal);
-//                    miuInfo.setHealthCareUnitHsaId(uppdrag.getEnhet());
-//                    miuInfo.setHealthCareUnitName("Enhet som inte finns");
-//                    miuInfo.setHealthCareProviderHsaId(uppdrag.getVardgivare());
-//                    cit.getCommission().add(miuInfo);
-//                }
-//            }
-//        }
         informationTypes.add(cit);
         return informationTypes;
     }

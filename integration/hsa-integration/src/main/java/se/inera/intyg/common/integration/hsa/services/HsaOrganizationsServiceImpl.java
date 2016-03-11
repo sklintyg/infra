@@ -90,11 +90,13 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         UnitType unit = getUnit(careUnitHsaId);
 
         Vardenhet vardenhet = new Vardenhet(unit.getUnitHsaId(), unit.getUnitName(), unit.getUnitStartDate(), unit.getUnitEndDate());
-        attachMottagningar(vardenhet);
-        updateWithContactInformation(vardenhet, unit);
 
-        // TODO figure out how to get the group prescriptioncode - and if we need it at all.
-        vardenhet.setArbetsplatskod(DEFAULT_ARBETSPLATSKOD);
+        getHealthCareUnitMembers(vardenhet).ifPresent(response -> {
+            attachMottagningar(vardenhet, response.getHealthCareUnitMembers());
+            setArbetsplatskod(vardenhet, response.getHealthCareUnitMembers());
+        });
+
+        updateWithContactInformation(vardenhet, unit);
 
         return vardenhet;
     }
@@ -165,17 +167,33 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         Vardenhet vardenhet = new Vardenhet(ct.getHealthCareUnitHsaId(), ct.getHealthCareUnitName());
         vardenhet.setStart(ct.getHealthCareUnitStartDate());
         vardenhet.setEnd(ct.getHealthCareUnitEndDate());
-        vardenhet.setArbetsplatskod(
-                credentialInformation.getGroupPrescriptionCode().size() > 0 ? credentialInformation.getGroupPrescriptionCode().get(0) : "");
 
         // I don't like this, but we need to do an extra call to
         // infrastructure:directory:organization:getUnit for address related stuff.
         updateWithContactInformation(vardenhet, getUnit(vardenhet.getId()));
 
-        // Mottagningar
-        attachMottagningar(vardenhet);
+        getHealthCareUnitMembers(vardenhet).ifPresent(response -> {
+            attachMottagningar(vardenhet, response.getHealthCareUnitMembers());
+            setArbetsplatskod(vardenhet, response.getHealthCareUnitMembers());
+        });
 
         return vardenhet;
+    }
+
+    private void setArbetsplatskod(Vardenhet vardenhet, final HealthCareUnitMembersType healthCareUnitMembers) {
+        vardenhet.setArbetsplatskod(
+                healthCareUnitMembers.getHealthCareUnitPrescriptionCode().size() > 0
+                        && healthCareUnitMembers.getHealthCareUnitPrescriptionCode().get(0) != null
+                                ? healthCareUnitMembers.getHealthCareUnitPrescriptionCode().get(0) : DEFAULT_ARBETSPLATSKOD);
+    }
+
+    private Optional<GetHealthCareUnitMembersResponseType> getHealthCareUnitMembers(final Vardenhet vardenhet) {
+        GetHealthCareUnitMembersResponseType response = organizationUnitService.getHealthCareUnitMembers(vardenhet.getId());
+        if (response == null || response.getResultCode() == ResultCodeEnum.ERROR) {
+            LOG.error("Could not fetch mottagningar for unit {}, null or error response: ", vardenhet.getId(),
+                    response != null ? response.getResultText() : "Response was null");
+        }
+        return Optional.ofNullable(response);
     }
 
     private boolean isActive(LocalDateTime fromDate, LocalDateTime toDate) {
@@ -187,15 +205,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         return !(toDate != null && now.isAfter(toDate));
     }
 
-    private void attachMottagningar(Vardenhet vardenhet) {
-        GetHealthCareUnitMembersResponseType response = organizationUnitService.getHealthCareUnitMembers(vardenhet.getId());
-        if (response == null || response.getResultCode() == ResultCodeEnum.ERROR) {
-            LOG.error("Could not fetch mottagningar for unit {}, null or error response: ", vardenhet.getId(),
-                    response != null ? response.getResultText() : "Response was null");
-            return;
-        }
-        HealthCareUnitMembersType healthCareUnitMembers = response.getHealthCareUnitMembers();
-
+    private void attachMottagningar(Vardenhet vardenhet, final HealthCareUnitMembersType healthCareUnitMembers) {
         for (HealthCareUnitMemberType member : healthCareUnitMembers.getHealthCareUnitMember()) {
 
             if (!isActive(member.getHealthCareUnitMemberStartDate(), member.getHealthCareUnitMemberEndDate())) {

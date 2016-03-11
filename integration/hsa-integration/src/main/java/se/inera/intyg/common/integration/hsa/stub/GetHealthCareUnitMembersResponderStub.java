@@ -49,21 +49,21 @@ public class GetHealthCareUnitMembersResponderStub implements GetHealthCareUnitM
             return response;
         }
 
-
         HealthCareUnitMembersType membersType = new HealthCareUnitMembersType();
 
-        attachMembers(membersType, parameters.getHealthCareUnitHsaId());
+        updateUnit(membersType, parameters.getHealthCareUnitHsaId());
 
         response.setHealthCareUnitMembers(membersType);
         response.setResultCode(ResultCodeEnum.OK);
         return response;
     }
 
-    private void attachMembers(HealthCareUnitMembersType membersType, String unitHsaId) {
+    private void updateUnit(HealthCareUnitMembersType membersType, String unitHsaId) {
 
         for (Vardgivare vardgivare : hsaServiceStub.getVardgivare()) {
             for (Vardenhet enhet : vardgivare.getVardenheter()) {
                 if (enhet.getId().equals(unitHsaId)) {
+                    membersType.getHealthCareUnitPrescriptionCode().add(enhet.getArbetsplatskod());
 
                     for (Mottagning mottagning : enhet.getMottagningar()) {
                         if (mottagning.getId().endsWith("-finns-ej")) {
