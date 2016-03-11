@@ -19,12 +19,9 @@
 
 package se.inera.intyg.common.integration.hsa.client;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import se.riv.infrastructure.directory.organization.gethealthcareunit.v1.rivtabp21.GetHealthCareUnitResponderInterface;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v1.rivtabp21.GetHealthCareUnitMembersResponderInterface;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersResponseType;
@@ -36,12 +33,17 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitR
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitType;
 
 /**
+ * Provides a common interface to the {@link GetUnitResponderInterface}, {@link GetHealthCareUnitResponderInterface} and
+ * {@link GetHealthCareUnitMembersResponderInterface} HSA services.
+ *
+ * The class does _not_ perform any response or error checking. In this case this is entirely up to the caller.
+ *
+ *
+ *
  * Created by eriklupander on 2015-12-03.
  */
 @Service
 public class OrganizationUnitServiceBean implements OrganizationUnitService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(OrganizationUnitServiceBean.class);
 
     @Autowired
     private GetUnitResponderInterface getUnitResponderInterface;

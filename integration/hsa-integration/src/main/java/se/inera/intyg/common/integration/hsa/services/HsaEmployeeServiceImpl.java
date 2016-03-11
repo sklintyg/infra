@@ -33,9 +33,9 @@ import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedper
  * Created by Magnus Ekstrand on 28/05/15.
  */
 @Service
-public class GetEmployeeServiceImpl implements GetEmployeeService {
+public class HsaEmployeeServiceImpl implements HsaEmployeeService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GetEmployeeServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HsaEmployeeServiceImpl.class);
 
     @Autowired
     private EmployeeService employeeService;

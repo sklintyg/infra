@@ -19,14 +19,14 @@
 
 package se.inera.intyg.common.integration.hsa.services;
 
-import javax.xml.ws.WebServiceException;
-
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonResponseType;
+
+import javax.xml.ws.WebServiceException;
 
 /**
  * Created by Magnus Ekstrand on 27/05/15.
  */
-public interface GetEmployeeService {
+public interface HsaEmployeeService {
 
     /**
      * Returnerar information, som kontaktinformation samt legitimerad yrkesgrupp och specialitet, för sökt person.

@@ -31,7 +31,7 @@ import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentials
  * Created by eriklupander on 2015-12-04.
  */
 @Service
-public class AuthorizationManagementServiceImpl implements AuthorizationManagementService {
+public class AuthorizationManagementServiceBean implements AuthorizationManagementService {
 
     @Autowired
     private GetCredentialsForPersonIncludingProtectedPersonResponderInterface getCredentialsForPersonIncludingProtectedPersonResponderInterface;

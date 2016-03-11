@@ -19,11 +19,14 @@
 
 package se.inera.intyg.common.integration.hsa.client;
 
-import javax.xml.ws.WebServiceException;
-
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonResponseType;
 
+import javax.xml.ws.WebServiceException;
+
 /**
+ * Note: Avoid using this class directly from external applications. Use {@link se.inera.intyg.common.integration.hsa.services.HsaEmployeeService}
+ * instead.
+ *
  * Created by eriklupander on 2015-12-03.
  */
 public interface EmployeeService {

@@ -24,6 +24,9 @@ import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitResponseType;
 
 /**
+ * Note: Avoid using this class directly from external applications. Use {@link se.inera.intyg.common.integration.hsa.services.HsaOrganizationsService}
+ * instead.
+ *
  * Created by eriklupander on 2015-12-03.
  */
 public interface OrganizationUnitService {
