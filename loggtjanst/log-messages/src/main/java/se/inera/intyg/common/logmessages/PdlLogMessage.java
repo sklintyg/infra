@@ -183,4 +183,28 @@ public class PdlLogMessage implements Serializable {
     public void setSystemId(String systemId) {
         this.systemId = systemId;
     }
+
+    /**
+     * Returns a copy (new instance) of this, optionally omitting the resourceList.
+     *
+     * @return
+     *      A brand new instance of PdlLogMessage.
+     */
+    public PdlLogMessage copy(boolean includeResourceList) {
+        PdlLogMessage msg = new PdlLogMessage(this.activityType, this.purpose);
+        msg.setActivityArgs(this.activityArgs);
+        msg.setActivityLevel(this.activityLevel);
+        msg.setSystemId(this.systemId);
+        msg.setSystemName(this.systemName);
+        msg.setTimestamp(this.timestamp);
+        msg.setUserCareUnit(this.userCareUnit);
+        msg.setUserId(this.userId);
+        msg.setUserName(this.userName);
+
+        if (includeResourceList) {
+            msg.setPdlResourceList(pdlResourceList);
+        }
+
+        return msg;
+    }
 }
