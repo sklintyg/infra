@@ -27,6 +27,7 @@ import se.riv.ehr.log.store.v1.ResultType;
 import se.riv.ehr.log.v1.LogType;
 import se.riv.ehr.log.v1.ResultCodeType;
 
+import javax.xml.ws.WebServiceException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -38,13 +39,36 @@ public class StoreLogStubResponder implements StoreLogResponderInterface {
     @Autowired
     private CopyOnWriteArrayList<LogType> logEntries;
 
+    @Autowired(required = false)
+    private StubState stubState;
+
     @Override
     public StoreLogResponseType storeLog(String logicalAddress, StoreLogRequestType request) {
+        StoreLogResponseType response = new StoreLogResponseType();
+        ResultType result = new ResultType();
+
+        if (stubState != null) {
+
+            if (stubState.getArtificialLatency() > 0L) {
+                try {
+                    Thread.sleep(stubState.getArtificialLatency());
+                } catch (InterruptedException e) {
+                    // I was interrupted.
+                }
+            }
+
+            if (!stubState.isActive()) {
+                throw new WebServiceException("Stub is faking unaccessible StoreLog service");
+            } else if (stubState.isActive() && stubState.isFakeError()) {
+                result.setResultCode(ResultCodeType.ERROR);
+                result.setResultText("Stub is faking errors.");
+                response.setResultType(result);
+                return response;
+            }
+        }
+
         logEntries.addAll(request.getLog());
 
-        StoreLogResponseType response = new StoreLogResponseType();
-
-        ResultType result = new ResultType();
         result.setResultCode(ResultCodeType.OK);
         result.setResultText("Done");
         response.setResultType(result);

@@ -24,6 +24,8 @@ import se.riv.ehr.log.v1.LogType;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -31,12 +33,15 @@ import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * @author andreaskaltenbach
+ * @author eriklup, andreaskaltenbach
  */
 public class LoggtjanstStubRestApi {
 
     @Autowired
     private CopyOnWriteArrayList<LogType> logEntries;
+
+    @Autowired
+    private StubState stubState;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -48,5 +53,26 @@ public class LoggtjanstStubRestApi {
     public Response deleteMedarbetaruppdrag() {
         logEntries.clear();
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("/activate")
+    public Response activateStub() {
+        stubState.setActive(true);
+        return Response.ok().entity("OK").build();
+    }
+
+    @GET
+    @Path("/deactivate")
+    public Response deactivateStub() {
+        stubState.setActive(false);
+        return Response.ok().entity("OK").build();
+    }
+
+    @GET
+    @Path("/latency/{latencyMillis}")
+    public Response setLatency(@PathParam("latencyMillis") Long latencyMillis) {
+        stubState.setArtificialLatency(latencyMillis);
+        return Response.ok().entity("OK").build();
     }
 }

@@ -26,6 +26,7 @@
 
   <beans profile="dev,wc-all-stubs,wc-loggtjanst-stub,testability-api">
     <bean id="logEntries" class="java.util.concurrent.CopyOnWriteArrayList" />
+    <bean id="stubState" class="se.inera.intyg.common.loggtjanststub.StubState"/>
   </beans>
   
   <beans profile="dev,wc-all-stubs,wc-loggtjanst-stub">
