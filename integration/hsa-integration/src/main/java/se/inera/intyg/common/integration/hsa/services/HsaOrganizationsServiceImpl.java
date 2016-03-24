@@ -253,14 +253,16 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
             vardenhet.setPostnummer(response.getPostalCode());
         }
 
-        StringBuilder postaAddress = new StringBuilder();
-        List<String> lines = address.getAddressLine();
-        for (int i = 0; i < lines.size() - 1; i++) {
-            if (lines.get(i) != null) {
-                postaAddress.append(lines.get(i).trim());
-            }
+        if (address.getAddressLine() == null) {
+            LOG.error("AddressLine was null when updatingWithContactInformation in HsaOrganizationsService");
+            return;
         }
-        vardenhet.setPostadress(postaAddress.toString());
+
+        List<String> lines = address.getAddressLine().subList(0, address.getAddressLine().size() - 1);
+
+        String postAddress = lines.stream()
+                .collect(Collectors.joining(" "));
+        vardenhet.setPostadress(postAddress.toString());
 
         String lastLine = lines != null && lines.size() > 0 ? lines.get(lines.size() - 1) : null;
         final int shortestLengthToIncludeBothPnrAndPostort = 7;
