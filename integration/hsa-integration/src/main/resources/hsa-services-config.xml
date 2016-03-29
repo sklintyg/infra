@@ -49,6 +49,7 @@
       serviceClass="se.riv.infrastructure.directory.employee.getemployeeincludingprotectedperson.v1.rivtabp21.GetEmployeeIncludingProtectedPersonResponderInterface"
       address="${infrastructure.directory.employee.getemployee.endpoint.url}" />
 
+  <!--
   <jaxws:client id="pingForConfigurationResponderInterfaceAuthorizationmanagement"
       serviceClass="se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface"
       address="${infrastructure.directory.authorizationmanagement.pingforconfiguration.endpoint.url}" />
@@ -57,9 +58,10 @@
       serviceClass="se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface"
       address="${infrastructure.directory.employee.pingforconfiguration.endpoint.url}" />
 
-  <jaxws:client id="pingForConfigurationResponderInterfaceorganization"
+  <jaxws:client id="pingForConfigurationResponderInterfaceOrganization"
       serviceClass="se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface"
       address="${infrastructure.directory.organization.pingforconfiguration.endpoint.url}" />
+  -->
 
   <beans profile="!dev">
     <http:conduit

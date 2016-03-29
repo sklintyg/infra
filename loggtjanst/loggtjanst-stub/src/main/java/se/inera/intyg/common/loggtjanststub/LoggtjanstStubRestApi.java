@@ -56,19 +56,48 @@ public class LoggtjanstStubRestApi {
     }
 
     @GET
-    @Path("/activate")
+    @Path("/online")
     public Response activateStub() {
         stubState.setActive(true);
         return Response.ok().entity("OK").build();
     }
 
     @GET
-    @Path("/deactivate")
+    @Path("/offline")
     public Response deactivateStub() {
         stubState.setActive(false);
         return Response.ok().entity("OK").build();
     }
 
+    /**
+     * Makes the stub fake one of the specified error types. See {@link ErrorState}
+     *
+     * @param errorType
+     *      Allowed values are NONE, ERROR, VALIDATION
+     * @return
+     *   200 OK if state change was successful. 500 Server Error if the errorType string couldn't be parsed into
+     *   an {@link ErrorState}
+     */
+    @GET
+    @Path("/error/{errorType}")
+    public Response activateErrorState(@PathParam("errorType") String errorType) {
+        try {
+            ErrorState errorState = ErrorState.valueOf(errorType);
+            stubState.setErrorState(errorState);
+            return Response.ok().entity("OK").build();
+        } catch (IllegalArgumentException e) {
+            return Response.serverError().entity("Unknown ErrorState: " + errorType + ". Allowed values are NONE, ERROR, VALIDATION").build();
+        }
+    }
+
+    /**
+     * Introduces a fake latency in the stub.
+     *
+     * @param latencyMillis
+     *      Latency, in milliseconds.
+     * @return
+     *      200 OK
+     */
     @GET
     @Path("/latency/{latencyMillis}")
     public Response setLatency(@PathParam("latencyMillis") Long latencyMillis) {

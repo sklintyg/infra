@@ -26,6 +26,7 @@ public class StubState {
     private boolean active = true;
     private boolean fakeError = false;
     private long artificialLatency = 0L;
+    private ErrorState errorState = ErrorState.NONE;
 
     public boolean isActive() {
         return active;
@@ -49,5 +50,13 @@ public class StubState {
 
     public void setArtificialLatency(long artificialLatency) {
         this.artificialLatency = artificialLatency;
+    }
+
+    public ErrorState getErrorState() {
+        return errorState;
+    }
+
+    public void setErrorState(ErrorState errorState) {
+        this.errorState = errorState;
     }
 }

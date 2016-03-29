@@ -65,6 +65,23 @@ public class StoreLogStubResponder implements StoreLogResponderInterface {
                 response.setResultType(result);
                 return response;
             }
+
+            if (stubState.getErrorState() != null && stubState.getErrorState() != ErrorState.NONE) {
+                switch (stubState.getErrorState()) {
+                    case ERROR:
+                        result.setResultCode(ResultCodeType.ERROR);
+                        break;
+                    case VALIDATION:
+                        result.setResultCode(ResultCodeType.VALIDATION_ERROR);
+                        break;
+                    default:
+                        result.setResultCode(ResultCodeType.OK);
+                        break;
+                }
+                response.setResultType(result);
+                result.setResultText("Stub is triggering error: " + stubState.getErrorState().name());
+                return response;
+            }
         }
 
         logEntries.addAll(request.getLog());

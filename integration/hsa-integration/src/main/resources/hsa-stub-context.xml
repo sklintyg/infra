@@ -38,9 +38,11 @@
     <jaxws:endpoint address="/hsa-healthcareunit-members" implementor="se.inera.intyg.common.integration.hsa.stub.GetHealthCareUnitMembersResponderStub"/>
     <jaxws:endpoint address="/hsa-unit" implementor="se.inera.intyg.common.integration.hsa.stub.GetUnitResponderStub"/>
 
+    <!--
     <jaxws:endpoint address="/hsa-authorizationmanagement-ping" id="pingForConfigurationResponderInterfaceAuthorizationmanagement" name="pingForConfigurationResponderInterfaceAuthorizationmanagement" implementor="se.inera.intyg.common.integration.hsa.stub.PingForConfigurationResponderAuthorizationManagementStub"/>
     <jaxws:endpoint address="/hsa-employee-ping" id="pingForConfigurationResponderInterfaceEmployee" name="pingForConfigurationResponderInterfaceEmployee" implementor="se.inera.intyg.common.integration.hsa.stub.PingForConfigurationResponderEmployeeStub"/>
     <jaxws:endpoint address="/hsa-organization-ping" id="pingForConfigurationResponderInterfaceOrganization" name="pingForConfigurationResponderInterfaceOrganization" implementor="se.inera.intyg.common.integration.hsa.stub.PingForConfigurationResponderOrganizationStub"/>
+    -->
 
     <bean class="se.inera.intyg.common.integration.hsa.stub.BootstrapBean"/>
   </beans>
