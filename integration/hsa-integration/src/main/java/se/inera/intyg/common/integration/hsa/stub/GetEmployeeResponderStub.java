@@ -50,7 +50,8 @@ public class GetEmployeeResponderStub implements GetEmployeeIncludingProtectedPe
         PersonInformationType person = new PersonInformationType();
         person.setTitle(hsaPerson.getTitel());
         person.setPersonHsaId(hsaPerson.getHsaId());
-        person.setGivenName(hsaPerson.getEfterNamn());
+        person.setGivenName(hsaPerson.getForNamn());
+        person.setMiddleAndSurName(hsaPerson.getEfterNamn());
 
         for (String legYrkesGrp : hsaPerson.getLegitimeradeYrkesgrupper()) {
             PaTitleType paTitle = new PaTitleType();
