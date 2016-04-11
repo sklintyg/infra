@@ -26,7 +26,7 @@
   <parent>
     <groupId>se.inera.intyg.common</groupId>
     <artifactId>common-pom</artifactId>
-    <version>1.0.22</version>
+    <version>1.0.23</version>
   </parent>
 
   <artifactId>common</artifactId>
@@ -37,7 +37,7 @@
 
   <properties>
     <!-- Schemas -->
-    <rivta-clinicalprocess.version>2.0.RC4.2</rivta-clinicalprocess.version>
+    <rivta-clinicalprocess.version>2.0.RC5.0</rivta-clinicalprocess.version>
     <rivta-insuranceprocess.version>3.1.0.1</rivta-insuranceprocess.version>
     <rivta-itintegration-monitoring.version>1.0.0.1</rivta-itintegration-monitoring.version>
     <rivta-ehr-logstore.version>1.2.1</rivta-ehr-logstore.version>
