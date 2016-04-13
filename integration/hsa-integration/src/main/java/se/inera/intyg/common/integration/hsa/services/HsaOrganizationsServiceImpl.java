@@ -19,14 +19,24 @@
 
 package se.inera.intyg.common.integration.hsa.services;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.xml.ws.WebServiceException;
+
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.common.integration.hsa.model.AbstractVardenhet;
+
 import se.inera.intyg.common.integration.hsa.client.AuthorizationManagementService;
 import se.inera.intyg.common.integration.hsa.client.OrganizationUnitService;
+import se.inera.intyg.common.integration.hsa.model.AbstractVardenhet;
 import se.inera.intyg.common.integration.hsa.model.Mottagning;
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
@@ -42,11 +52,6 @@ import se.riv.infrastructure.directory.v1.AddressType;
 import se.riv.infrastructure.directory.v1.CommissionType;
 import se.riv.infrastructure.directory.v1.CredentialInformationType;
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
-
-import javax.xml.ws.WebServiceException;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Provides HSA organization services through TJK over NTjP.

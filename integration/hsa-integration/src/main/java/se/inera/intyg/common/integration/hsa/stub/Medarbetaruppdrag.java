@@ -19,8 +19,9 @@
 
 package se.inera.intyg.common.integration.hsa.stub;
 
-import static java.util.Arrays.asList;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * @author andreaskaltenbach
@@ -28,6 +29,7 @@ import java.util.List;
 public class Medarbetaruppdrag {
 
     public static final String VARD_OCH_BEHANDLING = "Vård och behandling";
+    public static final String STATISTIK = "Statistik";
 
     private String hsaId;
     private List<Uppdrag> uppdrag;

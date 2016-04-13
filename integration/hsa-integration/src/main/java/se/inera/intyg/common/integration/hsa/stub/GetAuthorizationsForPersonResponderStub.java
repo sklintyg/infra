@@ -49,7 +49,7 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
 
         if (serviceStub.getMedarbetaruppdrag().size() > 0) {
             for (Medarbetaruppdrag miu : serviceStub.getMedarbetaruppdrag()) {
-                if (miu.getHsaId().equals(parameters.getPersonHsaId())) {
+                if (miu.getHsaId().equalsIgnoreCase(parameters.getPersonHsaId())) {
                     response.getCredentialInformation().addAll(miuInformationTypesForEnhetsIds(miu, parameters.getPersonHsaId()));
                 }
             }
