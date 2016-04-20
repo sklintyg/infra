@@ -19,11 +19,7 @@
 
 package se.inera.intyg.common.integration.hsa.services;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.xml.ws.WebServiceException;
@@ -36,22 +32,15 @@ import org.springframework.stereotype.Service;
 
 import se.inera.intyg.common.integration.hsa.client.AuthorizationManagementService;
 import se.inera.intyg.common.integration.hsa.client.OrganizationUnitService;
-import se.inera.intyg.common.integration.hsa.model.AbstractVardenhet;
-import se.inera.intyg.common.integration.hsa.model.Mottagning;
-import se.inera.intyg.common.integration.hsa.model.Vardenhet;
-import se.inera.intyg.common.integration.hsa.model.Vardgivare;
+import se.inera.intyg.common.integration.hsa.model.*;
 import se.inera.intyg.common.integration.hsa.stub.Medarbetaruppdrag;
+import se.inera.intyg.common.support.common.util.StringUtil;
 import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponseType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersResponseType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMemberType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.*;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.GetHealthCareUnitResponseType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitResponseType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
-import se.riv.infrastructure.directory.v1.AddressType;
-import se.riv.infrastructure.directory.v1.CommissionType;
-import se.riv.infrastructure.directory.v1.CredentialInformationType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+import se.riv.infrastructure.directory.v1.*;
 
 /**
  * Provides HSA organization services through TJK over NTjP.
@@ -172,13 +161,15 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         Vardenhet vardenhet = new Vardenhet(ct.getHealthCareUnitHsaId(), ct.getHealthCareUnitName());
         vardenhet.setStart(ct.getHealthCareUnitStartDate());
         vardenhet.setEnd(ct.getHealthCareUnitEndDate());
+        AgandeForm agandeForm = getAgandeForm(ct.getHealthCareProviderOrgNo());
+        vardenhet.setAgandeForm(agandeForm);
 
         // I don't like this, but we need to do an extra call to
         // infrastructure:directory:organization:getUnit for address related stuff.
         updateWithContactInformation(vardenhet, getUnit(vardenhet.getId()));
 
         getHealthCareUnitMembers(vardenhet).ifPresent(response -> {
-            attachMottagningar(vardenhet, response.getHealthCareUnitMembers());
+            attachMottagningar(vardenhet, response.getHealthCareUnitMembers(), agandeForm);
             setArbetsplatskod(vardenhet, response.getHealthCareUnitMembers());
         });
 
@@ -210,7 +201,22 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         return !(toDate != null && now.isAfter(toDate));
     }
 
-    private void attachMottagningar(Vardenhet vardenhet, final HealthCareUnitMembersType healthCareUnitMembers) {
+    private AgandeForm getAgandeForm(String orgNo) {
+        if (StringUtil.isNullOrEmpty(orgNo)) {
+            LOG.error("orgNo is null or empty, this make us unable to determine if the unit is private or not");
+            return AgandeForm.OKAND;
+        }
+        return orgNo.startsWith("2") ? AgandeForm.OFFENTLIG : AgandeForm.PRIVAT;
+    }
+
+    /**
+     * Used when ownership is not used.
+     */
+    private void attachMottagningar(Vardenhet vardenhet, HealthCareUnitMembersType healthCareUnitMembers) {
+        attachMottagningar(vardenhet, healthCareUnitMembers, AgandeForm.OKAND);
+    }
+
+    private void attachMottagningar(Vardenhet vardenhet, final HealthCareUnitMembersType healthCareUnitMembers, AgandeForm agandeForm) {
         for (HealthCareUnitMemberType member : healthCareUnitMembers.getHealthCareUnitMember()) {
 
             if (!isActive(member.getHealthCareUnitMemberStartDate(), member.getHealthCareUnitMemberEndDate())) {
@@ -231,6 +237,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
             mottagning.setTelefonnummer(member.getHealthCareUnitMemberTelephoneNumber().stream().collect(Collectors.joining(", ")));
             mottagning.setArbetsplatskod(member.getHealthCareUnitMemberPrescriptionCode().size() > 0
                     ? member.getHealthCareUnitMemberPrescriptionCode().get(0) : DEFAULT_ARBETSPLATSKOD);
+            mottagning.setAgandeForm(agandeForm);
 
             vardenhet.getMottagningar().add(mottagning);
             LOG.debug("Attached mottagning '{}' to vardenhet '{}'", mottagning.getId(), vardenhet.getId());
