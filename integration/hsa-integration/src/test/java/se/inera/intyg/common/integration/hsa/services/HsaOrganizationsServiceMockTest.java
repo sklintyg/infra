@@ -32,9 +32,7 @@ import javax.xml.bind.JAXB;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.google.common.base.Charsets;
@@ -83,7 +81,7 @@ public class HsaOrganizationsServiceMockTest {
         when(organizationUnitService.getUnit(UNIT_HSA_ID)).thenReturn(buildGetUnitReponse("EnhetWCTand.xml"));
         Vardenhet vardenhet = service.getVardenhet(UNIT_HSA_ID);
         verify(organizationUnitService).getUnit(UNIT_HSA_ID);
-        assertEquals("Nordic MedTest Bryggaregatan 11", vardenhet.getPostadress()); 
+        assertEquals("Nordic MedTest Bryggaregatan 11", vardenhet.getPostadress());
     }
 
     private GetUnitResponseType buildGetUnitReponse(String filename) throws IOException {

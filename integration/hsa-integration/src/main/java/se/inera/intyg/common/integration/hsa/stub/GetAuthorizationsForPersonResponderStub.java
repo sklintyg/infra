@@ -24,8 +24,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import se.inera.intyg.common.integration.hsa.model.Vardenhet;
-import se.inera.intyg.common.integration.hsa.model.Vardgivare;
+import se.inera.intyg.common.integration.hsa.model.*;
 import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponderInterface;
 import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponseType;
 import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonType;
@@ -43,7 +42,8 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
     private HsaServiceStub serviceStub;
 
     @Override
-    public GetCredentialsForPersonIncludingProtectedPersonResponseType getCredentialsForPersonIncludingProtectedPerson(String logicalAddress, GetCredentialsForPersonIncludingProtectedPersonType parameters) {
+    public GetCredentialsForPersonIncludingProtectedPersonResponseType getCredentialsForPersonIncludingProtectedPerson(String logicalAddress,
+            GetCredentialsForPersonIncludingProtectedPersonType parameters) {
         GetCredentialsForPersonIncludingProtectedPersonResponseType response = new GetCredentialsForPersonIncludingProtectedPersonResponseType();
         response.setResultCode(ResultCodeEnum.OK);
 
@@ -57,7 +57,6 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
 
         return response;
     }
-
 
     private List<CredentialInformationType> miuInformationTypesForEnhetsIds(Medarbetaruppdrag medarbetaruppdrag, String hsaPersonId) {
         List<CredentialInformationType> informationTypes = new ArrayList<>();
@@ -85,7 +84,7 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
 
                             miuInfo.setHealthCareProviderHsaId(vardgivare.getId());
                             miuInfo.setHealthCareProviderName(vardgivare.getNamn());
-
+                            miuInfo.setHealthCareProviderOrgNo(AgandeForm.PRIVAT.equals(enhet.getAgandeForm()) ? "5555555555" : "2222222222");
 
                             cit.getCommission().add(miuInfo);
                         }
