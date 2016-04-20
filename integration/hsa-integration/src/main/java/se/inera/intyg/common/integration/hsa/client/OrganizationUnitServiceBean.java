@@ -38,8 +38,6 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitT
  *
  * The class does _not_ perform any response or error checking. In this case this is entirely up to the caller.
  *
- *
- *
  * Created by eriklupander on 2015-12-03.
  */
 @Service

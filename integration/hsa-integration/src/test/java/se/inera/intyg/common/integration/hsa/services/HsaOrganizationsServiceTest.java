@@ -20,39 +20,27 @@
 package se.inera.intyg.common.integration.hsa.services;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import se.inera.intyg.common.integration.hsa.services.HsaOrganizationsService;
-import se.inera.intyg.common.util.integration.integration.json.CustomObjectMapper;
-import se.inera.intyg.common.integration.hsa.model.Mottagning;
-import se.inera.intyg.common.integration.hsa.model.Vardenhet;
-import se.inera.intyg.common.integration.hsa.model.Vardgivare;
-import se.inera.intyg.common.integration.hsa.stub.HsaServiceStub;
-import se.inera.intyg.common.integration.hsa.stub.Medarbetaruppdrag;
-
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+
+import se.inera.intyg.common.integration.hsa.model.*;
+import se.inera.intyg.common.integration.hsa.stub.HsaServiceStub;
+import se.inera.intyg.common.integration.hsa.stub.Medarbetaruppdrag;
+import se.inera.intyg.common.util.integration.integration.json.CustomObjectMapper;
 
 /**
  * @author andreaskaltenbach
@@ -94,6 +82,7 @@ public class HsaOrganizationsServiceTest {
 
         Vardenhet enhet = vg.getVardenheter().get(0);
         assertEquals("centrum-norr", enhet.getId());
+        assertEquals(AgandeForm.PRIVAT, enhet.getAgandeForm());
         assertEquals("Vårdcentrum i Norr", enhet.getNamn());
         assertTrue(enhet.getMottagningar().isEmpty());
         assertEquals("arbetsplatskod_centrum-norr", enhet.getArbetsplatskod());
@@ -121,6 +110,30 @@ public class HsaOrganizationsServiceTest {
         Vardgivare vg = vardgivare.get(0);
         Vardenhet enhet = vg.getVardenheter().get(0);
         assertEquals("arbetsplatskod_centrum-norr", enhet.getArbetsplatskod());
+    }
+
+    @Test
+    public void isPrivateForPrivateUnit() {
+        addMedarbetaruppdrag(PERSON_HSA_ID, "vastmanland", asList(CENTRUM_NORR));
+
+        List<Vardgivare> vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID);
+        assertEquals(1, vardgivare.size());
+
+        Vardgivare vg = vardgivare.get(0);
+        Vardenhet enhet = vg.getVardenheter().get(0);
+        assertEquals(AgandeForm.PRIVAT, enhet.getAgandeForm());
+    }
+
+    @Test
+    public void isPrivateForNonPrivateUnit() {
+        addMedarbetaruppdrag(PERSON_HSA_ID, "vastmanland", asList(CENTRUM_VAST));
+
+        List<Vardgivare> vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID);
+        assertEquals(1, vardgivare.size());
+
+        Vardgivare vg = vardgivare.get(0);
+        Vardenhet enhet = vg.getVardenheter().get(0);
+        assertEquals(AgandeForm.OFFENTLIG, enhet.getAgandeForm());
     }
 
     @Test

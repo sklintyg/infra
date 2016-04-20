@@ -50,7 +50,7 @@ public interface HsaOrganizationsService {
     String getVardgivareOfVardenhet(String vardenhetHsaId);
 
     /**
-     * Returns a fully recursively populated Vardenhet for the specified.
+     * Returns a fully recursively populated Vardenhet for the specified hsaId.
      * @param vardenhetHsaId
      *      HsaId of the vårdenhet.
      * @return
