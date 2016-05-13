@@ -68,6 +68,10 @@
     <module>services</module>
     <module>loggtjanst/log-messages</module>
     <module>loggtjanst/loggtjanst-stub</module>
+
+    <module>security/common</module>
+    <module>security/authorities</module>
+    <module>security/siths</module>
   </modules>
 
   <scm>
