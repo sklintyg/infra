@@ -7,3 +7,5 @@
 node
 node_modules
 target
+build
+.gradle

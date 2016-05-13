@@ -64,9 +64,6 @@ The HSA-integration requires the following properties being set:
 - infrastructure.directory.organization.gethealthcareunit.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/organization/GetHealthCareUnit/1/rivtabp21
 - infrastructure.directory.organization.gethealthcareunitmembers.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/organization/GetHealthCareUnitMembers/1/rivtabp21
 - infrastructure.directory.employee.getemployee.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/employee/GetEmployeeIncludingProtectedPerson/1/rivtabp21
-- infrastructure.directory.authorizationmanagement.pingforconfiguration.endpoint.url=http://localhost:9088/services/hsa-authorizationmanagement-ping
-- infrastructure.directory.employee.pingforconfiguration.endpoint.url=http://localhost:9088/services/hsa-employee-ping
-- infrastructure.directory.organization.pingforconfiguration.endpoint.url=http://localhost:9088/services/hsa-organization-ping
 - infrastructure.directory.logicalAddress=SE165565594230-1000
   
 - ntjp.ws.certificate.file=${config.dir}/certifikat/[our cert]
