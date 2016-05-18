@@ -30,15 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This SAML-assertion is based on the one described in the document
- * sakerhetstjanster_sambi_saml_profil_1.03.pdf.
- *
- * @author andreaskaltenbach, nikpet
+ * This SAML-assertion is adapted for "uppdragslös inloggning", specifying only employeeHsaId.
  */
 @SuppressWarnings("FieldMayBeFinal")
-public class CommonSakerhetstjanstAssertion {
-
-
+public class BaseSakerhetstjanstAssertion {
 
     // Användarens HSA-ID.
     public static final String HSA_ID_ATTRIBUTE = "http://sambi.se/attributes/1/employeeHsaId";
@@ -52,7 +47,7 @@ public class CommonSakerhetstjanstAssertion {
 
 
     /* Constructor taking an Assertion object */
-    public CommonSakerhetstjanstAssertion(Assertion assertion) {
+    public BaseSakerhetstjanstAssertion(Assertion assertion) {
         if (assertion.getAttributeStatements() != null) {
             for (AttributeStatement attributeStatement : assertion.getAttributeStatements()) {
                 extractAttributes(attributeStatement.getAttributes());
@@ -66,8 +61,8 @@ public class CommonSakerhetstjanstAssertion {
 
     // - - - - -  Static - - - - -
 
-    public static CommonSakerhetstjanstAssertion getAssertion(SAMLCredential credential) {
-        return new CommonSakerhetstjanstAssertion(credential.getAuthenticationAssertion());
+    public static BaseSakerhetstjanstAssertion getAssertion(SAMLCredential credential) {
+        return new BaseSakerhetstjanstAssertion(credential.getAuthenticationAssertion());
     }
 
 

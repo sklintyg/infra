@@ -39,6 +39,7 @@ import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.web.PortResolverImpl;
 import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 import org.springframework.security.web.savedrequest.SavedRequest;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
@@ -55,6 +56,7 @@ import se.inera.intyg.common.security.common.model.Privilege;
 import se.inera.intyg.common.security.common.model.Role;
 import se.inera.intyg.common.security.common.model.UserOrigin;
 import se.inera.intyg.common.security.common.model.UserOriginType;
+import se.inera.intyg.common.security.common.service.AuthenticationLogger;
 import se.inera.intyg.common.security.common.service.CommonFeatureService;
 import se.inera.intyg.common.security.exception.HsaServiceException;
 import se.inera.intyg.common.security.exception.MissingHsaEmployeeInformation;
@@ -62,19 +64,20 @@ import se.inera.intyg.common.security.exception.MissingMedarbetaruppdragExceptio
 import se.riv.infrastructure.directory.v1.PaTitleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.transform.stream.StreamSource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -82,7 +85,7 @@ import static org.mockito.Mockito.when;
  * @author andreaskaltenbach
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CommonUserDetailsServiceTest extends CommonAuthoritiesConfigurationTestSetup {
+public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTestSetup {
 
     private static final String PERSONAL_HSAID = "TSTNMT2321000156-1024";
 
@@ -93,7 +96,11 @@ public class CommonUserDetailsServiceTest extends CommonAuthoritiesConfiguration
     private static final String TITLE_HEAD_DOCTOR = "Överläkare";
 
     @InjectMocks
-    private CommonUserDetailsService userDetailsService = new CommonUserDetailsService();
+    private BaseUserDetailsService userDetailsService = new BaseUserDetailsService() {
+        protected String getDefaultRole() {
+            return AuthoritiesConstants.ROLE_ADMIN;
+        }
+    };
 
     @Mock
     private HsaOrganizationsService hsaOrganizationsService;
@@ -102,18 +109,16 @@ public class CommonUserDetailsServiceTest extends CommonAuthoritiesConfiguration
     private HsaPersonService hsaPersonService;
 
     @Mock
-    private CommonFeatureService webcertFeatureService;
+    private CommonFeatureService commonFeatureService;
 
-   // @Mock
-   // private MonitoringLogService monitoringLogService;
+    @Mock
+    private UserOrigin userOrigin;
+
+    @Mock
+    private AuthenticationLogger monitoringLogService;
 
     @Mock
     private CommonAuthoritiesResolver authoritiesResolver;
-
-
-    private Vardgivare vardgivare;
-    private UserOrigin webCertUserOrigin;
-
 
     @BeforeClass
     public static void bootstrapOpenSaml() throws Exception {
@@ -126,14 +131,12 @@ public class CommonUserDetailsServiceTest extends CommonAuthoritiesConfiguration
         MockHttpServletRequest request = mockHttpServletRequest("/any/path");
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
+        when(userOrigin.resolveOrigin(any())).thenReturn(UserOriginType.NORMAL.name());
+
         when(hsaPersonService.getHsaPersonInfo(anyString())).thenReturn(Collections.emptyList());
+        ReflectionTestUtils.setField(userDetailsService, "userOrigin", Optional.of(userOrigin));
+        ReflectionTestUtils.setField(userDetailsService, "commonFeatureService", Optional.of(commonFeatureService));
         userDetailsService.setCommonAuthoritiesResolver(AUTHORITIES_RESOLVER);
-        userDetailsService.setUserOrigin(new UserOrigin() {
-            @Override
-            public String resolveOrigin(HttpServletRequest request) {
-                return UserOriginType.NORMAL.name();
-            }
-        });
     }
 
     @Test
@@ -293,7 +296,7 @@ public class CommonUserDetailsServiceTest extends CommonAuthoritiesConfiguration
     }
 
     private void setupCallToAuthorizedEnheterForHosPerson() {
-        vardgivare = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
+        Vardgivare vardgivare = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
         vardgivare.getVardenheter().add(new Vardenhet(ENHET_HSAID_1, "VårdEnhet2A"));
         vardgivare.getVardenheter().add(new Vardenhet(ENHET_HSAID_2, "Vårdcentralen"));
 
@@ -314,7 +317,7 @@ public class CommonUserDetailsServiceTest extends CommonAuthoritiesConfiguration
         Set<String> availableFeatures = new TreeSet<>();
         availableFeatures.add("feature1");
         availableFeatures.add("feature2");
-        when(webcertFeatureService.getActiveFeatures()).thenReturn(availableFeatures);
+        when(commonFeatureService.getActiveFeatures()).thenReturn(availableFeatures);
     }
 
 }

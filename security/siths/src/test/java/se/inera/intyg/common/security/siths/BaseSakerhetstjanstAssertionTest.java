@@ -37,7 +37,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author erikl
  */
-public class CommonSakerhetstjanstAssertionTest {
+public class BaseSakerhetstjanstAssertionTest {
 
     private static Assertion assertionWithEnhet;
 
@@ -57,7 +57,7 @@ public class CommonSakerhetstjanstAssertionTest {
     @Test
     public void testAssertionWithEnhetAndVardgivare() {
 
-        CommonSakerhetstjanstAssertion assertion = new CommonSakerhetstjanstAssertion(assertionWithEnhet);
+        BaseSakerhetstjanstAssertion assertion = new BaseSakerhetstjanstAssertion(assertionWithEnhet);
         assertEquals("TSTNMT2321000156-1024", assertion.getHsaId());
     }
 

@@ -22,19 +22,22 @@ package se.inera.intyg.common.integration.hsa.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.xml.ws.WebServiceException;
+
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import se.inera.intyg.common.integration.hsa.stub.Medarbetaruppdrag;
 import se.inera.intyg.common.integration.hsa.client.AuthorizationManagementService;
 import se.inera.intyg.common.integration.hsa.client.EmployeeService;
+import se.inera.intyg.common.integration.hsa.stub.Medarbetaruppdrag;
 import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponseType;
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonResponseType;
 import se.riv.infrastructure.directory.v1.CommissionType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
+import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 
 /**
  * Provides person related services using TJK over NTjP.
@@ -87,5 +90,20 @@ public class HsaPersonServiceImpl implements HsaPersonService {
         LOG.debug("Person has {} MIUs on unit '{}'", filteredMuisOnUnit.size(), hosPersonHsaId);
 
         return filteredMuisOnUnit;
+    }
+
+    @Override
+    public List<String> getSystemRoles(String employeeHsaId) {
+        GetCredentialsForPersonIncludingProtectedPersonResponseType response = authorizationManagementService.getAuthorizationsForPerson(employeeHsaId, null, null);
+        if (response != null && response.getResultCode() == ResultCodeEnum.OK && response.getCredentialInformation() != null) {
+            return response.getCredentialInformation().stream()
+                    .flatMap(cit -> cit.getHsaSystemRole().stream())
+                    .map(systemRole -> systemRole.getRole())
+                    .distinct()
+                    .collect(Collectors.toList());
+        } else {
+            LOG.error("getSystemRoles failed with code '{}' and message '{}'", response.getResultCode().value(), response.getResultText());
+            throw new WebServiceException(response.getResultText());
+        }
     }
 }

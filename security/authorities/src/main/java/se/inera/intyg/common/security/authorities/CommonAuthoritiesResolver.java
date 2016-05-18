@@ -35,7 +35,6 @@ import se.inera.intyg.common.security.common.model.Title;
 import se.inera.intyg.common.security.common.model.TitleCode;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,18 +53,16 @@ public class CommonAuthoritiesResolver {
 
     private static final Logger LOG = LoggerFactory.getLogger(CommonAuthoritiesResolver.class);
 
-
     @Autowired
     private AuthoritiesConfigurationLoader configurationLoader;
 
     // ~ API
     // ======================================================================================
 
-    public Role resolveRole(IntygUser user, List<PersonInformationType> personInfo, HttpServletRequest request) {
+    public Role resolveRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole) {
         Assert.notNull(user, "Argument 'user' cannot be null");
-        Assert.notNull(request, "Argument 'request' cannot be null");
 
-        Role role = lookupUserRole(user, personInfo);
+        Role role = lookupUserRole(user, personInfo, defaultRole);
         return role;
     }
 
@@ -147,7 +144,7 @@ public class CommonAuthoritiesResolver {
      *
      * @return the resolved role
      */
-    Role lookupUserRole(IntygUser user, List<PersonInformationType> personInfo) {
+    Role lookupUserRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole) {
         Role role;
         List<String> legitimeradeYrkesgrupper = extractLegitimeradeYrkesgrupper(personInfo);
         // 1. Bestäm användarens roll utefter titel som kommer från NÅGOT ANNAT ÄN SAML.
@@ -177,7 +174,9 @@ public class CommonAuthoritiesResolver {
         }
 
         // 6. Användaren är en vårdadministratör inom landstinget
-        return fnRole.apply(AuthoritiesConstants.ROLE_ADMIN);
+        //return fnRole.apply(AuthoritiesConstants.ROLE_ADMIN);
+        role = fnRole.apply(defaultRole);
+        return role;
     }
 
     /** Lookup user role by looking into 'legitimerade yrkesgrupper'.

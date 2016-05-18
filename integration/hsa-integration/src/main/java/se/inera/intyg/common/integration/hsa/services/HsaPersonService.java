@@ -19,14 +19,16 @@
 
 package se.inera.intyg.common.integration.hsa.services;
 
-import java.util.List;
-
 import se.riv.infrastructure.directory.v1.CommissionType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
+
+import java.util.List;
 
 public interface HsaPersonService {
 
     List<PersonInformationType> getHsaPersonInfo(String personHsaId);
 
     List<CommissionType> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, final String unitHsaId);
+
+    List<String> getSystemRoles(String employeeHsaId);
 }

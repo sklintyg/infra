@@ -12,10 +12,12 @@ import se.inera.intyg.common.security.authorities.bootstrap.AuthoritiesConfigura
 import se.inera.intyg.common.security.common.model.AuthoritiesConstants;
 import se.inera.intyg.common.security.common.model.Role;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -130,4 +132,44 @@ public class AuthoritiesResolverTest {
             }
         }
     }
+
+    @Test
+    public void lookupUserRoleByTitleCodeAndGroupPrescriptionCodeNoMatchReturnsNull() {
+        // Act
+        Role role = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(new ArrayList<String>(), new ArrayList<String>());
+
+        // Assert
+        assertNull(role);
+
+    }
+
+    @Test
+    public void lookupUserRoleByTitleCodeAndGroupPrescriptionCodeCombination() {
+        // Arrange
+        List<String> befattningsKoder = Arrays.asList("204010", "203090", "204090");
+        List<String> gruppforskrivarKoder = Arrays.asList("9300005", "9100009");
+
+        // Act
+        Role role = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningsKoder, gruppforskrivarKoder);
+
+        // Assert
+        assertEquals(AuthoritiesConstants.ROLE_LAKARE, role.getName());
+
+    }
+
+    // FIX THIS or MOVE TO REHAB!!!
+//    @Test
+//    public void testResolveRehabkoordinatorRole() throws Exception {
+//        // Arrange
+//        BaseSakerhetstjanstAssertion sa = Mockito.mock(BaseSakerhetstjanstAssertion.class);
+//
+//        // Act
+//        Role role = authoritiesResolver.lookupUserRole(sa, new ArrayList<>());
+//
+//        // Verify
+//        assertEquals(AuthoritiesConstants.ROLE_KOORDINATOR, role.getName());
+//    }
+
+
+
 }

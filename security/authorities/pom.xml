@@ -33,7 +33,7 @@
   <artifactId>security-authorities</artifactId>
   <packaging>jar</packaging>
 
-  <name>Common (Security SITHS)</name>
+  <name>Common (Security Authorities)</name>
 
   <properties>
 

@@ -19,18 +19,21 @@
 
 package se.inera.intyg.common.integration.hsa.stub;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
-import se.inera.intyg.common.integration.hsa.model.*;
+import se.inera.intyg.common.integration.hsa.model.AgandeForm;
+import se.inera.intyg.common.integration.hsa.model.Vardenhet;
+import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponderInterface;
 import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponseType;
 import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonType;
 import se.riv.infrastructure.directory.v1.CommissionType;
 import se.riv.infrastructure.directory.v1.CredentialInformationType;
+import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2015-12-03.
@@ -63,6 +66,7 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
         CredentialInformationType cit = new CredentialInformationType();
         cit.setPersonHsaId(hsaPersonId);
 
+
         for (Vardgivare vardgivare : serviceStub.getVardgivare()) {
             for (Vardenhet enhet : vardgivare.getVardenheter()) {
                 if (enhet.getId().endsWith("-finns-ej")) {
@@ -73,6 +77,10 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
                         continue;
                     }
                     if (uppdrag.getEnhet().equals(enhet.getId())) {
+
+                        // NYTT, lägg på systemRoles från stubbens data ifall sådan finns tillgänglig.
+                        addSystemRole(cit, uppdrag);
+
                         for (String andamal : uppdrag.getAndamal()) {
                             CommissionType miuInfo = new CommissionType();
                             miuInfo.setCommissionHsaId(medarbetaruppdrag.getHsaId());
@@ -95,5 +103,23 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
         }
         informationTypes.add(cit);
         return informationTypes;
+    }
+
+    /**
+     * If our user has defined systemRole(s) in the stub, add them here to the credential.
+
+     * @param cit
+     * @param uppdrag
+     */
+    private void addSystemRole(CredentialInformationType cit, Medarbetaruppdrag.Uppdrag uppdrag) {
+        if (uppdrag.getSystemRoles() != null) {
+            cit.getHsaSystemRole().addAll(uppdrag.getSystemRoles().stream().map((String s) ->
+            {
+                HsaSystemRoleType systemRole = new HsaSystemRoleType();
+                systemRole.setRole(s);
+                return systemRole;
+            }).collect(Collectors.toList()));
+        }
+
     }
 }

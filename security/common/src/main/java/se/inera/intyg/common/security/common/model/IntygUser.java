@@ -67,7 +67,8 @@ public class IntygUser implements UserDetails {
 
 
     /** The sole constructor. */
-    public IntygUser() {
+    public IntygUser(String employeeHsaId) {
+        this.hsaId = employeeHsaId;
     }
 
 

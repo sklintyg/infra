@@ -23,6 +23,7 @@ import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
@@ -52,10 +53,14 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(AuthoritiesConfigurationLoader.class);
 
+    @Value("${authorities.configuration.file}")
     private String authoritiesConfigurationFile;
 
     private AuthoritiesConfiguration authoritiesConfiguration;
 
+    private AuthoritiesConfigurationLoader() {
+         // Uses @Value injected authoritiesConfigurationFile
+    }
 
     /**
      * Constructor taking a path to the authorities configuration file.
@@ -91,7 +96,7 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
             uri = resource.getURI();
             authoritiesConfiguration = loadConfiguration(Paths.get(resource.getURI()));
         } catch (IOException ioe) {
-           throw new AuthoritiesException(format("Could not load authorities configuration file %s", uri.getPath()), ioe);
+           throw new AuthoritiesException(format("Could not load authorities configuration file %s", uri != null ? uri.getPath() : authoritiesConfiguration), ioe);
         }
 
     }
