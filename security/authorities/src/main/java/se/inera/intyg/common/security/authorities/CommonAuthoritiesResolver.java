@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import se.inera.intyg.common.integration.hsa.util.HsaAttributeExtractor;
 import se.inera.intyg.common.security.authorities.bootstrap.AuthoritiesConfigurationLoader;
 import se.inera.intyg.common.security.common.model.AuthoritiesConstants;
 import se.inera.intyg.common.security.common.model.IntygUser;
@@ -35,15 +36,11 @@ import se.inera.intyg.common.security.common.model.Title;
 import se.inera.intyg.common.security.common.model.TitleCode;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Created by Magnus Ekstrand on 20/11/15.
@@ -146,7 +143,7 @@ public class CommonAuthoritiesResolver {
      */
     Role lookupUserRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole) {
         Role role;
-        List<String> legitimeradeYrkesgrupper = extractLegitimeradeYrkesgrupper(personInfo);
+        List<String> legitimeradeYrkesgrupper = new HsaAttributeExtractor().extractLegitimeradeYrkesgrupper(personInfo);
         // 1. Bestäm användarens roll utefter titel som kommer från NÅGOT ANNAT ÄN SAML.
         //    Titel ska vara detsamma som legitimerade yrkesgrupper.
         role = lookupUserRoleByLegitimeradeYrkesgrupper(Arrays.asList(user.getTitel()));
@@ -173,8 +170,7 @@ public class CommonAuthoritiesResolver {
             return role;
         }
 
-        // 6. Användaren är en vårdadministratör inom landstinget
-        //return fnRole.apply(AuthoritiesConstants.ROLE_ADMIN);
+        // 6. Användaren skall få fallback-rollen, t.ex. en vårdadministratör eller rehabkoordinator inom landstinget.
         role = fnRole.apply(defaultRole);
         return role;
     }
@@ -259,19 +255,19 @@ public class CommonAuthoritiesResolver {
 
     // ~ Private methods
     // ======================================================================================
-
-    private List<String> extractLegitimeradeYrkesgrupper(List<PersonInformationType> hsaUserTypes) {
-        Set<String> lygSet = new TreeSet<>();
-
-        for (PersonInformationType userType : hsaUserTypes) {
-            if (userType.getPaTitle() != null) {
-                List<String> hsaTitles = userType.getPaTitle().stream().map(paTitle -> paTitle.getPaTitleName()).collect(Collectors.toList());
-                lygSet.addAll(hsaTitles);
-            }
-        }
-
-        return new ArrayList<>(lygSet);
-    }
+//
+//    private List<String> extractLegitimeradeYrkesgrupper(List<PersonInformationType> hsaUserTypes) {
+//        Set<String> lygSet = new TreeSet<>();
+//
+//        for (PersonInformationType userType : hsaUserTypes) {
+//            if (userType.getPaTitle() != null) {
+//                List<String> hsaTitles = userType.getPaTitle().stream().map(paTitle -> paTitle.getPaTitleName()).collect(Collectors.toList());
+//                lygSet.addAll(hsaTitles);
+//            }
+//        }
+//
+//        return new ArrayList<>(lygSet);
+//    }
 
 
 

@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
  */
 public class GetAuthorizationsForPersonResponderStub implements GetCredentialsForPersonIncludingProtectedPersonResponderInterface {
 
-    public static final String DEFAULT_ARBETSPLATSKOD = "0000000";
     @Autowired
     private HsaServiceStub serviceStub;
 

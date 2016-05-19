@@ -77,21 +77,25 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
     @Autowired
     private HsaPersonService hsaPersonService;
 
-    // TODO this needs to be fixed!!!
     @Autowired
     private AuthenticationLogger monitoringLogService;
 
     protected CommonAuthoritiesResolver commonAuthoritiesResolver;
 
-    @Autowired
-    public void setCommonAuthoritiesResolver(CommonAuthoritiesResolver commonAuthoritiesResolver) {
-        this.commonAuthoritiesResolver = commonAuthoritiesResolver;
-    }
-
-    private DefaultUserDetailsHelper defaultUserDetailsHelper = new DefaultUserDetailsHelper();
+    private DefaultUserDetailsDecorator defaultUserDetailsDecorator = new DefaultUserDetailsDecorator();
     // ~ API
     // =====================================================================================
 
+    /**
+     * Entry-point method for building a user principal given a SAMLCredential.
+     *
+     * Implementing subclasses may override this method, but are recommended to _not_ do so. Instead overriding
+     * {@link BaseUserDetailsService#buildUserPrincipal} and/or
+     * {@link BaseUserDetailsService#createIntygUser(String, String, List, List)} is the recommended way.
+     *
+     * @param credential
+     * @return
+     */
     @Override
     public Object loadUserBySAML(SAMLCredential credential) {
 
@@ -100,17 +104,11 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         }
 
         LOG.info("Start user authentication...");
-
-        if (LOG.isDebugEnabled()) {
-            // I dont want to read this object every time.
-            String str = ToStringBuilder.reflectionToString(credential);
-            LOG.debug("SAML credential is:\n{}", str);
-        }
+        logCredential(credential);
 
         try {
             // Create the user
-            Object principal = createUser(credential);
-
+            Object principal = buildUserPrincipal(credential);
             LOG.info("End user authentication...SUCCESS");
             return principal;
 
@@ -119,9 +117,38 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
             if (e instanceof AuthenticationException) {
                 throw e;
             }
-
             LOG.error("Error building user {}, failed with message {}", getAssertion(credential).getHsaId(), e.getMessage());
             throw new GenericAuthenticationException(getAssertion(credential).getHsaId(), e);
+        }
+    }
+
+    /**
+     * Method responsible to create the actual Principal given a SAMLCredential.
+     *
+     * Note that this default implementation only uses employeeHsaId and authnMethod from a supplied SAML ticket.
+     *
+     * Implementing subclasses should override this method, call super.buildUserPrincipal(..) and then dececorate their own Principal based
+     * on the {@link IntygUser} returned by this base method.
+     *
+     * @param credential
+     * @return
+     */
+    protected IntygUser buildUserPrincipal(SAMLCredential credential) {
+        LOG.debug("Creating Webcert user object...");
+
+        String employeeHsaId = getAssertion(credential).getHsaId();
+        String authenticationScheme = getAssertion(credential).getAuthenticationScheme();
+        List<PersonInformationType> personInfo = getPersonInfo(employeeHsaId);
+        List<Vardgivare> authorizedVardgivare = getAuthorizedVardgivare(employeeHsaId);
+
+        try {
+            assertEmployee(employeeHsaId, personInfo);
+            assertAuthorizedVardgivare(employeeHsaId, authorizedVardgivare);
+            return createIntygUser(employeeHsaId, authenticationScheme, authorizedVardgivare, personInfo);
+        } catch (MissingMedarbetaruppdragException e) {
+            monitoringLogService.logMissingMedarbetarUppdrag(getAssertion(credential).getHsaId());
+            LOG.error("Missing medarbetaruppdrag. This needs to be fixed!!!");
+            throw e;
         }
     }
 
@@ -157,7 +184,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
     /**
      * Fetches a list of PersonInformationType from HSA using infrastructure:directory:employee:GetEmployeeIncludingProtectedPerson.
      *
-     * Override to provide your own implementation.
+     * Override to provide your own implementation for fetching PersonInfo.
      *
      * @param employeeHsaId
      * @return
@@ -179,45 +206,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         return hsaPersonInfo;
     }
 
-    /**
-     * Class responsible to create the actual Principal given a SAMLCredential.
-     *
-     * Note that this default implementation only uses employeeHsaId and authnMethod from a supplied SAML ticket.
-     *
-     * Implementing subclasses should override this method, call super.createUser and then build their own Principal based
-     * on the {@link IntygUser} returned by this base method.
-     * implementation.
-     *
-     * @param credential
-     * @return
-     */
-    protected IntygUser createUser(SAMLCredential credential) {
-        LOG.debug("Creating Webcert user object...");
 
-        String employeeHsaId = getAssertion(credential).getHsaId();
-        String authenticationScheme = getAssertion(credential).getAuthenticationScheme();
-        List<PersonInformationType> personInfo = getPersonInfo(employeeHsaId);
-        List<Vardgivare> authorizedVardgivare = getAuthorizedVardgivare(employeeHsaId);
-
-        try {
-            assertEmployee(employeeHsaId, personInfo);
-            assertAuthorizedVardgivare(employeeHsaId, authorizedVardgivare);
-            return createIntygUser(employeeHsaId, authenticationScheme, authorizedVardgivare, personInfo);
-        } catch (MissingMedarbetaruppdragException e) {
-            monitoringLogService.logMissingMedarbetarUppdrag(getAssertion(credential).getHsaId());
-            LOG.error("Missing medarbetaruppdrag. This needs to be fixed!!!");
-            throw e;
-        }
-    }
-
-    private void assertEmployee(String employeeHsaId, List<PersonInformationType> personInfo) {
-        if (personInfo == null || personInfo.isEmpty()) {
-            LOG.error("Cannot authorize user with employeeHsaId '{}', no records found for Employee in HoSP.", employeeHsaId);
-            throw new MissingHsaEmployeeInformation(employeeHsaId);
-        }
-    }
-    // ~ Private scope
-    // =====================================================================================
 
     protected void assertAuthorizedVardgivare(String employeeHsaId, List<Vardgivare> authorizedVardgivare) {
         LOG.debug("Assert user has authorization to one or more 'vårdenheter'");
@@ -228,6 +217,22 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         }
     }
 
+    /**
+     * Creates the base {@link IntygUser} instance that implementing subclasses then can decorate on their own. Optionally,
+     * all of the decorate* methods can be individually overridden by implementing subclasses.
+     *
+     * @param employeeHsaId
+     *      hsaId for the authorizing user. From SAML ticket.
+     * @param authenticationScheme
+     *      auth scheme, i.e. what auth method used, typically :siths or :fake
+     * @param authorizedVardgivare
+     *      List of vardgivare fetched from HSA, each entry is actually a tree of vardgivare -> vardenhet(er) -> mottagning(ar)
+     *      where the user has medarbetaruppdrag 'Vård och Behandling'
+     * @param personInfo
+     *      Employee information from HSA.
+     * @return
+     *      A base IntygUser Principal.
+     */
     protected IntygUser createIntygUser(String employeeHsaId, String authenticationScheme, List<Vardgivare> authorizedVardgivare, List<PersonInformationType> personInfo) {
         LOG.debug("Decorate/populate user object with additional information");
 
@@ -242,8 +247,69 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         return intygUser;
     }
 
+
+
+    protected abstract String getDefaultRole();
+
+    protected void decorateIntygUserWithAdditionalInfo(IntygUser intygUser, List<PersonInformationType> hsaPersonInfo) {
+        defaultUserDetailsDecorator.decorateIntygUserWithAdditionalInfo(intygUser, hsaPersonInfo);
+    }
+
+
+    protected void decorateIntygUserWithAuthenticationMethod(IntygUser intygUser, String authenticationScheme) {
+        defaultUserDetailsDecorator.decorateIntygUserWithAuthenticationMethod(intygUser, authenticationScheme);
+    }
+
+    protected void decorateIntygUserWithDefaultVardenhet(IntygUser intygUser) {
+        defaultUserDetailsDecorator.decorateIntygUserWithDefaultVardenhet(intygUser);
+    }
+
+    /**
+     * Note that features are optional.
+     *
+     * @param intygUser
+     */
+    protected void decorateIntygUserWithAvailableFeatures(IntygUser intygUser) {
+        if (commonFeatureService.isPresent()) {
+            Set<String> availableFeatures = commonFeatureService.get().getActiveFeatures();
+            intygUser.setFeatures(availableFeatures);
+        }
+    }
+
+    protected String compileName(String fornamn, String mellanOchEfterNamn) {
+        return defaultUserDetailsDecorator.compileName(fornamn, mellanOchEfterNamn);
+    }
+
+    protected BaseSakerhetstjanstAssertion getAssertion(Assertion assertion) {
+        if (assertion == null) {
+            throw new IllegalArgumentException("Assertion parameter cannot be null");
+        }
+        return new BaseSakerhetstjanstAssertion(assertion);
+    }
+
+    protected HttpServletRequest getCurrentRequest() {
+        return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    }
+
+    // Allow subclasses to use HSA services.
+    protected HsaOrganizationsService getHsaOrganizationsService() {
+        return hsaOrganizationsService;
+    }
+
+    // Allow subclasses to use HSA services.
+    protected HsaPersonService getHsaPersonService() {
+        return hsaPersonService;
+    }
+
+    @Autowired
+    public void setCommonAuthoritiesResolver(CommonAuthoritiesResolver commonAuthoritiesResolver) {
+        this.commonAuthoritiesResolver = commonAuthoritiesResolver;
+    }
+
+    // ~ Private scope
+    // =====================================================================================
     private void decorateIntygUserWithBasicInfo(IntygUser intygUser, List<Vardgivare> authorizedVardgivare, List<PersonInformationType> personInfo, String authenticationScheme) {
-        intygUser.setNamn(compileName(personInfo.get(0).getGivenName() , personInfo.get(0).getMiddleAndSurName()));
+        intygUser.setNamn(compileName(personInfo.get(0).getGivenName(), personInfo.get(0).getMiddleAndSurName()));
         intygUser.setVardgivare(authorizedVardgivare);
 
         // Förskrivarkod is sensitive information, not allowed to store real value
@@ -267,73 +333,18 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         intygUser.setAuthorities(AuthoritiesResolverUtil.toMap(role.getPrivileges()));
     }
 
-    protected abstract String getDefaultRole();
-
-    protected void decorateIntygUserWithAdditionalInfo(IntygUser intygUser, List<PersonInformationType> hsaPersonInfo) {
-        defaultUserDetailsHelper.decorateIntygUserWithAdditionalInfo(intygUser, hsaPersonInfo);
-    }
-
-    protected List<String> extractBefattningar(List<PersonInformationType> hsaPersonInfo) {
-        return defaultUserDetailsHelper.extractBefattningar(hsaPersonInfo);
-    }
-
-    protected String extractTitel(List<PersonInformationType> hsaPersonInfo) {
-        return defaultUserDetailsHelper.extractTitel(hsaPersonInfo);
-    }
-
-    protected void decorateIntygUserWithAuthenticationMethod(IntygUser intygUser, String authenticationScheme) {
-        defaultUserDetailsHelper.decorateIntygUserWithAuthenticationMethod(intygUser, authenticationScheme);
-    }
-
-    protected void decorateIntygUserWithDefaultVardenhet(IntygUser intygUser) {
-        defaultUserDetailsHelper.decorateIntygUserWithDefaultVardenhet(intygUser);
-    }
-
-    protected List<String> extractLegitimeradeYrkesgrupper(List<PersonInformationType> hsaUserTypes) {
-        return defaultUserDetailsHelper.extractLegitimeradeYrkesgrupper(hsaUserTypes);
-    }
-
-    protected List<String> extractSpecialiseringar(List<PersonInformationType> hsaUserTypes) {
-        return defaultUserDetailsHelper.extractSpecialiseringar(hsaUserTypes);
-    }
-
-    protected boolean setFirstVardenhetOnFirstVardgivareAsDefault(IntygUser intygUser) {
-        return defaultUserDetailsHelper.setFirstVardenhetOnFirstVardgivareAsDefault(intygUser);
-    }
-
-    protected String compileName(String fornamn, String mellanOchEfterNamn) {
-        return defaultUserDetailsHelper.compileName(fornamn, mellanOchEfterNamn);
-    }
-
-    protected BaseSakerhetstjanstAssertion getAssertion(Assertion assertion) {
-        if (assertion == null) {
-            throw new IllegalArgumentException("Assertion parameter cannot be null");
-        }
-        return new BaseSakerhetstjanstAssertion(assertion);
-    }
-
-    /**
-     * Note that features are optional.
-     *
-     * @param intygUser
-     */
-    protected void decorateIntygUserWithAvailableFeatures(IntygUser intygUser) {
-        if (commonFeatureService.isPresent()) {
-            Set<String> availableFeatures = commonFeatureService.get().getActiveFeatures();
-            intygUser.setFeatures(availableFeatures);
+    private void assertEmployee(String employeeHsaId, List<PersonInformationType> personInfo) {
+        if (personInfo == null || personInfo.isEmpty()) {
+            LOG.error("Cannot authorize user with employeeHsaId '{}', no records found for Employee in HoSP.", employeeHsaId);
+            throw new MissingHsaEmployeeInformation(employeeHsaId);
         }
     }
 
-    protected HttpServletRequest getCurrentRequest() {
-        return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-    }
-
-    // Allow subclasses to use HSA services.
-    protected HsaOrganizationsService getHsaOrganizationsService() {
-        return hsaOrganizationsService;
-    }
-
-    protected HsaPersonService getHsaPersonService() {
-        return hsaPersonService;
+    private void logCredential(SAMLCredential credential) {
+        if (LOG.isDebugEnabled()) {
+            // I dont want to read this object every time.
+            String str = ToStringBuilder.reflectionToString(credential);
+            LOG.debug("SAML credential is:\n{}", str);
+        }
     }
 }
