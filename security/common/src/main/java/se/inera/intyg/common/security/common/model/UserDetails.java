@@ -21,6 +21,7 @@ package se.inera.intyg.common.security.common.model;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -28,18 +29,6 @@ import java.util.Map;
  *
  */
 public interface UserDetails extends Serializable {
-
-    /**
-     * Returns the authorities (privileges) granted to the user. Cannot return <code>null</code>.
-     *
-     * @return the authorities, sorted by natural key (never <code>null</code>)
-     */
-    Map<String, Privilege> getAuthorities();
-
-    /**
-     * Set the authorities (privileges) granted to a user.
-     */
-    void setAuthorities(Map<String, Privilege> authorities);
 
     /**
      * Returns the name to authenticate the user. Cannot return <code>null</code>.
@@ -56,6 +45,18 @@ public interface UserDetails extends Serializable {
     String getPersonId();
 
     /**
+     * Gets the features the system has put on the user.
+     *
+     * @return the features
+     */
+    Set<String> getFeatures();
+
+    /**
+     * Sets the system wide features on user.
+     */
+    void setFeatures(Set<String> features);
+
+    /**
      * Returns the role granted to the user. Cannot return <code>null</code>.
      *
      * @return the role
@@ -66,5 +67,29 @@ public interface UserDetails extends Serializable {
      * Set the roles granted to a user.
      */
     void setRoles(Map<String, Role> roles);
+
+    /**
+     * Returns the authorities (privileges) granted to the user. Cannot return <code>null</code>.
+     *
+     * @return the authorities, sorted by natural key (never <code>null</code>)
+     */
+    Map<String, Privilege> getAuthorities();
+
+    /**
+     * Set the authorities (privileges) granted to a user.
+     */
+    void setAuthorities(Map<String, Privilege> authorities);
+
+    /**
+     * Get user's origin, i.e his/hers entrance to the system.
+     *
+     * @return the user's origin.
+     */
+    String getOrigin();
+
+    /**
+     * Set user's origin.
+     */
+    void setOrigin(String origin);
 
 }

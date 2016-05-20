@@ -20,10 +20,10 @@
 package se.inera.intyg.common.security.authorities.validation;
 
 import se.inera.intyg.common.security.authorities.AuthoritiesException;
-import se.inera.intyg.common.security.common.model.IntygUser;
 import se.inera.intyg.common.security.common.model.Privilege;
 import se.inera.intyg.common.security.common.model.RequestOrigin;
 import se.inera.intyg.common.security.common.model.Role;
+import se.inera.intyg.common.security.common.model.UserDetails;
 import se.inera.intyg.common.security.common.model.UserOriginType;
 import se.inera.intyg.common.security.common.service.Feature;
 
@@ -41,7 +41,7 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
     /*
      * Instance context state
      */
-    private IntygUser user;
+    private UserDetails user;
     private Optional<String> intygsTypeContext;
 
     /*
@@ -61,7 +61,7 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
 
     private List<String> errors = new ArrayList<String>();
 
-    public AuthExpectationSpecImpl(IntygUser user, Optional<String> intygstyp) {
+    public AuthExpectationSpecImpl(UserDetails user, Optional<String> intygstyp) {
         this.user = user;
         this.intygsTypeContext = intygstyp;
     }

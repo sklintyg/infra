@@ -19,7 +19,7 @@
 
 package se.inera.intyg.common.security.authorities.validation;
 
-import se.inera.intyg.common.security.common.model.IntygUser;
+import se.inera.intyg.common.security.common.model.UserDetails;
 
 import java.util.Optional;
 
@@ -46,7 +46,7 @@ public final class AuthoritiesValidator {
      * @param intygstyp
      * @return
      */
-    public AuthExpectationSpecification given(IntygUser user, String intygstyp) {
+    public AuthExpectationSpecification given(UserDetails user, String intygstyp) {
         return new AuthExpectationSpecImpl(user, Optional.of(intygstyp));
     }
 
@@ -56,7 +56,7 @@ public final class AuthoritiesValidator {
      * @param user
      * @return
      */
-    public AuthExpectationSpecification given(IntygUser user) {
+    public AuthExpectationSpecification given(UserDetails user) {
         return new AuthExpectationSpecImpl(user, Optional.empty());
     }
 

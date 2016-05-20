@@ -22,13 +22,16 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.inera.intyg.common.integration.hsa.model.AuthenticationMethod;
+import se.inera.intyg.common.integration.hsa.model.UserCredentials;
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.common.integration.hsa.util.HsaAttributeExtractor;
 import se.inera.intyg.common.security.common.model.IntygUser;
+import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Provides a number of default implementations for decorating a IntygUser principal with various information extracted
@@ -70,6 +73,12 @@ public class DefaultUserDetailsDecorator {
         LOG.debug("Setting care unit '{}' as default unit on user '{}'", intygUser.getValdVardenhet().getId(), intygUser.getHsaId());
     }
 
+    public void decorateIntygUserWithSystemRoles(IntygUser intygUser, UserCredentials userCredentials) {
+        if (userCredentials != null && userCredentials.getHsaSystemRole() != null) {
+            intygUser.setSystemRoles(userCredentials.getHsaSystemRole().stream().map(HsaSystemRoleType::getRole).collect(Collectors.toList()));
+        }
+    }
+
     public String compileName(String fornamn, String mellanOchEfterNamn) {
 
         StringBuilder sb = new StringBuilder();
@@ -97,4 +106,6 @@ public class DefaultUserDetailsDecorator {
 
         return true;
     }
+
+
 }

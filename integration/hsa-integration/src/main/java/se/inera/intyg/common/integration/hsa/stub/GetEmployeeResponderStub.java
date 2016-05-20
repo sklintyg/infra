@@ -64,6 +64,15 @@ public class GetEmployeeResponderStub implements GetEmployeeIncludingProtectedPe
             person.getSpecialityName().add(spec.getNamn());
         }
 
+        // Lägg in ev. befattningskod såsom en PaTitleType
+        if (hsaPerson.getBefattningsKod() != null) {
+            PaTitleType paTitleType = new PaTitleType();
+            paTitleType.setPaTitleCode(hsaPerson.getBefattningsKod());
+            paTitleType.setPaTitleName(hsaPerson.getBefattningsKod());
+            person.getPaTitle().add(paTitleType);
+        }
+
+
         response.getPersonInformation().add(person);
         response.setResultCode(ResultCodeEnum.OK);
         return response;

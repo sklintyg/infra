@@ -19,28 +19,41 @@
 
 package se.inera.intyg.common.integration.hsa.services;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import javax.xml.ws.WebServiceException;
-
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.common.integration.hsa.client.AuthorizationManagementService;
 import se.inera.intyg.common.integration.hsa.client.OrganizationUnitService;
-import se.inera.intyg.common.integration.hsa.model.*;
+import se.inera.intyg.common.integration.hsa.model.AbstractVardenhet;
+import se.inera.intyg.common.integration.hsa.model.AgandeForm;
+import se.inera.intyg.common.integration.hsa.model.Mottagning;
+import se.inera.intyg.common.integration.hsa.model.UserAuthorizationInfo;
+import se.inera.intyg.common.integration.hsa.model.UserCredentials;
+import se.inera.intyg.common.integration.hsa.model.Vardenhet;
+import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.common.integration.hsa.stub.Medarbetaruppdrag;
 import se.inera.intyg.common.support.common.util.StringUtil;
 import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponseType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.*;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersResponseType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMemberType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.GetHealthCareUnitResponseType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitResponseType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
-import se.riv.infrastructure.directory.v1.*;
+import se.riv.infrastructure.directory.v1.AddressType;
+import se.riv.infrastructure.directory.v1.CommissionType;
+import se.riv.infrastructure.directory.v1.CredentialInformationType;
+import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+
+import javax.xml.ws.WebServiceException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Provides HSA organization services through TJK over NTjP.
@@ -115,8 +128,9 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
     }
 
     @Override
-    public List<Vardgivare> getAuthorizedEnheterForHosPerson(String hosPersonHsaId) {
+    public UserAuthorizationInfo getAuthorizedEnheterForHosPerson(String hosPersonHsaId) {
         List<Vardgivare> vardgivareList = new ArrayList<>();
+        UserCredentials userCredentials = new UserCredentials();
 
         GetCredentialsForPersonIncludingProtectedPersonResponseType response = authorizationManagementService
                 .getAuthorizationsForPerson(hosPersonHsaId, null, null);
@@ -146,14 +160,20 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
                             return vg;
                         }).collect(Collectors.toList()));
+
+                // Add relevant credentialInfo to the userCredz
+                userCredentials.getGroupPrescriptionCode().addAll(credentialInformation.getGroupPrescriptionCode());
+                userCredentials.getPaTitleCode().addAll(credentialInformation.getPaTitleCode());
+                userCredentials.setPersonalPrescriptionCode(credentialInformation.getPersonalPrescriptionCode());
+                userCredentials.getHsaSystemRole().addAll(credentialInformation.getHsaSystemRole());
             }
 
             vardgivareList.sort(Comparator.nullsLast(Comparator.comparing(Vardgivare::getNamn)));
-            return vardgivareList;
+            return new UserAuthorizationInfo(userCredentials, vardgivareList);
         } else {
             LOG.error("getAuthorizationsForPerson failed with code '{}' and message '{}'", response.getResultCode().value(),
                     response.getResultText());
-            return vardgivareList; // Empty
+            return new UserAuthorizationInfo(userCredentials, vardgivareList); // Empty
         }
     }
 

@@ -29,6 +29,4 @@ public interface HsaPersonService {
     List<PersonInformationType> getHsaPersonInfo(String personHsaId);
 
     List<CommissionType> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, final String unitHsaId);
-
-    List<String> getSystemRoles(String employeeHsaId);
 }

@@ -53,6 +53,7 @@ public class IntygUser implements UserDetails {
     protected List<String> befattningar;
     protected List<String> specialiseringar;
     protected List<String> legitimeradeYrkesgrupper;
+    protected List<String> systemRoles;
 
     protected SelectableVardenhet valdVardenhet;
     protected SelectableVardenhet valdVardgivare;
@@ -64,6 +65,7 @@ public class IntygUser implements UserDetails {
     protected Map<String, Role> roles;
     protected Map<String, Privilege> authorities;
     protected String origin;
+
 
 
     /** The sole constructor. */
@@ -217,6 +219,17 @@ public class IntygUser implements UserDetails {
 
     public void setLegitimeradeYrkesgrupper(List<String> legitimeradeYrkesgrupper) {
         this.legitimeradeYrkesgrupper = legitimeradeYrkesgrupper;
+    }
+
+    public List<String> getSystemRoles() {
+        if (systemRoles == null) {
+            systemRoles = Collections.emptyList();
+        }
+        return systemRoles;
+    }
+
+    public void setSystemRoles(List<String> systemRoles) {
+        this.systemRoles = systemRoles;
     }
 
     /**

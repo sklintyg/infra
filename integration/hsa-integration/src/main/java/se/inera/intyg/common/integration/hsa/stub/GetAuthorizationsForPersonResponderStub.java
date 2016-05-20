@@ -63,7 +63,13 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
     private List<CredentialInformationType> miuInformationTypesForEnhetsIds(Medarbetaruppdrag medarbetaruppdrag, String hsaPersonId) {
         List<CredentialInformationType> informationTypes = new ArrayList<>();
         CredentialInformationType cit = new CredentialInformationType();
+        HsaPerson hsaPerson = serviceStub.getHsaPerson(hsaPersonId);
+
         cit.setPersonHsaId(hsaPersonId);
+        cit.setPersonalPrescriptionCode(hsaPerson.getForskrivarKod());
+        cit.getPaTitleCode().add(hsaPerson.getBefattningsKod());
+        // TODO gruppförskrivarkod? cit.getGroupPrescriptionCode()
+
 
 
         for (Vardgivare vardgivare : serviceStub.getVardgivare()) {

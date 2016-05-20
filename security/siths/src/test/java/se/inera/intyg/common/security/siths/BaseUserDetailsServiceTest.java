@@ -44,6 +44,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
 import se.inera.intyg.common.integration.hsa.model.AuthenticationMethod;
+import se.inera.intyg.common.integration.hsa.model.UserAuthorizationInfo;
+import se.inera.intyg.common.integration.hsa.model.UserCredentials;
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.common.integration.hsa.services.HsaOrganizationsService;
@@ -173,7 +175,7 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
     public void assertMedarbetarUppdragExceptionThrownWhenNoMiU() throws Exception {
         // given
         SAMLCredential samlCredential = createSamlCredential("assertion-1.xml");
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new ArrayList<>());
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>()));
         setupCallToGetHsaPersonInfo();
         setupCallToWebcertFeatureService();
 
@@ -301,7 +303,9 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         vardgivare.getVardenheter().add(new Vardenhet(ENHET_HSAID_2, "Vårdcentralen"));
 
         List<Vardgivare> vardgivareList = Collections.singletonList(vardgivare);
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(vardgivareList);
+
+        UserCredentials userCredentials = new UserCredentials();
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredentials, vardgivareList));
     }
 
     private void setupCallToGetHsaPersonInfo() {

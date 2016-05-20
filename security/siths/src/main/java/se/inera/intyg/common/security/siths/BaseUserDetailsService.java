@@ -29,6 +29,8 @@ import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import se.inera.intyg.common.integration.hsa.model.UserAuthorizationInfo;
+import se.inera.intyg.common.integration.hsa.model.UserCredentials;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.common.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.common.integration.hsa.services.HsaPersonService;
@@ -91,7 +93,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
      *
      * Implementing subclasses may override this method, but are recommended to _not_ do so. Instead overriding
      * {@link BaseUserDetailsService#buildUserPrincipal} and/or
-     * {@link BaseUserDetailsService#createIntygUser(String, String, List, List)} is the recommended way.
+     * {@link BaseUserDetailsService#createIntygUser(String, String, UserAuthorizationInfo, List)} is the recommended way.
      *
      * @param credential
      * @return
@@ -139,12 +141,17 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         String employeeHsaId = getAssertion(credential).getHsaId();
         String authenticationScheme = getAssertion(credential).getAuthenticationScheme();
         List<PersonInformationType> personInfo = getPersonInfo(employeeHsaId);
-        List<Vardgivare> authorizedVardgivare = getAuthorizedVardgivare(employeeHsaId);
+        UserAuthorizationInfo userAuthorizationInfo = getAuthorizedVardgivare(employeeHsaId);
 
         try {
             assertEmployee(employeeHsaId, personInfo);
-            assertAuthorizedVardgivare(employeeHsaId, authorizedVardgivare);
-            return createIntygUser(employeeHsaId, authenticationScheme, authorizedVardgivare, personInfo);
+            assertAuthorizedVardgivare(employeeHsaId, userAuthorizationInfo.getVardgivare());
+            IntygUser intygUser = createIntygUser(employeeHsaId, authenticationScheme, userAuthorizationInfo, personInfo);
+
+            // Clean out förskrivarkod
+            intygUser.setForskrivarkod("0000000");
+            return intygUser;
+
         } catch (MissingMedarbetaruppdragException e) {
             monitoringLogService.logMissingMedarbetarUppdrag(getAssertion(credential).getHsaId());
             LOG.error("Missing medarbetaruppdrag. This needs to be fixed!!!");
@@ -169,7 +176,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
      * @param employeeHsaId
      * @return
      */
-    protected List<Vardgivare> getAuthorizedVardgivare(String employeeHsaId) {
+    protected UserAuthorizationInfo getAuthorizedVardgivare(String employeeHsaId) {
         LOG.debug("Retrieving authorized units from HSA...");
 
         try {
@@ -225,39 +232,46 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
      *      hsaId for the authorizing user. From SAML ticket.
      * @param authenticationScheme
      *      auth scheme, i.e. what auth method used, typically :siths or :fake
-     * @param authorizedVardgivare
-     *      List of vardgivare fetched from HSA, each entry is actually a tree of vardgivare -> vardenhet(er) -> mottagning(ar)
-     *      where the user has medarbetaruppdrag 'Vård och Behandling'
+     * @param userAuthorizationInfo
+     *      UserCredentials and List of vardgivare fetched from HSA, each entry is actually a tree of vardgivare -> vardenhet(er) -> mottagning(ar)
+     *      where the user has medarbetaruppdrag 'Vård och Behandling'.
      * @param personInfo
      *      Employee information from HSA.
      * @return
      *      A base IntygUser Principal.
      */
-    protected IntygUser createIntygUser(String employeeHsaId, String authenticationScheme, List<Vardgivare> authorizedVardgivare, List<PersonInformationType> personInfo) {
+    protected IntygUser createIntygUser(String employeeHsaId, String authenticationScheme, UserAuthorizationInfo userAuthorizationInfo, List<PersonInformationType> personInfo) {
         LOG.debug("Decorate/populate user object with additional information");
 
         IntygUser intygUser = new IntygUser(employeeHsaId);
-        decorateIntygUserWithBasicInfo(intygUser, authorizedVardgivare, personInfo, authenticationScheme);
+        decorateIntygUserWithBasicInfo(intygUser, userAuthorizationInfo, personInfo, authenticationScheme);
         decorateIntygUserWithAdditionalInfo(intygUser, personInfo);
         decorateIntygUserWithAvailableFeatures(intygUser);
         decorateIntygUserWithAuthenticationMethod(intygUser, authenticationScheme);
         decorateIntygUserWithDefaultVardenhet(intygUser);
         decorateIntygUserWithRoleAndAuthorities(intygUser, personInfo);
-
+        decorateIntygUserWithSystemRoles(intygUser, userAuthorizationInfo.getUserCredentials());
         return intygUser;
     }
 
 
-
+    /**
+     * Each application must override this method in order to specify it's fallback default role.
+     *
+     * @return
+     */
     protected abstract String getDefaultRole();
 
     protected void decorateIntygUserWithAdditionalInfo(IntygUser intygUser, List<PersonInformationType> hsaPersonInfo) {
         defaultUserDetailsDecorator.decorateIntygUserWithAdditionalInfo(intygUser, hsaPersonInfo);
     }
 
-
     protected void decorateIntygUserWithAuthenticationMethod(IntygUser intygUser, String authenticationScheme) {
         defaultUserDetailsDecorator.decorateIntygUserWithAuthenticationMethod(intygUser, authenticationScheme);
+    }
+
+    protected void decorateIntygUserWithSystemRoles(IntygUser intygUser, UserCredentials userCredentials) {
+        defaultUserDetailsDecorator.decorateIntygUserWithSystemRoles(intygUser, userCredentials);
     }
 
     protected void decorateIntygUserWithDefaultVardenhet(IntygUser intygUser) {
@@ -308,15 +322,16 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
 
     // ~ Private scope
     // =====================================================================================
-    private void decorateIntygUserWithBasicInfo(IntygUser intygUser, List<Vardgivare> authorizedVardgivare, List<PersonInformationType> personInfo, String authenticationScheme) {
+    private void decorateIntygUserWithBasicInfo(IntygUser intygUser, UserAuthorizationInfo userAuthorizationInfo, List<PersonInformationType> personInfo, String authenticationScheme) {
         intygUser.setNamn(compileName(personInfo.get(0).getGivenName(), personInfo.get(0).getMiddleAndSurName()));
-        intygUser.setVardgivare(authorizedVardgivare);
+        intygUser.setVardgivare(userAuthorizationInfo.getVardgivare());
 
-        // Förskrivarkod is sensitive information, not allowed to store real value
-        intygUser.setForskrivarkod("0000000");
+        // Förskrivarkod is sensitive information, not allowed to store real value so make sure we overwrite this later after role resolution.
+        intygUser.setForskrivarkod(userAuthorizationInfo.getUserCredentials().getPersonalPrescriptionCode());
 
         // Set user's authentication scheme
         intygUser.setAuthenticationScheme(authenticationScheme);
+
 
         // Set application mode / request origin if applicable
         if (userOrigin.isPresent()) {
