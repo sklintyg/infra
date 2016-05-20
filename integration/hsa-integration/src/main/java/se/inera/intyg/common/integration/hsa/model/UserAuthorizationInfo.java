@@ -39,15 +39,8 @@ public class UserAuthorizationInfo {
         return userCredentials;
     }
 
-    public void setUserCredentials(UserCredentials userCredentials) {
-        this.userCredentials = userCredentials;
-    }
 
     public List<Vardgivare> getVardgivare() {
         return vardgivare;
-    }
-
-    public void setVardgivare(List<Vardgivare> vardgivare) {
-        this.vardgivare = vardgivare;
     }
 }
