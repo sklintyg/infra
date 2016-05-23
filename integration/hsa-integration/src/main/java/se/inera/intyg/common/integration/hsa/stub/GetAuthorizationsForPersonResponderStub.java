@@ -66,11 +66,11 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
         HsaPerson hsaPerson = serviceStub.getHsaPerson(hsaPersonId);
 
         cit.setPersonHsaId(hsaPersonId);
-        cit.setPersonalPrescriptionCode(hsaPerson.getForskrivarKod());
-        cit.getPaTitleCode().add(hsaPerson.getBefattningsKod());
-        // TODO gruppförskrivarkod? cit.getGroupPrescriptionCode()
-
-
+        if (hsaPerson != null) {
+            cit.setPersonalPrescriptionCode(hsaPerson.getForskrivarKod());
+            cit.getPaTitleCode().add(hsaPerson.getBefattningsKod());
+            // TODO gruppförskrivarkod? cit.getGroupPrescriptionCode()
+        }
 
         for (Vardgivare vardgivare : serviceStub.getVardgivare()) {
             for (Vardenhet enhet : vardgivare.getVardenheter()) {
