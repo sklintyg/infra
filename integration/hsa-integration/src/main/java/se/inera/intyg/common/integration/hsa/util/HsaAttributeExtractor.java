@@ -53,8 +53,13 @@ public class HsaAttributeExtractor {
 
         for (PersonInformationType userType : hsaPersonInfo) {
             if (userType.getPaTitle() != null) {
-                List<String> hsaTitles = userType.getPaTitle().stream().map(paTitle -> paTitle.getPaTitleName()).collect(Collectors.toList());
-                befattningar.addAll(hsaTitles);
+                List<String> hsaTitles = userType.getPaTitle().stream()
+                        .map(paTitle -> paTitle.getPaTitleCode())
+                        .filter(paTitleCode -> paTitleCode != null)
+                        .collect(Collectors.toList());
+                if (hsaTitles.size() > 0) {
+                    befattningar.addAll(hsaTitles);
+                }
             }
         }
         return new ArrayList<>(befattningar);
@@ -64,12 +69,10 @@ public class HsaAttributeExtractor {
         Set<String> lygSet = new TreeSet<>();
 
         for (PersonInformationType userType : hsaUserTypes) {
-            if (userType.getPaTitle() != null) {
-                List<String> hsaTitles = userType.getPaTitle().stream().map(paTitle -> paTitle.getPaTitleName()).collect(Collectors.toList());
-                lygSet.addAll(hsaTitles);
+            if (userType.getHealthCareProfessionalLicence() != null) {
+                lygSet.addAll(userType.getHealthCareProfessionalLicence());
             }
         }
-
         return new ArrayList<>(lygSet);
     }
 
@@ -81,9 +84,10 @@ public class HsaAttributeExtractor {
         for (PersonInformationType pit : hsaPersonInfo) {
             if (pit.getTitle() != null && pit.getTitle().trim().length() > 0) {
                 titleSet.add(pit.getTitle());
-            } else if (pit.getHealthCareProfessionalLicence() != null && pit.getHealthCareProfessionalLicence().size() > 0) {
-                titleSet.addAll(pit.getHealthCareProfessionalLicence());
             }
+//            else if (pit.getHealthCareProfessionalLicence() != null && pit.getHealthCareProfessionalLicence().size() > 0) {
+//                titleSet.addAll(pit.getHealthCareProfessionalLicence());
+//            }
         }
         return titleSet.stream().sorted().collect(Collectors.joining(", "));
     }

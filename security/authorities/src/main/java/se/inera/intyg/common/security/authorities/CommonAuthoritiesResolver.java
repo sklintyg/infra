@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import se.inera.intyg.common.integration.hsa.model.UserCredentials;
 import se.inera.intyg.common.integration.hsa.util.HsaAttributeExtractor;
 import se.inera.intyg.common.security.authorities.bootstrap.AuthoritiesConfigurationLoader;
 import se.inera.intyg.common.security.common.model.AuthoritiesConstants;
@@ -36,6 +37,7 @@ import se.inera.intyg.common.security.common.model.Title;
 import se.inera.intyg.common.security.common.model.TitleCode;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -56,10 +58,10 @@ public class CommonAuthoritiesResolver {
     // ~ API
     // ======================================================================================
 
-    public Role resolveRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole) {
+    public Role resolveRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole, UserCredentials userCredentials) {
         Assert.notNull(user, "Argument 'user' cannot be null");
 
-        Role role = lookupUserRole(user, personInfo, defaultRole);
+        Role role = lookupUserRole(user, personInfo, defaultRole, userCredentials);
         return role;
     }
 
@@ -141,7 +143,7 @@ public class CommonAuthoritiesResolver {
      *
      * @return the resolved role
      */
-    Role lookupUserRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole) {
+    Role lookupUserRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole, UserCredentials userCredentials) {
         Role role;
         List<String> legitimeradeYrkesgrupper = new HsaAttributeExtractor().extractLegitimeradeYrkesgrupper(personInfo);
         // 1. Bestäm användarens roll utefter titel som kommer från NÅGOT ANNAT ÄN SAML.
@@ -165,7 +167,17 @@ public class CommonAuthoritiesResolver {
         }
 
         // 4. Bestäm användarens roll utefter kombinationen befattningskod och gruppförskrivarkod
-        role = lookupUserRoleByBefattningskodAndGruppforskrivarkod(user.getBefattningar(), Arrays.asList(user.getForskrivarkod()));
+        List<String> allaForskrivarKoder = new ArrayList<>();
+        if (user.getForskrivarkod() != null) {
+            allaForskrivarKoder.add(user.getForskrivarkod());
+        }
+        allaForskrivarKoder.addAll(userCredentials.getGroupPrescriptionCode());
+
+        List<String> allaBefattningar = new ArrayList<>();
+        allaBefattningar.addAll(user.getBefattningar());
+        allaBefattningar.addAll(userCredentials.getPaTitleCode());
+
+        role = lookupUserRoleByBefattningskodAndGruppforskrivarkod(allaBefattningar, allaForskrivarKoder);
         if (role != null) {
             return role;
         }
