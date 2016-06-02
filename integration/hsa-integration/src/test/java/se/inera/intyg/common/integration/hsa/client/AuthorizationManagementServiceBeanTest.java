@@ -1,19 +1,23 @@
 package se.inera.intyg.common.integration.hsa.client;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponderInterface;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponseType;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
+import se.inera.intyg.common.support.modules.support.api.exception.ExternalServiceCallException;
+import se.riv.infrastructure.directory.authorizationmanagement.v1.*;
+import se.riv.infrastructure.directory.v1.CredentialInformationType;
+import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 
 /**
  * This test is a bit superfluent since the tested method has no branching or error handling
@@ -33,11 +37,11 @@ public class AuthorizationManagementServiceBeanTest {
     private AuthorizationManagementServiceBean testee;
 
     @Test
-    public void testOk() {
+    public void testOk() throws ExternalServiceCallException {
         when(credzService.getCredentialsForPersonIncludingProtectedPerson(anyString(), any(GetCredentialsForPersonIncludingProtectedPersonType.class)))
             .thenReturn(buildResponse());
-        GetCredentialsForPersonIncludingProtectedPersonResponseType authorizationsForPerson = testee.getAuthorizationsForPerson(HSA_ID, null, null);
-        assertEquals(ResultCodeEnum.OK, authorizationsForPerson.getResultCode());
+        List<CredentialInformationType> authorizationsForPerson = testee.getAuthorizationsForPerson(HSA_ID, null, null);
+        assertNotNull(authorizationsForPerson);
     }
 
     private GetCredentialsForPersonIncludingProtectedPersonResponseType buildResponse() {

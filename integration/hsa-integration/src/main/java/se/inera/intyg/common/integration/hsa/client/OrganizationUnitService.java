@@ -19,20 +19,22 @@
 
 package se.inera.intyg.common.integration.hsa.client;
 
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersResponseType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.GetHealthCareUnitResponseType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitResponseType;
+import se.inera.intyg.common.support.modules.support.api.exception.ExternalServiceCallException;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.HealthCareUnitType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
 
 /**
- * Note: Avoid using this class directly from external applications. Use {@link se.inera.intyg.common.integration.hsa.services.HsaOrganizationsService}
+ * Note: Avoid using this class directly from external applications. Use
+ * {@link se.inera.intyg.common.integration.hsa.services.HsaOrganizationsService}
  * instead.
  *
  * Created by eriklupander on 2015-12-03.
  */
 public interface OrganizationUnitService {
-    GetUnitResponseType getUnit(String unitHsaId);
+    UnitType getUnit(String unitHsaId) throws ExternalServiceCallException;
 
-    GetHealthCareUnitResponseType getHealthCareUnit(String hsaId);
+    HealthCareUnitType getHealthCareUnit(String hsaId) throws ExternalServiceCallException;
 
-    GetHealthCareUnitMembersResponseType getHealthCareUnitMembers(String unitHsaId);
+    HealthCareUnitMembersType getHealthCareUnitMembers(String unitHsaId) throws ExternalServiceCallException;
 }

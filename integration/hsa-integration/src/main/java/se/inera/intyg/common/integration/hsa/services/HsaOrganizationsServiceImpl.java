@@ -19,41 +19,28 @@
 
 package se.inera.intyg.common.integration.hsa.services;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
+import javax.xml.ws.WebServiceException;
+
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.common.integration.hsa.client.AuthorizationManagementService;
 import se.inera.intyg.common.integration.hsa.client.OrganizationUnitService;
-import se.inera.intyg.common.integration.hsa.model.AbstractVardenhet;
-import se.inera.intyg.common.integration.hsa.model.AgandeForm;
-import se.inera.intyg.common.integration.hsa.model.Mottagning;
-import se.inera.intyg.common.integration.hsa.model.UserAuthorizationInfo;
-import se.inera.intyg.common.integration.hsa.model.UserCredentials;
-import se.inera.intyg.common.integration.hsa.model.Vardenhet;
-import se.inera.intyg.common.integration.hsa.model.Vardgivare;
+import se.inera.intyg.common.integration.hsa.model.*;
 import se.inera.intyg.common.integration.hsa.stub.Medarbetaruppdrag;
 import se.inera.intyg.common.support.common.util.StringUtil;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponseType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersResponseType;
+import se.inera.intyg.common.support.modules.support.api.exception.ExternalServiceCallException;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMemberType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.GetHealthCareUnitResponseType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitResponseType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.HealthCareUnitType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
-import se.riv.infrastructure.directory.v1.AddressType;
-import se.riv.infrastructure.directory.v1.CommissionType;
-import se.riv.infrastructure.directory.v1.CredentialInformationType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
-
-import javax.xml.ws.WebServiceException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import se.riv.infrastructure.directory.v1.*;
 
 /**
  * Provides HSA organization services through TJK over NTjP.
@@ -80,13 +67,13 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
     @Override
     public String getVardgivareOfVardenhet(String careUnitHsaId) {
-        GetHealthCareUnitResponseType healthCareUnit = organizationUnitService.getHealthCareUnit(careUnitHsaId);
-        if (healthCareUnit == null || healthCareUnit.getHealthCareUnit() == null
-                || healthCareUnit.getHealthCareUnit().getHealthCareProviderHsaId() == null) {
-            LOG.error("Could not look up vardgivarId for vardEnhet {0}. Does vardEnhet exist?", careUnitHsaId);
+        try {
+            HealthCareUnitType healthCareUnit = organizationUnitService.getHealthCareUnit(careUnitHsaId);
+            return healthCareUnit.getHealthCareProviderHsaId();
+        } catch (ExternalServiceCallException e) {
+            LOG.error("Could not look up vardgivarId for vardEnhet {}. Does vardEnhet exist?", careUnitHsaId);
             return null;
         }
-        return healthCareUnit.getHealthCareUnit().getHealthCareProviderHsaId();
     }
 
     @Override
@@ -94,13 +81,19 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
         LOG.debug("Getting info on vardenhet '{}'", careUnitHsaId);
 
-        UnitType unit = getUnit(careUnitHsaId);
+        UnitType unit;
+        try {
+            unit = getUnit(careUnitHsaId);
+        } catch (ExternalServiceCallException e) {
+            LOG.error(e.getMessage());
+            throw new WebServiceException(e.getMessage());
+        }
 
         Vardenhet vardenhet = new Vardenhet(unit.getUnitHsaId(), unit.getUnitName(), unit.getUnitStartDate(), unit.getUnitEndDate());
 
         getHealthCareUnitMembers(vardenhet).ifPresent(response -> {
-            attachMottagningar(vardenhet, response.getHealthCareUnitMembers());
-            setArbetsplatskod(vardenhet, response.getHealthCareUnitMembers());
+            attachMottagningar(vardenhet, response);
+            setArbetsplatskod(vardenhet, response);
         });
 
         updateWithContactInformation(vardenhet, unit);
@@ -110,10 +103,10 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
     @Override
     public List<String> getHsaIdForAktivaUnderenheter(String vardEnhetHsaId) {
-        GetHealthCareUnitMembersResponseType response = organizationUnitService.getHealthCareUnitMembers(vardEnhetHsaId);
-        final LocalDateTime now = LocalDateTime.now();
-        if (response.getResultCode() == ResultCodeEnum.OK) {
-            return response.getHealthCareUnitMembers().getHealthCareUnitMember()
+        try {
+            HealthCareUnitMembersType response = organizationUnitService.getHealthCareUnitMembers(vardEnhetHsaId);
+            final LocalDateTime now = LocalDateTime.now();
+            return response.getHealthCareUnitMember()
                     .stream()
                     .filter(member -> (member.getHealthCareUnitMemberStartDate() == null
                             || member.getHealthCareUnitMemberStartDate().compareTo(now) <= 0)
@@ -121,9 +114,9 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
                     .map(HealthCareUnitMemberType::getHealthCareUnitMemberHsaId)
                     .distinct()
                     .collect(Collectors.toList());
-        } else {
-            LOG.error("getHealthCareUnitMembers failed with code '{}' and message '{}'", response.getResultCode().value(), response.getResultText());
-            throw new WebServiceException(response.getResultText());
+        } catch (ExternalServiceCallException e) {
+            LOG.error(e.getMessage());
+            throw new WebServiceException(e.getMessage());
         }
     }
 
@@ -132,11 +125,10 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         List<Vardgivare> vardgivareList = new ArrayList<>();
         UserCredentials userCredentials = new UserCredentials();
 
-        GetCredentialsForPersonIncludingProtectedPersonResponseType response = authorizationManagementService
-                .getAuthorizationsForPerson(hosPersonHsaId, null, null);
+        try {
+            List<CredentialInformationType> credentialInformationList = authorizationManagementService
+                    .getAuthorizationsForPerson(hosPersonHsaId, null, null);
 
-        if (response.getResultCode() == ResultCodeEnum.OK) {
-            List<CredentialInformationType> credentialInformationList = response.getCredentialInformation();
             for (CredentialInformationType credentialInformation : credentialInformationList) {
                 List<CommissionType> commissions = credentialInformation.getCommission()
                         .stream()
@@ -154,6 +146,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
                                     .filter(ct -> ct.getHealthCareProviderHsaId().equals(vg.getId())
                                             && isActive(ct.getHealthCareUnitStartDate(), ct.getHealthCareUnitEndDate()))
                                     .map(ct -> createVardenhet(credentialInformation, ct))
+                                    .filter(Objects::nonNull)
                                     .distinct()
                                     .sorted(Comparator.comparing(Vardenhet::getNamn))
                                     .collect(Collectors.toList()));
@@ -170,11 +163,10 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
             vardgivareList.sort(Comparator.nullsLast(Comparator.comparing(Vardgivare::getNamn)));
             return new UserAuthorizationInfo(userCredentials, vardgivareList);
-        } else {
-            LOG.error("getAuthorizationsForPerson failed with code '{}' and message '{}'", response.getResultCode().value(),
-                    response.getResultText());
-            return new UserAuthorizationInfo(userCredentials, vardgivareList); // Empty
+        } catch (ExternalServiceCallException e) {
+            LOG.warn("Returning empty vardgivareList, cause: {}", e.getMessage());
         }
+        return new UserAuthorizationInfo(userCredentials, vardgivareList); // Empty
     }
 
     private Vardenhet createVardenhet(CredentialInformationType credentialInformation, CommissionType ct) {
@@ -186,11 +178,16 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
         // I don't like this, but we need to do an extra call to
         // infrastructure:directory:organization:getUnit for address related stuff.
-        updateWithContactInformation(vardenhet, getUnit(vardenhet.getId()));
+        try {
+            updateWithContactInformation(vardenhet, getUnit(vardenhet.getId()));
+        } catch (ExternalServiceCallException e) {
+            LOG.error(e.getMessage());
+            return null;
+        }
 
         getHealthCareUnitMembers(vardenhet).ifPresent(response -> {
-            attachMottagningar(vardenhet, response.getHealthCareUnitMembers(), agandeForm);
-            setArbetsplatskod(vardenhet, response.getHealthCareUnitMembers());
+            attachMottagningar(vardenhet, response, agandeForm);
+            setArbetsplatskod(vardenhet, response);
         });
 
         return vardenhet;
@@ -203,13 +200,13 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
                                 ? healthCareUnitMembers.getHealthCareUnitPrescriptionCode().get(0) : DEFAULT_ARBETSPLATSKOD);
     }
 
-    private Optional<GetHealthCareUnitMembersResponseType> getHealthCareUnitMembers(final Vardenhet vardenhet) {
-        GetHealthCareUnitMembersResponseType response = organizationUnitService.getHealthCareUnitMembers(vardenhet.getId());
-        if (response == null || response.getResultCode() == ResultCodeEnum.ERROR) {
-            LOG.error("Could not fetch mottagningar for unit {}, null or error response: ", vardenhet.getId(),
-                    response != null ? response.getResultText() : "Response was null");
+    private Optional<HealthCareUnitMembersType> getHealthCareUnitMembers(final Vardenhet vardenhet) {
+        try {
+            HealthCareUnitMembersType response = organizationUnitService.getHealthCareUnitMembers(vardenhet.getId());
+            return Optional.ofNullable(response);
+        } catch (ExternalServiceCallException e) {
+            return Optional.empty();
         }
-        return Optional.ofNullable(response);
     }
 
     private boolean isActive(LocalDateTime fromDate, LocalDateTime toDate) {
@@ -265,9 +262,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         vardenhet.setMottagningar(vardenhet.getMottagningar().stream().sorted().collect(Collectors.toList()));
     }
 
-    private UnitType getUnit(String careUnitHsaId) {
-        GetUnitResponseType unitResponse = organizationUnitService.getUnit(careUnitHsaId);
-        return unitResponse.getUnit();
+    private UnitType getUnit(String careUnitHsaId) throws ExternalServiceCallException {
+        return organizationUnitService.getUnit(careUnitHsaId);
     }
 
     private void updateWithContactInformation(AbstractVardenhet vardenhet, UnitType response) {

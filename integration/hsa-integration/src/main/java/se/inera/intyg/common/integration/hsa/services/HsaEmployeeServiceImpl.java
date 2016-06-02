@@ -19,6 +19,8 @@
 
 package se.inera.intyg.common.integration.hsa.services;
 
+import java.util.List;
+
 import javax.xml.ws.WebServiceException;
 
 import org.slf4j.Logger;
@@ -27,7 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import se.inera.intyg.common.integration.hsa.client.EmployeeService;
-import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonResponseType;
+import se.inera.intyg.common.support.modules.support.api.exception.ExternalServiceCallException;
+import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**
  * Created by Magnus Ekstrand on 28/05/15.
@@ -41,14 +44,23 @@ public class HsaEmployeeServiceImpl implements HsaEmployeeService {
     private EmployeeService employeeService;
 
     @Override
-    public GetEmployeeIncludingProtectedPersonResponseType getEmployee(String personHsaId, String personalIdentityNumber) throws WebServiceException {
-        return employeeService.getEmployee(personHsaId, personalIdentityNumber, null);
+    public List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber) throws WebServiceException {
+        try {
+            return employeeService.getEmployee(personHsaId, personalIdentityNumber, null);
+        } catch (ExternalServiceCallException e) {
+            LOG.error(e.getMessage());
+            throw new WebServiceException(e.getMessage());
+        }
     }
 
     @Override
-    public GetEmployeeIncludingProtectedPersonResponseType getEmployee(String personHsaId, String personalIdentityNumber, String searchBase) throws WebServiceException {
-        return employeeService.getEmployee(personHsaId, personalIdentityNumber, searchBase);
+    public List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase) throws WebServiceException {
+        try {
+            return employeeService.getEmployee(personHsaId, personalIdentityNumber, searchBase);
+        } catch (ExternalServiceCallException e) {
+            LOG.error(e.getMessage());
+            throw new WebServiceException(e.getMessage());
+        }
     }
-
 
 }

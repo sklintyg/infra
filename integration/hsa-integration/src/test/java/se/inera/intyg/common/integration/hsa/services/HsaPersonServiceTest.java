@@ -24,8 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,10 +35,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import se.inera.intyg.common.integration.hsa.client.AuthorizationManagementService;
 import se.inera.intyg.common.integration.hsa.client.EmployeeService;
-import se.inera.intyg.common.integration.hsa.services.HsaPersonServiceImpl;
-import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonResponseType;
+import se.inera.intyg.common.support.modules.support.api.exception.ExternalServiceCallException;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HsaPersonServiceTest {
@@ -57,18 +54,11 @@ public class HsaPersonServiceTest {
     private HsaPersonServiceImpl hsaPersonService;
 
     @Before
-    public void setupExpectations() {
+    public void setupExpectations() throws ExternalServiceCallException {
 
-//        PersonInformationType validParams = new PersonInformationType();
-//        validParams.setPersonHsaId(VALID_HSA_ID);
-//
-//        PersonInformationType invalidParams = new PersonInformationType();
-//        invalidParams.setPersonHsaId(INVALID_HSA_ID);
+        when(employeeService.getEmployee(VALID_HSA_ID, null, null)).thenReturn(buildResponse());
 
-        GetEmployeeIncludingProtectedPersonResponseType response = buildResponse();
-        when(employeeService.getEmployee(VALID_HSA_ID, null, null)).thenReturn(response);
-
-        GetEmployeeIncludingProtectedPersonResponseType emptyResponse = new GetEmployeeIncludingProtectedPersonResponseType();
+        ArrayList<PersonInformationType> emptyResponse = new ArrayList<PersonInformationType>();
         when(employeeService.getEmployee(INVALID_HSA_ID, null, null)).thenReturn(emptyResponse);
     }
 
@@ -90,14 +80,11 @@ public class HsaPersonServiceTest {
         assertTrue(res.isEmpty());
     }
 
-    private GetEmployeeIncludingProtectedPersonResponseType buildResponse() {
+    private List<PersonInformationType> buildResponse() {
 
         PersonInformationType userType = buildUserType(VALID_HSA_ID, "Henry", "Jekyl");
 
-        GetEmployeeIncludingProtectedPersonResponseType response = new GetEmployeeIncludingProtectedPersonResponseType();
-        response.getPersonInformation().add(userType);
-        response.setResultCode(ResultCodeEnum.OK);
-        return response;
+        return Arrays.asList(userType);
     }
 
     private PersonInformationType buildUserType(String hsaId, String fName, String lName) {

@@ -19,19 +19,26 @@
 
 package se.inera.intyg.common.integration.hsa.client;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponderInterface;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponseType;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonType;
+import se.inera.intyg.common.support.modules.support.api.exception.ExternalServiceCallException;
+import se.riv.infrastructure.directory.authorizationmanagement.v1.*;
+import se.riv.infrastructure.directory.v1.CredentialInformationType;
+import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 
 /**
  * Created by eriklupander on 2015-12-04.
  */
 @Service
 public class AuthorizationManagementServiceBean implements AuthorizationManagementService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AuthorizationManagementServiceBean.class);
 
     @Autowired
     private GetCredentialsForPersonIncludingProtectedPersonResponderInterface getCredentialsForPersonIncludingProtectedPersonResponderInterface;
@@ -40,8 +47,8 @@ public class AuthorizationManagementServiceBean implements AuthorizationManageme
     private String logicalAddress;
 
     @Override
-    public GetCredentialsForPersonIncludingProtectedPersonResponseType getAuthorizationsForPerson(String personHsaId, String personalIdentityNumber,
-            String searchBase) {
+    public List<CredentialInformationType> getAuthorizationsForPerson(String personHsaId, String personalIdentityNumber,
+            String searchBase) throws ExternalServiceCallException {
         GetCredentialsForPersonIncludingProtectedPersonType parameters = new GetCredentialsForPersonIncludingProtectedPersonType();
         parameters.setPersonalIdentityNumber(personalIdentityNumber);
         parameters.setPersonHsaId(personHsaId);
@@ -49,6 +56,16 @@ public class AuthorizationManagementServiceBean implements AuthorizationManageme
         GetCredentialsForPersonIncludingProtectedPersonResponseType response = getCredentialsForPersonIncludingProtectedPersonResponderInterface
                 .getCredentialsForPersonIncludingProtectedPerson(logicalAddress, parameters);
 
-        return response;
+        if (response.getResultCode() == ResultCodeEnum.ERROR) {
+            // Absolute minimum required response
+            String errorText = "GetCredentialsForPersonIncludingProtectedPerson returned ERROR with result text '{}'";
+            if (response.getCredentialInformation() == null || response.getCredentialInformation().isEmpty()) {
+                LOG.error(errorText, response.getResultText());
+                throw new ExternalServiceCallException("Could not call GetCredentialsForPersonIncludingProtectedPerson");
+            } else {
+                LOG.warn(errorText, response.getResultText());
+            }
+        }
+        return response.getCredentialInformation();
     }
 }
