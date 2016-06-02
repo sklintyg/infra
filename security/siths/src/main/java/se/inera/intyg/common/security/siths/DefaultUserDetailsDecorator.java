@@ -75,7 +75,9 @@ public class DefaultUserDetailsDecorator {
 
     public void decorateIntygUserWithSystemRoles(IntygUser intygUser, UserCredentials userCredentials) {
         if (userCredentials != null && userCredentials.getHsaSystemRole() != null) {
-            intygUser.setSystemRoles(userCredentials.getHsaSystemRole().stream().map(HsaSystemRoleType::getRole).collect(Collectors.toList()));
+            intygUser.setSystemRoles(userCredentials.getHsaSystemRole().stream()
+                    .map(DefaultUserDetailsDecorator::hsaSystemRoleAsString)
+                    .collect(Collectors.toList()));
         }
     }
 
@@ -107,5 +109,11 @@ public class DefaultUserDetailsDecorator {
         return true;
     }
 
-
+    private static String hsaSystemRoleAsString(HsaSystemRoleType systemRole) {
+        if (systemRole.getSystemId() == null || systemRole.getSystemId().trim().isEmpty()) {
+            return systemRole.getRole();
+        } else {
+            return systemRole.getSystemId() + ";" + systemRole.getRole();
+        }
+    }
 }

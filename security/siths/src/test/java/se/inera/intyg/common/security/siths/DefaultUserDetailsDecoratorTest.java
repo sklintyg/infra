@@ -20,10 +20,12 @@ package se.inera.intyg.common.security.siths;
 
 import org.junit.Test;
 import se.inera.intyg.common.integration.hsa.model.AuthenticationMethod;
+import se.inera.intyg.common.integration.hsa.model.UserCredentials;
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.common.security.common.model.AuthConstants;
 import se.inera.intyg.common.security.common.model.IntygUser;
+import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 
 import java.util.Collections;
 
@@ -62,6 +64,44 @@ public class DefaultUserDetailsDecoratorTest {
         // Verify
         assertEquals(vardgivare, user.getValdVardgivare());
         assertEquals(enhet1, user.getValdVardenhet());
+    }
+
+    @Test
+    public void testRehabSystemRoleInRoleOnly() {
+        IntygUser user = new IntygUser(HSA_ID);
+        UserCredentials userCredentials = new UserCredentials();
+        userCredentials.getHsaSystemRole().add(hsaSystemRole(null, "INTYG;Rehab-1234"));
+
+        testee.decorateIntygUserWithSystemRoles(user, userCredentials);
+        assertEquals("INTYG;Rehab-1234", user.getSystemRoles().get(0));
+    }
+
+    @Test
+    public void testRehabSystemRoleInRoleOnlyWithSpacedStringAsSystemId() {
+        IntygUser user = new IntygUser(HSA_ID);
+        UserCredentials userCredentials = new UserCredentials();
+        userCredentials.getHsaSystemRole().add(hsaSystemRole(" ", "INTYG;Rehab-1234"));
+
+        testee.decorateIntygUserWithSystemRoles(user, userCredentials);
+        assertEquals("INTYG;Rehab-1234", user.getSystemRoles().get(0));
+    }
+
+    @Test
+    public void testRehabSystemRoleFromSystemAndRole() {
+        IntygUser user = new IntygUser(HSA_ID);
+        UserCredentials userCredentials = new UserCredentials();
+        userCredentials.getHsaSystemRole().add(hsaSystemRole("INTYG", "Rehab-1234"));
+
+        testee.decorateIntygUserWithSystemRoles(user, userCredentials);
+        assertEquals("INTYG;Rehab-1234", user.getSystemRoles().get(0));
+    }
+
+
+    private HsaSystemRoleType hsaSystemRole(String systemId, String role) {
+        HsaSystemRoleType hsaSystemRoleType = new HsaSystemRoleType();
+        hsaSystemRoleType.setSystemId(systemId);
+        hsaSystemRoleType.setRole(role);
+        return hsaSystemRoleType;
     }
 
 }
