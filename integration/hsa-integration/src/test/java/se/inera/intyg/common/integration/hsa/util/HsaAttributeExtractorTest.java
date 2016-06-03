@@ -23,6 +23,7 @@ import se.riv.infrastructure.directory.v1.PaTitleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -61,11 +62,11 @@ public class HsaAttributeExtractorTest {
         PersonInformationType pt = new PersonInformationType();
         pt.setTitle("title1");
         final PaTitleType paTitleType1 = new PaTitleType();
-        paTitleType1.setPaTitleName("paTitle1");
+        paTitleType1.setPaTitleCode("paTitle1");
         pt.getPaTitle().add(paTitleType1);
 
         final PaTitleType paTitleType2 = new PaTitleType();
-        paTitleType2.setPaTitleName("paTitle2");
+        paTitleType2.setPaTitleCode("paTitle2");
         pt.getPaTitle().add(paTitleType2);
 
         List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
@@ -100,7 +101,8 @@ public class HsaAttributeExtractorTest {
         final String titleString = testee.extractTitel(hsaPersonInfo);
 
         // Verify
-        assertEquals("hcpl1, hcpl2, xpitTitle", titleString);
+        //assertEquals("hcpl1, hcpl2, xpitTitle", titleString);
+        assertEquals("xpitTitle", titleString);
 
     }
 
@@ -109,14 +111,7 @@ public class HsaAttributeExtractorTest {
 
         // Arrange
         PersonInformationType pt = new PersonInformationType();
-        pt.setTitle("title1");
-        final PaTitleType paTitleType1 = new PaTitleType();
-        paTitleType1.setPaTitleName("paTitle1");
-        pt.getPaTitle().add(paTitleType1);
-
-        final PaTitleType paTitleType2 = new PaTitleType();
-        paTitleType2.setPaTitleName("paTitle2");
-        pt.getPaTitle().add(paTitleType2);
+        pt.getHealthCareProfessionalLicence().addAll(Arrays.asList("1234", "5678"));
 
         List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
         hsaPersonInfo.add(pt);
@@ -127,8 +122,8 @@ public class HsaAttributeExtractorTest {
         // Verify
         // Verify
         assertEquals(2, legitimeradeYrkesgrupper.size());
-        assertTrue(legitimeradeYrkesgrupper.contains("paTitle1"));
-        assertTrue(legitimeradeYrkesgrupper.contains("paTitle2"));
+        assertTrue(legitimeradeYrkesgrupper.contains("1234"));
+        assertTrue(legitimeradeYrkesgrupper.contains("5678"));
 
     }
 }

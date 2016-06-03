@@ -54,9 +54,7 @@ public class GetEmployeeResponderStub implements GetEmployeeIncludingProtectedPe
         person.setMiddleAndSurName(hsaPerson.getEfterNamn());
 
         for (String legYrkesGrp : hsaPerson.getLegitimeradeYrkesgrupper()) {
-            PaTitleType paTitle = new PaTitleType();
-            paTitle.setPaTitleName(legYrkesGrp);
-            person.getPaTitle().add(paTitle);
+            person.getHealthCareProfessionalLicence().add(legYrkesGrp);
         }
 
         for (HsaSpecialicering spec : hsaPerson.getSpecialiseringar()) {

@@ -19,21 +19,18 @@
 
 package se.inera.intyg.common.integration.hsa.stub;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class BootstrapBean {
     private static final Logger LOG = LoggerFactory.getLogger(BootstrapBean.class);
@@ -72,18 +69,18 @@ public class BootstrapBean {
 
     private void addMedarbetaruppdrag(Resource res) throws IOException {
         LOG.debug("Loading medarbetaruppdrag from " + res.getFilename());
-        Medarbetaruppdrag medarbetaruppdrag = objectMapper.readValue(res.getFile(), Medarbetaruppdrag.class);
+        Medarbetaruppdrag medarbetaruppdrag = objectMapper.readValue(res.getInputStream(), Medarbetaruppdrag.class);
         hsaServiceStub.getMedarbetaruppdrag().add(medarbetaruppdrag);
         LOG.debug("Loaded medarbetaruppdrag for " + medarbetaruppdrag.getHsaId());
     }
 
     private void addPerson(Resource res) throws IOException {
-        HsaPerson hsaPerson = objectMapper.readValue(res.getFile(), HsaPerson.class);
+        HsaPerson hsaPerson = objectMapper.readValue(res.getInputStream(), HsaPerson.class);
         hsaServiceStub.addHsaPerson(hsaPerson);
     }
 
     private void addVardgivare(Resource res) throws IOException {
-        Vardgivare vardgivare = objectMapper.readValue(res.getFile(), Vardgivare.class);
+        Vardgivare vardgivare = objectMapper.readValue(res.getInputStream(), Vardgivare.class);
         hsaServiceStub.getVardgivare().add(vardgivare);
         LOG.debug("Loaded vardgivare " + vardgivare.getId());
     }

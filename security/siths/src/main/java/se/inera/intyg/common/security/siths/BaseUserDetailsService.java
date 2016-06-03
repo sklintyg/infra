@@ -249,7 +249,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         decorateIntygUserWithAvailableFeatures(intygUser);
         decorateIntygUserWithAuthenticationMethod(intygUser, authenticationScheme);
         decorateIntygUserWithDefaultVardenhet(intygUser);
-        decorateIntygUserWithRoleAndAuthorities(intygUser, personInfo);
+        decorateIntygUserWithRoleAndAuthorities(intygUser, personInfo, userAuthorizationInfo.getUserCredentials());
         decorateIntygUserWithSystemRoles(intygUser, userAuthorizationInfo.getUserCredentials());
         return intygUser;
     }
@@ -339,8 +339,8 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         }
     }
 
-    private void decorateIntygUserWithRoleAndAuthorities(IntygUser intygUser, List<PersonInformationType> personInfo) {
-        Role role = commonAuthoritiesResolver.resolveRole(intygUser, personInfo, getDefaultRole());
+    private void decorateIntygUserWithRoleAndAuthorities(IntygUser intygUser, List<PersonInformationType> personInfo, UserCredentials userCredentials) {
+        Role role = commonAuthoritiesResolver.resolveRole(intygUser, personInfo, getDefaultRole(), userCredentials);
         LOG.debug("User role is set to {}", role);
 
         // Set role and privileges
