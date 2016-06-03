@@ -64,6 +64,7 @@ public class AuthorizationManagementServiceBean implements AuthorizationManageme
                 throw new ExternalServiceCallException("Could not call GetCredentialsForPersonIncludingProtectedPerson");
             } else {
                 LOG.warn(errorText, response.getResultText());
+                LOG.warn("Continuing anyway because information was delivered with the ERROR code.");
             }
         }
         return response.getCredentialInformation();

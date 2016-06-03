@@ -86,6 +86,7 @@ public class EmployeeServiceBean implements EmployeeService {
                 } else {
                     LOG.warn("Failed getting employee information from HSA; personHsaId = '{}'. Result text: {}", employeeType.getPersonHsaId(),
                             response.getResultText());
+                    LOG.warn("Continuing anyway because information was delivered with the ERROR code.");
                 }
             }
         } catch (SOAPFaultException e) {

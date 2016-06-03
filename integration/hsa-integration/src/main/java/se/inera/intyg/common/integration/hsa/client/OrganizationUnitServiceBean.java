@@ -69,6 +69,7 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
                 throw new ExternalServiceCallException("Could not GetUnit for hsaId " + unitHsaId);
             } else {
                 LOG.warn("Error received when calling GetUnit for {}, result text: {}", unitHsaId, unitResponse.getResultText());
+                LOG.warn("Continuing anyway because information was delivered with the ERROR code.");
             }
         }
         return unitResponse.getUnit();
@@ -86,6 +87,7 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
                 throw new ExternalServiceCallException("Could not GetHealthCareUnit for hsaId " + hsaId);
             } else {
                 LOG.warn("Error received when calling GetHealthCareUnit for {}, result text: {}", hsaId, response.getResultText());
+                LOG.warn("Continuing anyway because information was delivered with the ERROR code.");
             }
         }
         return response.getHealthCareUnit();
@@ -104,6 +106,7 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
                 throw new ExternalServiceCallException("Could not GetHealthCareUnitMembers for hsaId " + unitHsaId);
             } else {
                 LOG.warn("Error received when calling GetHealthCareUnitMembers for {}, result text: {}", unitHsaId, response.getResultText());
+                LOG.warn("Continuing anyway because information was delivered with the ERROR code.");
             }
         }
         return response.getHealthCareUnitMembers();
