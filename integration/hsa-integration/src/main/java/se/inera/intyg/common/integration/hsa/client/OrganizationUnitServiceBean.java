@@ -64,7 +64,7 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
         GetUnitResponseType unitResponse = getUnitResponderInterface.getUnit(logicalAddress, parameters);
 
         if (unitResponse.getResultCode() == ResultCodeEnum.ERROR) {
-            if (unitResponse.getUnit() == null || unitResponse.getUnit().getUnitHsaId() != null) {
+            if (unitResponse.getUnit() == null || unitResponse.getUnit().getUnitHsaId() == null) {
                 LOG.error("Error received when calling GetUnit for {}, result text: {}", unitHsaId, unitResponse.getResultText());
                 throw new ExternalServiceCallException("Could not GetUnit for hsaId " + unitHsaId);
             } else {
@@ -82,7 +82,7 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
         GetHealthCareUnitResponseType response = getHealthCareUnitResponderInterface.getHealthCareUnit(logicalAddress, parameters);
 
         if (response.getResultCode() == ResultCodeEnum.ERROR) {
-            if (response.getHealthCareUnit() == null || response.getHealthCareUnit().getHealthCareUnitHsaId() != null) {
+            if (response.getHealthCareUnit() == null || response.getHealthCareUnit().getHealthCareUnitHsaId() == null) {
                 LOG.error("Error received when calling GetHealthCareUnit for {}, result text: {}", hsaId, response.getResultText());
                 throw new ExternalServiceCallException("Could not GetHealthCareUnit for hsaId " + hsaId);
             } else {
@@ -101,7 +101,7 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
                 parameters);
 
         if (response.getResultCode() == ResultCodeEnum.ERROR) {
-            if (response.getHealthCareUnitMembers() == null || response.getHealthCareUnitMembers().getHealthCareUnitHsaId() != null) {
+            if (response.getHealthCareUnitMembers() == null || response.getHealthCareUnitMembers().getHealthCareUnitHsaId() == null) {
                 LOG.error("Error received when calling GetHealthCareUnitMembers for {}, result text: {}", unitHsaId, response.getResultText());
                 throw new ExternalServiceCallException("Could not GetHealthCareUnitMembers for hsaId " + unitHsaId);
             } else {
