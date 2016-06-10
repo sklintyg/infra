@@ -119,7 +119,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
             if (e instanceof AuthenticationException) {
                 throw e;
             }
-            LOG.error("Error building user {}, failed with message {}", getAssertion(credential).getHsaId(), e.getMessage());
+            LOG.error("Error building user {}, failed with stacktrace {}", getAssertion(credential).getHsaId(), e);
             throw new GenericAuthenticationException(getAssertion(credential).getHsaId(), e);
         }
     }
