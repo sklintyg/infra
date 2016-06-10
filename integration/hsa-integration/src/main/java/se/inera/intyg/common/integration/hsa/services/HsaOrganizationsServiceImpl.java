@@ -57,8 +57,6 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
     private static final String DEFAULT_ARBETSPLATSKOD = "0000000";
 
-    private static final String DEFAULT_POSTNR = "XXXXX";
-
     @Autowired
     private AuthorizationManagementService authorizationManagementService;
 
@@ -301,7 +299,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
             }
         } else {
             if (vardenhet.getPostnummer() == null) {
-                vardenhet.setPostnummer(DEFAULT_POSTNR);
+                vardenhet.setPostnummer("");
             }
             vardenhet.setPostort(lastLine != null ? lastLine.trim() : "");
         }
