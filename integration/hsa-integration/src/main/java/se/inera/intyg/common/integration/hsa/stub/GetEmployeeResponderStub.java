@@ -65,7 +65,7 @@ public class GetEmployeeResponderStub implements GetEmployeeIncludingProtectedPe
         if (hsaPerson.getBefattningsKod() != null) {
             PaTitleType paTitleType = new PaTitleType();
             paTitleType.setPaTitleCode(hsaPerson.getBefattningsKod());
-            paTitleType.setPaTitleName(BefattningKod.getDisplayNameFromCode(hsaPerson.getBefattningsKod()));
+            paTitleType.setPaTitleName(BefattningKod.getDescriptionFromCode(hsaPerson.getBefattningsKod()).orElse(null));
             person.getPaTitle().add(paTitleType);
         }
 

@@ -18,16 +18,15 @@
  */
 package se.inera.intyg.common.integration.hsa.util;
 
-import org.junit.Test;
-import se.riv.infrastructure.directory.v1.PaTitleType;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.util.*;
+
+import org.junit.Test;
+
+import se.riv.infrastructure.directory.v1.PaTitleType;
+import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**
  * Created by eriklupander on 2016-05-19.
@@ -43,9 +42,8 @@ public class HsaAttributeExtractorTest {
     public void testExtractSpecialiseringar() {
         // Arrange
         PersonInformationType pt = new PersonInformationType();
-        pt.getSpecialityName().add(SPEC_1);
-        pt.getSpecialityName().add(SPEC_2);
-
+        pt.getSpecialityCode().add(SPEC_1);
+        pt.getSpecialityCode().add(SPEC_2);
 
         List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
         hsaPersonInfo.add(pt);
@@ -68,6 +66,9 @@ public class HsaAttributeExtractorTest {
         final PaTitleType paTitleType2 = new PaTitleType();
         paTitleType2.setPaTitleCode("paTitle2");
         pt.getPaTitle().add(paTitleType2);
+
+        // will filter null codes
+        pt.getPaTitle().add(new PaTitleType());
 
         List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
         hsaPersonInfo.add(pt);
