@@ -18,14 +18,11 @@
  */
 package se.inera.intyg.common.integration.hsa.util;
 
-import se.riv.infrastructure.directory.v1.PersonInformationType;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import se.riv.infrastructure.directory.v1.PaTitleType;
+import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**
  * Helper class for extracting certain HoSP attributes.
@@ -34,14 +31,12 @@ import java.util.stream.Collectors;
  */
 public class HsaAttributeExtractor {
 
-    // - Package scoped so we can unit-test them. Perhaps move into a specific extract-helper-class.
     public List<String> extractSpecialiseringar(List<PersonInformationType> hsaUserTypes) {
         Set<String> specSet = new TreeSet<>();
 
         for (PersonInformationType userType : hsaUserTypes) {
-            if (userType.getSpecialityName() != null) {
-                List<String> specialityNames = userType.getSpecialityName();
-                specSet.addAll(specialityNames);
+            if (userType.getSpecialityCode() != null) {
+                specSet.addAll(userType.getSpecialityCode());
             }
         }
 
@@ -54,8 +49,8 @@ public class HsaAttributeExtractor {
         for (PersonInformationType userType : hsaPersonInfo) {
             if (userType.getPaTitle() != null) {
                 List<String> hsaTitles = userType.getPaTitle().stream()
-                        .map(paTitle -> paTitle.getPaTitleCode())
-                        .filter(paTitleCode -> paTitleCode != null)
+                        .map(PaTitleType::getPaTitleCode)
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toList());
                 if (hsaTitles.size() > 0) {
                     befattningar.addAll(hsaTitles);

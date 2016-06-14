@@ -19,10 +19,11 @@
 
 package se.inera.intyg.common.integration.hsa.services;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.LocalDateTime;
@@ -33,9 +34,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import se.inera.intyg.common.integration.hsa.client.AuthorizationManagementService;
-import se.inera.intyg.common.integration.hsa.services.HsaPersonServiceImpl;
 import se.inera.intyg.common.integration.hsa.stub.Medarbetaruppdrag;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponseType;
+import se.inera.intyg.common.support.modules.support.api.exception.ExternalServiceCallException;
 import se.riv.infrastructure.directory.v1.CommissionType;
 import se.riv.infrastructure.directory.v1.CredentialInformationType;
 
@@ -55,9 +55,9 @@ public class HSAPersonServiceTest2 {
     private HsaPersonServiceImpl hsaPersonService;
 
     @Test
-    public void testWithNoMius() {
+    public void testWithNoMius() throws ExternalServiceCallException {
 
-        GetCredentialsForPersonIncludingProtectedPersonResponseType miuResponse = new GetCredentialsForPersonIncludingProtectedPersonResponseType();
+        List<CredentialInformationType> miuResponse = new ArrayList<CredentialInformationType>();
 
         when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null, null)).thenReturn(miuResponse);
 
@@ -68,9 +68,9 @@ public class HSAPersonServiceTest2 {
     }
 
     @Test
-    public void testWithOneMiu() {
+    public void testWithOneMiu() throws ExternalServiceCallException {
 
-        GetCredentialsForPersonIncludingProtectedPersonResponseType miuResponse = new GetCredentialsForPersonIncludingProtectedPersonResponseType();
+        List<CredentialInformationType> miuResponse = new ArrayList<CredentialInformationType>();
         CredentialInformationType cit = new CredentialInformationType();
 
         CommissionType miu1 = new CommissionType();
@@ -80,7 +80,7 @@ public class HSAPersonServiceTest2 {
         miu1.setHealthCareUnitEndDate(LocalDateTime.now().plusYears(1));
 
         cit.getCommission().add(miu1);
-        miuResponse.getCredentialInformation().add(cit);
+        miuResponse.add(cit);
 
         when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null, null)).thenReturn(miuResponse);
 
@@ -91,9 +91,9 @@ public class HSAPersonServiceTest2 {
     }
 
     @Test
-    public void testWithOneMiuNoMatch() {
+    public void testWithOneMiuNoMatch() throws ExternalServiceCallException {
 
-        GetCredentialsForPersonIncludingProtectedPersonResponseType miuResponse = new GetCredentialsForPersonIncludingProtectedPersonResponseType();
+        List<CredentialInformationType> miuResponse = new ArrayList<CredentialInformationType>();
         CredentialInformationType cit = new CredentialInformationType();
 
         CommissionType miu1 = new CommissionType();
@@ -103,7 +103,7 @@ public class HSAPersonServiceTest2 {
         miu1.setHealthCareUnitEndDate(LocalDateTime.now().plusYears(1));
         cit.getCommission().add(miu1);
 
-        miuResponse.getCredentialInformation().add(cit);
+        miuResponse.add(cit);
         when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null, null)).thenReturn(miuResponse);
 
         List<CommissionType> res = hsaPersonService.checkIfPersonHasMIUsOnUnit(HSA_PERSON_ID, HSA_UNIT_ID);
@@ -113,9 +113,9 @@ public class HSAPersonServiceTest2 {
     }
 
     @Test
-    public void testWithSeveralMius() {
+    public void testWithSeveralMius() throws ExternalServiceCallException {
 
-        GetCredentialsForPersonIncludingProtectedPersonResponseType miuResponse = new GetCredentialsForPersonIncludingProtectedPersonResponseType();
+        List<CredentialInformationType> miuResponse = new ArrayList<CredentialInformationType>();
         CredentialInformationType cit = new CredentialInformationType();
 
         CommissionType miu1 = new CommissionType();
@@ -140,7 +140,7 @@ public class HSAPersonServiceTest2 {
         miu3.setHealthCareUnitEndDate(LocalDateTime.now().plusYears(1));
         cit.getCommission().add(miu3);
 
-        miuResponse.getCredentialInformation().add(cit);
+        miuResponse.add(cit);
         when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null, null)).thenReturn(miuResponse);
 
         List<CommissionType> res = hsaPersonService.checkIfPersonHasMIUsOnUnit(HSA_PERSON_ID, HSA_UNIT_ID);
@@ -150,9 +150,9 @@ public class HSAPersonServiceTest2 {
     }
 
     @Test
-    public void testWithSeveralMiusNoMatch() {
+    public void testWithSeveralMiusNoMatch() throws ExternalServiceCallException {
 
-        GetCredentialsForPersonIncludingProtectedPersonResponseType miuResponse = new GetCredentialsForPersonIncludingProtectedPersonResponseType();
+        List<CredentialInformationType> miuResponse = new ArrayList<CredentialInformationType>();
         CredentialInformationType cit = new CredentialInformationType();
 
         CommissionType miu1 = new CommissionType();
@@ -176,7 +176,7 @@ public class HSAPersonServiceTest2 {
         miu3.setHealthCareUnitEndDate(LocalDateTime.now().plusYears(1));
         cit.getCommission().add(miu3);
 
-        miuResponse.getCredentialInformation().add(cit);
+        miuResponse.add(cit);
         when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null, null)).thenReturn(miuResponse);
 
         List<CommissionType> res = hsaPersonService.checkIfPersonHasMIUsOnUnit(HSA_PERSON_ID, HSA_UNIT_ID);

@@ -19,21 +19,22 @@
 
 package se.inera.intyg.common.integration.hsa.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.xml.ws.WebServiceException;
+
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.common.integration.hsa.client.AuthorizationManagementService;
 import se.inera.intyg.common.integration.hsa.client.EmployeeService;
 import se.inera.intyg.common.integration.hsa.stub.Medarbetaruppdrag;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponseType;
-import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonResponseType;
-import se.riv.infrastructure.directory.v1.CommissionType;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import se.inera.intyg.common.support.modules.support.api.exception.ExternalServiceCallException;
+import se.riv.infrastructure.directory.v1.*;
 
 /**
  * Provides person related services using TJK over NTjP.
@@ -64,16 +65,20 @@ public class HsaPersonServiceImpl implements HsaPersonService {
 
         LOG.debug("Getting info from HSA for person '{}'", personHsaId);
 
-        GetEmployeeIncludingProtectedPersonResponseType responseType = employeeService.getEmployee(personHsaId, null,  null);
-        return responseType.getPersonInformation();
+        try {
+            return employeeService.getEmployee(personHsaId, null,  null);
+        } catch (ExternalServiceCallException e) {
+            LOG.error(e.getMessage());
+            throw new WebServiceException(e.getMessage());
+        }
     }
 
-    public List<CommissionType> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, final String unitHsaId) {
+    public List<CommissionType> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, final String unitHsaId) throws ExternalServiceCallException {
 
         LOG.debug("Checking if person with HSA id '{}' has MIUs on unit '{}'", hosPersonHsaId, unitHsaId);
 
-        GetCredentialsForPersonIncludingProtectedPersonResponseType response = authorizationManagementService.getAuthorizationsForPerson(hosPersonHsaId, null, null);
-        List<CommissionType> commissions = response.getCredentialInformation().stream()
+        List<CredentialInformationType> response = authorizationManagementService.getAuthorizationsForPerson(hosPersonHsaId, null, null);
+        List<CommissionType> commissions = response.stream()
                 .flatMap(ci -> ci.getCommission().stream())
                 .collect(Collectors.toList());
 

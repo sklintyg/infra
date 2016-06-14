@@ -19,7 +19,8 @@
 
 package se.inera.intyg.common.integration.hsa.client;
 
-import javax.xml.ws.WebServiceException;
+import java.util.List;
+
 import javax.xml.ws.soap.SOAPFaultException;
 
 import org.slf4j.Logger;
@@ -29,9 +30,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import se.inera.intyg.common.support.common.util.StringUtil;
+import se.inera.intyg.common.support.modules.support.api.exception.ExternalServiceCallException;
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedperson.v1.rivtabp21.GetEmployeeIncludingProtectedPersonResponderInterface;
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonResponseType;
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonType;
+import se.riv.infrastructure.directory.v1.PersonInformationType;
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 
 /**
@@ -49,7 +52,7 @@ public class EmployeeServiceBean implements EmployeeService {
     private String logicalAddress;
 
     @Override
-    public GetEmployeeIncludingProtectedPersonResponseType getEmployee(String personHsaId, String personalIdentityNumber, String searchBase) throws WebServiceException {
+    public List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase) throws ExternalServiceCallException {
 
         LOG.debug("Getting info from HSA for person '{}'", personHsaId);
 
@@ -66,7 +69,8 @@ public class EmployeeServiceBean implements EmployeeService {
         return getEmployee(logicalAddress, employeeType);
     }
 
-    private GetEmployeeIncludingProtectedPersonResponseType getEmployee(String logicalAddress, GetEmployeeIncludingProtectedPersonType employeeType) throws WebServiceException {
+    private List<PersonInformationType> getEmployee(String logicalAddress, GetEmployeeIncludingProtectedPersonType employeeType)
+            throws ExternalServiceCallException {
 
         GetEmployeeIncludingProtectedPersonResponseType response;
 
@@ -74,18 +78,23 @@ public class EmployeeServiceBean implements EmployeeService {
             response = getEmployeeIncludingProtectedPersonResponderInterface.getEmployeeIncludingProtectedPerson(logicalAddress, employeeType);
 
             // check whether call was successful or not
-            if (response.getResultCode() != ResultCodeEnum.OK) {
-                String personHsaId = employeeType.getPersonHsaId();
-                LOG.error("Failed getting employee information from HSA; personHsaId = '{}'", personHsaId);
-                throw new WebServiceException(response.getResultText());
+            if (response.getResultCode() == ResultCodeEnum.ERROR) {
+                if (response.getPersonInformation() == null || response.getPersonInformation().isEmpty()) {
+                    LOG.error("Failed getting employee information from HSA; personHsaId = '{}'. Result text: {}", employeeType.getPersonHsaId(),
+                            response.getResultText());
+                    throw new ExternalServiceCallException(response.getResultText());
+                } else {
+                    LOG.warn("Failed getting employee information from HSA; personHsaId = '{}'. Result text: {}", employeeType.getPersonHsaId(),
+                            response.getResultText());
+                    LOG.warn("Continuing anyway because information was delivered with the ERROR code.");
+                }
             }
         } catch (SOAPFaultException e) {
-            throw new WebServiceException(e);
+            throw new ExternalServiceCallException(e);
         }
 
-        return response;
+        return response.getPersonInformation();
     }
-
 
     private GetEmployeeIncludingProtectedPersonType createEmployeeType(String personHsaId, String personalIdentityNumber, String searchBase) {
         GetEmployeeIncludingProtectedPersonType employeeType = new GetEmployeeIncludingProtectedPersonType();

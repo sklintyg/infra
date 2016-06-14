@@ -40,10 +40,12 @@ import com.google.common.io.Resources;
 
 import se.inera.intyg.common.integration.hsa.client.OrganizationUnitService;
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
+import se.inera.intyg.common.support.modules.support.api.exception.ExternalServiceCallException;
 import se.riv.infrastructure.directory.organization.gethealthcareunit.v1.rivtabp21.GetHealthCareUnitResponderInterface;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v1.rivtabp21.GetHealthCareUnitMembersResponderInterface;
 import se.riv.infrastructure.directory.organization.getunit.v1.rivtabp21.GetUnitResponderInterface;
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitResponseType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
 
 /**
  * @author andreaskaltenbach
@@ -77,16 +79,16 @@ public class HsaOrganizationsServiceMockTest {
     }
 
     @Test
-    public void testPostaddressFormateringForMottagning() throws IOException {
+    public void testPostaddressFormateringForMottagning() throws IOException, ExternalServiceCallException {
         when(organizationUnitService.getUnit(UNIT_HSA_ID)).thenReturn(buildGetUnitReponse("EnhetWCTand.xml"));
         Vardenhet vardenhet = service.getVardenhet(UNIT_HSA_ID);
         verify(organizationUnitService).getUnit(UNIT_HSA_ID);
         assertEquals("Nordic MedTest Bryggaregatan 11", vardenhet.getPostadress());
     }
 
-    private GetUnitResponseType buildGetUnitReponse(String filename) throws IOException {
+    private UnitType buildGetUnitReponse(String filename) throws IOException {
         String xmlContents = Resources.toString(getResource(TEST_DIR + filename), Charsets.UTF_8);
-        return JAXB.unmarshal(new StringReader(xmlContents), GetUnitResponseType.class);
+        return JAXB.unmarshal(new StringReader(xmlContents), GetUnitResponseType.class).getUnit();
     }
 
     private static URL getResource(String href) {
