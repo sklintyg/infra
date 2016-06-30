@@ -21,7 +21,6 @@ package se.inera.intyg.common.integration.hsa.stub;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import se.inera.intyg.common.support.common.enumerations.BefattningKod;
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedperson.v1.rivtabp21.GetEmployeeIncludingProtectedPersonResponderInterface;
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonResponseType;
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonType;
@@ -65,7 +64,6 @@ public class GetEmployeeResponderStub implements GetEmployeeIncludingProtectedPe
         if (hsaPerson.getBefattningsKod() != null) {
             PaTitleType paTitleType = new PaTitleType();
             paTitleType.setPaTitleCode(hsaPerson.getBefattningsKod());
-            paTitleType.setPaTitleName(BefattningKod.getDescriptionFromCode(hsaPerson.getBefattningsKod()).orElse(null));
             person.getPaTitle().add(paTitleType);
         }
 
