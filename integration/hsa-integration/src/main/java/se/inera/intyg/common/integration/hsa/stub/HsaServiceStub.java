@@ -19,15 +19,15 @@
 
 package se.inera.intyg.common.integration.hsa.stub;
 
+import se.inera.intyg.common.integration.hsa.model.Mottagning;
+import se.inera.intyg.common.integration.hsa.model.Vardenhet;
+import se.inera.intyg.common.integration.hsa.model.Vardgivare;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import se.inera.intyg.common.integration.hsa.model.Mottagning;
-import se.inera.intyg.common.integration.hsa.model.Vardenhet;
-import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 
 /**
  * @author johannesc
@@ -97,7 +97,16 @@ public class HsaServiceStub {
     }
 
     public HsaPerson getHsaPerson(String hsaId) {
-        return personMap.get(hsaId);
+        if (personMap.containsKey(hsaId)) {
+            return personMap.get(hsaId);
+        } else if (personMap.containsKey(hsaId.toUpperCase())) {
+            return personMap.get(hsaId.toUpperCase());
+        } else if (personMap.containsKey(hsaId.toLowerCase())) {
+            return personMap.get(hsaId.toLowerCase());
+        } else {
+            return null;
+        }
+
     }
 
     public void addHsaPerson(HsaPerson person) {
