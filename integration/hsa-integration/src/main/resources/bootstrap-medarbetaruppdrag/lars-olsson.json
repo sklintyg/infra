@@ -5,11 +5,13 @@
     "uppdrag":[
     	{
     		"enhet": "TSTNMT2321000156-1062",
-            "andamal":["Vård och behandling"]
+            "andamal":["Vård och behandling"],
+			"systemRoles": ["INTYG;Rehab-TSTNMT2321000156-1062"]
     	},
 		{
 			"enhet": "TSTNMT2321000156-1063",
-			"andamal":["Vård och behandling"]
+			"andamal":["Vård och behandling"],
+			"systemRoles": ["INTYG;Rehab-TSTNMT2321000156-1063"]
 		}
     ]
 }

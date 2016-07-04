@@ -2,16 +2,12 @@
 	"hsaId": "TSTNMT2321000156-105R",
 	"forNamn": "Emma",
 	"efterNamn": "Nilsson",
-	"legitimeradeYrkesgrupper" : [
-		"Läkare"
-	],
+	"legitimeradeYrkesgrupper" : [ "Läkare"	],
 	"uppdrag": [
 		{
 			"vardgivare": "TSTNMT2321000156-105M",
 			"enhet": "TSTNMT2321000156-105N",
-			"andamal": [
-				"Vård och behandling"
-			]
+			"andamal": [ "Vård och behandling" ]
 		}
 	]
 }
