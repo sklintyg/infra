@@ -1,0 +1,19 @@
+{
+    "hsaId": "perpersson",
+    "forNamn": "Per",
+    "efterNamn": "Persson",
+    "legitimeradeYrkesgrupper" : [
+        "Läkare"
+    ],
+    "uppdrag":[
+        {
+            "enhet": "anestesikliniken"
+        },
+        {
+            "enhet": "kvinnokliniken"
+        },
+        {
+            "enhet": "medicinkliniken"
+        }
+    ]
+}

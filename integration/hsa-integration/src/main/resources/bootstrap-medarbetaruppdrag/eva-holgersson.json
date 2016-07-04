@@ -1,0 +1,39 @@
+{
+    "hsaId": "eva",
+	"forNamn": "Eva",
+	"efterNamn": "Holgersson",
+	"legitimeradeYrkesgrupper" : [
+		"Läkare"
+	],
+	"specialiseringar": [
+		{
+			"kod": "100",
+			"namn": "Kirurgi"
+		},
+		{
+			"kod": "200",
+			"namn": "Oftalmologi"
+		}
+	],
+    "uppdrag":[
+        {
+            "enhet": "centrum-vast",
+            "andamal": [
+                "Vård och behandling"
+            ]
+    	},
+    	{
+    		"enhet": "linkoping",
+            "andamal": [
+                "Vård och behandling"
+            ]
+    	},
+    	{
+    		"vardgivare": "ostergotland",
+    		"enhet": "enhet-finns-ej",
+            "andamal": [
+                "Vård och behandling"
+            ]
+    	}
+    ]
+}

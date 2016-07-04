@@ -1,0 +1,17 @@
+{
+    "hsaId": "fitness1",
+	"forNamn": "Test",
+	"efterNamn": "Testsson",
+	"specialiseringar": [{
+		"kod": "100",
+		"namn": "Kirurgi"
+	},{
+		"kod": "200",
+		"namn": "Ortopedi"
+	}],
+    "uppdrag":[
+    	{
+    		"enhet": "vardenhet-fit-1"
+    	}
+    ]
+}

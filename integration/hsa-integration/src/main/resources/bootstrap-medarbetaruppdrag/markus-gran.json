@@ -1,0 +1,38 @@
+{
+    "hsaId": "TST5565594230-106J",
+	"forNamn": "Markus",
+	"efterNamn": "Gran",
+	"legitimeradeYrkesgrupper" : [
+		"Läkare"
+	],
+	"specialiseringar": [
+		{
+			"kod": "77",
+			"namn": "Allergisjukdomar"
+		},
+		{
+			"kod": "10080",
+			"namn": "Barn- och ungdomskirurgi"
+		}
+	],
+    "uppdrag":[
+    	{
+    		"enhet": "IFV1239877878-103F",
+			"andamal": [
+				"Vård och behandling"
+			]
+    	},
+    	{
+    		"enhet": "IFV1239877878-103H",
+			"andamal": [
+				"Vård och behandling"
+			]
+    	},
+    	{
+    		"enhet": "IFV1239877878-103D",
+			"andamal": [
+				"Vård och behandling"
+			]
+    	}
+    ]
+}
