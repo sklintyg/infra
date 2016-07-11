@@ -1,0 +1,11 @@
+{
+  "hsaId": "TSTNMT2321000156-998V",
+  "uppdrag": [
+    {
+      "vardgivare": "TSTNMT2321000156-105M",
+      "enhet": "TSTNMT2321000156-105N",
+      "systemRoles": ["INTYG;Rehab-some-other-careunit"]
+    }
+  ]
+}
+
