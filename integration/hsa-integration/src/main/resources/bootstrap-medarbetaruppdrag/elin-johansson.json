@@ -12,6 +12,7 @@
 			"andamal":["Vård och behandling"]
 		}
     ],
+	"legitimeradeYrkesgrupper" : [ "Läkare"	],
 	"befattningsKod": "204090",
 	"forskrivarKod": "9100009"
 }
