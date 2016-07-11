@@ -20,20 +20,28 @@
 package se.inera.intyg.common.security.authorities;
 
 
-import java.util.*;
-import java.util.function.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-
 import se.inera.intyg.common.integration.hsa.model.UserCredentials;
 import se.inera.intyg.common.integration.hsa.util.HsaAttributeExtractor;
 import se.inera.intyg.common.security.authorities.bootstrap.AuthoritiesConfigurationLoader;
-import se.inera.intyg.common.security.common.model.*;
+import se.inera.intyg.common.security.common.model.AuthoritiesConstants;
+import se.inera.intyg.common.security.common.model.IntygUser;
+import se.inera.intyg.common.security.common.model.Privilege;
+import se.inera.intyg.common.security.common.model.RequestOrigin;
+import se.inera.intyg.common.security.common.model.Role;
+import se.inera.intyg.common.security.common.model.Title;
+import se.inera.intyg.common.security.common.model.TitleCode;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Created by Magnus Ekstrand on 20/11/15.
@@ -131,51 +139,55 @@ public class CommonAuthoritiesResolver {
     /**
      * Resolve a user role using SAML credential and HSA information.
      *
+     * Please note that the title attribute is not taken into account anymore, see INTYG-2627
      *
      * @return the resolved role
      */
     Role lookupUserRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole, UserCredentials userCredentials) {
         Role role;
         List<String> legitimeradeYrkesgrupper = new HsaAttributeExtractor().extractLegitimeradeYrkesgrupper(personInfo);
-        // 1. Bestäm användarens roll utefter titel som kommer från NÅGOT ANNAT ÄN SAML.
-        //    Titel ska vara detsamma som legitimerade yrkesgrupper.
-        role = lookupUserRoleByLegitimeradeYrkesgrupper(Arrays.asList(user.getTitel()));
-        if (role != null) {
-            return role;
-        }
 
-        // 2. Bestäm användarens roll utefter legitimerade yrkesgrupper som hämtas från HSA.
+        // 1. Bestäm användarens roll utefter legitimerade yrkesgrupper som hämtas från HSA.
 
         role = lookupUserRoleByLegitimeradeYrkesgrupper(legitimeradeYrkesgrupper);
         if (role != null) {
             return role;
         }
 
-        // 3. Bestäm användarens roll utefter befattningskod som kommer från SAML.
+        // 2. Bestäm användarens roll utefter befattningskod som kommer från SAML.
         role = lookupUserRoleByBefattningskod(user.getBefattningar());
         if (role != null) {
             return role;
         }
 
-        // 4. Bestäm användarens roll utefter kombinationen befattningskod och gruppförskrivarkod
-        List<String> allaForskrivarKoder = new ArrayList<>();
-        if (user.getForskrivarkod() != null) {
-            allaForskrivarKoder.add(user.getForskrivarkod());
-        }
-        allaForskrivarKoder.addAll(userCredentials.getGroupPrescriptionCode());
-
-        List<String> allaBefattningar = new ArrayList<>();
-        allaBefattningar.addAll(user.getBefattningar());
-        allaBefattningar.addAll(userCredentials.getPaTitleCode());
+        // 3. Bestäm användarens roll utefter kombinationen befattningskod och gruppförskrivarkod
+        List<String> allaForskrivarKoder = buildAllaForskrivarKoderList(user, userCredentials);
+        List<String> allaBefattningar = buildAllaBefattningarList(user, userCredentials);
 
         role = lookupUserRoleByBefattningskodAndGruppforskrivarkod(allaBefattningar, allaForskrivarKoder);
         if (role != null) {
             return role;
         }
 
-        // 6. Användaren skall få fallback-rollen, t.ex. en vårdadministratör eller rehabkoordinator inom landstinget.
+        // 4. Användaren skall få fallback-rollen, t.ex. en vårdadministratör eller rehabkoordinator inom landstinget.
         role = fnRole.apply(defaultRole);
         return role;
+    }
+
+    private List<String> buildAllaForskrivarKoderList(IntygUser user, UserCredentials userCredentials) {
+        List<String> allaForskrivarKoder = new ArrayList<>();
+        if (user.getForskrivarkod() != null) {
+            allaForskrivarKoder.add(user.getForskrivarkod());
+        }
+        allaForskrivarKoder.addAll(userCredentials.getGroupPrescriptionCode());
+        return allaForskrivarKoder;
+    }
+
+    private List<String> buildAllaBefattningarList(IntygUser user, UserCredentials userCredentials) {
+        List<String> allaBefattningar = new ArrayList<>();
+        allaBefattningar.addAll(user.getBefattningar());
+        allaBefattningar.addAll(userCredentials.getPaTitleCode());
+        return allaBefattningar;
     }
 
     /** Lookup user role by looking into 'legitimerade yrkesgrupper'.
@@ -307,13 +319,6 @@ public class CommonAuthoritiesResolver {
     private Function<String, Role> fnRole = (name) -> {
         return getRoles().stream()
                 .filter(isRole(name))
-                .findFirst()
-                .orElse(null);
-    };
-
-    private Function<String, Title> fnTitle = (title) -> {
-        return getTitles().stream()
-                .filter(isTitle(title))
                 .findFirst()
                 .orElse(null);
     };
