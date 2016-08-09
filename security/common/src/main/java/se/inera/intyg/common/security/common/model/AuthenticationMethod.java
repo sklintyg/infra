@@ -17,12 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.common.integration.hsa.model;
+package se.inera.intyg.common.security.common.model;
 
 /**
  * Created by eriklupander on 2015-08-21.
- *
- * TODO How did this file end up here, within hsa-integration????
  */
 public enum AuthenticationMethod {
 

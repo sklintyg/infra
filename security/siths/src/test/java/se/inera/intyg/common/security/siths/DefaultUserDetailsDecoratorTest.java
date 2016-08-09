@@ -19,12 +19,9 @@
 package se.inera.intyg.common.security.siths;
 
 import org.junit.Test;
-import se.inera.intyg.common.integration.hsa.model.AuthenticationMethod;
-import se.inera.intyg.common.integration.hsa.model.UserCredentials;
-import se.inera.intyg.common.integration.hsa.model.Vardenhet;
-import se.inera.intyg.common.integration.hsa.model.Vardgivare;
-import se.inera.intyg.common.security.common.model.AuthConstants;
-import se.inera.intyg.common.security.common.model.IntygUser;
+
+import se.inera.intyg.common.integration.hsa.model.*;
+import se.inera.intyg.common.security.common.model.*;
 import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 
 import java.util.Collections;

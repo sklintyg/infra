@@ -21,7 +21,7 @@ package se.inera.intyg.common.security.common.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import se.inera.intyg.common.integration.hsa.model.AuthenticationMethod;
+
 import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.common.util.integration.integration.json.CustomObjectMapper;

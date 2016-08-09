@@ -21,11 +21,10 @@ package se.inera.intyg.common.security.siths;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.inera.intyg.common.integration.hsa.model.AuthenticationMethod;
-import se.inera.intyg.common.integration.hsa.model.UserCredentials;
-import se.inera.intyg.common.integration.hsa.model.Vardenhet;
-import se.inera.intyg.common.integration.hsa.model.Vardgivare;
+
+import se.inera.intyg.common.integration.hsa.model.*;
 import se.inera.intyg.common.integration.hsa.util.HsaAttributeExtractor;
+import se.inera.intyg.common.security.common.model.AuthenticationMethod;
 import se.inera.intyg.common.security.common.model.IntygUser;
 import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
