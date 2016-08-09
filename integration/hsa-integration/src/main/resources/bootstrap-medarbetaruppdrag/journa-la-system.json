@@ -1,0 +1,14 @@
+{
+    "hsaId": "SE4815162344-1B02",
+    "forNamn": "Journa",
+	"efterNamn": "La System",
+	"legitimeradeYrkesgrupper" : [
+		"Läkare"],
+    "uppdrag":[
+    	{
+    		"enhet":"SE4815162344-1A03"
+    	},{
+    		"enhet":"SE4815162344-1A02"
+    	}
+    ]
+}

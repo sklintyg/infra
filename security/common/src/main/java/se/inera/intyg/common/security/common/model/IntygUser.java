@@ -21,7 +21,7 @@ package se.inera.intyg.common.security.common.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import se.inera.intyg.common.integration.hsa.model.AuthenticationMethod;
+
 import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.common.util.integration.integration.json.CustomObjectMapper;
@@ -66,7 +66,7 @@ public class IntygUser implements UserDetails {
     protected Map<String, Privilege> authorities;
     protected String origin;
 
-
+    private String reference;
 
     /** The sole constructor. */
     public IntygUser(String employeeHsaId) {
@@ -376,6 +376,15 @@ public class IntygUser implements UserDetails {
     @Override
     public String toString() {
         return hsaId + " [authScheme=" + authenticationScheme + ", lakare=" + isLakare() + "]";
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 
 }
