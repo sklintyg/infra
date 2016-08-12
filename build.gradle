@@ -1,31 +1,40 @@
 allprojects  {
   apply plugin: 'maven'
+  apply plugin: 'nebula.dependency-recommender'
 
   group = 'se.inera.intyg.common'
   version = '0-SNAPSHOT'
-}
 
-subprojects {
-  apply plugin: 'java'
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
+  dependencyRecommendations {
+    mavenBom module: 'se.inera.intyg.common:common-pom:1.0.25'
+  }
 
   repositories {
     mavenLocal()
-
     maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases/" }
     maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/nightly/" }
     maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/snapshots/" }
     maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/thirdparty/" }
     maven { url "http://repo.maven.apache.org/maven2" }
   }
+}
 
-  buildscript {
-    repositories {
-      mavenLocal()
-      maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/snapshots/" }
-      jcenter()
-    }
+subprojects {
+  apply plugin: 'java'
+
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+
+}
+
+buildscript {
+  repositories {
+    mavenLocal()
+    maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/snapshots/" }
+    jcenter()
   }
-  
+
+  dependencies {
+    classpath 'com.netflix.nebula:nebula-dependency-recommender:3.6.3'
+  }
 }

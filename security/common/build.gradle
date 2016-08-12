@@ -3,13 +3,12 @@ description = "Common (Security Common)"
 dependencies {
     compile project(':hsa-integration')
     compile project(':integration-util')
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.4'
-    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.4.4'
-    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.5'
-    compile 'org.slf4j:slf4j-api:1.7.5'
+    compile 'com.fasterxml.jackson.core:jackson-annotations'
+    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider'
+    compile 'org.slf4j:slf4j-api'
 
-    compileOnly 'javax.servlet:servlet-api:2.5'
+    compileOnly 'javax.servlet:servlet-api'
     
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.9.0'
+    testCompile 'junit:junit'
+    testCompile 'org.mockito:mockito-core'
 }
