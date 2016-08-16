@@ -3,7 +3,7 @@ allprojects  {
   apply plugin: 'nebula.dependency-recommender'
 
   group = 'se.inera.intyg.common'
-  version = '0-SNAPSHOT'
+  version = System.getProperty('VERSION') ?: '0-SNAPSHOT'
 
   dependencyRecommendations {
     mavenBom module: 'se.inera.intyg.common:common-pom:1.0.25'
