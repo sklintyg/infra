@@ -1,22 +1,24 @@
+plugins {
+  id 'org.ajoberstar.grgit' version '1.5.1'
+}
+
 allprojects  {
   apply plugin: 'maven'
-  apply plugin: 'nebula.dependency-recommender'
+  apply plugin: 'org.ajoberstar.grgit'
+
+  def baseVersion = '2.6.'
 
   group = 'se.inera.intyg.common'
-  version = System.getProperty('VERSION') ?: '0-SNAPSHOT'
-
-  dependencyRecommendations {
-    mavenBom module: 'se.inera.intyg.common:common-pom:1.0.25'
-  }
+  version = System.getProperty('BUILD_NUMBER') ? baseVersion + System.getProperty('BUILD_NUMBER') : '0-SNAPSHOT'
 
   repositories {
     mavenLocal()
     maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases/" }
-    maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/nightly/" }
     maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/snapshots/" }
     maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/thirdparty/" }
     maven { url "http://repo.maven.apache.org/maven2" }
   }
+
 }
 
 subprojects {
@@ -25,16 +27,27 @@ subprojects {
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
 
-}
-
-buildscript {
-  repositories {
-    mavenLocal()
-    maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/snapshots/" }
-    jcenter()
+  task createVersionPropertyFile(dependsOn: processResources) << {
+    def propertyFile = "${buildDir}/resources/main/version.properties"
+    ant.touch(file: propertyFile, mkdirs: "true")
+    ant.propertyfile(file: propertyFile) {
+      entry(key: 'project.version', default: rootProject.version)
+      entry(key: 'buildTime', default: new Date())
+      entry(key: 'gitCommit', default: "${grgit.head().id}")
+      entry(key: 'gitBranch', default: "${grgit.branch.getCurrent().getName()}")
+    }
   }
 
-  dependencies {
-    classpath 'com.netflix.nebula:nebula-dependency-recommender:3.6.3'
+  jar.dependsOn(createVersionPropertyFile)
+}
+
+task tagRelease {
+  description = 'Tags the current head with the projects version.'
+  doLast {
+    grgit.tag.add {
+      name = version
+      message = "Release of ${version}"
+    }
+    grgit.push(tags: true)
   }
 }

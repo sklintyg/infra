@@ -4,24 +4,22 @@ dependencies {
   compile project(':security-common')
   compile project(':security-authorities')
 
-  compile 'org.springframework.security.extensions:spring-security-saml2-core'
-  compile 'org.opensaml:opensaml'
-  compile 'org.opensaml:openws'
-  compile 'org.slf4j:slf4j-api'
-  compile 'org.springframework:spring-beans'
-  compile 'org.springframework:spring-context'
-  compile 'org.springframework:spring-context-support'
-  compile 'org.springframework.security:spring-security-web'
-  compile 'org.springframework:spring-test'
+  compile 'org.springframework.security.extensions:spring-security-saml2-core:1.0.1.RELEASE'
   compile 'org.opensaml:opensaml:2.5.3'
-  compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.5'
+  compile 'org.opensaml:openws:1.4.2-1'
+  compile 'org.slf4j:slf4j-api:1.7.5'
+  compile 'org.springframework:spring-beans:4.2.2.RELEASE'
+  compile 'org.springframework:spring-context:4.2.2.RELEASE'
+  compile 'org.springframework:spring-context-support:4.2.2.RELEASE'
+  compile 'org.springframework.security:spring-security-web:4.0.3.RELEASE'
+  compile 'org.springframework:spring-test:4.2.2.RELEASE'
   compile(group: 'org.opensaml', name: 'xmltooling', version:'1.3.2') {
     exclude(module: 'xml-apis')
   }
 
-  compileOnly 'javax.servlet:servlet-api'
+  compileOnly 'javax.servlet:servlet-api:2.5'
 
-  testCompile 'junit:junit'
-  testCompile 'org.mockito:mockito-core'
-  testCompile 'javax.servlet:javax.servlet-api:3.1.0'  
+  testCompile 'junit:junit:4.12'
+  testCompile 'org.mockito:mockito-core:1.9.0'
+  testCompile 'javax.servlet:javax.servlet-api:3.1.0'
 }
