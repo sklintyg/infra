@@ -19,12 +19,9 @@
 
 package se.inera.intyg.common.logmessages;
 
-import org.joda.time.LocalDateTime;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * Class for all log messages. Each project sending PDL log messsages should implement their own domain-specific

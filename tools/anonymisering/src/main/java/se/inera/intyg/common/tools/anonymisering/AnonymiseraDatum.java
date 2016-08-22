@@ -1,8 +1,7 @@
 package se.inera.intyg.common.tools.anonymisering;
 
+import java.time.LocalDate;
 import java.util.Random;
-
-import org.joda.time.LocalDate;
 
 public class AnonymiseraDatum {
 

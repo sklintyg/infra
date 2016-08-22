@@ -26,7 +26,7 @@
   <parent>
     <groupId>se.inera.intyg.common</groupId>
     <artifactId>common-pom</artifactId>
-    <version>1.0.10</version>
+    <version>1.0.26</version>
   </parent>
 
   <!--
@@ -43,11 +43,6 @@
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-all</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
     </dependency>
 
     <!-- Test dependencies -->
@@ -104,8 +99,16 @@
           </dependency>
         </dependencies>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-Xmx1024m</argLine>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+
 
   <repositories>
     <repository>
