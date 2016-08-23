@@ -8,11 +8,8 @@ allprojects  {
 
   def baseVersion = '2.6.'
 
-  logger.quiet("Version: " + System.env.BUILD_NUMBER)
-  //logger.quiet("P Version: " + project.BUILD_NUMBER)
-
   group = 'se.inera.intyg.common'
-  version = System.getProperty('BUILD_NUMBER') ? baseVersion + System.getProperty('BUILD_NUMBER') : '0-SNAPSHOT'
+  version = System.env.BUILD_NUMBER != null ? baseVersion + System.env.BUILD_NUMBER : '0-SNAPSHOT'
 
   repositories {
     mavenLocal()
@@ -52,14 +49,5 @@ task tagRelease {
       message = "Release of ${version}"
     }
     grgit.push(tags: true)
-  }
-}
-
-task printInfo {
-  //logger.quiet("Version: " + System.getProperty('BUILD_NUMBER'))
-  System.properties.each { logger.quiet(it.key + ": " + it.value) }
-  doLast {
-    System.properties.each { logger.quiet(it.key + ": " + it.value) }
-    // logger.quiet("Version in dolast: " + System.getProperty('BUILD_NUMBER'))
   }
 }
