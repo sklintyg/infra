@@ -60,6 +60,6 @@ task printInfo {
   System.getProperties.each { logger.quiet(it) }
   doLast {
     System.getProperties.each { logger.quiet(it) }
-    # logger.quiet("Version in dolast: " + System.getProperty('BUILD_NUMBER'))
+    // logger.quiet("Version in dolast: " + System.getProperty('BUILD_NUMBER'))
   }
 }
