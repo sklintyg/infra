@@ -8,7 +8,7 @@ allprojects  {
 
   def baseVersion = '2.6.'
 
-  logger.quiet("Version: " + System.getProperty('BUILD_NUMBER'))
+  logger.quiet("Version: " + System.env.BUILD_NUMBER)
   //logger.quiet("P Version: " + project.BUILD_NUMBER)
 
   group = 'se.inera.intyg.common'
