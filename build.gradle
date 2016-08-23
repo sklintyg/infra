@@ -57,9 +57,9 @@ task tagRelease {
 
 task printInfo {
   //logger.quiet("Version: " + System.getProperty('BUILD_NUMBER'))
-  System.getProperties.each { logger.quiet(it) }
+  System.properties.each { logger.quiet(it) }
   doLast {
-    System.getProperties.each { logger.quiet(it) }
+    System.properties.each { logger.quiet(it) }
     // logger.quiet("Version in dolast: " + System.getProperty('BUILD_NUMBER'))
   }
 }
