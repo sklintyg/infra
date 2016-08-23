@@ -43,8 +43,8 @@ subprojects {
 
 task tagRelease {
   description = 'Tags the current head with the projects version.'
-  setProperty("ext.org.ajoberstar.grgit.auth.username", System.env.GITUSER)
-  setProperty("ext.org.ajoberstar.grgit.auth.password", System.env.GITPW)
+  project.ext.org.ajoberstar.grgit.auth.username = System.env.GITUSER
+  project.ext.org.ajoberstar.grgit.auth.password = System.env.GITPW
   doLast {
     grgit.tag.add {
       name = version
