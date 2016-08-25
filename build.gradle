@@ -2,6 +2,9 @@ plugins {
   id 'org.ajoberstar.grgit' version '1.5.1'
 }
 
+ext.nexusUsername = System.properties['nexusUsername']
+ext.nexusPassword = System.properties['nexusPassword']
+
 allprojects  {
   apply plugin: 'maven'
   apply plugin: 'org.ajoberstar.grgit'
@@ -10,6 +13,17 @@ allprojects  {
 
   group = 'se.inera.intyg.common'
   version = System.env.BUILD_NUMBER != null ? baseVersion + System.env.BUILD_NUMBER : '0-SNAPSHOT'
+
+  uploadArchives {
+    repositories {
+      mavenDeployer {
+        configuration = configurations.deployerJars
+        repository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases") {
+          authentication(userName: nexusUsername, password: nexusPassword)
+        }
+      }
+    }
+  }
 
   repositories {
     mavenLocal()
