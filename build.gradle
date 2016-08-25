@@ -17,7 +17,6 @@ allprojects  {
   uploadArchives {
     repositories {
       mavenDeployer {
-        configuration = configurations.deployerJars
         repository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases") {
           authentication(userName: nexusUsername, password: nexusPassword)
         }
