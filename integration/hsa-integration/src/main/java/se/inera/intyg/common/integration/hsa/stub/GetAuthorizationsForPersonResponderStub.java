@@ -69,7 +69,6 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
         if (hsaPerson != null) {
             cit.setPersonalPrescriptionCode(hsaPerson.getForskrivarKod());
             cit.getPaTitleCode().add(hsaPerson.getBefattningsKod());
-            // TODO gruppförskrivarkod? cit.getGroupPrescriptionCode()
         }
 
         for (Vardgivare vardgivare : serviceStub.getVardgivare()) {
