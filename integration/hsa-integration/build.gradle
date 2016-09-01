@@ -3,20 +3,21 @@ description = 'Common (HSA-integration)'
 dependencies {
   compile project(':integration-util')
 
-  compile "se.riv.infrastructure.directory.authorizationmanagement:${rivtaHsaAuthorizationmanagementVersion}"
+  compile "se.riv.infrastructure.directory.authorizationmanagement:infrastructure-directory-authorizationmanagement-schemas:${rivtaHsaAuthorizationmanagementVersion}"
   compile "se.riv.infrastructure.directory.employee:infrastructure-directory-employee-schemas:${rivtaHsaEmployeeVersion}"
-  compile "se.riv.infrastructure.directory.organization:${rivtaHsaOrganizationVersion}"
+  compile "se.riv.infrastructure.directory.organization:infrastructure-directory-organization-schemas:${rivtaHsaOrganizationVersion}"
 
-  compile 'org.slf4j:slf4j-api:1.7.5'
-  compile 'com.google.guava:guava:14.0.1'
-  compile 'org.apache.cxf:cxf-rt-frontend-jaxrs:3.1.3'
-  compile 'org.apache.cxf:cxf-rt-frontend-jaxws:3.1.3'
-  compile 'org.apache.cxf:cxf-rt-transports-http:3.1.3'
-  compile 'org.springframework:spring-beans:4.2.2.RELEASE'
-  compile 'org.springframework:spring-context:4.2.2.RELEASE'
-  compile 'org.springframework:spring-context-support:4.2.2.RELEASE'
-  compile 'org.springframework.security:spring-security-web:4.0.3.RELEASE'
-  compile 'org.springframework:spring-test:4.2.2.RELEASE'
+  compile "org.slf4j:slf4j-api:${slf4jVersion}"
+  compile "com.google.guava:guava:${guavaVersion}"
+  compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+  compile "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
+  compile "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
 
-  testCompile 'org.mockito:mockito-core:1.9.0'
+  compile "org.springframework:spring-beans:${springVersion}"
+  compile "org.springframework:spring-context:${springVersion}"
+  compile "org.springframework:spring-context-support:${springVersion}"
+  compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
+
+  testCompile "org.springframework:spring-test:${springVersion}"
+  testCompile "org.mockito:mockito-core:${mockitoVersion}"
 }
