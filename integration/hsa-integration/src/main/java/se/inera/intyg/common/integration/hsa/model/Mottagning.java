@@ -19,7 +19,7 @@
 
 package se.inera.intyg.common.integration.hsa.model;
 
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
