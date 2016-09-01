@@ -5,6 +5,22 @@ plugins {
 ext.nexusUsername = System.properties['nexusUsername']
 ext.nexusPassword = System.properties['nexusPassword']
 
+ext {
+  rivtaClinicalprocessVersion = "2.0.RC5.2"
+  rivtaEhrLogstoreVersion = "1.2.2"
+  rivtaInsuranceprocessVersion = "3.1.0.2"
+  rivtaItintegrationMonitoringVersion = "1.0.0.2"
+  rivtaHsaAuthorizationmanagementVersion = "1.0.RC4.2"
+  rivtaHsaEmployeeVersion = "1.0.RC4.2"
+  rivtaHsaOrganizationVersion = "1.1.RC5.2"
+  intygClinicalprocessVersion = "1.0.2"
+  intygInsuranceprocessVersion = "1.0.2"
+  intygTransportstyrelsenVersion = "1.0.2"
+  intygPrivatepractitionerVersion = "1.0.2"
+
+  jacksonVersion = "2.8.1"
+}
+
 allprojects  {
   apply plugin: 'maven'
   apply plugin: 'org.ajoberstar.grgit'
@@ -31,7 +47,6 @@ allprojects  {
     maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/thirdparty/" }
     maven { url "http://repo.maven.apache.org/maven2" }
   }
-
 }
 
 subprojects {

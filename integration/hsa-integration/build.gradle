@@ -3,9 +3,10 @@ description = 'Common (HSA-integration)'
 dependencies {
   compile project(':integration-util')
 
-  compile 'se.riv.infrastructure.directory.authorizationmanagement:infrastructure-directory-authorizationmanagement-schemas:1.0.RC4.1'
-  compile 'se.riv.infrastructure.directory.employee:infrastructure-directory-employee-schemas:1.0.RC4.1'
-  compile 'se.riv.infrastructure.directory.organization:infrastructure-directory-organization-schemas:1.1.RC5.1'
+  compile "se.riv.infrastructure.directory.authorizationmanagement:${rivtaHsaAuthorizationmanagementVersion}"
+  compile "se.riv.infrastructure.directory.employee:infrastructure-directory-employee-schemas:${rivtaHsaEmployeeVersion}"
+  compile "se.riv.infrastructure.directory.organization:${rivtaHsaOrganizationVersion}"
+
   compile 'org.slf4j:slf4j-api:1.7.5'
   compile 'com.google.guava:guava:14.0.1'
   compile 'org.apache.cxf:cxf-rt-frontend-jaxrs:3.1.3'

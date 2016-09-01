@@ -3,6 +3,5 @@ description = 'Common (Log Messages)'
 dependencies {
   compile project(':common-support')
 
-  compile 'joda-time:joda-time:2.2'
-  compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.4'
+  compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
 }
