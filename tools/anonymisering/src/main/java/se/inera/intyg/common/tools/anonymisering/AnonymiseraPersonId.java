@@ -8,8 +8,8 @@ import java.util.Set;
 import java.util.Collections;
 import java.util.regex.Pattern;
 
-import org.joda.time.LocalDate;
-import org.joda.time.format.ISODateTimeFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class AnonymiseraPersonId {
 
@@ -23,7 +23,7 @@ public class AnonymiseraPersonId {
 
     // Package scope for testability
     Random random = new Random();
-    
+
     private final Map<String, String> actualToAnonymized = Collections.synchronizedMap(new HashMap<String, String>());
     private final Set<String> anonymizedSet = Collections.synchronizedSet(new HashSet<String>());
 
@@ -43,7 +43,7 @@ public class AnonymiseraPersonId {
             return personnr;
         }
     }
-    
+
     private String getUniqueRandomPersonid(String nummer) {
         String anonymized;
         try {
@@ -64,12 +64,12 @@ public class AnonymiseraPersonId {
         LocalDate date;
         boolean samordning = false;
         try {
-            date = ISODateTimeFormat.basicDate().parseLocalDate(nummer.substring(0, END_OF_BIRTHDATE));
+            date = LocalDate.parse(nummer.substring(0, END_OF_BIRTHDATE), DateTimeFormatter.BASIC_ISO_DATE);
         } catch (Exception e) {
             StringBuilder b = new StringBuilder(nummer.substring(0, END_OF_BIRTHDATE));
             b.setCharAt(DAY_INDEX, (char) (b.charAt(DAY_INDEX) - SAMORDNING_OFFSET));
-                date = ISODateTimeFormat.basicDate().parseLocalDate(b.toString());
-                samordning = true;
+            date = LocalDate.parse(b.toString(), DateTimeFormatter.BASIC_ISO_DATE);
+            samordning = true;
         }
         int days = random.nextInt(BIRTHDAY_RANGE) - BIRTHDAY_RANGE/2;
         if (days == 0) days = BIRTHDAY_RANGE/2;
@@ -80,7 +80,7 @@ public class AnonymiseraPersonId {
             extension += 1;
         }
         String suffix = String.format("%1$03d", extension);
-        String prefix = date.toString("yyyyMMdd");
+        String prefix = date.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         // Make samordning if needed
         if (samordning) {
             StringBuilder b = new StringBuilder(prefix);

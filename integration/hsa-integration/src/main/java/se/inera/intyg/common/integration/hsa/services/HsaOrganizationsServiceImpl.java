@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.ws.WebServiceException;
 
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -208,7 +208,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
     }
 
     private boolean isActive(LocalDateTime fromDate, LocalDateTime toDate) {
-        LocalDateTime now = new LocalDateTime();
+        LocalDateTime now = LocalDateTime.now();
 
         if (fromDate != null && now.isBefore(fromDate)) {
             return false;

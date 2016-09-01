@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -57,7 +57,7 @@ public class HSAPersonServiceTest2 {
     @Test
     public void testWithNoMius() throws ExternalServiceCallException {
 
-        List<CredentialInformationType> miuResponse = new ArrayList<CredentialInformationType>();
+        List<CredentialInformationType> miuResponse = new ArrayList<>();
 
         when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null, null)).thenReturn(miuResponse);
 
@@ -70,7 +70,7 @@ public class HSAPersonServiceTest2 {
     @Test
     public void testWithOneMiu() throws ExternalServiceCallException {
 
-        List<CredentialInformationType> miuResponse = new ArrayList<CredentialInformationType>();
+        List<CredentialInformationType> miuResponse = new ArrayList<>();
         CredentialInformationType cit = new CredentialInformationType();
 
         CommissionType miu1 = new CommissionType();
@@ -93,7 +93,7 @@ public class HSAPersonServiceTest2 {
     @Test
     public void testWithOneMiuNoMatch() throws ExternalServiceCallException {
 
-        List<CredentialInformationType> miuResponse = new ArrayList<CredentialInformationType>();
+        List<CredentialInformationType> miuResponse = new ArrayList<>();
         CredentialInformationType cit = new CredentialInformationType();
 
         CommissionType miu1 = new CommissionType();
@@ -115,7 +115,7 @@ public class HSAPersonServiceTest2 {
     @Test
     public void testWithSeveralMius() throws ExternalServiceCallException {
 
-        List<CredentialInformationType> miuResponse = new ArrayList<CredentialInformationType>();
+        List<CredentialInformationType> miuResponse = new ArrayList<>();
         CredentialInformationType cit = new CredentialInformationType();
 
         CommissionType miu1 = new CommissionType();
@@ -152,7 +152,7 @@ public class HSAPersonServiceTest2 {
     @Test
     public void testWithSeveralMiusNoMatch() throws ExternalServiceCallException {
 
-        List<CredentialInformationType> miuResponse = new ArrayList<CredentialInformationType>();
+        List<CredentialInformationType> miuResponse = new ArrayList<>();
         CredentialInformationType cit = new CredentialInformationType();
 
         CommissionType miu1 = new CommissionType();
