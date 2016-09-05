@@ -83,7 +83,7 @@ public class HsaPersonServiceImpl implements HsaPersonService {
                 .collect(Collectors.toList());
 
         List<CommissionType> filteredMuisOnUnit = commissions.stream()
-                .filter(ct -> ct.getHealthCareUnitHsaId().equals(unitHsaId))
+                .filter(ct -> ct.getHealthCareUnitHsaId() != null && ct.getHealthCareUnitHsaId().equals(unitHsaId))
                 .filter(ct -> ct.getHealthCareUnitEndDate() == null || ct.getHealthCareUnitEndDate().isAfter(LocalDateTime.now()))
                 .filter(ct -> (ct.getCommissionPurpose() != null) && Medarbetaruppdrag.VARD_OCH_BEHANDLING.equalsIgnoreCase(ct.getCommissionPurpose()))
                 .collect(Collectors.toList());
