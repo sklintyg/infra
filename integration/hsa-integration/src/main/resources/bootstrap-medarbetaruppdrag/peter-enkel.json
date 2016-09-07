@@ -1,0 +1,26 @@
+{
+  "hsaId": "peter-enkel",
+  "forNamn": "Peter",
+  "efterNamn": "Ekel",
+  "legitimeradeYrkesgrupper" : [
+    "Läkare"
+  ],
+  "specialiseringar": [
+    {
+      "kod": "100",
+      "namn": "Kirurgi"
+    },
+    {
+      "kod": "200",
+      "namn": "Oftalmologi"
+    }
+  ],
+  "uppdrag":[
+    {
+      "enhet": "IFV1239877878-103H",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    }
+  ]
+}

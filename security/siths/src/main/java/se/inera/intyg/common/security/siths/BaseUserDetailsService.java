@@ -248,9 +248,9 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         decorateIntygUserWithAdditionalInfo(intygUser, personInfo);
         decorateIntygUserWithAvailableFeatures(intygUser);
         decorateIntygUserWithAuthenticationMethod(intygUser, authenticationScheme);
-        decorateIntygUserWithDefaultVardenhet(intygUser);
         decorateIntygUserWithRoleAndAuthorities(intygUser, personInfo, userAuthorizationInfo.getUserCredentials());
         decorateIntygUserWithSystemRoles(intygUser, userAuthorizationInfo.getUserCredentials());
+        decorateIntygUserWithDefaultVardenhet(intygUser);
         return intygUser;
     }
 
