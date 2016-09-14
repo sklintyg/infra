@@ -23,11 +23,11 @@ import groovy.json.*
 import groovy.json.internal.LazyMap
 
 class AnonymiseraJson {
-    
+
     AnonymiseraHsaId anonymiseraHsaId;
     AnonymiseraDatum anonymiseraDatum;
     AnonymiseraPersonId anonymiseraPersonId;
-    
+
     static {
         LazyMap.metaClass.anonymize = {key->
             anonymizeField(delegate, key)
@@ -56,24 +56,24 @@ class AnonymiseraJson {
         this.anonymiseraHsaId = anonymiseraHsaId
         this.anonymiseraDatum = anonymiseraDatum
     }
-    
+
     AnonymiseraJson(AnonymiseraHsaId anonymiseraHsaId, AnonymiseraDatum anonymiseraDatum, AnonymiseraPersonId anonymiseraPersonId) {
         this.anonymiseraHsaId = anonymiseraHsaId
         this.anonymiseraDatum = anonymiseraDatum
         this.anonymiseraPersonId = anonymiseraPersonId
     }
-    
+
     String anonymiseraIntygsJson(String s) {
         anonymiseraIntygsJson(s, null)
     }
-    
+
     String anonymiseraIntygsJson(String s, String personId) {
         def intyg = new JsonSlurper().parseText(s)
         anonymizeJson(intyg, personId)
         JsonBuilder builder = new JsonBuilder( intyg )
         return builder.toString()
     }
-    
+
     void anonymizeJson(def intyg, String personId) {
         intyg.grundData.patient.personId = personId ?: anonymiseraPersonId.anonymisera(intyg.grundData.patient.personId)
         intyg.grundData.patient.anonymize('fornamn')
@@ -97,5 +97,5 @@ class AnonymiseraJson {
         intyg.anonymize('arbetsformagaPrognos')
         intyg.anonymize('namnfortydligandeOchAdress')
     }
-    
+
 }

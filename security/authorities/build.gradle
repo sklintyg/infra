@@ -4,7 +4,7 @@ dependencies {
   compile project(':hsa-integration')
   compile project(':integration-util')
   compile project(':security-common')
-  
+
   compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
   compile "org.opensaml:opensaml:${opensamlVersion}"
   compile "org.opensaml:openws:${opensamlOpenwsVersion}"
