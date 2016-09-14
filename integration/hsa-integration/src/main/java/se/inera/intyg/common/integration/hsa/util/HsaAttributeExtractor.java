@@ -35,8 +35,8 @@ public class HsaAttributeExtractor {
         Set<String> specSet = new TreeSet<>();
 
         for (PersonInformationType userType : hsaUserTypes) {
-            if (userType.getSpecialityCode() != null) {
-                specSet.addAll(userType.getSpecialityCode());
+            if (userType.getSpecialityName() != null) {
+                specSet.addAll(userType.getSpecialityName());
             }
         }
 

@@ -19,10 +19,20 @@
 
 package se.inera.intyg.common.security.siths;
 
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import javax.xml.transform.stream.StreamSource;
+
 import org.apache.cxf.staxutils.StaxUtils;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -51,33 +61,9 @@ import se.inera.intyg.common.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.common.security.common.model.*;
 import se.inera.intyg.common.security.common.service.AuthenticationLogger;
 import se.inera.intyg.common.security.common.service.CommonFeatureService;
-import se.inera.intyg.common.security.exception.HsaServiceException;
-import se.inera.intyg.common.security.exception.MissingHsaEmployeeInformation;
-import se.inera.intyg.common.security.exception.MissingMedarbetaruppdragException;
+import se.inera.intyg.common.security.exception.*;
 import se.riv.infrastructure.directory.v1.PaTitleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
-
-import javax.xml.transform.stream.StreamSource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * @author andreaskaltenbach
@@ -675,7 +661,7 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         }
 
         if ((specialities != null) && (specialities.size() > 0)) {
-            type.getSpecialityCode().addAll(specialities);
+            type.getSpecialityName().addAll(specialities);
         }
 
         return type;

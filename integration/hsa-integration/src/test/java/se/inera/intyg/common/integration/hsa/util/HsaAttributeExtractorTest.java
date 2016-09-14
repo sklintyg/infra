@@ -42,13 +42,14 @@ public class HsaAttributeExtractorTest {
     public void testExtractSpecialiseringar() {
         // Arrange
         PersonInformationType pt = new PersonInformationType();
-        pt.getSpecialityCode().add(SPEC_1);
-        pt.getSpecialityCode().add(SPEC_2);
+        pt.getSpecialityName().add(SPEC_1);
+        pt.getSpecialityName().add(SPEC_2);
 
         List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
         hsaPersonInfo.add(pt);
 
         List<String> specialiseringar = testee.extractSpecialiseringar(hsaPersonInfo);
+        assertEquals(2, specialiseringar.size());
         assertTrue(specialiseringar.contains(SPEC_1));
         assertTrue(specialiseringar.contains(SPEC_2));
     }
