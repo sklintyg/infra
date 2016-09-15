@@ -21,13 +21,14 @@ package se.inera.intyg.common.security.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by Magnus Ekstrand on 19/11/15.
  */
-public class RequestOrigin {
+public class RequestOrigin implements Serializable {
 
     @JsonProperty
     private String name;
