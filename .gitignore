@@ -4,6 +4,7 @@
 .project
 .settings
 .classpath
+bower_components
 node
 node_modules
 target
