@@ -1,0 +1,23 @@
+description = 'Common (HSA-integration)'
+
+dependencies {
+  compile project(':integration-util')
+
+  compile "se.riv.infrastructure.directory.authorizationmanagement:infrastructure-directory-authorizationmanagement-schemas:${rivtaHsaAuthorizationmanagementVersion}"
+  compile "se.riv.infrastructure.directory.employee:infrastructure-directory-employee-schemas:${rivtaHsaEmployeeVersion}"
+  compile "se.riv.infrastructure.directory.organization:infrastructure-directory-organization-schemas:${rivtaHsaOrganizationVersion}"
+
+  compile "org.slf4j:slf4j-api:${slf4jVersion}"
+  compile "com.google.guava:guava:${guavaVersion}"
+  compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+  compile "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
+  compile "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
+
+  compile "org.springframework:spring-beans:${springVersion}"
+  compile "org.springframework:spring-context:${springVersion}"
+  compile "org.springframework:spring-context-support:${springVersion}"
+  compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
+
+  testCompile "org.springframework:spring-test:${springVersion}"
+  testCompile "org.mockito:mockito-core:${mockitoVersion}"
+}

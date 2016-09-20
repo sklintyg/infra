@@ -1,0 +1,24 @@
+dependencies {
+  compile project(':hsa-integration')
+  compile project(':integration-util')
+  compile project(':security-common')
+  compile project(':security-authorities')
+
+  compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
+  compile "org.opensaml:opensaml:${opensamlVersion}"
+  compile "org.opensaml:openws:${opensamlOpenwsVersion}"
+  compile "org.slf4j:slf4j-api:${slf4jVersion}"
+  compile "org.springframework:spring-beans:${springVersion}"
+  compile "org.springframework:spring-context:${springVersion}"
+  compile "org.springframework:spring-context-support:${springVersion}"
+  compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
+  compile "org.springframework:spring-test:${springVersion}"
+  compile(group: "org.opensaml", name: "xmltooling", version:"${opensamlXmltoolingVersion}") {
+    exclude(module: "xml-apis")
+  }
+
+  compileOnly "javax.servlet:servlet-api:${servletApiVersion}"
+
+  testCompile "org.mockito:mockito-core:${mockitoVersion}"
+  testCompile "javax.servlet:javax.servlet-api:${servletApiTestVersion}"
+}

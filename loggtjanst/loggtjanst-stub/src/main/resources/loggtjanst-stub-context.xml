@@ -28,12 +28,12 @@
     <bean id="logEntries" class="java.util.concurrent.CopyOnWriteArrayList" />
     <bean id="stubState" class="se.inera.intyg.common.loggtjanststub.StubState"/>
   </beans>
-  
+
   <beans profile="dev,wc-all-stubs,wc-loggtjanst-stub">
     <jaxws:endpoint address="/store-log-stub"
       implementor="se.inera.intyg.common.loggtjanststub.StoreLogStubResponder" />
   </beans>
-  
+
   <beans profile="dev,testability-api">
     <jaxrs:server address="/loggtjanst-stub">
       <jaxrs:serviceBeans>
@@ -47,7 +47,7 @@
       </jaxrs:extensionMappings>
     </jaxrs:server>
     <bean id="loggtjanstStubRestApi" class="se.inera.intyg.common.loggtjanststub.LoggtjanstStubRestApi" />
-  
+
     <bean id="jacksonJsonProvider"
       class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider">
       <property name="mapper">
