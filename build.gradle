@@ -7,7 +7,7 @@ ext.nexusUsername = System.properties['nexusUsername']
 ext.nexusPassword = System.properties['nexusPassword']
 
 ext {
-  rivtaClinicalprocessVersion = "2.0.RC5.2"
+  rivtaClinicalprocessVersion = "2.0.RC6.0"
   rivtaEhrLogstoreVersion = "1.2.2"
   rivtaInsuranceprocessVersion = "3.1.0.2"
   rivtaItintegrationMonitoringVersion = "1.0.0.2"
