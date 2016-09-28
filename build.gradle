@@ -1,34 +1,3 @@
-ext {
-  rivtaClinicalprocessVersion = "2.0.RC6.1"
-  rivtaEhrLogstoreVersion = "1.2.3"
-  rivtaInsuranceprocessVersion = "3.1.0.3"
-  rivtaItintegrationMonitoringVersion = "1.0.0.3"
-  rivtaHsaAuthorizationmanagementVersion = "1.0.RC4.3"
-  rivtaHsaEmployeeVersion = "1.0.RC4.3"
-  rivtaHsaOrganizationVersion = "1.1.RC5.3"
-  intygClinicalprocessVersion = "1.0.3"
-  intygInsuranceprocessVersion = "1.0.3"
-  intygTransportstyrelsenVersion = "1.0.3"
-  intygPrivatepractitionerVersion = "1.0.3"
-
-  jacksonVersion = "2.8.1"
-  jacksonDataformatVersion = "2.4.5"
-  springVersion = "4.2.2.RELEASE"
-  springSecurityVersion = "4.0.3.RELEASE"
-  springSecurityExtensionsVersion = "1.0.1.RELEASE"
-  cxfVersion = "3.1.3"
-  slf4jVersion = "1.7.21"
-  guavaVersion = "14.0.1"
-  logbackVersion = "1.0.11"
-  opensamlVersion = "2.5.3"
-  opensamlOpenwsVersion = "1.4.2-1"
-  opensamlXmltoolingVersion = "1.3.2"
-  servletApiVersion = "2.5"
-
-  mockitoVersion = "1.9.0"
-  servletApiTestVersion = "3.1.0"
-}
-
 allprojects  {
   apply plugin: 'maven'
   apply plugin: 'org.ajoberstar.grgit'
@@ -37,23 +6,6 @@ allprojects  {
 
   group = 'se.inera.intyg.common'
   version = System.env.BUILD_NUMBER != null ? baseVersion + System.env.BUILD_NUMBER : '0-SNAPSHOT'
-
-  uploadArchives {
-    repositories {
-      mavenDeployer {
-        repository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases") {
-          authentication(userName: System.properties['nexusUsername'], password: System.properties['nexusPassword'])
-        }
-      }
-    }
-  }
-
-  repositories {
-    mavenLocal()
-    maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases/" }
-    maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/snapshots/" }
-    maven { url "http://repo.maven.apache.org/maven2" }
-  }
 }
 
 subprojects {
@@ -88,10 +40,6 @@ subprojects {
 
   jar.dependsOn(createVersionPropertyFile)
 
-  dependencies {
-    testCompile "junit:junit:4.+"
-  }
-
   if (project.hasProperty('codeQuality')) {
     apply plugin: 'checkstyle'
     checkstyle {
@@ -114,6 +62,27 @@ subprojects {
         destinationFile = file("$buildDir/jacoco/test.exec")
       }
     }
+  }
+
+  uploadArchives {
+    repositories {
+      mavenDeployer {
+        repository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases") {
+          authentication(userName: System.properties['nexusUsername'], password: System.properties['nexusPassword'])
+        }
+      }
+    }
+  }
+
+  dependencies {
+    testCompile "junit:junit:4.+"
+  }
+
+  repositories {
+    mavenLocal()
+    maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases/" }
+    maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/snapshots/" }
+    maven { url "http://repo.maven.apache.org/maven2" }
   }
 }
 
@@ -160,6 +129,37 @@ if (project.hasProperty('runSonar')) {
       }
     }
   }
+}
+
+ext {
+  rivtaClinicalprocessVersion = "2.0.RC6.1"
+  rivtaEhrLogstoreVersion = "1.2.3"
+  rivtaInsuranceprocessVersion = "3.1.0.3"
+  rivtaItintegrationMonitoringVersion = "1.0.0.3"
+  rivtaHsaAuthorizationmanagementVersion = "1.0.RC4.3"
+  rivtaHsaEmployeeVersion = "1.0.RC4.3"
+  rivtaHsaOrganizationVersion = "1.1.RC5.3"
+  intygClinicalprocessVersion = "1.0.3"
+  intygInsuranceprocessVersion = "1.0.3"
+  intygTransportstyrelsenVersion = "1.0.3"
+  intygPrivatepractitionerVersion = "1.0.3"
+
+  jacksonVersion = "2.8.1"
+  jacksonDataformatVersion = "2.4.5"
+  springVersion = "4.2.2.RELEASE"
+  springSecurityVersion = "4.0.3.RELEASE"
+  springSecurityExtensionsVersion = "1.0.1.RELEASE"
+  cxfVersion = "3.1.3"
+  slf4jVersion = "1.7.21"
+  guavaVersion = "14.0.1"
+  logbackVersion = "1.0.11"
+  opensamlVersion = "2.5.3"
+  opensamlOpenwsVersion = "1.4.2-1"
+  opensamlXmltoolingVersion = "1.3.2"
+  servletApiVersion = "2.5"
+
+  mockitoVersion = "1.9.0"
+  servletApiTestVersion = "3.1.0"
 }
 
 buildscript {
