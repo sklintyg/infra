@@ -16,7 +16,7 @@ dependencies {
   compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jacksonVersion}"
   compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonDataformatVersion}"
   compile "org.springframework:spring-test:${springVersion}"
-  compile(group: "org.opensaml", name: "xmltooling", version:"${opensamlXmltoolingVersion}") {
+  compile("org.opensaml:xmltooling:${opensamlXmltoolingVersion}") {
     exclude(module: "xml-apis")
   }
 

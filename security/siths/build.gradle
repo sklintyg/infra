@@ -13,7 +13,7 @@ dependencies {
   compile "org.springframework:spring-context-support:${springVersion}"
   compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
   compile "org.springframework:spring-test:${springVersion}"
-  compile(group: "org.opensaml", name: "xmltooling", version:"${opensamlXmltoolingVersion}") {
+  compile("org.opensaml:xmltooling:${opensamlXmltoolingVersion}") {
     exclude(module: "xml-apis")
   }
 
