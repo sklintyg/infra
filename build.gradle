@@ -71,22 +71,24 @@ subprojects {
 
     jar.dependsOn(createVersionPropertyFile)
 
-    if (project.hasProperty('codeQuality')) {
-        apply plugin: 'checkstyle'
-        checkstyle {
-            config = resources.text.fromFile("$rootProject.projectDir/build-tools/src/main/resources/checkstyle/checkstyle.xml")
-            ignoreFailures = false
-            showViolations = true
-        }
+    apply plugin: 'checkstyle'
 
-        checkstyleMain.source = "src/main/java"
-        checkstyleTest.enabled = false
+    checkstyle {
+        config = resources.text.fromFile("$rootProject.projectDir/build-tools/src/main/resources/checkstyle/checkstyle.xml")
+        ignoreFailures = false
+        showViolations = true
     }
 
+    checkstyleMain.onlyIf { project.hasProperty('codeQuality') }
+    checkstyleMain.source = "src/main/java" // Explicitly disable generated code
+    checkstyleTest.enabled = false
+
     apply plugin: 'jacoco'
+
     jacoco {
         toolVersion = "0.7.6.201602180812"
     }
+
     test {
         jacoco {
             destinationFile = file("$buildDir/jacoco/test.exec")
