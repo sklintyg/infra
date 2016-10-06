@@ -148,11 +148,6 @@ sonarqube {
         property "sonar.javascript.lcov.reportPath", "build/karma/merged_lcov.info"
     }
 }
-project(":common-specifications") {
-    sonarqube {
-        skipProject = true
-    }
-}
 
 buildscript {
     dependencies {
