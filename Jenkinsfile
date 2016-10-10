@@ -47,7 +47,7 @@ stage('tag and upload') {
 }
 
 stage ('start next job') {
-    build job: 'intyg-intygstyper-pipeline', parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: $GIT_BRANCH]]
+    build job: 'intyg-intygstyper-pipeline', parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: env.$GIT_BRANCH]]
 }
 
 def notifyFailed() {
