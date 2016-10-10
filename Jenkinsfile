@@ -46,6 +46,10 @@ stage('tag and upload') {
     }
 }
 
+stage ('start next job') {
+    build job: 'intyg-intygstyper-pipeline', parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: $GIT_BRANCH]]
+}
+
 def notifyFailed() {
     emailext (subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
               body: """FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':\n\nCheck console output at ${env.BUILD_URL}""",
