@@ -47,7 +47,7 @@ stage('tag and upload') {
 }
 
 stage ('propagate') {
-    build job: 'intyg-intygstyper-pipeline', wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: env.$GIT_BRANCH]]
+    build job: 'intyg-intygstyper-pipeline', wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
 }
 
 def notifyFailed() {
