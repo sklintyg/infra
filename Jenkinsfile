@@ -21,7 +21,7 @@ stage('build') {
     node {
         try {
             withEnv(javaEnv()) {
-                sh './gradlew --refresh-dependencies clean build sonarqube -PcodeQuality'
+                sh './gradlew --refresh-dependencies clean build sonarqube -PcodeQuality -DgruntColors=false'
             }
         } catch (e) {
             currentBuild.result = "FAILED"
@@ -46,7 +46,7 @@ stage('tag and upload') {
     }
 }
 
-stage ('start next job') {
+stage ('propagate') {
     build job: 'intyg-intygstyper-pipeline', wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: env.$GIT_BRANCH]]
 }
 
