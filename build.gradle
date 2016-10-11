@@ -30,13 +30,11 @@ ext {
 }
 
 allprojects  {
+    group = 'se.inera.intyg.common'
+    version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
+
     apply plugin: 'maven'
     apply plugin: 'org.ajoberstar.grgit'
-
-    def baseVersion = '3.0.'
-
-    group = 'se.inera.intyg.common'
-    version = System.env.BUILD_NUMBER != null ? baseVersion + System.env.BUILD_NUMBER : '0-SNAPSHOT'
 }
 
 subprojects {
@@ -120,11 +118,12 @@ subprojects {
 task tagRelease {
     description = 'Tags the current head with the projects version.'
     doLast {
+        def grgit = org.ajoberstar.grgit.Grgit.open(creds: new org.ajoberstar.grgit.Credentials(System.properties['githubUser'], System.properties['githubPassword']))
         grgit.tag.add {
             name = version
             message = "Release of ${version}"
         }
-        //grgit.push(tags: true)
+        grgit.push(tags: true)
     }
 }
 
