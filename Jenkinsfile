@@ -9,7 +9,6 @@ def javaEnv() {
 
 stage('checkout') {
     node {
-        notify "Jesper testar"
         try {
             checkout scm
         } catch (e) {
@@ -24,11 +23,11 @@ stage('build') {
     node {
         try {
             withEnv(javaEnv()) {
-                sh "./gradlew --refresh-dependencies clean build sonarqube -PcodeQuality -DgruntColors=false -DbuildVersion=${buildVersion}"
+                sh "./gradlew --refresh-dependencies goffa clean build sonarqube -PcodeQuality -DgruntColors=false -DbuildVersion=${buildVersion}"
             }
         } catch (e) {
             currentBuild.result = "FAILED"
-            notifyFailed()
+            notify()
             throw e
         }
     }
