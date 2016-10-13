@@ -9,6 +9,7 @@ def javaEnv() {
 
 stage('checkout') {
     node {
+        notify "Jesper testar"
         try {
             checkout scm
         } catch (e) {
