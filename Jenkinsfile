@@ -12,7 +12,6 @@ stage('checkout') {
         try {
             checkout scm
         } catch (e) {
-            currentBuild.result = "FAILED"
             notifyFailed()
             throw e
         }
@@ -26,8 +25,7 @@ stage('build') {
                 sh "./gradlew --refresh-dependencies goffa clean build sonarqube -PcodeQuality -DgruntColors=false -DbuildVersion=${buildVersion}"
             }
         } catch (e) {
-            currentBuild.result = "FAILED"
-            emailFailed("yelp")
+            notifyFailed()
             throw e
         }
     }
@@ -41,7 +39,6 @@ stage('tag and upload') {
                     -DgithubUser=$GITHUB_USERNAME -DgithubPassword=$GITHUB_PASSWORD -DbuildVersion=${buildVersion}"
             }
         } catch (e) {
-            currentBuild.result = "FAILED"
             notifyFailed()
             throw e
         }
@@ -50,10 +47,4 @@ stage('tag and upload') {
 
 stage ('propagate') {
     build job: 'intyg-intygstyper-pipeline', wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
-}
-
-def notifyFailed() {
-    emailext (subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-              body: """FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':\n\nCheck console output at ${env.BUILD_URL}""",
-              recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider']])
 }
