@@ -20,14 +20,7 @@ stage('checkout') {
 
 stage('build') {
     node {
-        try {
-            withEnv(javaEnv()) {
-                sh "./gradlew --refresh-dependencies goffa clean build sonarqube -PcodeQuality -DgruntColors=false -DbuildVersion=${buildVersion}"
-            }
-        } catch (e) {
-            notifyFailed()
-            throw e
-        }
+        bGradle "./gradlew --refresh-dependencies goffa clean build sonarqube -PcodeQuality -DgruntColors=false -DbuildVersion=${buildVersion}"
     }
 }
 
