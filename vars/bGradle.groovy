@@ -4,13 +4,9 @@ def javaEnv() {
 }
 
 def call(gradleCommand) {
-    try {
+    util.safeExecute {
         withEnv(javaEnv()) {
             sh gradleCommand
         }
-    } catch (e) {
-        currentBuild.result = "FAILED"
-        notifyFailed()
-        throw e
     }
 }
