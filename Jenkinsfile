@@ -16,7 +16,7 @@ stage('checkout') {
 
 stage('build') {
     node {
-        bGradle "./gradlew --refresh-dependencies goffa clean build sonarqube -PcodeQuality -DgruntColors=false -DbuildVersion=${buildVersion}"
+        bGradle "./gradlew --refresh-dependencies clean build sonarqube -PcodeQuality -DgruntColors=false -DbuildVersion=${buildVersion}"
     }
 }
 
