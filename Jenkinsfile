@@ -4,13 +4,7 @@ def buildVersion = "3.0.${BUILD_NUMBER}"
 
 stage('checkout') {
     node {
-        try {
-            checkout scm
-        } catch (e) {
-            currentBuild.result = "FAILED"
-            notifyFailed()
-            throw e
-        }
+        util.safeExecute { checkout scm }
     }
 }
 
