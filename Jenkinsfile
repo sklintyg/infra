@@ -27,7 +27,7 @@ stage('build') {
             }
         } catch (e) {
             currentBuild.result = "FAILED"
-            notify()
+            emailFailed("yelp")
             throw e
         }
     }
