@@ -10,13 +10,13 @@ stage('checkout') {
 
 stage('build') {
     node {
-        shgradle "--refresh-dependencies clean build sonarqube -PcodeQuality -DgruntColors=false"
+        shgradle "--refresh-dependencies clean build sonarqube -PcodeQuality -DgruntColors=false -DbuildVersion=${buildVersion}"
     }
 }
 
 stage('tag and upload') {
     node {
-        shgradle "uploadArchives tagRelease"
+        shgradle "uploadArchives tagRelease -DbuildVersion=${buildVersion}"
     }
 }
 
