@@ -7,7 +7,7 @@ def call(gradleCommand) {
     try {
         wrap([$class: 'Xvfb']) {
             withEnv(javaEnv()) {
-                sh gradleCommand
+                sh "./gradlew " + gradleCommand
             }
         }
     } catch (e) {
