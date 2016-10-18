@@ -6,10 +6,8 @@ ext {
     rivtaHsaAuthorizationmanagementVersion = "1.0.RC4.3"
     rivtaHsaEmployeeVersion = "1.0.RC4.3"
     rivtaHsaOrganizationVersion = "1.1.RC5.3"
-    intygClinicalprocessVersion = "1.0.3"
     intygInsuranceprocessVersion = "1.0.3"
     intygTransportstyrelsenVersion = "1.0.3"
-    intygPrivatepractitionerVersion = "1.0.3"
 
     jacksonVersion = "2.8.1"
     jacksonDataformatVersion = "2.4.5"
