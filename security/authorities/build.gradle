@@ -1,26 +1,5 @@
 description = "Common (Security Authorities)"
 
 dependencies {
-  compile project(':hsa-integration')
-  compile project(':integration-util')
   compile project(':security-common')
-
-  compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
-  compile "org.opensaml:opensaml:${opensamlVersion}"
-  compile "org.opensaml:openws:${opensamlOpenwsVersion}"
-  compile "org.slf4j:slf4j-api:${slf4jVersion}"
-  compile "org.springframework:spring-beans:${springVersion}"
-  compile "org.springframework:spring-context:${springVersion}"
-  compile "org.springframework:spring-context-support:${springVersion}"
-  compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
-  compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jacksonVersion}"
-  compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonDataformatVersion}"
-  compile "org.springframework:spring-test:${springVersion}"
-  compile("org.opensaml:xmltooling:${opensamlXmltoolingVersion}") {
-    exclude(module: "xml-apis")
-  }
-
-  compileOnly "javax.servlet:servlet-api:${servletApiVersion}"
-
-  testCompile "org.mockito:mockito-core:${mockitoVersion}"
 }

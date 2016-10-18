@@ -4,8 +4,4 @@ dependencies {
   compile project(':integration-util')
 
   compile "se.riv.ehr.logstore:ehr-logstore-schemas:${rivtaEhrLogstoreVersion}"
-
-  compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
-  compile "org.springframework:spring-context:${springVersion}"
-  compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jacksonVersion}"
 }
