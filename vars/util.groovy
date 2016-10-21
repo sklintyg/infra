@@ -18,3 +18,12 @@ def run(Closure body) {
         throw e
     }
 }
+
+def waitForServer(var url) {
+    timeout(240) {
+	waitUntil {
+	    def r = sh script: "wget -q  ${url} --no-check-certificate -O /dev/null", returnStatus: true
+	    return (r == 0);
+	}
+    }
+}
