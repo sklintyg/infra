@@ -22,7 +22,7 @@ def run(Closure body) {
 def waitForServer(String url) {
     timeout(240) {
 	waitUntil {
-	    def r = sh script: "wget -q  ${url} --no-check-certificate -O /dev/null", returnStatus: true
+	    def r = sh script: "wget -q ${url} --no-check-certificate -O /dev/null", returnStatus: true
 	    return (r == 0);
 	}
     }

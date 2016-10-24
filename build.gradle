@@ -30,6 +30,7 @@ ext {
     servletApiTestVersion = "3.1.0"
 }
 
+
 allprojects  {
     group = 'se.inera.intyg.common'
     version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
