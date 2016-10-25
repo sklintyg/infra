@@ -1,0 +1,10 @@
+description = 'Intyg Common (Cache Core)'
+
+dependencies {
+    compile "org.apache.ignite:ignite-core:1.7.0"
+    compile "org.apache.ignite:ignite-spring:1.7.0"
+    compile "org.springframework:spring-core:${springVersion}"
+    runtime "org.springframework:spring-context-support:${springVersion}"
+
+    testCompile "org.springframework:spring-test:${springVersion}"
+}

@@ -1,0 +1,14 @@
+description = 'Intyg Common (Cache Metrics)'
+
+dependencies {
+
+    compile "org.apache.ignite:ignite-core:1.7.0"
+    compile "org.apache.ignite:ignite-spring:1.7.0"
+    compile "org.springframework:spring-core:${springVersion}"
+    compile "org.springframework:spring-context:${springVersion}"
+
+    compile "org.springframework:spring-context-support:${springVersion}"
+
+    testCompile "org.springframework:spring-test:${springVersion}"
+    testCompile "org.mockito:mockito-core:${mockitoVersion}"
+}

@@ -19,10 +19,12 @@
 
 package se.inera.intyg.common.integration.hsa.client;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import se.inera.intyg.common.support.modules.support.api.exception.ExternalServiceCallException;
@@ -33,6 +35,8 @@ import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v
 import se.riv.infrastructure.directory.organization.getunit.v1.rivtabp21.GetUnitResponderInterface;
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.*;
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+
+import static se.inera.intyg.common.integration.hsa.cache.HsaCacheConfiguration.*;
 
 /**
  * Provides a common interface to the {@link GetUnitResponderInterface}, {@link GetHealthCareUnitResponderInterface} and
@@ -58,6 +62,9 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
     private String logicalAddress;
 
     @Override
+    @Cacheable(value = HSA_UNIT_CACHE_NAME,
+            key = "#unitHsaId",
+            unless="#result == null")
     public UnitType getUnit(String unitHsaId) throws ExternalServiceCallException {
         GetUnitType parameters = new GetUnitType();
         parameters.setUnitHsaId(unitHsaId);
@@ -76,6 +83,9 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
     }
 
     @Override
+    @Cacheable(value = HSA_HEALTH_CARE_UNIT_CACHE_NAME,
+            key = "#hsaId",
+            unless="#result == null")
     public HealthCareUnitType getHealthCareUnit(String hsaId) throws ExternalServiceCallException {
         GetHealthCareUnitType parameters = new GetHealthCareUnitType();
         parameters.setHealthCareUnitMemberHsaId(hsaId);
@@ -94,6 +104,9 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
     }
 
     @Override
+    @Cacheable(value = HSA_HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME,
+            key = "#unitHsaId",
+            unless="#result == null")
     public HealthCareUnitMembersType getHealthCareUnitMembers(String unitHsaId) throws ExternalServiceCallException {
         GetHealthCareUnitMembersType parameters = new GetHealthCareUnitMembersType();
         parameters.setHealthCareUnitHsaId(unitHsaId);
@@ -112,4 +125,8 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
         return response.getHealthCareUnitMembers();
     }
 
+    @VisibleForTesting
+    public void setGetHealthCareUnitMembersResponderInterface(GetHealthCareUnitMembersResponderInterface getHealthCareUnitMembersResponderInterface) {
+        this.getHealthCareUnitMembersResponderInterface = getHealthCareUnitMembersResponderInterface;
+    }
 }
