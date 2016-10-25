@@ -29,13 +29,12 @@
   <!-- NEVER forget this little gem. Without it, the @Cachable annotations doesn't have any effect whatsoever! -->
   <cache:annotation-driven cache-manager="cacheManager" />
   <bean class="se.inera.intyg.common.cache.core.BasicCacheConfiguration" />
-
+  <bean class="se.inera.intyg.common.integration.hsa.cache.HsaCacheConfiguration" />
   <!-- <context:component-scan base-package="se.inera.intyg.common.cache.config"/> -->
   <!-- Using same ugly practice of referencing cache xml config using relative path
   <import resource="../../../../src/main/resources/hsa-cache-config.xml"/>
   -->
 
-  <context:component-scan base-package="se.inera.intyg.common.integration.hsa.cache"/>
   <context:component-scan base-package="se.inera.intyg.common.integration.hsa.client"/>
   <context:component-scan base-package="se.inera.intyg.common.integration.hsa.services"/>
 

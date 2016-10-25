@@ -43,7 +43,7 @@ public class BasicCacheConfiguration {
     @Value("${cache.ipaddresses}")
     private String igniteIpAddresses;
 
-    @Value("${cache.expiration.seconds}")
+    @Value("${cache.default.expiration.seconds}")
     private String cacheExpirySeconds = null;
 
     @Bean
