@@ -4,7 +4,7 @@ def buildVersion = "3.1.${BUILD_NUMBER}"
 
 stage('checkout') {
     node {
-        git url: "https://github.com/sklintyg/common.git", branch: 'develop'
+        git url: "https://github.com/sklintyg/common.git", branch: GIT_BRANCH
         util.run { checkout scm }
     }
 }
@@ -27,5 +27,5 @@ stage('tag and upload') {
 }
 
 stage('propagate') {
-    build job: 'intyg-intygstyper-pipeline', wait: false //, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
+    build job: 'intyg-intygstyper-pipeline', wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
 }
