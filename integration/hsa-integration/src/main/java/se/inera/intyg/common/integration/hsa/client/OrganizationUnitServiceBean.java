@@ -62,9 +62,7 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
     private String logicalAddress;
 
     @Override
-    @Cacheable(value = HSA_UNIT_CACHE_NAME,
-            key = "#unitHsaId",
-            unless="#result == null")
+    @Cacheable(value = HSA_UNIT_CACHE_NAME, key = "#unitHsaId", unless = "#result == null")
     public UnitType getUnit(String unitHsaId) throws ExternalServiceCallException {
         GetUnitType parameters = new GetUnitType();
         parameters.setUnitHsaId(unitHsaId);
@@ -83,9 +81,7 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
     }
 
     @Override
-    @Cacheable(value = HSA_HEALTH_CARE_UNIT_CACHE_NAME,
-            key = "#hsaId",
-            unless="#result == null")
+    @Cacheable(value = HSA_HEALTH_CARE_UNIT_CACHE_NAME, key = "#hsaId", unless = "#result == null")
     public HealthCareUnitType getHealthCareUnit(String hsaId) throws ExternalServiceCallException {
         GetHealthCareUnitType parameters = new GetHealthCareUnitType();
         parameters.setHealthCareUnitMemberHsaId(hsaId);
@@ -104,9 +100,7 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
     }
 
     @Override
-    @Cacheable(value = HSA_HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME,
-            key = "#unitHsaId",
-            unless="#result == null")
+    @Cacheable(value = HSA_HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME, key = "#unitHsaId", unless = "#result == null")
     public HealthCareUnitMembersType getHealthCareUnitMembers(String unitHsaId) throws ExternalServiceCallException {
         GetHealthCareUnitMembersType parameters = new GetHealthCareUnitMembersType();
         parameters.setHealthCareUnitHsaId(unitHsaId);
