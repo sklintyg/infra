@@ -2,10 +2,14 @@ description = 'Common (HSA-integration)'
 
 dependencies {
   compile project(':integration-util')
+  compile project(':common-cache-core')
 
-  compile "se.riv.infrastructure.directory.authorizationmanagement:infrastructure-directory-authorizationmanagement-schemas:${rivtaHsaAuthorizationmanagementVersion}"
-  compile "se.riv.infrastructure.directory.employee:infrastructure-directory-employee-schemas:${rivtaHsaEmployeeVersion}"
-  compile "se.riv.infrastructure.directory.organization:infrastructure-directory-organization-schemas:${rivtaHsaOrganizationVersion}"
+  compile "org.apache.ignite:ignite-core:1.7.0"
+  compile "org.apache.ignite:ignite-spring:1.7.0"
+
+  compile "se.riv.infrastructure.directory.authorizationmanagement:infrastructure-directory-authorizationmanagement-schemas:${rivtaHsaAuthorizationmanagementSchemasVersion}"
+  compile "se.riv.infrastructure.directory.employee:infrastructure-directory-employee-schemas:${rivtaHsaEmployeeSchemasVersion}"
+  compile "se.riv.infrastructure.directory.organization:infrastructure-directory-organization-schemas:${rivtaHsaOrganizationSchemasVersion}"
 
   compile "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
 

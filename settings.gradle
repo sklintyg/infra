@@ -2,6 +2,9 @@ rootProject.name = 'common'
 
 include ':common-build-tools'
 include ':logging-util'
+
+include ':common-cache-core'
+include ':common-cache-metrics'
 include ':common-support'
 include ':common-web'
 include ':integration-util'
@@ -17,6 +20,8 @@ include ':security-siths'
 
 project(':common-build-tools').projectDir = "$rootDir/build-tools" as File
 project(':logging-util').projectDir = "$rootDir/util/logging-util" as File
+project(':common-cache-core').projectDir = "$rootDir/cache/core" as File
+project(':common-cache-metrics').projectDir = "$rootDir/cache/metrics" as File
 project(':common-support').projectDir = "$rootDir/support" as File
 project(':common-web').projectDir = "$rootDir/web" as File
 project(':integration-util').projectDir = "$rootDir/util/integration-util" as File
