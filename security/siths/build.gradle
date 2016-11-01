@@ -2,7 +2,7 @@ dependencies {
   compile project(':security-common')
   compile project(':security-authorities')
 
-  compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
+  compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecuritySaml2CoreVersion}"
 
   compileOnly "javax.servlet:servlet-api:${servletApiVersion}"
 
