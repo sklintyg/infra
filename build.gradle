@@ -2,10 +2,10 @@ ext {
     intygInsuranceprocessSchemasVersion = "1.0.4"
     intygTransportstyrelsenSchemasVersion = "1.0.4"
     rivtaClinicalprocessSchemasVersion = "2.0.RC6.2"
+    rivtaDirectoryOrganizationSchemasVersion = "1.1.RC5.4"
     rivtaEhrLogstoreSchemasVersion = "1.2.4"
     rivtaHsaAuthorizationmanagementSchemasVersion = "1.0.RC4.4"
     rivtaHsaEmployeeSchemasVersion = "1.0.RC4.4"
-    rivtaDirectoryOrganizationSchemasVersion = "1.1.RC5.4"
     rivtaInsuranceprocessSchemasVersion = "3.1.0.4"
     rivtaItintegrationMonitoringSchemasVersion = "1.0.0.4"
 
@@ -118,7 +118,7 @@ sonarqube {
 buildscript {
     dependencies {
         classpath 'se.inera.intyg:gradle-intyg-plugin:1.0.+'
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.+"
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.+'
         classpath 'org.ajoberstar:gradle-git:1.+'
         classpath 'com.moowork.gradle:gradle-node-plugin:0.+'
         classpath 'com.moowork.gradle:gradle-grunt-plugin:0.+'
