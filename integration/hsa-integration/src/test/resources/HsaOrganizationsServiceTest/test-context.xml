@@ -22,8 +22,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-  <context:annotation-config/>
-  <context:component-scan base-package="se.inera.intyg.common"/>
+  <context:component-scan base-package="se.inera.intyg.common.integration.hsa.client"/>
+  <context:component-scan base-package="se.inera.intyg.common.integration.hsa.services"/>
+
 
   <bean class="se.inera.intyg.common.integration.hsa.stub.GetAuthorizationsForPersonResponderStub" />
   <bean class="se.inera.intyg.common.integration.hsa.stub.GetEmployeeResponderStub" />
@@ -32,5 +33,13 @@
   <bean class="se.inera.intyg.common.integration.hsa.stub.GetHealthCareUnitMembersResponderStub" />
 
   <bean class="se.inera.intyg.common.integration.hsa.stub.HsaServiceStub" />
+
+  <bean name="props" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>classpath:services.properties</value>
+      </list>
+    </property>
+  </bean>
 
 </beans>

@@ -50,11 +50,12 @@ public class StoreLogStubResponder implements StoreLogResponderInterface {
         if (stubState != null) {
 
             if (stubState.getArtificialLatency() > 0L) {
+                //CHECKSTYLE:OFF EmptyBlock
                 try {
                     Thread.sleep(stubState.getArtificialLatency());
                 } catch (InterruptedException e) {
-                    // I was interrupted.
                 }
+                //CHECKSTYLE:ON EmptyBlock
             }
 
             if (!stubState.isActive()) {

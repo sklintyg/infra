@@ -5,12 +5,12 @@ Intyg Common tillhandahåller hjälpprojekt för de övriga intygsprojekten unde
 Här hittar du grundläggande instruktioner för hur man kommer igång med projektet. Mer detaljerade instruktioner för att sätta upp sin utvecklingsmiljö och liknande hittar du på projektets [Wiki för utveckling](https://github.com/sklintyg/common/wiki).
 
 ### Bygg projektet
-Intyg Common innehåller flera olika underprojekt och byggs med hjälp av Maven enligt följande:
+Intyg Common innehåller flera olika underprojekt och byggs med hjälp av Gradle enligt följande:
 ```
 $ git clone https://github.com/sklintyg/common.git
 
 $ cd common
-$ mvn install
+$ ./gradlew build install
 ```
 
 ## Licens
