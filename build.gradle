@@ -29,7 +29,7 @@ ext {
     seleniumServerVersion = "2.52.0"
     servletApiVersion = "2.5"
     slf4jVersion = "1.7.21"
-    springSecuritySaml2CoreVersion = "1.0.1.RELEASE" 
+    springSecuritySaml2CoreVersion = "1.0.1.RELEASE"
     springSecurityVersion = "4.0.3.RELEASE"
     springVersion = "4.2.2.RELEASE"
 
@@ -54,30 +54,6 @@ subprojects {
 
     task createVersionPropertyFile(type: VersionPropertyFileTask)
 
-    apply plugin: 'checkstyle'
-
-    checkstyle {
-        config = resources.text.fromFile("$rootProject.projectDir/build-tools/src/main/resources/checkstyle/checkstyle.xml")
-        ignoreFailures = false
-        showViolations = true
-    }
-
-    checkstyleMain.onlyIf { project.hasProperty('codeQuality') }
-    checkstyleMain.source = "src/main/java" // Explicitly disable generated code
-    checkstyleTest.enabled = false
-
-    apply plugin: 'jacoco'
-
-    jacoco {
-        toolVersion = "0.7.6.201602180812"
-    }
-
-    test {
-        jacoco {
-            destinationFile = file("$buildDir/jacoco/test.exec")
-        }
-    }
-
     uploadArchives.repositories.mavenDeployer {
         repository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases") {
             authentication(userName: System.properties['nexusUsername'], password: System.properties['nexusPassword'])
@@ -98,22 +74,10 @@ subprojects {
 }
 
 task tagRelease(type: TagReleaseTask)
-                      
+
 task testReport(type: SharedTestReportTask)
 
-apply plugin: "org.sonarqube"
-
-sonarqube {
-    properties {
-        property "sonar.jacoco.reportPath", "$buildDir/jacoco/test.exec"
-        property "sonar.projectName", "Intyg Common"
-        property "sonar.projectKey", "intyg-common"
-        property "sonar.host.url", System.properties['sonarUrl'] ?: "https://build-inera.nordicmedtest.se/sonar"
-        property "sonar.test.exclusions", "src/test/**"
-        property "sonar.exclusions", ["**/stub/**", "**/exception/**", "**/*Exception*.java", "**/templates.js", "**/vendor/**"]
-        property "sonar.javascript.lcov.reportPath", "build/karma/merged_lcov.info"
-    }
-}
+apply from: file("codequality.gradle")
 
 buildscript {
     dependencies {
