@@ -19,6 +19,7 @@
 
 package se.inera.intyg.common.integration.hsa.cache;
 
+import org.apache.ignite.Ignition;
 import org.apache.ignite.cache.spring.SpringCacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import se.inera.intyg.common.cache.core.ConfigurableCache;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
 
@@ -73,6 +75,10 @@ public class HsaCacheConfiguration implements ConfigurableCache {
         initCache(HSA_HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME, hsaHealthCareUnitMembersDuration);
     }
 
+    @PreDestroy
+    public void tearDown() {
+        Ignition.stopAll(false);
+    }
     private void initCache(String cacheName, Duration duration) {
         cacheManager.getDynamicCacheConfiguration().setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(duration));
         cacheManager.getCache(cacheName);
