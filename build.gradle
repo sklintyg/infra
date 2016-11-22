@@ -9,7 +9,7 @@ ext {
     rivtaInsuranceprocessSchemasVersion = "3.1.0.4"
     rivtaItintegrationMonitoringSchemasVersion = "1.0.0.4"
 
-    activeMqClientVersion = "5.13.0"
+    activeMqVersion = "5.13.4"
     commonsCodecVersion = "1.10"
     commonsDbcp2Version = "2.0"
     commonsLangVersion = "3.1"

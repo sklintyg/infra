@@ -26,7 +26,7 @@ import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.spi.discovery.DiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.ipfinder.TcpDiscoveryIpFinder;
-import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder;
+import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -56,6 +56,10 @@ import java.util.concurrent.TimeUnit;
 public class BasicCacheConfiguration {
 
     private static final Duration DEFAULT_EXPIRY_DURATION = Duration.ONE_MINUTE;
+    private static final long JOIN_TIMEOUT = 10000L;
+
+    @Value("${cache.bindport:47500}")
+    private String bindport;
 
     @Value("${cache.ipaddresses}")
     private String igniteIpAddresses;
@@ -91,12 +95,14 @@ public class BasicCacheConfiguration {
 
     private DiscoverySpi discoverySpi() {
         TcpDiscoverySpi spi = new TcpDiscoverySpi();
-        spi.setIpFinder(tcpDiscoveryMulticastIpFinder());
+        spi.setIpFinder(tcpDiscoveryVmIpFinder());
+        spi.setJoinTimeout(JOIN_TIMEOUT);
+        spi.setLocalPort(Integer.parseInt(bindport));
         return spi;
     }
 
-    private TcpDiscoveryIpFinder tcpDiscoveryMulticastIpFinder() {
-        TcpDiscoveryMulticastIpFinder ipFinder = new TcpDiscoveryMulticastIpFinder();
+    private TcpDiscoveryIpFinder tcpDiscoveryVmIpFinder() {
+        TcpDiscoveryVmIpFinder ipFinder = new TcpDiscoveryVmIpFinder();
         ipFinder.setAddresses(buildIpAddressList(igniteIpAddresses));
         return ipFinder;
     }
@@ -126,5 +132,9 @@ public class BasicCacheConfiguration {
 
     public void setCacheExpirySeconds(String cacheExpirySeconds) {
         this.cacheExpirySeconds = cacheExpirySeconds;
+    }
+
+    public void setBindport(String bindport) {
+        this.bindport = bindport;
     }
 }
