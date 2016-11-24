@@ -1,5 +1,6 @@
 subprojects {
     apply plugin: 'checkstyle'
+    apply plugin: 'pmd'
 
     checkstyle {
         config = resources.text.fromFile("$rootProject.projectDir/build-tools/src/main/resources/checkstyle/checkstyle.xml")
@@ -23,6 +24,16 @@ subprojects {
             destinationFile = file("$buildDir/jacoco/test.exec")
         }
     }
+
+    pmd {
+        ignoreFailures = false
+        ruleSetFiles = rootProject.files("$rootProject.projectDir/build-tools/src/main/resources/pmd/pmdRuleSet.xml")
+        ruleSets = []
+        sourceSets = [ sourceSets.main ]
+    }
+
+    pmdMain.onlyIf { project.hasProperty('codeQuality') }
+    pmdTest.enabled = false
 
     apply plugin: 'com.github.hierynomus.license'
 

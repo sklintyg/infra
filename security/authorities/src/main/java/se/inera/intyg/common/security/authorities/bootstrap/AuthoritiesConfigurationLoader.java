@@ -19,26 +19,24 @@
 
 package se.inera.intyg.common.security.authorities.bootstrap;
 
-import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static java.lang.String.format;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.*;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+
+import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
+
 import se.inera.intyg.common.security.authorities.AuthoritiesConfiguration;
 import se.inera.intyg.common.security.authorities.AuthoritiesException;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import static java.lang.String.format;
 
 
 /**
@@ -50,8 +48,6 @@ import static java.lang.String.format;
  */
 @Component("AuthoritiesConfigurationLoader")
 public class AuthoritiesConfigurationLoader implements InitializingBean {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AuthoritiesConfigurationLoader.class);
 
     @Value("${authorities.configuration.file}")
     private String authoritiesConfigurationFile;
@@ -87,7 +83,7 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
      *                   as failure to set an essential property) or if initialization fails.
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() throws AuthoritiesException {
 
         Resource resource = getResource(authoritiesConfigurationFile);
         URI uri = null;
@@ -122,8 +118,7 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
     private AuthoritiesConfiguration loadConfiguration(Path path) throws IOException {
         Yaml yaml = new Yaml();
         try (InputStream in = Files.newInputStream(path)) {
-            AuthoritiesConfiguration ac = yaml.loadAs(in, AuthoritiesConfiguration.class);
-            return ac;
+            return yaml.loadAs(in, AuthoritiesConfiguration.class);
         }
     }
 

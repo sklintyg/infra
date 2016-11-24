@@ -20,28 +20,21 @@
 package se.inera.intyg.common.security.authorities;
 
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+
 import se.inera.intyg.common.integration.hsa.model.UserCredentials;
 import se.inera.intyg.common.integration.hsa.util.HsaAttributeExtractor;
 import se.inera.intyg.common.security.authorities.bootstrap.AuthoritiesConfigurationLoader;
-import se.inera.intyg.common.security.common.model.AuthoritiesConstants;
-import se.inera.intyg.common.security.common.model.IntygUser;
-import se.inera.intyg.common.security.common.model.Privilege;
-import se.inera.intyg.common.security.common.model.RequestOrigin;
-import se.inera.intyg.common.security.common.model.Role;
-import se.inera.intyg.common.security.common.model.Title;
-import se.inera.intyg.common.security.common.model.TitleCode;
+import se.inera.intyg.common.security.common.model.*;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * Created by Magnus Ekstrand on 20/11/15.
@@ -60,8 +53,7 @@ public class CommonAuthoritiesResolver {
     public Role resolveRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole, UserCredentials userCredentials) {
         Assert.notNull(user, "Argument 'user' cannot be null");
 
-        Role role = lookupUserRole(user, personInfo, defaultRole, userCredentials);
-        return role;
+        return lookupUserRole(user, personInfo, defaultRole, userCredentials);
     }
 
     /**
@@ -295,10 +287,6 @@ public class CommonAuthoritiesResolver {
 
     private Predicate<Role> isRole(String name) {
         return r -> r.getName() != null && r.getName().equalsIgnoreCase(name);
-    }
-
-    private Predicate<Title> isTitle(String title) {
-        return t -> t.getTitle() != null && t.getTitle().equalsIgnoreCase(title);
     }
 
     private Predicate<TitleCode> isTitleCode(String titleCode) {

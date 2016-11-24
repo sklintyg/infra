@@ -19,18 +19,17 @@
 
 package se.inera.intyg.common.integration.hsa.cache;
 
-import org.apache.ignite.Ignition;
-import org.apache.ignite.cache.spring.SpringCacheManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import se.inera.intyg.common.cache.core.ConfigurableCache;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
+
+import org.apache.ignite.Ignition;
+import org.apache.ignite.cache.spring.SpringCacheManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
+import se.inera.intyg.common.cache.core.ConfigurableCache;
 
 /**
  * While the cacheManager.getCache(...) isn't strictly necessary for creating the cache used by
@@ -41,8 +40,6 @@ import javax.cache.expiry.Duration;
  * Created by eriklupander on 2016-10-20.
  */
 public class HsaCacheConfiguration implements ConfigurableCache {
-
-    private static final Logger LOG = LoggerFactory.getLogger(HsaCacheConfiguration.class);
 
     public static final String HSA_UNIT_CACHE_NAME = "hsaUnitCache";
     public static final String HSA_HEALTH_CARE_UNIT_CACHE_NAME = "hsaHealthCareUnitCache";

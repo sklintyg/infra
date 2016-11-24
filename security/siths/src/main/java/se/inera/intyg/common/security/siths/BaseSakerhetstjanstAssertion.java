@@ -19,15 +19,13 @@
 
 package se.inera.intyg.common.security.siths;
 
-import org.opensaml.saml2.core.Assertion;
-import org.opensaml.saml2.core.Attribute;
-import org.opensaml.saml2.core.AttributeStatement;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.opensaml.saml2.core.*;
 import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.schema.impl.XSAnyImpl;
 import org.springframework.security.saml.SAMLCredential;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This SAML-assertion is adapted for "uppdragslös inloggning", specifying only employeeHsaId.
@@ -93,7 +91,7 @@ public class BaseSakerhetstjanstAssertion {
                     if (val != null && hsaId == null) {
                         hsaId = val;
                     }
-
+                    break;
                 default:
                     // Ignore.
             }
