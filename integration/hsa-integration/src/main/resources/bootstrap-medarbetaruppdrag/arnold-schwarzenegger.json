@@ -1,0 +1,14 @@
+{
+    "hsaId": "TSTNMT2321000156-1079",
+    "forNamn": "Arnold",
+    "efterNamn": "Johansson",
+    "uppdrag":[
+        {
+            "vardgivare": "TSTNMT2321000156-102Q",
+            "enhet": "TSTNMT2321000156-1077",
+            "andamal":["Vård och behandling"]
+        }
+    ],
+    "befattningsKod": "204010",
+    "forskrivarKod": "9400001"
+}

@@ -1,0 +1,10 @@
+{
+    "hsaId": "hansolo",
+	"forNamn": "Han",
+	"efterNamn": "Solo",
+    "uppdrag":[
+    	{
+    		"enhet": "centrum-norr"
+    	}
+    ]
+}

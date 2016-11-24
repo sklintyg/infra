@@ -1,0 +1,21 @@
+{
+    "hsaId": "IFV1239877878-104K",
+	"legitimeradeYrkesgrupper" : [
+		"Läkare"
+	],
+    "uppdrag":[
+    	{
+    		"enhet": "IFV1239877878-1045",
+			"andamal": [
+				"Vård och behandling"
+			]
+
+    	},
+    	{
+    		"enhet": "IFV1239877878-104D",
+			"andamal": [
+				"Vård och behandling"
+			]
+    	}
+    ]
+}

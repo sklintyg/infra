@@ -1,0 +1,9 @@
+description = 'Intyg Infra (Cache Metrics)'
+
+dependencies {
+    compile "org.apache.ignite:ignite-spring:${igniteSpringVersion}"
+    compile "org.springframework:spring-context-support:${springVersion}"
+
+    testCompile "org.springframework:spring-test:${springVersion}"
+    testCompile "org.mockito:mockito-core:${mockitoVersion}"
+}

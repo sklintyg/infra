@@ -1,0 +1,19 @@
+rootProject.name = 'infra'
+
+include ':infra-cache-core'
+include ':infra-cache-metrics'
+include ':hsa-integration'
+include ':log-messages'
+include ':loggtjanst-stub'
+include ':security-common'
+include ':security-authorities'
+include ':security-siths'
+
+project(':infra-cache-core').projectDir = "$rootDir/cache/core" as File
+project(':infra-cache-metrics').projectDir = "$rootDir/cache/metrics" as File
+project(':hsa-integration').projectDir = "$rootDir/integration/hsa-integration" as File
+project(':log-messages').projectDir = "$rootDir/loggtjanst/log-messages" as File
+project(':loggtjanst-stub').projectDir = "$rootDir/loggtjanst/loggtjanst-stub" as File
+project(':security-common').projectDir = "$rootDir/security/common" as File
+project(':security-authorities').projectDir = "$rootDir/security/authorities" as File
+project(':security-siths').projectDir = "$rootDir/security/siths" as File

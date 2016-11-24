@@ -1,0 +1,13 @@
+description = "Infra (Security Common)"
+
+dependencies {
+    compile project(':hsa-integration')
+
+    compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonDataformatVersion}"
+
+    compile "org.springframework:spring-context:${springVersion}"
+    compile "org.slf4j:slf4j-api:${slf4jVersion}"
+
+    compileOnly "javax.servlet:servlet-api:${servletApiVersion}"
+}
