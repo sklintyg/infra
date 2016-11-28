@@ -19,17 +19,14 @@
 
 package se.inera.intyg.common.security.authorities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import se.inera.intyg.common.security.common.model.Privilege;
-import se.inera.intyg.common.security.common.model.RequestOrigin;
-import se.inera.intyg.common.security.common.model.Role;
-import se.inera.intyg.common.security.common.model.Title;
-import se.inera.intyg.common.security.common.model.TitleCode;
+import static java.lang.String.format;
 
 import java.util.Date;
 import java.util.List;
 
-import static java.lang.String.format;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import se.inera.intyg.common.security.common.model.*;
 
 /**
  * Created by Magnus Ekstrand on 18/11/15.
@@ -168,18 +165,18 @@ public final class AuthoritiesConfiguration {
     @Override
     public String toString() {
         return new StringBuilder()
-                .append(format("Version: %s\n", version))
-                .append(format("Released: %s\n", released))
-                .append(format("Changedby: %s\n", changedby))
-                .append(format("KnownRequestOrigins: %s\n", knownRequestOrigins))
-                .append(format("KnownRoles: %s\n", knownRoles))
-                .append(format("KnownPrivileges: %s\n", knownPrivileges))
-                .append(format("KnownIntygstyper: %s\n", knownIntygstyper))
-                .append(format("RequestOrigins: %s\n", requestOrigins))
-                .append(format("Privileges: %s\n", privileges))
-                .append(format("Roles: %s\n", roles))
-                .append(format("Titles: %s\n", titles))
-                .append(format("TitleCodes: %s\n", titleCodes))
+                .append(format("Version: %s%n", version))
+                .append(format("Released: %s%n", released))
+                .append(format("Changedby: %s%n", changedby))
+                .append(format("KnownRequestOrigins: %s%n", knownRequestOrigins))
+                .append(format("KnownRoles: %s%n", knownRoles))
+                .append(format("KnownPrivileges: %s%n", knownPrivileges))
+                .append(format("KnownIntygstyper: %s%n", knownIntygstyper))
+                .append(format("RequestOrigins: %s%n", requestOrigins))
+                .append(format("Privileges: %s%n", privileges))
+                .append(format("Roles: %s%n", roles))
+                .append(format("Titles: %s%n", titles))
+                .append(format("TitleCodes: %s%n", titleCodes))
                 .toString();
     }
 

@@ -20,7 +20,6 @@
 package se.inera.intyg.common.integration.hsa.model;
 
 import java.time.LocalDateTime;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +35,7 @@ public class Mottagning extends AbstractVardenhet {
     private String parentHsaId;
 
     public Mottagning() {
+        // Needed for deserialization
         super();
     }
 

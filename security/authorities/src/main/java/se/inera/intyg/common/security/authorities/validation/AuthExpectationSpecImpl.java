@@ -19,19 +19,12 @@
 
 package se.inera.intyg.common.security.authorities.validation;
 
-import se.inera.intyg.common.security.authorities.AuthoritiesException;
-import se.inera.intyg.common.security.common.model.Privilege;
-import se.inera.intyg.common.security.common.model.RequestOrigin;
-import se.inera.intyg.common.security.common.model.Role;
-import se.inera.intyg.common.security.common.model.UserDetails;
-import se.inera.intyg.common.security.common.model.UserOriginType;
-import se.inera.intyg.common.security.common.service.Feature;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import se.inera.intyg.common.security.authorities.AuthoritiesException;
+import se.inera.intyg.common.security.common.model.*;
+import se.inera.intyg.common.security.common.service.Feature;
 
 /**
  * Created by marced on 18/12/15.
@@ -59,7 +52,7 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
     private Optional<String> privilegeConstraint = Optional.empty();
     private Optional<String> privilegeNotConstraint = Optional.empty();
 
-    private List<String> errors = new ArrayList<String>();
+    private List<String> errors = new ArrayList<>();
 
     public AuthExpectationSpecImpl(UserDetails user, Optional<String> intygstyp) {
         this.user = user;
@@ -223,7 +216,7 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
             return false;
         }
 
-        if (this.intygsTypeContext.isPresent() && (privilegeConfig.getIntygstyper().size() > 0)
+        if (this.intygsTypeContext.isPresent() && privilegeConfig.getIntygstyper().size() > 0
                 && privilegeConfig.getIntygstyper().stream().noneMatch(t -> t.equals(this.intygsTypeContext.get()))) {
             return false;
         }
@@ -239,7 +232,7 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
 
             // If the originConfig has a intygstypeConstraint - one of them must also match any given intygstype
             // context..
-            if (this.intygsTypeContext.isPresent() && (matchingOriginConfig.get().getIntygstyper().size() > 0)
+            if (this.intygsTypeContext.isPresent() && matchingOriginConfig.get().getIntygstyper().size() > 0
                     && matchingOriginConfig.get().getIntygstyper().stream().noneMatch(t -> t.equals(this.intygsTypeContext.get()))) {
                 return false;
             }

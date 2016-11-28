@@ -19,10 +19,9 @@
 
 package se.inera.intyg.common.integration.hsa.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.time.LocalDateTime;
 
 /**
  * @author andreaskaltenbach
@@ -39,6 +38,8 @@ public class Vardenhet extends AbstractVardenhet {
     private List<Mottagning> mottagningar;
 
     public Vardenhet() {
+        // Needed for deserialization
+        super();
     }
 
     public Vardenhet(String id, String namn) {
@@ -67,6 +68,7 @@ public class Vardenhet extends AbstractVardenhet {
         this.mottagningar = mottagningar;
     }
 
+    @Override
     public List<String> getHsaIds() {
         List<String> ids = new ArrayList<>();
         ids.add(getId());

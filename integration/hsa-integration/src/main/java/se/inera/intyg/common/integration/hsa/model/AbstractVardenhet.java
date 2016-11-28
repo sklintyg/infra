@@ -44,6 +44,7 @@ public abstract class AbstractVardenhet implements SelectableVardenhet, Comparab
     private AgandeForm agandeForm;
 
     public AbstractVardenhet() {
+       // Needed for deserialization
     }
 
     public AbstractVardenhet(String id, String namn) {
@@ -51,6 +52,7 @@ public abstract class AbstractVardenhet implements SelectableVardenhet, Comparab
         this.namn = namn;
     }
 
+    @Override
     public String getId() {
         return id;
     }
@@ -59,6 +61,7 @@ public abstract class AbstractVardenhet implements SelectableVardenhet, Comparab
         this.id = id;
     }
 
+    @Override
     public String getNamn() {
         return namn;
     }

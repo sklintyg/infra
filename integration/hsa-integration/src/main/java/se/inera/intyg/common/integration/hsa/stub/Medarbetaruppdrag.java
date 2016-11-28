@@ -19,10 +19,11 @@
 
 package se.inera.intyg.common.integration.hsa.stub;
 
-import java.util.List;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import static java.util.Arrays.asList;
+
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * @author andreaskaltenbach
@@ -39,6 +40,7 @@ public class Medarbetaruppdrag {
     private List<Uppdrag> uppdrag;
 
     public Medarbetaruppdrag() {
+        // Needed for deserialization
     }
 
     public Medarbetaruppdrag(String hsaId, List<Uppdrag> uppdrag) {

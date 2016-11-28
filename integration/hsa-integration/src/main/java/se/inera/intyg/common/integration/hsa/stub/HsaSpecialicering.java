@@ -25,10 +25,6 @@ public class HsaSpecialicering {
 
     private String namn;
 
-    public HsaSpecialicering() {
-
-    }
-
     public String getKod() {
         return kod;
     }

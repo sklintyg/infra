@@ -19,9 +19,9 @@
 
 package se.inera.intyg.common.logmessages;
 
-import se.inera.intyg.common.support.modules.support.api.dto.Personnummer;
-
 import java.io.Serializable;
+
+import se.inera.intyg.common.support.modules.support.api.dto.Personnummer;
 
 /**
  * @author andreaskaltenbach
@@ -34,6 +34,7 @@ public class Patient implements Serializable {
     private String patientNamn;
 
     public Patient() {
+        // Needed for deserialization
     }
 
     public Patient(Personnummer patientId) {

@@ -34,6 +34,7 @@ public class Enhet implements Serializable {
     private String vardgivareNamn;
 
     public Enhet() {
+        // Needed for deserialization
     }
 
     public Enhet(String enhetsId, String vardgivareId) {
