@@ -31,5 +31,5 @@ stage('propagate') {
 }
 
 stage('notify') {
-    notifySuccess
+    util.notifySuccess
 }
