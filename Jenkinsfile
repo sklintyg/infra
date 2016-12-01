@@ -26,6 +26,10 @@ stage('tag and upload') {
     }
 }
 
+stage('propagate') {
+    build job: 'intyg-intygstjanst-pipeline', wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
+}
+
 stage('notify') {
     node {
         util.notifySuccess()
