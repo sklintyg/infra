@@ -17,11 +17,10 @@ apply plugin: "org.sonarqube"
 sonarqube {
     properties {
         property "sonar.jacoco.reportPath", "$buildDir/jacoco/test.exec"
-        property "sonar.projectName", "Intyg Common"
-        property "sonar.projectKey", "intyg-common"
+        property "sonar.projectName", "Intyg Infra"
+        property "sonar.projectKey", "intyg-infra"
         property "sonar.host.url", System.properties['sonarUrl'] ?: "https://build-inera.nordicmedtest.se/sonar"
         property "sonar.test.exclusions", "src/test/**"
-        property "sonar.exclusions", ["**/stub/**", "**/exception/**", "**/*Exception*.java", "**/templates.js", "**/vendor/**"]
-        property "sonar.javascript.lcov.reportPath", "build/karma/merged_lcov.info"
+        property "sonar.exclusions", ["**/stub/**", "**/exception/**", "**/*Exception*.java"]
     }
 }
