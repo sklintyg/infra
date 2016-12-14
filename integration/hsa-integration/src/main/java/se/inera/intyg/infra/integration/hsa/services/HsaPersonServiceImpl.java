@@ -19,12 +19,12 @@
 
 package se.inera.intyg.infra.integration.hsa.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.xml.ws.WebServiceException;
 
-import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +32,11 @@ import org.springframework.stereotype.Service;
 
 import se.inera.intyg.infra.integration.hsa.client.AuthorizationManagementService;
 import se.inera.intyg.infra.integration.hsa.client.EmployeeService;
-import se.inera.intyg.infra.integration.hsa.stub.Medarbetaruppdrag;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
-import se.riv.infrastructure.directory.v1.*;
+import se.inera.intyg.infra.integration.hsa.stub.Medarbetaruppdrag;
+import se.riv.infrastructure.directory.v1.CommissionType;
+import se.riv.infrastructure.directory.v1.CredentialInformationType;
+import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**
  * Provides person related services using TJK over NTjP.
@@ -73,6 +75,7 @@ public class HsaPersonServiceImpl implements HsaPersonService {
         }
     }
 
+    @Override
     public List<CommissionType> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, final String unitHsaId) throws HsaServiceCallException {
 
         LOG.debug("Checking if person with HSA id '{}' has MIUs on unit '{}'", hosPersonHsaId, unitHsaId);
@@ -85,7 +88,7 @@ public class HsaPersonServiceImpl implements HsaPersonService {
         List<CommissionType> filteredMuisOnUnit = commissions.stream()
                 .filter(ct -> ct.getHealthCareUnitHsaId() != null && ct.getHealthCareUnitHsaId().equals(unitHsaId))
                 .filter(ct -> ct.getHealthCareUnitEndDate() == null || ct.getHealthCareUnitEndDate().isAfter(LocalDateTime.now()))
-                .filter(ct -> (ct.getCommissionPurpose() != null) && Medarbetaruppdrag.VARD_OCH_BEHANDLING.equalsIgnoreCase(ct.getCommissionPurpose()))
+                .filter(ct -> ct.getCommissionPurpose() != null && Medarbetaruppdrag.VARD_OCH_BEHANDLING.equalsIgnoreCase(ct.getCommissionPurpose()))
                 .collect(Collectors.toList());
 
         LOG.debug("Person has {} MIUs on unit '{}'", filteredMuisOnUnit.size(), hosPersonHsaId);

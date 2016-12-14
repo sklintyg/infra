@@ -32,6 +32,7 @@ public class Patient implements Serializable {
     private String patientNamn;
 
     public Patient() {
+        // Needed for deserialization
     }
 
     public Patient(String patientId) {
