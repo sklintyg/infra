@@ -19,11 +19,11 @@
 
 package se.inera.intyg.infra.integration.hsa.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author andreaskaltenbach
@@ -38,6 +38,7 @@ public class Vardgivare implements SelectableVardenhet, Comparable<Vardgivare>, 
     private List<Vardenhet> vardenheter;
 
     public Vardgivare() {
+        // Needed for deserialization
     }
 
     public Vardgivare(String id, String namn) {
@@ -45,6 +46,7 @@ public class Vardgivare implements SelectableVardenhet, Comparable<Vardgivare>, 
         this.namn = namn;
     }
 
+    @Override
     public String getNamn() {
         return namn;
     }
@@ -53,6 +55,7 @@ public class Vardgivare implements SelectableVardenhet, Comparable<Vardgivare>, 
         this.namn = namn;
     }
 
+    @Override
     public String getId() {
         return id;
     }
@@ -74,6 +77,7 @@ public class Vardgivare implements SelectableVardenhet, Comparable<Vardgivare>, 
         this.vardenheter = vardenheter;
     }
 
+    @Override
     @JsonIgnore
     public List<String> getHsaIds() {
         List<String> ids = new ArrayList<>();

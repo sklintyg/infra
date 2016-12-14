@@ -19,15 +19,18 @@
 
 package se.inera.intyg.infra.security.common.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by mango on 19/11/15.
  */
-public class Role {
+public class Role implements Serializable {
+
+    private static final long serialVersionUID = -2028438321609037955L;
 
     @JsonProperty
     private String name;
@@ -66,7 +69,6 @@ public class Role {
             this.privileges = privileges;
         }
     }
-
 
     @Override
     public String toString() {
