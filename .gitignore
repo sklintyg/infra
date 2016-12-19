@@ -6,3 +6,6 @@
 build
 bin
 .gradle
+
+# Ignore IntelliJ’s module libraries
+**/*.iml
