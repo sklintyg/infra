@@ -1,9 +1,9 @@
-# Intyg Common Integration HSA-integration
+# Intyg Infra Integration HSA-integration
 
 Provides access to various HSA services over NTjP using infrastructure:directory:* TjK:s.
 
-Typical use is an external application (Webcert, Rehabstod, Intygstjansten) including se.inera.intyg.common:hsa-integration
-as a dependency. This then requires a number of properties being set in the executing application's context as well as 
+Typical use is an external application (Webcert, Rehabstod, Intygstjansten) including se.inera.intyg.infra:hsa-integration
+as a dependency. This then requires a number of properties being set in the executing application's context as well as
 some common Spring profile names.
 
 ### Profiles
@@ -20,12 +20,12 @@ Example:
 Place in a .json file inside folder: bootstrap-vardgivare/ on your classpath
 
      {
-         "@class" : "se.inera.intyg.common.integration.hsa.model.Vardgivare",
+         "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardgivare",
          "id" : "IFV1239877878-1041",
          "namn" : "WebCert-Vårdgivare1",
          "vardenheter" : [
              {
-             	"@class" : "se.inera.intyg.common.integration.hsa.model.Vardenhet",
+             	"@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
                  "id" : "IFV1239877878-1042",
                  "namn" : "WebCert-Enhet1",
                  "epost" : "enhet1@webcert.invalid.se",
@@ -37,7 +37,7 @@ Place in a .json file inside folder: bootstrap-vardgivare/ on your classpath
              }
          ]
      }
-     
+
 #### Medarbetaruppdrag / personal
 
 Place in a .json file inside folder: bootstrap-medarbetaruppdrag/ on your classpath
@@ -45,16 +45,16 @@ Place in a .json file inside folder: bootstrap-medarbetaruppdrag/ on your classp
     {
         "hsaId": "IFV1239877878-1049",
         "uppdrag":[
-        	{
-        	 	"enhet":"IFV1239877878-1042",
-        	 	"andamal":["Vård och behandling", "Admin"]
-        	}
+            {
+                "enhet":"IFV1239877878-1042",
+                "andamal":["Vård och behandling", "Admin"]
+            }
         ]
     }
-    
-#### Loading the JSON above    
+
+#### Loading the JSON above
 All JSON files within classpath:/bootstrap-medarbetaruppdrag and classpath:/bootstrap-vardgivare are then loaded by the hsa-integration project on startup.
-    
+
 ### Runtime properties
 The HSA-integration requires the following properties being set:
 
@@ -65,7 +65,7 @@ The HSA-integration requires the following properties being set:
 - infrastructure.directory.organization.gethealthcareunitmembers.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/organization/GetHealthCareUnitMembers/1/rivtabp21
 - infrastructure.directory.employee.getemployee.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/employee/GetEmployeeIncludingProtectedPerson/1/rivtabp21
 - infrastructure.directory.logicalAddress=SE165565594230-1000
-  
+
 - ntjp.ws.certificate.file=${config.dir}/certifikat/[our cert]
 - ntjp.ws.certificate.type=JKS
 - ntjp.ws.truststore.file=${config.dir}/certifikat/[the truststore]
@@ -79,10 +79,10 @@ The HSA-integration requires the following properties being set:
 ## Licens
 Copyright (C) 2016 Inera AB (http://www.inera.se)
 
-Intyg Common is free software: you can redistribute it and/or modify it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Intyg Infra is free software: you can redistribute it and/or modify it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-Intyg Common is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU LESSER GENERAL PUBLIC LICENSE for more details.
+Intyg Infra is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU LESSER GENERAL PUBLIC LICENSE for more details.
 
-Se även [LICENSE.md](https://github.com/sklintyg/common/blob/master/LICENSE.md). 
+Se även [LICENSE.md](https://github.com/sklintyg/common/blob/master/LICENSE.md).
 
 -----

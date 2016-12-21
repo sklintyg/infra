@@ -1,24 +1,24 @@
 {
-    "@class" : "se.inera.intyg.common.integration.hsa.model.Vardgivare",
+    "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardgivare",
     "id" : "vastmanland",
     "namn" : "Landstinget Västmanland",
     "vardenheter" : [
         {
-            "@class" : "se.inera.intyg.common.integration.hsa.model.Vardenhet",
+            "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
             "id" : "centrum-vast",
             "namn" : "Vårdcentrum i Väst",
             "epost" : "nagon@nagonstans.invalid",
             "agandeForm": "OFFENTLIG",
             "mottagningar" : [
                 {
-                    "@class" : "se.inera.intyg.common.integration.hsa.model.Mottagning",
+                    "@class" : "se.inera.intyg.infra.integration.hsa.model.Mottagning",
                     "id" : "dialys",
                     "namn" : "Dialys",
                     "agandeForm": "OFFENTLIG",
                     "arbetsplatskod" : "arbetsplatskod_centrum-vast-dialys"
                 },
                 {
-                    "@class" : "se.inera.intyg.common.integration.hsa.model.Mottagning",
+                    "@class" : "se.inera.intyg.infra.integration.hsa.model.Mottagning",
                     "id" : "akuten",
                     "namn" : "Akuten",
                     "agandeForm": "OFFENTLIG",
@@ -27,7 +27,7 @@
             ]
         },
         {
-            "@class" : "se.inera.intyg.common.integration.hsa.model.Vardenhet",
+            "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
             "id" : "centrum-ost",
             "namn" : "Vårdcentrum i Öst",
             "epost" : "nagon@nagonstans.invalid",
@@ -35,7 +35,7 @@
             "agandeForm": "PRIVAT",
             "mottagningar" : [
                 {
-                    "@class" : "se.inera.intyg.common.integration.hsa.model.Mottagning",
+                    "@class" : "se.inera.intyg.infra.integration.hsa.model.Mottagning",
                     "id" : "nagel",
                     "namn" : "Nagelmottagningen",
                     "agandeForm": "PRIVAT",
@@ -45,7 +45,7 @@
             ]
         },
         {
-            "@class" : "se.inera.intyg.common.integration.hsa.model.Vardenhet",
+            "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
             "id" : "centrum-norr",
             "namn" : "Vårdcentrum i Norr",
             "agandeForm": "PRIVAT",

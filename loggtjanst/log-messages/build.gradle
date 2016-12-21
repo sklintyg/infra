@@ -1,7 +1,5 @@
-description = 'Common (Log Messages)'
+description = 'Infra (Log Messages)'
 
 dependencies {
-  compile project(':common-support')
-
   compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
 }

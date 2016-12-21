@@ -1,4 +1,4 @@
-description = 'Intyg Common (Cache Metrics)'
+description = 'Intyg Infra (Cache Metrics)'
 
 dependencies {
     compile "org.apache.ignite:ignite-spring:${igniteSpringVersion}"

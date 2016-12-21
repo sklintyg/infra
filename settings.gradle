@@ -1,34 +1,17 @@
-rootProject.name = 'common'
+rootProject.name = 'infra'
 
-include ':common-build-tools'
-include ':logging-util'
-
-include ':common-cache-core'
-include ':common-cache-metrics'
-include ':common-support'
-include ':common-web'
-include ':integration-util'
-include ':common-schemas'
-include ':common-specifications'
+include ':infra-cache-core'
+include ':infra-cache-metrics'
 include ':hsa-integration'
-include ':common-services'
 include ':log-messages'
 include ':loggtjanst-stub'
 include ':security-common'
 include ':security-authorities'
 include ':security-siths'
 
-project(':common-build-tools').projectDir = "$rootDir/build-tools" as File
-project(':logging-util').projectDir = "$rootDir/util/logging-util" as File
-project(':common-cache-core').projectDir = "$rootDir/cache/core" as File
-project(':common-cache-metrics').projectDir = "$rootDir/cache/metrics" as File
-project(':common-support').projectDir = "$rootDir/support" as File
-project(':common-web').projectDir = "$rootDir/web" as File
-project(':integration-util').projectDir = "$rootDir/util/integration-util" as File
-project(':common-schemas').projectDir = "$rootDir/schemas" as File
-project(':common-specifications').projectDir = "$rootDir/specifications" as File
+project(':infra-cache-core').projectDir = "$rootDir/cache/core" as File
+project(':infra-cache-metrics').projectDir = "$rootDir/cache/metrics" as File
 project(':hsa-integration').projectDir = "$rootDir/integration/hsa-integration" as File
-project(':common-services').projectDir = "$rootDir/services" as File
 project(':log-messages').projectDir = "$rootDir/loggtjanst/log-messages" as File
 project(':loggtjanst-stub').projectDir = "$rootDir/loggtjanst/loggtjanst-stub" as File
 project(':security-common').projectDir = "$rootDir/security/common" as File

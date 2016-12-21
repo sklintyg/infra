@@ -22,17 +22,17 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-  <context:component-scan base-package="se.inera.intyg.common.integration.hsa.client"/>
-  <context:component-scan base-package="se.inera.intyg.common.integration.hsa.services"/>
+  <context:component-scan base-package="se.inera.intyg.infra.integration.hsa.client"/>
+  <context:component-scan base-package="se.inera.intyg.infra.integration.hsa.services"/>
 
 
-  <bean class="se.inera.intyg.common.integration.hsa.stub.GetAuthorizationsForPersonResponderStub" />
-  <bean class="se.inera.intyg.common.integration.hsa.stub.GetEmployeeResponderStub" />
-  <bean class="se.inera.intyg.common.integration.hsa.stub.GetHealthCareUnitResponderStub" />
-  <bean class="se.inera.intyg.common.integration.hsa.stub.GetUnitResponderStub" />
-  <bean class="se.inera.intyg.common.integration.hsa.stub.GetHealthCareUnitMembersResponderStub" />
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetAuthorizationsForPersonResponderStub" />
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetEmployeeResponderStub" />
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitResponderStub" />
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetUnitResponderStub" />
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitMembersResponderStub" />
 
-  <bean class="se.inera.intyg.common.integration.hsa.stub.HsaServiceStub" />
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.HsaServiceStub" />
 
   <bean name="props" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">

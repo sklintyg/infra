@@ -1,10 +1,10 @@
 {
-  "@class" : "se.inera.intyg.common.integration.hsa.model.Vardgivare",
+  "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardgivare",
   "id" : "TSTNMT2321000156-1061",
   "namn" : "VårdgivareCambio",
   "vardenheter" : [
     {
-      "@class" : "se.inera.intyg.common.integration.hsa.model.Vardenhet",
+      "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
       "id" : "TSTNMT2321000156-1062",
       "namn" : "CambioVårdenhet1",
       "epost" : "enhet1@cambio.invalid.se",
@@ -15,7 +15,7 @@
       "arbetsplatskod" : "2234567890"
     },
     {
-      "@class" : "se.inera.intyg.common.integration.hsa.model.Vardenhet",
+      "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
       "id" : "TSTNMT2321000156-1063",
       "namn" : "CambioVårdenhet2",
       "epost" : "enhet2@cambio.invalid.se",

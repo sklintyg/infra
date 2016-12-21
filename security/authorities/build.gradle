@@ -1,4 +1,4 @@
-description = "Common (Security Authorities)"
+description = "Infra (Security Authorities)"
 
 dependencies {
   compile project(':security-common')

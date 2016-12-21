@@ -1,10 +1,10 @@
 {
-  "@class" : "se.inera.intyg.common.integration.hsa.model.Vardgivare",
+  "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardgivare",
   "id" : "TSTNMT2321000156-1002",
   "namn" : "NMT vg1",
   "vardenheter" : [
     {
-      "@class" : "se.inera.intyg.common.integration.hsa.model.Vardenhet",
+      "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
       "id" : "TSTNMT2321000156-1003",
       "namn" : "NMT vg1 ve1",
       "epost" : "enhet1@webcert.invalid.se",
@@ -16,7 +16,7 @@
       "arbetsplatskod" : "1234567890"
     },
     {
-      "@class" : "se.inera.intyg.common.integration.hsa.model.Vardenhet",
+      "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
       "id" : "TSTNMT2321000156-1039",
       "namn" : "NMT vg1 ve2",
       "epost" : "enhet2@webcert.invalid.se",
@@ -28,7 +28,7 @@
       "arbetsplatskod" : "1234567890"
     },
     {
-      "@class" : "se.inera.intyg.common.integration.hsa.model.Vardenhet",
+      "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
       "id" : "TSTNMT2321000156-105F",
       "namn" : "NMT vg1 ve3",
       "epost" : "enhet3@webcert.invalid.se",

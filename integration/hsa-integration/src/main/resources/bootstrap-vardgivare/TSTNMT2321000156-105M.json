@@ -1,10 +1,10 @@
 {
-  "@class" : "se.inera.intyg.common.integration.hsa.model.Vardgivare",
+  "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardgivare",
   "id" : "TSTNMT2321000156-105M",
   "namn" : "Rehabstöd Vårdgivare 1",
   "vardenheter" : [
     {
-      "@class" : "se.inera.intyg.common.integration.hsa.model.Vardenhet",
+      "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
       "id" : "TSTNMT2321000156-105N",
       "namn" : "Rehabstöd Enhet 1",
       "epost" : "enhet1@rehabstod.invalid.se",
@@ -15,7 +15,7 @@
       "arbetsplatskod" : "1234567890"
     },
     {
-      "@class" : "se.inera.intyg.common.integration.hsa.model.Vardenhet",
+      "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
       "id" : "TSTNMT2321000156-105P",
       "namn" : "Rehabstöd Enhet 2",
       "epost" : "enhet1@rehabstod.invalid.se",
@@ -26,7 +26,7 @@
       "arbetsplatskod" : "1234567890"
     },
     {
-      "@class" : "se.inera.intyg.common.integration.hsa.model.Vardenhet",
+      "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
       "id" : "TSTNMT2321000156-105Q",
       "namn" : "Rehabstöd Enhet 3",
       "epost" : "enhet3@rehabstod.invalid.se",

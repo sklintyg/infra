@@ -1,10 +1,10 @@
 {
-  "@class" : "se.inera.intyg.common.integration.hsa.model.Vardgivare",
+  "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardgivare",
   "id" : "TSTNMT2321000156-102Q",
   "namn" : "NMT vg3",
   "vardenheter" : [
     {
-      "@class" : "se.inera.intyg.common.integration.hsa.model.Vardenhet",
+      "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
       "id" : "TSTNMT2321000156-1077",
       "namn" : "NMT vg3 ve1",
       "epost" : "enhet3@webcert.invalid.se",

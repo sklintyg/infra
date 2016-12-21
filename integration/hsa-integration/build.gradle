@@ -1,12 +1,21 @@
-description = 'Common (HSA-integration)'
+description = 'Infra (HSA-integration)'
 
 dependencies {
-  compile project(':integration-util')
-  compile project(':common-cache-core')
+  compile project(':infra-cache-core')
 
   compile "se.riv.infrastructure.directory.authorizationmanagement:infrastructure-directory-authorizationmanagement-schemas:${rivtaHsaAuthorizationmanagementSchemasVersion}"
   compile "se.riv.infrastructure.directory.employee:infrastructure-directory-employee-schemas:${rivtaHsaEmployeeSchemasVersion}"
   compile "se.riv.infrastructure.directory.organization:infrastructure-directory-organization-schemas:${rivtaDirectoryOrganizationSchemasVersion}"
 
   compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
+
+  compile "org.apache.commons:commons-lang3:${commonsLangVersion}"
+  compile "ch.qos.logback:logback-classic:${logbackVersion}"
+  compile "com.google.guava:guava:${guavaVersion}"
+
+  compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+  compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jacksonVersion}"
+  compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
+
+  compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
 }
