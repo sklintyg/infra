@@ -60,6 +60,14 @@ public class HsaPerson {
         this.efterNamn = efterNamn;
     }
 
+    public HsaPerson(String hsaId, String forNamn, String efterNamn, String titel) {
+        super();
+        this.hsaId = hsaId;
+        this.forNamn = forNamn;
+        this.efterNamn = efterNamn;
+        this.titel = titel;
+    }
+
 
     // ~ Getters and setters
     // ~ =====================================================================================

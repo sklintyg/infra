@@ -89,6 +89,7 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
                             CommissionType miuInfo = new CommissionType();
                             miuInfo.setCommissionHsaId(medarbetaruppdrag.getHsaId());
                             miuInfo.setCommissionPurpose(andamal);
+                            miuInfo.setCommissionName(uppdrag.getNamn());
                             miuInfo.setHealthCareUnitHsaId(enhet.getId());
                             miuInfo.setHealthCareUnitName(enhet.getNamn());
                             miuInfo.setHealthCareUnitStartDate(enhet.getStart());

@@ -19,29 +19,40 @@
 
 package se.inera.intyg.infra.integration.hsa.services;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import javax.xml.ws.WebServiceException;
-
-import java.time.LocalDateTime;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.infra.integration.hsa.client.AuthorizationManagementService;
 import se.inera.intyg.infra.integration.hsa.client.OrganizationUnitService;
-import se.inera.intyg.infra.integration.hsa.stub.Medarbetaruppdrag;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
-import se.inera.intyg.infra.integration.hsa.model.*;
+import se.inera.intyg.infra.integration.hsa.model.AbstractVardenhet;
+import se.inera.intyg.infra.integration.hsa.model.AgandeForm;
+import se.inera.intyg.infra.integration.hsa.model.Mottagning;
+import se.inera.intyg.infra.integration.hsa.model.UserAuthorizationInfo;
+import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
+import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
+import se.inera.intyg.infra.integration.hsa.stub.Medarbetaruppdrag;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMemberType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.HealthCareUnitType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
-import se.riv.infrastructure.directory.v1.*;
+import se.riv.infrastructure.directory.v1.AddressType;
+import se.riv.infrastructure.directory.v1.CommissionType;
+import se.riv.infrastructure.directory.v1.CredentialInformationType;
+
+import javax.xml.ws.WebServiceException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Provides HSA organization services through TJK over NTjP.
@@ -123,6 +134,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
     public UserAuthorizationInfo getAuthorizedEnheterForHosPerson(String hosPersonHsaId) {
         List<Vardgivare> vardgivareList = new ArrayList<>();
         UserCredentials userCredentials = new UserCredentials();
+        Map<String, String> commissionNamePerCareUnit = new HashMap<>();
 
         try {
             List<CredentialInformationType> credentialInformationList = authorizationManagementService
@@ -150,6 +162,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
                                     .sorted(Comparator.comparing(Vardenhet::getNamn))
                                     .collect(Collectors.toList()));
 
+                            commissions.stream().distinct().forEach(ct -> commissionNamePerCareUnit.put(ct.getHealthCareUnitHsaId(), ct.getCommissionName()));
                             return vg;
                         }).collect(Collectors.toList()));
 
@@ -161,11 +174,11 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
             }
 
             vardgivareList.sort(Comparator.nullsLast(Comparator.comparing(Vardgivare::getNamn)));
-            return new UserAuthorizationInfo(userCredentials, vardgivareList);
+            return new UserAuthorizationInfo(userCredentials, vardgivareList, commissionNamePerCareUnit);
         } catch (HsaServiceCallException e) {
             LOG.warn("Returning empty vardgivareList, cause: {}", e.getMessage());
         }
-        return new UserAuthorizationInfo(userCredentials, vardgivareList); // Empty
+        return new UserAuthorizationInfo(userCredentials, vardgivareList, new HashMap<>()); // Empty
     }
 
     private Vardenhet createVardenhet(CredentialInformationType credentialInformation, CommissionType ct) {

@@ -25,7 +25,6 @@ import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -55,23 +54,11 @@ public class HsaServiceStub {
     }
 
     public void deleteVardgivare(String id) {
-        Iterator<Vardgivare> iterator = vardgivare.iterator();
-        while (iterator.hasNext()) {
-            Vardgivare next = iterator.next();
-            if (next.getId().equals(id)) {
-                iterator.remove();
-            }
-        }
+        vardgivare.removeIf(next -> next.getId().equals(id));
     }
 
     public void deleteMedarbetareuppdrag(String hsaId) {
-        Iterator<Medarbetaruppdrag> iterator = medarbetaruppdrag.iterator();
-        while (iterator.hasNext()) {
-            Medarbetaruppdrag next = iterator.next();
-            if (next.getHsaId().equals(hsaId)) {
-                iterator.remove();
-            }
-        }
+        medarbetaruppdrag.removeIf(next -> next.getHsaId().equals(hsaId));
     }
 
     public List<Vardgivare> getVardgivare() {

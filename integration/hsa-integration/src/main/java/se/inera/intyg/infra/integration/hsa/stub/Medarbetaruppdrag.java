@@ -19,11 +19,11 @@
 
 package se.inera.intyg.infra.integration.hsa.stub;
 
-import static java.util.Arrays.asList;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import static java.util.Arrays.asList;
 
 /**
  * @author andreaskaltenbach
@@ -38,6 +38,7 @@ public class Medarbetaruppdrag {
     private String efterNamn;
     private String hsaId;
     private List<Uppdrag> uppdrag;
+    private String titel;
 
     public Medarbetaruppdrag() {
         // Needed for deserialization
@@ -53,6 +54,14 @@ public class Medarbetaruppdrag {
         this.efterNamn = efterNamn;
         this.hsaId = hsaId;
         this.uppdrag = uppdrag;
+    }
+
+    public Medarbetaruppdrag(String forNamn, String efterNamn, String hsaId, List<Uppdrag> uppdrag, String titel) {
+        this.forNamn = forNamn;
+        this.efterNamn = efterNamn;
+        this.hsaId = hsaId;
+        this.uppdrag = uppdrag;
+        this.titel = titel;
     }
 
     public String getHsaId() {
@@ -87,11 +96,23 @@ public class Medarbetaruppdrag {
         this.uppdrag = uppdrag;
     }
 
+    public String getTitel() {
+        return titel;
+    }
+
+    public void setTitel(String titel) {
+        this.titel = titel;
+    }
+
     public static class Uppdrag {
         private String vardgivare;
         private String enhet;
         private List<String> andamal;
         private List<String> systemRoles;
+        /**
+         * Medarbetaruppdragets namn, motsv. CommissionType#commissionName
+         */
+        private String namn;
 
         public Uppdrag() {
             enhet = "";
@@ -119,6 +140,14 @@ public class Medarbetaruppdrag {
             this.enhet = enhet;
             this.andamal = andamal;
             this.systemRoles = systemRoles;
+        }
+
+        public Uppdrag(String vardgivare, String enhet, List<String> andamal, List<String> systemRoles, String namn) {
+            this.vardgivare = vardgivare;
+            this.enhet = enhet;
+            this.andamal = andamal;
+            this.systemRoles = systemRoles;
+            this.namn = namn;
         }
 
         public String getVardgivare() {
@@ -151,6 +180,14 @@ public class Medarbetaruppdrag {
 
         public void setSystemRoles(List<String> systemRoles) {
             this.systemRoles = systemRoles;
+        }
+
+        public String getNamn() {
+            return namn;
+        }
+
+        public void setNamn(String namn) {
+            this.namn = namn;
         }
     }
 }

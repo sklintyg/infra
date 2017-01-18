@@ -19,20 +19,10 @@
 
 package se.inera.intyg.infra.security.siths;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import javax.xml.transform.stream.StreamSource;
-
 import org.apache.cxf.staxutils.StaxUtils;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -53,24 +43,51 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
-
-import se.inera.intyg.infra.integration.hsa.model.*;
-import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
-import se.inera.intyg.infra.integration.hsa.services.HsaPersonService;
-import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
-import se.inera.intyg.infra.security.common.model.*;
-import se.inera.intyg.infra.security.common.service.AuthenticationLogger;
-import se.inera.intyg.infra.security.common.service.CommonFeatureService;
-import se.inera.intyg.infra.security.exception.*;
 import se.inera.intyg.infra.integration.hsa.model.UserAuthorizationInfo;
 import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
+import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
+import se.inera.intyg.infra.integration.hsa.services.HsaPersonService;
+import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
+import se.inera.intyg.infra.security.common.model.AuthConstants;
+import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
+import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
+import se.inera.intyg.infra.security.common.model.IntygUser;
+import se.inera.intyg.infra.security.common.model.Privilege;
+import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.infra.security.common.model.UserOrigin;
+import se.inera.intyg.infra.security.common.model.UserOriginType;
+import se.inera.intyg.infra.security.common.service.AuthenticationLogger;
+import se.inera.intyg.infra.security.common.service.CommonFeatureService;
 import se.inera.intyg.infra.security.exception.HsaServiceException;
 import se.inera.intyg.infra.security.exception.MissingHsaEmployeeInformation;
 import se.inera.intyg.infra.security.exception.MissingMedarbetaruppdragException;
 import se.riv.infrastructure.directory.v1.PaTitleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
+
+import javax.xml.transform.stream.StreamSource;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author andreaskaltenbach
@@ -160,6 +177,12 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
 
         assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
         assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, webCertUser);
+
+        assertEquals(2, webCertUser.getMiuNamnPerEnhetsId().size());
+        assertTrue(webCertUser.getMiuNamnPerEnhetsId().keySet().contains(ENHET_HSAID_1));
+        assertTrue(webCertUser.getMiuNamnPerEnhetsId().keySet().contains(ENHET_HSAID_2));
+
+        assertEquals("Läkare på VårdEnhet2A", webCertUser.getSelectedMedarbetarUppdragNamn());
     }
 
     @Test
@@ -171,7 +194,7 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         userCredentials.getGroupPrescriptionCode().add("9300005");
         userCredentials.getPaTitleCode().add("203090");
 
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredentials, vardgivareList));
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredentials, vardgivareList, buildMiuPerCareUnitMap()));
         List<PersonInformationType> userTypes = Collections.singletonList(buildPersonInformationType(PERSONAL_HSAID, "Ingen titel alls", Collections.emptyList(), Collections.emptyList(), Collections.emptyList() ));
 
         when(hsaPersonService.getHsaPersonInfo(PERSONAL_HSAID)).thenReturn(userTypes);
@@ -190,7 +213,7 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         userCredentials.getGroupPrescriptionCode().add("9300005");
 
 
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredentials, vardgivareList));
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredentials, vardgivareList, buildMiuPerCareUnitMap()));
         List<PersonInformationType> userTypes = Collections.singletonList(buildPersonInformationType(PERSONAL_HSAID, "Ingen titel alls", new ArrayList<>(), new ArrayList<>(), Arrays.asList("203090")));
 
         when(hsaPersonService.getHsaPersonInfo(PERSONAL_HSAID)).thenReturn(userTypes);
@@ -204,7 +227,7 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
     public void assertMedarbetarUppdragExceptionThrownWhenNoMiU() throws Exception {
         // given
         SAMLCredential samlCredential = createSamlCredential("assertion-1.xml");
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>()));
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>(), new HashMap<>()));
         setupCallToGetHsaPersonInfoWithBefattningskoder();
         setupCallToWebcertFeatureService();
 
@@ -506,7 +529,7 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         SAMLCredential samlCredential = createSamlCredential("assertion-1.xml");
         setupCallToGetHsaPersonInfoWithBefattningskoder();
         when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
-                .thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>()));
+                .thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>(), new HashMap<>()));
 
         userDetailsService.loadUserBySAML(samlCredential);
     }
@@ -702,14 +725,14 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         List<Vardgivare> vardgivareList = buildVardgivareList();
 
         UserCredentials userCredentials = new UserCredentials();
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredentials, vardgivareList));
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredentials, vardgivareList, buildMiuPerCareUnitMap()));
     }
     private void setupCallToAuthorizedEnheterForHosPerson(String personalPrescriptionCode) {
         List<Vardgivare> vardgivareList = buildVardgivareList();
 
         UserCredentials userCredentials = new UserCredentials();
         userCredentials.setPersonalPrescriptionCode(personalPrescriptionCode);
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredentials, vardgivareList));
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredentials, vardgivareList, buildMiuPerCareUnitMap()));
     }
 
     private List<Vardgivare> buildVardgivareList() {
@@ -718,6 +741,13 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         vardgivare.getVardenheter().add(new Vardenhet(ENHET_HSAID_2, "Vårdcentralen"));
 
         return Collections.singletonList(vardgivare);
+    }
+
+    private Map<String, String> buildMiuPerCareUnitMap() {
+        Map<String, String> mius = new HashMap<>();
+        mius.put(ENHET_HSAID_1 , "Läkare på VårdEnhet2A");
+        mius.put(ENHET_HSAID_2, "Stafettläkare på Vårdcentralen");
+        return mius;
     }
 
 //    private void setupCallToAuthorizedEnheterForHosPerson(String titleCode) {

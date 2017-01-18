@@ -22,9 +22,7 @@ package se.inera.intyg.infra.security.common.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
@@ -53,6 +51,7 @@ public class IntygUser implements UserDetails {
     protected String authenticationScheme;
 
     protected List<Vardgivare> vardgivare;
+    protected Map<String, String> miuNamnPerEnhetsId;
     protected List<String> befattningar;
     protected List<String> specialiseringar;
     protected List<String> legitimeradeYrkesgrupper;
@@ -349,7 +348,32 @@ public class IntygUser implements UserDetails {
     }
 
 
+    public Map<String, String> getMiuNamnPerEnhetsId() {
+        return miuNamnPerEnhetsId;
+    }
 
+    public void setMiuNamnPerEnhetsId(Map<String, String> miuNamnPerEnhetsId) {
+        this.miuNamnPerEnhetsId = miuNamnPerEnhetsId;
+    }
+
+    /**
+     * Utility method to get the name "medarbetaruppdrag" that the user has on the currently selected vårdenhet.
+     *
+     * @return
+     *      The name of the medarbetaruppdrag. (Derived from infrastructure:directory:authorizationmanagement CommissionType#commissionName)
+     * @throws
+     *      IllegalStateException if no vardenhet is selected or if the map that maps enhetsId to commissionName hasn't been initialized.
+     */
+    @JsonIgnore
+    public String getSelectedMedarbetarUppdragNamn() {
+        if (valdVardenhet == null) {
+            throw new IllegalStateException("Cannot resolve current medarbetaruppdrag name, no vardenhet selected.");
+        }
+        if (miuNamnPerEnhetsId == null) {
+            throw new IllegalStateException("Cannot resolve current medarbetaruppdrag name, map of MiU's not initialized.");
+        }
+        return miuNamnPerEnhetsId.get(valdVardenhet.getId());
+    }
 
     /**
      * Determines if the user's roles contains a lakare role or not.

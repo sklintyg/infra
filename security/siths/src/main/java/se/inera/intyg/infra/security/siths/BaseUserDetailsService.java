@@ -332,11 +332,13 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         // Set user's authentication scheme
         intygUser.setAuthenticationScheme(authenticationScheme);
 
-
         // Set application mode / request origin if applicable
         if (userOrigin.isPresent()) {
             intygUser.setOrigin(commonAuthoritiesResolver.getRequestOrigin(userOrigin.get().resolveOrigin(getCurrentRequest())).getName());
         }
+
+        // Set commission names per enhetsId (required for PDL logging)
+        intygUser.setMiuNamnPerEnhetsId(userAuthorizationInfo.getCommissionNamePerCareUnit());
     }
 
     private void decorateIntygUserWithRoleAndAuthorities(IntygUser intygUser, List<PersonInformationType> personInfo, UserCredentials userCredentials) {

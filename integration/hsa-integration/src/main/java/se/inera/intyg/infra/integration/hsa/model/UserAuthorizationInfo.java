@@ -18,7 +18,10 @@
  */
 package se.inera.intyg.infra.integration.hsa.model;
 
+import se.riv.infrastructure.directory.v1.CommissionType;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * Composite class encapsulating response data from GetAuthorizationsForPerson.
@@ -30,17 +33,28 @@ public class UserAuthorizationInfo {
     private UserCredentials userCredentials;
     private List<Vardgivare> vardgivare;
 
-    public UserAuthorizationInfo(UserCredentials userCredentials, List<Vardgivare> vardgivare) {
+    /**
+     * Maps a careUnitId to the name of the actual commission the user has on that care unit. Used for PDL-logging.
+     *
+     * See {@link CommissionType#commissionName}
+     */
+    private Map<String, String> commissionNamePerCareUnit;
+
+    public UserAuthorizationInfo(UserCredentials userCredentials, List<Vardgivare> vardgivare, Map<String, String> commissionNamePerCareUnit) {
         this.userCredentials = userCredentials;
         this.vardgivare = vardgivare;
+        this.commissionNamePerCareUnit = commissionNamePerCareUnit;
     }
 
     public UserCredentials getUserCredentials() {
         return userCredentials;
     }
 
-
     public List<Vardgivare> getVardgivare() {
         return vardgivare;
+    }
+
+    public Map<String, String> getCommissionNamePerCareUnit() {
+        return commissionNamePerCareUnit;
     }
 }
