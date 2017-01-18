@@ -46,6 +46,8 @@ public class PdlLogMessage implements Serializable {
 
     private String userId;
     private String userName;
+    private String userTitle;
+    private String userAssignment;
     private Enhet userCareUnit;
 
     private List<PdlResource> pdlResourceList;
@@ -181,6 +183,22 @@ public class PdlLogMessage implements Serializable {
         this.systemId = systemId;
     }
 
+    public String getUserTitle() {
+        return userTitle;
+    }
+
+    public void setUserTitle(String userTitle) {
+        this.userTitle = userTitle;
+    }
+
+    public String getUserAssignment() {
+        return userAssignment;
+    }
+
+    public void setUserAssignment(String userAssignment) {
+        this.userAssignment = userAssignment;
+    }
+
     /**
      * Returns a copy (new instance) of this, optionally omitting the resourceList.
      *
@@ -197,6 +215,8 @@ public class PdlLogMessage implements Serializable {
         msg.setUserCareUnit(this.userCareUnit);
         msg.setUserId(this.userId);
         msg.setUserName(this.userName);
+        msg.setUserAssignment(this.userAssignment);
+        msg.setUserTitle(this.userTitle);
 
         if (includeResourceList) {
             msg.setPdlResourceList(pdlResourceList);
