@@ -90,6 +90,7 @@ public class BasicCacheConfiguration {
     public IgniteConfiguration igniteConfiguration() {
         IgniteConfiguration igniteConfiguration = new IgniteConfiguration();
         igniteConfiguration.setDiscoverySpi(discoverySpi());
+        igniteConfiguration.setMetricsLogFrequency(0);
         return igniteConfiguration;
     }
 
