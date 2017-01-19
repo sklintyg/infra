@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 
@@ -347,7 +348,7 @@ public class IntygUser implements UserDetails {
         this.vardgivare = vardgivare;
     }
 
-
+    @JsonIgnore
     public Map<String, String> getMiuNamnPerEnhetsId() {
         return miuNamnPerEnhetsId;
     }
@@ -372,7 +373,19 @@ public class IntygUser implements UserDetails {
         if (miuNamnPerEnhetsId == null) {
             throw new IllegalStateException("Cannot resolve current medarbetaruppdrag name, map of MiU's not initialized.");
         }
-        return miuNamnPerEnhetsId.get(valdVardenhet.getId());
+
+        // Try to get commissionName directly from the selected care unit.
+        // If not possible, check if we're a Mottagning and use the parentHsaId.
+        if (miuNamnPerEnhetsId.containsKey(valdVardenhet.getId())) {
+            return miuNamnPerEnhetsId.get(valdVardenhet.getId());
+        } else {
+            if (valdVardenhet instanceof Mottagning) {
+                String parentHsaId = ((Mottagning) valdVardenhet).getParentHsaId();
+                return miuNamnPerEnhetsId.get(parentHsaId);
+            } else {
+                return null;
+            }
+        }
     }
 
     /**
