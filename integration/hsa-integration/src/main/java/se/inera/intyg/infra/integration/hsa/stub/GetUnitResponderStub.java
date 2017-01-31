@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.integration.hsa.model.AbstractVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.riv.infrastructure.directory.organization.getunit.v1.rivtabp21.GetUnitResponderInterface;
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitResponseType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitType;
@@ -46,15 +47,28 @@ public class GetUnitResponderStub implements GetUnitResponderInterface {
         }
 
         GetUnitResponseType response = new GetUnitResponseType();
-        Vardenhet vardenhet = hsaServiceStub.getVardenhet(parameters.getUnitHsaId());
-        if  (vardenhet != null) {
 
-            UnitType unit = abstractVardenhetToUnitType(vardenhet);
+        // First, check if it is a Vardgivare
+        Vardgivare vardgivare = hsaServiceStub.getVardgivare(parameters.getUnitHsaId());
+        if (vardgivare != null) {
+            UnitType unit = new UnitType();
+            unit.setUnitName(vardgivare.getNamn());
+            unit.setUnitHsaId(vardgivare.getId());
             response.setUnit(unit);
+
         } else {
-            Mottagning mottagning = hsaServiceStub.getMottagning(parameters.getUnitHsaId());
-            UnitType unit = abstractVardenhetToUnitType(mottagning);
-            response.setUnit(unit);
+            // Then check if it is a Vardenhet
+            Vardenhet vardenhet = hsaServiceStub.getVardenhet(parameters.getUnitHsaId());
+            if (vardenhet != null) {
+
+                UnitType unit = abstractVardenhetToUnitType(vardenhet);
+                response.setUnit(unit);
+            } else {
+                // Finally, test if it is a Mottagning.
+                Mottagning mottagning = hsaServiceStub.getMottagning(parameters.getUnitHsaId());
+                UnitType unit = abstractVardenhetToUnitType(mottagning);
+                response.setUnit(unit);
+            }
         }
         response.setResultCode(ResultCodeEnum.OK);
         return response;

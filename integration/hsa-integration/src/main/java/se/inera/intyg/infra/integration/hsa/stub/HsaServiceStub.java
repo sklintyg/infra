@@ -40,6 +40,15 @@ public class HsaServiceStub {
 
     private Map<String, HsaPerson> personMap = new HashMap<>();
 
+    public Vardgivare getVardgivare(String hsaIdentity) {
+        for (Vardgivare vg : vardgivare) {
+            if (vg.getId().equalsIgnoreCase(hsaIdentity)) {
+                return vg;
+            }
+        }
+        return null;
+    }
+
     public Vardenhet getVardenhet(String hsaIdentity) {
 
         for (Vardgivare vg : vardgivare) {
