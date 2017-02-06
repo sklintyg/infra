@@ -20,6 +20,7 @@ package se.inera.intyg.infra.security.siths;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Test;
@@ -63,6 +64,25 @@ public class DefaultUserDetailsDecoratorTest {
         testee.decorateIntygUserWithDefaultVardenhet(user);
 
         // Verify
+        assertEquals(vardgivare, user.getValdVardgivare());
+        assertEquals(enhet1, user.getValdVardenhet());
+    }
+
+    @Test
+    public void testDecorateIntygUserWithDefaultVardenhetEmptyVardgivare() throws Exception {
+        Vardgivare vardgivareWithoutEnhet = new Vardgivare("vg-1", "Tom vardgivare");
+
+        Vardgivare vardgivare = new Vardgivare("vg-2", "IFV Testlandsting");
+        Vardenhet enhet1 = new Vardenhet("ve-1", "VårdEnhet2A");
+        vardgivare.getVardenheter().add(enhet1);
+        Vardenhet enhet2 = new Vardenhet("ve-2", "Vårdcentralen");
+        vardgivare.getVardenheter().add(enhet2);
+
+        IntygUser user = new IntygUser(HSA_ID);
+        user.setVardgivare(Arrays.asList(vardgivareWithoutEnhet, vardgivare));
+
+        testee.decorateIntygUserWithDefaultVardenhet(user);
+
         assertEquals(vardgivare, user.getValdVardgivare());
         assertEquals(enhet1, user.getValdVardenhet());
     }

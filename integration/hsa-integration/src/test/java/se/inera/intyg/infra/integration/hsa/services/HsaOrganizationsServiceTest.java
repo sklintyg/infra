@@ -270,6 +270,18 @@ public class HsaOrganizationsServiceTest {
     }
 
     @Test
+    public void testInactiveEnhetFilteringEmptyVardgivare() throws IOException {
+
+        addVardgivare("HsaOrganizationsServiceTest/landstinget-upp-och-ner.json");
+
+        // Assign Gunilla 5 MIUs where 2 is inactive (finito and futuro)
+        addMedarbetaruppdrag(PERSON_HSA_ID, "upp-och-ner", asList("finito", "futuro"));
+
+        List<Vardgivare> vardgivareList = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
+        assertEquals(0, vardgivareList.size());
+    }
+
+    @Test
     public void testInactiveMottagningFiltering() throws IOException {
         addVardgivare("HsaOrganizationsServiceTest/landstinget-upp-och-ner.json");
 

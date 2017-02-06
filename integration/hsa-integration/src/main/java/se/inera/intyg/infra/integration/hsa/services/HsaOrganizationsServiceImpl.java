@@ -164,7 +164,9 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
                             commissions.stream().distinct().forEach(ct -> commissionNamePerCareUnit.put(ct.getHealthCareUnitHsaId(), ct.getCommissionName()));
                             return vg;
-                        }).collect(Collectors.toList()));
+                        })
+                        .filter(vg -> !vg.getVardenheter().isEmpty())
+                        .collect(Collectors.toList()));
 
                 // Add relevant credentialInfo to the userCredz
                 userCredentials.getGroupPrescriptionCode().addAll(credentialInformation.getGroupPrescriptionCode());

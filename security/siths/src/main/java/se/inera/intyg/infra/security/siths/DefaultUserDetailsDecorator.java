@@ -101,13 +101,14 @@ public class DefaultUserDetailsDecorator {
     }
 
     private boolean setFirstVardenhetOnFirstVardgivareAsDefault(IntygUser intygUser) {
-        Vardgivare firstVardgivare = intygUser.getVardgivare().get(0);
-        intygUser.setValdVardgivare(firstVardgivare);
-
-        Vardenhet firstVardenhet = firstVardgivare.getVardenheter().get(0);
-        intygUser.setValdVardenhet(firstVardenhet);
-
-        return true;
+        for (Vardgivare vg : intygUser.getVardgivare()) {
+            if (!vg.getVardenheter().isEmpty()) {
+                intygUser.setValdVardgivare(vg);
+                intygUser.setValdVardenhet(vg.getVardenheter().get(0));
+                return true;
+            }
+        }
+        return false;
     }
 
     private static String hsaSystemRoleAsString(HsaSystemRoleType systemRole) {
