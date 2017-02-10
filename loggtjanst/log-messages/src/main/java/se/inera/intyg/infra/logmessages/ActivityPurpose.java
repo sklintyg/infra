@@ -23,7 +23,7 @@ public enum ActivityPurpose {
 
     CARE_TREATMENT("Vård och behandling");
 
-    private String type;
+    private final String type;
 
     ActivityPurpose(String type) {
         this.type = type;

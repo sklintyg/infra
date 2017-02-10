@@ -97,6 +97,7 @@ public class IntygUser implements UserDetails {
         return false;
     }
 
+    @Override
     public Set<String> getFeatures() {
         if (features == null) {
             features = new HashSet<>();
@@ -104,6 +105,7 @@ public class IntygUser implements UserDetails {
         return features;
     }
 
+    @Override
     public void setFeatures(Set<String> features) {
         this.features = features;
     }
@@ -140,10 +142,12 @@ public class IntygUser implements UserDetails {
         this.authenticationScheme = authenticationScheme;
     }
 
+    @Override
     public String getOrigin() {
         return origin;
     }
 
+    @Override
     public void setOrigin(String origin) {
         this.origin = origin;
     }

@@ -31,7 +31,7 @@ public enum ActivityType {
     SEND("Utskrift"),
     EMERGENCY_ACCESS("Nödöppning");
 
-    private String type;
+    private final String type;
 
     ActivityType(String type) {
         this.type = type;
