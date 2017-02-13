@@ -1,6 +1,7 @@
 #!groovy
 
 def buildVersion = "3.2.${BUILD_NUMBER}"
+def buildRoot = JOB_BASE_NAME.replaceAll(/-.*/, "") // Keep everything up to the first dash
 
 stage('checkout') {
     node {
@@ -27,7 +28,7 @@ stage('tag and upload') {
 }
 
 stage('propagate') {
-    build job: 'intyg-intygstjanst-pipeline', wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
+    build job: "${buildRoot}-intygstjanst-pipeline", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
 }
 
 stage('notify') {
