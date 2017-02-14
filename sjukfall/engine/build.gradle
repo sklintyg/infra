@@ -1,0 +1,6 @@
+description = 'Infra (Sjukfall Engine)'
+
+dependencies {
+    compile "org.apache.commons:commons-lang3:${commonsLangVersion}"
+    compile "ch.qos.logback:logback-classic:${logbackVersion}"
+}

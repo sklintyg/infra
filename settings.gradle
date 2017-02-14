@@ -8,6 +8,7 @@ include ':loggtjanst-stub'
 include ':security-common'
 include ':security-authorities'
 include ':security-siths'
+include ':sjukfall-engine'
 
 project(':common-cache-core').projectDir = "$rootDir/cache/core" as File
 project(':common-cache-metrics').projectDir = "$rootDir/cache/metrics" as File
@@ -17,3 +18,5 @@ project(':loggtjanst-stub').projectDir = "$rootDir/loggtjanst/loggtjanst-stub" a
 project(':security-common').projectDir = "$rootDir/security/common" as File
 project(':security-authorities').projectDir = "$rootDir/security/authorities" as File
 project(':security-siths').projectDir = "$rootDir/security/siths" as File
+project(':sjukfall-engine').projectDir = "$rootDir/sjukfall/engine" as File
+
