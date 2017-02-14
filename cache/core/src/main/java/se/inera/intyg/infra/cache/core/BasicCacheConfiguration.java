@@ -57,8 +57,9 @@ public class BasicCacheConfiguration {
 
     private static final Duration DEFAULT_EXPIRY_DURATION = Duration.ONE_MINUTE;
     private static final long JOIN_TIMEOUT = 10000L;
+    public static final int LOC_PORT_RANGE = 9;
 
-    @Value("${cache.bindport:47500}")
+    @Value("${cache.bindport}")
     private String bindport;
 
     @Value("${cache.ipaddresses}")
@@ -99,6 +100,7 @@ public class BasicCacheConfiguration {
         spi.setIpFinder(tcpDiscoveryVmIpFinder());
         spi.setJoinTimeout(JOIN_TIMEOUT);
         spi.setLocalPort(Integer.parseInt(bindport));
+        spi.setLocalPortRange(LOC_PORT_RANGE);
         return spi;
     }
 
