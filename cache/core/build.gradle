@@ -1,5 +1,3 @@
-description = 'Intyg Infra (Cache Core)'
-
 dependencies {
     compile "org.apache.ignite:ignite-spring:${igniteSpringVersion}"
     compile "org.springframework:spring-core:${springVersion}"

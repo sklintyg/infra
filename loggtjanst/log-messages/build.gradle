@@ -1,5 +1,3 @@
-description = 'Infra (Log Messages)'
-
 dependencies {
   compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
 }

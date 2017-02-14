@@ -22,48 +22,6 @@ ext {
     servletApiTestVersion = "3.1.0"
 }
 
-allprojects {
-    group = 'se.inera.intyg.infra'
-    version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
-
-    apply plugin: 'inera-intyg'
-    apply plugin: 'maven'
-    apply plugin: 'org.ajoberstar.grgit'
-}
-
-subprojects {
-    apply plugin: 'java'
-
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-
-    //task createVersionPropertyFile(type: VersionPropertyFileTask)
-
-    uploadArchives.repositories.mavenDeployer {
-        repository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases") {
-            authentication(userName: System.properties['nexusUsername'], password: System.properties['nexusPassword'])
-        }
-    }
-
-    dependencies {
-        testCompile "junit:junit:4.+"
-        testCompile "org.springframework:spring-test:${springVersion}"
-        testCompile "org.mockito:mockito-core:${mockitoVersion}"
-    }
-
-    repositories {
-        mavenLocal()
-        maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases/" }
-        maven { url "http://repo.maven.apache.org/maven2" }
-    }
-}
-
-task tagRelease(type: TagReleaseTask)
-
-task testReport(type: SharedTestReportTask)
-
-apply from: file("codequality.gradle")
-
 buildscript {
     dependencies {
         classpath 'se.inera.intyg:gradle-intyg-plugin:1.0.+'
@@ -82,3 +40,44 @@ buildscript {
     }
 }
 
+allprojects {
+    group = 'se.inera.intyg.infra'
+    version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
+
+    apply plugin: 'inera-intyg'
+    apply plugin: 'maven'
+    apply plugin: 'org.ajoberstar.grgit'
+}
+
+subprojects {
+    repositories {
+        mavenLocal()
+        maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases/" }
+        maven { url "http://repo.maven.apache.org/maven2" }
+    }
+
+    dependencies {
+        testCompile "junit:junit:4.+"
+        testCompile "org.springframework:spring-test:${springVersion}"
+        testCompile "org.mockito:mockito-core:${mockitoVersion}"
+    }
+
+    apply plugin: 'java'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    task createVersionPropertyFile(type: VersionPropertyFileTask)
+
+    uploadArchives.repositories.mavenDeployer {
+        repository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases") {
+            authentication(userName: System.properties['nexusUsername'], password: System.properties['nexusPassword'])
+        }
+    }
+}
+
+task tagRelease(type: TagReleaseTask)
+
+task testReport(type: SharedTestReportTask)
+
+apply from: file("codequality.gradle")

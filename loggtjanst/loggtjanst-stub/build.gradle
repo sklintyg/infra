@@ -1,5 +1,3 @@
-description = 'Infra (Loggtjänst Stub)'
-
 dependencies {
   compile "se.riv.ehr.logstore:ehr-logstore-schemas:${rivtaEhrLogstoreSchemasVersion}"
 
