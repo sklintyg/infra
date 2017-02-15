@@ -40,10 +40,8 @@ public class BaseSakerhetstjanstAssertion {
     // Användarens HSA-ID, legacy.
     public static final String HSA_ID_ATTRIBUTE_LEGACY = "urn:sambi:names:attribute:employeeHsaId";
 
-
     private String hsaId;
     private String authenticationScheme;
-
 
     /* Constructor taking an Assertion object */
     public BaseSakerhetstjanstAssertion(Assertion assertion) {
@@ -54,28 +52,26 @@ public class BaseSakerhetstjanstAssertion {
         }
 
         if (!assertion.getAuthnStatements().isEmpty()) {
-            authenticationScheme = assertion.getAuthnStatements().get(0).getAuthnContext().getAuthnContextClassRef().getAuthnContextClassRef();
+            authenticationScheme = assertion.getAuthnStatements().get(0).getAuthnContext().getAuthnContextClassRef()
+                    .getAuthnContextClassRef();
         }
     }
 
-    // - - - - -  Static - - - - -
+    // - - - - - Static - - - - -
 
     public static BaseSakerhetstjanstAssertion getAssertion(SAMLCredential credential) {
         return new BaseSakerhetstjanstAssertion(credential.getAuthenticationAssertion());
     }
 
-
-
-    // - - - - -  Getters and setters - - - - -
+    // - - - - - Getters and setters - - - - -
 
     public String getHsaId() {
         return hsaId;
     }
 
-   public String getAuthenticationScheme() {
+    public String getAuthenticationScheme() {
         return authenticationScheme;
     }
-
 
     // - - - - - Private scope - - - - -
 
@@ -83,18 +79,18 @@ public class BaseSakerhetstjanstAssertion {
         for (Attribute attribute : attributes) {
             switch (attribute.getName()) {
 
-                case HSA_ID_ATTRIBUTE:
-                    hsaId = getValue(attribute);
-                    break;
-                case HSA_ID_ATTRIBUTE_LEGACY:
-                    // Only set if other not already set.
-                    String val = getValue(attribute);
-                    if (val != null && hsaId == null) {
-                        hsaId = val;
-                    }
-                    break;
-                default:
-                    // Ignore.
+            case HSA_ID_ATTRIBUTE:
+                hsaId = getValue(attribute);
+                break;
+            case HSA_ID_ATTRIBUTE_LEGACY:
+                // Only set if other not already set.
+                String val = getValue(attribute);
+                if (val != null && hsaId == null) {
+                    hsaId = val;
+                }
+                break;
+            default:
+                // Ignore.
             }
         }
     }

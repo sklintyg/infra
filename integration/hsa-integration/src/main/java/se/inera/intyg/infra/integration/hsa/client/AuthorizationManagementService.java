@@ -21,14 +21,13 @@ package se.inera.intyg.infra.integration.hsa.client;
 import java.util.List;
 
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
-import se.inera.intyg.infra.integration.hsa.services.HsaPersonService;
 import se.riv.infrastructure.directory.v1.CredentialInformationType;
 
 /**
  * Exposes the HSA interface for GetCredentialsForPersonIncludingProtectedPerson.
  *
  * Note: Avoid using this class directly from external applications. Use
- * {@link HsaPersonService}
+ * {@link se.inera.intyg.infra.integration.hsa.services.HsaPersonService}
  * instead.
  *
  * Created by eriklupander on 2015-12-04.

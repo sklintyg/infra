@@ -79,7 +79,8 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
 
         if (originConstraints.isPresent() && Arrays.stream(originConstraints.get()).noneMatch(oc -> this.checkHasOrigin(oc.name()))) {
             errors.add(String.format("mandatory origins '%s' did not match users origin value of '%s'.",
-                    Arrays.stream(originConstraints.get()).map(UserOriginType::name).collect(Collectors.joining(",")), this.user.getOrigin()));
+                    Arrays.stream(originConstraints.get()).map(UserOriginType::name).collect(Collectors.joining(",")),
+                    this.user.getOrigin()));
         }
 
         if (originNotConstraints.isPresent() && Arrays.stream(originNotConstraints.get()).anyMatch(oc -> this.checkHasOrigin(oc.name()))) {

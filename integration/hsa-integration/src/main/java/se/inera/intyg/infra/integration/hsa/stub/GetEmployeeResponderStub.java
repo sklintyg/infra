@@ -18,12 +18,16 @@
  */
 package se.inera.intyg.infra.integration.hsa.stub;
 
+//CHECKSTYLE:OFF LineLength
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedperson.v1.rivtabp21.GetEmployeeIncludingProtectedPersonResponderInterface;
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonResponseType;
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonType;
 import se.riv.infrastructure.directory.v1.*;
+
+//CHECKSTYLE:ON LineLength
 
 /**
  * Created by eriklupander on 2015-12-03.
@@ -34,7 +38,8 @@ public class GetEmployeeResponderStub implements GetEmployeeIncludingProtectedPe
     private HsaServiceStub hsaServiceStub;
 
     @Override
-    public GetEmployeeIncludingProtectedPersonResponseType getEmployeeIncludingProtectedPerson(String logicalAddress, GetEmployeeIncludingProtectedPersonType getEmployeeIncludingProtectedPersonType) {
+    public GetEmployeeIncludingProtectedPersonResponseType getEmployeeIncludingProtectedPerson(String logicalAddress,
+            GetEmployeeIncludingProtectedPersonType getEmployeeIncludingProtectedPersonType) {
         GetEmployeeIncludingProtectedPersonResponseType response = new GetEmployeeIncludingProtectedPersonResponseType();
         String personHsaId = getEmployeeIncludingProtectedPersonType.getPersonHsaId();
         HsaPerson hsaPerson = hsaServiceStub.getHsaPerson(personHsaId);

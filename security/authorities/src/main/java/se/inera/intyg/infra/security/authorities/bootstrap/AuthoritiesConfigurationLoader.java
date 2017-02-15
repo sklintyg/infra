@@ -37,13 +37,12 @@ import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 import se.inera.intyg.infra.security.authorities.AuthoritiesConfiguration;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 
-
 /**
- *  The authorities configuration is read from a YAML file which is
- *  injected into the constructor upon creating an object of this class.
+ * The authorities configuration is read from a YAML file which is
+ * injected into the constructor upon creating an object of this class.
  *
- *  The YAML file is parsed and the resulting configuration can be fetched
- *  by calling the getConfiguration() method.
+ * The YAML file is parsed and the resulting configuration can be fetched
+ * by calling the getConfiguration() method.
  */
 @Component("AuthoritiesConfigurationLoader")
 public class AuthoritiesConfigurationLoader implements InitializingBean {
@@ -54,19 +53,19 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
     private AuthoritiesConfiguration authoritiesConfiguration;
 
     private AuthoritiesConfigurationLoader() {
-         // Uses @Value injected authoritiesConfigurationFile
+        // Uses @Value injected authoritiesConfigurationFile
     }
 
     /**
      * Constructor taking a path to the authorities configuration file.
      *
-     * @param authoritiesConfigurationFile path to YAML configuration file
+     * @param authoritiesConfigurationFile
+     *            path to YAML configuration file
      */
     public AuthoritiesConfigurationLoader(String authoritiesConfigurationFile) {
         Assert.notNull(authoritiesConfigurationFile, "Authorities configuration file must not be null");
         this.authoritiesConfigurationFile = authoritiesConfigurationFile;
     }
-
 
     // ~ Public scope
     // ======================================================================================================
@@ -74,12 +73,14 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
     /**
      * Invoked by a BeanFactory after it has set all bean properties supplied
      * (and satisfied BeanFactoryAware and ApplicationContextAware).
-     * <p>This method allows the bean instance to perform initialization only
+     * <p>
+     * This method allows the bean instance to perform initialization only
      * possible when all bean properties have been set and to throw an
      * exception in the event of misconfiguration.
      *
-     * @throws Exception in the event of misconfiguration (such
-     *                   as failure to set an essential property) or if initialization fails.
+     * @throws Exception
+     *             in the event of misconfiguration (such
+     *             as failure to set an essential property) or if initialization fails.
      */
     @Override
     public void afterPropertiesSet() throws AuthoritiesException {
@@ -91,7 +92,9 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
             uri = resource.getURI();
             authoritiesConfiguration = loadConfiguration(Paths.get(resource.getURI()));
         } catch (IOException ioe) {
-           throw new AuthoritiesException(format("Could not load authorities configuration file %s", uri != null ? uri.getPath() : authoritiesConfiguration), ioe);
+            throw new AuthoritiesException(
+                    format("Could not load authorities configuration file %s", uri != null ? uri.getPath() : authoritiesConfiguration),
+                    ioe);
         }
 
     }
@@ -104,7 +107,6 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
     public AuthoritiesConfiguration getConfiguration() {
         return this.authoritiesConfiguration;
     }
-
 
     // ~ Private scope
     // ======================================================================================================
@@ -122,4 +124,3 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
     }
 
 }
-

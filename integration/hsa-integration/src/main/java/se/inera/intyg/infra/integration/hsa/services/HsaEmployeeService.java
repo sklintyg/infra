@@ -59,6 +59,7 @@ public interface HsaEmployeeService {
      *
      * @throws WebServiceException
      */
-    List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase) throws WebServiceException;
+    List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase)
+            throws WebServiceException;
 
 }

@@ -108,10 +108,12 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
 
         if (response.getResultCode() == ResultCodeEnum.ERROR) {
             if (response.getHealthCareUnitMembers() == null || response.getHealthCareUnitMembers().getHealthCareUnitHsaId() == null) {
-                LOG.error("Error received when calling GetHealthCareUnitMembers for {}, result text: {}", unitHsaId, response.getResultText());
+                LOG.error("Error received when calling GetHealthCareUnitMembers for {}, result text: {}", unitHsaId,
+                        response.getResultText());
                 throw new HsaServiceCallException("Could not GetHealthCareUnitMembers for hsaId " + unitHsaId);
             } else {
-                LOG.warn("Error received when calling GetHealthCareUnitMembers for {}, result text: {}", unitHsaId, response.getResultText());
+                LOG.warn("Error received when calling GetHealthCareUnitMembers for {}, result text: {}", unitHsaId,
+                        response.getResultText());
                 LOG.warn("Continuing anyway because information was delivered with the ERROR code.");
             }
         }
@@ -119,7 +121,8 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
     }
 
     @VisibleForTesting
-    public void setGetHealthCareUnitMembersResponderInterface(GetHealthCareUnitMembersResponderInterface getHealthCareUnitMembersResponderInterface) {
+    public void setGetHealthCareUnitMembersResponderInterface(
+            GetHealthCareUnitMembersResponderInterface getHealthCareUnitMembersResponderInterface) {
         this.getHealthCareUnitMembersResponderInterface = getHealthCareUnitMembersResponderInterface;
     }
 }

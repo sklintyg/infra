@@ -73,7 +73,8 @@ public class GetHealthCareUnitResponderStub implements GetHealthCareUnitResponde
             return responseType;
         }
 
-        responseType.setResultText("HsaServiceStub returned NULL Mottagning for hsaId: '" + parameters.getHealthCareUnitMemberHsaId() + "'");
+        responseType
+                .setResultText("HsaServiceStub returned NULL Mottagning for hsaId: '" + parameters.getHealthCareUnitMemberHsaId() + "'");
         responseType.setResultCode(ResultCodeEnum.ERROR);
         return responseType;
     }

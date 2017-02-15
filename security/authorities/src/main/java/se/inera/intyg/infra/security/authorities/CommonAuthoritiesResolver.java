@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.infra.security.authorities;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.*;
@@ -57,6 +56,7 @@ public class CommonAuthoritiesResolver {
 
     /**
      * Get all configured (known/loaded) intygstyper.
+     *
      * @return a list with intygstyper
      */
     public List<String> getIntygstyper() {
@@ -65,6 +65,7 @@ public class CommonAuthoritiesResolver {
 
     /**
      * Get all configured (loaded) privileges.
+     *
      * @return a list with privileges
      */
     public List<Privilege> getPrivileges() {
@@ -81,6 +82,7 @@ public class CommonAuthoritiesResolver {
 
     /**
      * Get all configured (loaded) request origins.
+     *
      * @return a list with request origins
      */
     public List<RequestOrigin> getRequestOrigins() {
@@ -89,7 +91,8 @@ public class CommonAuthoritiesResolver {
 
     /**
      * Get all configured (loaded) roles.
-     * @return a list with  roles
+     *
+     * @return a list with roles
      */
     public List<Role> getRoles() {
         return configurationLoader.getConfiguration().getRoles();
@@ -97,6 +100,7 @@ public class CommonAuthoritiesResolver {
 
     /**
      * Get all configured (loaded) titles (a.k.a legitimerade yrkesgrupper).
+     *
      * @return a list with titles
      */
     public List<Title> getTitles() {
@@ -105,12 +109,12 @@ public class CommonAuthoritiesResolver {
 
     /**
      * Get all configured (loaded) title codes (a.k.a befattningskoder).
+     *
      * @return a list with title codes
      */
     public List<TitleCode> getTitleCodes() {
         return configurationLoader.getConfiguration().getTitleCodes();
     }
-
 
     // ~ Getter and setter
     // ======================================================================================
@@ -122,7 +126,6 @@ public class CommonAuthoritiesResolver {
     public void setConfigurationLoader(AuthoritiesConfigurationLoader configurationLoader) {
         this.configurationLoader = configurationLoader;
     }
-
 
     // ~ Package methods
     // ======================================================================================
@@ -181,14 +184,16 @@ public class CommonAuthoritiesResolver {
         return allaBefattningar;
     }
 
-    /** Lookup user role by looking into 'legitimerade yrkesgrupper'.
+    /**
+     * Lookup user role by looking into 'legitimerade yrkesgrupper'.
      * Currently there are only two 'yrkesgrupper' to look for:
      * <ul>
      * <li>Läkare</li>
      * <li>Tandläkare</li>
      * </ul>
      *
-     * @param legitimeradeYrkesgrupper string array with 'legitimerade yrkesgrupper'
+     * @param legitimeradeYrkesgrupper
+     *            string array with 'legitimerade yrkesgrupper'
      * @return a user role if valid 'yrkesgrupper', otherwise null
      */
     Role lookupUserRoleByLegitimeradeYrkesgrupper(List<String> legitimeradeYrkesgrupper) {
@@ -252,33 +257,12 @@ public class CommonAuthoritiesResolver {
 
         Role role = fnRole.apply(titleCode.getRole().getName());
         if (role == null) {
-            throw new AuthoritiesException("fnRole.apply(titleCode.fnRole()) returnerade 'null' vilket indikerar felaktig konfiguration av roller");
+            throw new AuthoritiesException(
+                    "fnRole.apply(titleCode.fnRole()) returnerade 'null' vilket indikerar felaktig konfiguration av roller");
         }
 
         return role;
     }
-
-
-    // ~ Private methods
-    // ======================================================================================
-//
-//    private List<String> extractLegitimeradeYrkesgrupper(List<PersonInformationType> hsaUserTypes) {
-//        Set<String> lygSet = new TreeSet<>();
-//
-//        for (PersonInformationType userType : hsaUserTypes) {
-//            if (userType.getPaTitle() != null) {
-//                List<String> hsaTitles = userType.getPaTitle().stream().map(paTitle -> paTitle.getPaTitleName()).collect(Collectors.toList());
-//                lygSet.addAll(hsaTitles);
-//            }
-//        }
-//
-//        return new ArrayList<>(lygSet);
-//    }
-
-
-
-    // ~ Lambdas
-    // ======================================================================================
 
     private Predicate<RequestOrigin> isRequestOrigin(String name) {
         return ro -> ro.getName() != null && ro.getName().equalsIgnoreCase(name);

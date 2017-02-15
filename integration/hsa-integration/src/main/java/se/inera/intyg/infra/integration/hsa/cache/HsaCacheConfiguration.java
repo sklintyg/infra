@@ -29,11 +29,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import se.inera.intyg.infra.cache.core.ConfigurableCache;
-import se.inera.intyg.infra.integration.hsa.client.OrganizationUnitServiceBean;
 
 /**
  * While the cacheManager.getCache(...) isn't strictly necessary for creating the cache used by
- * {@link OrganizationUnitServiceBean}, this class
+ * {@link se.inera.intyg.infra.integration.hsa.client.OrganizationUnitServiceBean}, this class
  * provides us with the capability of configuring individual caches based on the current state of the
  * {@link org.apache.ignite.cache.spring.SpringCacheManager#dynamicCacheCfg}
  *
@@ -65,7 +64,8 @@ public class HsaCacheConfiguration implements ConfigurableCache {
     public void init() {
         Duration hsaUnitDuration = buildDuration(hsaUnitCacheExpirySeconds, HSA_UNIT_CACHE_EXPIRY);
         Duration hsaHealthCareUnitDuration = buildDuration(hsaHealthCareUnitCacheExpirySeconds, HSA_HEALTHCAREUNIT_CACHE_EXPIRY);
-        Duration hsaHealthCareUnitMembersDuration = buildDuration(hsaHeathCareUnitMembersCacheExpirySeconds, HSA_HEALHCAREUNITMEMBERS_CACHE_EXPIRY);
+        Duration hsaHealthCareUnitMembersDuration = buildDuration(hsaHeathCareUnitMembersCacheExpirySeconds,
+                HSA_HEALHCAREUNITMEMBERS_CACHE_EXPIRY);
 
         initCache(HSA_UNIT_CACHE_NAME, hsaUnitDuration);
         initCache(HSA_HEALTH_CARE_UNIT_CACHE_NAME, hsaHealthCareUnitDuration);
@@ -76,6 +76,7 @@ public class HsaCacheConfiguration implements ConfigurableCache {
     public void tearDown() {
         Ignition.stopAll(false);
     }
+
     private void initCache(String cacheName, Duration duration) {
         cacheManager.getDynamicCacheConfiguration().setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(duration));
         cacheManager.getCache(cacheName);

@@ -19,14 +19,13 @@
 package se.inera.intyg.infra.integration.hsa.client;
 
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
-import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.HealthCareUnitType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
 
 /**
  * Note: Avoid using this class directly from external applications. Use
- * {@link HsaOrganizationsService}
+ * {@link se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService}
  * instead.
  *
  * Created by eriklupander on 2015-12-03.

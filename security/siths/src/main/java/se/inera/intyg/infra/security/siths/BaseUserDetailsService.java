@@ -51,9 +51,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-
 /**
- * Base class for providing authorization based on minimal SAML-tickets containing only the employeeHsaId and authnMethod.
+ * Base class for providing authorization based on minimal SAML-tickets containing only the employeeHsaId and
+ * authnMethod.
  *
  * Each application must extend this base class, with the option of overriding most methods.
  *
@@ -92,7 +92,8 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
      *
      * Implementing subclasses may override this method, but are recommended to _not_ do so. Instead overriding
      * {@link BaseUserDetailsService#buildUserPrincipal} and/or
-     * {@link BaseUserDetailsService#createIntygUser(String, String, UserAuthorizationInfo, List)} is the recommended way.
+     * {@link BaseUserDetailsService#createIntygUser(String, String, UserAuthorizationInfo, List)} is the recommended
+     * way.
      *
      * @param credential
      * @return
@@ -128,7 +129,8 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
      *
      * Note that this default implementation only uses employeeHsaId and authnMethod from a supplied SAML ticket.
      *
-     * Implementing subclasses should override this method, call super.buildUserPrincipal(..) and then dececorate their own Principal based
+     * Implementing subclasses should override this method, call super.buildUserPrincipal(..) and then dececorate their
+     * own Principal based
      * on the {@link IntygUser} returned by this base method.
      *
      * @param credential
@@ -158,7 +160,6 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         }
     }
 
-
     // ~ Protected scope
     // =====================================================================================
 
@@ -168,7 +169,8 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
 
     /**
      * Fetches a list of {@link Vardgivare} from HSA (over NTjP) that the specified employeeHsaId
-     * has medarbetaruppdrag "Vård och behandling" for. Uses infrastructure:directory:authorizationmanagement:GetCredentialsForPersonIncludingProtectedPerson.
+     * has medarbetaruppdrag "Vård och behandling" for. Uses
+     * infrastructure:directory:authorizationmanagement:GetCredentialsForPersonIncludingProtectedPerson.
      *
      * Override to provide your own mechanism for fetching Vardgivare.
      *
@@ -188,7 +190,8 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
     }
 
     /**
-     * Fetches a list of PersonInformationType from HSA using infrastructure:directory:employee:GetEmployeeIncludingProtectedPerson.
+     * Fetches a list of PersonInformationType from HSA using
+     * infrastructure:directory:employee:GetEmployeeIncludingProtectedPerson.
      *
      * Override to provide your own implementation for fetching PersonInfo.
      *
@@ -212,8 +215,6 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         return hsaPersonInfo;
     }
 
-
-
     protected void assertAuthorizedVardgivare(String employeeHsaId, List<Vardgivare> authorizedVardgivare) {
         LOG.debug("Assert user has authorization to one or more 'vårdenheter'");
 
@@ -224,22 +225,25 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
     }
 
     /**
-     * Creates the base {@link IntygUser} instance that implementing subclasses then can decorate on their own. Optionally,
+     * Creates the base {@link IntygUser} instance that implementing subclasses then can decorate on their own.
+     * Optionally,
      * all of the decorate* methods can be individually overridden by implementing subclasses.
      *
      * @param employeeHsaId
-     *      hsaId for the authorizing user. From SAML ticket.
+     *            hsaId for the authorizing user. From SAML ticket.
      * @param authenticationScheme
-     *      auth scheme, i.e. what auth method used, typically :siths or :fake
+     *            auth scheme, i.e. what auth method used, typically :siths or :fake
      * @param userAuthorizationInfo
-     *      UserCredentials and List of vardgivare fetched from HSA, each entry is actually a tree of vardgivare -> vardenhet(er) -> mottagning(ar)
-     *      where the user has medarbetaruppdrag 'Vård och Behandling'.
+     *            UserCredentials and List of vardgivare fetched from HSA, each entry is actually a tree of vardgivare
+     *            -> vardenhet(er) -> mottagning(ar)
+     *            where the user has medarbetaruppdrag 'Vård och Behandling'.
      * @param personInfo
-     *      Employee information from HSA.
+     *            Employee information from HSA.
      * @return
-     *      A base IntygUser Principal.
+     *         A base IntygUser Principal.
      */
-    protected IntygUser createIntygUser(String employeeHsaId, String authenticationScheme, UserAuthorizationInfo userAuthorizationInfo, List<PersonInformationType> personInfo) {
+    protected IntygUser createIntygUser(String employeeHsaId, String authenticationScheme, UserAuthorizationInfo userAuthorizationInfo,
+            List<PersonInformationType> personInfo) {
         LOG.debug("Decorate/populate user object with additional information");
 
         IntygUser intygUser = new IntygUser(employeeHsaId);
@@ -252,7 +256,6 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         decorateIntygUserWithDefaultVardenhet(intygUser);
         return intygUser;
     }
-
 
     /**
      * Each application must override this method in order to specify it's fallback default role.
@@ -321,11 +324,13 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
 
     // ~ Private scope
     // =====================================================================================
-    private void decorateIntygUserWithBasicInfo(IntygUser intygUser, UserAuthorizationInfo userAuthorizationInfo, List<PersonInformationType> personInfo, String authenticationScheme) {
+    private void decorateIntygUserWithBasicInfo(IntygUser intygUser, UserAuthorizationInfo userAuthorizationInfo,
+            List<PersonInformationType> personInfo, String authenticationScheme) {
         intygUser.setNamn(compileName(personInfo.get(0).getGivenName(), personInfo.get(0).getMiddleAndSurName()));
         intygUser.setVardgivare(userAuthorizationInfo.getVardgivare());
 
-        // Förskrivarkod is sensitive information, not allowed to store real value so make sure we overwrite this later after role resolution.
+        // Förskrivarkod is sensitive information, not allowed to store real value so make sure we overwrite this later
+        // after role resolution.
         intygUser.setForskrivarkod(userAuthorizationInfo.getUserCredentials().getPersonalPrescriptionCode());
 
         // Set user's authentication scheme
@@ -340,7 +345,8 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         intygUser.setMiuNamnPerEnhetsId(userAuthorizationInfo.getCommissionNamePerCareUnit());
     }
 
-    private void decorateIntygUserWithRoleAndAuthorities(IntygUser intygUser, List<PersonInformationType> personInfo, UserCredentials userCredentials) {
+    private void decorateIntygUserWithRoleAndAuthorities(IntygUser intygUser, List<PersonInformationType> personInfo,
+            UserCredentials userCredentials) {
         Role role = commonAuthoritiesResolver.resolveRole(intygUser, personInfo, getDefaultRole(), userCredentials);
         LOG.debug("User role is set to {}", role);
 

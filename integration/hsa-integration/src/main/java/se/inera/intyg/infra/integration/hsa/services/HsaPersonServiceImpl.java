@@ -67,7 +67,7 @@ public class HsaPersonServiceImpl implements HsaPersonService {
         LOG.debug("Getting info from HSA for person '{}'", personHsaId);
 
         try {
-            return employeeService.getEmployee(personHsaId, null,  null);
+            return employeeService.getEmployee(personHsaId, null, null);
         } catch (HsaServiceCallException e) {
             LOG.error(e.getMessage());
             throw new WebServiceException(e.getMessage());
@@ -87,7 +87,8 @@ public class HsaPersonServiceImpl implements HsaPersonService {
         List<CommissionType> filteredMuisOnUnit = commissions.stream()
                 .filter(ct -> ct.getHealthCareUnitHsaId() != null && ct.getHealthCareUnitHsaId().equals(unitHsaId))
                 .filter(ct -> ct.getHealthCareUnitEndDate() == null || ct.getHealthCareUnitEndDate().isAfter(LocalDateTime.now()))
-                .filter(ct -> ct.getCommissionPurpose() != null && Medarbetaruppdrag.VARD_OCH_BEHANDLING.equalsIgnoreCase(ct.getCommissionPurpose()))
+                .filter(ct -> ct.getCommissionPurpose() != null
+                        && Medarbetaruppdrag.VARD_OCH_BEHANDLING.equalsIgnoreCase(ct.getCommissionPurpose()))
                 .collect(Collectors.toList());
 
         LOG.debug("Person has {} MIUs on unit '{}'", filteredMuisOnUnit.size(), hosPersonHsaId);

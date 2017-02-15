@@ -72,10 +72,10 @@ public class LoggtjanstStubRestApi {
      * Makes the stub fake one of the specified error types. See {@link ErrorState}
      *
      * @param errorType
-     *      Allowed values are NONE, ERROR, VALIDATION
+     *            Allowed values are NONE, ERROR, VALIDATION
      * @return
-     *   200 OK if state change was successful. 500 Server Error if the errorType string couldn't be parsed into
-     *   an {@link ErrorState}
+     *         200 OK if state change was successful. 500 Server Error if the errorType string couldn't be parsed into
+     *         an {@link ErrorState}
      */
     @GET
     @Path("/error/{errorType}")
@@ -85,7 +85,8 @@ public class LoggtjanstStubRestApi {
             stubState.setErrorState(errorState);
             return Response.ok().entity("OK").build();
         } catch (IllegalArgumentException e) {
-            return Response.serverError().entity("Unknown ErrorState: " + errorType + ". Allowed values are NONE, ERROR, VALIDATION").build();
+            return Response.serverError().entity("Unknown ErrorState: " + errorType + ". Allowed values are NONE, ERROR, VALIDATION")
+                    .build();
         }
     }
 
@@ -93,9 +94,9 @@ public class LoggtjanstStubRestApi {
      * Introduces a fake latency in the stub.
      *
      * @param latencyMillis
-     *      Latency, in milliseconds.
+     *            Latency, in milliseconds.
      * @return
-     *      200 OK
+     *         200 OK
      */
     @GET
     @Path("/latency/{latencyMillis}")

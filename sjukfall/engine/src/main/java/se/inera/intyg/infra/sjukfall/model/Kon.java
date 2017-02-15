@@ -25,7 +25,7 @@ public enum Kon {
 
     F("Kvinna"), M("Man"), UNKNOWN("Okänt");
 
-    String desc;
+    private final String desc;
 
     Kon(String desc) {
         this.desc = desc;

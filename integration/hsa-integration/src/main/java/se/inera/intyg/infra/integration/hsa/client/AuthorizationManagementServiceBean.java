@@ -39,6 +39,8 @@ public class AuthorizationManagementServiceBean implements AuthorizationManageme
 
     private static final Logger LOG = LoggerFactory.getLogger(AuthorizationManagementServiceBean.class);
 
+    // CHECKSTYLE:OFF LineLength
+
     @Autowired
     private GetCredentialsForPersonIncludingProtectedPersonResponderInterface getCredentialsForPersonIncludingProtectedPersonResponderInterface;
 

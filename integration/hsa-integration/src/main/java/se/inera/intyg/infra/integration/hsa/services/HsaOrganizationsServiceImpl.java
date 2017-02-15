@@ -119,7 +119,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
                     .stream()
                     .filter(member -> (member.getHealthCareUnitMemberStartDate() == null
                             || member.getHealthCareUnitMemberStartDate().compareTo(now) <= 0)
-                            && (member.getHealthCareUnitMemberEndDate() == null || member.getHealthCareUnitMemberEndDate().compareTo(now) >= 0))
+                            && (member.getHealthCareUnitMemberEndDate() == null
+                                    || member.getHealthCareUnitMemberEndDate().compareTo(now) >= 0))
                     .map(HealthCareUnitMemberType::getHealthCareUnitMemberHsaId)
                     .distinct()
                     .collect(Collectors.toList());
@@ -142,7 +143,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
             for (CredentialInformationType credentialInformation : credentialInformationList) {
                 List<CommissionType> commissions = credentialInformation.getCommission()
                         .stream()
-                        .filter(commissionType -> Medarbetaruppdrag.VARD_OCH_BEHANDLING.equalsIgnoreCase(commissionType.getCommissionPurpose()))
+                        .filter(commissionType -> Medarbetaruppdrag.VARD_OCH_BEHANDLING
+                                .equalsIgnoreCase(commissionType.getCommissionPurpose()))
                         .collect(Collectors.toList());
 
                 LOG.debug("User '{}' has a total of {} medarbetaruppdrag", hosPersonHsaId, commissions.size());
@@ -161,7 +163,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
                                     .sorted(Comparator.comparing(Vardenhet::getNamn))
                                     .collect(Collectors.toList()));
 
-                            commissions.stream().distinct().forEach(ct -> commissionNamePerCareUnit.put(ct.getHealthCareUnitHsaId(), ct.getCommissionName()));
+                            commissions.stream().distinct()
+                                    .forEach(ct -> commissionNamePerCareUnit.put(ct.getHealthCareUnitHsaId(), ct.getCommissionName()));
                             return vg;
                         })
                         .filter(vg -> !vg.getVardenheter().isEmpty())
@@ -256,7 +259,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
             Mottagning mottagning = new Mottagning(member.getHealthCareUnitMemberHsaId(), member.getHealthCareUnitMemberName(),
                     member.getHealthCareUnitMemberStartDate(), member.getHealthCareUnitMemberEndDate());
-            if (member.getHealthCareUnitMemberpostalAddress() != null && member.getHealthCareUnitMemberpostalAddress().getAddressLine() != null) {
+            if (member.getHealthCareUnitMemberpostalAddress() != null
+                    && member.getHealthCareUnitMemberpostalAddress().getAddressLine() != null) {
                 mottagning.setPostadress(member.getHealthCareUnitMemberpostalAddress().getAddressLine()
                         .stream()
                         .collect(Collectors.joining(" ")));

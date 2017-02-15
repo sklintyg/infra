@@ -43,9 +43,12 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
     private HsaServiceStub serviceStub;
 
     @Override
-    public GetCredentialsForPersonIncludingProtectedPersonResponseType getCredentialsForPersonIncludingProtectedPerson(String logicalAddress,
+    public GetCredentialsForPersonIncludingProtectedPersonResponseType getCredentialsForPersonIncludingProtectedPerson(
+            String logicalAddress,
             GetCredentialsForPersonIncludingProtectedPersonType parameters) {
+        // CHECKSTYLE:OFF LineLength
         GetCredentialsForPersonIncludingProtectedPersonResponseType response = new GetCredentialsForPersonIncludingProtectedPersonResponseType();
+        // CHECKSTYLE:ON LineLength
         response.setResultCode(ResultCodeEnum.OK);
 
         if (serviceStub.getMedarbetaruppdrag().size() > 0) {
@@ -96,7 +99,8 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
 
                             miuInfo.setHealthCareProviderHsaId(vardgivare.getId());
                             miuInfo.setHealthCareProviderName(vardgivare.getNamn());
-                            miuInfo.setHealthCareProviderOrgNo(AgandeForm.PRIVAT.equals(enhet.getAgandeForm()) ? "5555555555" : "2222222222");
+                            miuInfo.setHealthCareProviderOrgNo(
+                                    AgandeForm.PRIVAT.equals(enhet.getAgandeForm()) ? "5555555555" : "2222222222");
 
                             cit.getCommission().add(miuInfo);
                         }
@@ -111,14 +115,13 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
 
     /**
      * If our user has defined systemRole(s) in the stub, add them here to the credential.
-
+     *
      * @param cit
      * @param uppdrag
      */
     private void addSystemRole(CredentialInformationType cit, Medarbetaruppdrag.Uppdrag uppdrag) {
         if (uppdrag.getSystemRoles() != null) {
-            cit.getHsaSystemRole().addAll(uppdrag.getSystemRoles().stream().map((String s) ->
-            {
+            cit.getHsaSystemRole().addAll(uppdrag.getSystemRoles().stream().map((String s) -> {
                 HsaSystemRoleType systemRole = new HsaSystemRoleType();
                 systemRole.setRole(s);
                 return systemRole;

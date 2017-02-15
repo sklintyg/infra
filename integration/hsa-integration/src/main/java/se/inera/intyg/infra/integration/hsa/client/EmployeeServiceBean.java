@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.integration.hsa.client;
 
+//CHECKSTYLE:OFF LineLength
+
 import java.util.List;
 
 import javax.xml.ws.soap.SOAPFaultException;
@@ -36,6 +38,8 @@ import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedper
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 
+//CHECKSTYLE:ON LineLength
+
 /**
  * Created by eriklupander on 2015-12-03.
  */
@@ -51,13 +55,15 @@ public class EmployeeServiceBean implements EmployeeService {
     private String logicalAddress;
 
     @Override
-    public List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase) throws HsaServiceCallException {
+    public List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase)
+            throws HsaServiceCallException {
 
         LOG.debug("Getting info from HSA for person '{}'", personHsaId);
 
         // Exakt ett av fälten personHsaId och personalIdentityNumber ska anges.
         if (StringUtils.isEmpty(personHsaId) && StringUtils.isEmpty(personalIdentityNumber)) {
-            throw new IllegalArgumentException("Inget av argumenten personHsaId och personalIdentityNumber är satt. Ett av dem måste ha ett värde.");
+            throw new IllegalArgumentException(
+                    "Inget av argumenten personHsaId och personalIdentityNumber är satt. Ett av dem måste ha ett värde.");
         }
 
         if (!StringUtils.isEmpty(personHsaId) && !StringUtils.isEmpty(personalIdentityNumber)) {
@@ -74,16 +80,19 @@ public class EmployeeServiceBean implements EmployeeService {
         GetEmployeeIncludingProtectedPersonResponseType response;
 
         try {
-            response = getEmployeeIncludingProtectedPersonResponderInterface.getEmployeeIncludingProtectedPerson(logicalAddress, employeeType);
+            response = getEmployeeIncludingProtectedPersonResponderInterface.getEmployeeIncludingProtectedPerson(logicalAddress,
+                    employeeType);
 
             // check whether call was successful or not
             if (response.getResultCode() == ResultCodeEnum.ERROR) {
                 if (response.getPersonInformation() == null || response.getPersonInformation().isEmpty()) {
-                    LOG.error("Failed getting employee information from HSA; personHsaId = '{}'. Result text: {}", employeeType.getPersonHsaId(),
+                    LOG.error("Failed getting employee information from HSA; personHsaId = '{}'. Result text: {}",
+                            employeeType.getPersonHsaId(),
                             response.getResultText());
                     throw new HsaServiceCallException(response.getResultText());
                 } else {
-                    LOG.warn("Failed getting employee information from HSA; personHsaId = '{}'. Result text: {}", employeeType.getPersonHsaId(),
+                    LOG.warn("Failed getting employee information from HSA; personHsaId = '{}'. Result text: {}",
+                            employeeType.getPersonHsaId(),
                             response.getResultText());
                     LOG.warn("Continuing anyway because information was delivered with the ERROR code.");
                 }
@@ -95,7 +104,8 @@ public class EmployeeServiceBean implements EmployeeService {
         return response.getPersonInformation();
     }
 
-    private GetEmployeeIncludingProtectedPersonType createEmployeeType(String personHsaId, String personalIdentityNumber, String searchBase) {
+    private GetEmployeeIncludingProtectedPersonType createEmployeeType(String personHsaId, String personalIdentityNumber,
+            String searchBase) {
         GetEmployeeIncludingProtectedPersonType employeeType = new GetEmployeeIncludingProtectedPersonType();
         employeeType.setPersonHsaId(personHsaId);
         employeeType.setPersonalIdentityNumber(personalIdentityNumber);

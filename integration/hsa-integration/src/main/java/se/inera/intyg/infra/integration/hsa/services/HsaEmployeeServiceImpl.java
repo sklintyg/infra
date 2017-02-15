@@ -53,7 +53,8 @@ public class HsaEmployeeServiceImpl implements HsaEmployeeService {
     }
 
     @Override
-    public List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase) throws WebServiceException {
+    public List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase)
+            throws WebServiceException {
         try {
             return employeeService.getEmployee(personHsaId, personalIdentityNumber, searchBase);
         } catch (HsaServiceCallException e) {

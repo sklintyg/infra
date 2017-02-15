@@ -75,7 +75,6 @@ public class IntygUser implements UserDetails {
         this.hsaId = employeeHsaId;
     }
 
-
     // ~ Public scope
     // ======================================================================================================
 
@@ -306,7 +305,6 @@ public class IntygUser implements UserDetails {
         return befattningar;
     }
 
-
     public void setBefattningar(List<String> befattningar) {
         this.befattningar = befattningar;
     }
@@ -364,9 +362,12 @@ public class IntygUser implements UserDetails {
      * Utility method to get the name "medarbetaruppdrag" that the user has on the currently selected vårdenhet.
      *
      * @return
-     *      The name of the medarbetaruppdrag. (Derived from infrastructure:directory:authorizationmanagement CommissionType#commissionName)
+     *         The name of the medarbetaruppdrag. (Derived from infrastructure:directory:authorizationmanagement
+     *         CommissionType#commissionName)
      * @throws
-     *      IllegalStateException if no vardenhet is selected or if the map that maps enhetsId to commissionName hasn't been initialized.
+     *             IllegalStateException
+     *             if no vardenhet is selected or if the map that maps enhetsId to commissionName hasn't been
+     *             initialized.
      */
     @JsonIgnore
     public String getSelectedMedarbetarUppdragNamn() {
@@ -400,10 +401,12 @@ public class IntygUser implements UserDetails {
      * <li>ROLE_TANDLAKARE</li>
      * </ul>
      * Note: This construct smells a bit, as it's somewhat ambigous what isLakare could be interpreted as?
+     *
      * @return true if role is one the above, otherwise false
      */
     public boolean isLakare() {
-        return roles.containsKey(AuthoritiesConstants.ROLE_LAKARE) || roles.containsKey(AuthoritiesConstants.ROLE_PRIVATLAKARE) || roles.containsKey(AuthoritiesConstants.ROLE_TANDLAKARE);
+        return roles.containsKey(AuthoritiesConstants.ROLE_LAKARE) || roles.containsKey(AuthoritiesConstants.ROLE_PRIVATLAKARE)
+                || roles.containsKey(AuthoritiesConstants.ROLE_TANDLAKARE);
     }
 
     public boolean isPrivatLakare() {
@@ -427,7 +430,6 @@ public class IntygUser implements UserDetails {
     public String getReference() {
         return reference;
     }
-
 
     public void setReference(String reference) {
         this.reference = reference;
