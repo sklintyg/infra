@@ -23,38 +23,28 @@ ext {
 }
 
 buildscript {
-    dependencies {
-        classpath 'se.inera.intyg:gradle-intyg-plugin:1.0.+'
-        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.+'
-        classpath 'org.ajoberstar:gradle-git:1.+'
-        classpath 'com.moowork.gradle:gradle-node-plugin:0.+'
-        classpath 'com.moowork.gradle:gradle-grunt-plugin:0.+'
-        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.+'
-        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.8'
-    }
-
     repositories {
         mavenLocal()
         maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases/" }
         maven { url "https://plugins.gradle.org/m2/" }
     }
+
+    dependencies {
+        classpath 'se.inera.intyg:gradle-intyg-plugin:1.1-SNAPSHOT'
+        classpath 'com.moowork.gradle:gradle-node-plugin:0.+'
+        classpath 'com.moowork.gradle:gradle-grunt-plugin:0.+'
+    }
 }
 
 allprojects {
-    group = 'se.inera.intyg.infra'
-    version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
-
-    apply plugin: 'inera-intyg'
-    apply plugin: 'maven'
-    apply plugin: 'org.ajoberstar.grgit'
-}
-
-subprojects {
     repositories {
         mavenLocal()
         maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases/" }
         maven { url "http://repo.maven.apache.org/maven2" }
     }
+
+    apply plugin: 'inera-intyg'
+    apply plugin: 'maven'
 
     dependencies {
         testCompile "junit:junit:4.+"
@@ -62,10 +52,22 @@ subprojects {
         testCompile "org.mockito:mockito-core:${mockitoVersion}"
     }
 
-    apply plugin: 'java'
+    group = 'se.inera.intyg.infra'
+    version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
+
+    checkstyle {
+        configProperties = ['package_name': 'infra']
+    }
+
+    sonarqube {
+        properties {
+            property "sonar.projectName", "Intyg Infra"
+            property "sonar.projectKey", "intyg-infra"
+        }
+    }
 
     task createVersionPropertyFile(type: VersionPropertyFileTask)
 
@@ -79,5 +81,3 @@ subprojects {
 task tagRelease(type: TagReleaseTask)
 
 task testReport(type: SharedTestReportTask)
-
-apply from: file("codequality.gradle")
