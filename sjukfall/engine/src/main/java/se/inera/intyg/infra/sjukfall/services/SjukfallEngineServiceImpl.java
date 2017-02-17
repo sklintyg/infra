@@ -50,7 +50,7 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
 
     protected Clock clock;
 
-    protected AktivtIntygResolver resolver;
+    private AktivtIntygResolver resolver = new AktivtIntygResolver();
 
     public SjukfallEngineServiceImpl() {
         clock = Clock.system(ZoneId.of("Europe/Paris"));
@@ -79,18 +79,18 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
 
     // - - -  Protected scope  - - -
 
-    protected DiagnosKod getDiagnosKod(IntygData intyg) {
+    DiagnosKod getDiagnosKod(IntygData intyg) {
         return new DiagnosKod(intyg.getDiagnosKod());
     }
 
-    protected Patient getPatient(IntygData intyg) {
+    private Patient getPatient(IntygData intyg) {
         String id = StringUtils.trim(intyg.getPatientId());
         String namn = intyg.getPatientNamn();
 
         return new Patient(id, namn);
     }
 
-    List<Sjukfall> assemble(Map<String, List<AktivtIntyg>> resolvedIntygsData, IntygParametrar parameters) {
+    private List<Sjukfall> assemble(Map<String, List<AktivtIntyg>> resolvedIntygsData, IntygParametrar parameters) {
         LOG.debug("  - Assembling 'sjukfall'");
 
         return resolvedIntygsData.entrySet().stream()
@@ -98,7 +98,7 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
                 .collect(Collectors.toList());
     }
 
-    Sjukfall toSjukfall(List<AktivtIntyg> list, LocalDate aktivtDatum) {
+    private Sjukfall toSjukfall(List<AktivtIntyg> list, LocalDate aktivtDatum) {
         // Find the active object
         AktivtIntyg aktivtIntyg = list.stream()
                 .filter(o -> o.isAktivtIntyg())
@@ -110,7 +110,7 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         return sjukfall;
     }
 
-    Sjukfall buildSjukfall(List<AktivtIntyg> values, AktivtIntyg aktivtIntyg, LocalDate aktivtDatum) {
+    protected Sjukfall buildSjukfall(List<AktivtIntyg> values, AktivtIntyg aktivtIntyg, LocalDate aktivtDatum) {
         Sjukfall sjukfall = new Sjukfall();
         sjukfall.setVardgivare(getVardgivare(aktivtIntyg));
         sjukfall.setVardenhet(getVardenhet(aktivtIntyg));
@@ -138,7 +138,7 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
     }
 
     private Lakare getLakare(AktivtIntyg aktivtIntyg) {
-        Lakare lakare = new Lakare(aktivtIntyg.getPatientId(), aktivtIntyg.getPatientNamn());
+        Lakare lakare = new Lakare(aktivtIntyg.getLakareId(), aktivtIntyg.getLakareNamn());
         return lakare;
     }
 

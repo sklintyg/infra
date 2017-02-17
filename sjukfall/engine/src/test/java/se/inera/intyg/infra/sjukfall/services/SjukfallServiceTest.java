@@ -194,7 +194,7 @@ public class SjukfallServiceTest {
         }
 
         @Override
-        Sjukfall buildSjukfall(List<AktivtIntyg> values, AktivtIntyg aktivtIntyg, LocalDate aktivtDatum) {
+        protected Sjukfall buildSjukfall(List<AktivtIntyg> values, AktivtIntyg aktivtIntyg, LocalDate aktivtDatum) {
             Vardgivare vardgivare = new Vardgivare(" IFV1239877878-0000 ", "Webcert-Vårdgivare1");
             Vardenhet vardenhet = new Vardenhet(" IFV1239877878-1045 ", "Webcert-Enhet2");
             Lakare lakare = new Lakare(aktivtIntyg.getLakareId(), aktivtIntyg.getLakareNamn());
