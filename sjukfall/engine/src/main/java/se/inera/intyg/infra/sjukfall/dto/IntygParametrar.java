@@ -28,6 +28,10 @@ public class IntygParametrar {
     private int maxIntygsGlapp;
     private LocalDate aktivtDatum;
 
+    public IntygParametrar(int maxIntygsGlapp, LocalDate aktivtDatum) {
+        this.maxIntygsGlapp = maxIntygsGlapp;
+        this.aktivtDatum = aktivtDatum;
+    }
 
     // getters and setters
 
@@ -35,16 +39,8 @@ public class IntygParametrar {
         return maxIntygsGlapp;
     }
 
-    public void setMaxIntygsGlapp(int maxIntygsGlapp) {
-        this.maxIntygsGlapp = maxIntygsGlapp;
-    }
-
     public LocalDate getAktivtDatum() {
         return aktivtDatum;
-    }
-
-    public void setAktivtDatum(LocalDate aktivtDatum) {
-        this.aktivtDatum = aktivtDatum;
     }
 
 }

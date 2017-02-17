@@ -18,10 +18,6 @@
  */
 package se.inera.intyg.infra.sjukfall.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +41,10 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -156,7 +156,7 @@ public class SjukfallServiceTest {
 
         DiagnosKod diagnosKod = testee.getDiagnosKod(intyg);
 
-        assertEquals(DIAGNOS_KOD, diagnosKod.getCode());
+        assertEquals(DIAGNOS_KOD, diagnosKod.getCleanedCode());
     }
 
 
@@ -182,10 +182,7 @@ public class SjukfallServiceTest {
     }
 
     private IntygParametrar getIntygParametrar(int maxIntygsGlapp, LocalDate aktivtDatum) {
-        IntygParametrar parametrar = new IntygParametrar();
-        parametrar.setMaxIntygsGlapp(maxIntygsGlapp);
-        parametrar.setAktivtDatum(aktivtDatum);
-        return parametrar;
+        return new IntygParametrar(maxIntygsGlapp, aktivtDatum);
     }
 
     private class SjukfallServiceImplTest extends SjukfallEngineServiceImpl {

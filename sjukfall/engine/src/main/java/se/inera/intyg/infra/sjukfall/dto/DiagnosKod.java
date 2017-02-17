@@ -26,15 +26,16 @@ public class DiagnosKod {
     public static final int KOD_LENGTH = 7;
 
     private String originalCode;
-    private String code;
+    private String cleanedCode;
     private String name;
 
-    public DiagnosKod(String line) {
-        if (line.length() >= KOD_LENGTH) {
-            code = cleanKod(line.substring(0, KOD_LENGTH));
-            name = line.substring(KOD_LENGTH).trim();
+    public DiagnosKod(String originalCode) {
+        this.originalCode = originalCode;
+        if (this.originalCode.length() >= KOD_LENGTH) {
+            this.cleanedCode = cleanKod(this.originalCode.substring(0, KOD_LENGTH));
+            this.name = this.originalCode.substring(KOD_LENGTH).trim();
         } else {
-            code = cleanKod(line);
+            this.cleanedCode = cleanKod(this.originalCode);
         }
     }
 
@@ -46,11 +47,11 @@ public class DiagnosKod {
         return name;
     }
 
-    public String getCode() {
-        return code;
+    public String getCleanedCode() {
+        return cleanedCode;
     }
 
-    public static String cleanKod(String kod) {
+    private String cleanKod(String kod) {
         String cleanedKod = kod.trim().toUpperCase();
         return cleanedKod.replaceAll("[^A-Z0-9\\-]", "");
     }
