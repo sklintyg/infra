@@ -1,16 +1,16 @@
-/*
+/**
  * Copyright (C) 2017 Inera AB (http://www.inera.se)
  *
- * This file is part of sklintyg (https://github.com/sklintyg).
+ * This file is part of SKLIntyg (https://github.com/sklintyg).
  *
- * sklintyg is free software: you can redistribute it and/or modify
+ * SKLIntyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * sklintyg is distributed in the hope that it will be useful,
+ * SKLIntyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -25,23 +25,29 @@ public class DiagnosKod {
 
     public static final int KOD_LENGTH = 7;
 
-    private String id;
+    private String originalCode;
+    private String code;
     private String name;
 
     public DiagnosKod(String line) {
         if (line.length() >= KOD_LENGTH) {
-            id = cleanKod(line.substring(0, KOD_LENGTH));
+            code = cleanKod(line.substring(0, KOD_LENGTH));
             name = line.substring(KOD_LENGTH).trim();
         } else {
-            id = cleanKod(line);
+            code = cleanKod(line);
         }
+    }
+
+    public String getOriginalCode() {
+        return originalCode;
     }
 
     public String getName() {
         return name;
     }
-    public String getId() {
-        return id;
+
+    public String getCode() {
+        return code;
     }
 
     public static String cleanKod(String kod) {

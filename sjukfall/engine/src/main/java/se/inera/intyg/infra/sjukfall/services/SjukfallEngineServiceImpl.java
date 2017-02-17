@@ -18,17 +18,9 @@
  */
 package se.inera.intyg.infra.sjukfall.services;
 
-import java.time.Clock;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.infra.sjukfall.dto.Formaga;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
@@ -37,22 +29,30 @@ import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.infra.sjukfall.dto.Patient;
 import se.inera.intyg.infra.sjukfall.dto.Sjukfall;
 import se.inera.intyg.infra.sjukfall.dto.Vardenhet;
+import se.inera.intyg.infra.sjukfall.dto.Vardgivare;
 import se.inera.intyg.infra.sjukfall.engine.AktivtIntyg;
 import se.inera.intyg.infra.sjukfall.engine.AktivtIntygResolver;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallLangdCalculator;
 
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * @author Magnus Ekstrand on 2017-02-10.
  */
-public class SjukfallServiceImpl implements SjukfallService {
+public class SjukfallEngineServiceImpl implements SjukfallEngineService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SjukfallServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SjukfallEngineServiceImpl.class);
 
     protected Clock clock;
 
     protected AktivtIntygResolver resolver;
 
-    public SjukfallServiceImpl() {
+    public SjukfallEngineServiceImpl() {
         clock = Clock.system(ZoneId.of("Europe/Paris"));
     }
 
@@ -103,7 +103,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         AktivtIntyg aktivtIntyg = list.stream()
                 .filter(o -> o.isAktivtIntyg())
                 .findFirst()
-                .orElseThrow(() -> new SjukfallServiceException("Unable to find a 'aktivt intyg'"));
+                .orElseThrow(() -> new SjukfallEngineServiceException("Unable to find a 'aktivt intyg'"));
 
         // Build Sjukfall object
         Sjukfall sjukfall = buildSjukfall(list, aktivtIntyg, aktivtDatum);
@@ -112,6 +112,8 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     Sjukfall buildSjukfall(List<AktivtIntyg> values, AktivtIntyg aktivtIntyg, LocalDate aktivtDatum) {
         Sjukfall sjukfall = new Sjukfall();
+        sjukfall.setVardgivare(getVardgivare(aktivtIntyg));
+        sjukfall.setVardenhet(getVardenhet(aktivtIntyg));
         sjukfall.setLakare(getLakare(aktivtIntyg));
         sjukfall.setPatient(getPatient(aktivtIntyg));
         sjukfall.setDiagnosKod(getDiagnosKod(aktivtIntyg));
@@ -119,17 +121,24 @@ public class SjukfallServiceImpl implements SjukfallService {
         sjukfall.setSlut(getMaximumDate(values));
         sjukfall.setDagar(SjukfallLangdCalculator.getEffectiveNumberOfSickDays(values));
         sjukfall.setIntyg(values.size());
-
-        List<Integer> grader = getGrader(aktivtIntyg.getFormagor());
-        sjukfall.setGrader(grader);
+        sjukfall.setGrader(getGrader(aktivtIntyg.getFormagor()));
         sjukfall.setAktivGrad(getAktivGrad(aktivtIntyg.getFormagor(), aktivtDatum));
 
         return sjukfall;
     }
 
+    private Vardgivare getVardgivare(AktivtIntyg aktivtIntyg) {
+        Vardgivare vardgivare = new Vardgivare(aktivtIntyg.getVardgivareId(), aktivtIntyg.getVardgivareNamn());
+        return vardgivare;
+    }
+
+    private Vardenhet getVardenhet(AktivtIntyg aktivtIntyg) {
+        Vardenhet vardenhet = new Vardenhet(aktivtIntyg.getVardenhetId(), aktivtIntyg.getVardenhetNamn());
+        return vardenhet;
+    }
+
     private Lakare getLakare(AktivtIntyg aktivtIntyg) {
-        Vardenhet vardenhet = new Vardenhet(aktivtIntyg.getVardenhetId(), aktivtIntyg.getVardenhetNamn(), null);
-        Lakare lakare = new Lakare(aktivtIntyg.getPatientId(), aktivtIntyg.getPatientNamn(), vardenhet);
+        Lakare lakare = new Lakare(aktivtIntyg.getPatientId(), aktivtIntyg.getPatientNamn());
         return lakare;
     }
 
@@ -138,7 +147,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         return list.stream()
                 .filter(f -> f.getStartdatum().compareTo(aktivtDatum) < 1 && f.getSlutdatum().compareTo(aktivtDatum) > -1)
                 .findFirst()
-                .orElseThrow(() -> new SjukfallServiceException("Unable to find an active 'arbetsförmåga'"))
+                .orElseThrow(() -> new SjukfallEngineServiceException("Unable to find an active 'arbetsförmåga'"))
                 .getNedsattning();
     }
 

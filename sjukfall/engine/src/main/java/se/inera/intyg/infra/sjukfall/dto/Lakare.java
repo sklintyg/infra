@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (C) 2017 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
@@ -10,7 +10,7 @@
  *
  * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -26,12 +26,9 @@ public class Lakare {
     private String id;
     private String namn;
 
-    private Vardenhet vardenhet;
-
-    public Lakare(String id, String namn, Vardenhet vardenhet) {
-        this.id = id;
-        this.namn = namn;
-        this.vardenhet = vardenhet;
+    public Lakare(String lakareId, String lakareNamn) {
+        this.id = lakareId;
+        this.namn = lakareNamn;
     }
 
     public String getId() {
@@ -42,7 +39,4 @@ public class Lakare {
         return namn;
     }
 
-    public Vardenhet getVardenhet() {
-        return vardenhet;
-    }
 }

@@ -32,13 +32,11 @@ import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
-import se.inera.intyg.infra.sjukfall.dto.Patient;
 import se.inera.intyg.infra.sjukfall.dto.Sjukfall;
 import se.inera.intyg.infra.sjukfall.dto.Vardenhet;
 import se.inera.intyg.infra.sjukfall.dto.Vardgivare;
 import se.inera.intyg.infra.sjukfall.engine.AktivtIntyg;
 import se.inera.intyg.infra.sjukfall.engine.AktivtIntygResolver;
-import se.inera.intyg.infra.sjukfall.model.Kon;
 import se.inera.intyg.infra.sjukfall.testdata.AktivtIntygGenerator;
 
 import java.io.IOException;
@@ -46,7 +44,6 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
@@ -152,114 +149,16 @@ public class SjukfallServiceTest {
         String fullstandigtNamn = "Anders Andersson";
         String id = "19121212-1212";
 
-        IntygData intyg = getIntygWithPatient(id, fullstandigtNamn);
+        IntygData intyg = new IntygData();
+        intyg.setPatientId(id);
+        intyg.setPatientNamn(fullstandigtNamn);
+        intyg.setDiagnosKod(DIAGNOS_KOD);
+
         DiagnosKod diagnosKod = testee.getDiagnosKod(intyg);
 
-        assertEquals(DIAGNOS_KOD, diagnosKod.getId());
+        assertEquals(DIAGNOS_KOD, diagnosKod.getCode());
     }
 
-    @Test
-    public void testPatient() {
-        String fullstandigtNamn = "Anders Andersson";
-        String id = " 19121212-1212 ";
-        final int expectedYear = (int) ChronoUnit.YEARS.between(tolvanBirthdate, LocalDate.now());
-
-        IntygData intyg = getIntygWithPatient(id, fullstandigtNamn);
-
-        Patient sjukfallPatient = testee.getPatient(intyg);
-
-        assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
-        assertEquals(Kon.M, sjukfallPatient.getKon());
-        assertEquals(expectedYear, sjukfallPatient.getAlder());
-        assertEquals(id.trim(), sjukfallPatient.getId());
-    }
-
-    @Test
-    public void testPatientShortId() {
-        String fullstandigtNamn = "Anders Andersson";
-        String id = " 19121212 ";
-        final int expectedYear =  (int) ChronoUnit.YEARS.between(tolvanBirthdate, LocalDate.now());
-
-        IntygData intyg = getIntygWithPatient(id, fullstandigtNamn);
-
-        Patient sjukfallPatient = testee.getPatient(intyg);
-
-        assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
-        assertEquals(Kon.UNKNOWN, sjukfallPatient.getKon());
-        assertEquals(expectedYear, sjukfallPatient.getAlder());
-        assertEquals(id.trim(), sjukfallPatient.getId());
-    }
-
-    @Test
-    public void testPatientEvenShorterId() {
-        String fullstandigtNamn = "Anders Andersson";
-        String id = " 121212 ";
-        final int expectedYear = 0;
-
-        IntygData intyg = getIntygWithPatient(id, fullstandigtNamn);
-
-        Patient sjukfallPatient = testee.getPatient(intyg);
-
-        assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
-        assertEquals(Kon.UNKNOWN, sjukfallPatient.getKon());
-        assertEquals(expectedYear, sjukfallPatient.getAlder());
-        assertEquals(id.trim(), sjukfallPatient.getId());
-    }
-
-    @Test
-    public void testPatientBadId() {
-        String fullstandigtNamn = "Anders Andersson";
-        String id = " 191212AB-ABCD ";
-
-        IntygData intyg = getIntygWithPatient(id, fullstandigtNamn);
-
-        Patient sjukfallPatient = testee.getPatient(intyg);
-
-        assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
-        assertEquals(Kon.UNKNOWN, sjukfallPatient.getKon());
-        assertEquals(0, sjukfallPatient.getAlder());
-        assertEquals(id.trim(), sjukfallPatient.getId());
-    }
-
-    @Test
-    public void testSamordningnummer() {
-        String fullstandigtNamn = "Anders Andersson";
-        String id = "19701063-2391";
-
-        IntygData intyg = getIntygWithPatient(id, fullstandigtNamn);
-
-        Patient sjukfallPatient = testee.getPatient(intyg);
-
-        assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
-        assertEquals(Kon.M, sjukfallPatient.getKon());
-        assertEquals(46, sjukfallPatient.getAlder());
-        assertEquals(id.trim(), sjukfallPatient.getId());
-    }
-
-    @Test
-    public void testShortSamordningnummer() {
-        String fullstandigtNamn = "Anders Andersson";
-        String id = "701063-2391 ";
-
-        IntygData intyg = getIntygWithPatient(id, fullstandigtNamn);
-
-        Patient sjukfallPatient = testee.getPatient(intyg);
-
-        assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
-        assertEquals(Kon.M, sjukfallPatient.getKon());
-        assertEquals(46, sjukfallPatient.getAlder());
-        assertEquals(id.trim(), sjukfallPatient.getId());
-    }
-
-    @Test
-    public void testWhitespaceTrimming() {
-        String fullstandigtNamn = "Anders Andersson";
-        String id = " 19121212-1212 ";
-        IntygData intyg = getIntygWithPatient(id, fullstandigtNamn);
-
-        Patient sjukfallPatient = testee.getPatient(intyg);
-        assertEquals(id.trim(), sjukfallPatient.getId());
-    }
 
     // - - -  Private scope  - - -
 
@@ -283,25 +182,13 @@ public class SjukfallServiceTest {
     }
 
     private IntygParametrar getIntygParametrar(int maxIntygsGlapp, LocalDate aktivtDatum) {
-        return new IntygParametrar(null, null, maxIntygsGlapp, aktivtDatum);
+        IntygParametrar parametrar = new IntygParametrar();
+        parametrar.setMaxIntygsGlapp(maxIntygsGlapp);
+        parametrar.setAktivtDatum(aktivtDatum);
+        return parametrar;
     }
 
-    private IntygData getIntygWithLakare(String lakareId, String fullstandigtNamn) {
-        IntygData intyg = new IntygData();
-        intyg.setLakareId(lakareId);
-        intyg.setLakareNamn(fullstandigtNamn);
-        return intyg;
-    }
-
-    private IntygData getIntygWithPatient(String patientId, String fullstandigtNamn) {
-        IntygData intyg = new IntygData();
-        intyg.setPatientId(patientId);
-        intyg.setPatientNamn(fullstandigtNamn);
-        intyg.setDiagnosKod(DIAGNOS_KOD);
-        return intyg;
-    }
-
-    private class SjukfallServiceImplTest extends SjukfallServiceImpl {
+    private class SjukfallServiceImplTest extends SjukfallEngineServiceImpl {
         public SjukfallServiceImplTest() {
             super();
             // 2016-02-11
@@ -312,10 +199,12 @@ public class SjukfallServiceTest {
         @Override
         Sjukfall buildSjukfall(List<AktivtIntyg> values, AktivtIntyg aktivtIntyg, LocalDate aktivtDatum) {
             Vardgivare vardgivare = new Vardgivare(" IFV1239877878-0000 ", "Webcert-Vårdgivare1");
-            Vardenhet vardenhet = new Vardenhet(" IFV1239877878-1045 ", "Webcert-Enhet2", vardgivare);
-            Lakare lakare = new Lakare(aktivtIntyg.getLakareId(), aktivtIntyg.getLakareNamn(), vardenhet);
+            Vardenhet vardenhet = new Vardenhet(" IFV1239877878-1045 ", "Webcert-Enhet2");
+            Lakare lakare = new Lakare(aktivtIntyg.getLakareId(), aktivtIntyg.getLakareNamn());
 
             Sjukfall sjukfall = super.buildSjukfall(values, aktivtIntyg, aktivtDatum);
+            sjukfall.setVardgivare(vardgivare);
+            sjukfall.setVardenhet(vardenhet);
             sjukfall.setLakare(lakare);
             return sjukfall;
         }

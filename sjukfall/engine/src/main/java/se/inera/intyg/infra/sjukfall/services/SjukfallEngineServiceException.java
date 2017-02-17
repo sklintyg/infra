@@ -16,29 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.sjukfall.dto;
+package se.inera.intyg.infra.sjukfall.services;
 
 /**
- * @author Magnus Ekstrand on 2017-02-10.
+ * Created by Magnus Ekstrand on 2016-02-22.
  */
-public class LangdIntervall {
+public class SjukfallEngineServiceException extends RuntimeException {
 
-    private String min;
-    private String max;
-
-    public LangdIntervall(String min, String max) {
-        this.min = min;
-        this.max = max;
+    /**
+     * Constructs an exception with the specified message and root
+     * cause.
+     *
+     * @param msg the detail message
+     * @param t   the root cause
+     */
+    public SjukfallEngineServiceException(String msg, Throwable t) {
+        super(msg, t);
     }
 
-    // getters and setters
-
-    public String getMin() {
-        return min;
-    }
-
-    public String getMax() {
-        return max;
+    /**
+     * Constructs an exception with the specified message and no
+     * root cause.
+     *
+     * @param msg the detail message
+     */
+    public SjukfallEngineServiceException(String msg) {
+        super(msg);
     }
 
 }

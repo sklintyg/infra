@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (C) 2017 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
@@ -10,7 +10,7 @@
  *
  * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -34,6 +34,8 @@ public class IntygData {
     private String lakareNamn;
     private String vardenhetId;
     private String vardenhetNamn;
+    private String vardgivareId;
+    private String vardgivareNamn;
 
     private LocalDateTime signeringsTidpunkt;
 
@@ -106,6 +108,22 @@ public class IntygData {
 
     public void setVardenhetNamn(String vardenhetNamn) {
         this.vardenhetNamn = vardenhetNamn;
+    }
+
+    public String getVardgivareId() {
+        return vardgivareId;
+    }
+
+    public void setVardgivareId(String vardgivareId) {
+        this.vardgivareId = vardgivareId;
+    }
+
+    public String getVardgivareNamn() {
+        return vardgivareNamn;
+    }
+
+    public void setVardgivareNamn(String vardgivareNamn) {
+        this.vardgivareNamn = vardgivareNamn;
     }
 
     public LocalDateTime getSigneringsTidpunkt() {

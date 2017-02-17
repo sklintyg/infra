@@ -28,7 +28,7 @@ import se.inera.intyg.infra.sjukfall.dto.Sjukfall;
  * @author Magnus Ekstrand on 2017-02-10.
  */
 @FunctionalInterface
-public interface SjukfallService {
+public interface SjukfallEngineService {
 
     /**
      * This method is the entry point when calculating 'sjukfall' using certificate information

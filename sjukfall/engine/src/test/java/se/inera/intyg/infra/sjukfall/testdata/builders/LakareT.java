@@ -1,16 +1,16 @@
-/*
+/**
  * Copyright (C) 2017 Inera AB (http://www.inera.se)
  *
- * This file is part of sklintyg (https://github.com/sklintyg).
+ * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
  *
- * sklintyg is free software: you can redistribute it and/or modify
+ * rehabstod is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * sklintyg is distributed in the hope that it will be useful,
+ * rehabstod is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -20,7 +20,6 @@ package se.inera.intyg.infra.sjukfall.testdata.builders;
 
 
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
-import se.inera.intyg.infra.sjukfall.dto.Vardenhet;
 
 /**
  * Created by Magnus Ekstrand on 2016-02-10.
@@ -34,7 +33,6 @@ public final class LakareT {
 
         private String hsaId;
         private String fullstandigtNamn;
-        private Vardenhet vardenhet;
 
         public LakareBuilder() {
         }
@@ -49,14 +47,9 @@ public final class LakareT {
             return this;
         }
 
-        public LakareBuilder enhet(Vardenhet enhet) {
-            this.vardenhet = enhet;
-            return this;
-        }
-
         @Override
         public Lakare build() {
-            Lakare lakare = new Lakare(hsaId, fullstandigtNamn, vardenhet);
+            Lakare lakare = new Lakare(hsaId, fullstandigtNamn);
             return lakare;
         }
     }

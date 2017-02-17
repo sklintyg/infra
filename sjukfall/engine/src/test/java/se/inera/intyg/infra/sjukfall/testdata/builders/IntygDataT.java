@@ -43,6 +43,8 @@ public final class IntygDataT {
         private String lakareNamn;
         private String vardenhetId;
         private String vardenhetNamn;
+        private String vardgivareId;
+        private String vardgivareNamn;
 
         private LocalDateTime signeringsTidpunkt;
 
@@ -93,6 +95,16 @@ public final class IntygDataT {
             return this;
         }
 
+        public IntygDataBuilder vardgivareId(String vardgivareId) {
+            this.vardgivareId = vardgivareId;
+            return this;
+        }
+
+        public IntygDataBuilder vardgivareNamn(String vardgivareNamn) {
+            this.vardgivareNamn = vardgivareNamn;
+            return this;
+        }
+
         public IntygDataBuilder formagor(List<Formaga> formagor) {
             this.formagor = formagor;
             return this;
@@ -119,6 +131,8 @@ public final class IntygDataT {
             intygData.setLakareNamn(this.lakareNamn);
             intygData.setVardenhetId(this.vardenhetId);
             intygData.setVardenhetNamn(this.vardenhetNamn);
+            intygData.setVardgivareId(this.vardgivareId);
+            intygData.setVardgivareNamn(this.vardgivareNamn);
             intygData.setSigneringsTidpunkt(this.signeringsTidpunkt);
             intygData.setFormagor(this.formagor);
             intygData.setEnkeltIntyg(this.enkeltIntyg);
