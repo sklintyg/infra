@@ -157,7 +157,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
                             vg.setVardenheter(commissions.stream()
                                     .filter(ct -> ct.getHealthCareProviderHsaId().equals(vg.getId())
                                             && isActive(ct.getHealthCareUnitStartDate(), ct.getHealthCareUnitEndDate()))
-                                    .map(ct -> createVardenhet(credentialInformation, ct))
+                                    .map(ct -> createVardenhet(ct))
                                     .filter(Objects::nonNull)
                                     .distinct()
                                     .sorted(Comparator.comparing(Vardenhet::getNamn))
@@ -185,7 +185,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         return new UserAuthorizationInfo(userCredentials, vardgivareList, new HashMap<>()); // Empty
     }
 
-    private Vardenhet createVardenhet(CredentialInformationType credentialInformation, CommissionType ct) {
+    private Vardenhet createVardenhet(CommissionType ct) {
         Vardenhet vardenhet = new Vardenhet(ct.getHealthCareUnitHsaId(), ct.getHealthCareUnitName());
         vardenhet.setStart(ct.getHealthCareUnitStartDate());
         vardenhet.setEnd(ct.getHealthCareUnitEndDate());
@@ -308,7 +308,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
             vardenhet.setPostadress("");
         }
 
-        String lastLine = lines != null && lines.size() > 0 ? lines.get(lines.size() - 1) : null;
+        String lastLine = lines.size() > 0 ? lines.get(lines.size() - 1) : null;
         final int shortestLengthToIncludeBothPnrAndPostort = 7;
         if (lastLine != null && lastLine.length() > shortestLengthToIncludeBothPnrAndPostort && Character.isDigit(lastLine.charAt(0))) {
             final int startPostort = 6;
