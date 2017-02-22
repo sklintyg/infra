@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.infra.sjukfall.services;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,16 +46,12 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 
 /**
  * Created by martin on 11/02/16.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SjukfallServiceTest {
+public class SjukfallEngineServiceTest {
     private static final String LOCATION_INTYGSDATA = "classpath:SjukfallServiceTest/intygsdata-engine.csv";
 
     private static final String DIAGNOS_KOD = "J1012";
@@ -66,7 +66,7 @@ public class SjukfallServiceTest {
     private AktivtIntygResolver resolver;
 
     @InjectMocks
-    private SjukfallServiceImplTest testee = new SjukfallServiceImplTest();
+    private SjukfallEngineServiceImplTest testee = new SjukfallEngineServiceImplTest();
 
     @Before
     public void init() throws IOException {
@@ -182,11 +182,12 @@ public class SjukfallServiceTest {
     }
 
     private IntygParametrar getIntygParametrar(int maxIntygsGlapp, LocalDate aktivtDatum) {
-        return new IntygParametrar(maxIntygsGlapp, aktivtDatum);
+        IntygParametrar parametrar = new IntygParametrar(maxIntygsGlapp, aktivtDatum);
+        return parametrar;
     }
 
-    private class SjukfallServiceImplTest extends SjukfallEngineServiceImpl {
-        public SjukfallServiceImplTest() {
+    private class SjukfallEngineServiceImplTest extends SjukfallEngineServiceImpl {
+        public SjukfallEngineServiceImplTest() {
             super();
             // 2016-02-11
             final int date = 1455203622;

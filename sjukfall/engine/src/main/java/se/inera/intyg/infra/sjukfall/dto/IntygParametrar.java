@@ -33,7 +33,7 @@ public class IntygParametrar {
         this.aktivtDatum = aktivtDatum;
     }
 
-    // getters and setters
+    // getters
 
     public int getMaxIntygsGlapp() {
         return maxIntygsGlapp;
