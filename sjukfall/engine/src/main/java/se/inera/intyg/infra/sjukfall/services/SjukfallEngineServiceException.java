@@ -24,17 +24,6 @@ package se.inera.intyg.infra.sjukfall.services;
 public class SjukfallEngineServiceException extends RuntimeException {
 
     /**
-     * Constructs an exception with the specified message and root
-     * cause.
-     *
-     * @param msg the detail message
-     * @param t   the root cause
-     */
-    public SjukfallEngineServiceException(String msg, Throwable t) {
-        super(msg, t);
-    }
-
-    /**
      * Constructs an exception with the specified message and no
      * root cause.
      *

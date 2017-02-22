@@ -169,12 +169,12 @@ public class AktivtIntygResolver {
      * Method returns a map with intermediate IntygsData objects.
      * Patient's personal-id is used as key.
      *
-     * @param intygData a list with basic IntygsData
+     * @param intygData a list with basic certificate data
      * @param aktivtDatum a date used for decision if a certificate is active or not
-     * @return
+     * @return a map with a patients current certificates
      */
     Map<String, List<AktivtIntyg>> toMap(List<IntygData> intygData, LocalDate aktivtDatum) {
-        Map<String, List<AktivtIntyg>> map = new HashMap();
+        Map<String, List<AktivtIntyg>> map = new HashMap<>();
 
         if (intygData == null || intygData.isEmpty()) {
             return map;

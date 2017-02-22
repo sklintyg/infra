@@ -29,7 +29,7 @@ import se.inera.intyg.infra.sjukfall.dto.IntygData;
  */
 public class AktivtIntyg extends IntygData {
 
-    public static final int HASH_SEED = 31;
+    private static final int HASH_SEED = 31;
 
     private LocalDate startDatum;
     private LocalDate slutDatum;
@@ -87,11 +87,8 @@ public class AktivtIntyg extends IntygData {
         }
 
         AktivtIntyg that = (AktivtIntyg) o;
-        if (!startDatum.equals(that.startDatum)) {
-            return false;
-        }
+        return startDatum.equals(that.startDatum) && slutDatum.equals(that.slutDatum);
 
-        return slutDatum.equals(that.slutDatum);
     }
 
     @Override

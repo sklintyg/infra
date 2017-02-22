@@ -63,13 +63,13 @@ public class AktivtIntygCreator {
     Map<String, List<AktivtIntyg>> createMap(List<IntygData> intygData, LocalDate aktivtDatum) {
         LOG.debug("  1. Create the map");
 
-        Map<String, List<AktivtIntyg>> map = new HashMap();
+        Map<String, List<AktivtIntyg>> map = new HashMap<>();
 
         for (IntygData i : intygData) {
             String k = i.getPatientId();
 
             if (map.get(k) == null) {
-                map.put(k, new ArrayList());
+                map.put(k, new ArrayList<>());
             }
 
             AktivtIntyg v = new AktivtIntyg.AktivtIntygBuilder(i, aktivtDatum).build();
@@ -90,11 +90,11 @@ public class AktivtIntygCreator {
 
     /**
      * Method returns a map with sorted values. The sorting is done on
-     * IntygsData objects' slutDatum. Objects are arranged in ascending order,
+     * AktivtIntyg objects' slutDatum. Objects are arranged in ascending order,
      * i.e object with biggest slutDatum will be last.
      *
-     * @param unsortedMap
-     * @return
+     * @param unsortedMap a map with patients current certificates
+     * @return a map with patients current certificates sorted in ascending order
      */
     Map<String, List<AktivtIntyg>> sortValues(Map<String, List<AktivtIntyg>> unsortedMap) {
         LOG.debug("  3. Sort map - sort each entry by its end date using ascending order.");

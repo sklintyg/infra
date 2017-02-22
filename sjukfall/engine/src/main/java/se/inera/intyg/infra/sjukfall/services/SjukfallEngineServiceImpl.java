@@ -56,11 +56,10 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
 
     public SjukfallEngineServiceImpl() {
         clock = Clock.system(ZoneId.of("Europe/Paris"));
-        resolver = new AktivtIntygResolver();
     }
 
 
-    // - - -  API  - - -
+    // api
 
     @Override
     public List<Sjukfall> beraknaSjukfall(List<IntygData> intygData, IntygParametrar parameters) {
@@ -80,11 +79,31 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
     }
 
 
-    // - - -  Protected scope  - - -
+    // package scope
 
     DiagnosKod getDiagnosKod(IntygData intyg) {
         return new DiagnosKod(intyg.getDiagnosKod());
     }
+
+    Sjukfall buildSjukfall(List<AktivtIntyg> values, AktivtIntyg aktivtIntyg, LocalDate aktivtDatum) {
+        Sjukfall sjukfall = new Sjukfall();
+        sjukfall.setVardgivare(getVardgivare(aktivtIntyg));
+        sjukfall.setVardenhet(getVardenhet(aktivtIntyg));
+        sjukfall.setLakare(getLakare(aktivtIntyg));
+        sjukfall.setPatient(getPatient(aktivtIntyg));
+        sjukfall.setDiagnosKod(getDiagnosKod(aktivtIntyg));
+        sjukfall.setStart(getMinimumDate(values));
+        sjukfall.setSlut(getMaximumDate(values));
+        sjukfall.setDagar(SjukfallLangdCalculator.getEffectiveNumberOfSickDays(values));
+        sjukfall.setIntyg(values.size());
+        sjukfall.setGrader(getGrader(aktivtIntyg.getFormagor()));
+        sjukfall.setAktivGrad(getAktivGrad(aktivtIntyg.getFormagor(), aktivtDatum));
+
+        return sjukfall;
+    }
+
+
+    // private scope
 
     private Patient getPatient(IntygData intyg) {
         String id = StringUtils.trim(intyg.getPatientId());
@@ -109,40 +128,19 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
                 .orElseThrow(() -> new SjukfallEngineServiceException("Unable to find a 'aktivt intyg'"));
 
         // Build Sjukfall object
-        Sjukfall sjukfall = buildSjukfall(list, aktivtIntyg, aktivtDatum);
-        return sjukfall;
-    }
-
-    protected Sjukfall buildSjukfall(List<AktivtIntyg> values, AktivtIntyg aktivtIntyg, LocalDate aktivtDatum) {
-        Sjukfall sjukfall = new Sjukfall();
-        sjukfall.setVardgivare(getVardgivare(aktivtIntyg));
-        sjukfall.setVardenhet(getVardenhet(aktivtIntyg));
-        sjukfall.setLakare(getLakare(aktivtIntyg));
-        sjukfall.setPatient(getPatient(aktivtIntyg));
-        sjukfall.setDiagnosKod(getDiagnosKod(aktivtIntyg));
-        sjukfall.setStart(getMinimumDate(values));
-        sjukfall.setSlut(getMaximumDate(values));
-        sjukfall.setDagar(SjukfallLangdCalculator.getEffectiveNumberOfSickDays(values));
-        sjukfall.setIntyg(values.size());
-        sjukfall.setGrader(getGrader(aktivtIntyg.getFormagor()));
-        sjukfall.setAktivGrad(getAktivGrad(aktivtIntyg.getFormagor(), aktivtDatum));
-
-        return sjukfall;
+        return buildSjukfall(list, aktivtIntyg, aktivtDatum);
     }
 
     private Vardgivare getVardgivare(AktivtIntyg aktivtIntyg) {
-        Vardgivare vardgivare = new Vardgivare(aktivtIntyg.getVardgivareId(), aktivtIntyg.getVardgivareNamn());
-        return vardgivare;
+        return new Vardgivare(aktivtIntyg.getVardgivareId(), aktivtIntyg.getVardgivareNamn());
     }
 
     private Vardenhet getVardenhet(AktivtIntyg aktivtIntyg) {
-        Vardenhet vardenhet = new Vardenhet(aktivtIntyg.getVardenhetId(), aktivtIntyg.getVardenhetNamn());
-        return vardenhet;
+        return new Vardenhet(aktivtIntyg.getVardenhetId(), aktivtIntyg.getVardenhetNamn());
     }
 
     private Lakare getLakare(AktivtIntyg aktivtIntyg) {
-        Lakare lakare = new Lakare(aktivtIntyg.getLakareId(), aktivtIntyg.getLakareNamn());
-        return lakare;
+        return new Lakare(aktivtIntyg.getLakareId(), aktivtIntyg.getLakareNamn());
     }
 
     private Integer getAktivGrad(List<Formaga> list, LocalDate aktivtDatum) {
