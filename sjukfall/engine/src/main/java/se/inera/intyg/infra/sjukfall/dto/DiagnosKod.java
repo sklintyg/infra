@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.sjukfall.dto;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Created by martin on 10/02/16.
  */
@@ -30,6 +32,10 @@ public class DiagnosKod {
     private String name;
 
     public DiagnosKod(String originalCode) {
+        if (StringUtils.isBlank(originalCode)) {
+            throw new IllegalArgumentException("Argument 'originalCode' in call to DiagnosKod is either empty, null or blank");
+        }
+
         this.originalCode = originalCode;
         if (this.originalCode.length() >= KOD_LENGTH) {
             this.cleanedCode = cleanKod(this.originalCode.substring(0, KOD_LENGTH));
@@ -51,7 +57,7 @@ public class DiagnosKod {
         return cleanedCode;
     }
 
-    private String cleanKod(String kod) {
+    public static String cleanKod(String kod) {
         String cleanedKod = kod.trim().toUpperCase();
         return cleanedKod.replaceAll("[^A-Z0-9\\-]", "");
     }

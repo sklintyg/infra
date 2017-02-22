@@ -21,6 +21,7 @@ package se.inera.intyg.infra.sjukfall.services;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.infra.sjukfall.dto.Formaga;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
@@ -44,6 +45,7 @@ import java.util.stream.Collectors;
 /**
  * @author Magnus Ekstrand on 2017-02-10.
  */
+@Service("sjukfallEngineService")
 public class SjukfallEngineServiceImpl implements SjukfallEngineService {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallEngineServiceImpl.class);
@@ -54,6 +56,7 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
 
     public SjukfallEngineServiceImpl() {
         clock = Clock.system(ZoneId.of("Europe/Paris"));
+        resolver = new AktivtIntygResolver();
     }
 
 
