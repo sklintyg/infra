@@ -18,16 +18,15 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
 
 /**
  * @author Magnus Ekstrand on 2017-02-10.
@@ -68,7 +67,7 @@ public class AktivtIntygResolver {
 
     // - - -  Package scope  - - -
 
-    Map<String, List<AktivtIntyg>> reduceMap(Map<String, List<AktivtIntyg>> intygsDataMap, int maxIntygsGlapp) {
+    private Map<String, List<AktivtIntyg>> reduceMap(Map<String, List<AktivtIntyg>> intygsDataMap, int maxIntygsGlapp) {
 
         LOG.debug("  - Reduce certificates. Only certificates fulfilling request parameter 'maxIntygsGlapp' will be concerned.");
 
@@ -195,7 +194,7 @@ public class AktivtIntygResolver {
         if (right == null || right.isEmpty()) {
             return  aktivtIntyg.getStartDatum();
         } else if (right.size() == 1) {
-            smallest = right.stream().findFirst().get().getStartDatum();
+            smallest = right.get(0).getStartDatum();
         } else {
             smallest = right.stream()
                     .min((o1, o2) -> o1.getStartDatum().compareTo(o2.getStartDatum()))

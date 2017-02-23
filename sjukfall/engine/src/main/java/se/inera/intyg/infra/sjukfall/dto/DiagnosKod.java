@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class DiagnosKod {
 
-    public static final int KOD_LENGTH = 7;
+    private static final int KOD_LENGTH = 7;
 
     private String originalCode;
     private String cleanedCode;

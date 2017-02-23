@@ -25,10 +25,10 @@ import java.time.LocalDate;
  */
 public class Formaga {
 
-    protected LocalDate startdatum;
-    protected LocalDate slutdatum;
+    private LocalDate startdatum;
+    private LocalDate slutdatum;
 
-    protected int nedsattning;
+    private int nedsattning;
 
     public Formaga(LocalDate startdatum, LocalDate slutdatum, int nedsattning) {
         this.startdatum = startdatum;

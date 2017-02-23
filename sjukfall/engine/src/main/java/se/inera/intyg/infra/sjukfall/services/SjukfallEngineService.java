@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.infra.sjukfall.services;
 
-import java.util.List;
-
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.Sjukfall;
+
+import java.util.List;
 
 /**
  * @author Magnus Ekstrand on 2017-02-10.
@@ -32,9 +32,6 @@ public interface SjukfallEngineService {
     /**
      * This method is the entry point when calculating 'sjukfall' using certificate information
      * and request parameters set by the client. Each 'sjukfall' correspomds to one patient.
-     *
-     * The certificate information is provided by the rehabilitation service contract
-     * 'Clinicalprocess Healthcond Rehabilitation'
      *
      * @param intygData the certificate information (base data)
      * @param parameters client request parameters

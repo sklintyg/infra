@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,11 +31,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
 
 /**
  * @author Magnus Ekstrand on 2017-02-10.
@@ -68,9 +67,7 @@ public class AktivtIntygCreator {
         for (IntygData i : intygData) {
             String k = i.getPatientId();
 
-            if (map.get(k) == null) {
-                map.put(k, new ArrayList<>());
-            }
+            map.computeIfAbsent(k, k1 -> new ArrayList<>());
 
             AktivtIntyg v = new AktivtIntyg.AktivtIntygBuilder(i, aktivtDatum).build();
             map.get(k).add(v);
@@ -119,7 +116,7 @@ public class AktivtIntygCreator {
                                 .collect(Collectors.toList())));
     }
 
-    List<AktivtIntyg> setActive(List<AktivtIntyg> intygsDataList) {
+    private List<AktivtIntyg> setActive(List<AktivtIntyg> intygsDataList) {
         List<AktivtIntyg> values = new ArrayList<>();
 
         int aktivtIntygIndex = 0;

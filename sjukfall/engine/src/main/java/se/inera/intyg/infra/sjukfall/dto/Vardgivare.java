@@ -23,8 +23,8 @@ package se.inera.intyg.infra.sjukfall.dto;
  */
 public class Vardgivare {
 
-    protected String id;
-    protected String namn;
+    private String id;
+    private String namn;
 
     public Vardgivare(String vardgivareId, String vardgivareNamn) {
         this.id = vardgivareId;

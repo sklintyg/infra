@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import se.inera.intyg.infra.sjukfall.dto.Formaga;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
+
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * @author Magnus Ekstrand on 2017-02-10.
@@ -108,7 +108,7 @@ public class AktivtIntyg extends IntygData {
 
         private boolean aktivtIntyg;
 
-        public AktivtIntygBuilder(IntygData intygData, LocalDate aktivtDatum) {
+        AktivtIntygBuilder(IntygData intygData, LocalDate aktivtDatum) {
             this.intygData = intygData;
             this.startDatum = lookupStartDatum(intygData.getFormagor());
             this.slutDatum = lookupSlutDatum(intygData.getFormagor());
