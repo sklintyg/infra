@@ -29,7 +29,7 @@ public interface AuthExpectationSpecification {
     /**
      * To pass, the user must have at least one of the given features active.
      * Also, if intygstyp context is given, that intygsmodule must also have given feature active.
-     * <p/>
+     *
      * If multiple invalidFeatureConstraints are given, this is effectively an OR condition. To express an AND condition
      * you can simply chain multiple features("x").features("y")
      *
@@ -43,7 +43,7 @@ public interface AuthExpectationSpecification {
      * To pass, the user must NOT have ANY of the given features active.
      * Also, if intygstyp context is given that intygsmodule must also have given feature active to be considered
      * active.
-     * <p/>
+     *
      *
      * @param invalidFeatureConstraints
      *            The features(s) that the user should NOT have
@@ -53,7 +53,7 @@ public interface AuthExpectationSpecification {
 
     /**
      * To pass, the user's request origin must match one of the given validOriginTypes.
-     * <p/>
+     *
      * If multiple validOriginTypes are given, this is effectively an OR condition. To express an AND condition you can
      * simply chain multiple origins(type1).origins(type2)
      *
@@ -74,7 +74,7 @@ public interface AuthExpectationSpecification {
 
     /**
      * To pass, the user's must have a role matching one of the given validRoles.
-     * <p/>
+     *
      * If multiple validRoles are given, this is effectively an OR condition. To express an AND condition you can simply
      * chain multiple roles(type1).roles(type2)
      *

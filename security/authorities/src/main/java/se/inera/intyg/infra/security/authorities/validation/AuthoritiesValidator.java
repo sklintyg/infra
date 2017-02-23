@@ -33,7 +33,7 @@ import java.util.Optional;
  *         notOrigins(WebCertUserOriginType.UTHOPP).
  *         privilege(&quot;SkrivIntyg&quot;);
  * </pre>
- * <p/>
+ *
  * Created by marced on 14/12/15.
  */
 public final class AuthoritiesValidator {
