@@ -23,7 +23,6 @@ import org.apache.ignite.cache.spring.SpringCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import se.inera.intyg.infra.cache.core.ConfigurableCache;
-import se.inera.intyg.infra.integration.pu.services.PUServiceImpl;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -32,7 +31,7 @@ import javax.cache.expiry.Duration;
 
 /**
  * While the cacheManager.getCache(...) isn't strictly necessary for creating the cache used by
- * {@link PUServiceImpl}, this class provides us with the capability
+ * {@link se.inera.intyg.infra.integration.pu.services.PUServiceImpl}, this class provides us with the capability
  * of configuring individual caches based on the current state of the
  * {@link org.apache.ignite.cache.spring.SpringCacheManager#dynamicCacheCfg}
  *
