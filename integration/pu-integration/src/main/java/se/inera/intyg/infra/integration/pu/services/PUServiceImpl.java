@@ -16,27 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.webcert.integration.pu.services;
+package se.inera.intyg.infra.integration.pu.services;
 
-import static se.inera.intyg.webcert.integration.pu.cache.PuCacheConfiguration.PERSON_CACHE_NAME;
-
-import javax.xml.ws.WebServiceException;
-
+import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-
-import com.google.common.annotations.VisibleForTesting;
-
+import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
+import se.inera.intyg.infra.integration.pu.model.Person;
+import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.schemas.contract.Personnummer;
-import se.inera.intyg.webcert.integration.pu.model.Person;
-import se.inera.intyg.webcert.integration.pu.model.PersonSvar;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.*;
+import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookUpSpecificationType;
+import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookupResidentForFullProfileResponseType;
+import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookupResidentForFullProfileType;
 import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v11.LookupResidentForFullProfileResponderInterface;
-import se.riv.population.residentmaster.types.v1.*;
+import se.riv.population.residentmaster.types.v1.JaNejTYPE;
+import se.riv.population.residentmaster.types.v1.NamnTYPE;
+import se.riv.population.residentmaster.types.v1.ResidentType;
+import se.riv.population.residentmaster.types.v1.SvenskAdressTYPE;
+
+import javax.xml.ws.WebServiceException;
 
 public class PUServiceImpl implements PUService {
 
@@ -49,9 +51,9 @@ public class PUServiceImpl implements PUService {
     private String logicaladdress;
 
     @Override
-    @Cacheable(value = PERSON_CACHE_NAME,
+    @Cacheable(value = PuCacheConfiguration.PERSON_CACHE_NAME,
                key = "#personId",
-               unless = "#result.status == T(se.inera.intyg.webcert.integration.pu.model.PersonSvar$Status).ERROR")
+               unless = "#result.status == T(se.inera.intyg.infra.integration.pu.model.PersonSvar$Status).ERROR")
     public PersonSvar getPerson(Personnummer personId) {
 
         LOG.debug("Looking up person '{}'", personId.getPnrHash());

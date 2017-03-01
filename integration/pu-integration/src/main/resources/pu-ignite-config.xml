@@ -30,7 +30,7 @@
 
   <beans profile="caching-enabled,prod">
     <bean class="se.inera.intyg.infra.cache.core.BasicCacheConfiguration"/>
-    <bean class="se.inera.intyg.webcert.integration.pu.cache.PuCacheConfiguration" />
+    <bean class="se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration" />
   </beans>
   <beans profile="!prod">
     <beans profile="!caching-enabled">

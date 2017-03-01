@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.webcert.integration.pu.services;
+package se.inera.intyg.infra.integration.pu.services;
 
 import com.google.common.annotations.VisibleForTesting;
 import se.inera.intyg.schemas.contract.Personnummer;
-import se.inera.intyg.webcert.integration.pu.model.PersonSvar;
+import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 
 public interface PUService {
 

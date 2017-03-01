@@ -16,11 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.webcert.integration.pu.stub;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.when;
+package se.inera.intyg.infra.integration.pu.stub;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +29,10 @@ import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1
 import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v11.LookupResidentForFullProfileResponderInterface;
 import se.riv.population.residentmaster.types.v1.PersonpostTYPE;
 import se.riv.population.residentmaster.types.v1.ResidentType;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LookupResidentForFullProfileWsStubTest {

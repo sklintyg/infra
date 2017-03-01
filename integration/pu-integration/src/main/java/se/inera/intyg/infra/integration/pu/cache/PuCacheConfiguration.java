@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.webcert.integration.pu.cache;
+package se.inera.intyg.infra.integration.pu.cache;
 
 import org.apache.ignite.Ignition;
 import org.apache.ignite.cache.spring.SpringCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import se.inera.intyg.infra.cache.core.ConfigurableCache;
+import se.inera.intyg.infra.integration.pu.services.PUServiceImpl;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -31,7 +32,7 @@ import javax.cache.expiry.Duration;
 
 /**
  * While the cacheManager.getCache(...) isn't strictly necessary for creating the cache used by
- * {@link se.inera.intyg.webcert.integration.pu.services.PUServiceImpl}, this class provides us with the capability
+ * {@link PUServiceImpl}, this class provides us with the capability
  * of configuring individual caches based on the current state of the
  * {@link org.apache.ignite.cache.spring.SpringCacheManager#dynamicCacheCfg}
  *

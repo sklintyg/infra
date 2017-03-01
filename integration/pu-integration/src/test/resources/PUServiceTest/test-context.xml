@@ -30,15 +30,11 @@
     </bean>
 
     <bean class="com.fasterxml.jackson.databind.ObjectMapper"/>
-    <bean class="se.inera.intyg.webcert.integration.pu.stub.PUBootstrapBean"/>
-    <bean class="se.inera.intyg.webcert.integration.pu.stub.ResidentStore"/>
+    <bean class="se.inera.intyg.infra.integration.pu.stub.PUBootstrapBean"/>
+    <bean class="se.inera.intyg.infra.integration.pu.stub.ResidentStore"/>
 
-    <bean class="se.inera.intyg.webcert.integration.pu.services.PUServiceImpl"/>
+    <bean class="se.inera.intyg.infra.integration.pu.services.PUServiceImpl"/>
 
-    <bean class="se.inera.intyg.webcert.integration.pu.stub.LookupResidentForFullProfileWsStub"/>
-
-    <!-- TODO: this import should be expressed in a way that doesn't use gradle's specific file structure
-    <import resource="../../../resources/main/pu-cache-config.xml" />
-     -->
+    <bean class="se.inera.intyg.infra.integration.pu.stub.LookupResidentForFullProfileWsStub"/>
 
 </beans>

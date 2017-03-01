@@ -16,22 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.webcert.integration.pu.stub;
+package se.inera.intyg.infra.integration.pu.stub;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import se.riv.population.residentmaster.types.v1.ResidentType;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class PUBootstrapBean {
     private static final Logger LOG = LoggerFactory.getLogger(PUBootstrapBean.class);

@@ -1,8 +1,9 @@
 dependencies {
-  compile "se.riv.population.residentmaster:population-residentmaster-schemas:${rivtaResidentMasterSchemasVersion}"
 
-  compile "se.inera.intyg.common:common-support:${commonVersion}"
-  compile "se.inera.intyg.infra:common-cache-core:${infraVersion}"
+  compile project(':common-cache-core')
+  
+  compile "se.riv.population.residentmaster:population-residentmaster-schemas:${rivtaResidentMasterSchemasVersion}"
+  compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
 
   runtime "org.springframework:spring-context-support:${springVersion}"
 

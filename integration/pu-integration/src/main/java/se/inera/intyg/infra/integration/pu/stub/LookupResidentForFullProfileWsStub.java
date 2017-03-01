@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.webcert.integration.pu.stub;
+package se.inera.intyg.infra.integration.pu.stub;
 
 import java.util.ArrayList;
 import java.util.List;
