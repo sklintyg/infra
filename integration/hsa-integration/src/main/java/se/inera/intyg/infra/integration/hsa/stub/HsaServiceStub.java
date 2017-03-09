@@ -107,4 +107,13 @@ public class HsaServiceStub {
     public void addHsaPerson(HsaPerson person) {
         personMap.put(person.getHsaId(), person);
     }
+
+    public void updateHsaPersonName(String hsaId, String firstName, String lastName) {
+        // Hitta och uppdatera hsaPerson
+        if (personMap.containsKey(hsaId)) {
+            HsaPerson storedHsPerson = personMap.get(hsaId);
+            storedHsPerson.setForNamn(firstName);
+            storedHsPerson.setEfterNamn(lastName);
+        }
+    }
 }
