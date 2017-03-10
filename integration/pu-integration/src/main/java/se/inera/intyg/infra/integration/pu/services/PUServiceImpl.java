@@ -18,13 +18,17 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
-import com.google.common.annotations.VisibleForTesting;
+import javax.xml.ws.WebServiceException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+
+import com.google.common.annotations.VisibleForTesting;
+
 import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
 import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
@@ -33,12 +37,12 @@ import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1
 import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookupResidentForFullProfileResponseType;
 import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookupResidentForFullProfileType;
 import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v11.LookupResidentForFullProfileResponderInterface;
+import se.riv.population.residentmaster.types.v1.AvregistreringTYPE;
+import se.riv.population.residentmaster.types.v1.AvregistreringsorsakKodTYPE;
 import se.riv.population.residentmaster.types.v1.JaNejTYPE;
 import se.riv.population.residentmaster.types.v1.NamnTYPE;
 import se.riv.population.residentmaster.types.v1.ResidentType;
 import se.riv.population.residentmaster.types.v1.SvenskAdressTYPE;
-
-import javax.xml.ws.WebServiceException;
 
 public class PUServiceImpl implements PUService {
 
@@ -52,8 +56,8 @@ public class PUServiceImpl implements PUService {
 
     @Override
     @Cacheable(value = PuCacheConfiguration.PERSON_CACHE_NAME,
-               key = "#personId",
-               unless = "#result.status == T(se.inera.intyg.infra.integration.pu.model.PersonSvar$Status).ERROR")
+            key = "#personId",
+            unless = "#result.status == T(se.inera.intyg.infra.integration.pu.model.PersonSvar$Status).ERROR")
     public PersonSvar getPerson(Personnummer personId) {
 
         LOG.debug("Looking up person '{}'", personId.getPnrHash());
@@ -73,6 +77,9 @@ public class PUServiceImpl implements PUService {
 
             SvenskAdressTYPE adress = resident.getPersonpost().getFolkbokforingsadress();
 
+            AvregistreringTYPE avregistrering = resident.getPersonpost().getAvregistrering();
+            boolean isDead = avregistrering != null && AvregistreringsorsakKodTYPE.AV == avregistrering.getAvregistreringsorsakKod();
+
             String adressRader = null;
             String postnr = null;
             String postort = null;
@@ -81,7 +88,7 @@ public class PUServiceImpl implements PUService {
                 postnr = adress.getPostNr();
                 postort = adress.getPostort();
             }
-            Person person = new Person(personId, resident.getSekretessmarkering() == JaNejTYPE.J, namn.getFornamn(),
+            Person person = new Person(personId, resident.getSekretessmarkering() == JaNejTYPE.J, isDead, namn.getFornamn(),
                     namn.getMellannamn(), namn.getEfternamn(), adressRader, postnr, postort);
             LOG.debug("Person '{}' found", personId.getPnrHash());
 

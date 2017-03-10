@@ -23,6 +23,7 @@ import se.inera.intyg.schemas.contract.Personnummer;
 public class Person {
     private final Personnummer personnummer;
     private final boolean sekretessmarkering;
+    private final boolean avliden;
     private final String fornamn;
     private final String mellannamn;
     private final String efternamn;
@@ -31,10 +32,11 @@ public class Person {
     private final String postort;
 
     // CHECKSTYLE:OFF ParameterNumber
-    public Person(Personnummer personnummer, boolean sekretessmarkering, String fornamn, String mellannamn, String efternamn,
-            String postadress, String postnummer, String postort) {
+    public Person(Personnummer personnummer, boolean sekretessmarkering, boolean avliden, String fornamn, String mellannamn,
+            String efternamn, String postadress, String postnummer, String postort) {
         this.personnummer = personnummer;
         this.sekretessmarkering = sekretessmarkering;
+        this.avliden = avliden;
         this.fornamn = fornamn;
         this.mellannamn = mellannamn;
         this.efternamn = efternamn;
@@ -50,6 +52,10 @@ public class Person {
 
     public boolean isSekretessmarkering() {
         return sekretessmarkering;
+    }
+
+    public boolean isAvliden() {
+        return avliden;
     }
 
     public String getFornamn() {

@@ -118,6 +118,17 @@ public class PUServiceTest {
     }
 
     @Test
+    public void checkDeadPerson() {
+        Person person = service.getPerson(new Personnummer("19000525-9809")).getPerson();
+        assertEquals("Tod", person.getFornamn());
+        assertEquals("Svensson", person.getEfternamn());
+        assertEquals("Tolvansson, Storgatan 1, PL 1234", person.getPostadress());
+        assertEquals("12345", person.getPostnummer());
+        assertEquals("Småmåla", person.getPostort());
+        assertTrue(person.isAvliden());
+    }
+
+    @Test
     public void checkCachedPerson() throws Exception {
         String logicalAddress = "${putjanst.logicaladdress}";
 
