@@ -40,6 +40,8 @@ public abstract class AbstractVardenhet implements SelectableVardenhet, Comparab
 
     private String arbetsplatskod;
 
+    private boolean inactive = false;
+
     private AgandeForm agandeForm;
 
     public AbstractVardenhet() {
@@ -117,6 +119,22 @@ public abstract class AbstractVardenhet implements SelectableVardenhet, Comparab
         this.arbetsplatskod = arbetsplatskod;
     }
 
+    public boolean isInactive() {
+        return inactive;
+    }
+
+    public void setInactive(boolean inactive) {
+        this.inactive = inactive;
+    }
+
+    public AgandeForm getAgandeForm() {
+        return agandeForm;
+    }
+
+    public void setAgandeForm(AgandeForm agandeForm) {
+        this.agandeForm = agandeForm;
+    }
+
     @Override
     public int compareTo(AbstractVardenhet annanVardenhet) {
         return getNamn().compareTo(annanVardenhet.getNamn());
@@ -145,13 +163,5 @@ public abstract class AbstractVardenhet implements SelectableVardenhet, Comparab
     @Override
     public int hashCode() {
         return id.hashCode();
-    }
-
-    public AgandeForm getAgandeForm() {
-        return agandeForm;
-    }
-
-    public void setAgandeForm(AgandeForm agandeForm) {
-        this.agandeForm = agandeForm;
     }
 }
