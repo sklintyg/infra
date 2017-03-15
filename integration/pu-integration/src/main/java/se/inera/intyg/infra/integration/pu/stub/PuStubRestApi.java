@@ -35,19 +35,21 @@ import javax.ws.rs.core.Response;
  */
 public class PuStubRestApi {
 
+    public static final int BAD_REQUEST = 400;
     @Autowired
     private ResidentStore residentStore;
 
     @GET
     @Path("/person/{personId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response setSekretessmarkerad(@PathParam("personId") String personId, @QueryParam("sekretessmarkering") String sekretessmarkering) {
-        if (sekretessmarkering == null || !(sekretessmarkering.equals("J") || sekretessmarkering.equals("N"))) {
-            return Response.status(400).entity("Sekretessmarkering kan endast ha värdena J eller N").build();
+    public Response setSekretessmarkerad(@PathParam("personId") String personId,
+            @QueryParam("sekretessmarkering") String sekretessmarkering) {
+        if (sekretessmarkering == null || !("J".equalsIgnoreCase(sekretessmarkering) || "N".equalsIgnoreCase(sekretessmarkering))) {
+            return Response.status(BAD_REQUEST).entity("Sekretessmarkering kan endast ha värdena J eller N").build();
         }
         ResidentType residentType = residentStore.get(personId);
         if (residentType == null) {
-            return Response.status(404).entity("No identity found for supplied personId").build();
+            return Response.status(BAD_REQUEST).entity("No identity found for supplied personId").build();
         }
         JaNejTYPE jaNejTYPE = JaNejTYPE.fromValue(sekretessmarkering);
         residentType.setSekretessmarkering(jaNejTYPE);
