@@ -35,7 +35,8 @@ import javax.ws.rs.core.Response;
  */
 public class PuStubRestApi {
 
-    public static final int BAD_REQUEST = 400;
+    private static final int BAD_REQUEST = 400;
+    
     @Autowired
     private ResidentStore residentStore;
 
