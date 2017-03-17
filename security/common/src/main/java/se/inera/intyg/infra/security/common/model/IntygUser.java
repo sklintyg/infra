@@ -68,8 +68,6 @@ public class IntygUser implements UserDetails {
     protected Map<String, Privilege> authorities;
     protected String origin;
 
-    private String reference;
-
     /** The sole constructor. */
     public IntygUser(String employeeHsaId) {
         this.hsaId = employeeHsaId;
@@ -425,14 +423,6 @@ public class IntygUser implements UserDetails {
     @Override
     public String toString() {
         return hsaId + " [authScheme=" + authenticationScheme + ", lakare=" + isLakare() + "]";
-    }
-
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(String reference) {
-        this.reference = reference;
     }
 
 }

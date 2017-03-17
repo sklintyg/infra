@@ -40,8 +40,6 @@ public abstract class AbstractVardenhet implements SelectableVardenhet, Comparab
 
     private String arbetsplatskod;
 
-    private boolean inactive = false;
-
     private AgandeForm agandeForm;
 
     public AbstractVardenhet() {
@@ -117,14 +115,6 @@ public abstract class AbstractVardenhet implements SelectableVardenhet, Comparab
 
     public void setArbetsplatskod(String arbetsplatskod) {
         this.arbetsplatskod = arbetsplatskod;
-    }
-
-    public boolean isInactive() {
-        return inactive;
-    }
-
-    public void setInactive(boolean inactive) {
-        this.inactive = inactive;
     }
 
     public AgandeForm getAgandeForm() {
