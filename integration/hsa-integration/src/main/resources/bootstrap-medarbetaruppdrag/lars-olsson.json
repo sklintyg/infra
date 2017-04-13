@@ -1,17 +1,35 @@
 {
-    "hsaId": "TSTNMT2321000156-1066",
-	"forNamn": "Lars",
-	"efterNamn": "Olsson",
-    "uppdrag":[
-    	{
-    		"enhet": "TSTNMT2321000156-1062",
-            "andamal":["Vård och behandling"],
-			"systemRoles": ["INTYG;Rehab-TSTNMT2321000156-1062"]
-    	},
-		{
-			"enhet": "TSTNMT2321000156-1063",
-			"andamal":["Vård och behandling"],
-			"systemRoles": ["INTYG;Rehab-TSTNMT2321000156-1063"]
-		}
+  "hsaId": "TSTNMT2321000156-1066",
+  "forNamn": "Lars",
+  "efterNamn": "Olsson",
+  "uppdrag": [
+    {
+      "enhet": "TSTNMT2321000156-1062",
+      "andamal": [
+        "Vård och behandling"
+      ],
+      "systemRoles": [
+        "INTYG;Rehab-TSTNMT2321000156-1062"
+      ]
+    },
+    {
+      "enhet": "TSTNMT2321000156-1063",
+      "andamal": [
+        "Vård och behandling"
+      ],
+      "systemRoles": [
+        "INTYG;Rehab-TSTNMT2321000156-1063"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "displayOrder": 390,
+    "env": "demo",
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-1066_TSTNMT2321000156-1062",
+        "beskrivning": "Lars Olsson (Vårdadmin | Cambio | 2 enheter)"
+      }
     ]
+  }
 }

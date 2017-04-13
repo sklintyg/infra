@@ -1,15 +1,28 @@
 {
-    "hsaId": "TSTNMT2321000156-103B",
-	"forNamn": "Louise",
-	"efterNamn": "Ericsson",
-	"legitimeradeYrkesgrupper" : [
-		"Tandläkare"
-	],
-    "uppdrag":[
-    	{
-    		"vardgivare": "TSTNMT2321000156-1002",
-    		"enhet": "TSTNMT2321000156-1039",
-			"andamal":["Vård och behandling"]
-    	}
+  "hsaId": "TSTNMT2321000156-103B",
+  "forNamn": "Louise",
+  "efterNamn": "Ericsson",
+  "legitimeradeYrkesgrupper": [
+    "Tandläkare"
+  ],
+  "uppdrag": [
+    {
+      "vardgivare": "TSTNMT2321000156-1002",
+      "enhet": "TSTNMT2321000156-1039",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "displayOrder": 290,
+    "env": "demo",
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-100B_TSTNMT2321000156-1039",
+        "beskrivning": "Louise Ericsson (Tandläkare)"
+      }
     ]
+  }
 }
+

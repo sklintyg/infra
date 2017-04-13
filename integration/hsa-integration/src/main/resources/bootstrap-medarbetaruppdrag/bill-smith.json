@@ -1,16 +1,26 @@
 {
-	"hsaId": "TSTNMT2321000156-103G",
-	"forNamn": "Bill",
-	"efterNamn": "Smith",
-	"uppdrag": [
-		{
-			"vardgivare": "TSTNMT2321000156-1002",
-			"enhet": "TSTNMT2321000156-1039",
-			"andamal": [
-				"Vård och behandling"
-			]
-		}
-	],
-	"befattningsKod": "203090",
-	"forskrivarKod": "9400003"
+  "hsaId": "TSTNMT2321000156-103G",
+  "forNamn": "Bill",
+  "efterNamn": "Smith",
+  "uppdrag": [
+    {
+      "vardgivare": "TSTNMT2321000156-1002",
+      "enhet": "TSTNMT2321000156-1039",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "befattningsKod": "203090",
+  "forskrivarKod": "9400003",
+  "fakeProperties": {
+    "displayOrder": 310,
+    "env": "demo",
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-100G_TSTNMT2321000156-1039",
+        "beskrivning": "Bill Smith (Läkare utom EU/ESS/Schweiz)"
+      }
+    ]
+  }
 }

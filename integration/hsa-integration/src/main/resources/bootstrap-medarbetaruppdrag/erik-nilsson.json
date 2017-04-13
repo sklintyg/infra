@@ -1,14 +1,26 @@
 {
-	"hsaId": "TSTNMT2321000156-105H",
-	"forNamn": "Erik",
-	"efterNamn": "Nilsson",
-	"uppdrag": [
-		{
-			"vardgivare": "TSTNMT2321000156-1002",
-			"enhet": "TSTNMT2321000156-105F",
-			"andamal": [ "Vård och behandling" ]
-		}
-	],
-	"befattningsKod": "204090",
-	"forskrivarKod": "9100009"
+  "hsaId": "TSTNMT2321000156-105H",
+  "forNamn": "Erik",
+  "efterNamn": "Nilsson",
+  "uppdrag": [
+    {
+      "vardgivare": "TSTNMT2321000156-1002",
+      "enhet": "TSTNMT2321000156-105F",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "befattningsKod": "204090",
+  "forskrivarKod": "9100009",
+  "fakeProperties": {
+    "displayOrder": 330,
+    "env": "demo",
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-105H_TSTNMT2321000156-105F",
+        "beskrivning": "Erik Nilsson (Läkare | NMT)"
+      }
+    ]
+  }
 }

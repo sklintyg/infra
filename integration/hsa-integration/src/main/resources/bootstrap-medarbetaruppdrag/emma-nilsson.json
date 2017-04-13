@@ -1,15 +1,29 @@
 {
-	"hsaId": "TSTNMT2321000156-105R",
-	"forNamn": "Emma",
-	"efterNamn": "Nilsson",
-	"titel": "Överläkare",
-	"legitimeradeYrkesgrupper" : [ "Läkare"	],
-	"uppdrag": [
-		{
-			"vardgivare": "TSTNMT2321000156-105M",
-			"enhet": "TSTNMT2321000156-105N",
-			"andamal": [ "Vård och behandling" ],
-			"namn": "Läkare på vårdcentralen"
-		}
-	]
+  "hsaId": "TSTNMT2321000156-105R",
+  "forNamn": "Emma",
+  "efterNamn": "Nilsson",
+  "titel": "Överläkare",
+  "legitimeradeYrkesgrupper": [
+    "Läkare"
+  ],
+  "uppdrag": [
+    {
+      "vardgivare": "TSTNMT2321000156-105M",
+      "enhet": "TSTNMT2321000156-105N",
+      "andamal": [
+        "Vård och behandling"
+      ],
+      "namn": "Läkare på vårdcentralen"
+    }
+  ],
+  "fakeProperties": {
+    "displayOrder": 350,
+    "env": "demo",
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-105R_TSTNMT2321000156-105N",
+        "beskrivning": "Emma Nilsson (Läkare 1 | Rehabstöd)"
+      }
+    ]
+  }
 }

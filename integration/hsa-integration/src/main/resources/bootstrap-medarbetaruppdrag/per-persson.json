@@ -1,19 +1,29 @@
 {
-    "hsaId": "perpersson",
-    "forNamn": "Per",
-    "efterNamn": "Persson",
-    "legitimeradeYrkesgrupper" : [
-        "Läkare"
-    ],
-    "uppdrag":[
-        {
-            "enhet": "anestesikliniken"
-        },
-        {
-            "enhet": "kvinnokliniken"
-        },
-        {
-            "enhet": "medicinkliniken"
-        }
+  "hsaId": "perpersson",
+  "forNamn": "Per",
+  "efterNamn": "Persson",
+  "legitimeradeYrkesgrupper": [
+    "Läkare"
+  ],
+  "uppdrag": [
+    {
+      "enhet": "anestesikliniken"
+    },
+    {
+      "enhet": "kvinnokliniken"
+    },
+    {
+      "enhet": "medicinkliniken"
+    }
+  ],
+  "fakeProperties": {
+    "displayOrder": 240,
+    "env": "dev",
+    "logins": [
+      {
+        "forvaldEnhet": "perpersson_anestesikliniken",
+        "beskrivning": "Per Persson (Läkare | Anestesikliniken, Kvinnokliniken, Medicinkliniken)"
+      }
     ]
+  }
 }

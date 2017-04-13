@@ -1,41 +1,51 @@
 {
-    "hsaId": "staffan",
-	"forNamn": "Staffan",
-	"efterNamn": "Stafett",
-	"titel" : "Läkare",
-	"legitimeradeYrkesgrupper" : [
-		"Läkare"
-	],
-	"specialiseringar": [
-		{
-			"kod": "200",
-			"namn": "Ortopedi"
-		}
-	],
-    "uppdrag":[
-    	{
-    		"enhet": "centrum-vast",
-			"andamal": [
-				"Vård och behandling"
-			]
-    	},
-    	{
-    		"enhet": "linkoping",
-			"andamal": [
-				"Vård och behandling"
-			]
-    	},
-    	{
-    		"enhet": "norrkoping",
-			"andamal": [
-				"Vård och behandling"
-			]
-    	},
-    	{
-    		"enhet": "motala",
-			"andamal": [
-				"Vård och behandling"
-			]
-    	}
+  "hsaId": "staffan",
+  "forNamn": "Staffan",
+  "efterNamn": "Stafett",
+  "titel": "Läkare",
+  "legitimeradeYrkesgrupper": [
+    "Läkare"
+  ],
+  "specialiseringar": [
+    {
+      "kod": "200",
+      "namn": "Ortopedi"
+    }
+  ],
+  "uppdrag": [
+    {
+      "enhet": "centrum-vast",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    },
+    {
+      "enhet": "linkoping",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    },
+    {
+      "enhet": "norrkoping",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    },
+    {
+      "enhet": "motala",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "displayOrder": 150,
+    "env": "dev",
+    "logins": [
+      {
+        "forvaldEnhet": "",
+        "beskrivning": "Staffan Stafett (Läkare | Centrum Väst, Linköping, Norrköping, Motala)"
+      }
     ]
+  }
 }

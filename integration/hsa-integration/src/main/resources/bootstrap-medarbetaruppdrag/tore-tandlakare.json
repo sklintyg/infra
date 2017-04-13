@@ -1,14 +1,25 @@
 {
-    "hsaId": "tore-tandlakare",
-	"forNamn": "Tore",
-	"efterNamn": "Tandläkare",
-	"legitimeradeYrkesgrupper" : [
-		"Tandläkare"
-	],
-    "uppdrag":[
-    	{
-    		"vardgivare": "tandlakare-1",
-    		"enhet": "tandenheten-1"
-    	}
+  "hsaId": "tore-tandlakare",
+  "forNamn": "Tore",
+  "efterNamn": "Tandläkare",
+  "legitimeradeYrkesgrupper": [
+    "Tandläkare"
+  ],
+  "uppdrag": [
+    {
+      "vardgivare": "tandlakare-1",
+      "enhet": "tandenheten-1"
+    }
+  ],
+  "fakeProperties": {
+    "displayOrder": 270,
+    "env": "demo",
+    "logins": [
+      {
+        "forvaldEnhet": "tore-tandlakare",
+        "beskrivning": "Tore Tandläkare (Tandläkare)"
+      }
     ]
+  }
 }
+

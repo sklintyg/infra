@@ -1,13 +1,27 @@
 {
-	"hsaId": "TSTNMT2321000156-105J",
-	"forNamn": "Susanne",
-	"efterNamn": "Karlsson",
-	"uppdrag": [
-		{
-			"vardgivare": "TSTNMT2321000156-1002",
-			"enhet": "TSTNMT2321000156-105F",
-			"andamal": [ "Vård och behandling" ],
-			"systemRoles": [ "INTYG;Rehab-TSTNMT2321000156-105F" ]
-		}
-	]
+  "hsaId": "TSTNMT2321000156-105J",
+  "forNamn": "Susanne",
+  "efterNamn": "Karlsson",
+  "uppdrag": [
+    {
+      "vardgivare": "TSTNMT2321000156-1002",
+      "enhet": "TSTNMT2321000156-105F",
+      "andamal": [
+        "Vård och behandling"
+      ],
+      "systemRoles": [
+        "INTYG;Rehab-TSTNMT2321000156-105F"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "displayOrder": 340,
+    "env": "demo",
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-105J_TSTNMT2321000156-105F",
+        "beskrivning": "Susanne Karlsson (Vårdadmin | NMT)"
+      }
+    ]
+  }
 }

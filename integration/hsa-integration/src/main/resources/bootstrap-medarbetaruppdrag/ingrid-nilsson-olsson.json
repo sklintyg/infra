@@ -1,19 +1,34 @@
 {
-	"hsaId": "TSTNMT2321000156-105T",
-	"forNamn": "Ingrid",
-	"efterNamn": "Nilsson Olsson",
-	"legitimeradeYrkesgrupper" : [ "Läkare"	],
-	"uppdrag": [
-		{
-			"vardgivare": "TSTNMT2321000156-105M",
-			"enhet": "TSTNMT2321000156-105P",
-			"andamal": [ "Vård och behandling" ]
-		},
-
-		{
-			"vardgivare": "TSTNMT2321000156-105M",
-			"enhet": "TSTNMT2321000156-105Q",
-			"andamal": [ "Vård och behandling" ]
-		}
-	]
+  "hsaId": "TSTNMT2321000156-105T",
+  "forNamn": "Ingrid",
+  "efterNamn": "Nilsson Olsson",
+  "legitimeradeYrkesgrupper": [
+    "Läkare"
+  ],
+  "uppdrag": [
+    {
+      "vardgivare": "TSTNMT2321000156-105M",
+      "enhet": "TSTNMT2321000156-105P",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    },
+    {
+      "vardgivare": "TSTNMT2321000156-105M",
+      "enhet": "TSTNMT2321000156-105Q",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "displayOrder": 370,
+    "env": "demo",
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-105T_TSTNMT2321000156-105P",
+        "beskrivning": "Ingrid Nilsson Olsson (Läkare 3 | Rehabstöd)"
+      }
+    ]
+  }
 }
