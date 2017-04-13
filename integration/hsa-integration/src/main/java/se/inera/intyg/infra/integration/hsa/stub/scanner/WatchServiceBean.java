@@ -30,6 +30,7 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 public class WatchServiceBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(WatchServiceBean.class);
+    public static final String SUFFIX_JSON = ".json";
 
     @Value("${hsa.stub.additional.identities.folder}")
     private String identitiesFolder;
@@ -66,6 +67,10 @@ public class WatchServiceBean {
                 for (WatchEvent<?> watchEvent : key.pollEvents()) {
 
                     Path name = path.resolve((Path) watchEvent.context());
+
+                    if (!name.toString().endsWith(SUFFIX_JSON)) {
+                        continue;
+                    }
 
                     switch (watchEvent.kind().name()) {
                         case "ENTRY_CREATE":
