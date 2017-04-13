@@ -39,6 +39,9 @@
     <jaxws:endpoint address="/hsa-unit" implementor="se.inera.intyg.infra.integration.hsa.stub.GetUnitResponderStub"/>
 
     <bean class="se.inera.intyg.infra.integration.hsa.stub.BootstrapBean"/>
+    <bean class="se.inera.intyg.infra.integration.hsa.stub.scanner.WatchServiceInitializerBean" />
+    <bean class="se.inera.intyg.infra.integration.hsa.stub.scanner.WatchEventHandler" />
+    <bean class="se.inera.intyg.infra.integration.hsa.stub.scanner.WatchServiceBean" />
   </beans>
 
   <beans profile="dev,testability-api">

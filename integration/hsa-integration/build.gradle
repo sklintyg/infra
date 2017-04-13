@@ -16,4 +16,6 @@ dependencies {
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
 
   compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+
+  testCompile 'org.awaitility:awaitility:2.0.0'
 }

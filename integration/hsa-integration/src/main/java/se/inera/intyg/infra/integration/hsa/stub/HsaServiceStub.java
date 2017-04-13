@@ -108,6 +108,10 @@ public class HsaServiceStub {
         personMap.put(person.getHsaId(), person);
     }
 
+    public void deleteHsaPerson(String hsaId) {
+        personMap.remove(hsaId);
+    }
+
     public void updateHsaPersonName(String hsaId, String firstName, String lastName) {
         // Hitta och uppdatera hsaPerson
         if (personMap.containsKey(hsaId)) {
