@@ -39,6 +39,7 @@ public class WatchEventHandler {
             hsaServiceStub.addHsaPerson(hsaPerson);
 
             scannedFiles.put(path.toUri().toString(), hsaPerson.getHsaId());
+            LOG.info("Created HSA person '{}'", hsaPerson.getForNamn() + " " + hsaPerson.getEfterNamn());
         } catch (IOException e) {
             LOG.error("Error creating HSA person from file '{}', message: {}", path.toString(), e.getMessage());
         }

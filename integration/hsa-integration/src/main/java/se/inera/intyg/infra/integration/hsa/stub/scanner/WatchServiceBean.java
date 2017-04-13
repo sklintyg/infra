@@ -41,7 +41,22 @@ public class WatchServiceBean {
     @Async
     public void start() {
         File dir = new File(identitiesFolder);
+        bootstrapScan(dir.toPath());
         scan(dir.toPath());
+    }
+
+    private void bootstrapScan(Path path) {
+        LOG.info("Performing startup scan of HSA identity folder '{}'", path.toString());
+        try {
+            Files.walk(path)
+                    .filter(Files::isRegularFile)
+                    .filter(p -> p.toString().endsWith(".json"))
+                    .forEach(p -> {
+                        handler.created(p);
+                    });
+        } catch (IOException e) {
+            LOG.error("Initial scan of " + identitiesFolder + " failed: " + e.getMessage());
+        }
     }
 
     private void scan(Path path) {
