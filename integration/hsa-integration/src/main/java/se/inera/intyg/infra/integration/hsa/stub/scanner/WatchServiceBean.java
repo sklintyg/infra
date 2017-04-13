@@ -26,7 +26,7 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
  * Created by eriklupander on 2017-04-12.
  */
 @Service
-@Profile({"dev", "wc-hsa-stub", "wc-all-stubs"})
+@Profile({ "dev", "wc-hsa-stub", "wc-all-stubs" })
 public class WatchServiceBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(WatchServiceBean.class);
@@ -60,7 +60,7 @@ public class WatchServiceBean {
     }
 
     private void scan(Path path) {
-        
+
         boolean isFolder = Files.isDirectory(path);
         if (!isFolder) {
             throw new IllegalArgumentException("Path: " + path
@@ -68,14 +68,13 @@ public class WatchServiceBean {
         }
 
         LOG.info("Starting WatchService for folder: " + path.toString());
-      
+
         FileSystem fs = path.getFileSystem();
 
         try (WatchService service = fs.newWatchService()) {
             path.register(service,
-                    new WatchEvent.Kind[]{ENTRY_CREATE, ENTRY_MODIFY, ENTRY_DELETE},
-                    SensitivityWatchEventModifier.HIGH
-            );
+                    new WatchEvent.Kind[] { ENTRY_CREATE, ENTRY_MODIFY, ENTRY_DELETE },
+                    SensitivityWatchEventModifier.HIGH);
 
             while (true) {
                 WatchKey key = service.take();
@@ -88,20 +87,20 @@ public class WatchServiceBean {
                     }
 
                     switch (watchEvent.kind().name()) {
-                        case "ENTRY_CREATE":
-                            LOG.info("New path created: " + name);
-                            handler.created(name);
-                            break;
-                        case "ENTRY_MODIFY":
-                            LOG.info("New path modified: " + name);
-                            handler.modified(name);
-                            break;
-                        case "ENTRY_DELETE":
-                            LOG.info("New path deleted: " + name);
-                            handler.deleted(name);
-                            break;
-                        default:
-                            break;
+                    case "ENTRY_CREATE":
+                        LOG.info("New path created: " + name);
+                        handler.created(name);
+                        break;
+                    case "ENTRY_MODIFY":
+                        LOG.info("New path modified: " + name);
+                        handler.modified(name);
+                        break;
+                    case "ENTRY_DELETE":
+                        LOG.info("New path deleted: " + name);
+                        handler.deleted(name);
+                        break;
+                    default:
+                        break;
                     }
                 }
 
