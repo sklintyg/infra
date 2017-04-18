@@ -19,7 +19,7 @@ import java.util.Map;
  * Created by eriklupander on 2017-04-12.
  */
 @Service
-@Profile({"dev", "wc-hsa-stub", "wc-all-stubs"})
+@Profile({ "dev", "wc-hsa-stub", "wc-all-stubs" })
 public class WatchEventHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(WatchEventHandler.class);
@@ -32,6 +32,7 @@ public class WatchEventHandler {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     void created(Path path) {
+        LOG.info("New path created: " + path.toString());
         HsaPerson hsaPerson;
         try {
             byte[] bytes = Files.readAllBytes(path);
@@ -43,10 +44,11 @@ public class WatchEventHandler {
         } catch (IOException e) {
             LOG.error("Error creating HSA person from file '{}', message: {}", path.toString(), e.getMessage());
         }
-
     }
 
     void modified(Path path) {
+        LOG.info("New path modified: " + path.toString());
+
         HsaPerson hsaPerson;
         try {
             byte[] bytes = Files.readAllBytes(path);
@@ -59,6 +61,8 @@ public class WatchEventHandler {
     }
 
     void deleted(Path path) {
+        LOG.info("New path deleted: " + path.toString());
+
         if (scannedFiles.containsKey(path.toUri().toString())) {
             hsaServiceStub.deleteHsaPerson(scannedFiles.get(path.toUri().toString()));
         } else {
