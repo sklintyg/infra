@@ -24,8 +24,8 @@
 
   <!-- Load the new JSON file scanner beans -->
   <bean class="se.inera.intyg.infra.integration.hsa.stub.scanner.WatchServiceInitializerBean" />
-  <bean class="se.inera.intyg.infra.integration.hsa.stub.scanner.WatchServiceBean" />
-  <bean class="se.inera.intyg.infra.integration.hsa.stub.scanner.WatchEventHandler" />
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.scanner.ScannerBean" />
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.scanner.WatchEventPersonHandler" />
 
   <bean name="props" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">

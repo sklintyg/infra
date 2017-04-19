@@ -1,15 +1,14 @@
 package se.inera.intyg.infra.integration.hsa.stub.scanner;
 
 import com.sun.nio.file.SensitivityWatchEventModifier;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
@@ -24,43 +23,36 @@ import java.nio.file.WatchService;
  */
 @Service
 @Profile({ "dev", "wc-hsa-stub", "wc-all-stubs" })
-public class WatchServiceBean {
+public class ScannerBean {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WatchServiceBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ScannerBean.class);
 
     private static final String SUFFIX_JSON = ".json";
     private static final String ENTRY_CREATE = "ENTRY_CREATE";
     private static final String ENTRY_MODIFY = "ENTRY_MODIFY";
     private static final String ENTRY_DELETE = "ENTRY_DELETE";
 
-    @Value("${hsa.stub.additional.identities.folder}")
-    private String identitiesFolder;
+    @Autowired
+    private WatchEventPersonHandler personHandler;
 
     @Autowired
-    private WatchEventHandler handler;
+    private WatchEventVardgivareHandler vardgivareHandler;
 
-    @Async
-    public void start() {
-        File dir = new File(identitiesFolder);
-        bootstrapScan(dir.toPath());
-        scan(dir.toPath());
-    }
-
-    private void bootstrapScan(Path path) {
+    void bootstrapScan(Path path, ScanTarget scanTarget) {
         LOG.info("Performing startup scan of HSA identity folder '{}'", path.toString());
+        ScanEventHandler handler = resolveHandler(scanTarget);
         try {
             Files.walk(path)
                     .filter(Files::isRegularFile)
                     .filter(p -> p.toString().endsWith(SUFFIX_JSON))
-                    .forEach(p -> {
-                        handler.created(p);
-                    });
+                    .forEach(handler::created);
         } catch (IOException e) {
-            LOG.error("Initial scan of " + identitiesFolder + " failed: " + e.getMessage());
+            LOG.error("Initial scan of " + path.toString() + " failed: " + e.getMessage());
         }
     }
 
-    private void scan(Path path) {
+    @Async
+    public void scan(Path path, ScanTarget scanTarget) {
 
         LOG.info("Starting WatchService for folder: " + path.toString());
 
@@ -81,7 +73,7 @@ public class WatchServiceBean {
                     },
                     SensitivityWatchEventModifier.HIGH);
 
-            pollForEvents(path, service);
+            pollForEvents(path, service, scanTarget);
 
         } catch (IOException | InterruptedException ioe) {
             throw new IllegalStateException(ioe.getMessage());
@@ -89,7 +81,8 @@ public class WatchServiceBean {
 
     }
 
-    private void pollForEvents(Path path, WatchService service) throws InterruptedException {
+    private void pollForEvents(Path path, WatchService service, ScanTarget scanTarget) throws InterruptedException {
+        ScanEventHandler handler = resolveHandler(scanTarget);
         while (true) {
             WatchKey key = service.take();
             for (WatchEvent<?> watchEvent : key.pollEvents()) {
@@ -101,17 +94,17 @@ public class WatchServiceBean {
                 }
 
                 switch (watchEvent.kind().name()) {
-                case ENTRY_CREATE:
-                    handler.created(name);
-                    break;
-                case ENTRY_MODIFY:
-                    handler.modified(name);
-                    break;
-                case ENTRY_DELETE:
-                    handler.deleted(name);
-                    break;
-                default:
-                    break;
+                    case ENTRY_CREATE:
+                        handler.created(name);
+                        break;
+                    case ENTRY_MODIFY:
+                        handler.modified(name);
+                        break;
+                    case ENTRY_DELETE:
+                        handler.deleted(name);
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -119,5 +112,10 @@ public class WatchServiceBean {
                 break;
             }
         }
+    }
+
+    @NotNull
+    private ScanEventHandler resolveHandler(ScanTarget scanTarget) {
+        return scanTarget == ScanTarget.VARDGIVARE ? vardgivareHandler : personHandler;
     }
 }

@@ -29,9 +29,9 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/WatchServiceTest/watchservice-test-context.xml")
 @ActiveProfiles({"dev", "wc-hsa-stub"})
-public class WatchServiceBeanTest {
+public class ScannerBeanTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WatchServiceBeanTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ScannerBeanTest.class);
 
     private static final String HSA_ID = "test-emma";
     private static final String EFTERNAMN1 = "Nilsson";

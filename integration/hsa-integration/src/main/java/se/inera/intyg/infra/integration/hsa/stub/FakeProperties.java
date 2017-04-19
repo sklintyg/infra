@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.infra.integration.hsa.stub;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
@@ -56,7 +55,6 @@ public class FakeProperties {
         this.env = env;
     }
 
-    @JsonIgnore
     public boolean isReadOnly() {
         return readOnly;
     }

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.stub.HsaPerson;
 import se.inera.intyg.infra.integration.hsa.stub.HsaServiceStub;
+import se.inera.intyg.infra.integration.hsa.stub.Medarbetaruppdrag;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,9 +21,9 @@ import java.util.Map;
  */
 @Service
 @Profile({ "dev", "wc-hsa-stub", "wc-all-stubs" })
-public class WatchEventHandler {
+public class WatchEventPersonHandler implements ScanEventHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WatchEventHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WatchEventPersonHandler.class);
 
     @Autowired
     private HsaServiceStub hsaServiceStub;
@@ -31,17 +32,19 @@ public class WatchEventHandler {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    void created(Path path) {
+    public void created(Path path) {
         LOG.debug("New path created: " + path.toString());
         HsaPerson hsaPerson;
+        Medarbetaruppdrag medarbetaruppdrag;
         try {
             byte[] bytes = Files.readAllBytes(path);
             hsaPerson = objectMapper.readValue(bytes, HsaPerson.class);
+            medarbetaruppdrag = objectMapper.readValue(bytes, Medarbetaruppdrag.class);
 
-            // Verify so stub doesn't contain person as a read-only entity.
+            // Verify so stub doesn't contain person
             HsaPerson existingHsaPerson = hsaServiceStub.getHsaPerson(hsaPerson.getHsaId());
-            if (existingHsaPerson == null || isMutable(existingHsaPerson)) {
-                hsaServiceStub.addHsaPerson(hsaPerson);
+            if (existingHsaPerson == null) {
+                addPerson(hsaPerson, medarbetaruppdrag);
                 LOG.info("Created HSA person '{}' with hsaId '{}'", hsaPerson.getForNamn() + " " + hsaPerson.getEfterNamn(),
                         hsaPerson.getHsaId());
             } else {
@@ -55,24 +58,23 @@ public class WatchEventHandler {
         }
     }
 
-    private boolean isMutable(HsaPerson existingHsaPerson) {
-        return existingHsaPerson.getFakeProperties() != null && !existingHsaPerson.getFakeProperties().isReadOnly();
-    }
-
-    void modified(Path path) {
+    public void modified(Path path) {
         LOG.debug("New path modified: " + path.toString());
 
         HsaPerson hsaPerson;
+        Medarbetaruppdrag medarbetaruppdrag;
         try {
             byte[] bytes = Files.readAllBytes(path);
             hsaPerson = objectMapper.readValue(bytes, HsaPerson.class);
+            medarbetaruppdrag = objectMapper.readValue(bytes, Medarbetaruppdrag.class);
+
             HsaPerson existingHsaPerson = hsaServiceStub.getHsaPerson(hsaPerson.getHsaId());
             if (existingHsaPerson == null) {
-                hsaServiceStub.addHsaPerson(hsaPerson);
+                addPerson(hsaPerson, medarbetaruppdrag);
                 LOG.info("Successfully added HSA person {}", hsaPerson.getHsaId());
             } else if (isMutable(existingHsaPerson)) {
-                hsaServiceStub.deleteHsaPerson(hsaPerson.getHsaId());
-                hsaServiceStub.addHsaPerson(hsaPerson);
+                removePerson(hsaPerson.getHsaId());
+                addPerson(hsaPerson, medarbetaruppdrag);
                 LOG.info("Successfully modified HSA person {}", hsaPerson.getHsaId());
             } else {
                 LOG.warn("Could not update HSA person {}, person with hsaId '{}' already exists in HSA "
@@ -89,21 +91,38 @@ public class WatchEventHandler {
         }
     }
 
-    void deleted(Path path) {
+
+    public void deleted(Path path) {
         LOG.debug("New path deleted: " + path.toString());
 
         if (scannedFiles.containsKey(path.toUri().toString())) {
-            String hsaId = path.toUri().toString();
+            String hsaId = scannedFiles.get(path.toUri().toString());
             HsaPerson existingHsaPerson = hsaServiceStub.getHsaPerson(hsaId);
             if (existingHsaPerson != null && isMutable(existingHsaPerson)) {
-                hsaServiceStub.deleteHsaPerson(hsaId);
+                removePerson(hsaId);
                 LOG.info("Successfully deleted HSA person {}", hsaId);
             } else {
                 LOG.warn("Could not delete HSA person with hsaId '{}', doesn't exist in HSA "
-                                + "stub or is marked readOnly.", hsaId);
+                        + "stub or is marked readOnly.", hsaId);
             }
         } else {
             LOG.warn("Path '{}' not stored in scannedFiles, no content was deleted from HSA stub", path.toString());
         }
+    }
+
+    private void removePerson(String hsaId) {
+        hsaServiceStub.deleteHsaPerson(hsaId);
+        hsaServiceStub.deleteMedarbetareuppdrag(hsaId);
+    }
+
+    private void addPerson(HsaPerson hsaPerson, Medarbetaruppdrag medarbetaruppdrag) {
+        hsaServiceStub.addHsaPerson(hsaPerson);
+        hsaServiceStub.getMedarbetaruppdrag().add(medarbetaruppdrag);
+    }
+
+
+    private boolean isMutable(HsaPerson existingHsaPerson) {
+        return existingHsaPerson.getFakeProperties() == null
+                || (existingHsaPerson.getFakeProperties() != null && !existingHsaPerson.getFakeProperties().isReadOnly());
     }
 }

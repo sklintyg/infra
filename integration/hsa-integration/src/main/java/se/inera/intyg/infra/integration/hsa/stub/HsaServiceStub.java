@@ -33,6 +33,7 @@ import java.util.Map;
 public class HsaServiceStub {
 
     // Data cache
+    private List<String> readOnlyVardgivare = new ArrayList<>();
 
     private List<Vardgivare> vardgivare = new ArrayList<>();
     private List<Medarbetaruppdrag> medarbetaruppdrag = new ArrayList<>();
@@ -119,5 +120,13 @@ public class HsaServiceStub {
             storedHsPerson.setForNamn(firstName);
             storedHsPerson.setEfterNamn(lastName);
         }
+    }
+
+    public boolean isVardgivareReadOnly(String hsaId) {
+        return readOnlyVardgivare.contains(hsaId);
+    }
+
+    public void markAsReadOnly(String hsaId) {
+        readOnlyVardgivare.add(hsaId);
     }
 }
