@@ -32,39 +32,76 @@ public class WatchEventHandler {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     void created(Path path) {
-        LOG.info("New path created: " + path.toString());
+        LOG.debug("New path created: " + path.toString());
         HsaPerson hsaPerson;
         try {
             byte[] bytes = Files.readAllBytes(path);
             hsaPerson = objectMapper.readValue(bytes, HsaPerson.class);
-            hsaServiceStub.addHsaPerson(hsaPerson);
+
+            // Verify so stub doesn't contain person as a read-only entity.
+            HsaPerson existingHsaPerson = hsaServiceStub.getHsaPerson(hsaPerson.getHsaId());
+            if (existingHsaPerson == null || isMutable(existingHsaPerson)) {
+                hsaServiceStub.addHsaPerson(hsaPerson);
+                LOG.info("Created HSA person '{}' with hsaId '{}'", hsaPerson.getForNamn() + " " + hsaPerson.getEfterNamn(),
+                        hsaPerson.getHsaId());
+            } else {
+                LOG.warn("Could not create HSA person {}, person with hsaId '{}' already exists in HSA stub.",
+                        hsaPerson.getForNamn() + " " + hsaPerson.getEfterNamn(), hsaPerson.getHsaId());
+            }
 
             scannedFiles.put(path.toUri().toString(), hsaPerson.getHsaId());
-            LOG.info("Created HSA person '{}'", hsaPerson.getForNamn() + " " + hsaPerson.getEfterNamn());
         } catch (IOException e) {
             LOG.error("Error creating HSA person from file '{}', message: {}", path.toString(), e.getMessage());
         }
     }
 
+    private boolean isMutable(HsaPerson existingHsaPerson) {
+        return existingHsaPerson.getFakeProperties() != null && !existingHsaPerson.getFakeProperties().isReadOnly();
+    }
+
     void modified(Path path) {
-        LOG.info("New path modified: " + path.toString());
+        LOG.debug("New path modified: " + path.toString());
 
         HsaPerson hsaPerson;
         try {
             byte[] bytes = Files.readAllBytes(path);
             hsaPerson = objectMapper.readValue(bytes, HsaPerson.class);
-            hsaServiceStub.deleteHsaPerson(hsaPerson.getHsaId());
-            hsaServiceStub.addHsaPerson(hsaPerson);
+            HsaPerson existingHsaPerson = hsaServiceStub.getHsaPerson(hsaPerson.getHsaId());
+            if (existingHsaPerson == null) {
+                hsaServiceStub.addHsaPerson(hsaPerson);
+                LOG.info("Successfully added HSA person {}", hsaPerson.getHsaId());
+            } else if (isMutable(existingHsaPerson)) {
+                hsaServiceStub.deleteHsaPerson(hsaPerson.getHsaId());
+                hsaServiceStub.addHsaPerson(hsaPerson);
+                LOG.info("Successfully modified HSA person {}", hsaPerson.getHsaId());
+            } else {
+                LOG.warn("Could not update HSA person {}, person with hsaId '{}' already exists in HSA "
+                        + "stub and is marked readOnly.",
+                        hsaPerson.getForNamn() + " " + hsaPerson.getEfterNamn(), hsaPerson.getHsaId());
+            }
+
+            if (!scannedFiles.containsKey(path.toUri().toString())) {
+                scannedFiles.put(path.toUri().toString(), hsaPerson.getHsaId());
+            }
+
         } catch (IOException e) {
             LOG.error("Error creating HSA person from file '{}', message: {}", path.toString(), e.getMessage());
         }
     }
 
     void deleted(Path path) {
-        LOG.info("New path deleted: " + path.toString());
+        LOG.debug("New path deleted: " + path.toString());
 
         if (scannedFiles.containsKey(path.toUri().toString())) {
-            hsaServiceStub.deleteHsaPerson(scannedFiles.get(path.toUri().toString()));
+            String hsaId = path.toUri().toString();
+            HsaPerson existingHsaPerson = hsaServiceStub.getHsaPerson(hsaId);
+            if (existingHsaPerson != null && isMutable(existingHsaPerson)) {
+                hsaServiceStub.deleteHsaPerson(hsaId);
+                LOG.info("Successfully deleted HSA person {}", hsaId);
+            } else {
+                LOG.warn("Could not delete HSA person with hsaId '{}', doesn't exist in HSA "
+                                + "stub or is marked readOnly.", hsaId);
+            }
         } else {
             LOG.warn("Path '{}' not stored in scannedFiles, no content was deleted from HSA stub", path.toString());
         }

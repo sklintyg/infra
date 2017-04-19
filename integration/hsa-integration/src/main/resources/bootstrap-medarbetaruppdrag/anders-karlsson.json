@@ -24,6 +24,7 @@
   "fakeProperties": {
     "displayOrder": 360,
     "env": "demo",
+    "readOnly": true,
     "logins": [
       {
         "forvaldEnhet": "TSTNMT2321000156-105S_TSTNMT2321000156-105N",

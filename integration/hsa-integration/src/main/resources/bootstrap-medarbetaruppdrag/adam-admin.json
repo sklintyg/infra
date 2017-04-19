@@ -10,6 +10,7 @@
   "fakeProperties": {
     "displayOrder": 180,
     "env": "dev",
+    "readOnly": true,
     "logins": [
       {
         "forvaldEnhet": "adam_centrum-vast",

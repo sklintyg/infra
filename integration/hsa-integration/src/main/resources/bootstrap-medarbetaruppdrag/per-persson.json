@@ -19,6 +19,7 @@
   "fakeProperties": {
     "displayOrder": 240,
     "env": "dev",
+    "readOnly": true,
     "logins": [
       {
         "forvaldEnhet": "perpersson_anestesikliniken",

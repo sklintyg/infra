@@ -39,6 +39,7 @@
   "fakeProperties": {
     "displayOrder": 140,
     "env": "dev",
+    "readOnly": true,
     "logins": [
       {
         "forvaldEnhet": "eva_centrum-vast",

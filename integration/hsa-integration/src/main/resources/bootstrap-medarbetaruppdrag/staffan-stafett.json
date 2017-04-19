@@ -41,6 +41,7 @@
   "fakeProperties": {
     "displayOrder": 150,
     "env": "dev",
+    "readOnly": true,
     "logins": [
       {
         "forvaldEnhet": "",

@@ -14,6 +14,7 @@
   "fakeProperties": {
     "displayOrder": 270,
     "env": "demo",
+    "readOnly": true,
     "logins": [
       {
         "forvaldEnhet": "tore-tandlakare",

@@ -11,6 +11,7 @@
   "fakeProperties": {
     "displayOrder": 80,
     "env": "dev",
+    "readOnly": true,
     "logins": [
       {
         "forvaldEnhet": "IFV1239877878-104L_IFV1239877878-104D",

@@ -13,6 +13,7 @@
   "fakeProperties": {
     "displayOrder": 190,
     "env": "dev",
+    "readOnly": true,
     "logins": [
       {
         "forvaldEnhet": "adamo_centrum-vast",

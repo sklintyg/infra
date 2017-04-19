@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.infra.integration.hsa.stub;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class FakeProperties {
 
     private String displayOrder;
     private String env;
+    private boolean readOnly = false;
 
     private List<FakeLogins> logins = new ArrayList<FakeLogins>();
 
@@ -52,6 +54,15 @@ public class FakeProperties {
 
     public void setEnv(String env) {
         this.env = env;
+    }
+
+    @JsonIgnore
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
     }
 
     public List<FakeLogins> getLogins() {
