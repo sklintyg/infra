@@ -16,7 +16,7 @@
     "readOnly": true,
     "logins": [
       {
-        "forvaldEnhet": "SE4815162344-1B01_SE4815162344-1A02",
+        "forvaldEnhet": "SE4815162344-1A02",
         "beskrivning": "Ivar Integration (Läkare, djupintegration | WebCert-Integration Enhet 1)"
       }
     ]

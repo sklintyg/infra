@@ -13,7 +13,7 @@
     "readOnly": true,
     "logins": [
       {
-        "forvaldEnhet": "adam_centrum-vast",
+        "forvaldEnhet": "centrum-vast",
         "beskrivning": "Adam Admin (Vårdadmin | Centrum Väst)"
       }
     ]

@@ -42,15 +42,15 @@
     "readOnly": true,
     "logins": [
       {
-        "forvaldEnhet": "TST5565594230-106J_IFV1239877878-103D",
+        "forvaldEnhet": "IFV1239877878-103D",
         "beskrivning": "Markus Gran (Läkare | VårdEnhetA)"
       },
       {
-        "forvaldEnhet": "TST5565594230-106J_IFV1239877878-103F",
+        "forvaldEnhet": "IFV1239877878-103F",
         "beskrivning": "Markus Gran (Läkare | VårdEnhet1A)"
       },
       {
-        "forvaldEnhet": "TST5565594230-106J_IFV1239877878-103H",
+        "forvaldEnhet": "IFV1239877878-103H",
         "beskrivning": "Markus Gran (Läkare | VårdEnhet2A)"
       }
     ]

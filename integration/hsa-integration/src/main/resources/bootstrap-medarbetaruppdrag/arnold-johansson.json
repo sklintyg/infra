@@ -2,6 +2,9 @@
   "hsaId": "TSTNMT2321000156-1079",
   "forNamn": "Arnold",
   "efterNamn": "Johansson",
+  "legitimeradeYrkesgrupper": [
+    "Läkare"
+  ],
   "uppdrag": [
     {
       "vardgivare": "TSTNMT2321000156-102Q",
@@ -19,7 +22,7 @@
     "readOnly": true,
     "logins": [
       {
-        "forvaldEnhet": "TSTNMT2321000156-1079_TSTNMT2321000156-1077",
+        "forvaldEnhet": "TSTNMT2321000156-1077",
         "beskrivning": "Arnold Johansson (Läkare | Har intyg och ärenden)"
       }
     ]

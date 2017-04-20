@@ -14,7 +14,7 @@
     "env": "dev",
     "logins": [
       {
-        "forvaldEnhet": "hansolo_centrum-norr",
+        "forvaldEnhet": "centrum-norr",
         "beskrivning": "Han Solo (Vårdadmin | Centrum Norr)"
       }
     ]

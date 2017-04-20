@@ -22,7 +22,7 @@
     "readOnly": true,
     "logins": [
       {
-        "forvaldEnhet": "perpersson_anestesikliniken",
+        "forvaldEnhet": "anestesikliniken",
         "beskrivning": "Per Persson (Läkare | Anestesikliniken, Kvinnokliniken, Medicinkliniken)"
       }
     ]

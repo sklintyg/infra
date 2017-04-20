@@ -31,19 +31,19 @@
     "readOnly": true,
     "logins": [
       {
-        "forvaldEnhet": "IFV1239877878-104B_IFV1239877878-1042",
+        "forvaldEnhet": "IFV1239877878-1042",
         "beskrivning": "Åsa Andersson (Läkare | WebCert Enhet 1)"
       },
       {
-        "forvaldEnhet": "IFV1239877878-104B_IFV1239877878-1045",
+        "forvaldEnhet": "IFV1239877878-1045",
         "beskrivning": "Åsa Andersson (Läkare | WebCert Enhet 2 + 2UE)"
       },
       {
-        "forvaldEnhet": "IFV1239877878-104B_IFV1239877878-1046",
+        "forvaldEnhet": "IFV1239877878-1046",
         "beskrivning": "Åsa Andersson (Läkare | WebCert Enhet 2 - Underenhet 1)"
       },
       {
-        "forvaldEnhet": "IFV1239877878-104B_IFV1239877878-104C",
+        "forvaldEnhet": "IFV1239877878-104C",
         "beskrivning": "Åsa Andersson (Läkare | WebCert Enhet 2 - Underenhet 2)"
       }
     ]

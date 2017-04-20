@@ -42,7 +42,7 @@
     "readOnly": true,
     "logins": [
       {
-        "forvaldEnhet": "eva_centrum-vast",
+        "forvaldEnhet": "centrum-vast",
         "beskrivning": "Eva Holgersson (Läkare | Centrum Väst, Linköping, 'Enhet-finns-ej')"
       }
     ]
