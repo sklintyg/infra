@@ -18,14 +18,15 @@
  */
 package se.inera.intyg.infra.integration.hsa.stub;
 
-import se.inera.intyg.infra.integration.hsa.model.Mottagning;
-import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
-import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import se.inera.intyg.infra.integration.hsa.model.Mottagning;
+import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 
 /**
  * @author johannesc
@@ -33,6 +34,7 @@ import java.util.Map;
 public class HsaServiceStub {
 
     // Data cache
+    private List<String> readOnlyVardgivare = new ArrayList<>();
 
     private List<Vardgivare> vardgivare = new ArrayList<>();
     private List<Medarbetaruppdrag> medarbetaruppdrag = new ArrayList<>();
@@ -91,6 +93,14 @@ public class HsaServiceStub {
         return null;
     }
 
+    public List<HsaPerson> getHsaPerson() {
+        if (personMap == null || personMap.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return personMap.entrySet().stream().map(x -> x.getValue()).collect(Collectors.toList());
+    }
+
     public HsaPerson getHsaPerson(String hsaId) {
         if (personMap.containsKey(hsaId)) {
             return personMap.get(hsaId);
@@ -108,6 +118,10 @@ public class HsaServiceStub {
         personMap.put(person.getHsaId(), person);
     }
 
+    public void deleteHsaPerson(String hsaId) {
+        personMap.remove(hsaId);
+    }
+
     public void updateHsaPersonName(String hsaId, String firstName, String lastName) {
         // Hitta och uppdatera hsaPerson
         if (personMap.containsKey(hsaId)) {
@@ -115,5 +129,13 @@ public class HsaServiceStub {
             storedHsPerson.setForNamn(firstName);
             storedHsPerson.setEfterNamn(lastName);
         }
+    }
+
+    public boolean isVardgivareReadOnly(String hsaId) {
+        return readOnlyVardgivare.contains(hsaId);
+    }
+
+    public void markAsReadOnly(String hsaId) {
+        readOnlyVardgivare.add(hsaId);
     }
 }

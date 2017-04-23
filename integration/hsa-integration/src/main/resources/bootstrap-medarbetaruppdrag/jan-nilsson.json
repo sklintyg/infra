@@ -1,15 +1,34 @@
 {
-    "hsaId": "IFV1239877878-1049",
-    "forNamn": "Jan",
-    "efterNamn": "Nilsson",
-    "uppdrag":[
-    	{
-    	 	"enhet":"IFV1239877878-1042",
-    	 	"andamal":["Vård och behandling", "Admin"]
-    	}
-    ],
-    "specialiseringar": [
-      {"kod":"Kod1", "namn":"Kirurgi i käkpartiet"}
-    ],
-    "legitimeradeYrkesgrupper": ["Läkare"]
+  "hsaId": "IFV1239877878-1049",
+  "forNamn": "Jan",
+  "efterNamn": "Nilsson",
+  "legitimeradeYrkesgrupper": [
+    "Läkare"
+  ],
+  "specialiseringar": [
+    {
+      "kod": "Kod1",
+      "namn": "Kirurgi i käkpartiet"
+    }
+  ],
+  "uppdrag": [
+    {
+      "enhet": "IFV1239877878-1042",
+      "andamal": [
+        "Vård och behandling",
+        "Admin"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "displayOrder": 30,
+    "env": "dev",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "IFV1239877878-1042",
+        "beskrivning": "Jan Nilsson (Läkare | WebCert Enhet 1)"
+      }
+    ]
+  }
 }

@@ -1,13 +1,28 @@
 {
-    "hsaId": "adamo",
-	"forNamn": "Adamo",
-	"efterNamn": "Admin",
-    "uppdrag":[
-    	{
-    		"enhet": "centrum-vast"
-    	},
-    	{
-    		"enhet": "centrum-ost"
-    	}
+  "hsaId": "adamo",
+  "forNamn": "Adamo",
+  "efterNamn": "Admin",
+  "uppdrag": [
+    {
+      "enhet": "centrum-vast"
+    },
+    {
+      "enhet": "centrum-ost"
+    }
+  ],
+  "fakeProperties": {
+    "displayOrder": 190,
+    "env": "dev",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "centrum-vast",
+        "beskrivning": "Adamo Admin (Vårdadmin | Centrum Väst)"
+      },
+      {
+        "forvaldEnhet": "centrum-ost",
+        "beskrivning": "Adamo Admin (Vårdadmin | Centrum Öst)"
+      }
     ]
+  }
 }

@@ -1,18 +1,21 @@
 {
+  "hsaId": "TSTNMT2321000156-105W",
   "forNamn": "Kerstin",
   "efterNamn": "Johansson",
-  "hsaId": "TSTNMT2321000156-105W",
   "uppdrag": [
     {
       "vardgivare": "TSTNMT2321000156-105M",
       "enhet": "TSTNMT2321000156-105P",
-      "systemRoles": ["INTYG;Rehab-TSTNMT2321000156-105P"]
+      "systemRoles": [
+        "INTYG;Rehab-TSTNMT2321000156-105P"
+      ]
     },
     {
       "vardgivare": "TSTNMT2321000156-105M",
       "enhet": "TSTNMT2321000156-105Q",
-      "systemRoles":
-        ["INTYG;Rehab-TSTNMT2321000156-105Q"]
+      "systemRoles": [
+        "INTYG;Rehab-TSTNMT2321000156-105Q"
+      ]
     }
   ]
 }

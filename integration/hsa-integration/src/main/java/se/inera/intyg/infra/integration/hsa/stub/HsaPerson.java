@@ -44,6 +44,8 @@ public class HsaPerson {
 
     private String forskrivarKod;
 
+    private FakeProperties fakeProperties;
+
 
     // ~ Constructors
     // ~ =====================================================================================
@@ -141,6 +143,14 @@ public class HsaPerson {
 
     public void setForskrivarKod(String forskrivarKod) {
         this.forskrivarKod = forskrivarKod;
+    }
+
+    public FakeProperties getFakeProperties() {
+        return fakeProperties;
+    }
+
+    public void setFakeProperties(FakeProperties fakeProperties) {
+        this.fakeProperties = fakeProperties;
     }
 
 }

@@ -1,6 +1,7 @@
 {
-	"hsaId": "pelle-uppdragslos",
-	"uppdrag": [
-
-	]
+  "hsaId": "pelle-uppdragslos",
+  "forNamn": "Pelle",
+  "efterNamn": "Uppdragslös",
+  "uppdrag": [
+  ]
 }

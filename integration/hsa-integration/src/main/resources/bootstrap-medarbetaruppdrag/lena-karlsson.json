@@ -1,11 +1,24 @@
 {
-    "hsaId": "IFV1239877878-104N",
-    "uppdrag":[
-    	{
-    		"enhet": "IFV1239877878-1045",
-            "andamal": [
-              "Vård och behandling"
-            ]
-    	}
+  "hsaId": "IFV1239877878-104N",
+  "forNamn": "Lena",
+  "efterNamn": "Karlsson",
+  "uppdrag": [
+    {
+      "enhet": "IFV1239877878-1045",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "displayOrder": 100,
+    "env": "dev",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "IFV1239877878-1045",
+        "beskrivning": "Lena Karlsson (Vårdadmin | WebCert Enhet 2 + 2UE)"
+      }
     ]
+  }
 }

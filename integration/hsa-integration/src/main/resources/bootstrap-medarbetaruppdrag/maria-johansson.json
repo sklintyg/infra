@@ -1,10 +1,10 @@
 {
-    "hsaId": "TSTNMT2321000156-1028",
-    "forNamn": "Maria",
-    "efterNamn": "Johansson",
-    "uppdrag":[
-        {
-            "enhet": "TSTNMT2321000156-1003"
-        }
-    ]
+  "hsaId": "TSTNMT2321000156-1028",
+  "forNamn": "Maria",
+  "efterNamn": "Johansson",
+  "uppdrag": [
+    {
+      "enhet": "TSTNMT2321000156-1003"
+    }
+  ]
 }

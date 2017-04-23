@@ -1,14 +1,25 @@
 {
-    "hsaId": "IFV1239877878-104M",
-    "forNamn": "Anders",
-    "efterNamn": "Larsson",
-    "uppdrag":[
-    	{
-    		"enhet":"IFV1239877878-1045",
-            "andamal":[
-                "Vård och behandling"
-            ]
-    	}
-    ],
-    "befattningsKod": "204010"
+  "hsaId": "IFV1239877878-104M",
+  "forNamn": "Anders",
+  "efterNamn": "Larsson",
+  "uppdrag": [
+    {
+      "enhet": "IFV1239877878-1045",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "befattningsKod": "204010",
+  "fakeProperties": {
+    "displayOrder": 90,
+    "env": "dev",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "IFV1239877878-1045",
+        "beskrivning": "Anders Larsson (AT Läkare | WebCert Enhet 2 + 2UE)"
+      }
+    ]
+  }
 }

@@ -1,12 +1,25 @@
 {
   "hsaId": "TSTNMT2321000156-100L",
-  "uppdrag":[
+  "forNamn": "Åsa",
+  "efterNamn": "Svensson",
+  "uppdrag": [
     {
-      "enhet":"TSTNMT2321000156-1003",
-      "andamal":[
+      "enhet": "TSTNMT2321000156-1003",
+      "andamal": [
         "Vård och behandling",
         "Admin"
       ]
     }
-  ]
+  ],
+  "fakeProperties": {
+    "displayOrder": 280,
+    "env": "demo",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-1003",
+        "beskrivning": "Åsa Svensson (NMT variabel testperson)"
+      }
+    ]
+  }
 }

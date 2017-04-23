@@ -1,10 +1,14 @@
 {
   "hsaId": "TSTNMT2321000156-998V",
+  "forNamn": "Ralf",
+  "efterNamn": "Enhetslöse",
   "uppdrag": [
     {
       "vardgivare": "TSTNMT2321000156-105M",
       "enhet": "TSTNMT2321000156-105N",
-      "systemRoles": ["INTYG;Rehab-some-other-careunit"]
+      "systemRoles": [
+        "INTYG;Rehab-some-other-careunit"
+      ]
     }
   ]
 }

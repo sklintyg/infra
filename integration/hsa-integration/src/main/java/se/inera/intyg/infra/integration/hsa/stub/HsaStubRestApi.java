@@ -95,4 +95,12 @@ public class HsaStubRestApi {
         hsaServiceStub.updateHsaPersonName(person.getHsaId(), person.getForNamn(), person.getEfterNamn());
         return Response.ok().build();
     }
+
+    @GET
+    @Path("/person")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<HsaPerson> getHsaPerson() {
+        return hsaServiceStub.getHsaPerson();
+    }
+
 }

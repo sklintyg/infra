@@ -81,6 +81,7 @@ public class BootstrapBean {
     private void addVardgivare(Resource res) throws IOException {
         Vardgivare vardgivare = objectMapper.readValue(res.getInputStream(), Vardgivare.class);
         hsaServiceStub.getVardgivare().add(vardgivare);
+        hsaServiceStub.markAsReadOnly(vardgivare.getId());
         LOG.debug("Loaded vardgivare " + vardgivare.getId());
     }
 }

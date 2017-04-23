@@ -1,10 +1,22 @@
 {
-    "hsaId": "hansolo",
-	"forNamn": "Han",
-	"efterNamn": "Solo",
-    "uppdrag":[
-    	{
-    		"enhet": "centrum-norr"
-    	}
+  "hsaId": "hansolo",
+  "forNamn": "Han",
+  "efterNamn": "Solo",
+  "uppdrag": [
+    {
+      "enhet": "centrum-norr"
+    }
+  ],
+  "forskrivarKod": "2481632",
+  "fakeProperties": {
+    "displayOrder": 230,
+    "readOnly": true,
+    "env": "dev",
+    "logins": [
+      {
+        "forvaldEnhet": "centrum-norr",
+        "beskrivning": "Han Solo (Vårdadmin | Centrum Norr)"
+      }
     ]
+  }
 }

@@ -1,10 +1,21 @@
 {
-    "hsaId": "adam",
-    "forNamn": "Adam",
-	"efterNamn": "Admin",
-    "uppdrag":[
-    	{
-    		"enhet": "centrum-vast"
-    	}
+  "hsaId": "adam",
+  "forNamn": "Adam",
+  "efterNamn": "Admin",
+  "uppdrag": [
+    {
+      "enhet": "centrum-vast"
+    }
+  ],
+  "fakeProperties": {
+    "displayOrder": 180,
+    "env": "dev",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "centrum-vast",
+        "beskrivning": "Adam Admin (Vårdadmin | Centrum Väst)"
+      }
     ]
+  }
 }

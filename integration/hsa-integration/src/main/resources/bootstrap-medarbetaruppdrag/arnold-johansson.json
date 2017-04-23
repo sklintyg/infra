@@ -1,0 +1,30 @@
+{
+  "hsaId": "TSTNMT2321000156-1079",
+  "forNamn": "Arnold",
+  "efterNamn": "Johansson",
+  "legitimeradeYrkesgrupper": [
+    "Läkare"
+  ],
+  "uppdrag": [
+    {
+      "vardgivare": "TSTNMT2321000156-102Q",
+      "enhet": "TSTNMT2321000156-1077",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "befattningsKod": "204010",
+  "forskrivarKod": "9400001",
+  "fakeProperties": {
+    "displayOrder": 10,
+    "env": "demo",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-1077",
+        "beskrivning": "Arnold Johansson (Läkare | Har intyg och ärenden)"
+      }
+    ]
+  }
+}

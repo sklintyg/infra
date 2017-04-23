@@ -1,11 +1,24 @@
 {
-    "hsaId": "IFV1239877878-104K",
-    "uppdrag":[
-    	{
-    		"enhet":"IFV1239877878-104D",
-    		"andamal":[
-				"Statistik"
-			]
-    	}
+  "hsaId": "IFV1239877878-104K",
+  "forNamn": "Anna",
+  "efterNamn": "Persson",
+  "uppdrag": [
+    {
+      "enhet": "IFV1239877878-104D",
+      "andamal": [
+        "Statistik"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "displayOrder": 80,
+    "env": "dev",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "IFV1239877878-104D",
+        "beskrivning": "Anna Persson (Statistik | Webcert Enhet 3)"
+      }
     ]
+  }
 }

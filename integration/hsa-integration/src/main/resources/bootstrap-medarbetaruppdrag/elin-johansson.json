@@ -1,16 +1,33 @@
 {
-    "hsaId": "TSTNMT2321000156-1067",
-	"forNamn": "Elin",
-	"efterNamn": "Johansson",
-    "uppdrag":[
-    	{
-    		"enhet": "TSTNMT2321000156-1062",
-            "andamal":["Vård och behandling"]
-    	},
-		{
-			"enhet": "TSTNMT2321000156-1063",
-			"andamal":["Vård och behandling"]
-		}
-    ],
-	"legitimeradeYrkesgrupper" : [ "Läkare"	]
+  "hsaId": "TSTNMT2321000156-1067",
+  "forNamn": "Elin",
+  "efterNamn": "Johansson",
+  "legitimeradeYrkesgrupper": [
+    "Läkare"
+  ],
+  "uppdrag": [
+    {
+      "enhet": "TSTNMT2321000156-1062",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    },
+    {
+      "enhet": "TSTNMT2321000156-1063",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "displayOrder": 380,
+    "env": "demo",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-1062",
+        "beskrivning": "Elin Johansson (Läkare | Cambio)"
+      }
+    ]
+  }
 }

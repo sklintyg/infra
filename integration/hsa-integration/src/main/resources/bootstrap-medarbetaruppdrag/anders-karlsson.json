@@ -1,18 +1,35 @@
 {
-	"hsaId": "TSTNMT2321000156-105S",
-	"forNamn": "Anders",
-	"efterNamn": "Karlsson",
-	"legitimeradeYrkesgrupper" : [ "Läkare"	],
-	"uppdrag": [
-		{
-			"vardgivare": "TSTNMT2321000156-105M",
-			"enhet": "TSTNMT2321000156-105N",
-			"andamal": [ "Vård och behandling" ]
-		},
-		{
-			"vardgivare": "TSTNMT2321000156-105M",
-			"enhet": "TSTNMT2321000156-105P",
-			"andamal": [ "Vård och behandling" ]
-		}
-	]
+  "hsaId": "TSTNMT2321000156-105S",
+  "forNamn": "Anders",
+  "efterNamn": "Karlsson",
+  "legitimeradeYrkesgrupper": [
+    "Läkare"
+  ],
+  "uppdrag": [
+    {
+      "vardgivare": "TSTNMT2321000156-105M",
+      "enhet": "TSTNMT2321000156-105N",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    },
+    {
+      "vardgivare": "TSTNMT2321000156-105M",
+      "enhet": "TSTNMT2321000156-105P",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "displayOrder": 360,
+    "env": "demo",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-105N",
+        "beskrivning": "Anders Karlsson (Läkare 2 | Rehabstöd)"
+      }
+    ]
+  }
 }
