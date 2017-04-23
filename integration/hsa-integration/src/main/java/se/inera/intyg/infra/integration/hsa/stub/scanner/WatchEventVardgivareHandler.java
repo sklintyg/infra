@@ -31,6 +31,7 @@ public class WatchEventVardgivareHandler implements ScanEventHandler {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    @Override
     public void created(Path path) {
         LOG.debug("New path created: " + path.toString());
         try {
@@ -53,6 +54,7 @@ public class WatchEventVardgivareHandler implements ScanEventHandler {
         }
     }
 
+    @Override
     public void modified(Path path) {
         LOG.debug("New path modified: " + path.toString());
 
@@ -81,7 +83,7 @@ public class WatchEventVardgivareHandler implements ScanEventHandler {
         }
     }
 
-
+    @Override
     public void deleted(Path path) {
         LOG.debug("New path deleted: " + path.toString());
 
