@@ -14,8 +14,6 @@
       ]
     }
   ],
-  "befattningsKod": "204010",
-  "forskrivarKod": "9400001",
   "fakeProperties": {
     "displayOrder": 10,
     "env": "demo",
