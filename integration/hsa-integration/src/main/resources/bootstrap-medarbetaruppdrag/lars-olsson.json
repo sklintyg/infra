@@ -23,13 +23,14 @@
     }
   ],
   "fakeProperties": {
+    "allowedInApplications": [],
     "displayOrder": 390,
     "env": "demo",
     "readOnly": true,
     "logins": [
       {
         "forvaldEnhet": "TSTNMT2321000156-1062",
-        "beskrivning": "Lars Olsson (Vårdadmin | Cambio | 2 enheter)"
+        "beskrivning": "Lars Olsson (Vårdadmin | Cambio | 2 VE)"
       }
     ]
   }

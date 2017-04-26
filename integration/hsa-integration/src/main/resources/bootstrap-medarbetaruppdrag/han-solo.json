@@ -7,8 +7,8 @@
       "enhet": "centrum-norr"
     }
   ],
-  "forskrivarKod": "2481632",
   "fakeProperties": {
+    "allowedInApplications": ["WC"],
     "displayOrder": 230,
     "readOnly": true,
     "env": "dev",

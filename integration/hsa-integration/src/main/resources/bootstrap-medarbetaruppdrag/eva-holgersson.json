@@ -20,23 +20,27 @@
       "enhet": "centrum-vast",
       "andamal": [
         "Vård och behandling"
-      ]
+      ],
+      "systemRoles": []
     },
     {
       "enhet": "linkoping",
       "andamal": [
         "Vård och behandling"
-      ]
+      ],
+      "systemRoles": []
     },
     {
       "vardgivare": "ostergotland",
       "enhet": "enhet-finns-ej",
       "andamal": [
         "Vård och behandling"
-      ]
+      ],
+      "systemRoles": []
     }
   ],
   "fakeProperties": {
+    "allowedInApplications": [],
     "displayOrder": 140,
     "env": "dev",
     "readOnly": true,

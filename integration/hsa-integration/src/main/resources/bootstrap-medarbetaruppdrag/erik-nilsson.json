@@ -14,6 +14,7 @@
   "befattningsKod": "204090",
   "forskrivarKod": "9100009",
   "fakeProperties": {
+    "allowedInApplications": [],
     "displayOrder": 330,
     "env": "demo",
     "readOnly": true,

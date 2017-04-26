@@ -12,6 +12,7 @@
   ],
   "befattningsKod": "204010",
   "fakeProperties": {
+    "allowedInApplications": [],
     "displayOrder": 90,
     "env": "dev",
     "readOnly": true,

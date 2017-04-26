@@ -17,6 +17,7 @@
     }
   ],
   "fakeProperties": {
+    "allowedInApplications": [],
     "displayOrder": 350,
     "env": "demo",
     "readOnly": true,

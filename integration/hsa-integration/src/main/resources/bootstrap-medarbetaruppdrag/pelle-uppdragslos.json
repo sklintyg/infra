@@ -3,5 +3,15 @@
   "forNamn": "Pelle",
   "efterNamn": "Uppdragslös",
   "uppdrag": [
-  ]
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["RS"],
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "",
+        "beskrivning": "Pelle Uppdragslös (Saknar medarbetaruppdrag)"
+      }
+    ]
+  }
 }

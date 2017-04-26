@@ -10,6 +10,16 @@
         "INTYG;Rehab-some-other-careunit"
       ]
     }
-  ]
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["RS"],
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-105N",
+        "beskrivning": "Ralf Enhetlöse (saknar rätt enhet på systemroll)"
+      }
+    ]
+  }
 }
 
