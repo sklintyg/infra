@@ -22,5 +22,15 @@
         "Vård och behandling"
       ]
     }
-  ]
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["RS"],
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "",
+        "beskrivning": "Peter Enkel (Läkare | 1 VE med underenhet)"
+      }
+    ]
+  }
 }

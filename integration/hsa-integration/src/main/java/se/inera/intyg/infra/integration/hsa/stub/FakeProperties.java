@@ -33,6 +33,7 @@ public class FakeProperties {
     private String env;
     private boolean readOnly = false;
 
+    private List<String> allowedInApplications = new ArrayList<>();
     private List<FakeLogins> logins = new ArrayList<FakeLogins>();
 
     public FakeProperties() {
@@ -69,5 +70,13 @@ public class FakeProperties {
 
     public void setLogins(List<FakeLogins> logins) {
         this.logins = logins;
+    }
+
+    public List<String> getAllowedInApplications() {
+        return allowedInApplications;
+    }
+
+    public void setAllowedInApplications(List<String> allowedInApplications) {
+        this.allowedInApplications = allowedInApplications;
     }
 }

@@ -7,5 +7,15 @@
       "vardgivare": "TSTNMT2321000156-105M",
       "enhet": "TSTNMT2321000156-105N"
     }
-  ]
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["RS"],
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-105N",
+        "beskrivning": "Rolf Rollöse (saknar HSA systemroll Rehab för enheter)"
+      }
+    ]
+  }
 }

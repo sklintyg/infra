@@ -17,5 +17,18 @@
         "INTYG;Rehab-TSTNMT2321000156-105Q"
       ]
     }
-  ]
+  ],
+  "fakeProperties": {
+    "allowedInApplications": [
+      "RS"
+    ],
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-105P",
+        "beskrivning": "Kerstin Johansson (Vårdadmin 2 | Rehabstöd)"
+      }
+    ]
+
+  }
 }

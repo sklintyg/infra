@@ -10,5 +10,15 @@
         "INTYG;Rehab-TSTNMT2321000156-105N"
       ]
     }
-  ]
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["RS"],
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-105N",
+        "beskrivning": "Nils Ericsson (Vårdadmin 1 | Rehabstöd))"
+      }
+    ]
+  }
 }
