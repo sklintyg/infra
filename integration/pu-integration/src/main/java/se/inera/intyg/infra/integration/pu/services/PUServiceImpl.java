@@ -52,9 +52,6 @@ public class PUServiceImpl implements PUService {
     @Value("${putjanst.logicaladdress}")
     private String logicaladdress;
 
-    @Value("${putjanst.endpoint.url}")
-    private String endpointUrl;
-
     @Override
     @Cacheable(value = PuCacheConfiguration.PERSON_CACHE_NAME,
             key = "#personId",
@@ -95,8 +92,7 @@ public class PUServiceImpl implements PUService {
 
             return new PersonSvar(person, PersonSvar.Status.FOUND);
         } catch (WebServiceException e) {
-            LOG.error("Error contacting PU-service at {}: {}", endpointUrl, e.getMessage());
-            LOG.warn("Error occured, no person '{}' found", personId.getPnrHash());
+            LOG.warn("Error occured, no person '{}' found.", personId.getPnrHash());
             return new PersonSvar(null, PersonSvar.Status.ERROR);
         }
     }
