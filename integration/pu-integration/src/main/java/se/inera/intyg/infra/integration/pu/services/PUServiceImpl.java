@@ -18,17 +18,13 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
-import javax.xml.ws.WebServiceException;
-
+import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-
-import com.google.common.annotations.VisibleForTesting;
-
 import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
 import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
@@ -44,6 +40,8 @@ import se.riv.population.residentmaster.types.v1.NamnTYPE;
 import se.riv.population.residentmaster.types.v1.ResidentType;
 import se.riv.population.residentmaster.types.v1.SvenskAdressTYPE;
 
+import javax.xml.ws.WebServiceException;
+
 public class PUServiceImpl implements PUService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PUServiceImpl.class);
@@ -53,6 +51,9 @@ public class PUServiceImpl implements PUService {
 
     @Value("${putjanst.logicaladdress}")
     private String logicaladdress;
+
+    @Value("${putjanst.endpoint.url}")
+    private String endpointUrl;
 
     @Override
     @Cacheable(value = PuCacheConfiguration.PERSON_CACHE_NAME,
@@ -94,6 +95,7 @@ public class PUServiceImpl implements PUService {
 
             return new PersonSvar(person, PersonSvar.Status.FOUND);
         } catch (WebServiceException e) {
+            LOG.error("Error contacting PU-service at {}: {}", endpointUrl, e.getMessage());
             LOG.warn("Error occured, no person '{}' found", personId.getPnrHash());
             return new PersonSvar(null, PersonSvar.Status.ERROR);
         }
