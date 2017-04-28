@@ -20,18 +20,24 @@ package se.inera.intyg.infra.integration.pu.stub;
 
 import se.riv.population.residentmaster.types.v1.ResidentType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ResidentStore {
 
     private final Map<String, ResidentType> residents = new HashMap<>();
 
-    public void addUser(ResidentType residentPost) {
+    void addUser(ResidentType residentPost) {
         residents.put(residentPost.getPersonpost().getPersonId(), residentPost);
     }
 
-    public ResidentType get(String id) {
+    ResidentType get(String id) {
         return residents.get(id);
+    }
+
+    List<ResidentType> getAll() {
+        return new ArrayList<>(residents.values());
     }
 }
