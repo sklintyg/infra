@@ -22,8 +22,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 
 import javax.annotation.PostConstruct;
@@ -31,6 +33,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+@Service
+@Profile({ "dev", "wc-hsa-stub", "wc-all-stubs" })
 public class BootstrapBean {
     private static final Logger LOG = LoggerFactory.getLogger(BootstrapBean.class);
 

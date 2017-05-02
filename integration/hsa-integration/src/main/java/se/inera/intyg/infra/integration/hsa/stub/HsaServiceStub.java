@@ -18,19 +18,23 @@
  */
 package se.inera.intyg.infra.integration.hsa.stub;
 
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.integration.hsa.model.Mottagning;
+import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import se.inera.intyg.infra.integration.hsa.model.Mottagning;
-import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
-import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-
 /**
  * @author johannesc
  */
+@Service
+@Profile({ "dev", "wc-hsa-stub", "wc-all-stubs", "testability-api" })
 public class HsaServiceStub {
 
     // Data cache

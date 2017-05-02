@@ -26,19 +26,12 @@
                             http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
                             http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
-  <beans profile="dev,wc-all-stubs,wc-hsa-stub,testability-api">
-    <bean id="hsaServiceStub" class="se.inera.intyg.infra.integration.hsa.stub.HsaServiceStub"/>
-  </beans>
-
   <beans profile="dev,wc-all-stubs,wc-hsa-stub">
-
     <jaxws:endpoint address="/hsa-authorization" implementor="se.inera.intyg.infra.integration.hsa.stub.GetAuthorizationsForPersonResponderStub"/>
     <jaxws:endpoint address="/hsa-employee" implementor="se.inera.intyg.infra.integration.hsa.stub.GetEmployeeResponderStub"/>
     <jaxws:endpoint address="/hsa-healthcareunit" implementor="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitResponderStub"/>
     <jaxws:endpoint address="/hsa-healthcareunit-members" implementor="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitMembersResponderStub"/>
     <jaxws:endpoint address="/hsa-unit" implementor="se.inera.intyg.infra.integration.hsa.stub.GetUnitResponderStub"/>
-
-    <bean id="bootstrapBean" class="se.inera.intyg.infra.integration.hsa.stub.BootstrapBean"/>
   </beans>
 
   <beans profile="dev,testability-api">
