@@ -15,6 +15,17 @@ public class DynamicLink {
 
     private String target = null;
 
+    public DynamicLink() {
+    }
+
+    public DynamicLink(String key, String url, String text, String tooltip, String target) {
+        this.key = key;
+        this.url = url;
+        this.text = text;
+        this.tooltip = tooltip;
+        this.target = target;
+    }
+
     public String getKey() {
         return key;
     }
@@ -53,5 +64,24 @@ public class DynamicLink {
 
     public void setTarget(String target) {
         this.target = target;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof DynamicLink)) {
+            return false;
+        }
+
+        DynamicLink that = (DynamicLink) o;
+
+        return key.equals(that.key);
+    }
+
+    @Override
+    public int hashCode() {
+        return key.hashCode();
     }
 }
