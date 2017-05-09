@@ -76,7 +76,24 @@ The HSA-integration requires the following properties being set:
 - ntjp.ws.key.manager.password=[some password]
 - ntjp.ws.truststore.password=[some password]
 
-## Licens
+# Dynamisk laddning av medarbetaruppdrag och vårdgivare
+Från och med Webcert 5.3 och Rehabstöd 1.4 (develop) kan man dynamiskt skapa upp fejkinloggningsidentiteter genom att kopiera in JSON-dokument i utvalda mappar på målmiljön. Se nedan.
+Se till att följande property finns i t.ex. rehabstod.properties:
+
+    hsa.stub.additional.identities.folder=${rehabstod.resources.folder}/hsadata
+
+Den utpekade katalogen (t.ex. /opt/inera/rehabstod-resources/hsadata kommer få två tomma kataloger i sig efter uppstart: _/person_ och _/vardgivare_
+
+I respektive katalog kan man sedan kopiera in JSON-filer som har samma struktur som medarbetaruppdragen och vardgivarna här: 
+
+https://github.com/sklintyg/infra/tree/develop/integration/hsa-integration/src/main/resources
+
+Filerna kommer plockas upp automatiskt inom några sekunder och läsas in i HSA-stubben. Observera att:
+ 
+* Om man vill lägga till både vårdgivare och medarbetaruppdrag så är det säkrast att först kopiera in filen med vårdgivaren och sedan kopiera in medarbetaruppdrag.
+* Man _inte_ skall/kan ändra på identiteter som ingår i standarduppsättningen.
+
+# Licens
 Copyright (C) 2016 Inera AB (http://www.inera.se)
 
 Intyg Infra is free software: you can redistribute it and/or modify it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
