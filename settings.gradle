@@ -2,6 +2,7 @@ rootProject.name = 'infra'
 
 include ':common-cache-core'
 include ':common-cache-metrics'
+include ':grp-stub'
 include ':hsa-integration'
 include ':pu-integration'
 include ':log-messages'
@@ -15,6 +16,7 @@ include ':dynamiclink'
 project(':common-cache-core').projectDir = "$rootDir/cache/core" as File
 project(':common-cache-metrics').projectDir = "$rootDir/cache/metrics" as File
 project(':dynamiclink').projectDir = "$rootDir/dynamiclink" as File
+project(':grp-stub').projectDir = "$rootDir/integration/grp-stub" as File
 project(':hsa-integration').projectDir = "$rootDir/integration/hsa-integration" as File
 project(':pu-integration').projectDir = "$rootDir/integration/pu-integration" as File
 project(':log-messages').projectDir = "$rootDir/loggtjanst/log-messages" as File
