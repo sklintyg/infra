@@ -1,6 +1,4 @@
 dependencies {
-  compile project(':common-cache-core')
-
   compile "se.funktionstjanster.grp:funktionstjanster-grp-schemas:${funktionstjansterGrpSchemasVersion}"
 
   compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
@@ -14,6 +12,4 @@ dependencies {
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
 
   compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
-
-  testCompile 'org.awaitility:awaitility:2.0.0'
 }

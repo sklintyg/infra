@@ -18,12 +18,9 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import com.google.common.base.Joiner;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import se.funktionstjanster.grp.v1.AuthenticateRequestType;
 import se.funktionstjanster.grp.v1.CollectRequestType;
 import se.funktionstjanster.grp.v1.CollectResponseType;
@@ -35,14 +32,16 @@ import se.funktionstjanster.grp.v1.Property;
 import se.funktionstjanster.grp.v1.SignRequestType;
 import se.funktionstjanster.grp.v1.SignatureFileRequestType;
 
-import com.google.common.base.Joiner;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Magnus Ekstrand on 2017-05-16.
  */
 public class GrpServicePortTypeStub implements GrpServicePortType {
 
-    private static final String PERSON_ID = "19121212-1212";
+    public static final String PERSON_ID = "19121212-1212";
 
     @Autowired
     private GrpServiceStub serviceStub;
@@ -54,16 +53,17 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
         // Build the response
         OrderResponseType response = new OrderResponseType();
 
-        if (isNullOrEmpty(authenticateRequestType.getTransactionId())) {
-            response.setTransactionId(UUID.randomUUID().toString());
-        } else {
-            response.setTransactionId(authenticateRequestType.getTransactionId());
+        String transactionId = authenticateRequestType.getTransactionId();
+        if (isBlank(transactionId)) {
+            transactionId = UUID.randomUUID().toString();
         }
+        response.setTransactionId(transactionId);
 
         response.setOrderRef(UUID.randomUUID().toString());
         response.setAutoStartToken("start");
 
-        // Update the signature status
+        // Update GRP service stub
+        serviceStub.putOrderRef(response.getTransactionId(), response.getOrderRef());
         serviceStub.updateStatus(response.getOrderRef(), ProgressStatusType.STARTED);
 
         return response;
@@ -76,13 +76,17 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
         // Build the response
         CollectResponseType response = new CollectResponseType();
 
-        response.setProgressStatus(serviceStub.getStatus(collectRequestType.getOrderRef()).getStatus());
-
-        if (isNullOrEmpty(collectRequestType.getTransactionId())) {
-            response.setTransactionId(UUID.randomUUID().toString());
-        } else {
-            response.setTransactionId(collectRequestType.getTransactionId());
+        String transactionId = collectRequestType.getTransactionId();
+        if (isBlank(transactionId)) {
+            transactionId = UUID.randomUUID().toString();
         }
+        response.setTransactionId(transactionId);
+
+        String signature = "{\"signatur\":\"SIGNATURE\"}";
+        response.setSignature(signature);
+
+        String orderRef = serviceStub.getOrderRef(response.getTransactionId());
+        response.setProgressStatus(serviceStub.getStatus(orderRef).getStatus());
 
         Property p = new Property();
         p.setName("Subject.SerialNumber");
@@ -108,10 +112,10 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
         if (request == null) {
             messages.add("AuthenticateRequestType cannot be null");
         } else {
-            if (isNullOrEmpty(request.getPolicy())) {
+            if (isBlank(request.getPolicy())) {
                 messages.add("A policy must be supplied");
             }
-            if (isNullOrEmpty(request.getProvider())) {
+            if (isBlank(request.getProvider())) {
                 messages.add("A provider must be supplied");
             }
         }
@@ -127,13 +131,13 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
         if (request == null) {
             messages.add("CollectRequestType cannot be null");
         } else {
-            if (isNullOrEmpty(request.getPolicy())) {
+            if (isBlank(request.getPolicy())) {
                 messages.add("A policy must be supplied");
             }
-            if (isNullOrEmpty(request.getProvider())) {
+            if (isBlank(request.getProvider())) {
                 messages.add("A provider must be supplied");
             }
-            if (isNullOrEmpty(request.getOrderRef())) {
+            if (isBlank(request.getOrderRef())) {
                 messages.add("An order reference must be supplied");
             }
         }
@@ -141,10 +145,6 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
         if (messages.size() > 0) {
             throw new GrpFault(Joiner.on(", ").join(messages));
         }
-    }
-
-    private boolean isNullOrEmpty(String s) {
-        return s == null || s.isEmpty();
     }
 
 }

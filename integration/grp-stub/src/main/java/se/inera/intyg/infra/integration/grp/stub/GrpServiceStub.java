@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,10 +37,34 @@ import se.funktionstjanster.grp.v1.ProgressStatusType;
 public class GrpServiceStub {
 
     private Map<String, ProgressStatusType> signatureStatus = new ConcurrentHashMap<>();
+    private Map<String, String> orderRefMapping = new ConcurrentHashMap<>();
+
 
     public synchronized GrpSignatureStatus getStatus(String orderRef) {
         ProgressStatusType status = signatureStatus.get(orderRef);
         return new GrpSignatureStatus(orderRef, status);
+    }
+
+    public synchronized String getOrderRef(String transactionId) throws GrpFault {
+        String orderRef = orderRefMapping.get(transactionId);
+        if (isBlank(orderRef)) {
+            throw new GrpFault("No mapping between transactionId and orderRef was found");
+        }
+        return orderRef;
+    }
+
+    public synchronized void putOrderRef(String transactionId, String orderRef) throws GrpFault  {
+        if (transactionId == null || orderRef == null) {
+            throw new GrpFault("Arguments must have values");
+        }
+        if (orderRefMapping.containsKey(transactionId)) {
+            throw new GrpFault("The transactionId key is already associated with a value.");
+        }
+        try {
+            orderRefMapping.put(transactionId, orderRef);
+        } catch (Exception exception) {
+            throw new GrpFault(exception.getMessage());
+        }
     }
 
     public synchronized boolean updateStatus(GrpSignatureStatus status) throws GrpFault {

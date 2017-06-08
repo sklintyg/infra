@@ -39,6 +39,13 @@ public class GrpStubRestApi {
     private GrpServiceStub serviceStub;
 
     @GET
+    @Path("/orderref/{transactionId}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getOrderRef(@PathParam("transactionId") String transactionId) throws GrpFault {
+        return serviceStub.getOrderRef(transactionId);
+    }
+
+    @GET
     @Path("/status/{orderRef}")
     @Produces(MediaType.APPLICATION_JSON)
     public GrpSignatureStatus getSignatureStatus(@PathParam("orderRef") String orderRef) {
