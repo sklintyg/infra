@@ -19,6 +19,9 @@
     "displayOrder": 340,
     "env": "demo",
     "readOnly": true,
+    "extraContextProperties": {
+      "pdlConsentGiven": "true"
+    },
     "logins": [
       {
         "forvaldEnhet": "TSTNMT2321000156-105F",

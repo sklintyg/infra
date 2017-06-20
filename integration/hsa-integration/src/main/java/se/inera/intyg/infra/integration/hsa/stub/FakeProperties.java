@@ -21,7 +21,9 @@ package se.inera.intyg.infra.integration.hsa.stub;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Magnus Ekstrand on 2017-04-12.
@@ -35,6 +37,8 @@ public class FakeProperties {
 
     private List<String> allowedInApplications = new ArrayList<>();
     private List<FakeLogins> logins = new ArrayList<FakeLogins>();
+
+    private Map<String, String> extraContextProperties = new HashMap<>();
 
     public FakeProperties() {
         // Needed for deserialization
@@ -78,5 +82,13 @@ public class FakeProperties {
 
     public void setAllowedInApplications(List<String> allowedInApplications) {
         this.allowedInApplications = allowedInApplications;
+    }
+
+    public Map<String, String> getExtraContextProperties() {
+        return extraContextProperties;
+    }
+
+    public void setExtraContextProperties(Map<String, String> extraContextProperties) {
+        this.extraContextProperties = extraContextProperties;
     }
 }

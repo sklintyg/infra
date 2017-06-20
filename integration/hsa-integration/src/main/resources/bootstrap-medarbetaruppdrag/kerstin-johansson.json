@@ -23,6 +23,9 @@
       "RS"
     ],
     "readOnly": true,
+    "extraContextProperties": {
+      "pdlConsentGiven": "true"
+    },
     "logins": [
       {
         "forvaldEnhet": "TSTNMT2321000156-105P",
