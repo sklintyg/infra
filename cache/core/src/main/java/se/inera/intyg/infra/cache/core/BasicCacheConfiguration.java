@@ -55,8 +55,8 @@ import java.util.concurrent.TimeUnit;
 public class BasicCacheConfiguration {
 
     private static final Duration DEFAULT_EXPIRY_DURATION = Duration.ONE_MINUTE;
-    private static final long JOIN_TIMEOUT = 10000L;
-    public static final int LOC_PORT_RANGE = 9;
+    private static final long JOIN_TIMEOUT = 20000L;
+    private static final int LOC_PORT_RANGE = 9;
 
     @Value("${cache.bindport}")
     private String bindport;
