@@ -18,15 +18,15 @@
  */
 package se.inera.intyg.infra.security.authorities;
 
-import se.inera.intyg.infra.security.common.model.Privilege;
-import se.inera.intyg.infra.security.common.model.Role;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import se.inera.intyg.infra.security.common.model.Privilege;
+import se.inera.intyg.infra.security.common.model.Role;
 
 /**
  * Created by Magnus Ekstrand on 25/11/15.
@@ -40,10 +40,6 @@ public final class AuthoritiesResolverUtil {
         Map<String, Role> map = new HashMap<>();
         map.put(role.getName(), role);
         return map;
-//        return Collections.unmodifiableMap(Stream
-//                .of(new AbstractMap.SimpleEntry<String, Role>(role.getName(), role))
-//                .collect(Collectors.toMap(Role::getName, Role::g))
-               // .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
     }
 
     public static Map<String, Privilege> toMap(Collection<Privilege> privileges) {
