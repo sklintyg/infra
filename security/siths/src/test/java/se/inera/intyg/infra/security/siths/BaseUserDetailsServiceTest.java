@@ -581,7 +581,7 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
 
         verify(hsaOrganizationsService).getAuthorizedEnheterForHosPerson(PERSONAL_HSAID);
         verify(hsaPersonService, atLeastOnce()).getHsaPersonInfo(PERSONAL_HSAID);
-        verify(commonFeatureService).getActiveFeatures();
+        verify(commonFeatureService).getActiveFeatures(anyString(), anyString());
     }
 
     @Test
@@ -820,6 +820,6 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         Set<String> availableFeatures = new TreeSet<>();
         availableFeatures.add("feature1");
         availableFeatures.add("feature2");
-        when(commonFeatureService.getActiveFeatures()).thenReturn(availableFeatures);
+        when(commonFeatureService.getActiveFeatures(anyString(), anyString())).thenReturn(availableFeatures);
     }
 }

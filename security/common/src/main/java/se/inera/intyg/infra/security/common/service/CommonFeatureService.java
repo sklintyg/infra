@@ -55,7 +55,7 @@ public interface CommonFeatureService {
     /**
      * Returns a Set containing the names of all features, Webcert and module, that are active.
      */
-    Set<String> getActiveFeatures();
+    Set<String> getActiveFeatures(String... hsaIds);
 
     void setFeature(String key, String value);
 

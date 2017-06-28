@@ -18,6 +18,11 @@
  */
 package se.inera.intyg.infra.security.siths;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.opensaml.saml2.core.Assertion;
 import org.slf4j.Logger;
@@ -28,6 +33,7 @@ import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
 import se.inera.intyg.infra.integration.hsa.model.UserAuthorizationInfo;
 import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
@@ -46,11 +52,6 @@ import se.inera.intyg.infra.security.exception.MissingHsaEmployeeInformation;
 import se.inera.intyg.infra.security.exception.MissingMedarbetaruppdragException;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 /**
  * Base class for providing authorization based on minimal SAML-tickets containing only the employeeHsaId and
  * authnMethod.
@@ -61,28 +62,20 @@ import java.util.Set;
  */
 public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BaseUserDetailsService.class);
-
     protected static final String COMMA = ", ";
     protected static final String SPACE = " ";
-
+    private static final Logger LOG = LoggerFactory.getLogger(BaseUserDetailsService.class);
+    protected CommonAuthoritiesResolver commonAuthoritiesResolver;
     @Autowired(required = false)
     private Optional<CommonFeatureService> commonFeatureService;
-
     @Autowired(required = false)
     private Optional<UserOrigin> userOrigin;
-
     @Autowired
     private HsaOrganizationsService hsaOrganizationsService;
-
     @Autowired
     private HsaPersonService hsaPersonService;
-
     @Autowired
     private AuthenticationLogger monitoringLogService;
-
-    protected CommonAuthoritiesResolver commonAuthoritiesResolver;
-
     private DefaultUserDetailsDecorator defaultUserDetailsDecorator = new DefaultUserDetailsDecorator();
     // ~ API
     // =====================================================================================
@@ -249,11 +242,11 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         IntygUser intygUser = new IntygUser(employeeHsaId);
         decorateIntygUserWithBasicInfo(intygUser, userAuthorizationInfo, personInfo, authenticationScheme);
         decorateIntygUserWithAdditionalInfo(intygUser, personInfo);
-        decorateIntygUserWithAvailableFeatures(intygUser);
         decorateIntygUserWithAuthenticationMethod(intygUser, authenticationScheme);
         decorateIntygUserWithRoleAndAuthorities(intygUser, personInfo, userAuthorizationInfo.getUserCredentials());
         decorateIntygUserWithSystemRoles(intygUser, userAuthorizationInfo.getUserCredentials());
         decorateIntygUserWithDefaultVardenhet(intygUser);
+        decorateIntygUserWithAvailableFeatures(intygUser);
         return intygUser;
     }
 
@@ -285,10 +278,15 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
      *
      * @param intygUser
      */
-    protected void decorateIntygUserWithAvailableFeatures(IntygUser intygUser) {
+    public void decorateIntygUserWithAvailableFeatures(IntygUser intygUser) {
         if (commonFeatureService.isPresent()) {
-            Set<String> availableFeatures = commonFeatureService.get().getActiveFeatures();
-            intygUser.setFeatures(availableFeatures);
+            if (intygUser.getValdVardenhet() != null) {
+                intygUser.setFeatures(commonFeatureService.get().getActiveFeatures(intygUser.getValdVardenhet().getId(),
+                        intygUser.getValdVardgivare().getId()));
+            } else {
+                intygUser.setFeatures(commonFeatureService.get().getActiveFeatures());
+
+            }
         }
     }
 
