@@ -73,5 +73,3 @@ allprojects {
 }
 
 task tagRelease(type: TagReleaseTask)
-
-task testReport(type: SharedTestReportTask)
