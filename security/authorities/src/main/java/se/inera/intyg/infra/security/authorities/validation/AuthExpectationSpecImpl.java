@@ -18,12 +18,6 @@
  */
 package se.inera.intyg.infra.security.authorities.validation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.common.model.Privilege;
 import se.inera.intyg.infra.security.common.model.RequestOrigin;
@@ -31,6 +25,12 @@ import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.infra.security.common.model.UserDetails;
 import se.inera.intyg.infra.security.common.model.UserOriginType;
 import se.inera.intyg.infra.security.common.service.Feature;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by marced on 18/12/15.
@@ -55,8 +55,8 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
     private Optional<String[]> roleConstraints = Optional.empty();
     private Optional<String[]> roleNotConstraints = Optional.empty();
 
-    private Optional<String> privilegeConstraint = Optional.empty();
-    private Optional<String> privilegeNotConstraint = Optional.empty();
+    private List<Optional<String>> privilegeConstraints = new ArrayList<>();
+    private List<Optional<String>> privilegeNotConstraints = new ArrayList<>();
 
     private List<String> errors = new ArrayList<>();
 
@@ -97,12 +97,16 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
             errors.add(String.format("forbidden roles '%s' was present in users roles.", String.join(",", roleNotConstraints.get())));
         }
 
-        if (privilegeConstraint.isPresent() && !checkHasPrivilege(privilegeConstraint.get())) {
-            errors.add(formatPrivilegeError("user does not have mandatory privilege '%s'", privilegeConstraint.get()));
+        for (Optional<String> privilegeConstraint : privilegeConstraints) {
+            if (privilegeConstraint.isPresent() && !checkHasPrivilege(privilegeConstraint.get())) {
+                errors.add(formatPrivilegeError("user does not have mandatory privilege '%s'", privilegeConstraint.get()));
+            }
         }
 
-        if (privilegeNotConstraint.isPresent() && checkHasPrivilege(privilegeNotConstraint.get())) {
-            errors.add(formatPrivilegeError("forbidden privilege '%s' was present in user privileges", privilegeNotConstraint.get()));
+        for (Optional<String> privilegeNotConstraint : privilegeNotConstraints) {
+            if (privilegeNotConstraint.isPresent() && checkHasPrivilege(privilegeNotConstraint.get())) {
+                errors.add(formatPrivilegeError("forbidden privilege '%s' was present in user privileges", privilegeNotConstraint.get()));
+            }
         }
 
         return errors.isEmpty();
@@ -206,15 +210,32 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
 
     @Override
     public AuthExpectationSpecification privilege(String privilegeConstraint) {
-        this.privilegeConstraint = Optional.of(privilegeConstraint);
+        this.privilegeConstraints.add(Optional.of(privilegeConstraint));
+        return this;
+    }
+
+    @Override
+    public AuthExpectationSpecification privilegeIf(String privilegeConstraint, boolean evaluate) {
+        if (evaluate) {
+            this.privilegeConstraints.add(Optional.of(privilegeConstraint));
+        }
         return this;
     }
 
     @Override
     public AuthExpectationSpecification notPrivilege(String privilegeNotConstraint) {
-        this.privilegeNotConstraint = Optional.of(privilegeNotConstraint);
+        this.privilegeNotConstraints.add(Optional.of(privilegeNotConstraint));
         return this;
     }
+
+    @Override
+    public AuthExpectationSpecification notPrivilegeIf(String privilegeNotConstraint, boolean evaluate) {
+        if (evaluate) {
+            this.privilegeNotConstraints.add(Optional.of(privilegeNotConstraint));
+        }
+        return this;
+    }
+
 
     private boolean checkHasPrivilege(String privilegeConstraint) {
         final Privilege privilegeConfig = this.user.getAuthorities() != null ? this.user.getAuthorities().get(privilegeConstraint) : null;

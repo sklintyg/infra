@@ -18,18 +18,17 @@
  */
 package se.inera.intyg.infra.security.authorities;
 
-import static java.lang.String.format;
-
-import java.util.Date;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import se.inera.intyg.infra.security.common.model.Privilege;
 import se.inera.intyg.infra.security.common.model.RequestOrigin;
 import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.infra.security.common.model.Title;
 import se.inera.intyg.infra.security.common.model.TitleCode;
+
+import java.util.Date;
+import java.util.List;
+
+import static java.lang.String.format;
 
 /**
  * Created by Magnus Ekstrand on 18/11/15.
@@ -60,6 +59,8 @@ public final class AuthoritiesConfiguration {
     private List<Title> titles;
     @JsonProperty
     private List<TitleCode> titleCodes;
+    @JsonProperty
+    private List<String> sekretessmarkeringAllowed;
 
 
     // ~ Getter and setter
@@ -161,6 +162,13 @@ public final class AuthoritiesConfiguration {
         this.titleCodes = titleCodes;
     }
 
+    public List<String> getSekretessmarkeringAllowed() {
+        return sekretessmarkeringAllowed;
+    }
+
+    public void setSekretessmarkeringAllowed(List<String> sekretessmarkeringAllowed) {
+        this.sekretessmarkeringAllowed = sekretessmarkeringAllowed;
+    }
 
     // ~ API
     // ==================================================================
@@ -180,6 +188,7 @@ public final class AuthoritiesConfiguration {
                 .append(format("Roles: %s%n", roles))
                 .append(format("Titles: %s%n", titles))
                 .append(format("TitleCodes: %s%n", titleCodes))
+                .append(format("SekretessmarkeringAllowed: %s%n", sekretessmarkeringAllowed))
                 .toString();
     }
 

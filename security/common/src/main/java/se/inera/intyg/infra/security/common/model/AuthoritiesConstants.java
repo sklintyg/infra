@@ -57,5 +57,6 @@ public final class AuthoritiesConstants {
     public static final String PRIVILEGE_SVARA_MED_NYTT_INTYG = "SVARA_MED_NYTT_INTYG";
     public static final String PRIVILEGE_SKRIVA_INTYG = "SKRIVA_INTYG";
     public static final String PRIVILEGE_NOTIFIERING_UTKAST = "NOTIFIERING_UTKAST";
+    public static final String PRIVILEGE_HANTERA_SEKRETESSMARKERAD_PATIENT = "HANTERA_SEKRETESSMARKERAD_PATIENT";
 
 }

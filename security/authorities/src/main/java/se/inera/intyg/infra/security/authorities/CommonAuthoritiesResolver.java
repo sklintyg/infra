@@ -18,21 +18,28 @@
  */
 package se.inera.intyg.infra.security.authorities;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-
 import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
 import se.inera.intyg.infra.integration.hsa.util.HsaAttributeExtractor;
 import se.inera.intyg.infra.security.authorities.bootstrap.AuthoritiesConfigurationLoader;
-import se.inera.intyg.infra.security.common.model.*;
+import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
+import se.inera.intyg.infra.security.common.model.IntygUser;
+import se.inera.intyg.infra.security.common.model.Privilege;
+import se.inera.intyg.infra.security.common.model.RequestOrigin;
+import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.infra.security.common.model.Title;
+import se.inera.intyg.infra.security.common.model.TitleCode;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Created by Magnus Ekstrand on 20/11/15.
@@ -61,6 +68,15 @@ public class CommonAuthoritiesResolver {
      */
     public List<String> getIntygstyper() {
         return configurationLoader.getConfiguration().getKnownIntygstyper();
+    }
+
+    /**
+     * Get all TODO
+     *
+     * @return a list with intygstyper that can be handled for a sekretessmarkerad patient.
+     */
+    public List<String> getSekretessmarkeringAllowed() {
+        return configurationLoader.getConfiguration().getSekretessmarkeringAllowed();
     }
 
     /**

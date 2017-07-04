@@ -108,6 +108,8 @@ public interface AuthExpectationSpecification {
      */
     AuthExpectationSpecification privilege(String privilegeConstraint);
 
+    AuthExpectationSpecification privilegeIf(String privilegeConstraint, boolean evaluate);
+
     /**
      * A negation of privilege method to be able to express privilege a user must NOT.
      *
@@ -128,4 +130,6 @@ public interface AuthExpectationSpecification {
      * Throws AuthoritiesException if any of the added check fails.
      */
     void orThrow();
+
+    AuthExpectationSpecification notPrivilegeIf(String privilegeNotConstraint, boolean evaluate);
 }
