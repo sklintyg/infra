@@ -19,12 +19,14 @@
 package se.inera.intyg.infra.integration.pu.stub;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import se.inera.intyg.infra.integration.pu.services.PUService;
 import se.riv.population.residentmaster.types.v1.AvregistreringTYPE;
 import se.riv.population.residentmaster.types.v1.AvregistreringsorsakKodTYPE;
 import se.riv.population.residentmaster.types.v1.JaNejTYPE;
 import se.riv.population.residentmaster.types.v1.ResidentType;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -43,6 +45,9 @@ public class PuStubRestApi {
 
     @Autowired
     private ResidentStore residentStore;
+
+    @Autowired
+    private PUService puService;
 
     @GET
     @Path("/person")
@@ -94,6 +99,22 @@ public class PuStubRestApi {
 
         boolean oldValue = getAndSetAvliden(resident, newValue);
         return Response.ok().entity("Value was set to \"" + newValue + "\", from old value \"" + oldValue + "\"").build();
+    }
+
+    /**
+     * Use to evict all entries for the PU-cache.
+     *
+     * @return
+     */
+    @DELETE
+    @Path("/cache")
+    public Response clearCache() {
+        try {
+            puService.clearCache();
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.serverError().entity(e.getMessage()).build();
+        }
     }
 
     private boolean getAndSetAvliden(ResidentType resident, boolean newValue) {
