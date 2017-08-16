@@ -18,17 +18,15 @@
  */
 package se.inera.intyg.infra.integration.pu.stub;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.google.common.base.Joiner;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookupResidentForFullProfileResponseType;
 import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookupResidentForFullProfileType;
 import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v11.LookupResidentForFullProfileResponderInterface;
 import se.riv.population.residentmaster.types.v1.ResidentType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LookupResidentForFullProfileWsStub implements LookupResidentForFullProfileResponderInterface {
 
@@ -38,6 +36,7 @@ public class LookupResidentForFullProfileWsStub implements LookupResidentForFull
     @Override
     public LookupResidentForFullProfileResponseType lookupResidentForFullProfile(String logicalAddress,
             LookupResidentForFullProfileType parameters) {
+
         validate(logicalAddress, parameters);
         LookupResidentForFullProfileResponseType response = new LookupResidentForFullProfileResponseType();
         for (String id : parameters.getPersonId()) {

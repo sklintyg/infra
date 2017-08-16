@@ -27,6 +27,12 @@ import java.util.Map;
 
 public class ResidentStore {
 
+    private boolean active = true;
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     private final Map<String, ResidentType> residents = new HashMap<>();
 
     void addUser(ResidentType residentPost) {
@@ -34,10 +40,16 @@ public class ResidentStore {
     }
 
     ResidentType get(String id) {
+        if (!active) {
+            throw new IllegalStateException("Stub is deactivated for testing purposes.");
+        }
         return residents.get(id);
     }
 
     List<ResidentType> getAll() {
+        if (!active) {
+            throw new IllegalStateException("Stub is deactivated for testing purposes.");
+        }
         return new ArrayList<>(residents.values());
     }
 }

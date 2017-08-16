@@ -49,8 +49,8 @@
         </sec:trustManagers>
 
         <sec:cipherSuitesFilter>
-          <!-- these filters ensure that a cipher suite with export-suitable 
-            or null encryption is used, but exclude anonymous Diffie-Hellman key change 
+          <!-- these filters ensure that a cipher suite with export-suitable
+            or null encryption is used, but exclude anonymous Diffie-Hellman key change
             as this is vulnerable to man-in-the-middle attacks -->
           <sec:include>.*_EXPORT_.*</sec:include>
           <sec:include>.*_EXPORT1024_.*</sec:include>

@@ -117,6 +117,22 @@ public class PuStubRestApi {
         }
     }
 
+    @GET
+    @Path("/active")
+    public Response activatePuStub() {
+        puService.clearCache();
+        residentStore.setActive(true);
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path("/inactive")
+    public Response deactivatePuStub() {
+        puService.clearCache();
+        residentStore.setActive(false);
+        return Response.ok().build();
+    }
+
     private boolean getAndSetAvliden(ResidentType resident, boolean newValue) {
         AvregistreringTYPE avreg = resident.getPersonpost().getAvregistrering();
         boolean oldValue = avreg != null && avreg.getAvregistreringsorsakKod() == AvregistreringsorsakKodTYPE.AV;
