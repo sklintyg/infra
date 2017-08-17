@@ -61,6 +61,8 @@ public class PuStubRestApi {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setSekretessmarkerad(@PathParam("personId") String personId,
             @QueryParam("value") String value) {
+        puService.clearCache();
+
         String xmlValue;
         if ("".equals(value) || "true".equalsIgnoreCase(value)) {
             xmlValue = "J";
