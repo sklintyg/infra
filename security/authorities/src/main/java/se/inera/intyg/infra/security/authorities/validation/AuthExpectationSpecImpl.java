@@ -150,6 +150,13 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
     }
 
     @Override
+    public void orThrow(RuntimeException exception) {
+        if (!isVerified()) {
+            throw exception;
+        }
+    }
+
+    @Override
     public AuthExpectationSpecification features(Feature... featureConstraints) {
         this.featureConstraints = Optional.of(featureConstraints);
         return this;

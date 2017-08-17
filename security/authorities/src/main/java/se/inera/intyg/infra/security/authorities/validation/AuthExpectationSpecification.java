@@ -26,6 +26,7 @@ import se.inera.intyg.infra.security.common.service.Feature;
  * Created by marced on 18/12/15.
  */
 public interface AuthExpectationSpecification {
+
     /**
      * To pass, the user must have at least one of the given features active.
      * Also, if intygstyp context is given, that intygsmodule must also have given feature active.
@@ -108,6 +109,24 @@ public interface AuthExpectationSpecification {
      */
     AuthExpectationSpecification privilege(String privilegeConstraint);
 
+    /**
+     * This version of privilege(..) adds a conditional parameter that can be used for only checking a privilege if the
+     * passed parameter is true.
+     *
+     * To pass, the following must be fulfilled.
+     * <ul>
+     * <li>The user must have the basic privilegeConstraint, if the evaluate parameter is true.</li>
+     * <li>If the privilegeConstraint's has a intygstyp constraint - that must match a given intygstype context.</li>
+     * <li>If the privilegeConstraint's has a requestOrigin constraint - that must match the users origin.</li>
+     * <li>If the privilegeConstraint's requestOrigin constraint itself has a intygstype constraint - that must also
+     * match given intygstype context.</li>
+     * </ul>
+     *
+     * @param privilegeConstraint
+     * @param evaluate
+     *      If false, the privilege will not be evaluated.
+     * @return
+     */
     AuthExpectationSpecification privilegeIf(String privilegeConstraint, boolean evaluate);
 
     /**
@@ -117,6 +136,17 @@ public interface AuthExpectationSpecification {
      * @return
      */
     AuthExpectationSpecification notPrivilege(String privilegeConstraint);
+
+    /**
+     * A negation of privilege method to be able to express privilege a user must NOT. Can be ignored if the
+     * passed evaluate parameter is false.
+     *
+     * @param privilegeNotConstraint
+     * @param evaluate
+     *      If false, this privilege will not be evaluated.
+     * @return
+     */
+    AuthExpectationSpecification notPrivilegeIf(String privilegeNotConstraint, boolean evaluate);
 
     /**
      * Verify all given expectations.
@@ -131,5 +161,10 @@ public interface AuthExpectationSpecification {
      */
     void orThrow();
 
-    AuthExpectationSpecification notPrivilegeIf(String privilegeNotConstraint, boolean evaluate);
+    /**
+     * Throws a user-defined RuntimeException if any of the added check fails.
+     */
+    void orThrow(RuntimeException exception);
+
+
 }
