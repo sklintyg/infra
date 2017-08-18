@@ -1,0 +1,13 @@
+dependencies {
+
+  compile project(':common-cache-core')
+
+  compile "se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:0-SNAPSHOT"
+  compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
+  compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+
+  runtime "org.springframework:spring-context-support:${springVersion}"
+
+  testCompile "org.springframework:spring-test:${springVersion}"
+  testCompile "org.hamcrest:hamcrest-all:${hamcrestVersion}"
+}

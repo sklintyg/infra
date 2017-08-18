@@ -12,6 +12,7 @@ include ':common-cache-metrics'
 include ':grp-stub'
 include ':hsa-integration'
 include ':pu-integration'
+include ':srs-integration'
 include ':log-messages'
 include ':loggtjanst-stub'
 include ':security-common'
@@ -26,6 +27,7 @@ project(':dynamiclink').projectDir = "$rootDir/dynamiclink" as File
 project(':grp-stub').projectDir = "$rootDir/integration/grp-stub" as File
 project(':hsa-integration').projectDir = "$rootDir/integration/hsa-integration" as File
 project(':pu-integration').projectDir = "$rootDir/integration/pu-integration" as File
+project(':srs-integration').projectDir = "$rootDir/integration/srs-integration" as File
 project(':log-messages').projectDir = "$rootDir/loggtjanst/log-messages" as File
 project(':loggtjanst-stub').projectDir = "$rootDir/loggtjanst/loggtjanst-stub" as File
 project(':security-common').projectDir = "$rootDir/security/common" as File
