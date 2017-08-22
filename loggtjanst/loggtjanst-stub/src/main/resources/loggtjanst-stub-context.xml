@@ -52,7 +52,7 @@
       class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider">
       <!--
       <property name="mapper">
-        <bean class="se.inera.intyg.common.util.integration.integration.json.CustomObjectMapper" />
+        <bean class="se.inera.intyg.common.util.integration.json.CustomObjectMapper" />
       </property>
       -->
     </bean>
