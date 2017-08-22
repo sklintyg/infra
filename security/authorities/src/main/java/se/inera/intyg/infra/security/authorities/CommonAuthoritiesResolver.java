@@ -71,7 +71,7 @@ public class CommonAuthoritiesResolver {
     }
 
     /**
-     * Get all TODO
+     * Get all intygstyper that may be issued for a patient having sekretessmarkering.
      *
      * @return a list with intygstyper that can be handled for a sekretessmarkerad patient.
      */
