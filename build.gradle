@@ -1,3 +1,7 @@
+plugins {
+    id "se.inera.intyg.plugin.common" version "1.0.45" apply false
+}
+
 ext {
     funktionstjansterGrpSchemasVersion = "1.0.4"
 
@@ -28,28 +32,15 @@ ext {
     servletApiTestVersion = "3.1.0"
 }
 
-buildscript {
-    repositories {
-        mavenLocal()
-        maven { url "https://build-inera.nordicmedtest.se/nexus/repository/releases/" }
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-
-    dependencies {
-        classpath 'se.inera.intyg:gradle-intyg-plugin:1.0.+'
-        classpath 'com.moowork.gradle:gradle-node-plugin:1.1.1'
-    }
-}
-
 allprojects {
+    apply plugin: 'se.inera.intyg.plugin.common'
+    apply plugin: 'maven'
+
     repositories {
         mavenLocal()
         maven { url "https://build-inera.nordicmedtest.se/nexus/repository/releases/" }
         maven { url "http://repo.maven.apache.org/maven2" }
     }
-
-    apply plugin: 'inera-intyg'
-    apply plugin: 'maven'
 
     dependencies {
         testCompile "junit:junit:4.+"
