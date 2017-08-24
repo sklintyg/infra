@@ -2,6 +2,7 @@ package se.inera.intyg.infra.integration.srs.stub;
 
 import org.jetbrains.annotations.NotNull;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.*;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ public class SrsStub implements GetSRSInformationResponderInterface {
 
         if (filter.isPrediktion()) {
             Diagnosprediktion diagnosprediktion = new Diagnosprediktion();
-            diagnosprediktion.setSannolikhetLangvarig(Math.random());
+            diagnosprediktion.setSannolikhetOvergransvarde(Math.random());
             diagnosprediktion.setDiagnosprediktionstatus(Diagnosprediktionstatus.OK);
 
             Prediktion prediktion = new Prediktion();

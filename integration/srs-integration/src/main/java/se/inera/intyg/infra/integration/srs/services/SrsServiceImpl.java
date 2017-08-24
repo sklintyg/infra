@@ -3,7 +3,7 @@ package se.inera.intyg.infra.integration.srs.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgard;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Bedomningsunderlag;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnos;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponderInterface;
@@ -47,7 +47,7 @@ public class SrsServiceImpl implements SrsService {
                     == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
                 throw new SrsException("Prediktionsmodell saknas");
             }
-            level = Math.min((int) (underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetLangvarig() * 4), 3);
+            level = Math.min((int) (underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde() * 4), 3);
         }
 
         if (filter.isAtgardsrekommendation()) {
