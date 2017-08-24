@@ -1,44 +1,62 @@
 package se.inera.intyg.infra.integration.srs.stub;
 
 import org.jetbrains.annotations.NotNull;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgard;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendationer;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Bedomningsunderlag;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktion;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationRequestType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Prediktion;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.*;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
+
+import java.time.LocalDateTime;
 
 public class SrsStub implements GetSRSInformationResponderInterface {
 
     @Override
-    public GetSRSInformationResponseType getSRSInformation(GetSRSInformationRequestType getSRSInformationRequestType) {
+    public GetSRSInformationResponseType getSRSInformation(GetSRSInformationRequestType request) {
         GetSRSInformationResponseType response = new GetSRSInformationResponseType();
-        response.getBedomningsunderlag().add(createUnderlag());
+        response.getBedomningsunderlag().add(createUnderlag(request.getUtdatafilter()));
         response.setResultCode(ResultCodeEnum.OK);
         return response;
     }
 
     @NotNull
-    private Bedomningsunderlag createUnderlag() {
+    private Bedomningsunderlag createUnderlag(Utdatafilter filter) {
         Bedomningsunderlag underlag = new Bedomningsunderlag();
 
-        Diagnosprediktion diagnosprediktion = new Diagnosprediktion();
-        diagnosprediktion.setSannolikhetLangvarig(Math.random());
+        if (filter.isPrediktion()) {
+            Diagnosprediktion diagnosprediktion = new Diagnosprediktion();
+            diagnosprediktion.setSannolikhetLangvarig(Math.random());
+            diagnosprediktion.setDiagnosprediktionstatus(Diagnosprediktionstatus.OK);
 
-        Prediktion prediktion = new Prediktion();
-        prediktion.getDiagnosprediktion().add(diagnosprediktion);
-        underlag.setPrediktion(prediktion);
+            Prediktion prediktion = new Prediktion();
+            prediktion.getDiagnosprediktion().add(diagnosprediktion);
+            underlag.setPrediktion(prediktion);
 
-        Atgardsrekommendationer rekommendationer = new Atgardsrekommendationer();
-        rekommendationer.getRekommendation().add(createAtgardsrekommendation("Atgardsforslag 1"));
-        rekommendationer.getRekommendation().add(createAtgardsrekommendation("Atgardsforslag 2"));
-        rekommendationer.getRekommendation().add(createAtgardsrekommendation("Atgardsforslag 3"));
-        underlag.setAtgardsrekommendationer(rekommendationer);
+        }
+
+        if (filter.isAtgardsrekommendation()) {
+            Atgardsrekommendationer rekommendationer = new Atgardsrekommendationer();
+            rekommendationer.getRekommendation().add(createAtgardsrekommendation("Atgardsforslag 1"));
+            rekommendationer.getRekommendation().add(createAtgardsrekommendation("Atgardsforslag 2"));
+            rekommendationer.getRekommendation().add(createAtgardsrekommendation("Atgardsforslag 3"));
+            underlag.setAtgardsrekommendationer(rekommendationer);
+        }
+
+        if (filter.isStatistik()) {
+            Statistik statistik = new Statistik();
+            statistik.getStatistikbild().add(createStatistikBild("M18"));
+            underlag.setStatistik(statistik);
+        }
+
         return underlag;
+    }
+
+    private Statistikbild createStatistikBild(String diagnos) {
+        Statistikbild statistikbild = new Statistikbild();
+        statistikbild.setAndringstidpunkt(LocalDateTime.of(2017, 1, 1, 1, 1));
+        statistikbild.setBildadress("http://localhost/images/" + diagnos);
+        Diagnos tempDiagnos = new Diagnos();
+        tempDiagnos.setCode(diagnos);
+        tempDiagnos.setCodeSystem("MEH");
+        statistikbild.setDiagnos(tempDiagnos);
+        return statistikbild;
     }
 
     @NotNull

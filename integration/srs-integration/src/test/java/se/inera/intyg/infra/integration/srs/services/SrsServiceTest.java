@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.infra.integration.srs.services;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import java.util.Arrays;
+
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -43,10 +45,50 @@ public class SrsServiceTest {
     @Autowired
     private SrsService service;
 
-    @Test
-    public void testSrs() throws Exception {
+    private Utdatafilter utdatafilter;
 
-        SrsResponse response = service.getSrs(new Personnummer("191212121212"), "J20");
+    @Before
+    public void setup() {
+        utdatafilter = new Utdatafilter();
+        utdatafilter.setPrediktion(false);
+        utdatafilter.setAtgardsrekommendation(false);
+        utdatafilter.setStatistik(false);
+        utdatafilter.setFmbinformation(false);
+    }
+
+    @Test
+    public void testNone() throws Exception {
+        SrsResponse response = service.getSrs(new Personnummer("191212121212"), "M18", utdatafilter);
+        assertNull(response.getStatistikBild());
+        assertNull(response.getAtgarder());
+        assertNull(response.getLevel());
+    }
+
+    @Test
+    public void testSrsPrediktion() throws Exception {
+        utdatafilter.setPrediktion(true);
+        SrsResponse response = service.getSrs(new Personnummer("191212121212"), "M18", utdatafilter);
+        assertNotNull(response);
+        assertTrue(response.getLevel() >= 0);
+        assertTrue(response.getLevel() < 4);
+        assertNull(response.getAtgarder());
+    }
+
+    @Test
+    public void testSrsStatistik() throws Exception {
+        utdatafilter.setStatistik(true);
+        SrsResponse response = service.getSrs(new Personnummer("191212121212"), "M18", utdatafilter);
+        assertNotNull(response.getStatistikBild());
+        assertNull(response.getAtgarder());
+        assertNull(response.getLevel());
+        assertEquals("http://localhost/images/M18", response.getStatistikBild());
+    }
+
+    @Test
+    public void testSrsPrediktionAndAtgardRekommendation() throws Exception {
+        utdatafilter.setPrediktion(true);
+        utdatafilter.setAtgardsrekommendation(true);
+        SrsResponse response = service.getSrs(new Personnummer("191212121212"), "M18", utdatafilter);
         assertNotNull(response);
         assertTrue(response.getLevel() >= 0);
         assertTrue(response.getLevel() < 4);
@@ -54,4 +96,22 @@ public class SrsServiceTest {
         assertNotNull(response.getAtgarder().get(1));
         assertNotNull(response.getAtgarder().get(2));
     }
+
+    @Test
+    public void testSrsAll() throws Exception {
+        utdatafilter.setAtgardsrekommendation(true);
+        utdatafilter.setPrediktion(true);
+        utdatafilter.setStatistik(true);
+        utdatafilter.setFmbinformation(true);
+        SrsResponse response = service.getSrs(new Personnummer("191212121212"), "M18", utdatafilter);
+        assertNotNull(response);
+        assertTrue(response.getLevel() >= 0);
+        assertTrue(response.getLevel() < 4);
+        assertNotNull(response.getAtgarder().get(0));
+        assertNotNull(response.getAtgarder().get(1));
+        assertNotNull(response.getAtgarder().get(2));
+        assertNotNull(response.getStatistikBild());
+        assertEquals("http://localhost/images/M18", response.getStatistikBild());
+    }
+
 }

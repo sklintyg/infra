@@ -19,6 +19,7 @@ import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,27 +29,46 @@ public class SrsServiceImpl implements SrsService {
     private GetSRSInformationResponderInterface getSRSInformationResponderInterface;
 
     @Override
-    public SrsResponse getSrs(Personnummer personnummer, String diagnosisCode) throws InvalidPersonNummerException, SrsException {
+    public SrsResponse getSrs(Personnummer personnummer, String diagnosisCode, Utdatafilter filter) throws InvalidPersonNummerException, SrsException {
         GetSRSInformationResponseType response = getSRSInformationResponderInterface
-                .getSRSInformation(createRequest(personnummer, diagnosisCode));
-        if (response.getResultCode() != ResultCodeEnum.OK || response.getBedomningsunderlag().isEmpty()
-                || response.getBedomningsunderlag().get(0).getPrediktion() == null || response.getBedomningsunderlag().get(0)
-                .getPrediktion().getDiagnosprediktion().isEmpty()) {
+                .getSRSInformation(createRequest(personnummer, diagnosisCode, filter));
+        if (response.getResultCode() != ResultCodeEnum.OK || response.getBedomningsunderlag().isEmpty()) {
             throw new IllegalArgumentException("Bad data from SRS");
-        } else if (response.getBedomningsunderlag().get(0).getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus()
-                == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
-            throw new SrsException("Prediktionsmodell saknas");
         }
+
         Bedomningsunderlag underlag = response.getBedomningsunderlag().get(0);
-        int level = Math.min((int) (underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetLangvarig() * 4), 3);
-        List<String> atgarder = underlag.getAtgardsrekommendationer().getRekommendation().stream()
-                .flatMap(a -> a.getAtgard().stream())
-                .map(Atgard::getAtgardsforslag)
-                .collect(Collectors.toList());
-        return new SrsResponse(level, atgarder);
+
+        Integer level = null;
+        String statistikBild = null;
+        List<String> atgarder = null;
+
+        if (filter.isPrediktion()) {
+            if (underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus()
+                    == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
+                throw new SrsException("Prediktionsmodell saknas");
+            }
+            level = Math.min((int) (underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetLangvarig() * 4), 3);
+        }
+
+        if (filter.isAtgardsrekommendation()) {
+            atgarder = underlag.getAtgardsrekommendationer().getRekommendation().stream()
+                    .flatMap(a -> a.getAtgard().stream())
+                    .map(Atgard::getAtgardsforslag)
+                    .collect(Collectors.toList());
+        }
+
+        if (filter.isStatistik()) {
+            statistikBild = underlag.getStatistik().getStatistikbild().get(0).getBildadress();
+        }
+
+        if (filter.isFmbinformation()) {
+            // Handle fmbInformation here
+        }
+
+        return new SrsResponse(level, atgarder, statistikBild);
     }
 
-    private GetSRSInformationRequestType createRequest(Personnummer personnummer, String diagnosisCode)
+    private GetSRSInformationRequestType createRequest(Personnummer personnummer, String diagnosisCode, Utdatafilter filter)
             throws InvalidPersonNummerException {
         GetSRSInformationRequestType request = new GetSRSInformationRequestType();
         HsaId hsaId = new HsaId();
@@ -65,13 +85,7 @@ public class SrsServiceImpl implements SrsService {
         individ.setPersonId(personnummer.getNormalizedPnr());
         individer.getIndivid().add(individ);
 
-        // We are currently only interested in recommendations and prediction
-        Utdatafilter utdatafilter = new Utdatafilter();
-        utdatafilter.setAtgardsrekommendation(true);
-        utdatafilter.setFmbinformation(false);
-        utdatafilter.setPrediktion(true);
-        utdatafilter.setStatistik(false);
-        request.setUtdatafilter(utdatafilter);
+        request.setUtdatafilter(filter);
 
         request.setIndivider(individer);
         return request;
