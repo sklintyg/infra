@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 
 public class SrsStub implements GetSRSInformationResponderInterface {
 
+    private static final int YEAR = 2017;
+
     @Override
     public GetSRSInformationResponseType getSRSInformation(GetSRSInformationRequestType request) {
         GetSRSInformationResponseType response = new GetSRSInformationResponseType();
@@ -51,7 +53,7 @@ public class SrsStub implements GetSRSInformationResponderInterface {
 
     private Statistikbild createStatistikBild(String diagnos) {
         Statistikbild statistikbild = new Statistikbild();
-        statistikbild.setAndringstidpunkt(LocalDateTime.of(2017, 1, 1, 1, 1));
+        statistikbild.setAndringstidpunkt(LocalDateTime.of(YEAR, 1, 1, 1, 1));
         statistikbild.setBildadress("http://localhost/images/" + diagnos);
         Diagnos tempDiagnos = new Diagnos();
         tempDiagnos.setCode(diagnos);

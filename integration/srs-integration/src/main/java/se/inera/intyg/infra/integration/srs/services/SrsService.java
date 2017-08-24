@@ -1,7 +1,6 @@
 package se.inera.intyg.infra.integration.srs.services;
 
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
 import se.inera.intyg.infra.integration.srs.model.SrsException;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
@@ -20,5 +19,6 @@ public interface SrsService {
      * @throws InvalidPersonNummerException
      * @throws SrsException
      */
-    SrsResponse getSrs(Personnummer personnummer, String diagnosisCode, Utdatafilter filter) throws InvalidPersonNummerException, SrsException;
+    SrsResponse getSrs(Personnummer personnummer, String diagnosisCode, Utdatafilter filter) throws
+            InvalidPersonNummerException, SrsException;
 }

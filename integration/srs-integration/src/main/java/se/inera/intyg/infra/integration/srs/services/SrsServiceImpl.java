@@ -1,5 +1,7 @@
 package se.inera.intyg.infra.integration.srs.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgard;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Bedomningsunderlag;
@@ -19,17 +21,21 @@ import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class SrsServiceImpl implements SrsService {
 
+    private static final int FOUR = 4;
+    private static final int THREE = 3;
     @Autowired
     private GetSRSInformationResponderInterface getSRSInformationResponderInterface;
 
+    private static final Logger LOG = LoggerFactory.getLogger(SrsServiceImpl.class);
+
     @Override
-    public SrsResponse getSrs(Personnummer personnummer, String diagnosisCode, Utdatafilter filter) throws InvalidPersonNummerException, SrsException {
+    public SrsResponse getSrs(Personnummer personnummer, String diagnosisCode, Utdatafilter filter) throws
+            InvalidPersonNummerException, SrsException {
         GetSRSInformationResponseType response = getSRSInformationResponderInterface
                 .getSRSInformation(createRequest(personnummer, diagnosisCode, filter));
         if (response.getResultCode() != ResultCodeEnum.OK || response.getBedomningsunderlag().isEmpty()) {
@@ -47,7 +53,8 @@ public class SrsServiceImpl implements SrsService {
                     == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
                 throw new SrsException("Prediktionsmodell saknas");
             }
-            level = Math.min((int) (underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde() * 4), 3);
+            level = Math.min((int) (underlag.getPrediktion().getDiagnosprediktion().get(0)
+                    .getSannolikhetOvergransvarde() * FOUR), THREE);
         }
 
         if (filter.isAtgardsrekommendation()) {
@@ -63,6 +70,8 @@ public class SrsServiceImpl implements SrsService {
 
         if (filter.isFmbinformation()) {
             // Handle fmbInformation here
+            LOG.info("FMB info");
+
         }
 
         return new SrsResponse(level, atgarder, statistikBild);
