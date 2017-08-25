@@ -40,6 +40,8 @@ public class IntygData {
     private LocalDateTime signeringsTidpunkt;
 
     private List<Formaga> formagor;
+    private List<String> biDiagnoser;
+    private List<String> sysselsattning;
 
     private boolean enkeltIntyg;
 
@@ -150,4 +152,19 @@ public class IntygData {
         this.enkeltIntyg = enkeltIntyg;
     }
 
+    public List<String> getBiDiagnoser() {
+        return biDiagnoser;
+    }
+
+    public void setBiDiagnoser(List<String> biDiagnoser) {
+        this.biDiagnoser = biDiagnoser;
+    }
+
+    public List<String> getSysselsattning() {
+        return sysselsattning;
+    }
+
+    public void setSysselsattning(List<String> sysselsattning) {
+        this.sysselsattning = sysselsattning;
+    }
 }
