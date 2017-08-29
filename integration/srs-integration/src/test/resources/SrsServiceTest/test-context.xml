@@ -23,6 +23,7 @@
     <bean class="com.fasterxml.jackson.databind.ObjectMapper"/>
     <bean class="se.inera.intyg.infra.integration.srs.stub.GetSrsInformationStub"/>
     <bean class="se.inera.intyg.infra.integration.srs.stub.GetPredictionQuestionsStub"/>
-
+    <bean class="se.inera.intyg.infra.integration.srs.stub.GetConsentStub"/>
+    <bean class="se.inera.intyg.infra.integration.srs.stub.SetConsentStub"/>
     <bean class="se.inera.intyg.infra.integration.srs.services.SrsServiceImpl"/>
 </beans>

@@ -21,6 +21,7 @@ package se.inera.intyg.infra.integration.srs.stub;
 
 import org.apache.cxf.annotations.SchemaValidation;
 import org.jetbrains.annotations.NotNull;
+
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgard;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendation;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendationer;
@@ -34,10 +35,12 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Predik
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Statistik;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Statistikbild;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
 import java.time.LocalDateTime;
+
 
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.BOTH)
 public class GetSrsInformationStub implements GetSRSInformationResponderInterface {

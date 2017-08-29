@@ -31,5 +31,14 @@
                   serviceClass="se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface"
                   address="${srs.questions.endpoint.url}">
     </jaxws:client>
+    <jaxws:client id="getConsentBean"
+        serviceClass="se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentResponderInterface"
+        address="${srs.getconsent.endpoint.url}">
+    </jaxws:client>
+    <jaxws:client id="setConsentBean"
+        serviceClass="se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponderInterface"
+        address="${srs.setconsent.endpoint.url}">
+    </jaxws:client>
+
     <bean id="srsService" class="se.inera.intyg.infra.integration.srs.services.SrsServiceImpl"/>
 </beans>

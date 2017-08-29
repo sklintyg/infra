@@ -28,14 +28,23 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.CollectionUtils;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentRequestType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentRequestType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponderInterface;
 import se.inera.intyg.infra.integration.srs.model.SjukskrivningsGrad;
+import se.inera.intyg.infra.integration.srs.model.SrsConsentResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
+import se.inera.intyg.infra.integration.srs.stub.GetConsentStub;
 import se.inera.intyg.infra.integration.srs.stub.GetPredictionQuestionsStub;
+import se.inera.intyg.infra.integration.srs.stub.SetConsentStub;
+import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -146,5 +155,40 @@ public class SrsServiceTest {
 
         assertEquals(diagnosisCode, captor.getValue().getDiagnos().getCode());
         assertEquals("1.2.752.116.1.1.1.1.3", captor.getValue().getDiagnos().getCodeSystem());
+    }
+
+    @Test
+    public void testGetConsent() throws InvalidPersonNummerException {
+        // Use reflection to spy on the stub to make sure we are using the correct request
+        GetConsentResponderInterface spy = Mockito.spy(new GetConsentStub());
+        ReflectionTestUtils.setField(service, "getConsent", spy);
+
+        final String hsaId = "hsa";
+        final Personnummer persNr = new Personnummer("1912121212");
+        SrsConsentResponse response = service.getConsent(hsaId, persNr);
+        assertNotNull(response);
+
+        ArgumentCaptor<GetConsentRequestType> captor = ArgumentCaptor.forClass(GetConsentRequestType.class);
+
+        verify(spy).getConsent(captor.capture());
+        verifyNoMoreInteractions(spy);
+    }
+
+    @Test
+    public void testSetConsent() throws Exception  {
+        // Use reflection to spy on the stub to make sure we are using the correct request
+        SetConsentResponderInterface spy = Mockito.spy(new SetConsentStub());
+        ReflectionTestUtils.setField(service, "setConsent", spy);
+
+        final String hsaId = "hsa";
+        final Personnummer persNr = new Personnummer("1912121212");
+        ResultCodeEnum response = service.setConsent(hsaId, persNr, true);
+        assertNotNull(response);
+        assertEquals(ResultCodeEnum.OK, response);
+
+        ArgumentCaptor<SetConsentRequestType> captor = ArgumentCaptor.forClass(SetConsentRequestType.class);
+
+        verify(spy).setConsent(captor.capture());
+        verifyNoMoreInteractions(spy);
     }
 }

@@ -27,4 +27,6 @@
 
     <jaxws:endpoint address="/srs-stub" implementor="se.inera.intyg.infra.integration.srs.stub.GetSrsInformationStub"/>
     <jaxws:endpoint address="/get-questions-stub" implementor="se.inera.intyg.infra.integration.srs.stub.GetPredictionQuestionsStub"/>
+    <jaxws:endpoint address="/get-consent-stub" implementor="se.inera.intyg.infra.integration.srs.stub.GetConsentStub"/>
+    <jaxws:endpoint address="/set-consent-stub" implementor="se.inera.intyg.infra.integration.srs.stub.SetConsentStub"/>
 </beans>
