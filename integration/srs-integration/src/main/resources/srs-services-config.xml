@@ -25,7 +25,11 @@
         http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
     <jaxws:client id="srsClient"
                   serviceClass="se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponderInterface"
-                  address="${srs.endpoint.url}">
+                  address="${srs.getsrsinformation.endpoint.url}">
+    </jaxws:client>
+    <jaxws:client id="prediktionQuestionBean"
+                  serviceClass="se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface"
+                  address="${srs.questions.endpoint.url}">
     </jaxws:client>
     <bean id="srsService" class="se.inera.intyg.infra.integration.srs.services.SrsServiceImpl"/>
 </beans>

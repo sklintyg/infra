@@ -2,7 +2,7 @@ dependencies {
 
   compile project(':common-cache-core')
 
-  compile "se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:0.0.4"
+  compile "se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:${srsSchemasVersion}"
   compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
   compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
 

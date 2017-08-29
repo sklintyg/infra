@@ -3,24 +3,32 @@ package se.inera.intyg.infra.integration.srs.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgard;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Bedomningsunderlag;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Individ;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Individfaktorer;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Omfattning;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+import se.inera.intyg.infra.integration.srs.model.SjukskrivningsGrad;
 import se.inera.intyg.infra.integration.srs.model.SrsException;
+import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
+import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,16 +36,19 @@ public class SrsServiceImpl implements SrsService {
 
     private static final int FOUR = 4;
     private static final int THREE = 3;
-    @Autowired
-    private GetSRSInformationResponderInterface getSRSInformationResponderInterface;
-
     private static final Logger LOG = LoggerFactory.getLogger(SrsServiceImpl.class);
 
+    @Autowired
+    private GetSRSInformationResponderInterface getSRSInformation;
+
+    @Autowired
+    private GetPredictionQuestionsResponderInterface getPrediction;
+
     @Override
-    public SrsResponse getSrs(Personnummer personnummer, String diagnosisCode, Utdatafilter filter) throws
-            InvalidPersonNummerException, SrsException {
-        GetSRSInformationResponseType response = getSRSInformationResponderInterface
-                .getSRSInformation(createRequest(personnummer, diagnosisCode, filter));
+    public SrsResponse getSrs(String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
+            List<SrsQuestionResponse> questions, SjukskrivningsGrad sjukskrivningsGrad) throws InvalidPersonNummerException, SrsException {
+        GetSRSInformationResponseType response = getSRSInformation
+                .getSRSInformation(createRequest(intygId, personnummer, diagnosisCode, filter, sjukskrivningsGrad));
         if (response.getResultCode() != ResultCodeEnum.OK || response.getBedomningsunderlag().isEmpty()) {
             throw new IllegalArgumentException("Bad data from SRS");
         }
@@ -64,7 +75,8 @@ public class SrsServiceImpl implements SrsService {
                     .collect(Collectors.toList());
         }
 
-        if (filter.isStatistik()) {
+        if (filter.isStatistik() && underlag.getStatistik() != null
+                && !CollectionUtils.isEmpty(underlag.getStatistik().getStatistikbild())) {
             statistikBild = underlag.getStatistik().getStatistikbild().get(0).getBildadress();
         }
 
@@ -77,26 +89,46 @@ public class SrsServiceImpl implements SrsService {
         return new SrsResponse(level, atgarder, statistikBild);
     }
 
-    private GetSRSInformationRequestType createRequest(Personnummer personnummer, String diagnosisCode, Utdatafilter filter)
-            throws InvalidPersonNummerException {
+    @Override
+    public List<SrsQuestion> getQuestions(String diagnos) {
+        GetPredictionQuestionsRequestType request = new GetPredictionQuestionsRequestType();
+        request.setDiagnos(createDiagnos(diagnos));
+        GetPredictionQuestionsResponseType response = getPrediction.getPredictionQuestions(request);
+        return response.getPrediktionsfraga().stream()
+                .map(SrsQuestion::convert)
+                .sorted(Comparator.comparing(SrsQuestion::getPriority))
+                .collect(Collectors.toList());
+    }
+
+    private GetSRSInformationRequestType createRequest(String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
+            SjukskrivningsGrad sjukskrivningsGrad) throws InvalidPersonNummerException {
         GetSRSInformationRequestType request = new GetSRSInformationRequestType();
         HsaId hsaId = new HsaId();
+        hsaId.setRoot("1.2.752.129.2.1.4.1");
         hsaId.setExtension("SE5565594230-B31");
         request.setKonsumentId(hsaId);
 
         Individfaktorer individer = new Individfaktorer();
         Individ individ = new Individ();
-        individ.setOmfattning(Omfattning.HELT_NEDSATT);
-        Diagnos diagnos = new Diagnos();
-        diagnos.setCode(diagnosisCode);
-        diagnos.setCodeSystem("1.2.752.116.1.1.1.1.3");
-        individ.getDiagnos().add(diagnos);
+        individ.setOmfattning(sjukskrivningsGrad.toOmfattning());
+        individ.getDiagnos().add(createDiagnos(diagnosisCode));
         individ.setPersonId(personnummer.getNormalizedPnr());
+        IntygId intyg = new IntygId();
+        intyg.setExtension(intygId);
+        intyg.setRoot("SE5565594230-B31");
+        individ.setIntygId(intyg);
         individer.getIndivid().add(individ);
 
         request.setUtdatafilter(filter);
 
         request.setIndivider(individer);
         return request;
+    }
+
+    private Diagnos createDiagnos(String diagnosisCode) {
+        Diagnos diagnos = new Diagnos();
+        diagnos.setCode(diagnosisCode);
+        diagnos.setCodeSystem("1.2.752.116.1.1.1.1.3");
+        return diagnos;
     }
 }

@@ -21,22 +21,32 @@ package se.inera.intyg.infra.integration.srs.services;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponseType;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.CollectionUtils;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+import se.inera.intyg.infra.integration.srs.model.SjukskrivningsGrad;
+import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
+import se.inera.intyg.infra.integration.srs.stub.GetPredictionQuestionsStub;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:SrsServiceTest/test-context.xml")
@@ -58,7 +68,8 @@ public class SrsServiceTest {
 
     @Test
     public void testNone() throws Exception {
-        SrsResponse response = service.getSrs(new Personnummer("191212121212"), "M18", utdatafilter);
+        SrsResponse response = service.getSrs("intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
+                SjukskrivningsGrad.HELT_NEDSATT);
         assertNull(response.getStatistikBild());
         assertNull(response.getAtgarder());
         assertNull(response.getLevel());
@@ -67,7 +78,8 @@ public class SrsServiceTest {
     @Test
     public void testSrsPrediktion() throws Exception {
         utdatafilter.setPrediktion(true);
-        SrsResponse response = service.getSrs(new Personnummer("191212121212"), "M18", utdatafilter);
+        SrsResponse response = service.getSrs("intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
+                SjukskrivningsGrad.HELT_NEDSATT);
         assertNotNull(response);
         assertTrue(response.getLevel() >= 0);
         assertTrue(response.getLevel() < 4);
@@ -77,7 +89,8 @@ public class SrsServiceTest {
     @Test
     public void testSrsStatistik() throws Exception {
         utdatafilter.setStatistik(true);
-        SrsResponse response = service.getSrs(new Personnummer("191212121212"), "M18", utdatafilter);
+        SrsResponse response = service.getSrs("intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
+                SjukskrivningsGrad.HELT_NEDSATT);
         assertNotNull(response.getStatistikBild());
         assertNull(response.getAtgarder());
         assertNull(response.getLevel());
@@ -88,7 +101,8 @@ public class SrsServiceTest {
     public void testSrsPrediktionAndAtgardRekommendation() throws Exception {
         utdatafilter.setPrediktion(true);
         utdatafilter.setAtgardsrekommendation(true);
-        SrsResponse response = service.getSrs(new Personnummer("191212121212"), "M18", utdatafilter);
+        SrsResponse response = service.getSrs("intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
+                SjukskrivningsGrad.HELT_NEDSATT);
         assertNotNull(response);
         assertTrue(response.getLevel() >= 0);
         assertTrue(response.getLevel() < 4);
@@ -103,7 +117,8 @@ public class SrsServiceTest {
         utdatafilter.setPrediktion(true);
         utdatafilter.setStatistik(true);
         utdatafilter.setFmbinformation(true);
-        SrsResponse response = service.getSrs(new Personnummer("191212121212"), "M18", utdatafilter);
+        SrsResponse response = service.getSrs("intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
+                SjukskrivningsGrad.HELT_NEDSATT);
         assertNotNull(response);
         assertTrue(response.getLevel() >= 0);
         assertTrue(response.getLevel() < 4);
@@ -114,4 +129,22 @@ public class SrsServiceTest {
         assertEquals("http://localhost/images/M18", response.getStatistikBild());
     }
 
+    @Test
+    public void testGetQuestions() {
+        // Use reflection to spy on the stub to make sure we are using the correct request
+        GetPredictionQuestionsResponderInterface spy = Mockito.spy(new GetPredictionQuestionsStub());
+        ReflectionTestUtils.setField(service, "getPrediction", spy);
+
+        final String diagnosisCode = "diagnosisCode";
+        List<SrsQuestion> response = service.getQuestions(diagnosisCode);
+        assertFalse(CollectionUtils.isEmpty(response));
+
+        ArgumentCaptor<GetPredictionQuestionsRequestType> captor = ArgumentCaptor.forClass(GetPredictionQuestionsRequestType.class);
+
+        verify(spy).getPredictionQuestions(captor.capture());
+        verifyNoMoreInteractions(spy);
+
+        assertEquals(diagnosisCode, captor.getValue().getDiagnos().getCode());
+        assertEquals("1.2.752.116.1.1.1.1.3", captor.getValue().getDiagnos().getCodeSystem());
+    }
 }

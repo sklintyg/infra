@@ -21,7 +21,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean class="com.fasterxml.jackson.databind.ObjectMapper"/>
-    <bean class="se.inera.intyg.infra.integration.srs.stub.SrsStub"/>
+    <bean class="se.inera.intyg.infra.integration.srs.stub.GetSrsInformationStub"/>
+    <bean class="se.inera.intyg.infra.integration.srs.stub.GetPredictionQuestionsStub"/>
 
     <bean class="se.inera.intyg.infra.integration.srs.services.SrsServiceImpl"/>
 </beans>

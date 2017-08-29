@@ -25,5 +25,6 @@
                            http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd"
        profile="dev,wc-all-stubs,wc-srs-stub">
 
-    <jaxws:endpoint address="/srs-stub" implementor="se.inera.intyg.infra.integration.srs.stub.SrsStub"/>
+    <jaxws:endpoint address="/srs-stub" implementor="se.inera.intyg.infra.integration.srs.stub.GetSrsInformationStub"/>
+    <jaxws:endpoint address="/get-questions-stub" implementor="se.inera.intyg.infra.integration.srs.stub.GetPredictionQuestionsStub"/>
 </beans>
