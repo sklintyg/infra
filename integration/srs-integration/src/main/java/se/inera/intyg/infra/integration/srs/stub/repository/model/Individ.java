@@ -48,4 +48,12 @@ public final class Individ {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = personnummer.hashCode();
+        result = prime * result + caregiverId.hashCode();
+        return result;
+    }
 }
