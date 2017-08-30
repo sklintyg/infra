@@ -22,7 +22,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -63,6 +65,9 @@ public class SrsServiceTest {
 
     @Autowired
     private SrsService service;
+
+    @Autowired
+    private GetConsentStub consentStub;
 
     private Utdatafilter utdatafilter;
 
@@ -160,35 +165,18 @@ public class SrsServiceTest {
     @Test
     public void testGetConsent() throws InvalidPersonNummerException {
         // Use reflection to spy on the stub to make sure we are using the correct request
-        GetConsentResponderInterface spy = Mockito.spy(new GetConsentStub());
-        ReflectionTestUtils.setField(service, "getConsent", spy);
-
         final String hsaId = "hsa";
         final Personnummer persNr = new Personnummer("1912121212");
         SrsConsentResponse response = service.getConsent(hsaId, persNr);
         assertNotNull(response);
-
-        ArgumentCaptor<GetConsentRequestType> captor = ArgumentCaptor.forClass(GetConsentRequestType.class);
-
-        verify(spy).getConsent(captor.capture());
-        verifyNoMoreInteractions(spy);
     }
 
     @Test
     public void testSetConsent() throws Exception  {
-        // Use reflection to spy on the stub to make sure we are using the correct request
-        SetConsentResponderInterface spy = Mockito.spy(new SetConsentStub());
-        ReflectionTestUtils.setField(service, "setConsent", spy);
-
         final String hsaId = "hsa";
         final Personnummer persNr = new Personnummer("1912121212");
         ResultCodeEnum response = service.setConsent(hsaId, persNr, true);
         assertNotNull(response);
         assertEquals(ResultCodeEnum.OK, response);
-
-        ArgumentCaptor<SetConsentRequestType> captor = ArgumentCaptor.forClass(SetConsentRequestType.class);
-
-        verify(spy).setConsent(captor.capture());
-        verifyNoMoreInteractions(spy);
     }
 }

@@ -26,4 +26,5 @@
     <bean class="se.inera.intyg.infra.integration.srs.stub.GetConsentStub"/>
     <bean class="se.inera.intyg.infra.integration.srs.stub.SetConsentStub"/>
     <bean class="se.inera.intyg.infra.integration.srs.services.SrsServiceImpl"/>
+    <bean class="se.inera.intyg.infra.integration.srs.stub.repository.ConsentRepository"/>
 </beans>

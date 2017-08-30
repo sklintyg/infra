@@ -6,10 +6,10 @@ import java.time.LocalDateTime;
 
 public class SrsConsentResponse {
     private Samtyckesstatus status;
-    private boolean samtycke;
+    private Boolean samtycke;
     private LocalDateTime sparatTidpunkt;
 
-    public SrsConsentResponse(Samtyckesstatus status, boolean samtycke, LocalDateTime sparatTidpunkt) {
+    public SrsConsentResponse(Samtyckesstatus status, Boolean samtycke, LocalDateTime sparatTidpunkt) {
         this.samtycke = samtycke;
         this.status = status;
         this.sparatTidpunkt = sparatTidpunkt;
@@ -19,7 +19,7 @@ public class SrsConsentResponse {
         return status;
     }
 
-    public boolean isSamtycke() {
+    public Boolean isSamtycke() {
         return samtycke;
     }
 
