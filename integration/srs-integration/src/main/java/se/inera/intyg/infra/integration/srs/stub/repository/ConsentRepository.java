@@ -38,4 +38,8 @@ public class ConsentRepository {
     public void setConsent(Personnummer personnummer, String vardgivarId, boolean consent) {
         consentRepo.put(new Individ(personnummer, vardgivarId), new Consent(consent, LocalDateTime.now()));
     }
+
+    public void clear() {
+        consentRepo.clear();
+    }
 }

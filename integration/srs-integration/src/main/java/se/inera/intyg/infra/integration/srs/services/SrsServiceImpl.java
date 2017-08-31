@@ -7,6 +7,7 @@ import org.springframework.util.CollectionUtils;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
@@ -23,7 +24,6 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentReq
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponseType;
 import se.inera.intyg.infra.integration.srs.model.SjukskrivningsGrad;
-import se.inera.intyg.infra.integration.srs.model.SrsConsentResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsException;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
@@ -116,10 +116,9 @@ public class SrsServiceImpl implements SrsService {
     }
 
     @Override
-    public SrsConsentResponse getConsent(String hsaId, Personnummer personId) throws InvalidPersonNummerException {
+    public Samtyckesstatus getConsent(String hsaId, Personnummer personId) throws InvalidPersonNummerException {
         GetConsentResponseType response = getConsent.getConsent(createGetConsentRequest(hsaId, personId));
-        return new SrsConsentResponse(response.getSamtyckesstatus(), response.isSamtycke(),
-                response.getSparattidpunkt());
+        return response.getSamtyckesstatus();
     }
 
     @Override

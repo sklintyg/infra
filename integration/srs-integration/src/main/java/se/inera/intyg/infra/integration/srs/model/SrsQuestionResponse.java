@@ -19,24 +19,25 @@
 
 package se.inera.intyg.infra.integration.srs.model;
 
-public final class SrsQuestionResponse {
+public class SrsQuestionResponse {
 
     private int questionId;
     private int answerId;
-
-    public SrsQuestionResponse(int questionId, int answerId) {
-        if (questionId < 1 || answerId < 1) {
-            throw new IllegalArgumentException("Ids need to be a positive integer.");
-        }
-        this.questionId = questionId;
-        this.answerId = answerId;
-    }
 
     public int getQuestionId() {
         return questionId;
     }
 
+    public void setQuestionId(int questionId) {
+        this.questionId = questionId;
+    }
+
     public int getAnswerId() {
         return answerId;
     }
+
+    public void setAnswerId(int answerId) {
+        this.answerId = answerId;
+    }
+
 }

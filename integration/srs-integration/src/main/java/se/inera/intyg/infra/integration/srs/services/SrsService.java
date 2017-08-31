@@ -1,9 +1,9 @@
 package se.inera.intyg.infra.integration.srs.services;
 
+import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
 import se.inera.intyg.infra.integration.srs.model.SjukskrivningsGrad;
-import se.inera.intyg.infra.integration.srs.model.SrsConsentResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsException;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
@@ -11,7 +11,6 @@ import se.inera.intyg.infra.integration.srs.model.SrsResponse;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
-
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public interface SrsService {
      */
     List<SrsQuestion> getQuestions(String diagnos);
 
-    SrsConsentResponse getConsent(String hsaId, Personnummer personId) throws InvalidPersonNummerException;
+    Samtyckesstatus getConsent(String hsaId, Personnummer personId) throws InvalidPersonNummerException;
 
     ResultCodeEnum setConsent(String hsaId, Personnummer personId, boolean samtycke) throws InvalidPersonNummerException;
 

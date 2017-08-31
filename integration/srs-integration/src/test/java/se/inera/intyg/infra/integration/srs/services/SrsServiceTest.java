@@ -22,28 +22,22 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.CollectionUtils;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentRequestType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
-import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentRequestType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponderInterface;
 import se.inera.intyg.infra.integration.srs.model.SjukskrivningsGrad;
-import se.inera.intyg.infra.integration.srs.model.SrsConsentResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
 import se.inera.intyg.infra.integration.srs.stub.GetConsentStub;
 import se.inera.intyg.infra.integration.srs.stub.GetPredictionQuestionsStub;
-import se.inera.intyg.infra.integration.srs.stub.SetConsentStub;
+import se.inera.intyg.infra.integration.srs.stub.repository.ConsentRepository;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
@@ -67,12 +61,13 @@ public class SrsServiceTest {
     private SrsService service;
 
     @Autowired
-    private GetConsentStub consentStub;
+    private ConsentRepository consentRepository;
 
     private Utdatafilter utdatafilter;
 
     @Before
     public void setup() {
+        consentRepository.clear();
         utdatafilter = new Utdatafilter();
         utdatafilter.setPrediktion(false);
         utdatafilter.setAtgardsrekommendation(false);
@@ -167,12 +162,13 @@ public class SrsServiceTest {
         // Use reflection to spy on the stub to make sure we are using the correct request
         final String hsaId = "hsa";
         final Personnummer persNr = new Personnummer("1912121212");
-        SrsConsentResponse response = service.getConsent(hsaId, persNr);
+        Samtyckesstatus response = service.getConsent(hsaId, persNr);
         assertNotNull(response);
+        assertEquals(Samtyckesstatus.INGET, response);
     }
 
     @Test
-    public void testSetConsent() throws Exception  {
+    public void testSetConsent() throws Exception {
         final String hsaId = "hsa";
         final Personnummer persNr = new Personnummer("1912121212");
         ResultCodeEnum response = service.setConsent(hsaId, persNr, true);
