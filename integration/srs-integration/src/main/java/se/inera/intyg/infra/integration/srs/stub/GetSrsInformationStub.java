@@ -21,26 +21,30 @@ package se.inera.intyg.infra.integration.srs.stub;
 
 import org.apache.cxf.annotations.SchemaValidation;
 import org.jetbrains.annotations.NotNull;
-
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgard;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendation;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendationer;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendationstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardstyp;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Bedomningsunderlag;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktion;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Individ;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Prediktion;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Risksignal;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Statistik;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Statistikbild;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Statistikstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
-
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
-
+import java.util.Optional;
 
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.BOTH)
 public class GetSrsInformationStub implements GetSRSInformationResponderInterface {
@@ -50,19 +54,30 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
     @Override
     public GetSRSInformationResponseType getSRSInformation(GetSRSInformationRequestType request) {
         GetSRSInformationResponseType response = new GetSRSInformationResponseType();
-        response.getBedomningsunderlag().add(createUnderlag(request.getUtdatafilter()));
+        response.getBedomningsunderlag().add(createUnderlag(request));
         response.setResultCode(ResultCodeEnum.OK);
         return response;
     }
 
     @NotNull
-    private Bedomningsunderlag createUnderlag(Utdatafilter filter) {
+    private Bedomningsunderlag createUnderlag(GetSRSInformationRequestType request) {
         Bedomningsunderlag underlag = new Bedomningsunderlag();
+        Utdatafilter filter = request.getUtdatafilter();
+        String personId = request.getIndivider().getIndivid().stream().map(Individ::getPersonId)
+                .findFirst().orElseThrow(() -> new IllegalArgumentException());
+        Optional<Diagnos> diagnos = request.getIndivider().getIndivid().stream().flatMap(i -> i.getDiagnos().stream()).findFirst();
+        underlag.setPersonId(personId);
 
         if (filter.isPrediktion()) {
             Diagnosprediktion diagnosprediktion = new Diagnosprediktion();
+            diagnosprediktion.setInkommandediagnos(diagnos.orElseThrow(() -> new IllegalArgumentException()));
             diagnosprediktion.setSannolikhetOvergransvarde(Math.random());
             diagnosprediktion.setDiagnosprediktionstatus(Diagnosprediktionstatus.OK);
+
+            Risksignal riskSignal = new Risksignal();
+            riskSignal.setRiskkategori(BigInteger.ONE);
+            riskSignal.setBeskrivning("test");
+            diagnosprediktion.setRisksignal(riskSignal);
 
             Prediktion prediktion = new Prediktion();
             prediktion.getDiagnosprediktion().add(diagnosprediktion);
@@ -72,38 +87,46 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
 
         if (filter.isAtgardsrekommendation()) {
             Atgardsrekommendationer rekommendationer = new Atgardsrekommendationer();
-            rekommendationer.getRekommendation().add(createAtgardsrekommendation("Atgardsforslag 1"));
-            rekommendationer.getRekommendation().add(createAtgardsrekommendation("Atgardsforslag 2"));
-            rekommendationer.getRekommendation().add(createAtgardsrekommendation("Atgardsforslag 3"));
+            rekommendationer.getRekommendation()
+                    .add(createAtgardsrekommendation("Atgardsforslag 1", diagnos.orElseThrow(() -> new IllegalArgumentException())));
+            rekommendationer.getRekommendation()
+                    .add(createAtgardsrekommendation("Atgardsforslag 2", diagnos.orElseThrow(() -> new IllegalArgumentException())));
+            rekommendationer.getRekommendation()
+                    .add(createAtgardsrekommendation("Atgardsforslag 3", diagnos.orElseThrow(() -> new IllegalArgumentException())));
             underlag.setAtgardsrekommendationer(rekommendationer);
         }
 
         if (filter.isStatistik()) {
             Statistik statistik = new Statistik();
-            statistik.getStatistikbild().add(createStatistikBild("M18"));
+            statistik.getStatistikbild().add(createStatistikBild(diagnos.orElseThrow(() -> new IllegalArgumentException())));
             underlag.setStatistik(statistik);
         }
 
         return underlag;
     }
 
-    private Statistikbild createStatistikBild(String diagnos) {
+    private Statistikbild createStatistikBild(Diagnos diagnos) {
         Statistikbild statistikbild = new Statistikbild();
         statistikbild.setAndringstidpunkt(LocalDateTime.of(YEAR, 1, 1, 1, 1));
-        statistikbild.setBildadress("http://localhost/images/" + diagnos);
-        Diagnos tempDiagnos = new Diagnos();
-        tempDiagnos.setCode(diagnos);
-        tempDiagnos.setCodeSystem("1.2.752.116.1.1.1.1.3");
-        statistikbild.setDiagnos(tempDiagnos);
+        statistikbild.setInkommandediagnos(diagnos);
+        statistikbild.setBildadress("http://localhost/images/" + diagnos.getCode());
+        statistikbild.setDiagnos(diagnos);
+        statistikbild.setStatistikstatus(Statistikstatus.OK);
         return statistikbild;
     }
 
     @NotNull
-    private Atgardsrekommendation createAtgardsrekommendation(String atgardsforslag) {
+    private Atgardsrekommendation createAtgardsrekommendation(String atgardsforslag, Diagnos diagnos) {
         Atgardsrekommendation atgardrekommendation = new Atgardsrekommendation();
+        atgardrekommendation.setInkommandediagnos(diagnos);
         Atgard atgard = new Atgard();
+        atgard.setAtgardId(BigInteger.ONE);
+        atgard.setAtgardstyp(Atgardstyp.REK);
+        atgard.setPrioritet(BigInteger.ONE);
+        atgard.setVersion("version");
         atgard.setAtgardsforslag(atgardsforslag);
         atgardrekommendation.getAtgard().add(atgard);
+        atgardrekommendation.setAtgardsrekommendationstatus(Atgardsrekommendationstatus.OK);
         return atgardrekommendation;
     }
 }

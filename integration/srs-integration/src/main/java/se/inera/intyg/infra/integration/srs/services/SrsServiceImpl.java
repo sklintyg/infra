@@ -130,6 +130,7 @@ public class SrsServiceImpl implements SrsService {
     private GetSRSInformationRequestType createRequest(String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
             SjukskrivningsGrad sjukskrivningsGrad) throws InvalidPersonNummerException {
         GetSRSInformationRequestType request = new GetSRSInformationRequestType();
+        request.setVersion("1");
         HsaId hsaId = new HsaId();
         hsaId.setRoot("1.2.752.129.2.1.4.1");
         hsaId.setExtension("SE5565594230-B31");
