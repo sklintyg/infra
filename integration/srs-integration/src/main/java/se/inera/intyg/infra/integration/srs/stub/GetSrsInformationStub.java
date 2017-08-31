@@ -64,13 +64,13 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
         Bedomningsunderlag underlag = new Bedomningsunderlag();
         Utdatafilter filter = request.getUtdatafilter();
         String personId = request.getIndivider().getIndivid().stream().map(Individ::getPersonId)
-                .findFirst().orElseThrow(() -> new IllegalArgumentException());
+                .findFirst().orElseThrow(IllegalArgumentException::new);
         Optional<Diagnos> diagnos = request.getIndivider().getIndivid().stream().flatMap(i -> i.getDiagnos().stream()).findFirst();
         underlag.setPersonId(personId);
 
         if (filter.isPrediktion()) {
             Diagnosprediktion diagnosprediktion = new Diagnosprediktion();
-            diagnosprediktion.setInkommandediagnos(diagnos.orElseThrow(() -> new IllegalArgumentException()));
+            diagnosprediktion.setInkommandediagnos(diagnos.orElseThrow(IllegalArgumentException::new));
             diagnosprediktion.setSannolikhetOvergransvarde(Math.random());
             diagnosprediktion.setDiagnosprediktionstatus(Diagnosprediktionstatus.OK);
 
@@ -88,17 +88,17 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
         if (filter.isAtgardsrekommendation()) {
             Atgardsrekommendationer rekommendationer = new Atgardsrekommendationer();
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag 1", diagnos.orElseThrow(() -> new IllegalArgumentException())));
+                    .add(createAtgardsrekommendation("Atgardsforslag 1", diagnos.orElseThrow(IllegalArgumentException::new)));
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag 2", diagnos.orElseThrow(() -> new IllegalArgumentException())));
+                    .add(createAtgardsrekommendation("Atgardsforslag 2", diagnos.orElseThrow(IllegalArgumentException::new)));
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag 3", diagnos.orElseThrow(() -> new IllegalArgumentException())));
+                    .add(createAtgardsrekommendation("Atgardsforslag 3", diagnos.orElseThrow(IllegalArgumentException::new)));
             underlag.setAtgardsrekommendationer(rekommendationer);
         }
 
         if (filter.isStatistik()) {
             Statistik statistik = new Statistik();
-            statistik.getStatistikbild().add(createStatistikBild(diagnos.orElseThrow(() -> new IllegalArgumentException())));
+            statistik.getStatistikbild().add(createStatistikBild(diagnos.orElseThrow(IllegalArgumentException::new)));
             underlag.setStatistik(statistik);
         }
 
