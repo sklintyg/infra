@@ -18,31 +18,31 @@
  */
 package se.inera.intyg.infra.sjukfall.testdata;
 
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
 
 
 /**
  * Created by Magnus Ekstrand on 2016-02-10.
  */
-public class AktivtIntygGenerator {
+public class SjukfallIntygGenerator {
 
     private final int linesToSkip = 1;
 
-    private AktivtIntygReader reader;
+    private SjukfallIntygReader reader;
     private List<IntygData> intygData;
 
-    public AktivtIntygGenerator(String location) {
-        this.reader = new AktivtIntygReader(location, linesToSkip);
+    public SjukfallIntygGenerator(String location) {
+        this.reader = new SjukfallIntygReader(location, linesToSkip);
         this.intygData = new ArrayList();
     }
 
-    public AktivtIntygGenerator generate() throws IOException {
+    public SjukfallIntygGenerator generate() throws IOException {
         List<String> csvlines = reader.read();
-        intygData = AktivtIntygLineMapper.map(csvlines);
+        intygData = SjukfallIntygLineMapper.map(csvlines);
         return this;
     }
 

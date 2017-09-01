@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
-import se.inera.intyg.infra.sjukfall.testdata.AktivtIntygGenerator;
+import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -38,35 +38,35 @@ import java.util.Map;
  * Created by Magnus Ekstrand on 10/02/16.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AktivtIntygResolverReduceRightTest {
+public class SjukfallIntygEnhetResolverReduceRightTest {
 
-    private static final String LOCATION_INTYGSDATA = "classpath:AktivtIntygResolverTest/intygsdata-resolver-right.csv";
+    private static final String LOCATION_INTYGSDATA = "classpath:Sjukfall/Enhet/intygsdata-resolver-right.csv";
 
     private static List<IntygData> intygDataList;
 
-    private AktivtIntygResolver resolver;
+    private SjukfallIntygEnhetResolver resolver;
 
 
     @BeforeClass
     public static void initTestData() throws IOException {
-        AktivtIntygGenerator generator = new AktivtIntygGenerator(LOCATION_INTYGSDATA);
+        SjukfallIntygGenerator generator = new SjukfallIntygGenerator(LOCATION_INTYGSDATA);
         intygDataList = generator.generate().get();
     }
 
     @Before
     public void setup() {
-        resolver = new AktivtIntygResolver();
+        resolver = new SjukfallIntygEnhetResolver(new SjukfallIntygEnhetCreator());
     }
 
     @Test
     public void testFall1() {
-        List<AktivtIntyg> result = getTestData("fall-1-right", "2016-02-10", 5, "2016-01-31");
+        List<SjukfallIntyg> result = getTestData("fall-1-right", "2016-02-10", 5, "2016-01-31");
         assertTrue("Expected 3 but was " + result.size(), result.size() == 3);
     }
 
     @Test
     public void testFall2() {
-        List<AktivtIntyg> result = getTestData("fall-2-right", "2016-02-10", 5, "2016-01-31");
+        List<SjukfallIntyg> result = getTestData("fall-2-right", "2016-02-10", 5, "2016-01-31");
         assertTrue("Expected 2 but was " + result.size(), result.size() == 2);
         assertEquals("fall-2-intyg-1", result.get(0).getIntygId());
         assertEquals("fall-2-intyg-2", result.get(1).getIntygId());
@@ -74,13 +74,13 @@ public class AktivtIntygResolverReduceRightTest {
 
     @Test
     public void testFall3() {
-        List<AktivtIntyg> result = getTestData("fall-3-right", "2016-02-10", 5, "2016-01-31");
+        List<SjukfallIntyg> result = getTestData("fall-3-right", "2016-02-10", 5, "2016-01-31");
         assertTrue("Expected 0 but was " + result.size(), result.size() == 0);
     }
 
     @Test
     public void testFall4() {
-        List<AktivtIntyg> result = getTestData("fall-4-right", "2016-02-10", 5, "2016-01-31");
+        List<SjukfallIntyg> result = getTestData("fall-4-right", "2016-02-10", 5, "2016-01-31");
         assertTrue("Expected 3 but was " + result.size(), result.size() == 3);
         assertEquals("fall-4-intyg-1", result.get(0).getIntygId());
         assertEquals("fall-4-intyg-2", result.get(1).getIntygId());
@@ -89,7 +89,7 @@ public class AktivtIntygResolverReduceRightTest {
 
     @Test
     public void testFall5() {
-        List<AktivtIntyg> result = getTestData("fall-5-right", "2016-02-10", 5, "2016-01-31");
+        List<SjukfallIntyg> result = getTestData("fall-5-right", "2016-02-10", 5, "2016-01-31");
         assertTrue("Expected 3 but was " + result.size(), result.size() == 3);
         assertEquals("fall-5-intyg-4", result.get(0).getIntygId());
         assertEquals("fall-5-intyg-1", result.get(1).getIntygId());
@@ -98,20 +98,20 @@ public class AktivtIntygResolverReduceRightTest {
 
     @Test
     public void testFall6() {
-        List<AktivtIntyg> result = getTestData("fall-6-right", "2016-02-10", 5, "2016-01-31");
+        List<SjukfallIntyg> result = getTestData("fall-6-right", "2016-02-10", 5, "2016-01-31");
         assertTrue("Expected 2 but was " + result.size(), result.size() == 2);
     }
 
-    private List<AktivtIntyg> getTestData(String key, String aktivtDatum , int maxIntygsGlapp, String initialtDatum) {
-        Map<String, List<AktivtIntyg>> data = getTestData(aktivtDatum);
+    private List<SjukfallIntyg> getTestData(String key, String aktivtDatum , int maxIntygsGlapp, String initialtDatum) {
+        Map<String, List<SjukfallIntyg>> data = getTestData(aktivtDatum);
         return resolver.reduceRight(data.get(key), maxIntygsGlapp, LocalDate.parse(initialtDatum));
     }
 
-    private Map<String, List<AktivtIntyg>> getTestData(String aktivtDatum) {
-        return resolver.toMap(intygDataList, LocalDate.parse(aktivtDatum));
+    private Map<String, List<SjukfallIntyg>> getTestData(String aktivtDatum) {
+        return resolver.createMap(intygDataList, LocalDate.parse(aktivtDatum));
     }
 
-    private Map<String, List<AktivtIntyg>> getTestData(LocalDate aktivtDatum) {
-        return resolver.toMap(intygDataList, aktivtDatum);
+    private Map<String, List<SjukfallIntyg>> getTestData(LocalDate aktivtDatum) {
+        return resolver.createMap(intygDataList, aktivtDatum);
     }
 }

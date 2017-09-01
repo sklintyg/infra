@@ -35,17 +35,17 @@ import java.util.Set;
 /**
  * Created by Magnus Ekstrand on 2016-02-11.
  */
-public class AktivtIntygLineMapper {
+public class SjukfallIntygLineMapper {
 
     Set<String[]> fields;
 
 
-    public AktivtIntygLineMapper() {
+    public SjukfallIntygLineMapper() {
         fields = new HashSet();
     }
 
     public static List<IntygData> map(List<String> lines) {
-        AktivtIntygLineMapper mapper = new AktivtIntygLineMapper();
+        SjukfallIntygLineMapper mapper = new SjukfallIntygLineMapper();
 
         for (String line : lines) {
             String[] splitData = mapper.toArray(line);

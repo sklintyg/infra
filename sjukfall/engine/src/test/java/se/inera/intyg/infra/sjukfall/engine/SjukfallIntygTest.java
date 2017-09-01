@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
-import se.inera.intyg.infra.sjukfall.testdata.AktivtIntygGenerator;
+import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -37,9 +37,9 @@ import java.util.List;
  * Created by Magnus Ekstrand on 2016-02-16.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AktivtIntygTest {
+public class SjukfallIntygTest {
 
-    private static final String LOCATION_INTYGSDATA = "classpath:AktivtIntygTest/intygsdata.csv";
+    private static final String LOCATION_INTYGSDATA = "classpath:Sjukfall/Enhet/intygsdata.csv";
 
     private static List<IntygData> intygDataList;
 
@@ -47,7 +47,7 @@ public class AktivtIntygTest {
 
     @BeforeClass
     public static void initTestData() throws IOException {
-        AktivtIntygGenerator generator = new AktivtIntygGenerator(LOCATION_INTYGSDATA);
+        SjukfallIntygGenerator generator = new SjukfallIntygGenerator(LOCATION_INTYGSDATA);
         intygDataList = generator.generate().get();
 
         assertTrue("Expected 6 but was " + intygDataList.size(), intygDataList.size() == 6);
@@ -60,7 +60,7 @@ public class AktivtIntygTest {
     @Test
     public void testIntyg1() {
         IntygData intygData = getIntygsData("intyg-1");
-        AktivtIntyg testee = new AktivtIntyg.AktivtIntygBuilder(intygData, activeDate).build();
+        SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate).build();
 
         assertIntygsData(testee, "2016-02-01", "2016-02-10", false);
     }
@@ -68,7 +68,7 @@ public class AktivtIntygTest {
     @Test
     public void testIntyg2() {
         IntygData intygData = getIntygsData("intyg-2");
-        AktivtIntyg testee = new AktivtIntyg.AktivtIntygBuilder(intygData, activeDate).build();
+        SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate).build();
 
         assertIntygsData(testee, "2016-02-12", "2016-02-20", true);
     }
@@ -76,7 +76,7 @@ public class AktivtIntygTest {
     @Test
     public void testIntyg3() {
         IntygData intygData = getIntygsData("intyg-3");
-        AktivtIntyg testee = new AktivtIntyg.AktivtIntygBuilder(intygData, activeDate).build();
+        SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate).build();
 
         assertIntygsData(testee, "2016-02-01", "2016-02-20", true);
     }
@@ -84,7 +84,7 @@ public class AktivtIntygTest {
     @Test
     public void testIntyg4() {
         IntygData intygData = getIntygsData("intyg-4");
-        AktivtIntyg testee = new AktivtIntyg.AktivtIntygBuilder(intygData, activeDate).build();
+        SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate).build();
 
         assertIntygsData(testee, "2016-02-01", "2016-02-25", false);
     }
@@ -92,7 +92,7 @@ public class AktivtIntygTest {
     @Test
     public void testIntyg5() {
         IntygData intygData = getIntygsData("intyg-5");
-        AktivtIntyg testee = new AktivtIntyg.AktivtIntygBuilder(intygData, activeDate).build();
+        SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate).build();
 
         assertIntygsData(testee, "2016-02-01", "2016-02-28", true);
     }
@@ -100,9 +100,9 @@ public class AktivtIntygTest {
     @Test
     public void testIntyg6() {
         IntygData intygData = getIntygsData("intyg-6");
-        AktivtIntyg testee1 = new AktivtIntyg.AktivtIntygBuilder(intygData, activeDate).build();
-        AktivtIntyg testee2 = new AktivtIntyg.AktivtIntygBuilder(intygData, LocalDate.parse("2016-02-22")).build();
-        AktivtIntyg testee3 = new AktivtIntyg.AktivtIntygBuilder(intygData, LocalDate.parse("2016-02-23")).build();
+        SjukfallIntyg testee1 = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate).build();
+        SjukfallIntyg testee2 = new SjukfallIntyg.SjukfallIntygBuilder(intygData, LocalDate.parse("2016-02-22")).build();
+        SjukfallIntyg testee3 = new SjukfallIntyg.SjukfallIntygBuilder(intygData, LocalDate.parse("2016-02-23")).build();
 
         assertIntygsData(testee1, "2016-02-11", "2016-02-28", false);
         assertIntygsData(testee2, "2016-02-11", "2016-02-28", true);
@@ -116,7 +116,7 @@ public class AktivtIntygTest {
                 .get();
     }
 
-    private static void assertIntygsData(AktivtIntyg obj, String startDatum, String slutDatum, boolean aktivtIntyg) {
+    private static void assertIntygsData(SjukfallIntyg obj, String startDatum, String slutDatum, boolean aktivtIntyg) {
         assertTrue(obj.getStartDatum().equals(LocalDate.parse(startDatum)));
         assertTrue(obj.getSlutDatum().equals(LocalDate.parse(slutDatum)));
         assertTrue(obj.isAktivtIntyg() == aktivtIntyg);

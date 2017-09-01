@@ -35,48 +35,47 @@ import java.util.stream.Collectors;
 /**
  * @author Magnus Ekstrand on 2017-02-10.
  */
-public class AktivtIntygCreator {
+public class SjukfallIntygEnhetCreator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AktivtIntygCreator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygEnhetCreator.class);
 
 
     // - - - API - - -
 
-    public Map<String, List<AktivtIntyg>> create(List<IntygData> intygData, LocalDate aktivtDatum) {
-        LOG.debug("Start creating a map with storing application specific certificate information...");
+    public Map<String, List<SjukfallIntyg>> create(List<IntygData> intygData, LocalDate aktivtDatum) {
+        LOG.debug("Start creating a map of 'sjukfallintyg'...");
 
-        Map<String, List<AktivtIntyg>> map;
+        Map<String, List<SjukfallIntyg>> map;
 
         map = createMap(intygData, aktivtDatum);
         map = reduceMap(map);
         map = sortValues(map);
         map = setActive(map);
 
-        LOG.debug("...stop creating a map with storing application specific certificate information.");
+        LOG.debug("...stop creating a map of 'sjukfallintyg'.");
         return map;
     }
 
-
     // - - - Package scope - - -
 
-    Map<String, List<AktivtIntyg>> createMap(List<IntygData> intygData, LocalDate aktivtDatum) {
+    Map<String, List<SjukfallIntyg>> createMap(List<IntygData> intygsData, LocalDate aktivtDatum) {
         LOG.debug("  1. Create the map");
 
-        Map<String, List<AktivtIntyg>> map = new HashMap<>();
+        Map<String, List<SjukfallIntyg>> map = new HashMap<>();
 
-        for (IntygData i : intygData) {
+        for (IntygData i : intygsData) {
             String k = i.getPatientId();
 
             map.computeIfAbsent(k, k1 -> new ArrayList<>());
 
-            AktivtIntyg v = new AktivtIntyg.AktivtIntygBuilder(i, aktivtDatum).build();
+            SjukfallIntyg v = new SjukfallIntyg.SjukfallIntygBuilder(i, aktivtDatum).build();
             map.get(k).add(v);
         }
 
         return map;
     }
 
-    Map<String, List<AktivtIntyg>> reduceMap(Map<String, List<AktivtIntyg>> map) {
+    Map<String, List<SjukfallIntyg>> reduceMap(Map<String, List<SjukfallIntyg>> map) {
         LOG.debug("  2. Reduce map - filter out each entry where there is no active certificate.");
 
         return map.entrySet().stream()
@@ -87,26 +86,26 @@ public class AktivtIntygCreator {
 
     /**
      * Method returns a map with sorted values. The sorting is done on
-     * AktivtIntyg objects' slutDatum. Objects are arranged in ascending order,
+     * SjukfallIntyg objects' slutDatum. Objects are arranged in ascending order,
      * i.e object with biggest slutDatum will be last.
      *
      * @param unsortedMap a map with patients current certificates
      * @return a map with patients current certificates sorted in ascending order
      */
-    Map<String, List<AktivtIntyg>> sortValues(Map<String, List<AktivtIntyg>> unsortedMap) {
+    Map<String, List<SjukfallIntyg>> sortValues(Map<String, List<SjukfallIntyg>> unsortedMap) {
         LOG.debug("  3. Sort map - sort each entry by its end date using ascending order.");
 
         // Lambda comparator
-        Comparator<AktivtIntyg> endDateComparator = (o1, o2) -> o1.getSlutDatum().compareTo(o2.getSlutDatum());
+        Comparator<SjukfallIntyg> dateComparator = (o1, o2) -> o1.getSlutDatum().compareTo(o2.getSlutDatum());
 
         return unsortedMap.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         e -> e.getValue().stream()
-                                .sorted(endDateComparator)
+                                .sorted(dateComparator)
                                 .collect(Collectors.toList())));
     }
 
-    Map<String, List<AktivtIntyg>> setActive(Map<String, List<AktivtIntyg>> map) {
+    Map<String, List<SjukfallIntyg>> setActive(Map<String, List<SjukfallIntyg>> map) {
         LOG.debug("  4. Set the active certificate - there can be only one active certificate, find it and make it active.");
 
         return map.entrySet().stream()
@@ -116,38 +115,38 @@ public class AktivtIntygCreator {
                                 .collect(Collectors.toList())));
     }
 
-    private List<AktivtIntyg> setActive(List<AktivtIntyg> intygsDataList) {
-        List<AktivtIntyg> values = new ArrayList<>();
+    private List<SjukfallIntyg> setActive(List<SjukfallIntyg> intygsDataList) {
+        List<SjukfallIntyg> values = new ArrayList<>();
 
         int aktivtIntygIndex = 0;
-        AktivtIntyg aktivtIntyg = null;
+        SjukfallIntyg sjukfallIntyg = null;
 
-        ListIterator<AktivtIntyg> iterator = intygsDataList.listIterator();
+        ListIterator<SjukfallIntyg> iterator = intygsDataList.listIterator();
         while (iterator.hasNext()) {
             int currentIndex = iterator.nextIndex();
-            AktivtIntyg current = iterator.next();
+            SjukfallIntyg current = iterator.next();
 
             // Add current object to new list
             values.add(current);
 
             if (current.isAktivtIntyg()) {
 
-                if (aktivtIntyg == null) {
-                    aktivtIntyg = current;
+                if (sjukfallIntyg == null) {
+                    sjukfallIntyg = current;
                     aktivtIntygIndex = currentIndex;
                     continue;
                 }
 
-                LocalDateTime dtAktivt = aktivtIntyg.getSigneringsTidpunkt();
+                LocalDateTime dtAktivt = sjukfallIntyg.getSigneringsTidpunkt();
                 LocalDateTime dtCurrent = current.getSigneringsTidpunkt();
 
                 if (dtAktivt.isBefore(dtCurrent)) {
                     // Change active status
-                    aktivtIntyg.setAktivtIntyg(false);
+                    sjukfallIntyg.setAktivtIntyg(false);
                     // Update new list
-                    values.set(aktivtIntygIndex, aktivtIntyg);
+                    values.set(aktivtIntygIndex, sjukfallIntyg);
                     // Swap
-                    aktivtIntyg = current;
+                    sjukfallIntyg = current;
                     aktivtIntygIndex = currentIndex;
                 } else {
                     // Change active status

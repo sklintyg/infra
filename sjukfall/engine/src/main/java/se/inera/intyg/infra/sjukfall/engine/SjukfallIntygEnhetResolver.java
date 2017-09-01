@@ -31,19 +31,28 @@ import java.util.Map;
 /**
  * @author Magnus Ekstrand on 2017-02-10.
  */
-public class AktivtIntygResolver {
+public class SjukfallIntygEnhetResolver {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AktivtIntygResolver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygEnhetResolver.class);
 
+    private SjukfallIntygEnhetCreator creator = new SjukfallIntygEnhetCreator();
+
+    public SjukfallIntygEnhetResolver(SjukfallIntygEnhetCreator creator) {
+        this.creator = creator;
+    }
 
     // - - -  API  - - -
 
-    public Map<String, List<AktivtIntyg>> resolve(List<IntygData> intygData, int maxIntygsGlapp, LocalDate aktivtDatum) {
+    /**
+     * Method is resolving sjukfall for a health care unit based on the unit's certificate information.
+     * A map with patient id as key and a list of certificates associated with a sjukfall as value, will be returned.
+     */
+    public Map<String, List<SjukfallIntyg>> resolve(List<IntygData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum) {
 
         LOG.debug("Start resolving certificate information...");
         LOG.debug("  - max days between certificates: {}, active date: {}", maxIntygsGlapp, aktivtDatum);
 
-        if (intygData == null || intygData.isEmpty()) {
+        if (intygsData == null || intygsData.isEmpty()) {
             LOG.debug("There was no in-data! Returning empty list");
             return new HashMap<>();
         }
@@ -55,28 +64,43 @@ public class AktivtIntygResolver {
 
         // Create an map with personnummer as key holding each person's intygsdata
         // The map's values are sorted by slutDatum with ascending order.
-        Map<String, List<AktivtIntyg>> intygsDataMap = toMap(intygData, aktivtDatum);
+        Map<String, List<SjukfallIntyg>> createdMap = createMap(intygsData, aktivtDatum);
 
-        // Reduce list of IntygsData
-        Map<String, List<AktivtIntyg>> reducedMap = reduceMap(intygsDataMap, maxIntygsGlapp);
+        // Reduce the list
+        Map<String, List<SjukfallIntyg>> reducedMap = reduceMap(createdMap, maxIntygsGlapp);
 
         LOG.debug("...stop resolving certificate information.");
         return reducedMap;
     }
 
-
     // - - -  Package scope  - - -
 
-    private Map<String, List<AktivtIntyg>> reduceMap(Map<String, List<AktivtIntyg>> intygsDataMap, int maxIntygsGlapp) {
+    /**
+     * Method returns a map with intermediate IntygsData objects.
+     * Patient's personal-id is used as key.
+     *
+     * @param intygsData a list with basic certificate data
+     * @param aktivtDatum a date used for decision if a certificate is active or not
+     * @return a map with a patients current certificates
+     */
+    Map<String, List<SjukfallIntyg>> createMap(List<IntygData> intygsData, LocalDate aktivtDatum) {
+        if (intygsData == null || intygsData.isEmpty()) {
+            new HashMap<>();
+        }
+
+        return creator.create(intygsData, aktivtDatum);
+    }
+
+    Map<String, List<SjukfallIntyg>> reduceMap(Map<String, List<SjukfallIntyg>> intygsDataMap, int maxIntygsGlapp) {
 
         LOG.debug("  - Reduce certificates. Only certificates fulfilling request parameter 'maxIntygsGlapp' will be concerned.");
 
-        Map<String, List<AktivtIntyg>> resultMap = new HashMap<>();
+        Map<String, List<SjukfallIntyg>> resultMap = new HashMap<>();
 
         // For each entry in map, lookup "aktivtIntyg" within the list of IntygsData
-        for (Map.Entry<String, List<AktivtIntyg>> entry : intygsDataMap.entrySet()) {
+        for (Map.Entry<String, List<SjukfallIntyg>> entry : intygsDataMap.entrySet()) {
 
-            List<AktivtIntyg> reducedList = reduceList(entry.getValue(), maxIntygsGlapp);
+            List<SjukfallIntyg> reducedList = reduceList(entry.getValue(), maxIntygsGlapp);
             if (!reducedList.isEmpty()) {
                 resultMap.put(entry.getKey(), reducedList);
             }
@@ -85,48 +109,48 @@ public class AktivtIntygResolver {
         return resultMap;
     }
 
-    List<AktivtIntyg> reduceList(List<AktivtIntyg> values, int maxIntygsGlapp)  {
+    List<SjukfallIntyg> reduceList(List<SjukfallIntyg> values, int maxIntygsGlapp)  {
 
-        // filter out "aktivtIntyg"
-        AktivtIntyg aktivtIntyg = values.stream().filter(e -> e.isAktivtIntyg()).findFirst().get();
+        // filter out "sjukfallIntyg"
+        SjukfallIntyg sjukfallIntyg = values.stream().filter(e -> e.isAktivtIntyg()).findFirst().get();
 
-        // get position of the "aktivtIntyg"
-        int aktivtIndex = values.indexOf(aktivtIntyg);
+        // get position of the "sjukfallIntyg"
+        int aktivtIndex = values.indexOf(sjukfallIntyg);
 
-        // Slice "list of SortableIntygsData" into two lists, use "aktivtIntyg" as divider
-        List<AktivtIntyg> left = new ArrayList<>();
+        // Slice "list of SortableIntygsData" into two lists, use "sjukfallIntyg" as divider
+        List<SjukfallIntyg> left = new ArrayList<>();
         if (aktivtIndex > 0) {
             left = values.subList(0, aktivtIndex);
         }
 
-        List<AktivtIntyg> right = new ArrayList<>();
+        List<SjukfallIntyg> right = new ArrayList<>();
         if (aktivtIndex < values.size() - 1) {
             right = values.subList(aktivtIndex + 1, values.size());
         }
 
         // traverse (1) right and (2) left sub lists and add intyg fulfilling "maxIntygsGlapp"
-        right = reduceRight(right, maxIntygsGlapp, aktivtIntyg.getSlutDatum());
+        right = reduceRight(right, maxIntygsGlapp, sjukfallIntyg.getSlutDatum());
 
         // assure we have the smallest date as initial compare date when we call reduceLeft method
-        left = reduceLeft(left, maxIntygsGlapp, getCompareDate(right, aktivtIntyg));
+        left = reduceLeft(left, maxIntygsGlapp, getCompareDate(right, sjukfallIntyg));
 
         // concatenate the reduced list
-        List<AktivtIntyg> reducedList = new ArrayList<>();
+        List<SjukfallIntyg> reducedList = new ArrayList<>();
         reducedList.addAll(left);
-        reducedList.add(aktivtIntyg);
+        reducedList.add(sjukfallIntyg);
         reducedList.addAll(right);
 
         return reducedList;
     }
 
-    List<AktivtIntyg> reduceRight(List<AktivtIntyg> right, int maxIntygsGlapp, LocalDate initialCompareDate) {
+    List<SjukfallIntyg> reduceRight(List<SjukfallIntyg> right, int maxIntygsGlapp, LocalDate initialCompareDate) {
         // ensure right list is sorted by startDatum ascending order
         right.sort((o1, o2) -> o1.getStartDatum().compareTo(o2.getStartDatum()));
 
-        List<AktivtIntyg> list = new ArrayList<>();
+        List<SjukfallIntyg> list = new ArrayList<>();
         LocalDate compareDate = initialCompareDate;
 
-        for (AktivtIntyg nextRight : right) {
+        for (SjukfallIntyg nextRight : right) {
             LocalDate start = nextRight.getStartDatum();
             LocalDate lastValidStartDate = compareDate.plusDays(maxIntygsGlapp + 1);
 
@@ -142,12 +166,12 @@ public class AktivtIntygResolver {
         return list;
     }
 
-    List<AktivtIntyg> reduceLeft(List<AktivtIntyg> left, int maxIntygsGlapp, LocalDate initialCompareDate) {
-        List<AktivtIntyg> list = new ArrayList<>();
+    List<SjukfallIntyg> reduceLeft(List<SjukfallIntyg> left, int maxIntygsGlapp, LocalDate initialCompareDate) {
+        List<SjukfallIntyg> list = new ArrayList<>();
         LocalDate compareDate = initialCompareDate;
 
         for (int i = left.size() - 1; i >= 0; i--) {
-            AktivtIntyg nextLeft = left.get(i);
+            SjukfallIntyg nextLeft = left.get(i);
 
             LocalDate end = nextLeft.getSlutDatum();
             LocalDate lastValidEndDate = compareDate.minusDays(maxIntygsGlapp + 1);
@@ -164,35 +188,13 @@ public class AktivtIntygResolver {
         return list;
     }
 
-    /**
-     * Method returns a map with intermediate IntygsData objects.
-     * Patient's personal-id is used as key.
-     *
-     * @param intygData a list with basic certificate data
-     * @param aktivtDatum a date used for decision if a certificate is active or not
-     * @return a map with a patients current certificates
-     */
-    Map<String, List<AktivtIntyg>> toMap(List<IntygData> intygData, LocalDate aktivtDatum) {
-        Map<String, List<AktivtIntyg>> map = new HashMap<>();
-
-        if (intygData == null || intygData.isEmpty()) {
-            return map;
-        }
-
-        AktivtIntygCreator creator = new AktivtIntygCreator();
-        map = creator.create(intygData, aktivtDatum);
-
-        return map;
-    }
-
-
     // - - -  Private scope  - - -
 
-    private LocalDate getCompareDate(List<AktivtIntyg> right, AktivtIntyg aktivtIntyg) {
+    private LocalDate getCompareDate(List<SjukfallIntyg> right, SjukfallIntyg sjukfallIntyg) {
         LocalDate smallest;
 
         if (right == null || right.isEmpty()) {
-            return  aktivtIntyg.getStartDatum();
+            return  sjukfallIntyg.getStartDatum();
         } else if (right.size() == 1) {
             smallest = right.get(0).getStartDatum();
         } else {
@@ -202,11 +204,11 @@ public class AktivtIntygResolver {
                     .getStartDatum();
         }
 
-        if (smallest.isBefore(aktivtIntyg.getStartDatum())) {
+        if (smallest.isBefore(sjukfallIntyg.getStartDatum())) {
             return smallest;
         }
 
-        return aktivtIntyg.getStartDatum();
+        return sjukfallIntyg.getStartDatum();
     }
 
 

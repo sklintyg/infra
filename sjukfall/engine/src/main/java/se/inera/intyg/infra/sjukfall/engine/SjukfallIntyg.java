@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author Magnus Ekstrand on 2017-02-10.
  */
-public class AktivtIntyg extends IntygData {
+public class SjukfallIntyg extends IntygData {
 
     private static final int HASH_SEED = 31;
 
@@ -36,7 +36,7 @@ public class AktivtIntyg extends IntygData {
 
     private boolean aktivtIntyg;
 
-    public AktivtIntyg(AktivtIntygBuilder builder) {
+    public SjukfallIntyg(SjukfallIntygBuilder builder) {
         super();
 
         this.startDatum = builder.startDatum;
@@ -86,7 +86,7 @@ public class AktivtIntyg extends IntygData {
             return false;
         }
 
-        AktivtIntyg that = (AktivtIntyg) o;
+        SjukfallIntyg that = (SjukfallIntyg) o;
         return startDatum.equals(that.startDatum) && slutDatum.equals(that.slutDatum);
 
     }
@@ -99,7 +99,7 @@ public class AktivtIntyg extends IntygData {
         return result;
     }
 
-    public static class AktivtIntygBuilder {
+    public static class SjukfallIntygBuilder {
 
         private final IntygData intygData;
 
@@ -108,15 +108,15 @@ public class AktivtIntyg extends IntygData {
 
         private boolean aktivtIntyg;
 
-        AktivtIntygBuilder(IntygData intygData, LocalDate aktivtDatum) {
+        public SjukfallIntygBuilder(IntygData intygData, LocalDate aktivtDatum) {
             this.intygData = intygData;
             this.startDatum = lookupStartDatum(intygData.getFormagor());
             this.slutDatum = lookupSlutDatum(intygData.getFormagor());
-            this.aktivtIntyg = hasAktivFormaga(intygData.getFormagor(), aktivtDatum);
+            this.aktivtIntyg = isAktivtIntyg(intygData, aktivtDatum);
         }
 
-        public AktivtIntyg build() {
-            return new AktivtIntyg(this);
+        public SjukfallIntyg build() {
+            return new SjukfallIntyg(this);
         }
 
         private boolean hasAktivFormaga(List<Formaga> formagor, LocalDate aktivtDatum) {
@@ -126,6 +126,10 @@ public class AktivtIntyg extends IntygData {
 
         private boolean isAktivFormaga(LocalDate aktivtDatum, Formaga f) {
             return f.getStartdatum().compareTo(aktivtDatum) < 1 && f.getSlutdatum().compareTo(aktivtDatum) > -1;
+        }
+
+        private boolean isAktivtIntyg(IntygData intygData, LocalDate aktivtDatum) {
+            return aktivtDatum != null ? hasAktivFormaga(intygData.getFormagor(), aktivtDatum) : false;
         }
 
         private LocalDate lookupStartDatum(List<Formaga> formagor) {

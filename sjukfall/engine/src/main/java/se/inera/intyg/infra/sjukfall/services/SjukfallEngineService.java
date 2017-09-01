@@ -20,7 +20,8 @@ package se.inera.intyg.infra.sjukfall.services;
 
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
-import se.inera.intyg.infra.sjukfall.dto.Sjukfall;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallPatient;
 
 import java.util.List;
 
@@ -30,15 +31,28 @@ import java.util.List;
 public interface SjukfallEngineService {
 
     /**
-     * This method is the entry point when calculating 'sjukfall' using certificate information
-     * and request parameters set by the client. Each 'sjukfall' correspomds to one patient.
+     * This method is the entry point when calculating 'sjukfall' for a health care untit. Provided data are
+     * certificate information and request parameters set by the client. Each compiled 'sjukfall' corresponds to one
+     * patient.
      *
-     * @param intygData the certificate information (base data)
+     * @param intygData the certificate information (base data) for the health care unit
      * @param parameters client request parameters
      *
-     * @return a list with 'sjukfall' wrapped with an internal format.
+     * @return a list of compiled 'sjukfall'.
      *
      */
-    List<Sjukfall> beraknaSjukfall(List<IntygData> intygData, IntygParametrar parameters);
+    List<SjukfallEnhet> beraknaSjukfallForEnhet(List<IntygData> intygData, IntygParametrar parameters);
+
+    /**
+     * This method is the entry point when calculating 'sjukfall' for one patient. Provied data are
+     * certificate information and request parameters set by the client.
+     *
+     * @param intygData the certificate information (base data) for one patient
+     * @param parameters client request parameters
+     *
+     * @return a list of compiled 'sjukfall'.
+     *
+     */
+    List<SjukfallPatient> beraknaSjukfallForPatient(List<IntygData> intygData, IntygParametrar parameters);
 
 }

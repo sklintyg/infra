@@ -28,16 +28,21 @@ import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.infra.sjukfall.dto.Patient;
-import se.inera.intyg.infra.sjukfall.dto.Sjukfall;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallPatient;
 import se.inera.intyg.infra.sjukfall.dto.Vardenhet;
 import se.inera.intyg.infra.sjukfall.dto.Vardgivare;
-import se.inera.intyg.infra.sjukfall.engine.AktivtIntyg;
-import se.inera.intyg.infra.sjukfall.engine.AktivtIntygResolver;
+import se.inera.intyg.infra.sjukfall.engine.SjukfallIntyg;
+import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetCreator;
+import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetResolver;
+import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygPatientCreator;
+import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygPatientResolver;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallLangdCalculator;
 
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -52,95 +57,140 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
 
     protected Clock clock;
 
-    private AktivtIntygResolver resolver = new AktivtIntygResolver();
+    private SjukfallIntygEnhetResolver resolverEnhet;
+    private SjukfallIntygPatientResolver resolverPatient;
 
     public SjukfallEngineServiceImpl() {
         clock = Clock.system(ZoneId.of("Europe/Paris"));
+        resolverEnhet = new SjukfallIntygEnhetResolver(new SjukfallIntygEnhetCreator());
+        resolverPatient = new SjukfallIntygPatientResolver(new SjukfallIntygPatientCreator());
     }
-
 
     // api
 
     @Override
-    public List<Sjukfall> beraknaSjukfall(List<IntygData> intygData, IntygParametrar parameters) {
-        LOG.debug("Start calculation of sjukfall...");
+    public List<SjukfallEnhet> beraknaSjukfallForEnhet(List<IntygData> intygsData, IntygParametrar parameters) {
+        LOG.debug("Start calculation of sjukfall for health care unit...");
 
         int maxIntygsGlapp = parameters.getMaxIntygsGlapp();
-        LocalDate activeDate = parameters.getAktivtDatum();
+        LocalDate aktivtDatum = parameters.getAktivtDatum();
 
-        Map<String, List<AktivtIntyg>> resolvedIntygsData =
-                resolver.resolve(intygData, maxIntygsGlapp, activeDate);
+        Map<String, List<SjukfallIntyg>> resolvedIntygsData =
+                resolverEnhet.resolve(intygsData, maxIntygsGlapp, aktivtDatum);
 
-        // Assemble Sjukfall objects
-        List<Sjukfall> result = assemble(resolvedIntygsData, parameters);
+        // Assemble SjukfallEnhet objects
+        List<SjukfallEnhet> result = assembleSjukfallEnhetList(resolvedIntygsData, aktivtDatum);
 
-        LOG.debug("...stop calculation of sjukfall.");
+        LOG.debug("...stop calculation of sjukfall for health care unit.");
         return result;
     }
 
+    @Override
+    public List<SjukfallPatient> beraknaSjukfallForPatient(List<IntygData> intygData, IntygParametrar parameters) {
+        LOG.debug("Start calculation of sjukfall for a patient...");
+
+        int maxIntygsGlapp = parameters.getMaxIntygsGlapp();
+        LocalDate aktivtDatum = parameters.getAktivtDatum();
+
+        Map<Integer, List<SjukfallIntyg>> resolvedIntygsData =
+                resolverPatient.resolve(intygData, maxIntygsGlapp, aktivtDatum);
+
+        // Reverse order since we need the information in descending order
+
+        // Assemble SjukfallPatient objects
+        List<SjukfallPatient> result = assembleSjukfallPatientList(resolvedIntygsData, maxIntygsGlapp, aktivtDatum);
+
+        LOG.debug("...stop calculation of sjukfall for a patient.");
+        return result;
+    }
 
     // package scope
 
-    DiagnosKod getDiagnosKod(IntygData intyg) {
-        return new DiagnosKod(intyg.getDiagnosKod());
+    DiagnosKod getDiagnosKod(SjukfallIntyg sjukfallIntyg) {
+        return new DiagnosKod(sjukfallIntyg.getDiagnosKod());
     }
 
-    Sjukfall buildSjukfall(List<AktivtIntyg> values, AktivtIntyg aktivtIntyg, LocalDate aktivtDatum) {
-        Sjukfall sjukfall = new Sjukfall();
-        sjukfall.setVardgivare(getVardgivare(aktivtIntyg));
-        sjukfall.setVardenhet(getVardenhet(aktivtIntyg));
-        sjukfall.setLakare(getLakare(aktivtIntyg));
-        sjukfall.setPatient(getPatient(aktivtIntyg));
-        sjukfall.setDiagnosKod(getDiagnosKod(aktivtIntyg));
-        sjukfall.setStart(getMinimumDate(values));
-        sjukfall.setSlut(getMaximumDate(values));
-        sjukfall.setDagar(SjukfallLangdCalculator.getEffectiveNumberOfSickDays(values));
-        sjukfall.setIntyg(values.size());
-        sjukfall.setGrader(getGrader(aktivtIntyg.getFormagor()));
-        sjukfall.setAktivGrad(getAktivGrad(aktivtIntyg.getFormagor(), aktivtDatum));
+    SjukfallEnhet buildSjukfallEnhet(List<SjukfallIntyg> values, SjukfallIntyg aktivtIntyg, LocalDate aktivtDatum) {
+        SjukfallEnhet sjukfallEnhet = new SjukfallEnhet();
+        sjukfallEnhet.setVardgivare(getVardgivare(aktivtIntyg));
+        sjukfallEnhet.setVardenhet(getVardenhet(aktivtIntyg));
+        sjukfallEnhet.setLakare(getLakare(aktivtIntyg));
+        sjukfallEnhet.setPatient(getPatient(aktivtIntyg));
+        sjukfallEnhet.setDiagnosKod(getDiagnosKod(aktivtIntyg));
+        sjukfallEnhet.setStart(getMinimumDate(values));
+        sjukfallEnhet.setSlut(getMaximumDate(values));
+        sjukfallEnhet.setDagar(SjukfallLangdCalculator.getEffectiveNumberOfSickDays(values));
+        sjukfallEnhet.setIntyg(values.size());
+        sjukfallEnhet.setGrader(getGrader(aktivtIntyg.getFormagor()));
+        sjukfallEnhet.setAktivGrad(getAktivGrad(aktivtIntyg.getFormagor(), aktivtDatum));
 
-        return sjukfall;
+        return sjukfallEnhet;
     }
 
+    SjukfallPatient buildSjukfallPatient(List<SjukfallIntyg> values) {
+        SjukfallPatient sjukfallPatient = new SjukfallPatient();
+        sjukfallPatient.setPatient(getPatient(values.get(0)));
+        sjukfallPatient.setDiagnosKod(getDiagnosKod(values.get(0)));
+        sjukfallPatient.setStart(getMinimumDate(values));
+        sjukfallPatient.setSlut(getMaximumDate(values));
+        sjukfallPatient.setSjukfallIntygList(values);
+
+        return sjukfallPatient;
+    }
 
     // private scope
 
-    private Patient getPatient(IntygData intyg) {
-        String id = StringUtils.trim(intyg.getPatientId());
-        String namn = intyg.getPatientNamn();
+    private Patient getPatient(SjukfallIntyg sjukfallIntyg) {
+        String id = StringUtils.trim(sjukfallIntyg.getPatientId());
+        String namn = sjukfallIntyg.getPatientNamn();
 
         return new Patient(id, namn);
     }
 
-    private List<Sjukfall> assemble(Map<String, List<AktivtIntyg>> resolvedIntygsData, IntygParametrar parameters) {
-        LOG.debug("  - Assembling 'sjukfall'");
+    private List<SjukfallEnhet> assembleSjukfallEnhetList(Map<String, List<SjukfallIntyg>> intygsData, LocalDate aktivtDatum) {
+        LOG.debug("  - Assembling 'sjukfall for healt care unit'");
 
-        return resolvedIntygsData.entrySet().stream()
-                .map(e -> toSjukfall(e.getValue(), parameters.getAktivtDatum()))
+        return intygsData.entrySet().stream()
+                .map(e -> toSjukfallEnhet(e.getValue(), aktivtDatum))
                 .collect(Collectors.toList());
     }
 
-    private Sjukfall toSjukfall(List<AktivtIntyg> list, LocalDate aktivtDatum) {
-        // Find the active object
-        AktivtIntyg aktivtIntyg = list.stream()
+    private List<SjukfallPatient> assembleSjukfallPatientList(Map<Integer, List<SjukfallIntyg>> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum) {
+        LOG.debug("  - Assembling 'sjukfall for patient'");
+
+        Comparator<SjukfallPatient> dateComparator = Comparator.comparing(SjukfallPatient::getStart, Comparator.reverseOrder());
+
+        // 1. Build sjukfall for patient object
+        // 2. Filter out any future sjukfall
+        // 3. Sort by start date with descending order
+        return intygsData.entrySet().stream()
+            .map(e -> buildSjukfallPatient(e.getValue()))
+            .filter(o -> o.getStart().isAfter(aktivtDatum.plusDays(maxIntygsGlapp + 1)))
+            .sorted(dateComparator)
+            .collect(Collectors.toList());
+    }
+
+    private SjukfallEnhet toSjukfallEnhet(List<SjukfallIntyg> list, LocalDate aktivtDatum) {
+        // 1. Find the active object
+        SjukfallIntyg aktivtIntyg = list.stream()
                 .filter(o -> o.isAktivtIntyg())
                 .findFirst()
                 .orElseThrow(() -> new SjukfallEngineServiceException("Unable to find a 'aktivt intyg'"));
 
-        // Build Sjukfall object
-        return buildSjukfall(list, aktivtIntyg, aktivtDatum);
+        // 2. Build sjukfall for enhet object
+        return buildSjukfallEnhet(list, aktivtIntyg, aktivtDatum);
     }
 
-    private Vardgivare getVardgivare(AktivtIntyg aktivtIntyg) {
-        return new Vardgivare(aktivtIntyg.getVardgivareId(), aktivtIntyg.getVardgivareNamn());
+    private Vardgivare getVardgivare(SjukfallIntyg sjukfallIntyg) {
+        return new Vardgivare(sjukfallIntyg.getVardgivareId(), sjukfallIntyg.getVardgivareNamn());
     }
 
-    private Vardenhet getVardenhet(AktivtIntyg aktivtIntyg) {
-        return new Vardenhet(aktivtIntyg.getVardenhetId(), aktivtIntyg.getVardenhetNamn());
+    private Vardenhet getVardenhet(SjukfallIntyg sjukfallIntyg) {
+        return new Vardenhet(sjukfallIntyg.getVardenhetId(), sjukfallIntyg.getVardenhetNamn());
     }
 
-    private Lakare getLakare(AktivtIntyg aktivtIntyg) {
-        return new Lakare(aktivtIntyg.getLakareId(), aktivtIntyg.getLakareNamn());
+    private Lakare getLakare(SjukfallIntyg sjukfallIntyg) {
+        return new Lakare(sjukfallIntyg.getLakareId(), sjukfallIntyg.getLakareNamn());
     }
 
     private Integer getAktivGrad(List<Formaga> list, LocalDate aktivtDatum) {
@@ -159,12 +209,13 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
                 .map(f -> f.getNedsattning()).collect(Collectors.toList());
     }
 
-    private LocalDate getMinimumDate(List<AktivtIntyg> list) {
+    private LocalDate getMinimumDate(List<SjukfallIntyg> list) {
         return list.stream().min((d1, d2) -> d1.getStartDatum().compareTo(d2.getStartDatum())).get().getStartDatum();
     }
 
-    private LocalDate getMaximumDate(List<AktivtIntyg> list) {
+    private LocalDate getMaximumDate(List<SjukfallIntyg> list) {
         return list.stream().max((d1, d2) -> d1.getSlutDatum().compareTo(d2.getSlutDatum())).get().getSlutDatum();
     }
+
 
 }

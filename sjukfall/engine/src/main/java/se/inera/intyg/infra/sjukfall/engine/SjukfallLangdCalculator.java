@@ -34,7 +34,7 @@ public final class SjukfallLangdCalculator {
     private SjukfallLangdCalculator() {
     }
 
-    public static int getEffectiveNumberOfSickDays(List<AktivtIntyg> intygsUnderlag) {
+    public static int getEffectiveNumberOfSickDays(List<SjukfallIntyg> intygsUnderlag) {
         // Sanity check
         if (intygsUnderlag == null || intygsUnderlag.isEmpty()) {
             return 0;

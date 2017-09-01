@@ -18,56 +18,26 @@
  */
 package se.inera.intyg.infra.sjukfall.dto;
 
+import se.inera.intyg.infra.sjukfall.engine.SjukfallIntyg;
+
 import java.time.LocalDate;
 import java.util.List;
 
 /**
  * @author Magnus Ekstrand on 2017-02-10.
  */
-public class Sjukfall {
+public class SjukfallPatient {
 
-    private Vardgivare vardgivare;
-    private Vardenhet vardenhet;
-    private Lakare lakare;
     private Patient patient;
-
     private DiagnosKod diagnosKod;
 
     private LocalDate start;
     private LocalDate slut;
 
-    private int dagar;
-    private int intyg;
-    private int aktivGrad;
-
-    private List<Integer> grader;
+    private List<SjukfallIntyg> sjukfallIntygList;
 
 
     // getters and setters
-
-    public Vardgivare getVardgivare() {
-        return vardgivare;
-    }
-
-    public void setVardgivare(Vardgivare vardgivare) {
-        this.vardgivare = vardgivare;
-    }
-
-    public Vardenhet getVardenhet() {
-        return vardenhet;
-    }
-
-    public void setVardenhet(Vardenhet vardenhet) {
-        this.vardenhet = vardenhet;
-    }
-
-    public Lakare getLakare() {
-        return lakare;
-    }
-
-    public void setLakare(Lakare lakare) {
-        this.lakare = lakare;
-    }
 
     public Patient getPatient() {
         return patient;
@@ -101,36 +71,12 @@ public class Sjukfall {
         this.slut = slut;
     }
 
-    public int getDagar() {
-        return dagar;
+    public List<SjukfallIntyg> getSjukfallIntygList() {
+        return sjukfallIntygList;
     }
 
-    public void setDagar(int dagar) {
-        this.dagar = dagar;
-    }
-
-    public int getIntyg() {
-        return intyg;
-    }
-
-    public void setIntyg(int intyg) {
-        this.intyg = intyg;
-    }
-
-    public int getAktivGrad() {
-        return aktivGrad;
-    }
-
-    public void setAktivGrad(int aktivGrad) {
-        this.aktivGrad = aktivGrad;
-    }
-
-    public List<Integer> getGrader() {
-        return grader;
-    }
-
-    public void setGrader(List<Integer> grader) {
-        this.grader = grader;
+    public void setSjukfallIntygList(List<SjukfallIntyg> sjukfallIntygList) {
+        this.sjukfallIntygList = sjukfallIntygList;
     }
 
 }

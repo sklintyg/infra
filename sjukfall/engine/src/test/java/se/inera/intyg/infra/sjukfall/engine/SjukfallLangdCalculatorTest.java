@@ -40,7 +40,7 @@ public class SjukfallLangdCalculatorTest {
 
         assertEquals(0, SjukfallLangdCalculator.getEffectiveNumberOfSickDays(null));
 
-        List<AktivtIntyg> intygsUnderlag = new ArrayList<>();
+        List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
         assertEquals(0, SjukfallLangdCalculator.getEffectiveNumberOfSickDays(intygsUnderlag));
     }
 
@@ -51,7 +51,7 @@ public class SjukfallLangdCalculatorTest {
     @Test
     public void testGetEffectiveNumberOfSickDaysFall1() throws Exception {
 
-        List<AktivtIntyg> intygsUnderlag = new ArrayList<>();
+        List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
         // First add a simple intyg with a simple interval
         intygsUnderlag.add(createIntyg(createInterval("2016-02-01", "2016-02-10")));
@@ -66,7 +66,7 @@ public class SjukfallLangdCalculatorTest {
     @Test
     public void testGetEffectiveNumberOfSickDaysFall3() throws Exception {
 
-        List<AktivtIntyg> intygsUnderlag = new ArrayList<>();
+        List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
         // First add a simple intyg with a simple interval
         intygsUnderlag.add(createIntyg(createInterval("2016-02-01", "2016-02-10")));
@@ -82,7 +82,7 @@ public class SjukfallLangdCalculatorTest {
     @Test
     public void testGetEffectiveNumberOfSickDaysFall5() throws Exception {
 
-        List<AktivtIntyg> intygsUnderlag = new ArrayList<>();
+        List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
         // First add a simple intyg with a simple interval
         intygsUnderlag.add(createIntyg(createInterval("2016-02-12", "2016-02-20")));
@@ -97,7 +97,7 @@ public class SjukfallLangdCalculatorTest {
     @Test
     public void testGetEffectiveNumberOfSickDaysFall6() throws Exception {
 
-        List<AktivtIntyg> intygsUnderlag = new ArrayList<>();
+        List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
         // First add a simple intyg with a simple interval
         intygsUnderlag.add(createIntyg(createInterval("2016-02-12", "2016-02-20")));
@@ -112,10 +112,10 @@ public class SjukfallLangdCalculatorTest {
     @Test
     public void testGetEffectiveNumberOfSickDaysAbutIntervals() throws Exception {
 
-        List<AktivtIntyg> intygsUnderlag = new ArrayList<>();
+        List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
         intygsUnderlag.add(createIntyg(createInterval("2016-02-12", "2016-02-20"), createInterval("2016-02-21", "2016-02-26"), createInterval("2016-02-26", "2016-03-19")));
 
-        List<AktivtIntyg> intygsUnderlag2 = new ArrayList<>();
+        List<SjukfallIntyg> intygsUnderlag2 = new ArrayList<>();
         intygsUnderlag2.add(createIntyg(createInterval("2016-02-12", "2016-03-19")));
 
 
@@ -125,7 +125,7 @@ public class SjukfallLangdCalculatorTest {
 
     @Test
     public void testGetEffectiveNumberOfSickDays() throws Exception {
-        List<AktivtIntyg> intygsUnderlag = new ArrayList<>();
+        List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
         // First add a simple intyg with a simple interval
         intygsUnderlag.add(createIntyg(createInterval("2016-01-20", "2016-02-10")));
@@ -210,7 +210,7 @@ public class SjukfallLangdCalculatorTest {
         assertEquals(b2.getEndDate(), result.get(0).getEndDate());
     }
 
-    private AktivtIntyg createIntyg(LocalDateInterval... intervals) {
+    private SjukfallIntyg createIntyg(LocalDateInterval... intervals) {
         final List<Formaga> formagor = new ArrayList();
 
         for (LocalDateInterval i : intervals) {
@@ -221,7 +221,7 @@ public class SjukfallLangdCalculatorTest {
         IntygData intygData = new IntygData();
         intygData.setFormagor(formagor);
 
-        AktivtIntyg.AktivtIntygBuilder builder = new AktivtIntyg.AktivtIntygBuilder(intygData, LocalDate.now());
+        SjukfallIntyg.SjukfallIntygBuilder builder = new SjukfallIntyg.SjukfallIntygBuilder(intygData, LocalDate.now());
         return builder.build();
     }
 

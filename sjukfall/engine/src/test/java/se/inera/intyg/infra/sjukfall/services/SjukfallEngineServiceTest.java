@@ -32,12 +32,14 @@ import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
-import se.inera.intyg.infra.sjukfall.dto.Sjukfall;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallPatient;
 import se.inera.intyg.infra.sjukfall.dto.Vardenhet;
 import se.inera.intyg.infra.sjukfall.dto.Vardgivare;
-import se.inera.intyg.infra.sjukfall.engine.AktivtIntyg;
-import se.inera.intyg.infra.sjukfall.engine.AktivtIntygResolver;
-import se.inera.intyg.infra.sjukfall.testdata.AktivtIntygGenerator;
+import se.inera.intyg.infra.sjukfall.engine.SjukfallIntyg;
+import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetCreator;
+import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetResolver;
+import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 
 import java.io.IOException;
 import java.time.Clock;
@@ -54,16 +56,18 @@ import java.util.List;
 public class SjukfallEngineServiceTest {
     private static final String LOCATION_INTYGSDATA = "classpath:SjukfallServiceTest/intygsdata-engine.csv";
 
-    private static final String DIAGNOS_KOD = "J1012";
-
     private static List<IntygData> intygDataList;
-    private static List<Sjukfall> sjukfallList;
+    private static List<SjukfallEnhet> sjukfallListUnit;
+    private static List<SjukfallPatient> sjukfallListPatient;
 
     private LocalDate activeDate = LocalDate.parse("2016-02-16");
     private LocalDate tolvanBirthdate = LocalDate.parse("1912-12-12");
 
     @Spy
-    private AktivtIntygResolver resolver;
+    SjukfallIntygEnhetCreator creator = new SjukfallIntygEnhetCreator();
+
+    @Spy
+    private SjukfallIntygEnhetResolver resolver = new SjukfallIntygEnhetResolver(creator);
 
     @InjectMocks
     private SjukfallEngineServiceImplTest testee = new SjukfallEngineServiceImplTest();
@@ -71,12 +75,16 @@ public class SjukfallEngineServiceTest {
     @Before
     public void init() throws IOException {
         // Load test data
-        AktivtIntygGenerator generator = new AktivtIntygGenerator(LOCATION_INTYGSDATA);
+        SjukfallIntygGenerator generator = new SjukfallIntygGenerator(LOCATION_INTYGSDATA);
         intygDataList = generator.generate().get();
         assertInit(intygDataList, 33);
 
-        sjukfallList = testee.beraknaSjukfall(intygDataList, getIntygParametrar(5, activeDate));
-        assertInit(sjukfallList, 11);
+        sjukfallListUnit = testee.beraknaSjukfallForEnhet(intygDataList, getIntygParametrar(5, activeDate));
+        assertInit(sjukfallListUnit, 11);
+
+        //sjukfallListPatient = testee.beraknaSjukfallForPatient(intygDataList, getIntygParametrar(5, activeDate));
+        //assertInit(sjukfallListPatient, 0);
+
     }
 
     // ~ ======================================================================================================== ~
@@ -146,17 +154,15 @@ public class SjukfallEngineServiceTest {
 
     @Test
     public void testDiagnos() {
-        String fullstandigtNamn = "Anders Andersson";
-        String id = "19121212-1212";
+        // given
+        IntygData intyg = intygDataList.get(0);
+        SjukfallIntyg sjukfallIntyg = new SjukfallIntyg.SjukfallIntygBuilder(intyg, activeDate).build();
 
-        IntygData intyg = new IntygData();
-        intyg.setPatientId(id);
-        intyg.setPatientNamn(fullstandigtNamn);
-        intyg.setDiagnosKod(DIAGNOS_KOD);
+        // when
+        DiagnosKod diagnosKod = testee.getDiagnosKod(sjukfallIntyg);
 
-        DiagnosKod diagnosKod = testee.getDiagnosKod(intyg);
-
-        assertEquals(DIAGNOS_KOD, diagnosKod.getCleanedCode());
+        // then
+        assertEquals(intyg.getDiagnosKod(), diagnosKod.getCleanedCode());
     }
 
 
@@ -167,18 +173,18 @@ public class SjukfallEngineServiceTest {
     }
 
     private static void assertSjukfall(String patientId, String startDatum, String slutDatum, int antalIntyg, int effektivSjukskrivningslangd) {
-        Sjukfall sjukfall = sjukfallList.stream().
+        SjukfallEnhet sjukfallEnhet = sjukfallListUnit.stream().
                 filter(o -> o.getPatient().getId().equals(patientId)).findFirst().orElse(null);
 
         if (antalIntyg == 0) {
-            assertNull(sjukfall);
+            assertNull(sjukfallEnhet);
             return;
         }
 
-        assertTrue(sjukfall.getStart().isEqual(LocalDate.parse(startDatum)));
-        assertTrue(sjukfall.getSlut().isEqual(LocalDate.parse(slutDatum)));
-        assertTrue(sjukfall.getIntyg() == antalIntyg);
-        assertTrue(sjukfall.getDagar() == effektivSjukskrivningslangd);
+        assertTrue(sjukfallEnhet.getStart().isEqual(LocalDate.parse(startDatum)));
+        assertTrue(sjukfallEnhet.getSlut().isEqual(LocalDate.parse(slutDatum)));
+        assertTrue(sjukfallEnhet.getIntyg() == antalIntyg);
+        assertTrue(sjukfallEnhet.getDagar() == effektivSjukskrivningslangd);
     }
 
     private IntygParametrar getIntygParametrar(int maxIntygsGlapp, LocalDate aktivtDatum) {
@@ -195,16 +201,16 @@ public class SjukfallEngineServiceTest {
         }
 
         @Override
-        protected Sjukfall buildSjukfall(List<AktivtIntyg> values, AktivtIntyg aktivtIntyg, LocalDate aktivtDatum) {
+        protected SjukfallEnhet buildSjukfallEnhet(List<SjukfallIntyg> values, SjukfallIntyg aktivtIntyg, LocalDate aktivtDatum) {
             Vardgivare vardgivare = new Vardgivare(" IFV1239877878-0000 ", "Webcert-Vårdgivare1");
             Vardenhet vardenhet = new Vardenhet(" IFV1239877878-1045 ", "Webcert-Enhet2");
             Lakare lakare = new Lakare(aktivtIntyg.getLakareId(), aktivtIntyg.getLakareNamn());
 
-            Sjukfall sjukfall = super.buildSjukfall(values, aktivtIntyg, aktivtDatum);
-            sjukfall.setVardgivare(vardgivare);
-            sjukfall.setVardenhet(vardenhet);
-            sjukfall.setLakare(lakare);
-            return sjukfall;
+            SjukfallEnhet sjukfallEnhet = super.buildSjukfallEnhet(values, aktivtIntyg, aktivtDatum);
+            sjukfallEnhet.setVardgivare(vardgivare);
+            sjukfallEnhet.setVardenhet(vardenhet);
+            sjukfallEnhet.setLakare(lakare);
+            return sjukfallEnhet;
         }
     }
 }
