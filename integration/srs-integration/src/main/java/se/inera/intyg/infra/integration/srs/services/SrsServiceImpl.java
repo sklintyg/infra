@@ -8,6 +8,8 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentReq
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesRequestType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
@@ -30,6 +32,7 @@ import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.CVType;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
@@ -58,6 +61,9 @@ public class SrsServiceImpl implements SrsService {
 
     @Autowired
     private SetConsentResponderInterface setConsent;
+
+    @Autowired
+    private GetDiagnosisCodesResponderInterface getDiagnosisCodes;
 
     @Override
     public SrsResponse getSrs(String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
@@ -125,6 +131,12 @@ public class SrsServiceImpl implements SrsService {
     public ResultCodeEnum setConsent(String hsaId, Personnummer personId, boolean samtycke) throws InvalidPersonNummerException {
         SetConsentResponseType resp = setConsent.setConsent(createSetConsentRequest(hsaId, personId, samtycke));
         return resp.getResultCode();
+    }
+
+    @Override
+    public List<String> getAllDiagnosisCodes() {
+        return getDiagnosisCodes.getDiagnosisCodes(new GetDiagnosisCodesRequestType()).getDiagnos().stream().map(CVType::getCode)
+                .collect(Collectors.toList());
     }
 
     private GetSRSInformationRequestType createRequest(String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
