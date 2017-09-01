@@ -85,7 +85,7 @@ public class SjukfallIntygEnhetResolver {
      */
     Map<String, List<SjukfallIntyg>> createMap(List<IntygData> intygsData, LocalDate aktivtDatum) {
         if (intygsData == null || intygsData.isEmpty()) {
-            new HashMap<>();
+            return new HashMap<>();
         }
 
         return creator.create(intygsData, aktivtDatum);

@@ -155,7 +155,8 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
                 .collect(Collectors.toList());
     }
 
-    private List<SjukfallPatient> assembleSjukfallPatientList(Map<Integer, List<SjukfallIntyg>> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum) {
+    private List<SjukfallPatient> assembleSjukfallPatientList(Map<Integer, List<SjukfallIntyg>> intygsData, int maxIntygsGlapp,
+            LocalDate aktivtDatum) {
         LOG.debug("  - Assembling 'sjukfall for patient'");
 
         Comparator<SjukfallPatient> dateComparator = Comparator.comparing(SjukfallPatient::getStart, Comparator.reverseOrder());
@@ -164,10 +165,10 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         // 2. Filter out any future sjukfall
         // 3. Sort by start date with descending order
         return intygsData.entrySet().stream()
-            .map(e -> buildSjukfallPatient(e.getValue()))
-            .filter(o -> o.getStart().isAfter(aktivtDatum.plusDays(maxIntygsGlapp + 1)))
-            .sorted(dateComparator)
-            .collect(Collectors.toList());
+                .map(e -> buildSjukfallPatient(e.getValue()))
+                .filter(o -> o.getStart().isAfter(aktivtDatum.plusDays(maxIntygsGlapp + 1)))
+                .sorted(dateComparator)
+                .collect(Collectors.toList());
     }
 
     private SjukfallEnhet toSjukfallEnhet(List<SjukfallIntyg> list, LocalDate aktivtDatum) {
@@ -216,6 +217,5 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
     private LocalDate getMaximumDate(List<SjukfallIntyg> list) {
         return list.stream().max((d1, d2) -> d1.getSlutDatum().compareTo(d2.getSlutDatum())).get().getSlutDatum();
     }
-
 
 }

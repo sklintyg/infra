@@ -46,7 +46,8 @@ public class SjukfallIntygPatientResolver {
      * Method is resolving sjukfall for a health care unit based on the unit's certificate information.
      * A map with patient id as key and a list of certificates associated with a sjukfall as value, will be returned.
      */
-    public Map<Integer, List<SjukfallIntyg>> resolve(final List<IntygData> intygsData, final int maxIntygsGlapp, final LocalDate aktivtDatum) {
+    public Map<Integer, List<SjukfallIntyg>> resolve(final List<IntygData> intygsData, final int maxIntygsGlapp,
+            final LocalDate aktivtDatum) {
 
         LOG.debug("Start resolving certificate information...");
         LOG.debug("  - max days between certificates: {}, active date: {}", maxIntygsGlapp, aktivtDatum);
@@ -77,7 +78,7 @@ public class SjukfallIntygPatientResolver {
     /**
      * Method returns a map with intermediate IntygsData objects.
      */
-    Map<Integer, List<SjukfallIntyg>> createMap(List<IntygData> intygsData, int maxIntygsGlapp,  LocalDate aktivtDatum) {
+    Map<Integer, List<SjukfallIntyg>> createMap(List<IntygData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum) {
         if (intygsData == null || intygsData.isEmpty()) {
             return new HashMap<>();
         }
@@ -85,10 +86,10 @@ public class SjukfallIntygPatientResolver {
         return creator.create(intygsData, maxIntygsGlapp, aktivtDatum);
     }
 
-    private Map<Integer, List<SjukfallIntyg>> reduceMap(final Map<Integer, List<SjukfallIntyg>> intygsMap, final int maxIntygsGlapp, final LocalDate aktivtDatum) {
+    private Map<Integer, List<SjukfallIntyg>> reduceMap(final Map<Integer, List<SjukfallIntyg>> intygsMap, final int maxIntygsGlapp,
+            final LocalDate aktivtDatum) {
 
         LOG.debug("  - Reduce certificates. Only certificates fulfilling request parameter 'maxIntygsGlapp' will be concerned.");
-
 
         return intygsMap;
     }
