@@ -139,16 +139,18 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         return sjukfallPatient;
     }
 
-    private DiagnosKod resolveDiagnosKod(List<SjukfallIntyg> values) {
-        // TODO: implement rules
+    private DiagnosKod resolveDiagnosKod(List<SjukfallIntyg> intyg) {
         // Rules:
         // 1. If several intyg in list are active, choose the active
         //    intyg with latest signeringsTidpunkt
         // 2. If list doesn't have an active intyg, choose the one
         //    with latest signeringsTidpunkt
+        List<SjukfallIntyg> list = intyg.stream().filter(SjukfallIntyg::isAktivtIntyg).collect(Collectors.toList());
+        if (list.isEmpty()) {
+            list.addAll(intyg);
+        }
 
-        return values.get(0).getDiagnosKod();
-
+        return list.stream().max(Comparator.comparing(SjukfallIntyg::getSigneringsTidpunkt)).get().getDiagnosKod();
     }
 
     // private scope
