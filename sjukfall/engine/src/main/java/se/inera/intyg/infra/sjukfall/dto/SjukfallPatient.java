@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.infra.sjukfall.dto;
 
-import se.inera.intyg.infra.sjukfall.engine.SjukfallIntyg;
-
 import java.time.LocalDate;
 import java.util.List;
 

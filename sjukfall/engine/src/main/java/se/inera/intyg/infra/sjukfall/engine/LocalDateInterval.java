@@ -18,9 +18,9 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
-import java.time.LocalDate;
+import static java.time.temporal.ChronoUnit.DAYS;
 
-import static java.time.temporal.ChronoUnit.*;
+import java.time.LocalDate;
 
 /**
  * This class has the important getDurationInDays which includes the to-date in duration length.
@@ -28,8 +28,8 @@ import static java.time.temporal.ChronoUnit.*;
  * Created by marced on 19/02/16.
  */
 public class LocalDateInterval {
-    private LocalDate startDate;
 
+    private LocalDate startDate;
     private LocalDate endDate;
 
     public LocalDateInterval(LocalDate startDate, LocalDate endDate) {
@@ -56,6 +56,5 @@ public class LocalDateInterval {
     public int getDurationInDays() {
         // ChronoUnit.DAYS does not include the endDate (just between), so to get "duration", we need to add 1.
         return Long.valueOf(DAYS.between(startDate, endDate)).intValue() + 1;
-
     }
 }

@@ -27,7 +27,6 @@ import java.util.List;
 public class IntygData {
 
     private String intygId;
-    private String diagnosKod;
     private String patientId;
     private String patientNamn;
     private String lakareId;
@@ -40,7 +39,10 @@ public class IntygData {
     private LocalDateTime signeringsTidpunkt;
 
     private List<Formaga> formagor;
-    private List<String> biDiagnoser;
+
+    private DiagnosKod diagnosKod;
+    private List<DiagnosKod> biDiagnoser;
+
     private List<String> sysselsattning;
 
     private boolean enkeltIntyg;
@@ -54,14 +56,6 @@ public class IntygData {
 
     public void setIntygId(String intygId) {
         this.intygId = intygId;
-    }
-
-    public String getDiagnosKod() {
-        return diagnosKod;
-    }
-
-    public void setDiagnosKod(String diagnosKod) {
-        this.diagnosKod = diagnosKod;
     }
 
     public String getPatientId() {
@@ -152,11 +146,22 @@ public class IntygData {
         this.enkeltIntyg = enkeltIntyg;
     }
 
-    public List<String> getBiDiagnoser() {
+    public DiagnosKod getDiagnosKod() {
+        return diagnosKod;
+    }
+
+    public void setDiagnosKod(String diagnosKod) {
+        setDiagnosKod(new DiagnosKod(diagnosKod));
+    }
+    public void setDiagnosKod(DiagnosKod diagnosKod) {
+        this.diagnosKod = diagnosKod;
+    }
+
+    public List<DiagnosKod> getBiDiagnoser() {
         return biDiagnoser;
     }
 
-    public void setBiDiagnoser(List<String> biDiagnoser) {
+    public void setBiDiagnoser(List<DiagnosKod> biDiagnoser) {
         this.biDiagnoser = biDiagnoser;
     }
 

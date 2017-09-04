@@ -32,7 +32,7 @@ import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallPatient;
 import se.inera.intyg.infra.sjukfall.dto.Vardenhet;
 import se.inera.intyg.infra.sjukfall.dto.Vardgivare;
-import se.inera.intyg.infra.sjukfall.engine.SjukfallIntyg;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetCreator;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetResolver;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygPatientCreator;
@@ -104,11 +104,8 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         return result;
     }
 
-    // package scope
 
-    DiagnosKod getDiagnosKod(SjukfallIntyg sjukfallIntyg) {
-        return new DiagnosKod(sjukfallIntyg.getDiagnosKod());
-    }
+    // package scope
 
     SjukfallEnhet buildSjukfallEnhet(List<SjukfallIntyg> values, SjukfallIntyg aktivtIntyg, LocalDate aktivtDatum) {
         SjukfallEnhet sjukfallEnhet = new SjukfallEnhet();
@@ -116,10 +113,11 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         sjukfallEnhet.setVardenhet(getVardenhet(aktivtIntyg));
         sjukfallEnhet.setLakare(getLakare(aktivtIntyg));
         sjukfallEnhet.setPatient(getPatient(aktivtIntyg));
-        sjukfallEnhet.setDiagnosKod(getDiagnosKod(aktivtIntyg));
+        sjukfallEnhet.setDiagnosKod(aktivtIntyg.getDiagnosKod());
+        sjukfallEnhet.setBiDiagnoser(aktivtIntyg.getBiDiagnoser());
         sjukfallEnhet.setStart(getMinimumDate(values));
         sjukfallEnhet.setSlut(getMaximumDate(values));
-        sjukfallEnhet.setDagar(SjukfallLangdCalculator.getEffectiveNumberOfSickDays(values));
+        sjukfallEnhet.setDagar(SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(values));
         sjukfallEnhet.setIntyg(values.size());
         sjukfallEnhet.setGrader(getGrader(aktivtIntyg.getFormagor()));
         sjukfallEnhet.setAktivGrad(getAktivGrad(aktivtIntyg.getFormagor(), aktivtDatum));
@@ -128,14 +126,29 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
     }
 
     SjukfallPatient buildSjukfallPatient(List<SjukfallIntyg> values) {
+        Patient patient = getPatient(values.get(0));
+        DiagnosKod diagnosKod = resolveDiagnosKod(values);
+
         SjukfallPatient sjukfallPatient = new SjukfallPatient();
-        sjukfallPatient.setPatient(getPatient(values.get(0)));
-        sjukfallPatient.setDiagnosKod(getDiagnosKod(values.get(0)));
+        sjukfallPatient.setPatient(patient);
+        sjukfallPatient.setDiagnosKod(diagnosKod);
         sjukfallPatient.setStart(getMinimumDate(values));
         sjukfallPatient.setSlut(getMaximumDate(values));
         sjukfallPatient.setSjukfallIntygList(values);
 
         return sjukfallPatient;
+    }
+
+    private DiagnosKod resolveDiagnosKod(List<SjukfallIntyg> values) {
+        // TODO: implement rules
+        // Rules:
+        // 1. If several intyg in list are active, choose the active
+        //    intyg with latest signeringsTidpunkt
+        // 2. If list doesn't have an active intyg, choose the one
+        //    with latest signeringsTidpunkt
+
+        return values.get(0).getDiagnosKod();
+
     }
 
     // private scope
@@ -205,16 +218,17 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
     private List<Integer> getGrader(List<Formaga> list) {
         LOG.debug("  - Lookup all 'aktiva grader'");
         return list.stream()
-                .sorted((f1, f2) -> f1.getStartdatum().compareTo(f2.getStartdatum()))
-                .map(f -> f.getNedsattning()).collect(Collectors.toList());
+            .sorted(Comparator.comparing(Formaga::getStartdatum))
+            .map(f -> f.getNedsattning())
+            .collect(Collectors.toList());
     }
 
     private LocalDate getMinimumDate(List<SjukfallIntyg> list) {
-        return list.stream().min((d1, d2) -> d1.getStartDatum().compareTo(d2.getStartDatum())).get().getStartDatum();
+        return list.stream().min(Comparator.comparing(SjukfallIntyg::getStartDatum)).get().getStartDatum();
     }
 
     private LocalDate getMaximumDate(List<SjukfallIntyg> list) {
-        return list.stream().max((d1, d2) -> d1.getSlutDatum().compareTo(d2.getSlutDatum())).get().getSlutDatum();
+        return list.stream().max(Comparator.comparing(SjukfallIntyg::getSlutDatum)).get().getSlutDatum();
     }
 
 }

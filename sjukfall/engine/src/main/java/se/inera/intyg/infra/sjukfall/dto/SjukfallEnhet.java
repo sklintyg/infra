@@ -37,10 +37,14 @@ public class SjukfallEnhet {
     private LocalDate start;
     private LocalDate slut;
 
+    // Totalt antal sjukskrivningsdagar
     private int dagar;
-    private int intyg;
-    private int aktivGrad;
 
+    // Totalt antal intyg som ingår i sjukfallet
+    private int intyg;
+
+    // Nedsättning
+    private int aktivGrad;
     private List<Integer> grader;
 
 

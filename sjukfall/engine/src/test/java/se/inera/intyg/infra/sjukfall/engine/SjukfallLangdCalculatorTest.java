@@ -24,6 +24,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import se.inera.intyg.infra.sjukfall.dto.Formaga;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,10 +39,10 @@ public class SjukfallLangdCalculatorTest {
     @Test
     public void testGetEffectiveNumberOfSickDaysNointervals() throws Exception {
 
-        assertEquals(0, SjukfallLangdCalculator.getEffectiveNumberOfSickDays(null));
+        assertEquals(0, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(null));
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
-        assertEquals(0, SjukfallLangdCalculator.getEffectiveNumberOfSickDays(intygsUnderlag));
+        assertEquals(0, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag));
     }
 
     /**
@@ -56,7 +57,7 @@ public class SjukfallLangdCalculatorTest {
         // First add a simple intyg with a simple interval
         intygsUnderlag.add(createIntyg(createInterval("2016-02-01", "2016-02-10")));
         intygsUnderlag.add(createIntyg(createInterval("2016-02-12", "2016-02-20")));
-        assertEquals(19, SjukfallLangdCalculator.getEffectiveNumberOfSickDays(intygsUnderlag));
+        assertEquals(19, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag));
     }
 
     /**
@@ -72,7 +73,7 @@ public class SjukfallLangdCalculatorTest {
         intygsUnderlag.add(createIntyg(createInterval("2016-02-01", "2016-02-10")));
         intygsUnderlag.add(createIntyg(createInterval("2016-02-12", "2016-02-20")));
         intygsUnderlag.add(createIntyg(createInterval("2016-02-21", "2016-02-25")));
-        assertEquals(24, SjukfallLangdCalculator.getEffectiveNumberOfSickDays(intygsUnderlag));
+        assertEquals(24, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag));
     }
 
     /**
@@ -87,7 +88,7 @@ public class SjukfallLangdCalculatorTest {
         // First add a simple intyg with a simple interval
         intygsUnderlag.add(createIntyg(createInterval("2016-02-12", "2016-02-20")));
         intygsUnderlag.add(createIntyg(createInterval("2016-02-12", "2016-02-25")));
-        assertEquals(14, SjukfallLangdCalculator.getEffectiveNumberOfSickDays(intygsUnderlag));
+        assertEquals(14, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag));
     }
 
     /**
@@ -102,7 +103,7 @@ public class SjukfallLangdCalculatorTest {
         // First add a simple intyg with a simple interval
         intygsUnderlag.add(createIntyg(createInterval("2016-02-12", "2016-02-20")));
         intygsUnderlag.add(createIntyg(createInterval("2016-02-15", "2016-02-25")));
-        assertEquals(14, SjukfallLangdCalculator.getEffectiveNumberOfSickDays(intygsUnderlag));
+        assertEquals(14, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag));
     }
 
     /**
@@ -119,8 +120,8 @@ public class SjukfallLangdCalculatorTest {
         intygsUnderlag2.add(createIntyg(createInterval("2016-02-12", "2016-03-19")));
 
 
-        assertEquals(37, SjukfallLangdCalculator.getEffectiveNumberOfSickDays(intygsUnderlag));
-        assertEquals(37, SjukfallLangdCalculator.getEffectiveNumberOfSickDays(intygsUnderlag2));
+        assertEquals(37, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag));
+        assertEquals(37, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag2));
     }
 
     @Test
@@ -129,20 +130,20 @@ public class SjukfallLangdCalculatorTest {
 
         // First add a simple intyg with a simple interval
         intygsUnderlag.add(createIntyg(createInterval("2016-01-20", "2016-02-10")));
-        assertEquals(22, SjukfallLangdCalculator.getEffectiveNumberOfSickDays(intygsUnderlag));
+        assertEquals(22, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag));
 
         // Add one that should be "swallowed" entirely by the first and should therefore not effect the length
         intygsUnderlag.add(createIntyg(createInterval("2016-02-02", "2016-02-10")));
-        assertEquals(22, SjukfallLangdCalculator.getEffectiveNumberOfSickDays(intygsUnderlag));
+        assertEquals(22, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag));
 
         // Add another intyg where one of the intervals should overlap/extend the first (by 2 days) and adds  separate
         // interval of 20 days
         intygsUnderlag.add(createIntyg(createInterval("2016-01-25", "2016-02-12"), createInterval("2016-02-20", "2016-03-10")));
-        assertEquals(22 + 2 + 20, SjukfallLangdCalculator.getEffectiveNumberOfSickDays(intygsUnderlag));
+        assertEquals(22 + 2 + 20, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag));
 
         // add another that effectively encompasses all the previous ones except a few days of the last one
         intygsUnderlag.add(createIntyg(createInterval("2016-01-02", "2016-03-08")));
-        assertEquals(69, SjukfallLangdCalculator.getEffectiveNumberOfSickDays(intygsUnderlag));
+        assertEquals(69, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag));
 
     }
 

@@ -18,6 +18,9 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
+import se.inera.intyg.infra.sjukfall.dto.Formaga;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
@@ -34,15 +37,25 @@ public final class SjukfallLangdCalculator {
     private SjukfallLangdCalculator() {
     }
 
-    public static int getEffectiveNumberOfSickDays(List<SjukfallIntyg> intygsUnderlag) {
+    public static int getEffectiveNumberOfSickDaysByIntyg(List<SjukfallIntyg> intygsUnderlag) {
         // Sanity check
         if (intygsUnderlag == null || intygsUnderlag.isEmpty()) {
             return 0;
         }
 
-        // Extract all grader-intervals from all sortableIntygsdata's to a list of LocalDateIntervals
-        List<LocalDateInterval> allIntervals = intygsUnderlag.stream().map(sid -> sid.getFormagor()).flatMap(l -> l.stream())
-                .map(formaga -> new LocalDateInterval(formaga.getStartdatum(), formaga.getSlutdatum())).collect(Collectors.toList());
+        List<Formaga> li = intygsUnderlag.stream().map(sid -> sid.getFormagor()).flatMap(l -> l.stream()).collect(Collectors.toList());
+        return getEffectiveNumberOfSickDaysByFormaga(li);
+    }
+
+    public static int getEffectiveNumberOfSickDaysByFormaga(List<Formaga> formagaList) {
+        // Sanity check
+        if (formagaList == null || formagaList.isEmpty()) {
+            return 0;
+        }
+
+        // extract all grader-intervals from list of Formaga to a list of LocalDateIntervals
+        List<LocalDateInterval> allIntervals = formagaList.stream()
+            .map(formaga -> new LocalDateInterval(formaga.getStartdatum(), formaga.getSlutdatum())).collect(Collectors.toList());
 
         // apply merge algorithm
         List<LocalDateInterval> mergedIntervals = mergeIntervals(allIntervals);

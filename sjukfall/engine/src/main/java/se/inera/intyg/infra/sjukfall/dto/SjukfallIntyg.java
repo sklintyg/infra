@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.sjukfall.engine;
+package se.inera.intyg.infra.sjukfall.dto;
 
-import se.inera.intyg.infra.sjukfall.dto.Formaga;
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.infra.sjukfall.engine.SjukfallLangdCalculator;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Magnus Ekstrand on 2017-02-10.
@@ -31,8 +31,17 @@ public class SjukfallIntyg extends IntygData {
 
     private static final int HASH_SEED = 31;
 
+    // Intygets startdatum
     private LocalDate startDatum;
+
+    // Intygets slutdatum
     private LocalDate slutDatum;
+
+    // Totalt antal sjukskrivningsdagar för intyget
+    private Integer dagar;
+
+    // Nedsättning (arbetsförmåga)
+    private List<Integer> grader;
 
     private boolean aktivtIntyg;
 
@@ -42,9 +51,12 @@ public class SjukfallIntyg extends IntygData {
         this.startDatum = builder.startDatum;
         this.slutDatum = builder.slutDatum;
         this.aktivtIntyg = builder.aktivtIntyg;
+        this.dagar = builder.dagar;
+        this.grader = builder.grader;
 
         this.setIntygId(builder.intygData.getIntygId());
         this.setDiagnosKod(builder.intygData.getDiagnosKod());
+        this.setBiDiagnoser(builder.intygData.getBiDiagnoser());
         this.setPatientId(builder.intygData.getPatientId());
         this.setPatientNamn(builder.intygData.getPatientNamn());
         this.setLakareId(builder.intygData.getLakareId());
@@ -56,6 +68,7 @@ public class SjukfallIntyg extends IntygData {
         this.setSigneringsTidpunkt(builder.intygData.getSigneringsTidpunkt());
         this.setFormagor(builder.intygData.getFormagor());
         this.setEnkeltIntyg(builder.intygData.isEnkeltIntyg());
+        this.setSysselsattning(builder.intygData.getSysselsattning());
     }
 
     // Getters and setters
@@ -66,6 +79,14 @@ public class SjukfallIntyg extends IntygData {
 
     public LocalDate getSlutDatum() {
         return slutDatum;
+    }
+
+    public Integer getDagar() {
+        return dagar;
+    }
+
+    public List<Integer> getGrader() {
+        return grader;
     }
 
     public boolean isAktivtIntyg() {
@@ -106,17 +127,33 @@ public class SjukfallIntyg extends IntygData {
         private LocalDate startDatum;
         private LocalDate slutDatum;
 
+        private Integer dagar;
+        private List<Integer> grader;
+
         private boolean aktivtIntyg;
 
         public SjukfallIntygBuilder(IntygData intygData, LocalDate aktivtDatum) {
             this.intygData = intygData;
             this.startDatum = lookupStartDatum(intygData.getFormagor());
             this.slutDatum = lookupSlutDatum(intygData.getFormagor());
+            this.dagar = getDagar(intygData.getFormagor());
+            this.grader = getGrader(intygData.getFormagor());
             this.aktivtIntyg = isAktivtIntyg(intygData, aktivtDatum);
         }
 
         public SjukfallIntyg build() {
             return new SjukfallIntyg(this);
+        }
+
+        private Integer getDagar(List<Formaga> formagor) {
+            return SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByFormaga(formagor);
+        }
+
+        private List<Integer> getGrader(List<Formaga> formagor) {
+            return formagor.stream()
+                .map(Formaga::getNedsattning)
+                .sorted()
+                .collect(Collectors.toList());
         }
 
         private boolean hasAktivFormaga(List<Formaga> formagor, LocalDate aktivtDatum) {

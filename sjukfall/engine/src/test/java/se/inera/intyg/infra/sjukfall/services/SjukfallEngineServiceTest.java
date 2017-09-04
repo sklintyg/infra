@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.infra.sjukfall.services;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -28,7 +27,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
@@ -36,7 +34,7 @@ import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallPatient;
 import se.inera.intyg.infra.sjukfall.dto.Vardenhet;
 import se.inera.intyg.infra.sjukfall.dto.Vardgivare;
-import se.inera.intyg.infra.sjukfall.engine.SjukfallIntyg;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetCreator;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetResolver;
 import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
@@ -150,19 +148,6 @@ public class SjukfallEngineServiceTest {
     @Test
     public void testCalculateSjukfall12() {
         assertSjukfall("19710301-1032", "2016-02-15", "2016-03-04", 3, 19);
-    }
-
-    @Test
-    public void testDiagnos() {
-        // given
-        IntygData intyg = intygDataList.get(0);
-        SjukfallIntyg sjukfallIntyg = new SjukfallIntyg.SjukfallIntygBuilder(intyg, activeDate).build();
-
-        // when
-        DiagnosKod diagnosKod = testee.getDiagnosKod(sjukfallIntyg);
-
-        // then
-        assertEquals(intyg.getDiagnosKod(), diagnosKod.getCleanedCode());
     }
 
 
