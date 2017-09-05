@@ -39,6 +39,7 @@ public class SjukfallIntygEnhetCreator {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygEnhetCreator.class);
 
+
     // - - - API - - -
 
     public Map<String, List<SjukfallIntyg>> create(List<IntygData> intygData, LocalDate aktivtDatum) {
@@ -110,7 +111,8 @@ public class SjukfallIntygEnhetCreator {
         return map.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        e -> new ArrayList<>(e.setValue(setActive(e.getValue())))));
+                        e -> e.setValue(setActive(e.getValue())).stream()
+                                .collect(Collectors.toList())));
     }
 
     private List<SjukfallIntyg> setActive(List<SjukfallIntyg> intygsDataList) {

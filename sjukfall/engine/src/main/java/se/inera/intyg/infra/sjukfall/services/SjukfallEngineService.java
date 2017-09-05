@@ -35,7 +35,7 @@ public interface SjukfallEngineService {
      * certificate information and request parameters set by the client. Each compiled 'sjukfall' corresponds to one
      * patient.
      *
-     * @param intygData  the certificate information (base data) for the health care unit
+     * @param intygData the certificate information (base data) for the health care unit
      * @param parameters client request parameters
      * @return a list of compiled 'sjukfall'.
      */
