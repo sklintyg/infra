@@ -1,5 +1,6 @@
 package se.inera.intyg.infra.integration.srs.services;
 
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,6 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentReq
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesRequestType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
@@ -21,23 +20,26 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRS
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Individ;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Individfaktorer;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Prediktionsfaktorer;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponseType;
+import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.srs.model.SjukskrivningsGrad;
 import se.inera.intyg.infra.integration.srs.model.SrsException;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
+import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.CVType;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
+import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,34 +48,34 @@ public class SrsServiceImpl implements SrsService {
 
     private static final int FOUR = 4;
     private static final int THREE = 3;
+    private static final int POSTNUMMER_LENGTH = 5;
 
     private static final String HSA_ROOT = "1.2.752.129.2.1.4.1";
-    private static final Logger LOG = LoggerFactory.getLogger(SrsServiceImpl.class);
+    private static final String CONSUMER_HSA_ID = "SE5565594230-B31";
+    private static final String DIAGNOS_CODE_SYSTEM = "1.2.752.116.1.1.1.1.3";
 
+    private static final Logger LOG = LoggerFactory.getLogger(SrsServiceImpl.class);
     @Autowired
     private GetSRSInformationResponderInterface getSRSInformation;
-
     @Autowired
     private GetPredictionQuestionsResponderInterface getPrediction;
-
     @Autowired
     private GetConsentResponderInterface getConsent;
-
     @Autowired
     private SetConsentResponderInterface setConsent;
 
-    @Autowired
-    private GetDiagnosisCodesResponderInterface getDiagnosisCodes;
-
     @Override
-    public SrsResponse getSrs(String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
+    public SrsResponse getSrs(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
             List<SrsQuestionResponse> questions, SjukskrivningsGrad sjukskrivningsGrad) throws InvalidPersonNummerException, SrsException {
-        GetSRSInformationResponseType response = getSRSInformation
-                .getSRSInformation(createRequest(intygId, personnummer, diagnosisCode, filter, sjukskrivningsGrad));
-        if (response.getResultCode() != ResultCodeEnum.OK || response.getBedomningsunderlag().isEmpty()) {
+
+        GetSRSInformationResponseType response = getSRSInformation.getSRSInformation(
+                createRequest(user, intygId, personnummer, diagnosisCode, filter, questions, sjukskrivningsGrad));
+
+        if (response.getResultCode() != ResultCodeEnum.OK) {
             throw new IllegalArgumentException("Bad data from SRS");
         }
 
+        // Schema mandates that this is of 1..*
         Bedomningsunderlag underlag = response.getBedomningsunderlag().get(0);
 
         Integer level = null;
@@ -133,20 +135,18 @@ public class SrsServiceImpl implements SrsService {
         return resp.getResultCode();
     }
 
-    @Override
-    public List<String> getAllDiagnosisCodes() {
-        return getDiagnosisCodes.getDiagnosisCodes(new GetDiagnosisCodesRequestType()).getDiagnos().stream().map(CVType::getCode)
-                .collect(Collectors.toList());
-    }
+    private GetSRSInformationRequestType createRequest(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode,
+            Utdatafilter filter, List<SrsQuestionResponse> questions, SjukskrivningsGrad sjukskrivningsGrad)
+            throws InvalidPersonNummerException {
 
-    private GetSRSInformationRequestType createRequest(String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
-            SjukskrivningsGrad sjukskrivningsGrad) throws InvalidPersonNummerException {
         GetSRSInformationRequestType request = new GetSRSInformationRequestType();
-        request.setVersion("1");
-        HsaId hsaId = new HsaId();
-        hsaId.setRoot("1.2.752.129.2.1.4.1");
-        hsaId.setExtension("SE5565594230-B31");
-        request.setKonsumentId(hsaId);
+        request.setVersion("1.0");
+        request.setKonsumentId(createHsaId(CONSUMER_HSA_ID));
+        Prediktionsfaktorer faktorer = new Prediktionsfaktorer();
+        faktorer.setAnvandareId(createHsaId(user.getHsaId()));
+        faktorer.setPostnummer(getPostnummer(user));
+        faktorer.getFragasvar().addAll(questions.stream().map(SrsQuestionResponse::convert).collect(Collectors.toList()));
+        request.setPrediktionsfaktorer(faktorer);
         Individfaktorer individer = new Individfaktorer();
         Individ individ = new Individ();
         individ.setOmfattning(sjukskrivningsGrad.toOmfattning());
@@ -154,7 +154,7 @@ public class SrsServiceImpl implements SrsService {
         individ.setPersonId(personnummer.getNormalizedPnr());
         IntygId intyg = new IntygId();
         intyg.setExtension(intygId);
-        intyg.setRoot("SE5565594230-B31");
+        intyg.setRoot(user.getValdVardenhet().getId());
         individ.setIntygId(intyg);
         individer.getIndivid().add(individ);
 
@@ -164,12 +164,36 @@ public class SrsServiceImpl implements SrsService {
         return request;
     }
 
+    private BigInteger getPostnummer(IntygUser user) {
+        String postnummer;
+        if (user.getValdVardenhet() instanceof Vardenhet) {
+            postnummer = ((Vardenhet) user.getValdVardenhet()).getPostnummer();
+        } else {
+            return BigInteger.ONE; // What is default?
+        }
+
+        if (Strings.isNullOrEmpty(postnummer)) {
+            return BigInteger.ONE; // What is default?
+        }
+        String trimmed = postnummer.replace(" ", "");
+        if (trimmed.length() != POSTNUMMER_LENGTH) {
+            return BigInteger.ONE; // What is default?
+
+        }
+        return BigInteger.valueOf(Integer.parseInt(trimmed));
+    }
+
+    private HsaId createHsaId(String hsaIdCode) {
+        HsaId hsaId = new HsaId();
+        hsaId.setRoot(HSA_ROOT);
+        hsaId.setExtension(hsaIdCode);
+        return hsaId;
+    }
+
     private SetConsentRequestType createSetConsentRequest(String hsaString, Personnummer personId, boolean samtycke)
             throws InvalidPersonNummerException {
         SetConsentRequestType request = new SetConsentRequestType();
-        HsaId hsaId = new HsaId();
-        hsaId.setRoot(HSA_ROOT);
-        hsaId.setExtension(hsaString);
+        HsaId hsaId = createHsaId(hsaString);
         request.setVardgivareId(hsaId);
         request.setPersonId(personId.getNormalizedPnr());
         request.setSamtycke(samtycke);
@@ -190,7 +214,7 @@ public class SrsServiceImpl implements SrsService {
     private Diagnos createDiagnos(String diagnosisCode) {
         Diagnos diagnos = new Diagnos();
         diagnos.setCode(diagnosisCode);
-        diagnos.setCodeSystem("1.2.752.116.1.1.1.1.3");
+        diagnos.setCodeSystem(DIAGNOS_CODE_SYSTEM);
         return diagnos;
     }
 }

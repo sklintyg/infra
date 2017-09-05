@@ -8,6 +8,7 @@ import se.inera.intyg.infra.integration.srs.model.SrsException;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
+import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
@@ -19,6 +20,7 @@ public interface SrsService {
     /**
      * Perform a getSrsInformation for a given Personnummer and diagnosis.
      *
+     * @param user               user which made the request
      * @param intygId            id of the intyg used for SRS.
      * @param personnummer       {@link Personnummer} for the patient concerned.
      * @param diagnosisCode      string representation of the diagnosis code.
@@ -29,8 +31,9 @@ public interface SrsService {
      * @throws InvalidPersonNummerException
      * @throws SrsException
      */
-    SrsResponse getSrs(String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
-            List<SrsQuestionResponse> answers, SjukskrivningsGrad sjukskrivningsGrad) throws InvalidPersonNummerException, SrsException;
+    SrsResponse getSrs(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode,
+            Utdatafilter filter, List<SrsQuestionResponse> answers, SjukskrivningsGrad sjukskrivningsGrad)
+            throws InvalidPersonNummerException, SrsException;
 
     /**
      * Retreives the questions to be displayed in the GUI.
@@ -43,11 +46,4 @@ public interface SrsService {
     Samtyckesstatus getConsent(String hsaId, Personnummer personId) throws InvalidPersonNummerException;
 
     ResultCodeEnum setConsent(String hsaId, Personnummer personId, boolean samtycke) throws InvalidPersonNummerException;
-
-    /**
-     * Returns all diagnosis codes supported by SRS.
-     *
-     * @return List of Strings which contains all the diagnosis codes supported by SRS.
-     */
-    List<String> getAllDiagnosisCodes();
 }

@@ -32,12 +32,14 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstat
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.integration.srs.model.SjukskrivningsGrad;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
-import se.inera.intyg.infra.integration.srs.stub.GetConsentStub;
 import se.inera.intyg.infra.integration.srs.stub.GetPredictionQuestionsStub;
 import se.inera.intyg.infra.integration.srs.stub.repository.ConsentRepository;
+import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
@@ -77,8 +79,9 @@ public class SrsServiceTest {
 
     @Test
     public void testNone() throws Exception {
-        SrsResponse response = service.getSrs("intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
-                SjukskrivningsGrad.HELT_NEDSATT);
+        SrsResponse response = service
+                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
+                        SjukskrivningsGrad.HELT_NEDSATT);
         assertNull(response.getStatistikBild());
         assertNull(response.getAtgarder());
         assertNull(response.getLevel());
@@ -87,8 +90,9 @@ public class SrsServiceTest {
     @Test
     public void testSrsPrediktion() throws Exception {
         utdatafilter.setPrediktion(true);
-        SrsResponse response = service.getSrs("intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
-                SjukskrivningsGrad.HELT_NEDSATT);
+        SrsResponse response = service
+                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
+                        SjukskrivningsGrad.HELT_NEDSATT);
         assertNotNull(response);
         assertTrue(response.getLevel() >= 0);
         assertTrue(response.getLevel() < 4);
@@ -98,8 +102,9 @@ public class SrsServiceTest {
     @Test
     public void testSrsStatistik() throws Exception {
         utdatafilter.setStatistik(true);
-        SrsResponse response = service.getSrs("intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
-                SjukskrivningsGrad.HELT_NEDSATT);
+        SrsResponse response = service
+                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
+                        SjukskrivningsGrad.HELT_NEDSATT);
         assertNotNull(response.getStatistikBild());
         assertNull(response.getAtgarder());
         assertNull(response.getLevel());
@@ -110,8 +115,9 @@ public class SrsServiceTest {
     public void testSrsPrediktionAndAtgardRekommendation() throws Exception {
         utdatafilter.setPrediktion(true);
         utdatafilter.setAtgardsrekommendation(true);
-        SrsResponse response = service.getSrs("intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
-                SjukskrivningsGrad.HELT_NEDSATT);
+        SrsResponse response = service
+                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
+                        SjukskrivningsGrad.HELT_NEDSATT);
         assertNotNull(response);
         assertTrue(response.getLevel() >= 0);
         assertTrue(response.getLevel() < 4);
@@ -126,8 +132,9 @@ public class SrsServiceTest {
         utdatafilter.setPrediktion(true);
         utdatafilter.setStatistik(true);
         utdatafilter.setFmbinformation(true);
-        SrsResponse response = service.getSrs("intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
-                SjukskrivningsGrad.HELT_NEDSATT);
+        SrsResponse response = service
+                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
+                        SjukskrivningsGrad.HELT_NEDSATT);
         assertNotNull(response);
         assertTrue(response.getLevel() >= 0);
         assertTrue(response.getLevel() < 4);
@@ -176,13 +183,14 @@ public class SrsServiceTest {
         assertEquals(ResultCodeEnum.OK, response);
     }
 
-    @Test
-    public void testGetDiagnosisCodes() {
-        List<String> response = service.getAllDiagnosisCodes();
-        assertNotNull(response);
-        assertEquals(3, response.size());
-        assertTrue(response.contains("M18"));
-        assertTrue(response.contains("J20"));
-        assertTrue(response.contains("Q10"));
+    private IntygUser createUser() {
+        IntygUser user = new IntygUser("hsaId");
+        Vardgivare vg = new Vardgivare();
+        vg.setId("vgId");
+        user.setValdVardgivare(vg);
+        Vardenhet ve = new Vardenhet();
+        ve.setId("veId");
+        user.setValdVardenhet(ve);
+        return user;
     }
 }

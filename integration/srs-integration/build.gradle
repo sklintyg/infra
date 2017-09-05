@@ -1,6 +1,8 @@
 dependencies {
 
   compile project(':common-cache-core')
+  compile project(':security-common')
+  compile project(':hsa-integration')
 
   compile "se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:${srsSchemasVersion}"
   compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
