@@ -170,7 +170,8 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
                 .collect(Collectors.toList());
     }
 
-    private List<SjukfallPatient> assembleSjukfallPatientList(Map<Integer, List<SjukfallIntyg>> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum) {
+    private List<SjukfallPatient> assembleSjukfallPatientList(Map<Integer, List<SjukfallIntyg>> intygsData, int maxIntygsGlapp,
+                                                              LocalDate aktivtDatum) {
         LOG.debug("  - Assembling 'sjukfall for patient'");
 
         Comparator<SjukfallPatient> dateComparator = Comparator.comparing(SjukfallPatient::getStart, Comparator.reverseOrder());

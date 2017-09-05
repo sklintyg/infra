@@ -41,7 +41,8 @@ public class SjukfallIntygPatientCreator {
 
     // - - - API - - -
 
-    public Map<Integer, List<SjukfallIntyg>> create(final List<IntygData> intygsData, final int maxIntygsGlapp, final LocalDate aktivtDatum) {
+    public Map<Integer, List<SjukfallIntyg>> create(final List<IntygData> intygsData, final int maxIntygsGlapp,
+                                                    final LocalDate aktivtDatum) {
         LOG.debug("Start creating a map of 'sjukfallintyg'...");
 
         // Create the map
@@ -54,14 +55,16 @@ public class SjukfallIntygPatientCreator {
 
     // - - - Package scope - - -
 
-    Map<Integer, List<SjukfallIntyg>> createMap(final List<IntygData> intygsData, final int maxIntygsGlapp, final LocalDate aktivtDatum) {
+    Map<Integer, List<SjukfallIntyg>> createMap(final List<IntygData> intygsData, final int maxIntygsGlapp,
+                                                final LocalDate aktivtDatum) {
         LOG.debug("  2. Create the map");
 
         // Transform intygsdata to an internal format
         List<SjukfallIntyg> sjukfallIntygList = createList(intygsData, aktivtDatum);
 
         // Ensure the that indygsData list is sort by 'signeringsTidpunkt' with descending order
-        Comparator<SjukfallIntyg> dateComparator = Comparator.comparing(SjukfallIntyg::getSigneringsTidpunkt, Comparator.reverseOrder());
+        Comparator<SjukfallIntyg> dateComparator
+            = Comparator.comparing(SjukfallIntyg::getSigneringsTidpunkt, Comparator.reverseOrder());
 
         sjukfallIntygList = sjukfallIntygList.stream()
             .sorted(dateComparator)
@@ -86,8 +89,7 @@ public class SjukfallIntygPatientCreator {
     }
 
     /**
-     * Collect certificates inside a map where each entry's value is a list with
-     * SjukfallIntyg
+     * Collect certificates inside a map where each entry's value is a list with SjukfallIntyg.
      */
     private Map<Integer, List<SjukfallIntyg>> collecIntyg(List<SjukfallIntyg> intygsData, int maxIntygsGlapp) {
 
@@ -101,7 +103,10 @@ public class SjukfallIntygPatientCreator {
     }
 
     // Iterate over intygsdata and collect continuous certificates.
-    private void collectIntyg(List<SjukfallIntyg> input, Map<Integer, List<SjukfallIntyg>> output, Integer key, SjukfallIntyg first, int maxIntygsGlapp) {
+    private void collectIntyg(List<SjukfallIntyg> input, Map<Integer, List<SjukfallIntyg>> output,
+                              Integer key, SjukfallIntyg first, int maxIntygsGlapp) {
+
+        int tmp = key;
 
         if (input.contains(first)) {
             input.remove(first);
@@ -119,10 +124,10 @@ public class SjukfallIntygPatientCreator {
         // Rule: startDatum - slutDatum < maxIntygsGlapp
         SjukfallIntyg second = input.get(0);
         if (second.getSlutDatum().isBefore(first.getStartDatum().minusDays(maxIntygsGlapp + 1))) {
-            key++;
+            tmp++;
         }
 
         // Recursive call
-        collectIntyg(input, output, key, second, maxIntygsGlapp);
+        collectIntyg(input, output, tmp, second, maxIntygsGlapp);
     }
 }

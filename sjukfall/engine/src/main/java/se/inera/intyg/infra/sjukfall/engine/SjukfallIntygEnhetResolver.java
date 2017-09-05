@@ -86,9 +86,8 @@ public class SjukfallIntygEnhetResolver {
      */
     Map<String, List<SjukfallIntyg>> createMap(List<IntygData> intygsData, LocalDate aktivtDatum) {
         if (intygsData == null || intygsData.isEmpty()) {
-            new HashMap<>();
+            return new HashMap<>();
         }
-
         return creator.create(intygsData, aktivtDatum);
     }
 
@@ -112,7 +111,7 @@ public class SjukfallIntygEnhetResolver {
 
     List<SjukfallIntyg> reduceList(List<SjukfallIntyg> values, int maxIntygsGlapp)  {
 
-        // filter out "sjukfallIntyg"
+        // filter out active "sjukfallIntyg"
         SjukfallIntyg sjukfallIntyg = values.stream().filter(e -> e.isAktivtIntyg()).findFirst().get();
 
         // get position of the "sjukfallIntyg"

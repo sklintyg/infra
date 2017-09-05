@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Magnus Ekstrand on 2017-02-10.
@@ -35,19 +36,21 @@ public class SjukfallIntygPatientResolver {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygPatientResolver.class);
 
-    SjukfallIntygPatientCreator creator;
+    private SjukfallIntygPatientCreator creator;
 
     public SjukfallIntygPatientResolver(SjukfallIntygPatientCreator creator) {
         this.creator = creator;
     }
 
-    // - - -  API  - - -
+
+    // api
 
     /**
      * Method is resolving sjukfall for a health care unit based on the unit's certificate information.
      * A map with patient id as key and a list of certificates associated with a sjukfall as value, will be returned.
      */
-    public Map<Integer, List<SjukfallIntyg>> resolve(final List<IntygData> intygsData, final int maxIntygsGlapp, final LocalDate aktivtDatum) {
+    public Map<Integer, List<SjukfallIntyg>> resolve(final List<IntygData> intygsData,
+                                                     final int maxIntygsGlapp, final LocalDate aktivtDatum) {
 
         LOG.debug("Start resolving certificate information...");
         LOG.debug("  - max days between certificates: {}, active date: {}", maxIntygsGlapp, aktivtDatum);
@@ -63,7 +66,7 @@ public class SjukfallIntygPatientResolver {
         }
 
         // Create a map with an enumerated Integer as key holding each sjukfalls intygsdata.
-        // The map's values are sorted by signeringsTidpunkt with ascending order.
+        // The map's values are sorted by signeringsTidpunkt with descending order.
         Map<Integer, List<SjukfallIntyg>> createdMap = createMap(intygsData, maxIntygsGlapp, aktivtDatum);
 
         // Reduce the list
@@ -82,16 +85,31 @@ public class SjukfallIntygPatientResolver {
         if (intygsData == null || intygsData.isEmpty()) {
             return new HashMap<>();
         }
-
         return creator.create(intygsData, maxIntygsGlapp, aktivtDatum);
     }
 
-    private Map<Integer, List<SjukfallIntyg>> reduceMap(final Map<Integer, List<SjukfallIntyg>> intygsMap, final int maxIntygsGlapp, final LocalDate aktivtDatum) {
+    Map<Integer, List<SjukfallIntyg>> reduceMap(Map<Integer, List<SjukfallIntyg>> intygsMap, int maxIntygsGlapp,
+                                                        LocalDate aktivtDatum) {
 
-        LOG.debug("  - Reduce certificates. Only certificates fulfilling request parameter 'maxIntygsGlapp' will be concerned.");
+        LOG.debug("  - Reduce certificates. Future certificates will be removed.");
 
+        Map<Integer, List<SjukfallIntyg>> resultMap = new HashMap<>();
 
-        return intygsMap;
+        // For each entry in map, lookup "aktivtIntyg" within the list of IntygsData
+        for (Map.Entry<Integer, List<SjukfallIntyg>> entry : intygsMap.entrySet()) {
+            List<SjukfallIntyg> reducedList = reduceList(entry.getValue(), maxIntygsGlapp, aktivtDatum);
+            if (!reducedList.isEmpty()) {
+                resultMap.put(entry.getKey(), reducedList);
+            }
+        }
+
+        return resultMap;
+    }
+
+    List<SjukfallIntyg> reduceList(List<SjukfallIntyg> values, int maxIntygsGlapp, LocalDate aktivtDatum) {
+        return values.stream()
+            .filter(value -> aktivtDatum.plusDays(maxIntygsGlapp + 1).isAfter(value.getStartDatum()))
+            .collect(Collectors.toList());
     }
 
 }
