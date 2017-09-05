@@ -46,4 +46,11 @@ public interface SrsService {
     Samtyckesstatus getConsent(String hsaId, Personnummer personId) throws InvalidPersonNummerException;
 
     ResultCodeEnum setConsent(String hsaId, Personnummer personId, boolean samtycke) throws InvalidPersonNummerException;
+
+    /**
+     * Fetches all the diagnosis codes which are supported by SRS.
+     *
+     * @return a list containing all the supported diagnosis codes. All sub-diagnosis are also supported.
+     */
+    List<String> getAllDiagnosisCodes();
 }

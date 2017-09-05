@@ -183,6 +183,16 @@ public class SrsServiceTest {
         assertEquals(ResultCodeEnum.OK, response);
     }
 
+    @Test
+    public void testGetDiagnosisCodes() {
+        List<String> response = service.getAllDiagnosisCodes();
+        assertNotNull(response);
+        assertEquals(3, response.size());
+        assertTrue(response.contains("M18"));
+        assertTrue(response.contains("J20"));
+        assertTrue(response.contains("Q10"));
+    }
+
     private IntygUser createUser() {
         IntygUser user = new IntygUser("hsaId");
         Vardgivare vg = new Vardgivare();
