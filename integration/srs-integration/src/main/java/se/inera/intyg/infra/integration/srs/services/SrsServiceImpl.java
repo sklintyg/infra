@@ -149,6 +149,8 @@ public class SrsServiceImpl implements SrsService {
         request.setVersion("1.0");
         request.setKonsumentId(createHsaId(CONSUMER_HSA_ID));
 
+        request.setAnvandareId(createHsaId(user.getHsaId()));
+
         Prediktionsfaktorer faktorer = new Prediktionsfaktorer();
         faktorer.setPostnummer(getPostnummer(user));
         faktorer.getFragasvar().addAll(questions.stream().map(SrsQuestionResponse::convert).collect(Collectors.toList()));
