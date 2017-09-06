@@ -29,7 +29,6 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentReq
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponseType;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
-import se.inera.intyg.infra.integration.srs.model.SjukskrivningsGrad;
 import se.inera.intyg.infra.integration.srs.model.SrsException;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
@@ -43,7 +42,6 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
-import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,10 +70,10 @@ public class SrsServiceImpl implements SrsService {
 
     @Override
     public SrsResponse getSrs(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
-            List<SrsQuestionResponse> questions, SjukskrivningsGrad sjukskrivningsGrad) throws InvalidPersonNummerException, SrsException {
+            List<SrsQuestionResponse> questions) throws InvalidPersonNummerException, SrsException {
 
         GetSRSInformationResponseType response = getSRSInformation.getSRSInformation(
-                createRequest(user, intygId, personnummer, diagnosisCode, filter, questions, sjukskrivningsGrad));
+                createRequest(user, intygId, personnummer, diagnosisCode, filter, questions));
 
         if (response.getResultCode() != ResultCodeEnum.OK) {
             throw new IllegalArgumentException("Bad data from SRS");
@@ -107,12 +105,6 @@ public class SrsServiceImpl implements SrsService {
         if (filter.isStatistik() && underlag.getStatistik() != null
                 && !CollectionUtils.isEmpty(underlag.getStatistik().getStatistikbild())) {
             statistikBild = underlag.getStatistik().getStatistikbild().get(0).getBildadress();
-        }
-
-        if (filter.isFmbinformation()) {
-            // Handle fmbInformation here
-            LOG.info("FMB info");
-
         }
 
         return new SrsResponse(level, atgarder, statistikBild);
@@ -150,20 +142,20 @@ public class SrsServiceImpl implements SrsService {
     }
 
     private GetSRSInformationRequestType createRequest(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode,
-            Utdatafilter filter, List<SrsQuestionResponse> questions, SjukskrivningsGrad sjukskrivningsGrad)
+            Utdatafilter filter, List<SrsQuestionResponse> questions)
             throws InvalidPersonNummerException {
 
         GetSRSInformationRequestType request = new GetSRSInformationRequestType();
         request.setVersion("1.0");
         request.setKonsumentId(createHsaId(CONSUMER_HSA_ID));
+
         Prediktionsfaktorer faktorer = new Prediktionsfaktorer();
-        faktorer.setAnvandareId(createHsaId(user.getHsaId()));
         faktorer.setPostnummer(getPostnummer(user));
         faktorer.getFragasvar().addAll(questions.stream().map(SrsQuestionResponse::convert).collect(Collectors.toList()));
         request.setPrediktionsfaktorer(faktorer);
+
         Individfaktorer individer = new Individfaktorer();
         Individ individ = new Individ();
-        individ.setOmfattning(sjukskrivningsGrad.toOmfattning());
         individ.getDiagnos().add(createDiagnos(diagnosisCode));
         individ.setPersonId(personnummer.getNormalizedPnr());
         IntygId intyg = new IntygId();
@@ -178,23 +170,23 @@ public class SrsServiceImpl implements SrsService {
         return request;
     }
 
-    private BigInteger getPostnummer(IntygUser user) {
+    private String getPostnummer(IntygUser user) {
         String postnummer;
         if (user.getValdVardenhet() instanceof Vardenhet) {
             postnummer = ((Vardenhet) user.getValdVardenhet()).getPostnummer();
         } else {
-            return BigInteger.ONE; // What is default?
+            return ""; // What is default?
         }
 
         if (Strings.isNullOrEmpty(postnummer)) {
-            return BigInteger.ONE; // What is default?
+            return ""; // What is default?
         }
         String trimmed = postnummer.replace(" ", "");
         if (trimmed.length() != POSTNUMMER_LENGTH) {
-            return BigInteger.ONE; // What is default?
+            return ""; // What is default?
 
         }
-        return BigInteger.valueOf(Integer.parseInt(trimmed));
+        return trimmed;
     }
 
     private HsaId createHsaId(String hsaIdCode) {

@@ -3,7 +3,6 @@ package se.inera.intyg.infra.integration.srs.services;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
-import se.inera.intyg.infra.integration.srs.model.SjukskrivningsGrad;
 import se.inera.intyg.infra.integration.srs.model.SrsException;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
@@ -26,13 +25,12 @@ public interface SrsService {
      * @param diagnosisCode      string representation of the diagnosis code.
      * @param filter             Utdatafilter with desired response filters.
      * @param answers            Answers from the user.
-     * @param sjukskrivningsGrad The degree of sickleave considered for the patient.
      * @return {@link SrsResponse} with {@link Diagnosprediktionstatus} OK or PREDIKTIONSMODELL_SAKNAS
      * @throws InvalidPersonNummerException
      * @throws SrsException
      */
     SrsResponse getSrs(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode,
-            Utdatafilter filter, List<SrsQuestionResponse> answers, SjukskrivningsGrad sjukskrivningsGrad)
+            Utdatafilter filter, List<SrsQuestionResponse> answers)
             throws InvalidPersonNummerException, SrsException;
 
     /**

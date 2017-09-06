@@ -34,7 +34,6 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.G
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-import se.inera.intyg.infra.integration.srs.model.SjukskrivningsGrad;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
 import se.inera.intyg.infra.integration.srs.stub.GetPredictionQuestionsStub;
@@ -74,14 +73,12 @@ public class SrsServiceTest {
         utdatafilter.setPrediktion(false);
         utdatafilter.setAtgardsrekommendation(false);
         utdatafilter.setStatistik(false);
-        utdatafilter.setFmbinformation(false);
     }
 
     @Test
     public void testNone() throws Exception {
         SrsResponse response = service
-                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
-                        SjukskrivningsGrad.HELT_NEDSATT);
+                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList());
         assertNull(response.getStatistikBild());
         assertNull(response.getAtgarder());
         assertNull(response.getLevel());
@@ -91,8 +88,7 @@ public class SrsServiceTest {
     public void testSrsPrediktion() throws Exception {
         utdatafilter.setPrediktion(true);
         SrsResponse response = service
-                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
-                        SjukskrivningsGrad.HELT_NEDSATT);
+                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList());
         assertNotNull(response);
         assertTrue(response.getLevel() >= 0);
         assertTrue(response.getLevel() < 4);
@@ -103,8 +99,7 @@ public class SrsServiceTest {
     public void testSrsStatistik() throws Exception {
         utdatafilter.setStatistik(true);
         SrsResponse response = service
-                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
-                        SjukskrivningsGrad.HELT_NEDSATT);
+                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList());
         assertNotNull(response.getStatistikBild());
         assertNull(response.getAtgarder());
         assertNull(response.getLevel());
@@ -116,8 +111,7 @@ public class SrsServiceTest {
         utdatafilter.setPrediktion(true);
         utdatafilter.setAtgardsrekommendation(true);
         SrsResponse response = service
-                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
-                        SjukskrivningsGrad.HELT_NEDSATT);
+                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList());
         assertNotNull(response);
         assertTrue(response.getLevel() >= 0);
         assertTrue(response.getLevel() < 4);
@@ -131,10 +125,8 @@ public class SrsServiceTest {
         utdatafilter.setAtgardsrekommendation(true);
         utdatafilter.setPrediktion(true);
         utdatafilter.setStatistik(true);
-        utdatafilter.setFmbinformation(true);
         SrsResponse response = service
-                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList(),
-                        SjukskrivningsGrad.HELT_NEDSATT);
+                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList());
         assertNotNull(response);
         assertTrue(response.getLevel() >= 0);
         assertTrue(response.getLevel() < 4);

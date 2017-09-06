@@ -21,33 +21,32 @@ package se.inera.intyg.infra.integration.srs.model;
 
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.FragaSvar;
 
-import java.math.BigInteger;
-
 public class SrsQuestionResponse {
 
-    private int questionId;
-    private int answerId;
+    private String questionId;
+    private String answerId;
 
     public static FragaSvar convert(SrsQuestionResponse srsQuestionResponse) {
         FragaSvar fragaSvar = new FragaSvar();
-        fragaSvar.setFrageidSrs(BigInteger.valueOf(srsQuestionResponse.getQuestionId()));
-        fragaSvar.setSvarsalternativId(BigInteger.valueOf(srsQuestionResponse.getAnswerId()));
+        fragaSvar.setFrageidSrs(srsQuestionResponse.getQuestionId());
+
+        fragaSvar.setSvarsidSrs(srsQuestionResponse.getAnswerId());
         return fragaSvar;
     }
 
-    public int getQuestionId() {
+    public String getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(int questionId) {
+    public void setQuestionId(String questionId) {
         this.questionId = questionId;
     }
 
-    public int getAnswerId() {
+    public String getAnswerId() {
         return answerId;
     }
 
-    public void setAnswerId(int answerId) {
+    public void setAnswerId(String answerId) {
         this.answerId = answerId;
     }
 }

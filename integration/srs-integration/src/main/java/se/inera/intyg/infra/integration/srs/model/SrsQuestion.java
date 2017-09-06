@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 
 public final class SrsQuestion {
 
-    private int questionId;
+    private String questionId;
     private String text;
     private int priority;
     private ImmutableList<AnswerOption> answerOptions;
 
-    public SrsQuestion(int questionId, String text, List<AnswerOption> answerOptions, int priority) {
+    public SrsQuestion(String questionId, String text, List<AnswerOption> answerOptions, int priority) {
         this.questionId = questionId;
         this.text = text;
         this.answerOptions = ImmutableList.copyOf(answerOptions.stream()
@@ -44,13 +44,13 @@ public final class SrsQuestion {
     }
 
     public static SrsQuestion convert(Prediktionsfraga source) {
-        return new SrsQuestion(source.getFraga().getFrageidSrs().intValueExact(),
-                source.getFraga().getFragetext(),
+        return new SrsQuestion(source.getFrageidSrs(),
+                source.getFragetext(),
                 source.getSvarsalternativ().stream().map(AnswerOption::convert).collect(Collectors.toList()),
-                source.getFraga().getPrioritet().intValueExact());
+                source.getPrioritet().intValueExact());
     }
 
-    public int getQuestionId() {
+    public String getQuestionId() {
         return questionId;
     }
 
@@ -68,11 +68,11 @@ public final class SrsQuestion {
 
     public static final class AnswerOption {
         private final String text;
-        private final int id;
+        private final String id;
         private final int priority;
         private final boolean defaultValue;
 
-        public AnswerOption(int id, String text, int priority, boolean defaultValue) {
+        public AnswerOption(String id, String text, int priority, boolean defaultValue) {
             this.text = text;
             this.id = id;
             this.priority = priority;
@@ -80,7 +80,7 @@ public final class SrsQuestion {
         }
 
         public static AnswerOption convert(Svarsalternativ source) {
-            return new AnswerOption(source.getSvarsalternativId().intValueExact(), source.getSvarstext(),
+            return new AnswerOption(source.getSvarsidSrs(), source.getSvarstext(),
                     source.getPrioritet().intValueExact(), source.isDefault());
         }
 
@@ -88,7 +88,7 @@ public final class SrsQuestion {
             return text;
         }
 
-        public int getId() {
+        public String getId() {
             return id;
         }
 

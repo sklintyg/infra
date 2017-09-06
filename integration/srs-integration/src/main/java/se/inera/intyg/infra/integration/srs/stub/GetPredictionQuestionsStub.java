@@ -20,7 +20,6 @@
 package se.inera.intyg.infra.integration.srs.stub;
 
 import org.apache.cxf.annotations.SchemaValidation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.Fraga;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
@@ -51,13 +50,9 @@ public class GetPredictionQuestionsStub implements GetPredictionQuestionsRespond
         question.getSvarsalternativ().add(createAnswer(i.getAndIncrement()));
         question.getSvarsalternativ().add(createAnswer(i.getAndIncrement()));
         question.getSvarsalternativ().add(createAnswer(i.getAndIncrement()));
-        question.setFraga(createQuestion(id));
-        return question;
-    }
 
-    private Fraga createQuestion(int id) {
-        Fraga question = new Fraga();
-        question.setFrageidSrs(BigInteger.valueOf(id));
+        question.setFrageid(BigInteger.valueOf(id));
+        question.setFrageidSrs(String.valueOf(id));
         question.setFragetext("Fragetext " + id);
         question.setPrioritet(BigInteger.valueOf((int) (Math.random() * MAX_PRIORITY) + 1));
         return question;
@@ -67,7 +62,8 @@ public class GetPredictionQuestionsStub implements GetPredictionQuestionsRespond
         Svarsalternativ answer = new Svarsalternativ();
         answer.setDefault(id == 1);
         answer.setPrioritet(BigInteger.valueOf((int) (Math.random() * MAX_PRIORITY) + 1));
-        answer.setSvarsalternativId(BigInteger.valueOf(id));
+        answer.setSvarsid(BigInteger.valueOf(id));
+        answer.setSvarsidSrs("stud");
         answer.setSvarstext("Svarsalternativ " + id);
         return answer;
     }
