@@ -91,11 +91,11 @@ public class SjukfallIntygPatientCreator {
         Comparator<SjukfallIntyg> dateComparator
             = Comparator.comparing(SjukfallIntyg::getStartDatum);
 
-        intygsData = intygsData.stream()
+        List<SjukfallIntyg> sortedList = intygsData.stream()
             .sorted(dateComparator)
             .collect(Collectors.toList());
 
-        collectIntyg(intygsData, map, 0, intygsData.get(0), maxIntygsGlapp);
+        collectIntyg(sortedList, map, 0, sortedList.get(0), maxIntygsGlapp);
 
         return map;
     }
