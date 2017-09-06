@@ -36,7 +36,12 @@ public class ConsentRepository {
     }
 
     public void setConsent(Personnummer personnummer, String vardgivarId, boolean consent) {
-        consentRepo.put(new Individ(personnummer, vardgivarId), new Consent(consent, LocalDateTime.now()));
+        Individ individ = new Individ(personnummer, vardgivarId);
+        if (consent) {
+            consentRepo.put(individ, new Consent(true, LocalDateTime.now()));
+        } else {
+            consentRepo.remove(individ);
+        }
     }
 
     public void clear() {

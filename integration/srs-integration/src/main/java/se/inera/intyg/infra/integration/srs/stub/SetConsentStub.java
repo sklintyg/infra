@@ -21,6 +21,7 @@ public class SetConsentStub implements SetConsentResponderInterface {
     @Override
     public SetConsentResponseType setConsent(SetConsentRequestType setConsentRequestType) {
         LOG.info("Stub received SetConsent-request for {}.", setConsentRequestType.getPersonId());
+
         consentRepository
                 .setConsent(new Personnummer(setConsentRequestType.getPersonId()), setConsentRequestType.getVardgivareId().getExtension(),
                         setConsentRequestType.isSamtycke());

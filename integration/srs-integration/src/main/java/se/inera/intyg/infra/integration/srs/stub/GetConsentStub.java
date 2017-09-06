@@ -30,16 +30,12 @@ public class GetConsentStub implements GetConsentResponderInterface {
                 .getConsent(new Personnummer(getConsentRequestType.getPersonId()), getConsentRequestType.getVardgivareId().getExtension());
         GetConsentResponseType response = new GetConsentResponseType();
         if (consent.isPresent()) {
-            response.setSamtycke(consent.get().isConsent());
-            response.setSamtyckesstatus(getSamtyckesstatus(consent.get().isConsent()));
+            response.setSamtycke(true);
+            response.setSamtyckesstatus(Samtyckesstatus.JA);
             response.setSparattidpunkt(consent.get().getTimestamp());
         } else {
             response.setSamtyckesstatus(Samtyckesstatus.INGET);
         }
         return response;
-    }
-
-    private Samtyckesstatus getSamtyckesstatus(boolean consent) {
-        return consent ? Samtyckesstatus.JA : Samtyckesstatus.NEJ;
     }
 }
