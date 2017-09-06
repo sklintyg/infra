@@ -23,6 +23,8 @@ import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 /**
@@ -48,6 +50,12 @@ public class SjukfallIntygGenerator {
 
     public List<IntygData> get() {
         return this.intygData;
+    }
+
+    public List<IntygData> get(Predicate<? super IntygData> predicate) {
+        return this.intygData.stream()
+            .filter(predicate)
+            .collect(Collectors.toList());
     }
 
 }

@@ -26,12 +26,22 @@ import java.util.List;
  */
 public class SjukfallPatient {
 
+    // Patientuppgifter
     private Patient patient;
+
+    // Huvuddiagnos
     private DiagnosKod diagnosKod;
 
+    // Sjukfallets startdatum
     private LocalDate start;
+
+    // Sjukfallets slutdatum
     private LocalDate slut;
 
+    // Totalt antal sjukskrivningsdagar för sjukfallet
+    private Integer dagar;
+
+    // De intyg som ingår i sjukfallet
     private List<SjukfallIntyg> sjukfallIntygList;
 
 
@@ -67,6 +77,14 @@ public class SjukfallPatient {
 
     public void setSlut(LocalDate slut) {
         this.slut = slut;
+    }
+
+    public Integer getDagar() {
+        return dagar;
+    }
+
+    public void setDagar(Integer dagar) {
+        this.dagar = dagar;
     }
 
     public List<SjukfallIntyg> getSjukfallIntygList() {

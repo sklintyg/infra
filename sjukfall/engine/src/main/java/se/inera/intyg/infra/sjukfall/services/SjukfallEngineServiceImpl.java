@@ -134,9 +134,20 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         sjukfallPatient.setDiagnosKod(diagnosKod);
         sjukfallPatient.setStart(getMinimumDate(values));
         sjukfallPatient.setSlut(getMaximumDate(values));
-        sjukfallPatient.setSjukfallIntygList(values);
+        sjukfallPatient.setDagar(SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(values));
+        sjukfallPatient.setSjukfallIntygList(sortIntyg(values));
 
         return sjukfallPatient;
+    }
+
+    private List<SjukfallIntyg> sortIntyg(List<SjukfallIntyg> intyg) {
+        // Make sort order descending
+        Comparator<SjukfallIntyg> dateComparator
+            = Comparator.comparing(SjukfallIntyg::getStartDatum, Comparator.reverseOrder());
+
+        return intyg.stream()
+            .sorted(dateComparator)
+            .collect(Collectors.toList());
     }
 
     private DiagnosKod resolveDiagnosKod(List<SjukfallIntyg> intyg) {
@@ -174,14 +185,15 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
                                                               LocalDate aktivtDatum) {
         LOG.debug("  - Assembling 'sjukfall for patient'");
 
-        Comparator<SjukfallPatient> dateComparator = Comparator.comparing(SjukfallPatient::getStart, Comparator.reverseOrder());
+        Comparator<SjukfallPatient> dateComparator
+            = Comparator.comparing(SjukfallPatient::getStart, Comparator.reverseOrder());
 
         // 1. Build sjukfall for patient object
         // 2. Filter out any future sjukfall
         // 3. Sort by start date with descending order
         return intygsData.entrySet().stream()
             .map(e -> buildSjukfallPatient(e.getValue()))
-            .filter(o -> o.getStart().isAfter(aktivtDatum.plusDays(maxIntygsGlapp + 1)))
+            .filter(value -> aktivtDatum.plusDays(maxIntygsGlapp + 1).isAfter(value.getStart()))
             .sorted(dateComparator)
             .collect(Collectors.toList());
     }

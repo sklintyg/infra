@@ -18,11 +18,14 @@
  */
 package se.inera.intyg.infra.sjukfall.testdata.builders;
 
+import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.infra.sjukfall.dto.Formaga;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -49,6 +52,9 @@ public final class IntygDataT {
         private LocalDateTime signeringsTidpunkt;
 
         private List<Formaga> formagor;
+
+        private List<String> biDiagnoser;
+        private List<String> sysselsattning;
 
         private boolean enkeltIntyg;
 
@@ -105,8 +111,23 @@ public final class IntygDataT {
             return this;
         }
 
+        public IntygDataBuilder signeringsTidpunkt(LocalDateTime signeringsTidpunkt) {
+            this.signeringsTidpunkt = signeringsTidpunkt;
+            return this;
+        }
+
         public IntygDataBuilder formagor(List<Formaga> formagor) {
             this.formagor = formagor;
+            return this;
+        }
+
+        public IntygDataBuilder biDiagnoser(List<String> biDiagnoser) {
+            this.biDiagnoser = biDiagnoser;
+            return this;
+        }
+
+        public IntygDataBuilder sysselsattning(List<String> sysselsattning) {
+            this.sysselsattning = sysselsattning;
             return this;
         }
 
@@ -115,16 +136,12 @@ public final class IntygDataT {
             return this;
         }
 
-        public IntygDataBuilder signeringsTidpunkt(LocalDateTime signeringsTidpunkt) {
-            this.signeringsTidpunkt = signeringsTidpunkt;
-            return this;
-        }
-
         @Override
         public IntygData build() {
             IntygData intygData = new IntygData();
             intygData.setIntygId(this.intygId);
-            intygData.setDiagnosKod(this.diagnoskod);
+            intygData.setDiagnosKod(createDiagnosKod(this.diagnoskod));
+            intygData.setBiDiagnoser(createDiagnosKoder(this.biDiagnoser));
             intygData.setPatientId(this.patientId);
             intygData.setPatientNamn(this.patientNamn);
             intygData.setLakareId(this.lakareId);
@@ -133,12 +150,24 @@ public final class IntygDataT {
             intygData.setVardenhetNamn(this.vardenhetNamn);
             intygData.setVardgivareId(this.vardgivareId);
             intygData.setVardgivareNamn(this.vardgivareNamn);
-            intygData.setSigneringsTidpunkt(this.signeringsTidpunkt);
             intygData.setFormagor(this.formagor);
+            intygData.setSysselsattning(this.sysselsattning);
             intygData.setEnkeltIntyg(this.enkeltIntyg);
+            intygData.setSigneringsTidpunkt(this.signeringsTidpunkt);
 
             return intygData;
         }
 
+        private DiagnosKod createDiagnosKod(String diagnoskod) {
+            return new DiagnosKod(this.diagnoskod);
+        }
+
+        private List<DiagnosKod> createDiagnosKoder(List<String> diagnosKoder) {
+            if (diagnosKoder == null || diagnosKoder.isEmpty()) {
+                return new ArrayList<>();
+            }
+
+            return diagnosKoder.stream().map(DiagnosKod::new).collect(Collectors.toList());
+        }
     }
 }

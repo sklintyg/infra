@@ -150,9 +150,6 @@ public class IntygData {
         return diagnosKod;
     }
 
-    public void setDiagnosKod(String diagnosKod) {
-        setDiagnosKod(new DiagnosKod(diagnosKod));
-    }
     public void setDiagnosKod(DiagnosKod diagnosKod) {
         this.diagnosKod = diagnosKod;
     }

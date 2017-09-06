@@ -60,15 +60,7 @@ public class SjukfallIntygPatientCreator {
         LOG.debug("  2. Create the map");
 
         // Transform intygsdata to an internal format
-        List<SjukfallIntyg> sjukfallIntygList = createList(intygsData, aktivtDatum);
-
-        // Ensure the that indygsData list is sort by 'signeringsTidpunkt' with descending order
-        Comparator<SjukfallIntyg> dateComparator
-            = Comparator.comparing(SjukfallIntyg::getSigneringsTidpunkt, Comparator.reverseOrder());
-
-        sjukfallIntygList = sjukfallIntygList.stream()
-            .sorted(dateComparator)
-            .collect(Collectors.toList());
+        List<SjukfallIntyg> sjukfallIntygList = map(intygsData, aktivtDatum);
 
         return collecIntyg(sjukfallIntygList, maxIntygsGlapp);
     }
@@ -76,7 +68,7 @@ public class SjukfallIntygPatientCreator {
 
     // - - - Private scope - - -
 
-    private List<SjukfallIntyg> createList(List<IntygData> intygsData, LocalDate aktivtDatum) {
+    private List<SjukfallIntyg> map(List<IntygData> intygsData, LocalDate aktivtDatum) {
         LOG.debug("     a. Transform 'intygsdata' to intermediate format");
 
         List<SjukfallIntyg> list = new ArrayList<>();
@@ -95,9 +87,15 @@ public class SjukfallIntygPatientCreator {
 
         Map<Integer, List<SjukfallIntyg>> map = new HashMap<>();
 
-        Integer key = 0;
-        SjukfallIntyg first = intygsData.get(0);
-        collectIntyg(intygsData, map, key, first, maxIntygsGlapp);
+        // Ensure the that indygsData list is sort by 'startDatum' with ascending order
+        Comparator<SjukfallIntyg> dateComparator
+            = Comparator.comparing(SjukfallIntyg::getStartDatum);
+
+        intygsData = intygsData.stream()
+            .sorted(dateComparator)
+            .collect(Collectors.toList());
+
+        collectIntyg(intygsData, map, 0, intygsData.get(0), maxIntygsGlapp);
 
         return map;
     }
@@ -113,7 +111,7 @@ public class SjukfallIntygPatientCreator {
         }
 
         // Add to output map
-        output.computeIfAbsent(key, v -> new ArrayList<>()).add(first);
+        output.computeIfAbsent(tmp, v -> new ArrayList<>()).add(first);
 
         // Return if no more input
         if (input.isEmpty()) {
@@ -123,7 +121,7 @@ public class SjukfallIntygPatientCreator {
         // Lookup if the first and second intyg are within the specified amount of days
         // Rule: startDatum - slutDatum < maxIntygsGlapp
         SjukfallIntyg second = input.get(0);
-        if (second.getSlutDatum().isBefore(first.getStartDatum().minusDays(maxIntygsGlapp + 1))) {
+        if (first.getSlutDatum().plusDays(maxIntygsGlapp + 1).isBefore(second.getStartDatum())) {
             tmp++;
         }
 

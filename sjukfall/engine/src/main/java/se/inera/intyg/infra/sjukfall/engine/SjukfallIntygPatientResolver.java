@@ -27,7 +27,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Magnus Ekstrand on 2017-02-10.
@@ -38,10 +37,11 @@ public class SjukfallIntygPatientResolver {
 
     private SjukfallIntygPatientCreator creator;
 
+    // constructor
+
     public SjukfallIntygPatientResolver(SjukfallIntygPatientCreator creator) {
         this.creator = creator;
     }
-
 
     // api
 
@@ -67,13 +67,14 @@ public class SjukfallIntygPatientResolver {
 
         // Create a map with an enumerated Integer as key holding each sjukfalls intygsdata.
         // The map's values are sorted by signeringsTidpunkt with descending order.
-        Map<Integer, List<SjukfallIntyg>> createdMap = createMap(intygsData, maxIntygsGlapp, aktivtDatum);
+        //Map<Integer, List<SjukfallIntyg>> createdMap = createMap(intygsData, maxIntygsGlapp, aktivtDatum);
 
         // Reduce the list
-        Map<Integer, List<SjukfallIntyg>> reducedMap = reduceMap(createdMap, maxIntygsGlapp, aktivtDatum);
+        //Map<Integer, List<SjukfallIntyg>> reducedMap = reduceMap(createdMap, maxIntygsGlapp, aktivtDatum);
 
         LOG.debug("...stop resolving certificate information.");
-        return reducedMap;
+        //return reducedMap;
+        return creator.create(intygsData, maxIntygsGlapp, aktivtDatum);
     }
 
     // - - -  Package scope  - - -
@@ -81,13 +82,16 @@ public class SjukfallIntygPatientResolver {
     /**
      * Method returns a map with intermediate IntygsData objects.
      */
+
+    /*
     Map<Integer, List<SjukfallIntyg>> createMap(List<IntygData> intygsData, int maxIntygsGlapp,  LocalDate aktivtDatum) {
         if (intygsData == null || intygsData.isEmpty()) {
             return new HashMap<>();
         }
-        return creator.create(intygsData, maxIntygsGlapp, aktivtDatum);
+
     }
 
+    /*
     Map<Integer, List<SjukfallIntyg>> reduceMap(Map<Integer, List<SjukfallIntyg>> intygsMap, int maxIntygsGlapp,
                                                         LocalDate aktivtDatum) {
 
@@ -111,5 +115,6 @@ public class SjukfallIntygPatientResolver {
             .filter(value -> aktivtDatum.plusDays(maxIntygsGlapp + 1).isAfter(value.getStartDatum()))
             .collect(Collectors.toList());
     }
+    */
 
 }

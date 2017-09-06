@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.infra.sjukfall.services;
 
+import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -45,6 +46,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -80,9 +82,11 @@ public class SjukfallEngineServiceTest {
         sjukfallListUnit = testee.beraknaSjukfallForEnhet(intygDataList, getIntygParametrar(5, activeDate));
         assertInit(sjukfallListUnit, 11);
 
-        //sjukfallListPatient = testee.beraknaSjukfallForPatient(intygDataList, getIntygParametrar(5, activeDate));
-        //assertInit(sjukfallListPatient, 0);
+        List<IntygData> intygDataListPatient
+            = intygDataList.stream().filter(o -> o.getPatientId().equals("19710301-1032")).collect(Collectors.toList());
 
+        sjukfallListPatient = testee.beraknaSjukfallForPatient(intygDataListPatient, getIntygParametrar(5, activeDate));
+        assertInit(sjukfallListPatient, 2);
     }
 
     // ~ ======================================================================================================== ~
@@ -91,73 +95,83 @@ public class SjukfallEngineServiceTest {
     // ~ ======================================================================================================== ~
 
     @Test
-    public void testCalculateSjukfall1() {
-        assertSjukfall("19791110-9291", "2016-02-01", "2016-02-20", 2, 19);
+    public void testCalculateSjukfallEnhet1() {
+        assertSjukfallEnhet("19791110-9291", "2016-02-01", "2016-02-20", 2, 19);
     }
 
     @Test
-    public void testCalculateSjukfall2() {
-        assertSjukfall("19791123-9262", "2016-02-01", "2016-02-20", 2, 19);
+    public void testCalculateSjukfallEnhet2() {
+        assertSjukfallEnhet("19791123-9262", "2016-02-01", "2016-02-20", 2, 19);
     }
 
     @Test
-    public void testCalculateSjukfall3() {
-        assertSjukfall("19791212-9280", "2016-02-01", "2016-02-25", 3, 24);
+    public void testCalculateSjukfallEnhet3() {
+        assertSjukfallEnhet("19791212-9280", "2016-02-01", "2016-02-25", 3, 24);
     }
 
     @Test
-    public void testCalculateSjukfall4() {
-        assertSjukfall("19800113-9297", "2016-02-01", "2016-02-25", 3, 24);
+    public void testCalculateSjukfallEnhet4() {
+        assertSjukfallEnhet("19800113-9297", "2016-02-01", "2016-02-25", 3, 24);
     }
 
     @Test
-    public void testCalculateSjukfall5() {
-        assertSjukfall("19800124-9286", "2016-02-12", "2016-02-25", 2, 14);
+    public void testCalculateSjukfallEnhet5() {
+        assertSjukfallEnhet("19800124-9286", "2016-02-12", "2016-02-25", 2, 14);
     }
 
     @Test
-    public void testCalculateSjukfall6() {
-        assertSjukfall("19800207-9294", "2016-02-12", "2016-02-25", 2, 14);
+    public void testCalculateSjukfallEnhet6() {
+        assertSjukfallEnhet("19800207-9294", "2016-02-12", "2016-02-25", 2, 14);
     }
 
     @Test
-    public void testCalculateSjukfall7() {
-        assertSjukfall("19800228-9224", "2016-02-01", "2016-02-25", 0, 0);
+    public void testCalculateSjukfallEnhet7() {
+        assertSjukfallEnhet("19800228-9224", "2016-02-01", "2016-02-25", 0, 0);
     }
 
     @Test
-    public void testCalculateSjukfall8() {
-        assertSjukfall("19961110-2394", "2016-02-01", "2016-02-19", 3, 15);
+    public void testCalculateSjukfallEnhet8() {
+        assertSjukfallEnhet("19961110-2394", "2016-02-01", "2016-02-19", 3, 15);
     }
 
     @Test
-    public void testCalculateSjukfall9() {
-        assertSjukfall("19961111-2385", "2016-02-15", "2016-03-04", 3, 15);
+    public void testCalculateSjukfallEnhet9() {
+        assertSjukfallEnhet("19961111-2385", "2016-02-15", "2016-03-04", 3, 15);
     }
 
     @Test
-    public void testCalculateSjukfall10() {
-        assertSjukfall("19571109-2642", "2016-02-15", "2016-02-19", 1, 5);
+    public void testCalculateSjukfallEnhet10() {
+        assertSjukfallEnhet("19571109-2642", "2016-02-15", "2016-02-19", 1, 5);
     }
 
     @Test
-    public void testCalculateSjukfall11() {
-        assertSjukfall("19630206-2846", "2016-02-01", "2016-03-04", 4, 29);
+    public void testCalculateSjukfallEnhet11() {
+        assertSjukfallEnhet("19630206-2846", "2016-02-01", "2016-03-04", 4, 29);
     }
 
     @Test
-    public void testCalculateSjukfall12() {
-        assertSjukfall("19710301-1032", "2016-02-15", "2016-03-04", 3, 19);
+    public void testCalculateSjukfallEnhet12() {
+        assertSjukfallEnhet("19710301-1032", "2016-02-15", "2016-03-04", 3, 19);
     }
 
+    @Test
+    public void testCalculateSjukfallPatient() {
+
+        // Säkerställ att listan är rätt sorterad
+        List<SjukfallPatient> subList = sjukfallListPatient.subList(1, sjukfallListPatient.size());
+        assertSortOrder(sjukfallListPatient.get(0), subList);
+
+        assertSjukfallPatient(sjukfallListPatient.get(0), "2016-02-15", "2016-03-04", 3, 19);
+        assertSjukfallPatient(sjukfallListPatient.get(1), "2016-02-01", "2016-02-05", 1, 5);
+    }
 
     // - - -  Private scope  - - -
 
     private static void assertInit(List<?> list, int expectedListSize) {
-        assertTrue("Expected " + expectedListSize + " but was + " + list.size(), list.size() == expectedListSize);
+        assertTrue("Expected " + expectedListSize + " but was " + list.size(), list.size() == expectedListSize);
     }
 
-    private static void assertSjukfall(String patientId, String startDatum, String slutDatum, int antalIntyg, int effektivSjukskrivningslangd) {
+    private static void assertSjukfallEnhet(String patientId, String startDatum, String slutDatum, int antalIntyg, int effektivSjukskrivningslangd) {
         SjukfallEnhet sjukfallEnhet = sjukfallListUnit.stream().
                 filter(o -> o.getPatient().getId().equals(patientId)).findFirst().orElse(null);
 
@@ -170,6 +184,45 @@ public class SjukfallEngineServiceTest {
         assertTrue(sjukfallEnhet.getSlut().isEqual(LocalDate.parse(slutDatum)));
         assertTrue(sjukfallEnhet.getIntyg() == antalIntyg);
         assertTrue(sjukfallEnhet.getDagar() == effektivSjukskrivningslangd);
+    }
+
+    private static void assertSjukfallPatient(SjukfallPatient sjukfallPatient, String startDatum, String slutDatum,
+                                              int antalIntyg, int effektivSjukskrivningslangd) {
+
+        assertTrue(sjukfallPatient.getStart().isEqual(LocalDate.parse(startDatum)));
+        assertTrue(sjukfallPatient.getSlut().isEqual(LocalDate.parse(slutDatum)));
+        assertTrue(sjukfallPatient.getDagar() == effektivSjukskrivningslangd);
+        assertTrue(sjukfallPatient.getSjukfallIntygList().size() == antalIntyg);
+
+        // Kolla av att intygen är i fallande ordning gällande signeringstidpunkt
+        SjukfallIntyg intyg = sjukfallPatient.getSjukfallIntygList().get(0);
+        List<SjukfallIntyg> subList = sjukfallPatient.getSjukfallIntygList().subList(1, sjukfallPatient.getSjukfallIntygList().size());
+
+        assertSortOrder(intyg, subList);
+    }
+
+    private static void assertSortOrder(SjukfallPatient obj, List<SjukfallPatient> list) {
+        if (obj == null) {
+            fail();
+        }
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+
+        assertTrue(obj.getStart().isAfter(list.get(0).getStart()));
+        assertSortOrder(list.get(0), list.subList(1, list.size()));
+    }
+
+    private static void assertSortOrder(SjukfallIntyg obj, List<SjukfallIntyg> list) {
+        if (obj == null) {
+            fail();
+        }
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+
+        assertTrue(obj.getStartDatum().isAfter(list.get(0).getStartDatum()));
+        assertSortOrder(list.get(0), list.subList(1, list.size()));
     }
 
     private IntygParametrar getIntygParametrar(int maxIntygsGlapp, LocalDate aktivtDatum) {

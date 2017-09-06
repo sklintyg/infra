@@ -26,6 +26,7 @@ import se.inera.intyg.infra.sjukfall.testdata.builders.IntygDataT;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -69,21 +70,24 @@ public class SjukfallIntygLineMapper {
     }
 
     private IntygData intygData(String[] data) {
-        FormagaFieldSetMapper ffsm = new FormagaFieldSetMapper();
+        StringListMapper slm = new StringListMapper();
+        FormagaFieldMapper ffm = new FormagaFieldMapper();
 
         // CHECKSTYLE:OFF MagicNumber
         return new IntygDataT.IntygDataBuilder()
                 .intygsId(data[0])
                 .diagnoskod(data[5])
+                .biDiagnoser(slm.map(data[6]))
                 .patientId(data[1])
                 .patientNamn(patientNamn(data[2], data[3], data[4]))
-                .lakareId(data[8])
-                .lakareNamn(data[9])
-                .vardenhetId(data[6])
-                .vardenhetNamn(data[7])
-                .signeringsTidpunkt(LocalDateTime.parse(data[12]))
-                .formagor(ffsm.map(data[10]))
-                .enkeltIntyg(Boolean.valueOf(data[11]))
+                .lakareId(data[9])
+                .lakareNamn(data[10])
+                .vardenhetId(data[7])
+                .vardenhetNamn(data[8])
+                .formagor(ffm.map(data[11]))
+                .sysselsattning(slm.map(data[12]))
+                .enkeltIntyg(Boolean.valueOf(data[13]))
+                .signeringsTidpunkt(LocalDateTime.parse(data[14]))
                 .build();
         // CHECKSTYLE:ON MagicNumber
     }
@@ -112,15 +116,15 @@ public class SjukfallIntygLineMapper {
         return null;
     }
 
-    class FormagaFieldSetMapper {
+    class FormagaFieldMapper {
 
         public List<Formaga> map(String arbetsformaga) {
             List<Formaga> formagaList = new ArrayList();
             String[] formagor = arbetsformaga.replace("[", "").replace("]", "").split("\\|");
 
             for (String formaga : formagor) {
-                String[] fields = formaga.split(";");
-                formagaList.add(formaga(LocalDate.parse(fields[0]), LocalDate.parse(fields[1]), Integer.parseInt(fields[2])));
+                String[] arr = formaga.split(";");
+                formagaList.add(formaga(LocalDate.parse(arr[0]), LocalDate.parse(arr[1]), Integer.parseInt(arr[2])));
             }
 
             return formagaList;
@@ -128,6 +132,18 @@ public class SjukfallIntygLineMapper {
 
         private Formaga formaga(LocalDate start, LocalDate slut, int nedsatthet) {
             return new FormagaT.FormagaBuilder().startdatum(start).slutdatum(slut).nedsattning(nedsatthet).build();
+        }
+    }
+
+    class StringListMapper {
+
+        public List<String> map(String str) {
+            if (str == null || str.length() == 0) {
+                return new ArrayList();
+            }
+
+            String[] arr = str.replace("[", "").replace("]", "").split(";");
+            return Arrays.asList(arr);
         }
     }
 
