@@ -80,8 +80,10 @@ public class SrsServiceTest {
         SrsResponse response = service
                 .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList());
         assertNull(response.getStatistikBild());
-        assertNull(response.getAtgarder());
-        assertNull(response.getLevel());
+        assertNull(response.getAtgarderObs());
+        assertNull(response.getAtgarderRek());
+        assertNull(response.getPredictionLevel());
+        assertNull(response.getPredictionDescription());
     }
 
     @Test
@@ -90,9 +92,10 @@ public class SrsServiceTest {
         SrsResponse response = service
                 .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList());
         assertNotNull(response);
-        assertTrue(response.getLevel() >= 0);
-        assertTrue(response.getLevel() < 4);
-        assertNull(response.getAtgarder());
+        assertEquals(new Integer(1), response.getPredictionLevel());
+        assertEquals("test", response.getPredictionDescription());
+        assertNull(response.getAtgarderRek());
+        assertNull(response.getAtgarderObs());
     }
 
     @Test
@@ -101,8 +104,10 @@ public class SrsServiceTest {
         SrsResponse response = service
                 .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList());
         assertNotNull(response.getStatistikBild());
-        assertNull(response.getAtgarder());
-        assertNull(response.getLevel());
+        assertNull(response.getAtgarderRek());
+        assertNull(response.getAtgarderObs());
+        assertNull(response.getPredictionLevel());
+        assertNull(response.getPredictionDescription());
         assertEquals("http://localhost/images/M18", response.getStatistikBild());
     }
 
@@ -113,11 +118,11 @@ public class SrsServiceTest {
         SrsResponse response = service
                 .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList());
         assertNotNull(response);
-        assertTrue(response.getLevel() >= 0);
-        assertTrue(response.getLevel() < 4);
-        assertNotNull(response.getAtgarder().get(0));
-        assertNotNull(response.getAtgarder().get(1));
-        assertNotNull(response.getAtgarder().get(2));
+        assertEquals(new Integer(1), response.getPredictionLevel());
+        assertEquals("test", response.getPredictionDescription());
+        assertNotNull(response.getAtgarderRek().get(0));
+        assertNotNull(response.getAtgarderRek().get(1));
+        assertNotNull(response.getAtgarderRek().get(2));
     }
 
     @Test
@@ -128,11 +133,20 @@ public class SrsServiceTest {
         SrsResponse response = service
                 .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList());
         assertNotNull(response);
-        assertTrue(response.getLevel() >= 0);
-        assertTrue(response.getLevel() < 4);
-        assertNotNull(response.getAtgarder().get(0));
-        assertNotNull(response.getAtgarder().get(1));
-        assertNotNull(response.getAtgarder().get(2));
+        assertEquals(new Integer(1), response.getPredictionLevel());
+        assertEquals("test", response.getPredictionDescription());
+
+        assertEquals(3, response.getAtgarderRek().size());
+        assertNotNull(response.getAtgarderRek().get(0));
+        assertEquals("Atgardsforslag REK 1",response.getAtgarderRek().get(0));
+        assertEquals("Atgardsforslag REK 2",response.getAtgarderRek().get(1));
+        assertEquals("Atgardsforslag REK 3",response.getAtgarderRek().get(2));
+
+        assertEquals(3, response.getAtgarderObs().size());
+        assertNotNull(response.getAtgarderObs().get(0));
+        assertEquals("Atgardsforslag OBS 1",response.getAtgarderObs().get(0));
+        assertEquals("Atgardsforslag OBS 2",response.getAtgarderObs().get(1));
+        assertEquals("Atgardsforslag OBS 3",response.getAtgarderObs().get(2));
         assertNotNull(response.getStatistikBild());
         assertEquals("http://localhost/images/M18", response.getStatistikBild());
     }

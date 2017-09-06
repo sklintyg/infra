@@ -16,6 +16,7 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.G
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgard;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardstyp;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Bedomningsunderlag;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationRequestType;
@@ -44,6 +45,7 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SrsServiceImpl implements SrsService {
@@ -83,23 +85,40 @@ public class SrsServiceImpl implements SrsService {
         Bedomningsunderlag underlag = response.getBedomningsunderlag().get(0);
 
         Integer level = null;
+        String description = null;
         String statistikBild = null;
-        List<String> atgarder = null;
+        List<String> atgarderObs = null;
+        List<String> atgarderRek = null;
 
         if (filter.isPrediktion()) {
-            if (underlag.getPrediktion().getDiagnosprediktion().get(0)
-                    .getDiagnosprediktionstatus() == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
+            if (underlag.getPrediktion().getDiagnosprediktion().isEmpty()
+                    || underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus()
+                    == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
                 throw new SrsException("Prediktionsmodell saknas");
             }
-            level = Math.min((int) (underlag.getPrediktion().getDiagnosprediktion().get(0)
-                    .getSannolikhetOvergransvarde() * FOUR), THREE);
+            level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori().intValueExact();
+            description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
         }
 
         if (filter.isAtgardsrekommendation()) {
-            atgarder = underlag.getAtgardsrekommendationer().getRekommendation().stream()
+            Map<Atgardstyp, List<Atgard>> tmp = underlag
+                    .getAtgardsrekommendationer().getRekommendation().stream()
                     .flatMap(a -> a.getAtgard().stream())
-                    .map(Atgard::getAtgardsforslag)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.groupingBy(Atgard::getAtgardstyp));
+
+            if (tmp.containsKey(Atgardstyp.OBS)) {
+                atgarderObs = tmp.get(Atgardstyp.OBS).stream()
+                        .sorted(Comparator.comparing(Atgard::getPrioritet))
+                        .map(Atgard::getAtgardsforslag)
+                        .collect(Collectors.toList());
+            }
+
+            if (tmp.containsKey(Atgardstyp.REK)) {
+                atgarderRek = tmp.get(Atgardstyp.REK).stream()
+                        .sorted(Comparator.comparing(Atgard::getPrioritet))
+                        .map(Atgard::getAtgardsforslag)
+                        .collect(Collectors.toList());
+            }
         }
 
         if (filter.isStatistik() && underlag.getStatistik() != null
@@ -107,7 +126,7 @@ public class SrsServiceImpl implements SrsService {
             statistikBild = underlag.getStatistik().getStatistikbild().get(0).getBildadress();
         }
 
-        return new SrsResponse(level, atgarder, statistikBild);
+        return new SrsResponse(level, description, atgarderObs, atgarderRek, statistikBild);
     }
 
     @Override

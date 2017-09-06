@@ -46,10 +46,9 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+//CHECKSTYLE:OFF MagicNumber
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.BOTH)
 public class GetSrsInformationStub implements GetSRSInformationResponderInterface {
-
-    private static final int YEAR = 2017;
 
     @Override
     public GetSRSInformationResponseType getSRSInformation(GetSRSInformationRequestType request) {
@@ -88,11 +87,23 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
         if (filter.isAtgardsrekommendation()) {
             Atgardsrekommendationer rekommendationer = new Atgardsrekommendationer();
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag 1", diagnos.orElseThrow(IllegalArgumentException::new)));
+                    .add(createAtgardsrekommendation("Atgardsforslag REK 1", diagnos.orElseThrow(IllegalArgumentException::new),
+                            Atgardstyp.REK, 1));
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag 2", diagnos.orElseThrow(IllegalArgumentException::new)));
+                    .add(createAtgardsrekommendation("Atgardsforslag REK 2", diagnos.orElseThrow(IllegalArgumentException::new),
+                            Atgardstyp.REK, 2));
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag 3", diagnos.orElseThrow(IllegalArgumentException::new)));
+                    .add(createAtgardsrekommendation("Atgardsforslag REK 3", diagnos.orElseThrow(IllegalArgumentException::new),
+                            Atgardstyp.REK, 3));
+            rekommendationer.getRekommendation()
+                    .add(createAtgardsrekommendation("Atgardsforslag OBS 1", diagnos.orElseThrow(IllegalArgumentException::new),
+                            Atgardstyp.OBS, 1));
+            rekommendationer.getRekommendation()
+                    .add(createAtgardsrekommendation("Atgardsforslag OBS 2", diagnos.orElseThrow(IllegalArgumentException::new),
+                            Atgardstyp.OBS, 2));
+            rekommendationer.getRekommendation()
+                    .add(createAtgardsrekommendation("Atgardsforslag OBS 3", diagnos.orElseThrow(IllegalArgumentException::new),
+                            Atgardstyp.OBS, 3));
             underlag.setAtgardsrekommendationer(rekommendationer);
         }
 
@@ -107,7 +118,7 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
 
     private Statistikbild createStatistikBild(Diagnos diagnos) {
         Statistikbild statistikbild = new Statistikbild();
-        statistikbild.setAndringstidpunkt(LocalDateTime.of(YEAR, 1, 1, 1, 1));
+        statistikbild.setAndringstidpunkt(LocalDateTime.of(2017, 1, 1, 1, 1));
         statistikbild.setInkommandediagnos(diagnos);
         statistikbild.setBildadress("http://localhost/images/" + diagnos.getCode());
         statistikbild.setDiagnos(diagnos);
@@ -116,17 +127,18 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
     }
 
     @NotNull
-    private Atgardsrekommendation createAtgardsrekommendation(String atgardsforslag, Diagnos diagnos) {
+    private Atgardsrekommendation createAtgardsrekommendation(String atgardsforslag, Diagnos diagnos, Atgardstyp typ, int prio) {
         Atgardsrekommendation atgardrekommendation = new Atgardsrekommendation();
         atgardrekommendation.setInkommandediagnos(diagnos);
         Atgard atgard = new Atgard();
         atgard.setAtgardId(BigInteger.ONE);
-        atgard.setAtgardstyp(Atgardstyp.REK);
-        atgard.setPrioritet(BigInteger.ONE);
-        atgard.setVersion("version");
+        atgard.setAtgardstyp(typ);
+        atgard.setPrioritet(BigInteger.valueOf(prio));
+        atgard.setVersion("1.0");
         atgard.setAtgardsforslag(atgardsforslag);
         atgardrekommendation.getAtgard().add(atgard);
         atgardrekommendation.setAtgardsrekommendationstatus(Atgardsrekommendationstatus.OK);
         return atgardrekommendation;
     }
 }
+//CHECKSTYLE:ON MagicNumber

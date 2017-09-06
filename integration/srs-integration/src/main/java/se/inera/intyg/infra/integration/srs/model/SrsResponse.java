@@ -5,26 +5,42 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 
 public final class SrsResponse {
-    private final Integer level;
-    private final ImmutableList<String> atgarder;
+    private final Integer predictionLevel;
+    private final String predictionDescription;
+    private final ImmutableList<String> atgarderObs;
+    private final ImmutableList<String> atgarderRek;
     private final String statistikBild;
 
-    public SrsResponse(Integer level, List<String> atgarder, String statistikBild) {
-        this.level = level;
-        if (atgarder == null) {
-            this.atgarder = null;
+    public SrsResponse(Integer level, String description, List<String> atgarderObs, List<String> atgarderRek, String statistikBild) {
+        this.predictionLevel = level;
+        this.predictionDescription = description;
+        if (atgarderObs == null) {
+            this.atgarderObs = null;
         } else {
-            this.atgarder = ImmutableList.copyOf(atgarder);
+            this.atgarderObs = ImmutableList.copyOf(atgarderObs);
+        }
+        if (atgarderRek == null) {
+            this.atgarderRek = null;
+        } else {
+            this.atgarderRek = ImmutableList.copyOf(atgarderRek);
         }
         this.statistikBild = statistikBild;
     }
 
-    public Integer getLevel() {
-        return level;
+    public Integer getPredictionLevel() {
+        return predictionLevel;
     }
 
-    public ImmutableList<String> getAtgarder() {
-        return atgarder;
+    public String getPredictionDescription() {
+        return predictionDescription;
+    }
+
+    public ImmutableList<String> getAtgarderObs() {
+        return atgarderObs;
+    }
+
+    public ImmutableList<String> getAtgarderRek() {
+        return atgarderRek;
     }
 
     public String getStatistikBild() {
