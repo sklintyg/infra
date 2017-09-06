@@ -108,7 +108,6 @@ public class SrsServiceTest {
         assertNull(response.getAtgarderObs());
         assertNull(response.getPredictionLevel());
         assertNull(response.getPredictionDescription());
-        assertEquals("http://localhost/images/M18", response.getStatistikBild());
     }
 
     @Test
@@ -148,7 +147,6 @@ public class SrsServiceTest {
         assertEquals("Atgardsforslag OBS 2",response.getAtgarderObs().get(1));
         assertEquals("Atgardsforslag OBS 3",response.getAtgarderObs().get(2));
         assertNotNull(response.getStatistikBild());
-        assertEquals("http://localhost/images/M18", response.getStatistikBild());
     }
 
     @Test

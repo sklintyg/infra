@@ -21,6 +21,7 @@ package se.inera.intyg.infra.integration.srs.stub;
 
 import org.apache.cxf.annotations.SchemaValidation;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgard;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendation;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendationer;
@@ -120,7 +121,7 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
         Statistikbild statistikbild = new Statistikbild();
         statistikbild.setAndringstidpunkt(LocalDateTime.of(2017, 1, 1, 1, 1));
         statistikbild.setInkommandediagnos(diagnos);
-        statistikbild.setBildadress("http://localhost/images/" + diagnos.getCode());
+        statistikbild.setBildadress("/services/srs-statistics-stub");
         statistikbild.setDiagnos(diagnos);
         statistikbild.setStatistikstatus(Statistikstatus.OK);
         return statistikbild;
