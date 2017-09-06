@@ -31,12 +31,14 @@ public final class SrsQuestion {
 
     private String questionId;
     private String text;
+    private String helpText;
     private int priority;
     private ImmutableList<AnswerOption> answerOptions;
 
-    public SrsQuestion(String questionId, String text, List<AnswerOption> answerOptions, int priority) {
+    public SrsQuestion(String questionId, String text, List<AnswerOption> answerOptions, String helpText, int priority) {
         this.questionId = questionId;
         this.text = text;
+        this.helpText = helpText;
         this.answerOptions = ImmutableList.copyOf(answerOptions.stream()
                 .sorted(Comparator.comparing(AnswerOption::getPriority))
                 .collect(Collectors.toList()));
@@ -44,9 +46,11 @@ public final class SrsQuestion {
     }
 
     public static SrsQuestion convert(Prediktionsfraga source) {
-        return new SrsQuestion(source.getFrageidSrs(),
+        return new SrsQuestion(
+                source.getFrageidSrs(),
                 source.getFragetext(),
                 source.getSvarsalternativ().stream().map(AnswerOption::convert).collect(Collectors.toList()),
+                source.getHjalptext(),
                 source.getPrioritet().intValueExact());
     }
 
@@ -56,6 +60,10 @@ public final class SrsQuestion {
 
     public String getText() {
         return text;
+    }
+
+    public String getHelpText() {
+        return helpText;
     }
 
     public List<AnswerOption> getAnswerOptions() {

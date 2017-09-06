@@ -54,6 +54,7 @@ public class GetPredictionQuestionsStub implements GetPredictionQuestionsRespond
         question.setFrageid(BigInteger.valueOf(id));
         question.setFrageidSrs(String.valueOf(id));
         question.setFragetext("Fragetext " + id);
+        question.setHjalptext("Hjälptext " + id);
         question.setPrioritet(BigInteger.valueOf((int) (Math.random() * MAX_PRIORITY) + 1));
         return question;
     }
