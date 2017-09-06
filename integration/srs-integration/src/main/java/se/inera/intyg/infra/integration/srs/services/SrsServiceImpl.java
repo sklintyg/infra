@@ -43,6 +43,7 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +112,8 @@ public class SrsServiceImpl implements SrsService {
                         .sorted(Comparator.comparing(Atgard::getPrioritet))
                         .map(Atgard::getAtgardsforslag)
                         .collect(Collectors.toList());
+            } else {
+                atgarderObs = Collections.emptyList();
             }
 
             if (tmp.containsKey(Atgardstyp.REK)) {
@@ -118,6 +121,8 @@ public class SrsServiceImpl implements SrsService {
                         .sorted(Comparator.comparing(Atgard::getPrioritet))
                         .map(Atgard::getAtgardsforslag)
                         .collect(Collectors.toList());
+            } else {
+                atgarderObs = Collections.emptyList();
             }
         }
 
