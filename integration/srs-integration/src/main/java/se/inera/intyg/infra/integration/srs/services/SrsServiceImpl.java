@@ -122,7 +122,7 @@ public class SrsServiceImpl implements SrsService {
                         .map(Atgard::getAtgardsforslag)
                         .collect(Collectors.toList());
             } else {
-                atgarderObs = Collections.emptyList();
+                atgarderRek = Collections.emptyList();
             }
         }
 
