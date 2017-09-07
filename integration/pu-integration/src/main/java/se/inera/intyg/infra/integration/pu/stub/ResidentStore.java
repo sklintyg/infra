@@ -35,7 +35,7 @@ public class ResidentStore {
 
     private final Map<String, ResidentType> residents = new HashMap<>();
 
-    void addUser(ResidentType residentPost) {
+    public void addUser(ResidentType residentPost) {
         residents.put(residentPost.getPersonpost().getPersonId(), residentPost);
     }
 
