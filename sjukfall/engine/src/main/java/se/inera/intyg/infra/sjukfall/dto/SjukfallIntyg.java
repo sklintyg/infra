@@ -19,8 +19,11 @@
 package se.inera.intyg.infra.sjukfall.dto;
 
 import se.inera.intyg.infra.sjukfall.engine.SjukfallLangdCalculator;
+import se.inera.intyg.infra.sjukfall.util.SysselsattningMapper;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,6 +57,8 @@ public class SjukfallIntyg extends IntygData {
         this.dagar = builder.dagar;
         this.grader = builder.grader;
 
+        this.setSysselsattning(builder.sysselsattning);
+
         this.setIntygId(builder.intygData.getIntygId());
         this.setDiagnosKod(builder.intygData.getDiagnosKod());
         this.setBiDiagnoser(builder.intygData.getBiDiagnoser());
@@ -68,7 +73,6 @@ public class SjukfallIntyg extends IntygData {
         this.setSigneringsTidpunkt(builder.intygData.getSigneringsTidpunkt());
         this.setFormagor(builder.intygData.getFormagor());
         this.setEnkeltIntyg(builder.intygData.isEnkeltIntyg());
-        this.setSysselsattning(builder.intygData.getSysselsattning());
     }
 
     // Getters and setters
@@ -130,6 +134,8 @@ public class SjukfallIntyg extends IntygData {
         private Integer dagar;
         private List<Integer> grader;
 
+        private List<String> sysselsattning;
+
         private boolean aktivtIntyg;
 
         public SjukfallIntygBuilder(IntygData intygData, LocalDate aktivtDatum) {
@@ -138,6 +144,7 @@ public class SjukfallIntyg extends IntygData {
             this.slutDatum = lookupSlutDatum(intygData.getFormagor());
             this.dagar = getDagar(intygData.getFormagor());
             this.grader = getGrader(intygData.getFormagor());
+            this.sysselsattning = getSysselsattning(intygData.getSysselsattning());
             this.aktivtIntyg = isAktivtIntyg(intygData, aktivtDatum);
         }
 
@@ -156,6 +163,13 @@ public class SjukfallIntyg extends IntygData {
                 .collect(Collectors.toList());
         }
 
+        private List<String> getSysselsattning(List<String> sysselsattning) {
+            if (sysselsattning == null) {
+                return new ArrayList<>();
+            }
+            return SysselsattningMapper.map(sysselsattning);
+        }
+
         private boolean hasAktivFormaga(List<Formaga> formagor, LocalDate aktivtDatum) {
             return formagor.stream()
                     .anyMatch(f -> isAktivFormaga(aktivtDatum, f));
@@ -166,18 +180,16 @@ public class SjukfallIntyg extends IntygData {
         }
 
         private boolean isAktivtIntyg(IntygData intygData, LocalDate aktivtDatum) {
-            return aktivtDatum != null ? hasAktivFormaga(intygData.getFormagor(), aktivtDatum) : false;
+            return aktivtDatum != null && hasAktivFormaga(intygData.getFormagor(), aktivtDatum);
         }
 
         private LocalDate lookupStartDatum(List<Formaga> formagor) {
-            Formaga formaga = formagor.stream()
-                    .min((o1, o2) -> o1.getStartdatum().compareTo(o2.getStartdatum())).get();
+            Formaga formaga = formagor.stream().min((Comparator.comparing(Formaga::getStartdatum))).get();
             return formaga.getStartdatum();
         }
 
         private LocalDate lookupSlutDatum(List<Formaga> formagor) {
-            Formaga formaga = formagor.stream()
-                    .max((o1, o2) -> o1.getSlutdatum().compareTo(o2.getSlutdatum())).get();
+            Formaga formaga = formagor.stream().max(Comparator.comparing(Formaga::getSlutdatum)).get();
             return formaga.getSlutdatum();
         }
 
