@@ -34,6 +34,13 @@ public class SrsQuestionResponse {
         return fragaSvar;
     }
 
+    public static SrsQuestionResponse create(String questionId, String answerId) {
+        SrsQuestionResponse sqr = new SrsQuestionResponse();
+        sqr.setQuestionId(questionId);
+        sqr.setAnswerId(answerId);
+        return sqr;
+    }
+
     public String getQuestionId() {
         return questionId;
     }
