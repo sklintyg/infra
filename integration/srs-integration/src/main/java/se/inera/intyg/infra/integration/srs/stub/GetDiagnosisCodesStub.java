@@ -19,18 +19,23 @@
 
 package se.inera.intyg.infra.integration.srs.stub;
 
+import com.google.common.collect.ImmutableList;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.Diagnos;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponseType;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class GetDiagnosisCodesStub implements GetDiagnosisCodesResponderInterface {
+
+    public static List<String> allValidDiagnosis = ImmutableList.of("M18", "J20", "Q10");
+
     @Override
     public GetDiagnosisCodesResponseType getDiagnosisCodes(GetDiagnosisCodesRequestType getDiagnosisCodesRequestType) {
         GetDiagnosisCodesResponseType response = new GetDiagnosisCodesResponseType();
-        response.getDiagnos().add(createDiagnos("M18"));
-        response.getDiagnos().add(createDiagnos("J20"));
-        response.getDiagnos().add(createDiagnos("Q10"));
+        response.getDiagnos().addAll(allValidDiagnosis.stream().map(this::createDiagnos).collect(Collectors.toList()));
         return response;
     }
 

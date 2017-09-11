@@ -64,7 +64,9 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
         Utdatafilter filter = request.getUtdatafilter();
         String personId = request.getIndivider().getIndivid().stream().map(Individ::getPersonId)
                 .findFirst().orElseThrow(IllegalArgumentException::new);
-        Optional<Diagnos> diagnos = request.getIndivider().getIndivid().stream().flatMap(i -> i.getDiagnos().stream()).findFirst();
+        Optional<Diagnos> diagnos = request.getIndivider().getIndivid().stream().flatMap(i -> i.getDiagnos().stream())
+                .filter(d -> GetDiagnosisCodesStub.allValidDiagnosis.contains(d.getCode()))
+                .findFirst();
         underlag.setPersonId(personId);
 
         if (filter.isPrediktion()) {
