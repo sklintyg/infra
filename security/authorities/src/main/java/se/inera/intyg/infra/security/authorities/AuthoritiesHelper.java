@@ -18,15 +18,15 @@
  */
 package se.inera.intyg.infra.security.authorities;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
+import se.inera.intyg.infra.security.authorities.validation.AuthoritiesValidator;
+import se.inera.intyg.infra.security.common.model.UserDetails;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
-
-import se.inera.intyg.infra.security.authorities.validation.AuthoritiesValidator;
-import se.inera.intyg.infra.security.common.model.UserDetails;
 
 /**
  * @author Magnus Ekstrand on 2016-05-13.
@@ -65,6 +65,10 @@ public class AuthoritiesHelper {
                                         .collect(Collectors.toList());
 
         return toSet(filteredList);
+    }
+
+    public Set<String> getIntygstyperAllowedForSekretessmarkering() {
+        return new HashSet<>(authoritiesResolver.getSekretessmarkeringAllowed());
     }
 
     private Set<String> toSet(List<String> intygsTyper) {
