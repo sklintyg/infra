@@ -117,6 +117,10 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         }
     }
 
+    public IntygUser loadUserByHsaId(String hsaId) {
+        return buildUserPrincipal(hsaId, "");
+    }
+
     /**
      * Method responsible to create the actual Principal given a SAMLCredential.
      *
@@ -130,10 +134,14 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
      * @return
      */
     protected IntygUser buildUserPrincipal(SAMLCredential credential) {
-        LOG.debug("Creating Webcert user object...");
-
         String employeeHsaId = getAssertion(credential).getHsaId();
         String authenticationScheme = getAssertion(credential).getAuthenticationScheme();
+        return buildUserPrincipal(employeeHsaId, authenticationScheme);
+    }
+
+    private IntygUser buildUserPrincipal(String employeeHsaId, String authenticationScheme) {
+        LOG.debug("Creating Webcert user object...");
+
         List<PersonInformationType> personInfo = getPersonInfo(employeeHsaId);
         UserAuthorizationInfo userAuthorizationInfo = getAuthorizedVardgivare(employeeHsaId);
 
@@ -147,7 +155,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
             return intygUser;
 
         } catch (MissingMedarbetaruppdragException e) {
-            monitoringLogService.logMissingMedarbetarUppdrag(getAssertion(credential).getHsaId());
+            monitoringLogService.logMissingMedarbetarUppdrag(employeeHsaId);
             LOG.error("Missing medarbetaruppdrag. This needs to be fixed!!!");
             throw e;
         }
