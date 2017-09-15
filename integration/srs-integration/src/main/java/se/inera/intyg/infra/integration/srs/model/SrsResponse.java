@@ -10,8 +10,10 @@ public final class SrsResponse {
     private final ImmutableList<String> atgarderObs;
     private final ImmutableList<String> atgarderRek;
     private final String statistikBild;
+    private final String diagnosisCode;
 
-    public SrsResponse(Integer level, String description, List<String> atgarderObs, List<String> atgarderRek, String statistikBild) {
+    public SrsResponse(Integer level, String description, List<String> atgarderObs, List<String> atgarderRek, String statistikBild,
+            String diagnosisCode) {
         this.predictionLevel = level;
         this.predictionDescription = description;
         if (atgarderObs == null) {
@@ -25,6 +27,7 @@ public final class SrsResponse {
             this.atgarderRek = ImmutableList.copyOf(atgarderRek);
         }
         this.statistikBild = statistikBild;
+        this.diagnosisCode = diagnosisCode;
     }
 
     public Integer getPredictionLevel() {
@@ -45,5 +48,9 @@ public final class SrsResponse {
 
     public String getStatistikBild() {
         return statistikBild;
+    }
+
+    public String getDiagnosisCode() {
+        return diagnosisCode;
     }
 }

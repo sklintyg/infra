@@ -16,6 +16,7 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.G
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgard;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendation;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardstyp;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Bedomningsunderlag;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
@@ -47,6 +48,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SrsServiceImpl implements SrsService {
@@ -88,6 +91,7 @@ public class SrsServiceImpl implements SrsService {
         Integer level = null;
         String description = null;
         String statistikBild = null;
+        String responseDiagnosisCode = null;
         List<String> atgarderObs = null;
         List<String> atgarderRek = null;
 
@@ -99,9 +103,18 @@ public class SrsServiceImpl implements SrsService {
             }
             level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori().intValueExact();
             description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
+            responseDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
+                    .map(CVType::getCode).orElse(null);
         }
 
         if (filter.isAtgardsrekommendation()) {
+            if (responseDiagnosisCode == null) {
+                responseDiagnosisCode = underlag.getAtgardsrekommendationer().getRekommendation().stream()
+                        .map(Atgardsrekommendation::getDiagnos)
+                        .filter(Objects::nonNull)
+                        .map(CVType::getCode)
+                        .findAny().orElse(null);
+            }
             Map<Atgardstyp, List<Atgard>> tmp = underlag
                     .getAtgardsrekommendationer().getRekommendation().stream()
                     .flatMap(a -> a.getAtgard().stream())
@@ -128,10 +141,13 @@ public class SrsServiceImpl implements SrsService {
 
         if (filter.isStatistik() && underlag.getStatistik() != null
                 && !CollectionUtils.isEmpty(underlag.getStatistik().getStatistikbild())) {
+            responseDiagnosisCode = Optional.ofNullable(underlag.getStatistik().getStatistikbild().get(0).getDiagnos())
+                    .map(CVType::getCode)
+                    .orElse(null);
             statistikBild = underlag.getStatistik().getStatistikbild().get(0).getBildadress();
         }
 
-        return new SrsResponse(level, description, atgarderObs, atgarderRek, statistikBild);
+        return new SrsResponse(level, description, atgarderObs, atgarderRek, statistikBild, responseDiagnosisCode);
     }
 
     @Override
