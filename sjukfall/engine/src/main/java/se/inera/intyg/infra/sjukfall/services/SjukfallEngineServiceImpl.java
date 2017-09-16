@@ -126,6 +126,7 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
     }
 
     SjukfallPatient buildSjukfallPatient(List<SjukfallIntyg> values) {
+
         Patient patient = getPatient(values.get(0));
         DiagnosKod diagnosKod = resolveDiagnosKod(values);
 
