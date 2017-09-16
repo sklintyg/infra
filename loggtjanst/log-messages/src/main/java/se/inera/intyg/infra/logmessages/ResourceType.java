@@ -27,8 +27,8 @@ package se.inera.intyg.infra.logmessages;
 public enum ResourceType {
     RESOURCE_TYPE_INTYG("Intyg"),
     RESOURCE_TYPE_OVERSIKT_SJUKFALL("Översikt sjukskrivning (diagnos, till- och fråndatum, sjukskrivningsgrad, läkare)"),
-    RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK("Översikt sjukskrivninghistorik (diagnos, till- och fråndatum, " +
-        "sjukskrivningsgrad, läkare och sysselsättning per intyg)");
+    RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK("Översikt sjukskrivninghistorik (diagnos, till- och fråndatum, "
+        + "sjukskrivningsgrad, läkare och sysselsättning per intyg)");
 
     private final String resourceTypeName;
 
