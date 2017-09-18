@@ -141,9 +141,11 @@ public class SrsServiceImpl implements SrsService {
 
         if (filter.isStatistik() && underlag.getStatistik() != null
                 && !CollectionUtils.isEmpty(underlag.getStatistik().getStatistikbild())) {
-            responseDiagnosisCode = Optional.ofNullable(underlag.getStatistik().getStatistikbild().get(0).getDiagnos())
-                    .map(CVType::getCode)
-                    .orElse(null);
+            if (responseDiagnosisCode == null) {
+                responseDiagnosisCode = Optional.ofNullable(underlag.getStatistik().getStatistikbild().get(0).getDiagnos())
+                        .map(CVType::getCode)
+                        .orElse(null);
+            }
             statistikBild = underlag.getStatistik().getStatistikbild().get(0).getBildadress();
         }
 
