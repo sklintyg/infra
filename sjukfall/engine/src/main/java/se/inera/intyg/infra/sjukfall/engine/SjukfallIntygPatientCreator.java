@@ -60,7 +60,7 @@ public class SjukfallIntygPatientCreator {
         LOG.debug("  2. Create the map");
 
         // Transform intygsdata to an internal format
-        List<SjukfallIntyg> sjukfallIntygList = map(intygsData, aktivtDatum);
+        List<SjukfallIntyg> sjukfallIntygList = mapIntyg(intygsData, aktivtDatum);
 
         return collecIntyg(sjukfallIntygList, maxIntygsGlapp);
     }
@@ -68,7 +68,7 @@ public class SjukfallIntygPatientCreator {
 
     // - - - Private scope - - -
 
-    private List<SjukfallIntyg> map(List<IntygData> intygsData, LocalDate aktivtDatum) {
+    private List<SjukfallIntyg> mapIntyg(List<IntygData> intygsData, LocalDate aktivtDatum) {
         LOG.debug("     a. Transform 'intygsdata' to intermediate format");
 
         List<SjukfallIntyg> list = new ArrayList<>();

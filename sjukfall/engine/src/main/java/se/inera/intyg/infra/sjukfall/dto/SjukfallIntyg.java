@@ -167,7 +167,7 @@ public class SjukfallIntyg extends IntygData {
             if (sysselsattning == null) {
                 return new ArrayList<>();
             }
-            return SysselsattningMapper.map(sysselsattning);
+            return SysselsattningMapper.mapSysselsattning(sysselsattning);
         }
 
         private boolean hasAktivFormaga(List<Formaga> formagor, LocalDate aktivtDatum) {

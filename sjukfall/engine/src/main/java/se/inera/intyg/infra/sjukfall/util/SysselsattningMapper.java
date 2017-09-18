@@ -29,13 +29,13 @@ import java.util.stream.Stream;
  */
 public class SysselsattningMapper extends Mapper {
 
-    public static List<String> map(List<String> values) {
+    public static List<String> mapSysselsattning(List<String> values) {
         return values.stream()
-            .map(value -> map(value))
+            .map(value -> mapSysselsattning(value))
             .collect(Collectors.toList());
     }
 
-    public static String map(String key) {
+    public static String mapSysselsattning(String key) {
         return sysselsattningMap().get(key);
     }
 

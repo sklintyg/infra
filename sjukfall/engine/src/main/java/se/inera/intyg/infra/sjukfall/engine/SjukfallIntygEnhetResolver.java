@@ -54,12 +54,12 @@ public class SjukfallIntygEnhetResolver {
         LOG.debug("  - max days between certificates: {}, active date: {}", maxIntygsGlapp, aktivtDatum);
 
         if (intygsData == null || intygsData.isEmpty()) {
-            LOG.debug("There was no in-data! Returning empty list");
+            LOG.info("There was no in-data! Returning empty list");
             return new HashMap<>();
         }
 
         if (maxIntygsGlapp < 0) {
-            LOG.debug("Maximal days between certificates was {}. Value must be equal or greater than zero", maxIntygsGlapp);
+            LOG.info("Maximal days between certificates was {}. Value must be equal or greater than zero", maxIntygsGlapp);
             return new HashMap<>();
         }
 
