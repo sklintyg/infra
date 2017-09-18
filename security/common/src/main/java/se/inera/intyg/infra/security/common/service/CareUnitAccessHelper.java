@@ -34,7 +34,7 @@ import java.util.Set;
  *
  * Created by eriklupander on 2017-09-18.
  */
-public class CareUnitAccessHelper {
+public final class CareUnitAccessHelper {
 
     private CareUnitAccessHelper() {
     }
