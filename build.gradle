@@ -13,7 +13,7 @@ ext {
 
     srsSchemasVersion = "0.0.5"
 
-    schemasContractVersion = "2.1.4"
+    schemasContractVersion = "2.1.5"
 
     commonsLangVersion = "3.1"
     cxfVersion = "3.1.3"

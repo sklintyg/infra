@@ -41,6 +41,7 @@ import se.riv.population.residentmaster.types.v1.ResidentType;
 import se.riv.population.residentmaster.types.v1.SvenskAdressTYPE;
 
 import javax.xml.ws.WebServiceException;
+import javax.xml.ws.soap.SOAPFaultException;
 
 public class PUServiceImpl implements PUService {
 
@@ -91,6 +92,9 @@ public class PUServiceImpl implements PUService {
             LOG.debug("Person '{}' found", personId.getPnrHash());
 
             return new PersonSvar(person, PersonSvar.Status.FOUND);
+        } catch (SOAPFaultException e) {
+            LOG.warn("SOAP fault occured, no person '{}' found.", personId.getPnrHash());
+            return new PersonSvar(null, PersonSvar.Status.ERROR);
         } catch (WebServiceException e) {
             LOG.warn("Error occured, no person '{}' found.", personId.getPnrHash());
             return new PersonSvar(null, PersonSvar.Status.ERROR);
