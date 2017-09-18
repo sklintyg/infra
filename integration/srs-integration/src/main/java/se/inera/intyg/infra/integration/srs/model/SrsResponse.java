@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
+// CHECKSTYLE:OFF ParameterNumber
 public final class SrsResponse {
     private final Integer predictionLevel;
     private final String predictionDescription;
@@ -11,9 +12,12 @@ public final class SrsResponse {
     private final ImmutableList<String> atgarderRek;
     private final String statistikBild;
     private final String diagnosisCode;
+    private final String predictionStatusCode;
+    private final String atgarderStatusCode;
+    private final String statistikStatusCode;
 
     public SrsResponse(Integer level, String description, List<String> atgarderObs, List<String> atgarderRek, String statistikBild,
-            String diagnosisCode) {
+            String diagnosisCode, String predictionStatusCode, String atgarderStatusCode, String statistikStatusCode) {
         this.predictionLevel = level;
         this.predictionDescription = description;
         if (atgarderObs == null) {
@@ -28,6 +32,9 @@ public final class SrsResponse {
         }
         this.statistikBild = statistikBild;
         this.diagnosisCode = diagnosisCode;
+        this.predictionStatusCode = predictionStatusCode;
+        this.atgarderStatusCode = atgarderStatusCode;
+        this.statistikStatusCode = statistikStatusCode;
     }
 
     public Integer getPredictionLevel() {
@@ -53,4 +60,17 @@ public final class SrsResponse {
     public String getDiagnosisCode() {
         return diagnosisCode;
     }
+
+    public String getPredictionStatusCode() {
+        return predictionStatusCode;
+    }
+
+    public String getAtgarderStatusCode() {
+        return atgarderStatusCode;
+    }
+
+    public String getStatistikStatusCode() {
+        return statistikStatusCode;
+    }
 }
+// CHECKSTYLE:ON ParameterNumber

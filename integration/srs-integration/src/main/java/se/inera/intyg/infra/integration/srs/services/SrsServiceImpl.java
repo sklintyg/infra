@@ -17,6 +17,7 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.G
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgard;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendation;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendationstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardstyp;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Bedomningsunderlag;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
@@ -90,10 +91,13 @@ public class SrsServiceImpl implements SrsService {
 
         Integer level = null;
         String description = null;
+        String prediktionStatusCode = null;
         String statistikBild = null;
+        String statistikStatusCode = null;
         String responseDiagnosisCode = null;
         List<String> atgarderObs = null;
         List<String> atgarderRek = null;
+        String atgarderStatusCode = null;
 
         if (filter.isPrediktion()) {
             if (underlag.getPrediktion().getDiagnosprediktion().isEmpty()
@@ -103,6 +107,7 @@ public class SrsServiceImpl implements SrsService {
             }
             level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori().intValueExact();
             description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
+            prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
             responseDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
                     .map(CVType::getCode).orElse(null);
         }
@@ -137,6 +142,11 @@ public class SrsServiceImpl implements SrsService {
             } else {
                 atgarderRek = Collections.emptyList();
             }
+            // They are all for the same diagnosis and all have the same code.
+            atgarderStatusCode = underlag.getAtgardsrekommendationer().getRekommendation().stream()
+                    .map(Atgardsrekommendation::getAtgardsrekommendationstatus)
+                    .map(Atgardsrekommendationstatus::toString).findAny()
+                    .orElse(null);
         }
 
         if (filter.isStatistik() && underlag.getStatistik() != null
@@ -147,9 +157,11 @@ public class SrsServiceImpl implements SrsService {
                         .orElse(null);
             }
             statistikBild = underlag.getStatistik().getStatistikbild().get(0).getBildadress();
+            statistikStatusCode = underlag.getStatistik().getStatistikbild().get(0).getStatistikstatus().toString();
         }
 
-        return new SrsResponse(level, description, atgarderObs, atgarderRek, statistikBild, responseDiagnosisCode);
+        return new SrsResponse(level, description, atgarderObs, atgarderRek, statistikBild, responseDiagnosisCode, prediktionStatusCode,
+                atgarderStatusCode, statistikStatusCode);
     }
 
     @Override
