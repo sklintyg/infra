@@ -36,6 +36,9 @@ import java.util.Set;
  */
 public class CareUnitAccessHelper {
 
+    private CareUnitAccessHelper() {
+    }
+
     /**
      * Since the WebCertUser#getValdVardenhet may either return a
      * {@link se.inera.intyg.infra.integration.hsa.model.Vardenhet} or a
