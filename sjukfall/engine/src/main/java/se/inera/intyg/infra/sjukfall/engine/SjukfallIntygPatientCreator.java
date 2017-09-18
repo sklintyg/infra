@@ -62,7 +62,7 @@ public class SjukfallIntygPatientCreator {
         // Transform intygsdata to an internal format
         List<SjukfallIntyg> sjukfallIntygList = mapIntyg(intygsData, aktivtDatum);
 
-        return collecIntyg(sjukfallIntygList, maxIntygsGlapp);
+        return collectIntyg(sjukfallIntygList, maxIntygsGlapp);
     }
 
 
@@ -83,7 +83,7 @@ public class SjukfallIntygPatientCreator {
     /**
      * Collect certificates inside a map where each entry's value is a list with SjukfallIntyg.
      */
-    private Map<Integer, List<SjukfallIntyg>> collecIntyg(List<SjukfallIntyg> intygsData, int maxIntygsGlapp) {
+    private Map<Integer, List<SjukfallIntyg>> collectIntyg(List<SjukfallIntyg> intygsData, int maxIntygsGlapp) {
 
         Map<Integer, List<SjukfallIntyg>> map = new HashMap<>();
 
