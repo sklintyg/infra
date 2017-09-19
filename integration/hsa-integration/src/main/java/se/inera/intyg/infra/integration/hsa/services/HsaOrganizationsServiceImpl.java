@@ -34,11 +34,11 @@ import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.integration.hsa.stub.Medarbetaruppdrag;
+import se.inera.intyg.infra.integration.hsa.util.HsaUnitAddressParser;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMemberType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.HealthCareUnitType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
-import se.riv.infrastructure.directory.v1.AddressType;
 import se.riv.infrastructure.directory.v1.CommissionType;
 import se.riv.infrastructure.directory.v1.CredentialInformationType;
 
@@ -74,6 +74,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
     @Autowired
     private OrganizationUnitService organizationUnitService;
 
+    private HsaUnitAddressParser hsaUnitAddressParser = new HsaUnitAddressParser();
+
     @Override
     public String getVardgivareOfVardenhet(String careUnitHsaId) {
         try {
@@ -104,8 +106,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
             attachMottagningar(vardenhet, response);
             setArbetsplatskod(vardenhet, response);
         });
-
-        updateWithContactInformation(vardenhet, unit);
+        updateWithEmailAndPhone(vardenhet, unit);
+        hsaUnitAddressParser.updateWithContactInformation(vardenhet, unit.getPostalAddress(), unit.getPostalCode());
 
         return vardenhet;
     }
@@ -195,7 +197,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         // I don't like this, but we need to do an extra call to
         // infrastructure:directory:organization:getUnit for address related stuff.
         try {
-            updateWithContactInformation(vardenhet, getUnit(vardenhet.getId()));
+            UnitType unit = getUnit(vardenhet.getId());
+            hsaUnitAddressParser.updateWithContactInformation(vardenhet, unit.getPostalAddress(), unit.getPostalCode());
         } catch (HsaServiceCallException e) {
             LOG.error(e.getMessage());
             return null;
@@ -213,7 +216,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         vardenhet.setArbetsplatskod(
                 healthCareUnitMembers.getHealthCareUnitPrescriptionCode().size() > 0
                         && healthCareUnitMembers.getHealthCareUnitPrescriptionCode().get(0) != null
-                                ? healthCareUnitMembers.getHealthCareUnitPrescriptionCode().get(0) : DEFAULT_ARBETSPLATSKOD);
+                                ? healthCareUnitMembers.getHealthCareUnitPrescriptionCode().get(0)
+                                : DEFAULT_ARBETSPLATSKOD);
     }
 
     private Optional<HealthCareUnitMembersType> getHealthCareUnitMembers(final Vardenhet vardenhet) {
@@ -261,16 +265,17 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
                     member.getHealthCareUnitMemberStartDate(), member.getHealthCareUnitMemberEndDate());
             if (member.getHealthCareUnitMemberpostalAddress() != null
                     && member.getHealthCareUnitMemberpostalAddress().getAddressLine() != null) {
-                mottagning.setPostadress(member.getHealthCareUnitMemberpostalAddress().getAddressLine()
-                        .stream()
-                        .collect(Collectors.joining(" ")));
-                mottagning.setParentHsaId(vardenhet.getId());
+                hsaUnitAddressParser.updateWithContactInformation(mottagning, member.getHealthCareUnitMemberpostalAddress(),
+                        member.getHealthCareUnitMemberpostalCode());
+
             }
 
-            mottagning.setPostnummer(member.getHealthCareUnitMemberpostalCode());
+            mottagning.setParentHsaId(vardenhet.getId());
+
             mottagning.setTelefonnummer(member.getHealthCareUnitMemberTelephoneNumber().stream().collect(Collectors.joining(", ")));
             mottagning.setArbetsplatskod(member.getHealthCareUnitMemberPrescriptionCode().size() > 0
-                    ? member.getHealthCareUnitMemberPrescriptionCode().get(0) : DEFAULT_ARBETSPLATSKOD);
+                    ? member.getHealthCareUnitMemberPrescriptionCode().get(0)
+                    : DEFAULT_ARBETSPLATSKOD);
             mottagning.setAgandeForm(agandeForm);
 
             vardenhet.getMottagningar().add(mottagning);
@@ -283,44 +288,12 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         return organizationUnitService.getUnit(careUnitHsaId);
     }
 
-    private void updateWithContactInformation(AbstractVardenhet vardenhet, UnitType response) {
+
+
+    private void updateWithEmailAndPhone(AbstractVardenhet vardenhet, UnitType response) {
         vardenhet.setEpost(response.getMail());
         if (response.getTelephoneNumber() != null && !response.getTelephoneNumber().isEmpty()) {
             vardenhet.setTelefonnummer(response.getTelephoneNumber().get(0));
-        }
-        AddressType address = response.getPostalAddress();
-        if (address == null) {
-            return;
-        }
-
-        // There exists a postal code field, HSA doesn't seem to use it though (they use adressline2 for zip and city)
-        if (response.getPostalCode() != null && response.getPostalCode().trim().length() > 0) {
-            vardenhet.setPostnummer(response.getPostalCode());
-        }
-
-        List<String> lines = address.getAddressLine();
-
-        if (!lines.isEmpty()) {
-            vardenhet.setPostadress(lines.subList(0, address.getAddressLine().size() - 1).stream()
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.joining(" ")));
-        } else {
-            vardenhet.setPostadress("");
-        }
-
-        String lastLine = lines.size() > 0 ? lines.get(lines.size() - 1) : null;
-        final int shortestLengthToIncludeBothPnrAndPostort = 7;
-        if (lastLine != null && lastLine.length() > shortestLengthToIncludeBothPnrAndPostort && Character.isDigit(lastLine.charAt(0))) {
-            final int startPostort = 6;
-            vardenhet.setPostort(lastLine.substring(startPostort).trim());
-            if (vardenhet.getPostnummer() == null) {
-                vardenhet.setPostnummer(lastLine.substring(0, startPostort).trim());
-            }
-        } else {
-            if (vardenhet.getPostnummer() == null) {
-                vardenhet.setPostnummer("");
-            }
-            vardenhet.setPostort(lastLine != null ? lastLine.trim() : "");
         }
     }
 }
