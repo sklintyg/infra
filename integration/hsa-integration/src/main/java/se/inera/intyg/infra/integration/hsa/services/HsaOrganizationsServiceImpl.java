@@ -107,7 +107,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
             setArbetsplatskod(vardenhet, response);
         });
         updateWithEmailAndPhone(vardenhet, unit);
-        hsaUnitAddressParser.updateWithContactInformation(vardenhet, unit.getPostalAddress(), unit.getPostalCode());
+        hsaUnitAddressParser.updateWithAddress(vardenhet, unit.getPostalAddress(), unit.getPostalCode());
 
         return vardenhet;
     }
@@ -198,7 +198,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         // infrastructure:directory:organization:getUnit for address related stuff.
         try {
             UnitType unit = getUnit(vardenhet.getId());
-            hsaUnitAddressParser.updateWithContactInformation(vardenhet, unit.getPostalAddress(), unit.getPostalCode());
+            updateWithEmailAndPhone(vardenhet, unit);
+            hsaUnitAddressParser.updateWithAddress(vardenhet, unit.getPostalAddress(), unit.getPostalCode());
         } catch (HsaServiceCallException e) {
             LOG.error(e.getMessage());
             return null;
@@ -265,7 +266,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
                     member.getHealthCareUnitMemberStartDate(), member.getHealthCareUnitMemberEndDate());
             if (member.getHealthCareUnitMemberpostalAddress() != null
                     && member.getHealthCareUnitMemberpostalAddress().getAddressLine() != null) {
-                hsaUnitAddressParser.updateWithContactInformation(mottagning, member.getHealthCareUnitMemberpostalAddress(),
+                hsaUnitAddressParser.updateWithAddress(mottagning, member.getHealthCareUnitMemberpostalAddress(),
                         member.getHealthCareUnitMemberpostalCode());
 
             }

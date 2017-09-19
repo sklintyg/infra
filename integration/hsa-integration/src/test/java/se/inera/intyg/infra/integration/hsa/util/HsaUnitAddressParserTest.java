@@ -23,7 +23,7 @@ public class HsaUnitAddressParserTest {
         AddressType address = new AddressType();
         address.getAddressLine().add("Lokalgatan 12");
         address.getAddressLine().add("10000 Lillsala");
-        testee.updateWithContactInformation(mottagning, address, null);
+        testee.updateWithAddress(mottagning, address, null);
 
         assertEquals("Lokalgatan 12", mottagning.getPostadress());
         assertEquals("10000", mottagning.getPostnummer());
@@ -37,7 +37,7 @@ public class HsaUnitAddressParserTest {
         AddressType address = new AddressType();
         address.getAddressLine().add("Lokalgatan 12, 2 trappor");
         address.getAddressLine().add("100 00 Lillsala");
-        testee.updateWithContactInformation(mottagning, address, null);
+        testee.updateWithAddress(mottagning, address, null);
 
         assertEquals("Lokalgatan 12, 2 trappor", mottagning.getPostadress());
         assertEquals("100 00", mottagning.getPostnummer());
@@ -50,7 +50,7 @@ public class HsaUnitAddressParserTest {
         AddressType address = new AddressType();
         address.getAddressLine().add("Lokalgatan 12");
         address.getAddressLine().add("10000 Lillsala");
-        testee.updateWithContactInformation(mottagning, address, "12345");
+        testee.updateWithAddress(mottagning, address, "12345");
 
         assertEquals("Lokalgatan 12", mottagning.getPostadress());
         assertEquals("12345", mottagning.getPostnummer());
@@ -62,7 +62,7 @@ public class HsaUnitAddressParserTest {
         Mottagning mottagning = new Mottagning(MOTTAGNING_ID, MOTTAGNING_NAME);
         AddressType address = new AddressType();
 
-        testee.updateWithContactInformation(mottagning, address, "12345");
+        testee.updateWithAddress(mottagning, address, "12345");
 
         assertEquals("", mottagning.getPostadress());
         assertEquals("12345", mottagning.getPostnummer());
@@ -74,7 +74,7 @@ public class HsaUnitAddressParserTest {
         Mottagning mottagning = new Mottagning(MOTTAGNING_ID, MOTTAGNING_NAME);
         AddressType address = new AddressType();
 
-        testee.updateWithContactInformation(mottagning, address, null);
+        testee.updateWithAddress(mottagning, address, null);
 
         assertEquals("", mottagning.getPostadress());
         assertEquals("", mottagning.getPostnummer());
@@ -84,7 +84,7 @@ public class HsaUnitAddressParserTest {
     @Test
     public void testParseTwoLineMottagningWithNullLines() {
         Mottagning mottagning = new Mottagning(MOTTAGNING_ID, MOTTAGNING_NAME);
-        testee.updateWithContactInformation(mottagning, null, null);
+        testee.updateWithAddress(mottagning, null, null);
 
         assertNull(mottagning.getPostadress());
         assertNull(mottagning.getPostnummer());

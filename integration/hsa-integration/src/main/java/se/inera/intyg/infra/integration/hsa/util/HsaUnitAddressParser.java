@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public class HsaUnitAddressParser {
 
-    public void updateWithContactInformation(AbstractVardenhet vardenhet, AddressType address, String postalCode) {
+    public void updateWithAddress(AbstractVardenhet vardenhet, AddressType address, String postalCode) {
         if (address == null) {
             return;
         }
