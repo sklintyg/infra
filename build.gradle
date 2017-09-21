@@ -1,5 +1,5 @@
 plugins {
-    id "se.inera.intyg.plugin.common" version "1.0.45" apply false
+    id "se.inera.intyg.plugin.common" version "1.0.56" apply false
 }
 
 ext {
