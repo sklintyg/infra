@@ -73,15 +73,12 @@ import java.util.stream.Collectors;
 
 public class SrsServiceImpl implements SrsService {
 
-    private static final int FOUR = 4;
-    private static final int THREE = 3;
     private static final int POSTNUMMER_LENGTH = 5;
 
     private static final String HSA_ROOT = "1.2.752.129.2.1.4.1";
     private static final String CONSUMER_HSA_ID = "SE5565594230-B31";
     private static final String DIAGNOS_CODE_SYSTEM = "1.2.752.116.1.1.1.1.3";
 
-    private static final Logger LOG = LoggerFactory.getLogger(SrsServiceImpl.class);
     @Autowired
     private GetSRSInformationResponderInterface getSRSInformation;
     @Autowired
@@ -96,6 +93,10 @@ public class SrsServiceImpl implements SrsService {
     @Override
     public SrsResponse getSrs(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
             List<SrsQuestionResponse> questions) throws InvalidPersonNummerException, SrsException {
+
+        if (questions == null || questions.isEmpty()) {
+            throw new IllegalArgumentException("Answers are required to construct a valid request.");
+        }
 
         GetSRSInformationResponseType response = getSRSInformation.getSRSInformation(
                 createRequest(user, intygId, personnummer, diagnosisCode, filter, questions));
