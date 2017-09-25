@@ -35,6 +35,7 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdata
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
+import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
 import se.inera.intyg.infra.integration.srs.stub.GetPredictionQuestionsStub;
 import se.inera.intyg.infra.integration.srs.stub.repository.ConsentRepository;
@@ -43,7 +44,7 @@ import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -77,8 +78,8 @@ public class SrsServiceTest {
 
     @Test
     public void testNone() throws Exception {
-        SrsResponse response = service
-                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList());
+        SrsResponse response = service.getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter,
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNull(response.getStatistikBild());
         assertNull(response.getAtgarderObs());
         assertNull(response.getAtgarderRek());
@@ -89,8 +90,8 @@ public class SrsServiceTest {
     @Test
     public void testSrsPrediktion() throws Exception {
         utdatafilter.setPrediktion(true);
-        SrsResponse response = service
-                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList());
+        SrsResponse response = service.getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter,
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNotNull(response);
         assertEquals(new Integer(1), response.getPredictionLevel());
         assertEquals("test", response.getPredictionDescription());
@@ -101,8 +102,8 @@ public class SrsServiceTest {
     @Test
     public void testSrsStatistik() throws Exception {
         utdatafilter.setStatistik(true);
-        SrsResponse response = service
-                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList());
+        SrsResponse response = service.getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter,
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNotNull(response.getStatistikBild());
         assertNull(response.getAtgarderRek());
         assertNull(response.getAtgarderObs());
@@ -114,8 +115,8 @@ public class SrsServiceTest {
     public void testSrsPrediktionAndAtgardRekommendation() throws Exception {
         utdatafilter.setPrediktion(true);
         utdatafilter.setAtgardsrekommendation(true);
-        SrsResponse response = service
-                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList());
+        SrsResponse response = service.getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter,
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNotNull(response);
         assertEquals(new Integer(1), response.getPredictionLevel());
         assertEquals("test", response.getPredictionDescription());
@@ -129,23 +130,23 @@ public class SrsServiceTest {
         utdatafilter.setAtgardsrekommendation(true);
         utdatafilter.setPrediktion(true);
         utdatafilter.setStatistik(true);
-        SrsResponse response = service
-                .getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter, Collections.emptyList());
+        SrsResponse response = service.getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter,
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNotNull(response);
         assertEquals(new Integer(1), response.getPredictionLevel());
         assertEquals("test", response.getPredictionDescription());
 
         assertEquals(3, response.getAtgarderRek().size());
         assertNotNull(response.getAtgarderRek().get(0));
-        assertEquals("Atgardsforslag REK 1",response.getAtgarderRek().get(0));
-        assertEquals("Atgardsforslag REK 2",response.getAtgarderRek().get(1));
-        assertEquals("Atgardsforslag REK 3",response.getAtgarderRek().get(2));
+        assertEquals("Atgardsforslag REK 1", response.getAtgarderRek().get(0));
+        assertEquals("Atgardsforslag REK 2", response.getAtgarderRek().get(1));
+        assertEquals("Atgardsforslag REK 3", response.getAtgarderRek().get(2));
 
         assertEquals(3, response.getAtgarderObs().size());
         assertNotNull(response.getAtgarderObs().get(0));
-        assertEquals("Atgardsforslag OBS 1",response.getAtgarderObs().get(0));
-        assertEquals("Atgardsforslag OBS 2",response.getAtgarderObs().get(1));
-        assertEquals("Atgardsforslag OBS 3",response.getAtgarderObs().get(2));
+        assertEquals("Atgardsforslag OBS 1", response.getAtgarderObs().get(0));
+        assertEquals("Atgardsforslag OBS 2", response.getAtgarderObs().get(1));
+        assertEquals("Atgardsforslag OBS 3", response.getAtgarderObs().get(2));
         assertNotNull(response.getStatistikBild());
     }
 
