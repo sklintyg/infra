@@ -21,7 +21,6 @@ package se.inera.intyg.infra.integration.srs.services;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
-import se.inera.intyg.infra.integration.srs.model.SrsException;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
@@ -37,19 +36,17 @@ public interface SrsService {
     /**
      * Perform a getSrsInformation for a given Personnummer and diagnosis.
      *
-     * @param user               user which made the request
-     * @param intygId            id of the intyg used for SRS.
-     * @param personnummer       {@link Personnummer} for the patient concerned.
-     * @param diagnosisCode      string representation of the diagnosis code.
-     * @param filter             Utdatafilter with desired response filters.
-     * @param answers            Answers from the user.
+     * @param user          user which made the request
+     * @param intygId       id of the intyg used for SRS.
+     * @param personnummer  {@link Personnummer} for the patient concerned.
+     * @param diagnosisCode string representation of the diagnosis code.
+     * @param filter        Utdatafilter with desired response filters.
+     * @param answers       Answers from the user.
      * @return {@link SrsResponse} with {@link Diagnosprediktionstatus} OK or PREDIKTIONSMODELL_SAKNAS
      * @throws InvalidPersonNummerException
-     * @throws SrsException
      */
-    SrsResponse getSrs(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode,
-            Utdatafilter filter, List<SrsQuestionResponse> answers)
-            throws InvalidPersonNummerException, SrsException;
+    SrsResponse getSrs(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
+            List<SrsQuestionResponse> answers) throws InvalidPersonNummerException;
 
     /**
      * Retreives the questions to be displayed in the GUI.
