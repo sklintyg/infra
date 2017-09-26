@@ -30,7 +30,6 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentReq
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponseType;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
-import se.inera.intyg.infra.integration.srs.model.SrsException;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
@@ -72,7 +71,7 @@ public class SrsServiceImpl implements SrsService {
 
     @Override
     public SrsResponse getSrs(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
-            List<SrsQuestionResponse> questions) throws InvalidPersonNummerException, SrsException {
+            List<SrsQuestionResponse> questions) throws InvalidPersonNummerException {
 
         if (questions == null || questions.isEmpty()) {
             throw new IllegalArgumentException("Answers are required to construct a valid request.");
@@ -102,13 +101,14 @@ public class SrsServiceImpl implements SrsService {
             if (underlag.getPrediktion().getDiagnosprediktion().isEmpty()
                     || underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus()
                     == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
-                throw new SrsException("Prediktionsmodell saknas");
+                prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
+            } else {
+                level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori().intValueExact();
+                description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
+                prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
+                responseDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
+                        .map(CVType::getCode).orElse(null);
             }
-            level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori().intValueExact();
-            description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
-            prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
-            responseDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
-                    .map(CVType::getCode).orElse(null);
         }
 
         if (filter.isAtgardsrekommendation()) {
