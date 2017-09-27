@@ -9,3 +9,4 @@ bin
 
 # Ignore IntelliJ’s module libraries
 **/*.iml
+out
