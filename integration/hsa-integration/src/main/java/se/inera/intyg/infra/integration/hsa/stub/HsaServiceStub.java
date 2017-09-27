@@ -142,4 +142,18 @@ public class HsaServiceStub {
     public void markAsReadOnly(String hsaId) {
         readOnlyVardgivare.add(hsaId);
     }
+
+    /**
+     * Iterates over the Vårdgivare trees and makes sure the DTOs gets the parentHsaId fields set correctly.
+     */
+    public void updateParentOfRelations() {
+        for (Vardgivare vg : vardgivare) {
+            for (Vardenhet vardenhet : vg.getVardenheter()) {
+                vardenhet.setVardgivareHsaId(vg.getId());
+                for (Mottagning m : vardenhet.getMottagningar())  {
+                    m.setParentHsaId(vardenhet.getId());
+                }
+            }
+        }
+    }
 }
