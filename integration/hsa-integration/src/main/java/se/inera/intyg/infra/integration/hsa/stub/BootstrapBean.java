@@ -52,6 +52,7 @@ public class BootstrapBean {
         for (Resource res : files) {
             addVardgivare(res);
         }
+        hsaServiceStub.updateParentOfRelations();
 
         files = getResourceListing("bootstrap-medarbetaruppdrag/*.json");
         LOG.debug("Bootstrapping {} medarbetare for HSA stub ...", files.size());
@@ -59,6 +60,8 @@ public class BootstrapBean {
             addPerson(res);
             addMedarbetaruppdrag(res);
         }
+
+
     }
 
     private List<Resource> getResourceListing(String classpathResourcePath) {
