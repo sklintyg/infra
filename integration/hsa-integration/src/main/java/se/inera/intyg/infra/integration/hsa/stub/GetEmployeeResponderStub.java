@@ -25,7 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedperson.v1.rivtabp21.GetEmployeeIncludingProtectedPersonResponderInterface;
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonResponseType;
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonType;
-import se.riv.infrastructure.directory.v1.*;
+import se.riv.infrastructure.directory.v1.PaTitleType;
+import se.riv.infrastructure.directory.v1.PersonInformationType;
+import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 
 //CHECKSTYLE:ON LineLength
 
@@ -54,6 +56,7 @@ public class GetEmployeeResponderStub implements GetEmployeeIncludingProtectedPe
         person.setPersonHsaId(hsaPerson.getHsaId());
         person.setGivenName(hsaPerson.getForNamn());
         person.setMiddleAndSurName(hsaPerson.getEfterNamn());
+        person.setProtectedPerson(hsaPerson.isSekretessMarkerad());
 
         for (String legYrkesGrp : hsaPerson.getLegitimeradeYrkesgrupper()) {
             person.getHealthCareProfessionalLicence().add(legYrkesGrp);
