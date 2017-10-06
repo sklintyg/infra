@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 public class LookupResidentForFullProfileWsStubTest {
 
     @Mock
-    private ResidentStore residentStore;
+    private ChronicleResidentStore residentStore;
 
     @InjectMocks
     private LookupResidentForFullProfileResponderInterface ws = new LookupResidentForFullProfileWsStub();
@@ -83,7 +83,7 @@ public class LookupResidentForFullProfileWsStubTest {
         person.setPersonId("191212121212");
         ResidentType resident = new ResidentType();
         resident.setPersonpost(person);
-        when(residentStore.get("191212121212")).thenReturn(resident);
+        when(residentStore.getResident("191212121212")).thenReturn(resident);
         LookupResidentForFullProfileType parameters = defaultRequest();
         LookupResidentForFullProfileResponseType address = ws.lookupResidentForFullProfile("address", parameters);
         assertEquals(1, address.getResident().size());

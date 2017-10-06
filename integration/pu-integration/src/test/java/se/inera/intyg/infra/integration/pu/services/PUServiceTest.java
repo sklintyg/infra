@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +39,7 @@ import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
+import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -61,6 +63,16 @@ public class PUServiceTest {
     public void setup() {
         service.clearCache();
     }
+
+    @Before
+    @After
+    public void init() {
+        File dataFile = new File(System.getProperty("java.io.tmpdir") + File.separator + "residentstore.data");
+        if (dataFile.exists()) {
+            dataFile.delete();
+        }
+    }
+
 
     @Test
     public void checkExistingPersonWithFullAddress() {

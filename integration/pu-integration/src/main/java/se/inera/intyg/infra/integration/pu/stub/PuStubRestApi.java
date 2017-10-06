@@ -45,7 +45,7 @@ public class PuStubRestApi {
     private static final int BAD_REQUEST = 400;
 
     @Autowired
-    private ResidentStore residentStore;
+    private ChronicleResidentStore residentStore;
 
     @Autowired
     private PUService puService;
@@ -61,7 +61,7 @@ public class PuStubRestApi {
     @Path("/person/{personId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response updatePerson(@PathParam("personId") String personId) {
-        return Response.ok(residentStore.get(personId)).build();
+        return Response.ok(residentStore.getResident(personId)).build();
     }
 
     @PUT
@@ -69,7 +69,7 @@ public class PuStubRestApi {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updatePerson(ResidentType person) {
         puService.clearCache();
-        residentStore.addUser(person);
+        residentStore.addResident(person);
         return Response.ok().build();
     }
 
@@ -88,13 +88,14 @@ public class PuStubRestApi {
         } else {
             return Response.status(BAD_REQUEST).entity("Sekretessmarkering has to be set [true] or not set [false]").build();
         }
-        ResidentType residentType = residentStore.get(personId);
+        ResidentType residentType = residentStore.getResident(personId);
         if (residentType == null) {
             return Response.status(BAD_REQUEST).entity("No identity found for supplied personId").build();
         }
         JaNejTYPE newValue = JaNejTYPE.fromValue(xmlValue);
         JaNejTYPE oldValue = residentType.getSekretessmarkering();
         residentType.setSekretessmarkering(newValue);
+        residentStore.addResident(residentType);
         return Response.ok().entity("Value was set to \"" + newValue.value() + "\", from old value \"" + oldValue.value() + "\"").build();
     }
 
@@ -111,7 +112,7 @@ public class PuStubRestApi {
         } else {
             return Response.status(BAD_REQUEST).entity("avliden status has to be set [true] or not set [false]").build();
         }
-        ResidentType resident = residentStore.get(personId);
+        ResidentType resident = residentStore.getResident(personId);
         if (resident == null) {
             return Response.status(BAD_REQUEST).entity("No identity found for supplied personId").build();
         }
@@ -163,6 +164,7 @@ public class PuStubRestApi {
             avreg = null;
         }
         resident.getPersonpost().setAvregistrering(avreg);
+        residentStore.addResident(resident);
         return oldValue;
     }
 

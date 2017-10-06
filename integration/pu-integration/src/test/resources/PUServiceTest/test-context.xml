@@ -31,7 +31,7 @@
 
     <bean class="com.fasterxml.jackson.databind.ObjectMapper"/>
     <bean class="se.inera.intyg.infra.integration.pu.stub.PUBootstrapBean"/>
-    <bean class="se.inera.intyg.infra.integration.pu.stub.ResidentStore"/>
+    <bean class="se.inera.intyg.infra.integration.pu.stub.ChronicleResidentStore"/>
 
     <bean class="se.inera.intyg.infra.integration.pu.services.PUServiceImpl"/>
 
