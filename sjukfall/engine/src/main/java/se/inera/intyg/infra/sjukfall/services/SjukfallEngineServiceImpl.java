@@ -235,7 +235,7 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         LOG.debug("  - Lookup all 'aktiva grader'");
         return list.stream()
             .sorted(Comparator.comparing(Formaga::getStartdatum))
-            .map(f -> f.getNedsattning())
+            .map(Formaga::getNedsattning)
             .collect(Collectors.toList());
     }
 

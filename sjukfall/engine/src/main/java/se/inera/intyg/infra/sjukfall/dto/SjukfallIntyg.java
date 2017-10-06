@@ -158,8 +158,8 @@ public class SjukfallIntyg extends IntygData {
 
         private List<Integer> getGrader(List<Formaga> formagor) {
             return formagor.stream()
+                .sorted(Comparator.comparing(Formaga::getStartdatum))
                 .map(Formaga::getNedsattning)
-                .sorted()
                 .collect(Collectors.toList());
         }
 
