@@ -18,24 +18,13 @@
  */
 package se.inera.intyg.infra.sjukfall.services;
 
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
-import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
-import se.inera.intyg.infra.sjukfall.dto.Lakare;
-import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
-import se.inera.intyg.infra.sjukfall.dto.SjukfallPatient;
-import se.inera.intyg.infra.sjukfall.dto.Vardenhet;
-import se.inera.intyg.infra.sjukfall.dto.Vardgivare;
-import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
+import se.inera.intyg.infra.sjukfall.dto.*;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetCreator;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetResolver;
 import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
@@ -45,8 +34,13 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -221,8 +215,23 @@ public class SjukfallEngineServiceTest {
             return;
         }
 
+        // assert the capacity for work sort order
+        assertGrader(obj.getIntygId(), obj.getGrader());
+
         assertTrue(obj.getStartDatum().isAfter(list.get(0).getStartDatum()));
         assertSortOrder(list.get(0), list.subList(1, list.size()));
+    }
+
+    private static void assertGrader(String intygId, List<Integer> grader) {
+        IntygData data = intygDataList.stream().filter(obj -> obj.getIntygId().equalsIgnoreCase(intygId)).findFirst().get();
+        List<Formaga> formagor =
+                data.getFormagor().stream().sorted(Comparator.comparing(Formaga::getStartdatum)).collect(Collectors.toList());
+
+        assertTrue(grader.size() == formagor.size());
+
+        for (int i = 0; i < grader.size(); i++) {
+            assertTrue(grader.get(i).intValue() == formagor.get(i).getNedsattning());
+        }
     }
 
     private IntygParametrar getIntygParametrar(int maxIntygsGlapp, LocalDate aktivtDatum) {
