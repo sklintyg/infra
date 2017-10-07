@@ -44,9 +44,11 @@ import java.util.stream.Collectors;
 public class ChronicleResidentStore {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChronicleResidentStore.class);
+
     private static final String PU_STUB_DATA_FOLDER = "pu.stub.data.folder";
     private static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
     private static final String RESIDENTSTORE = "residentstore";
+
     private static final int MIN_SIZE = 20;
     private static final int AVERAGE_VALUE_SIZE = 720;
     private static final int AVERAGE_KEY_SIZE = 12;
@@ -124,7 +126,6 @@ public class ChronicleResidentStore {
     }
 
     private ResidentType fromJson(String json) {
-        LOG.info("About to deserialize " + json);
         try {
             return objectMapper.readValue(json, ResidentType.class);
         } catch (IOException e) {
