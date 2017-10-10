@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.loggtjanststub;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.riv.ehr.log.store.storelog.rivtabp21.v1.StoreLogResponderInterface;
 import se.riv.ehr.log.store.storelogresponder.v1.StoreLogRequestType;
@@ -27,7 +29,7 @@ import se.riv.ehr.log.v1.LogType;
 import se.riv.ehr.log.v1.ResultCodeType;
 
 import javax.xml.ws.WebServiceException;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.List;
 
 
 /**
@@ -35,8 +37,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class StoreLogStubResponder implements StoreLogResponderInterface {
 
+    private static final Logger LOG = LoggerFactory.getLogger(StoreLogStubResponder.class);
+
     @Autowired
-    private CopyOnWriteArrayList<LogType> logEntries;
+    private ChronicleLogStore logStore;
 
     @Autowired(required = false)
     private StubState stubState;
@@ -84,11 +88,17 @@ public class StoreLogStubResponder implements StoreLogResponderInterface {
             }
         }
 
-        logEntries.addAll(request.getLog());
+        List<LogType> logItems = request.getLog();
+        for (LogType lt : logItems) {
+            logStore.addLogItem(lt);
+        }
 
         result.setResultCode(ResultCodeType.OK);
         result.setResultText("Done");
         response.setResultType(result);
         return response;
     }
+
+
+
 }

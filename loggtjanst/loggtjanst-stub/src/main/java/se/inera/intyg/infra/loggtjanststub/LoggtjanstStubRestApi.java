@@ -29,15 +29,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Collection;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * @author eriklup, andreaskaltenbach
+ * @author eriklup
  */
 public class LoggtjanstStubRestApi {
 
     @Autowired
-    private CopyOnWriteArrayList<LogType> logEntries;
+    private ChronicleLogStore logStore;
 
     @Autowired
     private StubState stubState;
@@ -45,12 +44,12 @@ public class LoggtjanstStubRestApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Collection<LogType> getAllLogEntries() {
-        return logEntries;
+        return logStore.getAll();
     }
 
     @DELETE
-    public Response deleteMedarbetaruppdrag() {
-        logEntries.clear();
+    public Response deleteLogStore() {
+        logStore.clear();
         return Response.ok().build();
     }
 
