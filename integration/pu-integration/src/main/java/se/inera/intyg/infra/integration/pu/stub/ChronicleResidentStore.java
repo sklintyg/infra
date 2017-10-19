@@ -69,7 +69,7 @@ public class ChronicleResidentStore {
      *
      * @param residentType
      */
-    void addResident(ResidentType residentType) {
+    public void addResident(ResidentType residentType) {
         String pnr = residentType.getPersonpost().getPersonId();
         if (residents.containsKey(pnr)) {
             residents.remove(pnr);
