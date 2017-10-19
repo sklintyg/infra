@@ -49,7 +49,7 @@ public class ChronicleResidentStore {
     private static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
     private static final String RESIDENTSTORE = "residentstore";
 
-    private static final int MIN_SIZE = 20;
+    private static final int MIN_SIZE = 4000;
     private static final int AVERAGE_VALUE_SIZE = 720;
     private static final int AVERAGE_KEY_SIZE = 12;
 
