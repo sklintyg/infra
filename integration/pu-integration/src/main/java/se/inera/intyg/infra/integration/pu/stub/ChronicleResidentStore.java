@@ -49,7 +49,7 @@ public class ChronicleResidentStore {
     private static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
     private static final String RESIDENTSTORE = "residentstore";
 
-    private static final int MIN_SIZE = 4000;
+    private static final int MAX_SIZE = 4000;
     private static final int AVERAGE_VALUE_SIZE = 720;
     private static final int AVERAGE_KEY_SIZE = 12;
 
@@ -60,7 +60,7 @@ public class ChronicleResidentStore {
 
     @PostConstruct
     public void init() {
-        residents = getChronicleMap(RESIDENTSTORE, MIN_SIZE, AVERAGE_VALUE_SIZE, AVERAGE_KEY_SIZE);
+        residents = getChronicleMap(RESIDENTSTORE, MAX_SIZE, AVERAGE_VALUE_SIZE, AVERAGE_KEY_SIZE);
     }
 
     /**
@@ -94,16 +94,16 @@ public class ChronicleResidentStore {
         return new ArrayList<>(fromJson(residents.values()));
     }
 
-    private static ChronicleMap<String, String> getChronicleMap(String name, int minSize, int averageValueSize, int averageKeySize) {
+    private static ChronicleMap<String, String> getChronicleMap(String name, int maxSize, int averageValueSize, int averageKeySize) {
         String puStubFile = getStubDataFile(name);
 
-        LOG.info("Creating disk-persistent ChronicleMap for pustub at {} with minsize {}.", puStubFile, minSize);
+        LOG.info("Creating disk-persistent ChronicleMap for pustub at {} with maxsize {}.", puStubFile, maxSize);
 
         try {
             ChronicleMap<String, String> notificationsMap = ChronicleMap
                     .of(String.class, String.class)
                     .name(name)
-                    .entries(minSize)
+                    .entries(maxSize)
                     .averageValueSize(averageValueSize)
                     .averageKeySize(averageKeySize)
                     .createPersistedTo(new File(puStubFile));
