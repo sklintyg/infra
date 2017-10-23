@@ -87,6 +87,13 @@ public class ChronicleResidentStore {
         return fromJson(residents.get(id));
     }
 
+    void removeResident(ResidentType residentType) {
+        String pnr = residentType.getPersonpost().getPersonId();
+        if (residents.containsKey(pnr)) {
+            residents.remove(pnr);
+        }
+    }
+
     List<ResidentType> getAll() {
         if (!active) {
             throw new IllegalStateException("Stub is deactivated for testing purposes.");

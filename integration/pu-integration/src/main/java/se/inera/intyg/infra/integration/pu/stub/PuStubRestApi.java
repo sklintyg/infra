@@ -50,6 +50,14 @@ public class PuStubRestApi {
     @Autowired
     private PUService puService;
 
+    @DELETE
+    @Path("/person")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removePerson(ResidentType person) {
+        residentStore.removeResident(person);
+        return Response.ok().build();
+    }
+
     @GET
     @Path("/person")
     @Produces(MediaType.APPLICATION_JSON)
