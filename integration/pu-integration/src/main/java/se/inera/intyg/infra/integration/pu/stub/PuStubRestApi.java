@@ -51,10 +51,10 @@ public class PuStubRestApi {
     private PUService puService;
 
     @DELETE
-    @Path("/person")
+    @Path("/person/{personId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response removePerson(ResidentType person) {
-        residentStore.removeResident(person);
+    public Response removePerson(@PathParam("personId") String personId) {
+        residentStore.removeResident(personId);
         return Response.ok().build();
     }
 

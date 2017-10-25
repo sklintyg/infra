@@ -87,10 +87,9 @@ public class ChronicleResidentStore {
         return fromJson(residents.get(id));
     }
 
-    void removeResident(ResidentType residentType) {
-        String pnr = residentType.getPersonpost().getPersonId();
-        if (residents.containsKey(pnr)) {
-            residents.remove(pnr);
+    void removeResident(String personId) {
+        if (residents.containsKey(personId)) {
+            residents.remove(personId);
         }
     }
 
