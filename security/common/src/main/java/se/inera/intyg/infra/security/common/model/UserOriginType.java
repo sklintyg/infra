@@ -25,6 +25,7 @@ public enum UserOriginType {
 
     DJUPINTEGRATION,
     UTHOPP,
-    NORMAL;
+    NORMAL,
+    READONLY;
 
 }
