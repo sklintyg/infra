@@ -47,6 +47,9 @@ public class SjukfallEnhet {
     private int aktivGrad;
     private List<Integer> grader;
 
+    // ID för aktivt intyg.
+    private String aktivIntygsId;
+
 
     // getters and setters
 
@@ -146,4 +149,11 @@ public class SjukfallEnhet {
         this.grader = grader;
     }
 
+    public String getAktivIntygsId() {
+        return aktivIntygsId;
+    }
+
+    public void setAktivIntygsId(String aktivIntygsId) {
+        this.aktivIntygsId = aktivIntygsId;
+    }
 }
