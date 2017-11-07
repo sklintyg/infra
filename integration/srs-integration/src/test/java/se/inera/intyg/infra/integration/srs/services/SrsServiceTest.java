@@ -18,6 +18,17 @@
  */
 package se.inera.intyg.infra.integration.srs.services;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,12 +39,16 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.CollectionUtils;
+
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgardsrekommendationstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Statistikstatus;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
+import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
@@ -43,17 +58,6 @@ import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:SrsServiceTest/test-context.xml")
@@ -196,6 +200,50 @@ public class SrsServiceTest {
         assertTrue(response.contains("M18"));
         assertTrue(response.contains("J20"));
         assertTrue(response.contains("Q10"));
+    }
+
+    @Test
+    public void testGetSRSForDiagnosisCode() {
+        final SrsForDiagnosisResponse response = service.getSrsForDiagnose("M18");
+        assertNotNull(response);
+
+        assertEquals("M18", response.getDiagnosisCode());
+        assertEquals(3, response.getAtgarderObs().size());
+        assertEquals(3, response.getAtgarderRek().size());
+        assertEquals(Atgardsrekommendationstatus.OK.name(), response.getAtgarderStatusCode());
+
+        assertTrue(response.getStatistikBild().contains("srs-statistics-stub.jpg"));
+        assertEquals(Statistikstatus.OK.name(), response.getStatistikStatusCode());
+    }
+
+    @Test
+    public void testGetSRSForSubsetDiagnosisCode() {
+        final SrsForDiagnosisResponse response = service.getSrsForDiagnose("M18.1");
+        assertNotNull(response);
+        assertEquals("M18", response.getDiagnosisCode());
+        assertEquals(3, response.getAtgarderObs().size());
+        assertEquals(3, response.getAtgarderRek().size());
+        assertEquals(Atgardsrekommendationstatus.DIAGNOSKOD_PA_HOGRE_NIVA.name(), response.getAtgarderStatusCode());
+
+        assertTrue(response.getStatistikBild().contains("srs-statistics-stub-annan.jpg"));
+        assertEquals(Statistikstatus.DIAGNOSKOD_PA_HOGRE_NIVA.name(), response.getStatistikStatusCode());
+    }
+
+    @Test
+    public void testGetSRSForUnknownDiagnosisCode() {
+        final SrsForDiagnosisResponse response = service.getSrsForDiagnose("XX18");
+        assertNotNull(response);
+        assertEquals(0, response.getAtgarderObs().size());
+        assertEquals(0, response.getAtgarderRek().size());
+        assertEquals(Atgardsrekommendationstatus.INFORMATION_SAKNAS.name(), response.getAtgarderStatusCode());
+        assertEquals(Statistikstatus.STATISTIK_SAKNAS.name(), response.getStatistikStatusCode());
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetSRSForDiagnosisCodeInvalidRequest() {
+        service.getSrsForDiagnose(null);
+
     }
 
     private IntygUser createUser() {

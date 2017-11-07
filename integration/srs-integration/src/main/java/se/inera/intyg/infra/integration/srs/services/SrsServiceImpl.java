@@ -18,9 +18,19 @@
  */
 package se.inera.intyg.infra.integration.srs.services;
 
-import com.google.common.base.Strings;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+
+import com.google.common.base.Strings;
+
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentResponseType;
@@ -44,10 +54,15 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Indivi
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Individfaktorer;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Prediktionsfaktorer;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisRequestType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Statistikstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponseType;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
@@ -59,14 +74,6 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class SrsServiceImpl implements SrsService {
 
@@ -86,6 +93,8 @@ public class SrsServiceImpl implements SrsService {
     private SetConsentResponderInterface setConsent;
     @Autowired
     private GetDiagnosisCodesResponderInterface getDiagnosisCodes;
+    @Autowired
+    private GetSRSInformationForDiagnosisResponderInterface getSRSInformationForDiagnosis;
 
     @Override
     public SrsResponse getSrs(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
@@ -117,8 +126,8 @@ public class SrsServiceImpl implements SrsService {
 
         if (filter.isPrediktion()) {
             if (underlag.getPrediktion().getDiagnosprediktion().isEmpty()
-                    || underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus()
-                    == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
+                    || underlag.getPrediktion().getDiagnosprediktion().get(0)
+                            .getDiagnosprediktionstatus() == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
                 prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
             } else {
                 level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori().intValueExact();
@@ -210,6 +219,66 @@ public class SrsServiceImpl implements SrsService {
         return response.getDiagnos().stream()
                 .map(CVType::getCode)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public SrsForDiagnosisResponse getSrsForDiagnose(String diagnosCode) {
+
+        if (diagnosCode == null || diagnosCode.isEmpty()) {
+            throw new IllegalArgumentException("diagnosCode is required to construct a valid request.");
+        }
+
+        GetSRSInformationForDiagnosisRequestType request = new GetSRSInformationForDiagnosisRequestType();
+        request.setDiagnos(createDiagnos(diagnosCode));
+        GetSRSInformationForDiagnosisResponseType response = getSRSInformationForDiagnosis.getSRSInformationForDiagnosis(request);
+
+        if (response.getResultCode() != ResultCodeEnum.OK) {
+            throw new IllegalArgumentException("Bad data from SRS");
+        }
+
+        return createDiagnoseResponse(response);
+
+    }
+
+    private SrsForDiagnosisResponse createDiagnoseResponse(GetSRSInformationForDiagnosisResponseType response) {
+        String resultDiagnosCode = response.getAtgardsrekommendation().getDiagnos().getCode();
+        String atgarderStatusCode;
+        String statistikStatusCode;
+        String statistikBild;
+
+        // Ugh. maybe we should create common xsd types for these common subtypes...
+        final se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgardsrekommendation
+                atgardsrekommendation = response.getAtgardsrekommendation();
+
+        // finter out all OBS types sorted by priority
+        final List<String> atgarderObs = atgardsrekommendation.getAtgard().stream().sorted(Comparator
+                .comparing(se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgard::getPrioritet))
+                .filter(a -> a.getAtgardstyp()
+                        .equals(se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgardstyp.OBS))
+                .map(se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgard::getAtgardsforslag)
+                .collect(Collectors.toList());
+
+        // finter out all REK types sorted by priority
+        final List<String> atgarderRek = atgardsrekommendation.getAtgard().stream().sorted(Comparator
+                .comparing(se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgard::getPrioritet))
+                .filter(a -> a.getAtgardstyp()
+                        .equals(se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgardstyp.REK))
+                .map(se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgard::getAtgardsforslag)
+                .collect(Collectors.toList());
+
+        atgarderStatusCode = atgardsrekommendation.getAtgardsrekommendationstatus().name();
+
+        if (response.getStatistik() != null
+                && !CollectionUtils.isEmpty(response.getStatistik().getStatistikbild())) {
+            statistikStatusCode = response.getStatistik().getStatistikbild().get(0).getStatistikstatus().name();
+            statistikBild = response.getStatistik().getStatistikbild().get(0).getBildadress();
+        } else {
+            statistikStatusCode = Statistikstatus.STATISTIK_SAKNAS.name();
+            statistikBild = null;
+        }
+
+        return new SrsForDiagnosisResponse(atgarderObs, atgarderRek, statistikBild,
+                resultDiagnosCode, atgarderStatusCode, statistikStatusCode);
     }
 
     private GetSRSInformationRequestType createRequest(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode,

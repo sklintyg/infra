@@ -33,6 +33,7 @@
     <jaxws:endpoint address="/get-consent-stub" implementor="se.inera.intyg.infra.integration.srs.stub.GetConsentStub"/>
     <jaxws:endpoint address="/set-consent-stub" implementor="se.inera.intyg.infra.integration.srs.stub.SetConsentStub"/>
     <jaxws:endpoint address="/get-diagnosis-codes-stub" implementor="se.inera.intyg.infra.integration.srs.stub.GetDiagnosisCodesStub"/>
+    <jaxws:endpoint address="/get-srs-for-diagnosis-stub" implementor="se.inera.intyg.infra.integration.srs.stub.GetSRSInformationForDiagnosisStub"/>
 
     <bean id="consentRepository" class="se.inera.intyg.infra.integration.srs.stub.repository.ConsentRepository" />
 
