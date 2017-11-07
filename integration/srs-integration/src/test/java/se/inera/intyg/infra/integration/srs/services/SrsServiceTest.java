@@ -212,7 +212,7 @@ public class SrsServiceTest {
         assertEquals(3, response.getAtgarderRek().size());
         assertEquals(Atgardsrekommendationstatus.OK.name(), response.getAtgarderStatusCode());
 
-        assertTrue(response.getStatistikBild().contains("srs-statistics-stub.jpg"));
+        assertTrue(response.getStatistikBild().contains("srs-statistics-stub/M18"));
         assertEquals(Statistikstatus.OK.name(), response.getStatistikStatusCode());
     }
 
@@ -225,8 +225,8 @@ public class SrsServiceTest {
         assertEquals(3, response.getAtgarderRek().size());
         assertEquals(Atgardsrekommendationstatus.DIAGNOSKOD_PA_HOGRE_NIVA.name(), response.getAtgarderStatusCode());
 
-        assertTrue(response.getStatistikBild().contains("srs-statistics-stub-annan.jpg"));
-        assertEquals(Statistikstatus.DIAGNOSKOD_PA_HOGRE_NIVA.name(), response.getStatistikStatusCode());
+        assertNull(response.getStatistikBild());
+        assertEquals(Statistikstatus.STATISTIK_SAKNAS.name(), response.getStatistikStatusCode());
     }
 
     @Test
@@ -236,6 +236,7 @@ public class SrsServiceTest {
         assertEquals(0, response.getAtgarderObs().size());
         assertEquals(0, response.getAtgarderRek().size());
         assertEquals(Atgardsrekommendationstatus.INFORMATION_SAKNAS.name(), response.getAtgarderStatusCode());
+        assertNull(response.getStatistikBild());
         assertEquals(Statistikstatus.STATISTIK_SAKNAS.name(), response.getStatistikStatusCode());
 
     }

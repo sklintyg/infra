@@ -100,17 +100,15 @@ public class GetSRSInformationForDiagnosisStub implements GetSRSInformationForDi
             statistikbild.setStatistikstatus(Statistikstatus.OK);
             statistikbild.setAndringstidpunkt(LocalDateTime.of(2017, 1, 1, 1, 1));
             statistikbild.setInkommandediagnos(diagnos);
-            statistikbild.setBildadress("/services/srs-statistics-stub.jpg");
+            statistikbild.setBildadress("/services/srs-statistics-stub/" + diagnos.getCode() + ".jpg");
             statistikbild.setDiagnos(diagnos);
 
             statistik.getStatistikbild().add(statistikbild);
-        } else if (diagnos != null && getHigherMatchingDiagnoseCode(diagnos.getCode()).isPresent()) {
+        } else {
             Statistikbild statistikbild = new Statistikbild();
-            statistikbild.setStatistikstatus(Statistikstatus.DIAGNOSKOD_PA_HOGRE_NIVA);
+            statistikbild.setStatistikstatus(Statistikstatus.STATISTIK_SAKNAS);
             statistikbild.setAndringstidpunkt(LocalDateTime.of(2017, 1, 1, 1, 1));
             statistikbild.setInkommandediagnos(diagnos);
-            statistikbild.setBildadress("/services/srs-statistics-stub-annan.jpg");
-            statistikbild.setDiagnos(createDiagnos(getHigherMatchingDiagnoseCode(diagnos.getCode()).get()));
             statistik.getStatistikbild().add(statistikbild);
         }
 
