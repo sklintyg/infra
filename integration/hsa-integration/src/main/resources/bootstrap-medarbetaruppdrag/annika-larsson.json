@@ -1,0 +1,25 @@
+{
+  "hsaId": "TSTNMT2321000156-10CD",
+  "forNamn": "Annika",
+  "efterNamn": "Larsson",
+  "uppdrag": [
+    {
+      "vardgivare": "TSTNMT2321000156-102Q",
+      "enhet": "TSTNMT2321000156-1077",
+      "systemRoles": [
+        "INTYG;Rehab-TSTNMT2321000156-1077"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["WC","RS"],
+    "displayOrder": 15,
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-1077",
+        "beskrivning": "Annika Larsson (Vårdadmin | Alfaenheten)"
+      }
+    ]
+  }
+}
