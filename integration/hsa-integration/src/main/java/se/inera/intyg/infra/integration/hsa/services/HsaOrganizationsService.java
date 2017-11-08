@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.infra.integration.hsa.services;
 
+import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsa.model.UserAuthorizationInfo;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 
@@ -66,4 +67,6 @@ public interface HsaOrganizationsService {
      *      A list of hsaId's for mottagningar.
      */
     List<String> getHsaIdForAktivaUnderenheter(String vardEnhetHsaId);
+
+    String getParentUnit(String hsaId) throws HsaServiceCallException;
 }

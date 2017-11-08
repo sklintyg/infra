@@ -187,6 +187,12 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         return new UserAuthorizationInfo(userCredentials, vardgivareList, new HashMap<>()); // Empty
     }
 
+    @Override
+    public String getParentUnit(String hsaId) throws HsaServiceCallException {
+        return organizationUnitService.getHealthCareUnit(hsaId).getHealthCareUnitHsaId();
+
+    }
+
     private Vardenhet createVardenhet(CommissionType ct) {
         Vardenhet vardenhet = new Vardenhet(ct.getHealthCareUnitHsaId(), ct.getHealthCareUnitName());
         vardenhet.setStart(ct.getHealthCareUnitStartDate());
