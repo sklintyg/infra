@@ -16,27 +16,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package se.inera.intyg.infra.security.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableList;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-public final class Pilot implements Serializable {
+public class Feature implements Serializable {
 
     @JsonProperty
     private String name;
     @JsonProperty
     private String desc;
     @JsonProperty
-    private List<String> hsaIds;
+    private Boolean global;
     @JsonProperty
-    private List<Feature> activated;
-    @JsonProperty
-    private List<Feature> deactivated;
+    private List<String> intygstyper;
+
+    public Feature() {
+    }
+
+    public Feature(Feature template) {
+        this.name = template.name;
+        this.desc = template.desc;
+        this.global = template.global;
+        if (template.intygstyper != null) {
+            this.intygstyper = new ArrayList<>(template.intygstyper);
+        } else {
+            this.intygstyper = new ArrayList<>();
+        }
+    }
 
     public String getName() {
         return name;
@@ -54,45 +68,26 @@ public final class Pilot implements Serializable {
         this.desc = desc;
     }
 
-    public List<String> getHsaIds() {
-        return hsaIds;
+    public @NotNull Boolean getGlobal() {
+        return Optional.ofNullable(global).orElse(false);
     }
 
-    public void setHsaIds(List<String> hsaIds) {
-        if (hsaIds == null) {
-            this.hsaIds = ImmutableList.of();
+    public void setGlobal(Boolean global) {
+        this.global = global;
+    }
+
+    public List<String> getIntygstyper() {
+        if (intygstyper == null) {
+            return new ArrayList<>();
+        }
+        return intygstyper;
+    }
+
+    public void setIntygstyper(List<String> intygstyper) {
+        if (intygstyper == null) {
+            this.intygstyper = new ArrayList<>();
         } else {
-            this.hsaIds = ImmutableList.copyOf(hsaIds);
-        }
-    }
-
-    public List<Feature> getActivated() {
-        if (activated == null) {
-            return ImmutableList.of();
-        }
-        return activated;
-    }
-
-    public void setActivated(List<Feature> features) {
-        if (features == null) {
-            activated = ImmutableList.of();
-        } else {
-            activated = ImmutableList.copyOf(features.stream().map(Feature::new).collect(Collectors.toList()));
-        }
-    }
-
-    public List<Feature> getDeactivated() {
-        if (deactivated == null) {
-            return ImmutableList.of();
-        }
-        return deactivated;
-    }
-
-    public void setDeactivated(List<Feature> features) {
-        if (features == null) {
-            deactivated = ImmutableList.of();
-        } else {
-            deactivated = ImmutableList.copyOf(features.stream().map(Feature::new).collect(Collectors.toList()));
+            this.intygstyper = new ArrayList<>(intygstyper);
         }
     }
 }

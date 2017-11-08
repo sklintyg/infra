@@ -18,13 +18,7 @@
  */
 package se.inera.intyg.infra.security.common.model;
 
-/**
- * Created by mango on 25/11/15.
- */
 public final class AuthoritiesConstants {
-
-    private AuthoritiesConstants() {
-    }
 
     // Titles, a.k.a 'legitimerad yrkesgrupp', has a coding system governing these titles. See:
     // HSA Innehåll Legitimerad yrkesgrupp
@@ -59,5 +53,27 @@ public final class AuthoritiesConstants {
     public static final String PRIVILEGE_NOTIFIERING_UTKAST = "NOTIFIERING_UTKAST";
     public static final String PRIVILEGE_HANTERA_SEKRETESSMARKERAD_PATIENT = "HANTERA_SEKRETESSMARKERAD_PATIENT";
 
+    public static final String FEATURE_JS_MINIFIED = "MINIFIED_JS";
+    public static final String FEATURE_JS_LOGGNING = "JS_LOGGING";
+    public static final String FEATURE_HANTERA_INTYGSUTKAST = "HANTERA_INTYGSUTKAST";
+    public static final String FEATURE_HANTERA_INTYGSUTKAST_AVLIDEN = "HANTERA_INTYGSUTKAST_AVLIDEN";
+    public static final String FEATURE_HANTERA_FRAGOR = "HANTERA_FRAGOR";
+    public static final String FEATURE_SKAPA_NYFRAGA = "SKAPA_NY_FRAGA";
+    public static final String FEATURE_SRS = "SRS";
+    public static final String FEATURE_FORNYA_INTYG = "FORNYA_INTYG";
+    public static final String FEATURE_SKICKA_INTYG = "SKICKA_INTYG";
+    public static final String FEATURE_ARBETSGIVARUTSKRIFT = "FEATURE_ARBETSGIVARUTSKRIFT";
+    public static final String FEATURE_UTSKRIFT = "UTSKRIFT";
+    public static final String FEATURE_MAKULERA_INTYG = "MAKULERA_INTYG";
+    public static final String FEATURE_SIGNERA_SKICKA_DIREKT = "SIGNERA_SKICKA_DIREKT";
+    public static final String FEATURE_MAKULERA_INTYG_KRAVER_ANLEDNING = "MAKULERA_INTYG_KRAVER_ANLEDNING";
+    public static final String FEATURE_UNIKT_INTYG = "UNIKT_INTYG";
+    public static final String FEATURE_UNIKT_INTYG_INOM_VG = "UNIKT_INTYG_INOM_VG";
+    public static final String FEATURE_UNIKT_UTKAST_INOM_VG = "UNIKT_UTKAST_INOM_VG";
+    public static final String FEATURE_TAK_KONTROLL_TRADKLATTRING = "TAK_KONTROLL_TRADKLATTRING";
+    public static final String FEATURE_TAK_KONTROLL = "TAK_KONRTOLL";
+    public static final String FEATURE_SEKRETESSMARKERING = "SEKRETESSMARKERING";
 
+    private AuthoritiesConstants() {
+    }
 }

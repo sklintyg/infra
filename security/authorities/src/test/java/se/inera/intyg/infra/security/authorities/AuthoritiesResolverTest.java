@@ -26,40 +26,46 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.services.HsaPersonService;
-import se.inera.intyg.infra.security.authorities.bootstrap.AuthoritiesConfigurationLoader;
+import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
 import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
+import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.security.common.model.Role;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuthoritiesResolverTest {
 
-    private String configurationLocation = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    private String authoritiesConfigurationLocation = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    private String featuresConfigurationLocation = "AuthoritiesConfigurationLoaderTest/features-test.yaml";
 
     @Mock
     private HsaPersonService hsaPersonService;
 
     @Spy
-    private AuthoritiesConfigurationLoader configurationLoader = new AuthoritiesConfigurationLoader(configurationLocation);
+    private SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationLocation,
+            featuresConfigurationLocation);
 
     @InjectMocks
     private CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         configurationLoader.afterPropertiesSet();
     }
 
     @Test
-    public void lookupUserRoleWhenTitleIsDoctor() throws Exception {
+    public void lookupUserRoleWhenTitleIsDoctor() {
         // given
         List<String> titles = Collections.singletonList("Läkare");
         // when
@@ -119,9 +125,9 @@ public class AuthoritiesResolverTest {
         // when
         for (int i = 0; i < befattningsKoder.size(); i++) {
             for (int j = 0; j < gruppforskrivarKoder.size(); j++) {
-                Role role = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningsKoder.get(i), gruppforskrivarKoder.get(j));
+                Role role = authoritiesResolver
+                        .lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningsKoder.get(i), gruppforskrivarKoder.get(j));
                 roleMatrix[i][j] = role;
-                //System.err.println("[" + i + "," + j + "] " + (role == null ? "null" : role.getName()));
             }
         }
 
@@ -154,7 +160,7 @@ public class AuthoritiesResolverTest {
     @Test
     public void lookupUserRoleByTitleCodeAndGroupPrescriptionCodeNoMatchReturnsNull() {
         // Act
-        Role role = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(new ArrayList<String>(), new ArrayList<String>());
+        Role role = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(new ArrayList<>(), new ArrayList<>());
 
         // Assert
         assertNull(role);
@@ -176,18 +182,78 @@ public class AuthoritiesResolverTest {
     }
 
     // FIX THIS or MOVE TO REHAB!!!
-//    @Test
-//    public void testResolveRehabkoordinatorRole() throws Exception {
-//        // Arrange
-//        BaseSakerhetstjanstAssertion sa = Mockito.mock(BaseSakerhetstjanstAssertion.class);
-//
-//        // Act
-//        Role role = authoritiesResolver.lookupUserRole(sa, new ArrayList<>());
-//
-//        // Verify
-//        assertEquals(AuthoritiesConstants.ROLE_KOORDINATOR, role.getName());
-//    }
+    //    @Test
+    //    public void testResolveRehabkoordinatorRole() {
+    //        // Arrange
+    //        BaseSakerhetstjanstAssertion sa = Mockito.mock(BaseSakerhetstjanstAssertion.class);
+    //
+    //        // Act
+    //        Role role = authoritiesResolver.lookupUserRole(sa, new ArrayList<>());
+    //
+    //        // Verify
+    //        assertEquals(AuthoritiesConstants.ROLE_KOORDINATOR, role.getName());
+    //    }
 
+    @Test
+    public void testGetFeatures() {
+        Map<String, Feature> features = authoritiesResolver.getFeatures(new ArrayList<>());
 
+        // Sanity check for features which should always be active by default
+        assertTrue(features.containsKey(AuthoritiesConstants.FEATURE_HANTERA_INTYGSUTKAST));
+        assertTrue(features.containsKey(AuthoritiesConstants.FEATURE_HANTERA_FRAGOR));
+        assertTrue(features.containsKey(AuthoritiesConstants.FEATURE_SKICKA_INTYG));
 
+        assertFalse(features.containsKey("non-existing-feature"));
+        assertFalse(features.containsKey(""));
+        assertFalse(features.containsKey(null));
+
+        assertEquals(9, features.get(AuthoritiesConstants.FEATURE_HANTERA_INTYGSUTKAST).getIntygstyper().size());
+
+        Map<String, Feature> featuresNonexistingHsaId = authoritiesResolver.getFeatures(Arrays.asList("non-existing"));
+
+        // Sanity check for features which should always be active by default
+        assertTrue(featuresNonexistingHsaId.containsKey(AuthoritiesConstants.FEATURE_HANTERA_INTYGSUTKAST));
+        assertTrue(featuresNonexistingHsaId.containsKey(AuthoritiesConstants.FEATURE_HANTERA_FRAGOR));
+        assertTrue(featuresNonexistingHsaId.containsKey(AuthoritiesConstants.FEATURE_SKICKA_INTYG));
+
+        assertFalse(featuresNonexistingHsaId.containsKey("non-existing-feature"));
+        assertFalse(featuresNonexistingHsaId.containsKey(""));
+        assertFalse(featuresNonexistingHsaId.containsKey(null));
+
+        assertEquals(9, featuresNonexistingHsaId.get(AuthoritiesConstants.FEATURE_HANTERA_INTYGSUTKAST).getIntygstyper().size());
+    }
+
+    @Test
+    public void testGetFeaturesAdditiveFeatures() {
+        Map<String, Feature> features = authoritiesResolver.getFeatures(Arrays.asList("additive"));
+        assertTrue(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
+        assertEquals(Arrays.asList("fk7263", "lisjp"), features.get(AuthoritiesConstants.FEATURE_SRS).getIntygstyper());
+    }
+
+    @Test
+    public void testGetFeaturesSubtractingFeatures() {
+        Map<String, Feature> features = authoritiesResolver.getFeatures(Arrays.asList("subtractive"));
+        assertFalse(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
+        assertTrue(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getGlobal());
+        assertFalse(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getIntygstyper().contains("db"));
+    }
+
+    @Test
+    public void testGetFeaturesBoth() {
+        Map<String, Feature> features = authoritiesResolver.getFeatures(Arrays.asList("both"));
+        assertFalse(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
+        assertTrue(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getGlobal());
+        assertFalse(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getIntygstyper().contains("db"));
+    }
+
+    @Test
+    public void testGetFeaturesBoth2() {
+        Map<String, Feature> features = authoritiesResolver.getFeatures(Arrays.asList("both2"));
+        assertTrue(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
+        List<String> expected = Arrays.asList("lisjp", "db", "doi");
+        Collections.sort(expected);
+        List<String> actual = features.get(AuthoritiesConstants.FEATURE_SRS).getIntygstyper();
+        Collections.sort(actual);
+        assertEquals(expected, actual);
+    }
 }

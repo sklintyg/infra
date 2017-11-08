@@ -59,9 +59,6 @@ public final class AuthoritiesConfiguration {
     private List<Title> titles;
     @JsonProperty
     private List<TitleCode> titleCodes;
-    @JsonProperty
-    private List<String> sekretessmarkeringAllowed;
-
 
     // ~ Getter and setter
     // ==================================================================
@@ -162,14 +159,6 @@ public final class AuthoritiesConfiguration {
         this.titleCodes = titleCodes;
     }
 
-    public List<String> getSekretessmarkeringAllowed() {
-        return sekretessmarkeringAllowed;
-    }
-
-    public void setSekretessmarkeringAllowed(List<String> sekretessmarkeringAllowed) {
-        this.sekretessmarkeringAllowed = sekretessmarkeringAllowed;
-    }
-
     // ~ API
     // ==================================================================
 
@@ -188,7 +177,6 @@ public final class AuthoritiesConfiguration {
                 .append(format("Roles: %s%n", roles))
                 .append(format("Titles: %s%n", titles))
                 .append(format("TitleCodes: %s%n", titleCodes))
-                .append(format("SekretessmarkeringAllowed: %s%n", sekretessmarkeringAllowed))
                 .toString();
     }
 

@@ -24,7 +24,6 @@ import se.inera.intyg.infra.security.common.model.RequestOrigin;
 import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.infra.security.common.model.UserDetails;
 import se.inera.intyg.infra.security.common.model.UserOriginType;
-import se.inera.intyg.infra.security.common.service.Feature;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,8 +45,8 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
     /*
      * Constraints states
      */
-    private Optional<Feature[]> featureConstraints = Optional.empty();
-    private Optional<Feature[]> featureNotConstraints = Optional.empty();
+    private Optional<String[]> featureConstraints = Optional.empty();
+    private Optional<String[]> featureNotConstraints = Optional.empty();
 
     private Optional<UserOriginType[]> originConstraints = Optional.empty();
     private Optional<UserOriginType[]> originNotConstraints = Optional.empty();
@@ -69,11 +68,11 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
     public boolean isVerified() {
         errors.clear();
 
-        if (featureConstraints.isPresent() && Arrays.stream(featureConstraints.get()).noneMatch(fc -> this.checkHasFeature(fc))) {
+        if (featureConstraints.isPresent() && Arrays.stream(featureConstraints.get()).noneMatch(this::checkHasFeature)) {
             errors.add(formatFeatureError(featureConstraints.get(), "mandatory features '%s' was not present in users features."));
         }
 
-        if (featureNotConstraints.isPresent() && Arrays.stream(featureNotConstraints.get()).anyMatch(fc -> this.checkHasFeature(fc))) {
+        if (featureNotConstraints.isPresent() && Arrays.stream(featureNotConstraints.get()).anyMatch(this::checkHasFeature)) {
             errors.add(formatFeatureError(featureNotConstraints.get(), "forbidden features '%s' was present in users features."));
         }
 
@@ -132,10 +131,9 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
         return sb.toString();
     }
 
-    private String formatFeatureError(Feature[] features, String format) {
+    private String formatFeatureError(String[] features, String format) {
         return String.format(format,
                 Arrays.stream(features)
-                        .map(Feature::getName)
                         .map(s -> intygsTypeContext.isPresent()
                                 ? String.format("%s.%s", s, intygsTypeContext.get())
                                 : s)
@@ -157,29 +155,26 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
     }
 
     @Override
-    public AuthExpectationSpecification features(Feature... featureConstraints) {
+    public AuthExpectationSpecification features(String... featureConstraints) {
         this.featureConstraints = Optional.of(featureConstraints);
         return this;
     }
 
     @Override
-    public AuthExpectationSpecification notFeatures(Feature... invalidFeatureConstraints) {
+    public AuthExpectationSpecification notFeatures(String... invalidFeatureConstraints) {
         this.featureNotConstraints = Optional.of(invalidFeatureConstraints);
         return this;
     }
 
-    private boolean checkHasFeature(Feature featureConstraint) {
-
-        if (!this.user.getFeatures().contains(featureConstraint.getName())) {
+    private boolean checkHasFeature(String feature) {
+        if (!user.getFeatures().containsKey(feature)) {
             return false;
         }
-        // If intygscontext is given, the intygsmodule feature must also be present.
-        if (this.intygsTypeContext.isPresent()) {
-            String intygsModuleFeatureConstraint = featureConstraint.getName() + "." + this.intygsTypeContext.get();
-            return this.user.getFeatures().contains(intygsModuleFeatureConstraint);
+        if (intygsTypeContext.isPresent()) {
+            return user.getFeatures().get(feature).getIntygstyper().contains(intygsTypeContext.get());
+        } else {
+            return user.getFeatures().get(feature).getGlobal();
         }
-
-        return true;
     }
 
     @Override
@@ -242,7 +237,6 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
         }
         return this;
     }
-
 
     private boolean checkHasPrivilege(String privilegeConstraint) {
         final Privilege privilegeConfig = this.user.getAuthorities() != null ? this.user.getAuthorities().get(privilegeConstraint) : null;

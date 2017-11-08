@@ -18,57 +18,58 @@
  */
 package se.inera.intyg.infra.security.authorities.bootstrap;
 
-import static java.lang.String.format;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.nio.file.*;
-
+import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-
-import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
-
 import se.inera.intyg.infra.security.authorities.AuthoritiesConfiguration;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
+import se.inera.intyg.infra.security.authorities.FeaturesConfiguration;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
- * The authorities configuration is read from a YAML file which is
+ * The security configuration is read from two seperate YAML files which are
  * injected into the constructor upon creating an object of this class.
- *
- * The YAML file is parsed and the resulting configuration can be fetched
- * by calling the getConfiguration() method.
+ * <p>
+ * The YAML files are parsed and the resulting configuration can be fetched
+ * by calling the {@link SecurityConfigurationLoader#getAuthoritiesConfiguration()}
+ * and {@link SecurityConfigurationLoader#getFeaturesConfiguration()} method.
  */
 @Component("AuthoritiesConfigurationLoader")
-public class AuthoritiesConfigurationLoader implements InitializingBean {
+public class SecurityConfigurationLoader implements InitializingBean {
 
     @Value("${authorities.configuration.file}")
     private String authoritiesConfigurationFile;
 
-    private AuthoritiesConfiguration authoritiesConfiguration;
+    @Value("${features.configuration.file}")
+    private String featuresConfigurationFile;
 
-    private AuthoritiesConfigurationLoader() {
+    private AuthoritiesConfiguration authoritiesConfiguration;
+    private FeaturesConfiguration featuresConfiguration;
+
+    private SecurityConfigurationLoader() {
         // Uses @Value injected authoritiesConfigurationFile
     }
 
     /**
      * Constructor taking a path to the authorities configuration file.
      *
-     * @param authoritiesConfigurationFile
-     *            path to YAML configuration file
+     * @param authoritiesConfigurationFile path to YAML configuration file
      */
-    public AuthoritiesConfigurationLoader(String authoritiesConfigurationFile) {
+    public SecurityConfigurationLoader(String authoritiesConfigurationFile, String featuresConfigurationFile) {
         Assert.notNull(authoritiesConfigurationFile, "Authorities configuration file must not be null");
+        Assert.notNull(featuresConfigurationFile, "Features configuration file must not be null");
         this.authoritiesConfigurationFile = authoritiesConfigurationFile;
+        this.featuresConfigurationFile = featuresConfigurationFile;
     }
-
-    // ~ Public scope
-    // ======================================================================================================
 
     /**
      * Invoked by a BeanFactory after it has set all bean properties supplied
@@ -78,23 +79,19 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
      * possible when all bean properties have been set and to throw an
      * exception in the event of misconfiguration.
      *
-     * @throws Exception
-     *             in the event of misconfiguration (such
-     *             as failure to set an essential property) or if initialization fails.
+     * @throws Exception in the event of misconfiguration (such
+     *                   as failure to set an essential property) or if initialization fails.
      */
     @Override
     public void afterPropertiesSet() throws AuthoritiesException {
 
-        Resource resource = getResource(authoritiesConfigurationFile);
-        URI uri = null;
-
+        Resource authoritiesResource = getResource(authoritiesConfigurationFile);
+        Resource featuresResource = getResource(featuresConfigurationFile);
         try {
-            uri = resource.getURI();
-            authoritiesConfiguration = loadConfiguration(Paths.get(resource.getURI()));
+            authoritiesConfiguration = loadConfiguration(Paths.get(authoritiesResource.getURI()), AuthoritiesConfiguration.class);
+            featuresConfiguration = loadConfiguration(Paths.get(featuresResource.getURI()), FeaturesConfiguration.class);
         } catch (IOException ioe) {
-            throw new AuthoritiesException(
-                    format("Could not load authorities configuration file %s", uri != null ? uri.getPath() : authoritiesConfiguration),
-                    ioe);
+            throw new AuthoritiesException("Could not load configuration files", ioe);
         }
 
     }
@@ -104,22 +101,28 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
      *
      * @return
      */
-    public AuthoritiesConfiguration getConfiguration() {
+    public AuthoritiesConfiguration getAuthoritiesConfiguration() {
         return this.authoritiesConfiguration;
     }
 
-    // ~ Private scope
-    // ======================================================================================================
+    /**
+     * Gets the loaded features configuration.
+     *
+     * @return
+     */
+    public FeaturesConfiguration getFeaturesConfiguration() {
+        return this.featuresConfiguration;
+    }
 
     private Resource getResource(String location) {
         PathMatchingResourcePatternResolver r = new PathMatchingResourcePatternResolver();
         return r.getResource(location);
     }
 
-    private AuthoritiesConfiguration loadConfiguration(Path path) throws IOException {
+    private <T> T loadConfiguration(Path path, Class<T> type) throws IOException {
         Yaml yaml = new Yaml();
         try (InputStream in = Files.newInputStream(path)) {
-            return yaml.loadAs(in, AuthoritiesConfiguration.class);
+            return yaml.loadAs(in, type);
         }
     }
 
