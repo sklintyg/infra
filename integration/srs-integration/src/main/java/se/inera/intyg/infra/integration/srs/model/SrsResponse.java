@@ -23,19 +23,25 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 
 // CHECKSTYLE:OFF ParameterNumber
-public final class SrsResponse {
-    private final Integer predictionLevel;
-    private final String predictionDescription;
-    private final ImmutableList<String> atgarderObs;
-    private final ImmutableList<String> atgarderRek;
-    private final String statistikBild;
-    private final String diagnosisCode;
-    private final String predictionStatusCode;
-    private final String atgarderStatusCode;
-    private final String statistikStatusCode;
+public class SrsResponse {
+    private Integer predictionLevel;
+    private String predictionDescription;
+    private ImmutableList<String> atgarderObs;
+    private ImmutableList<String> atgarderRek;
+    private String statistikBild;
+    private String predictionDiagnosisCode;
+    private String predictionDiagnosisDescription;
+    private String predictionStatusCode;
+    private String atgarderDiagnosisCode;
+    private String atgarderDiagnosisDescription;
+    private String atgarderStatusCode;
+    private String statistikDiagnosisCode;
+    private String statistikDiagnosisDescription;
+    private String statistikStatusCode;
 
     public SrsResponse(Integer level, String description, List<String> atgarderObs, List<String> atgarderRek, String statistikBild,
-            String diagnosisCode, String predictionStatusCode, String atgarderStatusCode, String statistikStatusCode) {
+            String predictionDiagnosisCode, String predictionStatusCode, String atgarderDiagnosisCode, String atgarderStatusCode,
+            String statistikDiagnosisCode, String statistikStatusCode) {
         this.predictionLevel = level;
         this.predictionDescription = description;
         if (atgarderObs == null) {
@@ -49,9 +55,14 @@ public final class SrsResponse {
             this.atgarderRek = ImmutableList.copyOf(atgarderRek);
         }
         this.statistikBild = statistikBild;
-        this.diagnosisCode = diagnosisCode;
+
+        this.predictionDiagnosisCode = predictionDiagnosisCode;
         this.predictionStatusCode = predictionStatusCode;
+
+        this.atgarderDiagnosisCode = atgarderDiagnosisCode;
         this.atgarderStatusCode = atgarderStatusCode;
+
+        this.statistikDiagnosisCode = statistikDiagnosisCode;
         this.statistikStatusCode = statistikStatusCode;
     }
 
@@ -75,10 +86,6 @@ public final class SrsResponse {
         return statistikBild;
     }
 
-    public String getDiagnosisCode() {
-        return diagnosisCode;
-    }
-
     public String getPredictionStatusCode() {
         return predictionStatusCode;
     }
@@ -89,6 +96,42 @@ public final class SrsResponse {
 
     public String getStatistikStatusCode() {
         return statistikStatusCode;
+    }
+
+    public String getPredictionDiagnosisCode() {
+        return predictionDiagnosisCode;
+    }
+
+    public String getPredictionDiagnosisDescription() {
+        return predictionDiagnosisDescription;
+    }
+
+    public String getAtgarderDiagnosisCode() {
+        return atgarderDiagnosisCode;
+    }
+
+    public String getAtgarderDiagnosisDescription() {
+        return atgarderDiagnosisDescription;
+    }
+
+    public String getStatistikDiagnosisCode() {
+        return statistikDiagnosisCode;
+    }
+
+    public String getStatistikDiagnosisDescription() {
+        return statistikDiagnosisDescription;
+    }
+
+    public void setPredictionDiagnosisDescription(String predictionDiagnosisDescription) {
+        this.predictionDiagnosisDescription = predictionDiagnosisDescription;
+    }
+
+    public void setAtgarderDiagnosisDescription(String atgarderDiagnosisDescription) {
+        this.atgarderDiagnosisDescription = atgarderDiagnosisDescription;
+    }
+
+    public void setStatistikDiagnosisDescription(String statistikDiagnosisDescription) {
+        this.statistikDiagnosisDescription = statistikDiagnosisDescription;
     }
 }
 // CHECKSTYLE:ON ParameterNumber
