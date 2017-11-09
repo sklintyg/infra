@@ -92,7 +92,9 @@ public class SrsServiceImpl implements SrsService {
         String prediktionStatusCode = null;
         String statistikBild = null;
         String statistikStatusCode = null;
-        String responseDiagnosisCode = null;
+        String predictionDiagnosisCode = null;
+        String atgarderDiagnosisCode = null;
+        String statistikDiagnosisCode = null;
         List<String> atgarderObs = null;
         List<String> atgarderRek = null;
         String atgarderStatusCode = null;
@@ -106,19 +108,18 @@ public class SrsServiceImpl implements SrsService {
                 level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori().intValueExact();
                 description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
                 prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
-                responseDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
-                        .map(CVType::getCode).orElse(null);
+                predictionDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
+                        .map(CVType::getCode)
+                        .orElse(null);
             }
         }
 
         if (filter.isAtgardsrekommendation()) {
-            if (responseDiagnosisCode == null) {
-                responseDiagnosisCode = underlag.getAtgardsrekommendationer().getRekommendation().stream()
-                        .map(Atgardsrekommendation::getDiagnos)
-                        .filter(Objects::nonNull)
-                        .map(CVType::getCode)
-                        .findAny().orElse(null);
-            }
+            atgarderDiagnosisCode = underlag.getAtgardsrekommendationer().getRekommendation().stream()
+                    .map(Atgardsrekommendation::getDiagnos)
+                    .filter(Objects::nonNull)
+                    .map(CVType::getCode)
+                    .findAny().orElse(null);
             Map<Atgardstyp, List<Atgard>> tmp = underlag
                     .getAtgardsrekommendationer().getRekommendation().stream()
                     .flatMap(a -> a.getAtgard().stream())
@@ -144,23 +145,22 @@ public class SrsServiceImpl implements SrsService {
             // They are all for the same diagnosis and all have the same code.
             atgarderStatusCode = underlag.getAtgardsrekommendationer().getRekommendation().stream()
                     .map(Atgardsrekommendation::getAtgardsrekommendationstatus)
-                    .map(Atgardsrekommendationstatus::toString).findAny()
+                    .map(Atgardsrekommendationstatus::toString)
+                    .findAny()
                     .orElse(null);
         }
 
         if (filter.isStatistik() && underlag.getStatistik() != null
                 && !CollectionUtils.isEmpty(underlag.getStatistik().getStatistikbild())) {
-            if (responseDiagnosisCode == null) {
-                responseDiagnosisCode = Optional.ofNullable(underlag.getStatistik().getStatistikbild().get(0).getDiagnos())
-                        .map(CVType::getCode)
-                        .orElse(null);
-            }
+            statistikDiagnosisCode = Optional.ofNullable(underlag.getStatistik().getStatistikbild().get(0).getDiagnos())
+                    .map(CVType::getCode)
+                    .orElse(null);
             statistikBild = underlag.getStatistik().getStatistikbild().get(0).getBildadress();
             statistikStatusCode = underlag.getStatistik().getStatistikbild().get(0).getStatistikstatus().toString();
         }
 
-        return new SrsResponse(level, description, atgarderObs, atgarderRek, statistikBild, responseDiagnosisCode, prediktionStatusCode,
-                atgarderStatusCode, statistikStatusCode);
+        return new SrsResponse(level, description, atgarderObs, atgarderRek, statistikBild, predictionDiagnosisCode, prediktionStatusCode,
+                atgarderDiagnosisCode, atgarderStatusCode, statistikDiagnosisCode, statistikStatusCode);
     }
 
     @Override
