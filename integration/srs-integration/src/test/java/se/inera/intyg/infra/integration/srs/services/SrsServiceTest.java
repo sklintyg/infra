@@ -217,7 +217,7 @@ public class SrsServiceTest {
     }
 
     @Test
-    public void testGetSRSForSubsetDiagnosisCode() {
+    public void testGetSRSForHigherDiagnosisCode() {
         final SrsForDiagnosisResponse response = service.getSrsForDiagnose("M18.1");
         assertNotNull(response);
         assertEquals("M18", response.getDiagnosisCode());
@@ -225,8 +225,9 @@ public class SrsServiceTest {
         assertEquals(3, response.getAtgarderRek().size());
         assertEquals(Atgardsrekommendationstatus.DIAGNOSKOD_PA_HOGRE_NIVA.name(), response.getAtgarderStatusCode());
 
-        assertNull(response.getStatistikBild());
-        assertEquals(Statistikstatus.STATISTIK_SAKNAS.name(), response.getStatistikStatusCode());
+        assertEquals(Statistikstatus.DIAGNOSKOD_PA_HOGRE_NIVA.name(), response.getStatistikStatusCode());
+        assertEquals("M18", response.getStatistikDiagnosisCode());
+        assertTrue(response.getStatistikBild().contains("srs-statistics-stub/M18"));
     }
 
     @Test

@@ -32,9 +32,11 @@ public final class SrsForDiagnosisResponse {
     private final ImmutableList<String> atgarderRek;
     private final String statistikBild;
     private final String statistikStatusCode;
+    private final String statistikDiagnosisCode;
 
-    public SrsForDiagnosisResponse(List<String> atgarderObs, List<String> atgarderRek, String statistikBild,
-            String diagnosisCode, String atgarderStatusCode, String statistikStatusCode) {
+    public SrsForDiagnosisResponse(List<String> atgarderObs, List<String> atgarderRek,
+            String diagnosisCode, String atgarderStatusCode, String statistikBild, String statistikStatusCode,
+            String statistikDiagnosisCode) {
         if (atgarderObs == null) {
             this.atgarderObs = null;
         } else {
@@ -49,6 +51,7 @@ public final class SrsForDiagnosisResponse {
         this.diagnosisCode = diagnosisCode;
         this.atgarderStatusCode = atgarderStatusCode;
         this.statistikStatusCode = statistikStatusCode;
+        this.statistikDiagnosisCode = statistikDiagnosisCode;
     }
 
     public ImmutableList<String> getAtgarderObs() {
@@ -73,5 +76,9 @@ public final class SrsForDiagnosisResponse {
 
     public String getStatistikStatusCode() {
         return statistikStatusCode;
+    }
+
+    public String getStatistikDiagnosisCode() {
+        return statistikDiagnosisCode;
     }
 }

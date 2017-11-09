@@ -57,6 +57,7 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdata
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Statistikbild;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Statistikstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponderInterface;
@@ -245,6 +246,7 @@ public class SrsServiceImpl implements SrsService {
         String atgarderStatusCode;
         String statistikStatusCode;
         String statistikBild;
+        String statistikDiagnosCode;
 
         // Ugh. maybe we should create common xsd types for these common subtypes...
         final se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgardsrekommendation
@@ -270,15 +272,18 @@ public class SrsServiceImpl implements SrsService {
 
         if (response.getStatistik() != null
                 && !CollectionUtils.isEmpty(response.getStatistik().getStatistikbild())) {
-            statistikStatusCode = response.getStatistik().getStatistikbild().get(0).getStatistikstatus().name();
-            statistikBild = response.getStatistik().getStatistikbild().get(0).getBildadress();
+            final Statistikbild statistikbild = response.getStatistik().getStatistikbild().get(0);
+            statistikStatusCode = statistikbild.getStatistikstatus().name();
+            statistikBild = statistikbild.getBildadress();
+            statistikDiagnosCode = statistikbild.getDiagnos() != null ? statistikbild.getDiagnos().getCode() : null;
         } else {
             statistikStatusCode = Statistikstatus.STATISTIK_SAKNAS.name();
             statistikBild = null;
+            statistikDiagnosCode = null;
         }
 
-        return new SrsForDiagnosisResponse(atgarderObs, atgarderRek, statistikBild,
-                resultDiagnosCode, atgarderStatusCode, statistikStatusCode);
+        return new SrsForDiagnosisResponse(atgarderObs, atgarderRek,
+                resultDiagnosCode, atgarderStatusCode, statistikBild, statistikStatusCode, statistikDiagnosCode);
     }
 
     private GetSRSInformationRequestType createRequest(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode,

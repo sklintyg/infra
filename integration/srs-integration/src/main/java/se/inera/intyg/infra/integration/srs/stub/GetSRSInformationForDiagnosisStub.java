@@ -71,15 +71,23 @@ public class GetSRSInformationForDiagnosisStub implements GetSRSInformationForDi
             atgardsrekommendation.getAtgard().add(createAtgard("Atgardsforslag OBS 3 för diagnos " + diagnos.getCode(), Atgardstyp.OBS, 3));
         } else if (diagnos != null && getHigherMatchingDiagnoseCode(diagnos.getCode()).isPresent()) {
             // ..partial match on less specific diagnose (i.e the given diagnose is under this one e.g M18.1 -> M18)
-            atgardsrekommendation.setDiagnos(createDiagnos(getHigherMatchingDiagnoseCode(diagnos.getCode()).get()));
+            final Diagnos actualDiagnose = createDiagnos(getHigherMatchingDiagnoseCode(diagnos.getCode()).get());
+            atgardsrekommendation.setDiagnos(actualDiagnose);
             atgardsrekommendation.setAtgardsrekommendationstatus(Atgardsrekommendationstatus.DIAGNOSKOD_PA_HOGRE_NIVA);
-            atgardsrekommendation.getAtgard().add(createAtgard("Atgardsforslag REK 1 för diagnos " + diagnos.getCode(), Atgardstyp.REK, 1));
-            atgardsrekommendation.getAtgard().add(createAtgard("Atgardsforslag REK 2 för diagnos " + diagnos.getCode(), Atgardstyp.REK, 2));
-            atgardsrekommendation.getAtgard().add(createAtgard("Atgardsforslag REK 3 för diagnos " + diagnos.getCode(), Atgardstyp.REK, 3));
-            atgardsrekommendation.getAtgard().add(createAtgard("Atgardsforslag OBS 1 för diagnos " + diagnos.getCode(), Atgardstyp.OBS, 1));
-            atgardsrekommendation.getAtgard().add(createAtgard("Atgardsforslag OBS 2 för diagnos " + diagnos.getCode(), Atgardstyp.OBS, 2));
-            atgardsrekommendation.getAtgard().add(createAtgard("Atgardsforslag OBS 3 för diagnos " + diagnos.getCode(), Atgardstyp.OBS, 3));
+            atgardsrekommendation.getAtgard()
+                    .add(createAtgard("Atgardsforslag REK 1 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.REK, 1));
+            atgardsrekommendation.getAtgard()
+                    .add(createAtgard("Atgardsforslag REK 2 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.REK, 2));
+            atgardsrekommendation.getAtgard()
+                    .add(createAtgard("Atgardsforslag REK 3 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.REK, 3));
+            atgardsrekommendation.getAtgard()
+                    .add(createAtgard("Atgardsforslag OBS 1 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.OBS, 1));
+            atgardsrekommendation.getAtgard()
+                    .add(createAtgard("Atgardsforslag OBS 2 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.OBS, 2));
+            atgardsrekommendation.getAtgard()
+                    .add(createAtgard("Atgardsforslag OBS 3 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.OBS, 3));
         } else {
+            //No match
             atgardsrekommendation.setDiagnos(diagnos);
             atgardsrekommendation.setAtgardsrekommendationstatus(Atgardsrekommendationstatus.INFORMATION_SAKNAS);
         }
@@ -104,7 +112,19 @@ public class GetSRSInformationForDiagnosisStub implements GetSRSInformationForDi
             statistikbild.setDiagnos(diagnos);
 
             statistik.getStatistikbild().add(statistikbild);
+
+        } else if (diagnos != null && getHigherMatchingDiagnoseCode(diagnos.getCode()).isPresent()) {
+            // ..partial match on less specific diagnose (i.e the given diagnose is under this one e.g M18.1 -> M18)
+            final Diagnos actualDiagnose = createDiagnos(getHigherMatchingDiagnoseCode(diagnos.getCode()).get());
+            Statistikbild statistikbild = new Statistikbild();
+            statistikbild.setStatistikstatus(Statistikstatus.DIAGNOSKOD_PA_HOGRE_NIVA);
+            statistikbild.setAndringstidpunkt(LocalDateTime.of(2017, 1, 1, 1, 1));
+            statistikbild.setInkommandediagnos(diagnos);
+            statistikbild.setBildadress("/services/srs-statistics-stub/" + actualDiagnose.getCode() + ".jpg");
+            statistikbild.setDiagnos(actualDiagnose);
+            statistik.getStatistikbild().add(statistikbild);
         } else {
+            //No match
             Statistikbild statistikbild = new Statistikbild();
             statistikbild.setStatistikstatus(Statistikstatus.STATISTIK_SAKNAS);
             statistikbild.setAndringstidpunkt(LocalDateTime.of(2017, 1, 1, 1, 1));
