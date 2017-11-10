@@ -63,12 +63,12 @@ public class AuthoritiesHelper {
                 .collect(Collectors.toSet());
     }
 
-    public Set<String> getIntygstyperForModuleFeature(UserDetails user, Feature feature) {
+    public Set<String> getIntygstyperForModuleFeature(UserDetails user, Feature... features) {
         AuthoritiesValidator authoritiesValidator = new AuthoritiesValidator();
         List<String> knownIntygstyper = authoritiesResolver.getIntygstyper();
 
         return knownIntygstyper.stream()
-                .filter(typ -> authoritiesValidator.given(user, typ).features(feature).isVerified())
+                .filter(typ -> authoritiesValidator.given(user, typ).features(features).isVerified())
                 .collect(Collectors.toSet());
     }
 
