@@ -18,19 +18,9 @@
  */
 package se.inera.intyg.infra.integration.srs.services;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-
-import com.google.common.base.Strings;
-
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentResponseType;
@@ -41,10 +31,6 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDia
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgard;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendationstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardstyp;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Bedomningsunderlag;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationRequestType;
@@ -57,11 +43,15 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdata
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Statistikbild;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Statistikstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgard;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendation;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardstyp;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikbild;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
@@ -75,6 +65,14 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class SrsServiceImpl implements SrsService {
 
@@ -249,23 +247,23 @@ public class SrsServiceImpl implements SrsService {
         String statistikDiagnosCode;
 
         // Ugh. maybe we should create common xsd types for these common subtypes...
-        final se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgardsrekommendation
-                atgardsrekommendation = response.getAtgardsrekommendation();
+        final Atgardsrekommendation atgardsrekommendation = response
+                .getAtgardsrekommendation();
 
         // finter out all OBS types sorted by priority
         final List<String> atgarderObs = atgardsrekommendation.getAtgard().stream().sorted(Comparator
-                .comparing(se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgard::getPrioritet))
+                .comparing(Atgard::getPrioritet))
                 .filter(a -> a.getAtgardstyp()
-                        .equals(se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgardstyp.OBS))
-                .map(se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgard::getAtgardsforslag)
+                        .equals(Atgardstyp.OBS))
+                .map(Atgard::getAtgardsforslag)
                 .collect(Collectors.toList());
 
         // finter out all REK types sorted by priority
         final List<String> atgarderRek = atgardsrekommendation.getAtgard().stream().sorted(Comparator
-                .comparing(se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgard::getPrioritet))
+                .comparing(Atgard::getPrioritet))
                 .filter(a -> a.getAtgardstyp()
-                        .equals(se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgardstyp.REK))
-                .map(se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgard::getAtgardsforslag)
+                        .equals(Atgardstyp.REK))
+                .map(Atgard::getAtgardsforslag)
                 .collect(Collectors.toList());
 
         atgarderStatusCode = atgardsrekommendation.getAtgardsrekommendationstatus().name();

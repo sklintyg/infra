@@ -11,7 +11,7 @@ ext {
     rivtaHsaEmployeeSchemasVersion = "1.0.RC4.4"
     rivtaResidentMasterSchemasVersion = "1.1.3.5"
 
-    srsSchemasVersion = "0.0.7-beta4"
+    srsSchemasVersion = "0.0.7"
 
     schemasContractVersion = "2.1.5"
 

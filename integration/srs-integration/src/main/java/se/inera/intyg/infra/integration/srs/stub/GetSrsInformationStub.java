@@ -21,11 +21,7 @@ package se.inera.intyg.infra.integration.srs.stub;
 
 import org.apache.cxf.annotations.SchemaValidation;
 import org.jetbrains.annotations.NotNull;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgard;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendation;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendationer;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendationstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardstyp;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Bedomningsunderlag;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktion;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
@@ -35,10 +31,14 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRS
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Individ;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Prediktion;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Risksignal;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Statistik;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Statistikbild;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Statistikstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgard;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendation;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardstyp;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistik;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikbild;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 

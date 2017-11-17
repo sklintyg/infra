@@ -18,24 +18,23 @@
  */
 package se.inera.intyg.infra.integration.srs.stub;
 
-import java.math.BigInteger;
-import java.time.LocalDateTime;
-import java.util.Optional;
-
 import org.jetbrains.annotations.NotNull;
-
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgard;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgardsrekommendation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgardsrekommendationstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgardstyp;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Statistik;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Statistikbild;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Statistikstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgard;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendation;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardstyp;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistik;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikbild;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
+
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * Created by marced on 2017-11-06.
