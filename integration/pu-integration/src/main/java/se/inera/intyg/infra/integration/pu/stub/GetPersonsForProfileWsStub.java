@@ -20,47 +20,52 @@ package se.inera.intyg.infra.integration.pu.stub;
 
 import com.google.common.base.Joiner;
 import org.springframework.beans.factory.annotation.Autowired;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookupResidentForFullProfileResponseType;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookupResidentForFullProfileType;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v11.LookupResidentForFullProfileResponderInterface;
-import se.riv.population.residentmaster.types.v1.ResidentType;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileType;
+import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
+import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class LookupResidentForFullProfileWsStub implements LookupResidentForFullProfileResponderInterface {
+public class GetPersonsForProfileWsStub implements GetPersonsForProfileResponderInterface {
 
     @Autowired
     private ChronicleResidentStore personer;
 
     @Override
-    public LookupResidentForFullProfileResponseType lookupResidentForFullProfile(String logicalAddress,
-            LookupResidentForFullProfileType parameters) {
+    public GetPersonsForProfileResponseType getPersonsForProfile(String logicalAddress,
+            GetPersonsForProfileType parameters) {
 
         validate(logicalAddress, parameters);
-        LookupResidentForFullProfileResponseType response = new LookupResidentForFullProfileResponseType();
-        for (String id : parameters.getPersonId()) {
-            ResidentType residentPost = personer.getResident(id);
+        GetPersonsForProfileResponseType response = new GetPersonsForProfileResponseType();
+        for (String id : parameters.getPersonId().stream().map(pid -> pid.getExtension()).collect(Collectors.toList())) {
+            PersonRecordType residentPost = personer.getResident(id);
 
             if (residentPost != null) {
-                response.getResident().add(residentPost);
+                RequestedPersonRecordType requestedPersonRecordType = new RequestedPersonRecordType();
+                requestedPersonRecordType.setPersonRecord(residentPost);
+                requestedPersonRecordType.setRequestedPersonalIdentity(residentPost.getPersonalIdentity());
+                response.getRequestedPersonRecord().add(requestedPersonRecordType);
             }
         }
         return response;
     }
 
-    private void validate(String logicalAddress, LookupResidentForFullProfileType parameters) {
+    private void validate(String logicalAddress, GetPersonsForProfileType parameters) {
         List<String> messages = new ArrayList<>();
         if (logicalAddress == null || logicalAddress.length() == 0) {
             messages.add("logicalAddress can not be null or empty");
         }
         if (parameters == null) {
-            messages.add("LookupResidentForFullProfileType can not be null");
+            messages.add("GetPersonsForProfileType can not be null");
         } else {
             if (parameters.getPersonId().isEmpty()) {
                 messages.add("At least one personId must be supplied");
             }
-            if (parameters.getLookUpSpecification() == null) {
+            if (parameters.getProfile() == null) {
                 messages.add("LookupSpecification must be included");
             }
         }

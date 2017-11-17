@@ -19,12 +19,17 @@
 package se.inera.intyg.infra.integration.pu.services;
 
 import com.google.common.annotations.VisibleForTesting;
-import se.inera.intyg.schemas.contract.Personnummer;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
+import se.inera.intyg.schemas.contract.Personnummer;
+
+import java.util.List;
+import java.util.Map;
 
 public interface PUService {
 
     PersonSvar getPerson(Personnummer personId);
+    Map<String, PersonSvar> getPersons(List<Personnummer> personIds);
+
 
     @VisibleForTesting
     void clearCache();

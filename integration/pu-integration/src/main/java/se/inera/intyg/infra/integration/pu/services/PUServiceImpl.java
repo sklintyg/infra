@@ -29,26 +29,28 @@ import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
 import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.schemas.contract.Personnummer;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookUpSpecificationType;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookupResidentForFullProfileResponseType;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookupResidentForFullProfileType;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v11.LookupResidentForFullProfileResponderInterface;
-import se.riv.population.residentmaster.types.v1.AvregistreringTYPE;
-import se.riv.population.residentmaster.types.v1.AvregistreringsorsakKodTYPE;
-import se.riv.population.residentmaster.types.v1.JaNejTYPE;
-import se.riv.population.residentmaster.types.v1.NamnTYPE;
-import se.riv.population.residentmaster.types.v1.ResidentType;
-import se.riv.population.residentmaster.types.v1.SvenskAdressTYPE;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileType;
+import se.riv.strategicresourcemanagement.persons.person.v3.DeregistrationType;
+import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
+import se.riv.strategicresourcemanagement.persons.person.v3.LookupProfileType;
+import se.riv.strategicresourcemanagement.persons.person.v3.NameType;
+import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
+import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
+import se.riv.strategicresourcemanagement.persons.person.v3.ResidentialAddressType;
 
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
+import java.util.List;
+import java.util.Map;
 
 public class PUServiceImpl implements PUService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PUServiceImpl.class);
 
     @Autowired
-    private LookupResidentForFullProfileResponderInterface service;
+    private GetPersonsForProfileResponderInterface service;
 
     @Value("${putjanst.logicaladdress}")
     private String logicaladdress;
@@ -60,37 +62,42 @@ public class PUServiceImpl implements PUService {
     public PersonSvar getPerson(Personnummer personId) {
 
         LOG.debug("Looking up person '{}'", personId.getPnrHash());
-        LookupResidentForFullProfileType parameters = new LookupResidentForFullProfileType();
-        parameters.setLookUpSpecification(new LookUpSpecificationType());
-        parameters.getPersonId().add(personId.getPersonnummerWithoutDash());
+        GetPersonsForProfileType parameters = new GetPersonsForProfileType();
+        parameters.setProfile(LookupProfileType.P_1);
+        IIType personIdType = new IIType();
+        personIdType.setExtension(personId.getPersonnummerWithoutDash());
+        parameters.getPersonId().add(personIdType);
         try {
-            LookupResidentForFullProfileResponseType response = service.lookupResidentForFullProfile(logicaladdress, parameters);
-            if (response.getResident().isEmpty()) {
+            GetPersonsForProfileResponseType response = service.getPersonsForProfile(logicaladdress, parameters);
+            if (response == null || response.getRequestedPersonRecord() == null || response.getRequestedPersonRecord().isEmpty()) {
                 LOG.warn("No person '{}' found", personId.getPnrHash());
                 return new PersonSvar(null, PersonSvar.Status.NOT_FOUND);
             }
 
-            ResidentType resident = response.getResident().get(0);
-
-            NamnTYPE namn = resident.getPersonpost().getNamn();
-
-            SvenskAdressTYPE adress = resident.getPersonpost().getFolkbokforingsadress();
-
-            AvregistreringTYPE avregistrering = resident.getPersonpost().getAvregistrering();
-            boolean isDead = avregistrering != null && AvregistreringsorsakKodTYPE.AV == avregistrering.getAvregistreringsorsakKod();
+            RequestedPersonRecordType resident = response.getRequestedPersonRecord().get(0);
+            PersonRecordType personRecord = resident.getPersonRecord();
+            NameType namn = personRecord.getName();
 
             String adressRader = null;
             String postnr = null;
             String postort = null;
-            if (adress != null) {
-                adressRader = buildAdress(adress);
-                postnr = adress.getPostNr();
-                postort = adress.getPostort();
+            if (personRecord.getAddressInformation() != null && personRecord.getAddressInformation().getResidentialAddress() != null) {
+                ResidentialAddressType adress = personRecord.getAddressInformation().getResidentialAddress();
+                //String careOf = null;
+                if (adress != null) {
+                    //careOf = adress.getCareOf();
+                    adressRader = buildAdress(adress);
+                    postnr = adress.getPostalCode().toString();
+                    postort = adress.getCity();
+                }
             }
-            Person person = new Person(personId, resident.getSekretessmarkering() == JaNejTYPE.J, isDead, namn.getFornamn(),
-                    namn.getMellannamn(), namn.getEfternamn(), adressRader, postnr, postort);
-            LOG.debug("Person '{}' found", personId.getPnrHash());
 
+            DeregistrationType avregistrering = personRecord.getDeregistration();
+            boolean isDead = avregistrering != null && "TODOFIXME".equals(avregistrering.getDeregistrationReasonCode());
+
+            Person person = new Person(personId, personRecord.isProtectedPersonIndicator(), isDead, namn.getGivenName().getName(),
+                    namn.getMiddleName().getName(), namn.getSurname().getName(), adressRader, postnr, postort);
+            LOG.debug("Person '{}' found", personId.getPnrHash());
             return new PersonSvar(person, PersonSvar.Status.FOUND);
         } catch (SOAPFaultException e) {
             LOG.warn("SOAP fault occured, no person '{}' found.", personId.getPnrHash());
@@ -102,14 +109,19 @@ public class PUServiceImpl implements PUService {
     }
 
     @Override
+    public Map<String, PersonSvar> getPersons(List<Personnummer> personIds) {
+        return null;
+    }
+
+    @Override
     @VisibleForTesting
     @CacheEvict(value = "personCache", allEntries = true)
     public void clearCache() {
         LOG.debug("personCache cleared");
     }
 
-    private String buildAdress(SvenskAdressTYPE adress) {
-        return joinIgnoreNulls(", ", adress.getCareOf(), adress.getUtdelningsadress1(), adress.getUtdelningsadress2());
+    private String buildAdress(ResidentialAddressType adress) {
+        return joinIgnoreNulls(", ", adress.getCareOf(), adress.getPostalAddress1(), adress.getPostalAddress2());
     }
 
     private String joinIgnoreNulls(String separator, String... values) {

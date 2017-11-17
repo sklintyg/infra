@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.openhft.chronicle.map.ChronicleMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.riv.population.residentmaster.types.v1.ResidentType;
+import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -69,15 +69,15 @@ public class ChronicleResidentStore {
      *
      * @param residentType
      */
-    public void addResident(ResidentType residentType) {
-        String pnr = residentType.getPersonpost().getPersonId();
+    public void addResident(PersonRecordType residentType) {
+        String pnr = residentType.getPersonalIdentity().getExtension();
         if (residents.containsKey(pnr)) {
             residents.remove(pnr);
         }
-        residents.put(residentType.getPersonpost().getPersonId(), toJson(residentType));
+        residents.put(residentType.getPersonalIdentity().getExtension(), toJson(residentType));
     }
 
-    ResidentType getResident(String id) {
+    PersonRecordType getResident(String id) {
         if (!active) {
             throw new IllegalStateException("Stub is deactivated for testing purposes.");
         }
@@ -93,7 +93,7 @@ public class ChronicleResidentStore {
         }
     }
 
-    List<ResidentType> getAll() {
+    List<PersonRecordType> getAll() {
         if (!active) {
             throw new IllegalStateException("Stub is deactivated for testing purposes.");
         }
@@ -131,15 +131,15 @@ public class ChronicleResidentStore {
         }
     }
 
-    private ResidentType fromJson(String json) {
+    private PersonRecordType fromJson(String json) {
         try {
-            return objectMapper.readValue(json, ResidentType.class);
+            return objectMapper.readValue(json, PersonRecordType.class);
         } catch (IOException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
     }
 
-    private String toJson(ResidentType residentPost) {
+    private String toJson(PersonRecordType residentPost) {
 
         try {
             return objectMapper.writeValueAsString(residentPost);
@@ -148,7 +148,7 @@ public class ChronicleResidentStore {
         }
     }
 
-    private List<ResidentType> fromJson(Collection<String> xml) {
+    private List<PersonRecordType> fromJson(Collection<String> xml) {
         return xml.stream().map(this::fromJson).collect(Collectors.toList());
     }
 

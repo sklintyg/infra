@@ -20,22 +20,22 @@ package se.inera.intyg.infra.integration.pu.stub;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.integration.pu.services.PUService;
-import se.riv.population.residentmaster.types.v1.AvregistreringTYPE;
-import se.riv.population.residentmaster.types.v1.AvregistreringsorsakKodTYPE;
-import se.riv.population.residentmaster.types.v1.JaNejTYPE;
-import se.riv.population.residentmaster.types.v1.ResidentType;
+import se.riv.strategicresourcemanagement.persons.person.v3.DeregistrationType;
+import se.riv.strategicresourcemanagement.persons.person.v3.PartialDateType;
+import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.PUT;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author eriklupander
@@ -75,7 +75,7 @@ public class PuStubRestApi {
     @PUT
     @Path("/person")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updatePerson(ResidentType person) {
+    public Response updatePerson(PersonRecordType person) {
         puService.clearCache();
         residentStore.addResident(person);
         return Response.ok().build();
@@ -89,22 +89,17 @@ public class PuStubRestApi {
         puService.clearCache();
 
         String xmlValue;
-        if ("".equals(value) || "true".equalsIgnoreCase(value)) {
-            xmlValue = "J";
-        } else if ("false".equalsIgnoreCase(value)) {
-            xmlValue = "N";
-        } else {
+        if (!("false".equals(value) || "true".equalsIgnoreCase(value))) {
             return Response.status(BAD_REQUEST).entity("Sekretessmarkering has to be set [true] or not set [false]").build();
         }
-        ResidentType residentType = residentStore.getResident(personId);
+
+        PersonRecordType residentType = residentStore.getResident(personId);
         if (residentType == null) {
             return Response.status(BAD_REQUEST).entity("No identity found for supplied personId").build();
         }
-        JaNejTYPE newValue = JaNejTYPE.fromValue(xmlValue);
-        JaNejTYPE oldValue = residentType.getSekretessmarkering();
-        residentType.setSekretessmarkering(newValue);
+        residentType.setProtectedPersonIndicator(Boolean.valueOf(value));
         residentStore.addResident(residentType);
-        return Response.ok().entity("Value was set to \"" + newValue.value() + "\", from old value \"" + oldValue.value() + "\"").build();
+        return Response.ok().entity("Value was set to \"" + value + "\", from old value \"" + value + "\"").build();
     }
 
     @GET
@@ -120,7 +115,7 @@ public class PuStubRestApi {
         } else {
             return Response.status(BAD_REQUEST).entity("avliden status has to be set [true] or not set [false]").build();
         }
-        ResidentType resident = residentStore.getResident(personId);
+        PersonRecordType resident = residentStore.getResident(personId);
         if (resident == null) {
             return Response.status(BAD_REQUEST).entity("No identity found for supplied personId").build();
         }
@@ -161,17 +156,19 @@ public class PuStubRestApi {
         return Response.ok().build();
     }
 
-    private boolean getAndSetAvliden(ResidentType resident, boolean newValue) {
-        AvregistreringTYPE avreg = resident.getPersonpost().getAvregistrering();
-        boolean oldValue = avreg != null && avreg.getAvregistreringsorsakKod() == AvregistreringsorsakKodTYPE.AV;
+    private boolean getAndSetAvliden(PersonRecordType resident, boolean newValue) {
+        DeregistrationType avreg = resident.getDeregistration();
+        boolean oldValue = avreg != null && avreg.getDeregistrationReasonCode().equals("TODOFIXTHIS");
         if (newValue) { // is avliden
-            avreg = new AvregistreringTYPE();
-            avreg.setAvregistreringsdatum(LocalDate.now().toString());
-            avreg.setAvregistreringsorsakKod(AvregistreringsorsakKodTYPE.AV);
+            avreg = new DeregistrationType();
+            PartialDateType pdt = new PartialDateType();
+            pdt.setValue(LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE));
+            avreg.setDeregistrationDate(pdt);
+            avreg.setDeregistrationReasonCode("TODOFIXTHIS");
         } else {
             avreg = null;
         }
-        resident.getPersonpost().setAvregistrering(avreg);
+        resident.setDeregistration(avreg);
         residentStore.addResident(resident);
         return oldValue;
     }

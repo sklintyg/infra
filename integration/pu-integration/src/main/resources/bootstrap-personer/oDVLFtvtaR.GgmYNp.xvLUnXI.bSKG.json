@@ -1,15 +1,1 @@
-{
-    "sekretessmarkering": "N",
-    "personpost": {
-        "personId": "190001019801",
-        "namn": {
-            "fornamn": "oDVLFtvtaR GgmYNp xvLUnXI",
-            "efternamn": "bSKG"
-        },
-        "folkbokforingsadress": {
-            "utdelningsadress2": "XXXXXXXX",
-            "postNr": 99999,
-            "postort": "XXXXXXXX"
-        }
-    }
-}
+{"personalIdentity":{"extension":"190001019801"},"protectedPersonIndicator":false,"testIndicator":false,"primaryIdentity":false,"name":{"givenName":{"name":"oDVLFtvtaR GgmYNp xvLUnXI"},"middleName":{},"surname":{"name":"bSKG"}},"addressInformation":{"residentialAddress":{"postalAddress2":"XXXXXXXX","postalCode":99999,"city":"XXXXXXXX"}}}
