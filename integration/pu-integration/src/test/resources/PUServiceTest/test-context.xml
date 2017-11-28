@@ -21,7 +21,7 @@
     xmlns:cache="http://www.springframework.org/schema/cache"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
-  <cache:annotation-driven/>
+  <!-- <cache:annotation-driven/>  -->
   <bean class="se.inera.intyg.infra.cache.core.BasicCacheConfiguration">
     <property name="bindport" value="47603"/>
     <property name="igniteIpAddresses" value="127.0.0.1:47603"/>

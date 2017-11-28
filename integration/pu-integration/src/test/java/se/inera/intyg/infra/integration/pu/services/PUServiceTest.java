@@ -18,16 +18,16 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
+import org.apache.ignite.cache.spring.SpringCacheManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.aop.framework.Advised;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.util.ReflectionTestUtils;
+import se.inera.intyg.infra.cache.core.BasicCacheConfiguration;
 import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.schemas.contract.Personnummer;
@@ -58,10 +58,15 @@ import static org.mockito.Mockito.when;
 public class PUServiceTest {
 
     @Autowired
-    private PUService service;
+    private PUServiceImpl service;
 
     @Autowired
     private GetPersonsForProfileResponderInterface residentService;
+
+    private SpringCacheManager cacheManager;
+
+    @Autowired
+    private BasicCacheConfiguration basicCacheConfiguration;
 
     private static IIType iiType = new IIType();
 
@@ -72,6 +77,7 @@ public class PUServiceTest {
 
     @Before
     public void setup() {
+        cacheManager = basicCacheConfiguration.cacheManager();
         service.clearCache();
     }
 
@@ -169,7 +175,8 @@ public class PUServiceTest {
         GetPersonsForProfileResponderInterface mockResidentService = mock(GetPersonsForProfileResponderInterface.class);
 
         when(mockResidentService.getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class))).thenReturn(response);
-        ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", mockResidentService);
+        //ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", mockResidentService);
+        service.setService(mockResidentService);
 
         // First request should call the lookup service
         Person person = service.getPerson(new Personnummer("19121212-1212")).getPerson();
@@ -191,7 +198,8 @@ public class PUServiceTest {
         assertEquals("12345", person.getPostnummer());
         assertEquals("Småmåla", person.getPostort());
 
-        ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", residentService);
+//        ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", residentService);
+        service.setService(residentService);
     }
 
     @Test
@@ -210,7 +218,8 @@ public class PUServiceTest {
                 .thenThrow(new SOAPFaultException(SOAPFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL).createFault()))
                 .thenThrow(new WebServiceException())
                 .thenReturn(response);
-        ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", mockResidentService);
+       // ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", mockResidentService);
+        service.setService(mockResidentService);
 
         // First request should call the lookup service
         PersonSvar personsvar = service.getPerson(new Personnummer("19121212-1212"));
@@ -249,6 +258,7 @@ public class PUServiceTest {
         assertEquals("12345", person.getPostnummer());
         assertEquals("Småmåla", person.getPostort());
 
-        ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", residentService);
+       // ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", residentService);
+        service.setService(residentService);
     }
 }

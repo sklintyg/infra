@@ -19,12 +19,12 @@
 package se.inera.intyg.infra.integration.pu.services;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.apache.ignite.cache.spring.SpringCacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.Cache;
 import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
 import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
@@ -42,6 +42,8 @@ import se.riv.strategicresourcemanagement.persons.person.v3.ResidentialAddressTy
 
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,16 +54,27 @@ public class PUServiceImpl implements PUService {
     @Autowired
     private GetPersonsForProfileResponderInterface service;
 
+    @Autowired
+    private SpringCacheManager cacheManager;
+
     @Value("${putjanst.logicaladdress}")
     private String logicaladdress;
 
     @Override
-    @Cacheable(value = PuCacheConfiguration.PERSON_CACHE_NAME,
-            key = "#personId",
-            unless = "#result.status == T(se.inera.intyg.infra.integration.pu.model.PersonSvar$Status).ERROR")
+//    @Cacheable(value = PuCacheConfiguration.PERSON_CACHE_NAME,
+//            key = "#personId",
+//            unless = "#result.status == T(se.inera.intyg.infra.integration.pu.model.PersonSvar$Status).ERROR")
     public PersonSvar getPerson(Personnummer personId) {
 
         LOG.debug("Looking up person '{}'", personId.getPnrHash());
+
+        // Check cache
+        PersonSvar cachedPersonSvar = queryCache(personId);
+        if (cachedPersonSvar != null) {
+            return cachedPersonSvar;
+        }
+
+
         GetPersonsForProfileType parameters = new GetPersonsForProfileType();
         parameters.setProfile(LookupProfileType.P_1);
         IIType personIdType = new IIType();
@@ -75,30 +88,7 @@ public class PUServiceImpl implements PUService {
             }
 
             RequestedPersonRecordType resident = response.getRequestedPersonRecord().get(0);
-            PersonRecordType personRecord = resident.getPersonRecord();
-            NameType namn = personRecord.getName();
-
-            String adressRader = null;
-            String postnr = null;
-            String postort = null;
-            if (personRecord.getAddressInformation() != null && personRecord.getAddressInformation().getResidentialAddress() != null) {
-                ResidentialAddressType adress = personRecord.getAddressInformation().getResidentialAddress();
-                //String careOf = null;
-                if (adress != null) {
-                    //careOf = adress.getCareOf();
-                    adressRader = buildAdress(adress);
-                    postnr = adress.getPostalCode().toString();
-                    postort = adress.getCity();
-                }
-            }
-
-            DeregistrationType avregistrering = personRecord.getDeregistration();
-            boolean isDead = avregistrering != null && "TODOFIXME".equals(avregistrering.getDeregistrationReasonCode());
-
-            Person person = new Person(personId, personRecord.isProtectedPersonIndicator(), isDead, namn.getGivenName().getName(),
-                    namn.getMiddleName().getName(), namn.getSurname().getName(), adressRader, postnr, postort);
-            LOG.debug("Person '{}' found", personId.getPnrHash());
-            return new PersonSvar(person, PersonSvar.Status.FOUND);
+            return buildPersonSvarFromPersonTypeRecord(personId, resident);
         } catch (SOAPFaultException e) {
             LOG.warn("SOAP fault occured, no person '{}' found.", personId.getPnrHash());
             return new PersonSvar(null, PersonSvar.Status.ERROR);
@@ -108,16 +98,115 @@ public class PUServiceImpl implements PUService {
         }
     }
 
+
     @Override
-    public Map<String, PersonSvar> getPersons(List<Personnummer> personIds) {
+    public Map<Personnummer, PersonSvar> getPersons(List<Personnummer> personIds) {
+        Map<Personnummer, PersonSvar> responseMap = new HashMap<>();
+        List<Personnummer> toQuery = new ArrayList<>();
+
+        // Query cache first, put not found ones into toQuery list.
+        for (Personnummer pnr : personIds) {
+            PersonSvar personSvar = queryCache(pnr);
+            if (personSvar != null) {
+                responseMap.put(pnr, personSvar);
+            } else {
+                toQuery.add(pnr);
+            }
+        }
+
+        // Build request
+        GetPersonsForProfileType parameters = new GetPersonsForProfileType();
+        parameters.setProfile(LookupProfileType.P_1);
+        for (Personnummer pnr : toQuery) {
+            parameters.getPersonId().add(buildIIType(pnr));
+        }
+
+        // Execute request
+        GetPersonsForProfileResponseType response = service.getPersonsForProfile(logicaladdress, parameters);
+        if (response == null || response.getRequestedPersonRecord() == null || response.getRequestedPersonRecord().size() == 0) {
+            LOG.warn("Problem fetching PersonSvar from PU-service. Returning cached items only.");
+            return responseMap;
+        }
+
+        // Iterate over response objects, transform and store in Map.
+        for (RequestedPersonRecordType requestedPersonRecordType : response.getRequestedPersonRecord()) {
+            Personnummer pnrFromResponse = new Personnummer(requestedPersonRecordType.getRequestedPersonalIdentity().getExtension());
+            PersonSvar personSvar = buildPersonSvarFromPersonTypeRecord(pnrFromResponse, requestedPersonRecordType);
+            responseMap.put(pnrFromResponse, personSvar);
+        }
+
+        // We need to "diff" the list of requested PNR with the ones present in the hashmap. For any missing ones, we
+        // put an NOT_FOUND in.
+        if (personIds.size() != responseMap.size()) {
+            for (Personnummer pnr : personIds) {
+                if (!responseMap.containsKey(pnr)) {
+                    PersonSvar notFoundPersonSvar = new PersonSvar(null, PersonSvar.Status.NOT_FOUND);
+                    responseMap.put(pnr, notFoundPersonSvar);
+                }
+            }
+            LOG.warn("One or more personnummer did not yield a response from our PU cache or the PU-service. They have been added as NOT_FOUND entries.");
+        }
+
+        return responseMap;
+    }
+
+    private IIType buildIIType(Personnummer pnr) {
+        IIType iiType = new IIType();
+        iiType.setExtension(pnr.getPersonnummerWithoutDash());
+        return iiType;
+    }
+
+    private PersonSvar buildPersonSvarFromPersonTypeRecord(Personnummer personId, RequestedPersonRecordType resident) {
+        PersonRecordType personRecord = resident.getPersonRecord();
+        NameType namn = personRecord.getName();
+
+        String adressRader = null;
+        String postnr = null;
+        String postort = null;
+        if (personRecord.getAddressInformation() != null && personRecord.getAddressInformation().getResidentialAddress() != null) {
+            ResidentialAddressType adress = personRecord.getAddressInformation().getResidentialAddress();
+            //String careOf = null;
+            if (adress != null) {
+                //careOf = adress.getCareOf();
+                adressRader = buildAdress(adress);
+                postnr = adress.getPostalCode().toString();
+                postort = adress.getCity();
+            }
+        }
+
+        DeregistrationType avregistrering = personRecord.getDeregistration();
+        boolean isDead = avregistrering != null && "TODOFIXME".equals(avregistrering.getDeregistrationReasonCode());
+
+        Person person = new Person(personId, personRecord.isProtectedPersonIndicator(), isDead, namn.getGivenName().getName(),
+                namn.getMiddleName().getName(), namn.getSurname().getName(), adressRader, postnr, postort);
+        LOG.debug("Person '{}' found", personId.getPnrHash());
+        PersonSvar personSvar = new PersonSvar(person, PersonSvar.Status.FOUND);
+        storeIfAbsent(personSvar);
+        return personSvar;
+    }
+
+    private void storeIfAbsent(PersonSvar personSvar) {
+        Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
+        cache.putIfAbsent(personSvar.getPerson().getPersonnummer(), personSvar);
+    }
+
+    private PersonSvar queryCache(Personnummer personId) {
+        Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
+        PersonSvar personSvar = cache.get(personId, PersonSvar.class);
+        if (personSvar != null) {
+            return personSvar;
+        }
         return null;
     }
 
+
     @Override
     @VisibleForTesting
-    @CacheEvict(value = "personCache", allEntries = true)
+   // @CacheEvict(value = "personCache", allEntries = true)
     public void clearCache() {
         LOG.debug("personCache cleared");
+        Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
+        cache.clear();
     }
 
     private String buildAdress(ResidentialAddressType adress) {
@@ -135,5 +224,9 @@ public class PUServiceImpl implements PUService {
             }
         }
         return builder.toString();
+    }
+
+    public void setService(GetPersonsForProfileResponderInterface service) {
+        this.service = service;
     }
 }

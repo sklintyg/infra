@@ -27,8 +27,20 @@ import java.util.Map;
 
 public interface PUService {
 
+    /**
+     * Retrieves a person object from the PU-service.
+     *
+     * @param personId
+     * @return
+     */
     PersonSvar getPerson(Personnummer personId);
-    Map<String, PersonSvar> getPersons(List<Personnummer> personIds);
+
+    /**
+     *
+     * @param personIds
+     * @return
+     */
+    Map<Personnummer, PersonSvar> getPersons(List<Personnummer> personIds);
 
 
     @VisibleForTesting
