@@ -97,7 +97,7 @@ public class PUServiceImpl implements PUService {
     @Override
     public Map<Personnummer, PersonSvar> getPersons(List<Personnummer> personIds) {
         Map<Personnummer, PersonSvar> responseMap = new HashMap<>();
-        if (personIds == null || personIds.size() > 0) {
+        if (personIds == null || personIds.size() == 0) {
             return responseMap;
         }
         List<Personnummer> toQuery = new ArrayList<>();
