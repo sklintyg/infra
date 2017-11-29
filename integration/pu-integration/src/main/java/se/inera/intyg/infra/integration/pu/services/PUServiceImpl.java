@@ -61,9 +61,6 @@ public class PUServiceImpl implements PUService {
     private String logicaladdress;
 
     @Override
-//    @Cacheable(value = PuCacheConfiguration.PERSON_CACHE_NAME,
-//            key = "#personId",
-//            unless = "#result.status == T(se.inera.intyg.infra.integration.pu.model.PersonSvar$Status).ERROR")
     public PersonSvar getPerson(Personnummer personId) {
 
         LOG.debug("Looking up person '{}'", personId.getPnrHash());
@@ -73,7 +70,6 @@ public class PUServiceImpl implements PUService {
         if (cachedPersonSvar != null) {
             return cachedPersonSvar;
         }
-
 
         GetPersonsForProfileType parameters = new GetPersonsForProfileType();
         parameters.setProfile(LookupProfileType.P_1);
@@ -98,10 +94,12 @@ public class PUServiceImpl implements PUService {
         }
     }
 
-
     @Override
     public Map<Personnummer, PersonSvar> getPersons(List<Personnummer> personIds) {
         Map<Personnummer, PersonSvar> responseMap = new HashMap<>();
+        if (personIds == null || personIds.size() > 0) {
+            return responseMap;
+        }
         List<Personnummer> toQuery = new ArrayList<>();
 
         // Query cache first, put not found ones into toQuery list.
@@ -112,6 +110,11 @@ public class PUServiceImpl implements PUService {
             } else {
                 toQuery.add(pnr);
             }
+        }
+
+        // If everything was cached, just return.
+        if (toQuery.size() == 0) {
+            return responseMap;
         }
 
         // Build request
@@ -144,7 +147,8 @@ public class PUServiceImpl implements PUService {
                     responseMap.put(pnr, notFoundPersonSvar);
                 }
             }
-            LOG.warn("One or more personnummer did not yield a response from our PU cache or the PU-service. They have been added as NOT_FOUND entries.");
+            LOG.warn(
+                    "One or more personnummer did not yield a response from our PU cache or the PU-service. They have been added as NOT_FOUND entries.");
         }
 
         return responseMap;
@@ -165,9 +169,9 @@ public class PUServiceImpl implements PUService {
         String postort = null;
         if (personRecord.getAddressInformation() != null && personRecord.getAddressInformation().getResidentialAddress() != null) {
             ResidentialAddressType adress = personRecord.getAddressInformation().getResidentialAddress();
-            //String careOf = null;
+            // String careOf = null;
             if (adress != null) {
-                //careOf = adress.getCareOf();
+                // careOf = adress.getCareOf();
                 adressRader = buildAdress(adress);
                 postnr = adress.getPostalCode().toString();
                 postort = adress.getCity();
@@ -199,10 +203,9 @@ public class PUServiceImpl implements PUService {
         return null;
     }
 
-
     @Override
     @VisibleForTesting
-   // @CacheEvict(value = "personCache", allEntries = true)
+    // @CacheEvict(value = "personCache", allEntries = true)
     public void clearCache() {
         LOG.debug("personCache cleared");
         Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
