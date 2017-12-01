@@ -19,26 +19,22 @@
 package se.inera.intyg.infra.integration.pu.services;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.apache.ignite.cache.spring.SpringCacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
-import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
+import se.inera.intyg.infra.integration.pu.util.PersonConverter;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileType;
-import se.riv.strategicresourcemanagement.persons.person.v3.DeregistrationType;
 import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
 import se.riv.strategicresourcemanagement.persons.person.v3.LookupProfileType;
-import se.riv.strategicresourcemanagement.persons.person.v3.NameType;
-import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
-import se.riv.strategicresourcemanagement.persons.person.v3.ResidentialAddressType;
 
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
@@ -55,10 +51,12 @@ public class PUServiceImpl implements PUService {
     private GetPersonsForProfileResponderInterface service;
 
     @Autowired
-    private SpringCacheManager cacheManager;
+    private CacheManager cacheManager;
 
     @Value("${putjanst.logicaladdress}")
     private String logicaladdress;
+
+    private PersonConverter personConverter = new PersonConverter();
 
     @Override
     public PersonSvar getPerson(Personnummer personId) {
@@ -84,7 +82,9 @@ public class PUServiceImpl implements PUService {
             }
 
             RequestedPersonRecordType resident = response.getRequestedPersonRecord().get(0);
-            return buildPersonSvarFromPersonTypeRecord(personId, resident);
+            PersonSvar personSvar = personConverter.toPersonSvar(personId, resident.getPersonRecord());
+            storeIfAbsent(personSvar);
+            return personSvar;
         } catch (SOAPFaultException e) {
             LOG.warn("SOAP fault occured, no person '{}' found.", personId.getPnrHash());
             return new PersonSvar(null, PersonSvar.Status.ERROR);
@@ -134,7 +134,7 @@ public class PUServiceImpl implements PUService {
         // Iterate over response objects, transform and store in Map.
         for (RequestedPersonRecordType requestedPersonRecordType : response.getRequestedPersonRecord()) {
             Personnummer pnrFromResponse = new Personnummer(requestedPersonRecordType.getRequestedPersonalIdentity().getExtension());
-            PersonSvar personSvar = buildPersonSvarFromPersonTypeRecord(pnrFromResponse, requestedPersonRecordType);
+            PersonSvar personSvar = personConverter.toPersonSvar(pnrFromResponse, requestedPersonRecordType.getPersonRecord());
             responseMap.put(pnrFromResponse, personSvar);
         }
 
@@ -160,37 +160,38 @@ public class PUServiceImpl implements PUService {
         return iiType;
     }
 
-    private PersonSvar buildPersonSvarFromPersonTypeRecord(Personnummer personId, RequestedPersonRecordType resident) {
-        PersonRecordType personRecord = resident.getPersonRecord();
-        NameType namn = personRecord.getName();
-
-        String adressRader = null;
-        String postnr = null;
-        String postort = null;
-        if (personRecord.getAddressInformation() != null && personRecord.getAddressInformation().getResidentialAddress() != null) {
-            ResidentialAddressType adress = personRecord.getAddressInformation().getResidentialAddress();
-            // String careOf = null;
-            if (adress != null) {
-                // careOf = adress.getCareOf();
-                adressRader = buildAdress(adress);
-                postnr = adress.getPostalCode().toString();
-                postort = adress.getCity();
-            }
-        }
-
-        DeregistrationType avregistrering = personRecord.getDeregistration();
-        boolean isDead = avregistrering != null && "TODOFIXME".equals(avregistrering.getDeregistrationReasonCode());
-
-        String firstName = namn.getGivenName() != null ? namn.getGivenName().getName() : null;
-        String middleName = namn.getMiddleName() != null ? namn.getMiddleName().getName() : null;
-        String lastName = namn.getSurname() != null ? namn.getSurname().getName() : null;
-        Person person = new Person(personId, personRecord.isProtectedPersonIndicator(), isDead, firstName,
-                middleName, lastName, adressRader, postnr, postort);
-        LOG.debug("Person '{}' found", personId.getPnrHash());
-        PersonSvar personSvar = new PersonSvar(person, PersonSvar.Status.FOUND);
-        storeIfAbsent(personSvar);
-        return personSvar;
-    }
+    // private PersonSvar buildPersonSvarFromPersonTypeRecord(Personnummer personId, RequestedPersonRecordType resident) {
+    // PersonRecordType personRecord = resident.getPersonRecord();
+    // NameType namn = personRecord.getName();
+    //
+    // String adressRader = null;
+    // String postnr = null;
+    // String postort = null;
+    // if (personRecord.getAddressInformation() != null && personRecord.getAddressInformation().getResidentialAddress() !=
+    // null) {
+    // ResidentialAddressType adress = personRecord.getAddressInformation().getResidentialAddress();
+    // // String careOf = null;
+    // if (adress != null) {
+    // // careOf = adress.getCareOf();
+    // adressRader = buildAdress(adress);
+    // postnr = adress.getPostalCode().toString();
+    // postort = adress.getCity();
+    // }
+    // }
+    //
+    // DeregistrationType avregistrering = personRecord.getDeregistration();
+    // boolean isDead = avregistrering != null && "TODOFIXME".equals(avregistrering.getDeregistrationReasonCode());
+    //
+    // String firstName = namn.getGivenName() != null ? namn.getGivenName().getName() : null;
+    // String middleName = namn.getMiddleName() != null ? namn.getMiddleName().getName() : null;
+    // String lastName = namn.getSurname() != null ? namn.getSurname().getName() : null;
+    // Person person = new Person(personId, personRecord.isProtectedPersonIndicator(), isDead, firstName,
+    // middleName, lastName, adressRader, postnr, postort);
+    // LOG.debug("Person '{}' found", personId.getPnrHash());
+    // PersonSvar personSvar = new PersonSvar(person, PersonSvar.Status.FOUND);
+    // storeIfAbsent(personSvar);
+    // return personSvar;
+    // }
 
     private void storeIfAbsent(PersonSvar personSvar) {
         Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
@@ -213,23 +214,6 @@ public class PUServiceImpl implements PUService {
         LOG.debug("personCache cleared");
         Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
         cache.clear();
-    }
-
-    private String buildAdress(ResidentialAddressType adress) {
-        return joinIgnoreNulls(", ", adress.getCareOf(), adress.getPostalAddress1(), adress.getPostalAddress2());
-    }
-
-    private String joinIgnoreNulls(String separator, String... values) {
-        StringBuilder builder = new StringBuilder();
-        for (String value : values) {
-            if (value != null) {
-                if (builder.length() > 0) {
-                    builder.append(separator);
-                }
-                builder.append(value);
-            }
-        }
-        return builder.toString();
     }
 
     public void setService(GetPersonsForProfileResponderInterface service) {
