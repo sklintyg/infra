@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.openhft.chronicle.map.ChronicleMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 
 import javax.annotation.PostConstruct;
@@ -71,23 +72,26 @@ public class ChronicleResidentStore {
      */
     public void addResident(PersonRecordType residentType) {
         String pnr = residentType.getPersonalIdentity().getExtension();
+        pnr = new Personnummer(pnr).getPersonnummerWithoutDash();
         if (residents.containsKey(pnr)) {
             residents.remove(pnr);
         }
-        residents.put(residentType.getPersonalIdentity().getExtension(), toJson(residentType));
+        residents.put(pnr, toJson(residentType));
     }
 
-    PersonRecordType getResident(String id) {
+    PersonRecordType getResident(String pnr) {
         if (!active) {
             throw new IllegalStateException("Stub is deactivated for testing purposes.");
         }
-        if (!residents.containsKey(id)) {
+        pnr = new Personnummer(pnr).getPersonnummerWithoutDash();
+        if (!residents.containsKey(pnr)) {
             return null;
         }
-        return fromJson(residents.get(id));
+        return fromJson(residents.get(pnr));
     }
 
     void removeResident(String personId) {
+        personId = new Personnummer(personId).getPersonnummerWithoutDash();
         if (residents.containsKey(personId)) {
             residents.remove(personId);
         }

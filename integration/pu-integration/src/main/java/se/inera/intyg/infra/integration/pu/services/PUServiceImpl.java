@@ -181,8 +181,11 @@ public class PUServiceImpl implements PUService {
         DeregistrationType avregistrering = personRecord.getDeregistration();
         boolean isDead = avregistrering != null && "TODOFIXME".equals(avregistrering.getDeregistrationReasonCode());
 
-        Person person = new Person(personId, personRecord.isProtectedPersonIndicator(), isDead, namn.getGivenName().getName(),
-                namn.getMiddleName().getName(), namn.getSurname().getName(), adressRader, postnr, postort);
+        String firstName = namn.getGivenName() != null ? namn.getGivenName().getName() : null;
+        String middleName = namn.getMiddleName() != null ? namn.getMiddleName().getName() : null;
+        String lastName = namn.getSurname() != null ? namn.getSurname().getName() : null;
+        Person person = new Person(personId, personRecord.isProtectedPersonIndicator(), isDead, firstName,
+                middleName, lastName, adressRader, postnr, postort);
         LOG.debug("Person '{}' found", personId.getPnrHash());
         PersonSvar personSvar = new PersonSvar(person, PersonSvar.Status.FOUND);
         storeIfAbsent(personSvar);
