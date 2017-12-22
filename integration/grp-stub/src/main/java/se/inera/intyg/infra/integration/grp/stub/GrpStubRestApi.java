@@ -18,6 +18,9 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import se.funktionstjanster.grp.v1.GrpFault;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -26,9 +29,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import se.funktionstjanster.grp.v1.GrpFault;
 
 /**
  * @author Magnus Ekstrand on 2017-05-16.
@@ -73,4 +73,12 @@ public class GrpStubRestApi {
         return Response.ok().build();
     }
 
+    @PUT
+    @Path("/cancel/{transactionId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response cancel(String transactionId) {
+        serviceStub.fail(transactionId);
+        return Response.ok().build();
+    }
 }
