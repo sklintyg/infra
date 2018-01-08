@@ -53,7 +53,7 @@ public final class AuthoritiesConstants {
     public static final String PRIVILEGE_NOTIFIERING_UTKAST = "NOTIFIERING_UTKAST";
     public static final String PRIVILEGE_HANTERA_SEKRETESSMARKERAD_PATIENT = "HANTERA_SEKRETESSMARKERAD_PATIENT";
 
-    public static final String FEATURE_JS_MINIFIED = "MINIFIED_JS";
+    public static final String FEATURE_JS_MINIFIED = "JS_MINIFIED";
     public static final String FEATURE_JS_LOGGNING = "JS_LOGGING";
     public static final String FEATURE_HANTERA_INTYGSUTKAST = "HANTERA_INTYGSUTKAST";
     public static final String FEATURE_HANTERA_INTYGSUTKAST_AVLIDEN = "HANTERA_INTYGSUTKAST_AVLIDEN";
@@ -71,7 +71,7 @@ public final class AuthoritiesConstants {
     public static final String FEATURE_UNIKT_INTYG_INOM_VG = "UNIKT_INTYG_INOM_VG";
     public static final String FEATURE_UNIKT_UTKAST_INOM_VG = "UNIKT_UTKAST_INOM_VG";
     public static final String FEATURE_TAK_KONTROLL_TRADKLATTRING = "TAK_KONTROLL_TRADKLATTRING";
-    public static final String FEATURE_TAK_KONTROLL = "TAK_KONRTOLL";
+    public static final String FEATURE_TAK_KONTROLL = "TAK_KONTROLL";
     public static final String FEATURE_SEKRETESSMARKERING = "SEKRETESSMARKERING";
 
     private AuthoritiesConstants() {
