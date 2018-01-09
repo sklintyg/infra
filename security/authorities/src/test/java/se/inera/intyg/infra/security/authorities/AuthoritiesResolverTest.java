@@ -234,22 +234,22 @@ public class AuthoritiesResolverTest {
     public void testGetFeaturesSubtractingFeatures() {
         Map<String, Feature> features = authoritiesResolver.getFeatures(Arrays.asList("subtractive"));
         assertFalse(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
-        assertTrue(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getGlobal());
+        assertFalse(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getGlobal());
         assertFalse(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getIntygstyper().contains("db"));
     }
 
     @Test
     public void testGetFeaturesBoth() {
         Map<String, Feature> features = authoritiesResolver.getFeatures(Arrays.asList("both"));
-        assertFalse(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
-        assertTrue(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getGlobal());
+        assertTrue(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
+        assertFalse(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getGlobal());
         assertFalse(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getIntygstyper().contains("db"));
     }
 
     @Test
     public void testGetFeaturesBoth2() {
         Map<String, Feature> features = authoritiesResolver.getFeatures(Arrays.asList("both2"));
-        assertTrue(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
+        assertFalse(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
         List<String> expected = Arrays.asList("lisjp", "db", "doi");
         Collections.sort(expected);
         List<String> actual = features.get(AuthoritiesConstants.FEATURE_SRS).getIntygstyper();

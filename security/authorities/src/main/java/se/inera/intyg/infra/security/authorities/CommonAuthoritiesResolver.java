@@ -327,7 +327,10 @@ public class CommonAuthoritiesResolver {
     private void handleDeactivatedPilots(List<Feature> featureList, List<Pilot> pilots) {
         for (Feature feature : getFeatures(pilots, Pilot::getDeactivated)) {
             getExisting(featureList, feature).ifPresent(f -> {
-                f.setGlobal(f.getGlobal() && feature.getGlobal());
+                // In a deactivated feature in a pilot we remove all functionality in the pilot.
+                // This means that if global == true in deactivated pilot then global == false in the actual resulting feature for the
+                // logged in user.
+                f.setGlobal(f.getGlobal() && !feature.getGlobal());
                 f.getIntygstyper().removeAll(feature.getIntygstyper());
             });
         }
