@@ -103,7 +103,7 @@ public class IntygUser implements UserDetails {
     }
 
     public boolean isFeatureActive(String featureName) {
-        return features != null && features.containsKey(featureName);
+        return features != null && features.containsKey(featureName) && features.get(featureName).getGlobal();
     }
 
     @JsonIgnore
