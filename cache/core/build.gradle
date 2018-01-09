@@ -1,5 +1,8 @@
 dependencies {
-    compile "org.apache.ignite:ignite-spring:${igniteSpringVersion}"
+    // Note exclude of lucene, ignite pulls in another version than the one we officially use.
+    compile("org.apache.ignite:ignite-spring:${igniteSpringVersion}") {
+        exclude group: "org.apache.lucene"
+    }
     compile "org.springframework:spring-core:${springVersion}"
 
     runtime "org.springframework:spring-context-support:${springVersion}"
