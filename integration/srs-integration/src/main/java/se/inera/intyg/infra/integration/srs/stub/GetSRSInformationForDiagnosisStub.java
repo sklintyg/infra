@@ -86,8 +86,8 @@ public class GetSRSInformationForDiagnosisStub implements GetSRSInformationForDi
             atgardsrekommendation.getAtgard()
                     .add(createAtgard("Atgardsforslag OBS 3 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.OBS, 3));
         } else {
-            //No match
-            atgardsrekommendation.setDiagnos(diagnos);
+            //No match. Note that setting null is quite stupid, but that's what the real SRS service does.
+            atgardsrekommendation.setDiagnos(null);
             atgardsrekommendation.setAtgardsrekommendationstatus(Atgardsrekommendationstatus.INFORMATION_SAKNAS);
         }
 
