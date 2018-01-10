@@ -205,7 +205,7 @@ public class SrsServiceTest {
     public void testGetSRSForDiagnosisCode() {
         final SrsForDiagnosisResponse response = service.getSrsForDiagnose("M18");
         assertNotNull(response);
-
+        assertNotNull(response.getDiagnosisCode());
         assertEquals("M18", response.getDiagnosisCode());
         assertEquals(3, response.getAtgarderObs().size());
         assertEquals(3, response.getAtgarderRek().size());
@@ -219,6 +219,7 @@ public class SrsServiceTest {
     public void testGetSRSForHigherDiagnosisCode() {
         final SrsForDiagnosisResponse response = service.getSrsForDiagnose("M18.1");
         assertNotNull(response);
+        assertNotNull(response.getDiagnosisCode());
         assertEquals("M18", response.getDiagnosisCode());
         assertEquals(3, response.getAtgarderObs().size());
         assertEquals(3, response.getAtgarderRek().size());
@@ -233,6 +234,7 @@ public class SrsServiceTest {
     public void testGetSRSForUnknownDiagnosisCode() {
         final SrsForDiagnosisResponse response = service.getSrsForDiagnose("XX18");
         assertNotNull(response);
+        assertNull(response.getDiagnosisCode());
         assertEquals(0, response.getAtgarderObs().size());
         assertEquals(0, response.getAtgarderRek().size());
         assertEquals(Atgardsrekommendationstatus.INFORMATION_SAKNAS.name(), response.getAtgarderStatusCode());

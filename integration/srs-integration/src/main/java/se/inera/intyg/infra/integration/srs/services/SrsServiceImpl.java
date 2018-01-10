@@ -240,7 +240,13 @@ public class SrsServiceImpl implements SrsService {
     }
 
     private SrsForDiagnosisResponse createDiagnoseResponse(GetSRSInformationForDiagnosisResponseType response) {
-        String resultDiagnosCode = response.getAtgardsrekommendation().getDiagnos().getCode();
+        String resultDiagnosCode = null;
+
+        // We need a null-check here in case there were no info available for the requested diagnosis code.
+        if (hasAtgardsrekommendationWithDiagnosisCode(response)) {
+            resultDiagnosCode = response.getAtgardsrekommendation().getDiagnos().getCode();
+        }
+
         String atgarderStatusCode;
         String statistikStatusCode;
         String statistikBild;
@@ -250,7 +256,7 @@ public class SrsServiceImpl implements SrsService {
         final Atgardsrekommendation atgardsrekommendation = response
                 .getAtgardsrekommendation();
 
-        // finter out all OBS types sorted by priority
+        // filter out all OBS types sorted by priority
         final List<String> atgarderObs = atgardsrekommendation.getAtgard().stream().sorted(Comparator
                 .comparing(Atgard::getPrioritet))
                 .filter(a -> a.getAtgardstyp()
@@ -258,7 +264,7 @@ public class SrsServiceImpl implements SrsService {
                 .map(Atgard::getAtgardsforslag)
                 .collect(Collectors.toList());
 
-        // finter out all REK types sorted by priority
+        // filter out all REK types sorted by priority
         final List<String> atgarderRek = atgardsrekommendation.getAtgard().stream().sorted(Comparator
                 .comparing(Atgard::getPrioritet))
                 .filter(a -> a.getAtgardstyp()
@@ -282,6 +288,11 @@ public class SrsServiceImpl implements SrsService {
 
         return new SrsForDiagnosisResponse(atgarderObs, atgarderRek,
                 resultDiagnosCode, atgarderStatusCode, statistikBild, statistikStatusCode, statistikDiagnosCode);
+    }
+
+    private boolean hasAtgardsrekommendationWithDiagnosisCode(GetSRSInformationForDiagnosisResponseType response) {
+        return response.getAtgardsrekommendation().getAtgardsrekommendationstatus() != Atgardsrekommendationstatus.INFORMATION_SAKNAS
+                && response.getAtgardsrekommendation().getDiagnos() != null;
     }
 
     private GetSRSInformationRequestType createRequest(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode,
