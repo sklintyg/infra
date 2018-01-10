@@ -23,10 +23,9 @@ knownFeatures:
   - &kf090 UTSKRIFT
   - &kf100 ARBETSGIVARUTSKRIFT
   - &kf110 JS_LOGGNING
-  - &kf120 JS_MINIFIED
-  - &kf130 SRS
-  - &kf140 WARN_ON_PREVIOUS
-  - &kf150 HANTERA_INTYGSUTKAST_AVLIDEN
+  - &kf120 SRS
+  - &kf130 WARN_ON_PREVIOUS
+  - &kf140 HANTERA_INTYGSUTKAST_AVLIDEN
 
 # De aktiverade features
 features:
@@ -162,21 +161,17 @@ features:
     global: true
   - &f120
     name: *kf120
-    desc: JS minifiering
-    global: true
-  - &f130
-    name: *kf130
     desc: SRS
     global: false
-  - &f140
-    name: *kf140
+  - &f130
+    name: *kf130
     desc: Varna om tidigare intyg
     global: true
     intygstyper:
       - *ki080 # DB
       - *ki090 # DOI
-  - &f150
-    name: *kf150
+  - &f140
+    name: *kf140
     desc: Hantera utkast för avlidna patienter
     global: true
     intygstyper:
@@ -191,7 +186,7 @@ pilots:
       - both2
     activated:
       - &pf010
-        name: *kf130
+        name: *kf120
         desc: SRS-stöd i Webcert
         global: true
         intygstyper:
@@ -203,7 +198,7 @@ pilots:
       - subtractive
     deactivated:
       - &pf020
-        name: *kf020
+        name: *kf120
         desc: SRS-stöd i Webcert
         global: false
       - &pf030
@@ -218,7 +213,7 @@ pilots:
       - both
     activated:
       - &pf040
-        name: *kf130
+        name: *kf120
         desc: SRS-stöd i Webcert
         global: true
         intygstyper:
@@ -226,7 +221,7 @@ pilots:
           - *ki050 # LISJP
     deactivated:
       - &pf050
-        name: *kf130
+        name: *kf120
         desc: SRS-stöd i Webcert
         global: false
       - &pf060
@@ -241,7 +236,7 @@ pilots:
       - both2
     activated:
       - &pf070
-        name: *kf130
+        name: *kf120
         desc: SRS-stöd i Webcert
         global: true
         intygstyper:
@@ -253,7 +248,7 @@ pilots:
       - both2
     deactivated:
       - &pf080
-        name: *kf130
+        name: *kf120
         desc: SRS-stöd i Webcert
         global: true
         intygstyper:

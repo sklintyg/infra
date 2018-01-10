@@ -53,7 +53,6 @@ public final class AuthoritiesConstants {
     public static final String PRIVILEGE_NOTIFIERING_UTKAST = "NOTIFIERING_UTKAST";
     public static final String PRIVILEGE_HANTERA_SEKRETESSMARKERAD_PATIENT = "HANTERA_SEKRETESSMARKERAD_PATIENT";
 
-    public static final String FEATURE_JS_MINIFIED = "JS_MINIFIED";
     public static final String FEATURE_JS_LOGGNING = "JS_LOGGING";
     public static final String FEATURE_HANTERA_INTYGSUTKAST = "HANTERA_INTYGSUTKAST";
     public static final String FEATURE_HANTERA_INTYGSUTKAST_AVLIDEN = "HANTERA_INTYGSUTKAST_AVLIDEN";
