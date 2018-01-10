@@ -67,12 +67,14 @@ public class WatchServiceInitializerBean {
             vardgivareDir.mkdirs();
         }
 
+        /*
         scannerBean.bootstrapScan(vardgivareDir.toPath(), ScanTarget.VARDGIVARE);
         scannerBean.bootstrapScan(personDir.toPath(), ScanTarget.PERSON);
 
         // scan() method is @Async
         scannerBean.scan(personDir.toPath(), ScanTarget.PERSON);
         scannerBean.scan(vardgivareDir.toPath(), ScanTarget.VARDGIVARE);
+        */
 
     }
 

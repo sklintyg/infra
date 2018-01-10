@@ -13,7 +13,7 @@ stage('checkout') {
 stage('build') {
     node {
         try {
-            shgradle "--refresh-dependencies clean build testReport sonarqube -PcodeQuality -PcodeCoverage -DgruntColors=false -DbuildVersion=${buildVersion}"
+            shgradle "--refresh-dependencies clean build testReport -DgruntColors=false -DbuildVersion=${buildVersion}"
         } finally {
             publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'build/reports/allTests', \
                 reportFiles: 'index.html', reportName: 'JUnit results'
@@ -28,9 +28,9 @@ stage('tag and upload') {
 }
 
 stage('propagate') {
-    build job: "${buildRoot}-intygstjanst", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
-    build job: "${buildRoot}-rehabstod", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
-    build job: "${buildRoot}-logsender", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
+    build job: "${buildRoot}-webcert", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
+    //build job: "${buildRoot}-rehabstod", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
+    //build job: "${buildRoot}-logsender", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
 }
 
 stage('notify') {
