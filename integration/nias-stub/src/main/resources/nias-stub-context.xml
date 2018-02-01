@@ -19,24 +19,22 @@
   -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:jaxws="http://cxf.apache.org/jaxws"
-  xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
                            http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd"
-  profile="dev,wc-all-stubs,wc-nias-stub">
+    profile="dev,wc-all-stubs,wc-nias-stub">
 
-  <!--
-  <bean id="grpStubRestApi" class="se.inera.intyg.infra.integration.grp.stub.GrpStubRestApi"/>
-  <bean id="grpServiceStub" class="se.inera.intyg.infra.integration.grp.stub.GrpServiceStub"/>
-   -->
+  <bean id="niasStubRestApi" class="se.inera.intyg.infra.integration.nias.stub.NiasStubRestApi"/>
+  <bean id="niasServiceStub" class="se.inera.intyg.infra.integration.nias.stub.NiasServiceStub"/>
+
   <jaxws:endpoint address="/netid-access-server-stub" implementor="se.inera.intyg.infra.integration.nias.stub.NetiDAccessServerSoapStub"/>
 
-  <!--
-  <jaxrs:server address="/grp-api">
+  <jaxrs:server address="/nias-api">
     <jaxrs:serviceBeans>
-      <ref bean="grpStubRestApi"/>
+      <ref bean="niasStubRestApi"/>
     </jaxrs:serviceBeans>
     <jaxrs:providers>
       <ref bean="jacksonJsonProvider"/>
@@ -45,6 +43,5 @@
       <entry key="json" value="application/json"/>
     </jaxrs:extensionMappings>
   </jaxrs:server>
-  -->
 
 </beans>
