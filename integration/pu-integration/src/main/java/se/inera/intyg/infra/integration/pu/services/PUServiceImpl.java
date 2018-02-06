@@ -148,7 +148,8 @@ public class PUServiceImpl implements PUService {
                 }
             }
             LOG.warn(
-                    "One or more personnummer did not yield a response from our PU cache or the PU-service. They have been added as NOT_FOUND entries.");
+                    "One or more personnummer did not yield a response from our PU cache or the PU-service. "
+                            + "They have been added as NOT_FOUND entries.");
         }
 
         return responseMap;
@@ -159,39 +160,6 @@ public class PUServiceImpl implements PUService {
         iiType.setExtension(pnr.getPersonnummerWithoutDash());
         return iiType;
     }
-
-    // private PersonSvar buildPersonSvarFromPersonTypeRecord(Personnummer personId, RequestedPersonRecordType resident) {
-    // PersonRecordType personRecord = resident.getPersonRecord();
-    // NameType namn = personRecord.getName();
-    //
-    // String adressRader = null;
-    // String postnr = null;
-    // String postort = null;
-    // if (personRecord.getAddressInformation() != null && personRecord.getAddressInformation().getResidentialAddress() !=
-    // null) {
-    // ResidentialAddressType adress = personRecord.getAddressInformation().getResidentialAddress();
-    // // String careOf = null;
-    // if (adress != null) {
-    // // careOf = adress.getCareOf();
-    // adressRader = buildAdress(adress);
-    // postnr = adress.getPostalCode().toString();
-    // postort = adress.getCity();
-    // }
-    // }
-    //
-    // DeregistrationType avregistrering = personRecord.getDeregistration();
-    // boolean isDead = avregistrering != null && "TODOFIXME".equals(avregistrering.getDeregistrationReasonCode());
-    //
-    // String firstName = namn.getGivenName() != null ? namn.getGivenName().getName() : null;
-    // String middleName = namn.getMiddleName() != null ? namn.getMiddleName().getName() : null;
-    // String lastName = namn.getSurname() != null ? namn.getSurname().getName() : null;
-    // Person person = new Person(personId, personRecord.isProtectedPersonIndicator(), isDead, firstName,
-    // middleName, lastName, adressRader, postnr, postort);
-    // LOG.debug("Person '{}' found", personId.getPnrHash());
-    // PersonSvar personSvar = new PersonSvar(person, PersonSvar.Status.FOUND);
-    // storeIfAbsent(personSvar);
-    // return personSvar;
-    // }
 
     private void storeIfAbsent(PersonSvar personSvar) {
         Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);

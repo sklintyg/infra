@@ -83,17 +83,17 @@ public class ChronicleResidentStore {
         if (!active) {
             throw new IllegalStateException("Stub is deactivated for testing purposes.");
         }
-        pnr = new Personnummer(pnr).getPersonnummerWithoutDash();
-        if (!residents.containsKey(pnr)) {
+        String pnrWithoutDash = new Personnummer(pnr).getPersonnummerWithoutDash();
+        if (!residents.containsKey(pnrWithoutDash)) {
             return null;
         }
-        return fromJson(residents.get(pnr));
+        return fromJson(residents.get(pnrWithoutDash));
     }
 
     void removeResident(String personId) {
-        personId = new Personnummer(personId).getPersonnummerWithoutDash();
-        if (residents.containsKey(personId)) {
-            residents.remove(personId);
+        String personIdWithoutDash = new Personnummer(personId).getPersonnummerWithoutDash();
+        if (residents.containsKey(personIdWithoutDash)) {
+            residents.remove(personIdWithoutDash);
         }
     }
 
