@@ -1,15 +1,1 @@
-{
-    "sekretessmarkering": "N",
-    "personpost": {
-        "personId": "194606109108",
-        "namn": {
-            "fornamn": "Magdalena",
-            "efternamn": "Karlgren"
-        },
-        "folkbokforingsadress": {
-            "utdelningsadress1": "Privatgatan 9",
-            "postNr": 12345,
-            "postort": "Privatstan"
-        }
-    }
-}
+{"personalIdentity":{"extension":"194606109108"},"protectedPersonIndicator":false,"testIndicator":false,"primaryIdentity":false,"name":{"givenName":{"name":"Magdalena"},"middleName":{},"surname":{"name":"Karlgren"}},"addressInformation":{"residentialAddress":{"postalAddress1":"Privatgatan 9","postalCode":12345,"city":"Privatstan"}}}

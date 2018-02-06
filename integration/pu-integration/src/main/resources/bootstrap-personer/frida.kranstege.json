@@ -1,15 +1,1 @@
-{
-    "sekretessmarkering": "N",
-    "personpost": {
-        "personId": "197705232382",
-        "namn": {
-            "fornamn": "Frida",
-            "efternamn": "Kranstege"
-        },
-        "folkbokforingsadress": {
-            "utdelningsadress1": "Privatgatan 3",
-            "postNr": 12345,
-            "postort": "Privatstan"
-        }
-    }
-}
+{"personalIdentity":{"extension":"197705232382"},"protectedPersonIndicator":false,"testIndicator":false,"primaryIdentity":false,"name":{"givenName":{"name":"Frida"},"middleName":{},"surname":{"name":"Kranstege"}},"addressInformation":{"residentialAddress":{"postalAddress1":"Privatgatan 3","postalCode":12345,"city":"Privatstan"}}}
