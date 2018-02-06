@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,19 +19,19 @@
 package se.inera.intyg.infra.security.siths;
 
 import org.junit.BeforeClass;
-
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
-import se.inera.intyg.infra.security.authorities.bootstrap.AuthoritiesConfigurationLoader;
-
+import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
 
 /**
  * Created by Magnus Ekstrand on 26/11/15.
  */
 public class CommonAuthoritiesConfigurationTestSetup {
 
-    protected static final String CONFIGURATION_LOCATION = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    protected static final String AUTHORITIES_CONFIGURATION_LOCATION = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    protected static final String FEATURES_CONFIGURATION_LOCATION = "AuthoritiesConfigurationLoaderTest/features-test.yaml";
 
-    protected static final AuthoritiesConfigurationLoader CONFIGURATION_LOADER = new AuthoritiesConfigurationLoader(CONFIGURATION_LOCATION);
+    protected static final SecurityConfigurationLoader CONFIGURATION_LOADER = new SecurityConfigurationLoader(
+            AUTHORITIES_CONFIGURATION_LOCATION, FEATURES_CONFIGURATION_LOCATION);
     protected static final CommonAuthoritiesResolver AUTHORITIES_RESOLVER = new CommonAuthoritiesResolver();
 
     @BeforeClass

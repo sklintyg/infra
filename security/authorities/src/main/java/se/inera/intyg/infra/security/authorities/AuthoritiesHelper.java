@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,13 +20,20 @@ package se.inera.intyg.infra.security.authorities;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.security.authorities.validation.AuthoritiesValidator;
+import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
+import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.security.common.model.UserDetails;
-import se.inera.intyg.infra.security.common.service.Feature;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * @author Magnus Ekstrand on 2016-05-13.
@@ -52,7 +59,7 @@ public class AuthoritiesHelper {
      *
      * @param user          the current user
      * @param privilegeName the privilege name
-     * @return returns a set of granted intygstyper, an empty set means no granted intygstyper for this privilege
+     * @return a set of granted intygstyper, an empty set means no granted intygstyper for this privilege
      */
     public Set<String> getIntygstyperForPrivilege(UserDetails user, String privilegeName) {
         AuthoritiesValidator authoritiesValidator = new AuthoritiesValidator();
@@ -63,21 +70,47 @@ public class AuthoritiesHelper {
                 .collect(Collectors.toSet());
     }
 
-    public Set<String> getIntygstyperForModuleFeature(UserDetails user, Feature... features) {
-        AuthoritiesValidator authoritiesValidator = new AuthoritiesValidator();
-        List<String> knownIntygstyper = authoritiesResolver.getIntygstyper();
-
-        return knownIntygstyper.stream()
-                .filter(typ -> authoritiesValidator.given(user, typ).features(features).isVerified())
+    public Set<String> getIntygstyperForFeature(UserDetails user, String... features) {
+        return Stream.of(features)
+                .map(f -> user.getFeatures().get(f))
+                .filter(Objects::nonNull)
+                .filter(Feature::getGlobal)
+                .map(Feature::getIntygstyper)
+                .flatMap(List::stream)
+                .distinct()
                 .collect(Collectors.toSet());
     }
 
+    public boolean isFeatureActive(String feature) {
+        return ofNullable(authoritiesResolver.getFeatures(Collections.emptyList()).get(feature))
+                .filter(Feature::getGlobal)
+                .isPresent();
+    }
+
+    public boolean isFeatureActive(String feature, String intygType) {
+        return ofNullable(authoritiesResolver.getFeatures(Collections.emptyList()).get(feature))
+                .filter(Feature::getGlobal)
+                .map(Feature::getIntygstyper)
+                .map(list -> list.contains(intygType)).orElse(false);
+    }
+
     public Set<String> getIntygstyperAllowedForSekretessmarkering() {
-        return new HashSet<>(authoritiesResolver.getSekretessmarkeringAllowed());
+        Optional<Feature> feature = Optional
+                .ofNullable(authoritiesResolver.getFeatures(Collections.emptyList()).get(AuthoritiesConstants.FEATURE_SEKRETESSMARKERING));
+        if (feature.isPresent() && feature.get().getGlobal()) {
+            return new HashSet<>(feature.get().getIntygstyper());
+        } else {
+            return Collections.emptySet();
+        }
     }
 
-    private Set<String> toSet(List<String> intygsTyper) {
-        return intygsTyper.stream().distinct().collect(Collectors.toSet());
+    public List<String> getIntygstyperAllowedForAvliden() {
+        Optional<Feature> feature = Optional.ofNullable(authoritiesResolver.getFeatures(Collections.emptyList())
+                .get(AuthoritiesConstants.FEATURE_HANTERA_INTYGSUTKAST_AVLIDEN));
+        if (feature.isPresent() && feature.get().getGlobal()) {
+            return feature.get().getIntygstyper();
+        } else {
+            return Collections.emptyList();
+        }
     }
-
 }

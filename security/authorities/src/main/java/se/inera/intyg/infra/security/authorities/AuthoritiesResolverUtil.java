@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,15 +18,16 @@
  */
 package se.inera.intyg.infra.security.authorities;
 
+import se.inera.intyg.infra.security.common.model.Role;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import se.inera.intyg.infra.security.common.model.Privilege;
-import se.inera.intyg.infra.security.common.model.Role;
 
 /**
  * Created by Magnus Ekstrand on 25/11/15.
@@ -42,16 +43,14 @@ public final class AuthoritiesResolverUtil {
         return map;
     }
 
-    public static Map<String, Privilege> toMap(Collection<Privilege> privileges) {
-        return privileges.stream()
-                .filter(p -> p != null)
-                .collect(Collectors.toMap(Privilege::getName, Function.identity()));
+    public static <T> Map<String, T> toMap(Collection<T> iterables, Function<T, String> keyFunction) {
+        return iterables.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(keyFunction, Function.identity()));
     }
 
     public static <V> List<V> toList(Map<String, V> map) {
-        return map.entrySet().stream()
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList());
+        return new ArrayList<>(map.values());
     }
 
     public static <V> String[] toArray(Map<String, V> map) {

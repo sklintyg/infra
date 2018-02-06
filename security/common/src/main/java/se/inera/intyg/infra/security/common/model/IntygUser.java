@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,26 +18,21 @@
  */
 package se.inera.intyg.infra.security.common.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 
-/**
- * @author andreaskaltenbach
- */
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class IntygUser implements UserDetails {
 
     private static final long serialVersionUID = -2624303818412468774L;
@@ -65,18 +60,17 @@ public class IntygUser implements UserDetails {
     protected AuthenticationMethod authenticationMethod;
 
     // Fields related to the authority context
-    protected Set<String> features;
+    protected Map<String, Feature> features;
     protected Map<String, Role> roles;
     protected Map<String, Privilege> authorities;
     protected String origin;
 
-    /** The sole constructor. */
+    /**
+     * The sole constructor.
+     */
     public IntygUser(String employeeHsaId) {
         this.hsaId = employeeHsaId;
     }
-
-    // ~ Public scope
-    // ======================================================================================================
 
     public boolean changeValdVardenhet(String vardenhetId) {
         if (vardenhetId == null) {
@@ -96,20 +90,20 @@ public class IntygUser implements UserDetails {
     }
 
     @Override
-    public Set<String> getFeatures() {
+    public Map<String, Feature> getFeatures() {
         if (features == null) {
-            features = new HashSet<>();
+            features = new HashMap<>();
         }
         return features;
     }
 
     @Override
-    public void setFeatures(Set<String> features) {
+    public void setFeatures(Map<String, Feature> features) {
         this.features = features;
     }
 
     public boolean isFeatureActive(String featureName) {
-        return features != null && features.contains(featureName);
+        return features != null && features.containsKey(featureName) && features.get(featureName).getGlobal();
     }
 
     @JsonIgnore
@@ -369,13 +363,10 @@ public class IntygUser implements UserDetails {
     /**
      * Utility method to get the name "medarbetaruppdrag" that the user has on the currently selected vårdenhet.
      *
-     * @return
-     *         The name of the medarbetaruppdrag. (Derived from infrastructure:directory:authorizationmanagement
-     *         CommissionType#commissionName)
-     * @throws
-     *             IllegalStateException
-     *             if no vardenhet is selected or if the map that maps enhetsId to commissionName hasn't been
-     *             initialized.
+     * @return The name of the medarbetaruppdrag. (Derived from infrastructure:directory:authorizationmanagement
+     * CommissionType#commissionName)
+     * @throws IllegalStateException if no vardenhet is selected or if the map that maps enhetsId to commissionName hasn't been
+     *                               initialized.
      */
     @JsonIgnore
     public String getSelectedMedarbetarUppdragNamn() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,24 +18,23 @@
  */
 package se.inera.intyg.infra.integration.srs.stub;
 
-import java.math.BigInteger;
-import java.time.LocalDateTime;
-import java.util.Optional;
-
 import org.jetbrains.annotations.NotNull;
-
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgard;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgardsrekommendation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgardsrekommendationstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgardstyp;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Statistik;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Statistikbild;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Statistikstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgard;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendation;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardstyp;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistik;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikbild;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
+
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * Created by marced on 2017-11-06.
@@ -87,8 +86,8 @@ public class GetSRSInformationForDiagnosisStub implements GetSRSInformationForDi
             atgardsrekommendation.getAtgard()
                     .add(createAtgard("Atgardsforslag OBS 3 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.OBS, 3));
         } else {
-            //No match
-            atgardsrekommendation.setDiagnos(diagnos);
+            //No match. Note that setting null is quite stupid, but that's what the real SRS service does.
+            atgardsrekommendation.setDiagnos(null);
             atgardsrekommendation.setAtgardsrekommendationstatus(Atgardsrekommendationstatus.INFORMATION_SAKNAS);
         }
 

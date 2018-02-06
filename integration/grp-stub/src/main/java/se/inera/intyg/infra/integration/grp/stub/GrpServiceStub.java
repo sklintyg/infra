@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,16 +18,15 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+import se.funktionstjanster.grp.v1.GrpFault;
+import se.funktionstjanster.grp.v1.ProgressStatusType;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
-
-import se.funktionstjanster.grp.v1.GrpFault;
-import se.funktionstjanster.grp.v1.ProgressStatusType;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * @author Magnus Ekstrand on 2017-05-16.
@@ -86,6 +85,12 @@ public class GrpServiceStub {
         }
 
         return true;
+    }
+
+    public synchronized void fail(String transactionId) {
+        String orderRef = orderRefMapping.get(transactionId);
+        signatureStatus.remove(orderRef);
+        orderRefMapping.remove(transactionId);
     }
 
 }

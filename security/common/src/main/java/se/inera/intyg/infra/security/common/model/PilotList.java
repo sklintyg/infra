@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,9 +18,10 @@
  */
 package se.inera.intyg.infra.security.common.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Collections;
+import java.util.List;
 
 public class PilotList {
 
@@ -32,7 +33,11 @@ public class PilotList {
     }
 
     public void setPilots(List<Pilot> pilots) {
-        this.pilots = pilots;
+        if (pilots == null) {
+            this.pilots = Collections.emptyList();
+        } else {
+            this.pilots = pilots;
+        }
     }
 
 }

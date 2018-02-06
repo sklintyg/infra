@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,7 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.services.HsaPersonService;
-import se.inera.intyg.infra.security.authorities.bootstrap.AuthoritiesConfigurationLoader;
+import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.common.model.Privilege;
 import se.inera.intyg.infra.security.common.model.RequestOrigin;
@@ -54,9 +54,10 @@ public class AuthoritiesHelperTest {
     public static final String DJUPINTEGRATION = "DJUPINTEGRATION";
     public static final String UTHOPP = "UTHOPP";
 
-    private final String configurationLocation = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    private final String authoritiesConfigurationLocation = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    private final String featuresConfigurationLocation = "AuthoritiesConfigurationLoaderTest/features-test.yaml";
 
-    private AuthoritiesConfigurationLoader configurationLoader = new AuthoritiesConfigurationLoader(configurationLocation);
+    private SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationLocation, featuresConfigurationLocation);
     private CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();
 
     @Mock

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -35,6 +35,7 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.stream.Stream;
 
 /**
  * Created by eriklupander on 2017-04-12.
@@ -59,9 +60,9 @@ public class ScannerBean {
     void bootstrapScan(Path path, ScanTarget scanTarget) {
         LOG.info("Performing startup scan of HSA identity folder '{}'", path.toString());
         ScanEventHandler handler = resolveHandler(scanTarget);
-        try {
-            Files.walk(path)
-                    .filter(Files::isRegularFile)
+
+        try (Stream<Path> stream = Files.walk(path)) {
+             stream.filter(Files::isRegularFile)
                     .filter(p -> p.toString().endsWith(SUFFIX_JSON))
                     .forEach(handler::created);
         } catch (IOException e) {

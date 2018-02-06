@@ -1,0 +1,15 @@
+{
+    "sekretessmarkering": "N",
+    "personpost": {
+        "personId": "194606109108",
+        "namn": {
+            "fornamn": "Magdalena",
+            "efternamn": "Karlgren"
+        },
+        "folkbokforingsadress": {
+            "utdelningsadress1": "Privatgatan 9",
+            "postNr": 12345,
+            "postort": "Privatstan"
+        }
+    }
+}

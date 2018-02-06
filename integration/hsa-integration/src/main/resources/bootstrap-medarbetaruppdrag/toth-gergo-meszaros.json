@@ -11,6 +11,16 @@
       "enhet": "TSTNMT2321000156-105N",
       "andamal": [
         "Vård och behandling"
+      ],
+      "systemRoles": [
+        "INTYG;Rehab-TSTNMT2321000156-105N"
+      ]
+    },
+    {
+      "vardgivare": "TSTNMT2321000156-105M",
+      "enhet": "TSTNMT2321000156-105P",
+      "andamal": [
+        "Vård och behandling"
       ]
     }
   ],

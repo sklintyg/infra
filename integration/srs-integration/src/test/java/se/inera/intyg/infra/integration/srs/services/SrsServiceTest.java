@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,17 +18,6 @@
  */
 package se.inera.intyg.infra.integration.srs.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,13 +28,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.CollectionUtils;
-
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Atgardsrekommendationstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.Statistikstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
@@ -58,6 +46,17 @@ import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:SrsServiceTest/test-context.xml")
@@ -206,7 +205,7 @@ public class SrsServiceTest {
     public void testGetSRSForDiagnosisCode() {
         final SrsForDiagnosisResponse response = service.getSrsForDiagnose("M18");
         assertNotNull(response);
-
+        assertNotNull(response.getDiagnosisCode());
         assertEquals("M18", response.getDiagnosisCode());
         assertEquals(3, response.getAtgarderObs().size());
         assertEquals(3, response.getAtgarderRek().size());
@@ -220,6 +219,7 @@ public class SrsServiceTest {
     public void testGetSRSForHigherDiagnosisCode() {
         final SrsForDiagnosisResponse response = service.getSrsForDiagnose("M18.1");
         assertNotNull(response);
+        assertNotNull(response.getDiagnosisCode());
         assertEquals("M18", response.getDiagnosisCode());
         assertEquals(3, response.getAtgarderObs().size());
         assertEquals(3, response.getAtgarderRek().size());
@@ -234,6 +234,7 @@ public class SrsServiceTest {
     public void testGetSRSForUnknownDiagnosisCode() {
         final SrsForDiagnosisResponse response = service.getSrsForDiagnose("XX18");
         assertNotNull(response);
+        assertNull(response.getDiagnosisCode());
         assertEquals(0, response.getAtgarderObs().size());
         assertEquals(0, response.getAtgarderRek().size());
         assertEquals(Atgardsrekommendationstatus.INFORMATION_SAKNAS.name(), response.getAtgarderStatusCode());
