@@ -28,6 +28,7 @@ import org.springframework.cache.CacheManager;
 import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.integration.pu.util.PersonConverter;
+import se.inera.intyg.infra.integration.pu.util.PersonIdUtil;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
@@ -70,9 +71,9 @@ public class PUServiceImpl implements PUService {
         }
 
         GetPersonsForProfileType parameters = new GetPersonsForProfileType();
-        parameters.setProfile(LookupProfileType.P_1);
-        IIType personIdType = new IIType();
-        personIdType.setExtension(personId.getPersonnummerWithoutDash());
+        parameters.setProfile(LookupProfileType.P_2);
+
+        IIType personIdType = buildIITypeForPersonOrSamordningsnummer(personId);
         parameters.getPersonId().add(personIdType);
         try {
             GetPersonsForProfileResponseType response = service.getPersonsForProfile(logicaladdress, parameters);
@@ -92,6 +93,15 @@ public class PUServiceImpl implements PUService {
             LOG.warn("Error occured, no person '{}' found.", personId.getPnrHash());
             return new PersonSvar(null, PersonSvar.Status.ERROR);
         }
+    }
+
+
+    private IIType buildIITypeForPersonOrSamordningsnummer(Personnummer personId) {
+        IIType personIdType = new IIType();
+        personIdType.setRoot(
+                PersonIdUtil.isSamordningsNummer(personId) ? PersonIdUtil.getSamordningsNummerRoot() : PersonIdUtil.getPersonnummerRoot());
+        personIdType.setExtension(personId.getPersonnummerWithoutDash());
+        return personIdType;
     }
 
     @Override
@@ -119,9 +129,9 @@ public class PUServiceImpl implements PUService {
 
         // Build request
         GetPersonsForProfileType parameters = new GetPersonsForProfileType();
-        parameters.setProfile(LookupProfileType.P_1);
+        parameters.setProfile(LookupProfileType.P_2);
         for (Personnummer pnr : toQuery) {
-            parameters.getPersonId().add(buildIIType(pnr));
+            parameters.getPersonId().add(buildIITypeForPersonOrSamordningsnummer(pnr));
         }
 
         // Execute request
@@ -155,12 +165,6 @@ public class PUServiceImpl implements PUService {
         return responseMap;
     }
 
-    private IIType buildIIType(Personnummer pnr) {
-        IIType iiType = new IIType();
-        iiType.setExtension(pnr.getPersonnummerWithoutDash());
-        return iiType;
-    }
-
     private void storeIfAbsent(PersonSvar personSvar) {
         Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
         cache.putIfAbsent(personSvar.getPerson().getPersonnummer(), personSvar);
@@ -177,7 +181,6 @@ public class PUServiceImpl implements PUService {
 
     @Override
     @VisibleForTesting
-    // @CacheEvict(value = "personCache", allEntries = true)
     public void clearCache() {
         LOG.debug("personCache cleared");
         Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
