@@ -10,6 +10,7 @@ ext {
     rivtaHsaAuthorizationmanagementSchemasVersion = "1.0.RC4.4"
     rivtaHsaEmployeeSchemasVersion = "1.0.RC4.4"
     rivtaResidentMasterSchemasVersion = "1.1.3.5"
+    rivtaGetPersonsPersonSchemasVersion = "3.0-beta1"
 
     srsSchemasVersion = "0.0.7"
 
