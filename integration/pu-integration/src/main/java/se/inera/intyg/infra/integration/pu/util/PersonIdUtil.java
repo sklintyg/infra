@@ -24,13 +24,17 @@ import se.inera.intyg.schemas.contract.Personnummer;
 /**
  * Provides utility methods for dealing with Personnummer, without having to introduce a dependency from infra -> common.
  */
-public class PersonIdUtil {
+public final class PersonIdUtil {
 
     private static final String KODVERK_SAMORDNINGSNUMMER = "1.2.752.129.2.1.3.3";
     private static final String KODVERK_PERSONNUMMER = "1.2.752.129.2.1.3.1";
 
     private static final int SAMORDNING_MONTH_INDEX = 6;
     private static final int SAMORDNING_MONTH_VALUE_MIN = 6;
+
+    private PersonIdUtil() {
+
+    }
 
     /**
      * Controls if a civic registration number is a 'samordningsnummer' or not.
