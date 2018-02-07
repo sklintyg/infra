@@ -1,17 +1,1 @@
-{
-    "sekretessmarkering": "N",
-    "personpost": {
-        "personId": "195401875769",
-        "namn": {
-            "fornamn": "Sam",
-            "efternamn": "Samordningsson"
-        },
-        "folkbokforingsadress": {
-            "careOf": "Segemyhr",
-            "utdelningsadress1": "Segergatan 1",
-            "utdelningsadress2": "PL 1234",
-            "postNr": 12345,
-            "postort": "Storholm"
-        }
-    }
-}
+{"personalIdentity":{"extension":"195401875769"},"protectedPersonIndicator":false,"testIndicator":false,"primaryIdentity":false,"name":{"givenName":{"name":"Sam"},"middleName":{},"surname":{"name":"Samordningsson"}},"addressInformation":{"residentialAddress":{"careOf":"Segemyhr","postalAddress1":"Segergatan 1","postalAddress2":"PL 1234","postalCode":12345,"city":"Storholm"}}}

@@ -1,15 +1,1 @@
-{
-    "sekretessmarkering": "N",
-    "personpost": {
-        "personId": "198408209990",
-        "namn": {
-            "fornamn": "Fredrik",
-            "efternamn": "Fransman"
-        },
-        "folkbokforingsadress": {
-            "utdelningsadress2": "Frankvägen 11",
-            "postNr": 56344,
-            "postort": "Frankorten"
-        }
-    }
-}
+{"personalIdentity":{"extension":"198408209990"},"protectedPersonIndicator":false,"testIndicator":false,"primaryIdentity":false,"name":{"givenName":{"name":"Fredrik"},"middleName":{},"surname":{"name":"Fransman"}},"addressInformation":{"residentialAddress":{"postalAddress2":"Frankvägen 11","postalCode":56344,"city":"Frankorten"}}}

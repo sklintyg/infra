@@ -23,75 +23,69 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
-import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
+import se.inera.intyg.infra.integration.pu.util.PersonConverter;
+import se.inera.intyg.infra.integration.pu.util.PersonIdUtil;
 import se.inera.intyg.schemas.contract.Personnummer;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookUpSpecificationType;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookupResidentForFullProfileResponseType;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookupResidentForFullProfileType;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v11.LookupResidentForFullProfileResponderInterface;
-import se.riv.population.residentmaster.types.v1.AvregistreringTYPE;
-import se.riv.population.residentmaster.types.v1.AvregistreringsorsakKodTYPE;
-import se.riv.population.residentmaster.types.v1.JaNejTYPE;
-import se.riv.population.residentmaster.types.v1.NamnTYPE;
-import se.riv.population.residentmaster.types.v1.ResidentType;
-import se.riv.population.residentmaster.types.v1.SvenskAdressTYPE;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileType;
+import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
+import se.riv.strategicresourcemanagement.persons.person.v3.LookupProfileType;
+import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
 
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PUServiceImpl implements PUService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PUServiceImpl.class);
 
     @Autowired
-    private LookupResidentForFullProfileResponderInterface service;
+    private GetPersonsForProfileResponderInterface service;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     @Value("${putjanst.logicaladdress}")
     private String logicaladdress;
 
+    private PersonConverter personConverter = new PersonConverter();
+
     @Override
-    @Cacheable(value = PuCacheConfiguration.PERSON_CACHE_NAME,
-            key = "#personId",
-            unless = "#result.status == T(se.inera.intyg.infra.integration.pu.model.PersonSvar$Status).ERROR")
     public PersonSvar getPerson(Personnummer personId) {
 
         LOG.debug("Looking up person '{}'", personId.getPnrHash());
-        LookupResidentForFullProfileType parameters = new LookupResidentForFullProfileType();
-        parameters.setLookUpSpecification(new LookUpSpecificationType());
-        parameters.getPersonId().add(personId.getPersonnummerWithoutDash());
+
+        // Check cache
+        PersonSvar cachedPersonSvar = queryCache(personId);
+        if (cachedPersonSvar != null) {
+            return cachedPersonSvar;
+        }
+
+        GetPersonsForProfileType parameters = new GetPersonsForProfileType();
+        parameters.setProfile(LookupProfileType.P_2);
+
+        IIType personIdType = buildIITypeForPersonOrSamordningsnummer(personId);
+        parameters.getPersonId().add(personIdType);
         try {
-            LookupResidentForFullProfileResponseType response = service.lookupResidentForFullProfile(logicaladdress, parameters);
-            if (response.getResident().isEmpty()) {
+            GetPersonsForProfileResponseType response = service.getPersonsForProfile(logicaladdress, parameters);
+            if (response == null || response.getRequestedPersonRecord() == null || response.getRequestedPersonRecord().isEmpty()) {
                 LOG.warn("No person '{}' found", personId.getPnrHash());
                 return new PersonSvar(null, PersonSvar.Status.NOT_FOUND);
             }
 
-            ResidentType resident = response.getResident().get(0);
-
-            NamnTYPE namn = resident.getPersonpost().getNamn();
-
-            SvenskAdressTYPE adress = resident.getPersonpost().getFolkbokforingsadress();
-
-            AvregistreringTYPE avregistrering = resident.getPersonpost().getAvregistrering();
-            boolean isDead = avregistrering != null && AvregistreringsorsakKodTYPE.AV == avregistrering.getAvregistreringsorsakKod();
-
-            String adressRader = null;
-            String postnr = null;
-            String postort = null;
-            if (adress != null) {
-                adressRader = buildAdress(adress);
-                postnr = adress.getPostNr();
-                postort = adress.getPostort();
-            }
-            Person person = new Person(personId, resident.getSekretessmarkering() == JaNejTYPE.J, isDead, namn.getFornamn(),
-                    namn.getMellannamn(), namn.getEfternamn(), adressRader, postnr, postort);
-            LOG.debug("Person '{}' found", personId.getPnrHash());
-
-            return new PersonSvar(person, PersonSvar.Status.FOUND);
+            RequestedPersonRecordType resident = response.getRequestedPersonRecord().get(0);
+            PersonSvar personSvar = personConverter.toPersonSvar(personId, resident.getPersonRecord());
+            storeIfAbsent(personSvar);
+            return personSvar;
         } catch (SOAPFaultException e) {
             LOG.warn("SOAP fault occured, no person '{}' found.", personId.getPnrHash());
             return new PersonSvar(null, PersonSvar.Status.ERROR);
@@ -101,27 +95,99 @@ public class PUServiceImpl implements PUService {
         }
     }
 
+
+    private IIType buildIITypeForPersonOrSamordningsnummer(Personnummer personId) {
+        IIType personIdType = new IIType();
+        personIdType.setRoot(
+                PersonIdUtil.isSamordningsNummer(personId) ? PersonIdUtil.getSamordningsNummerRoot() : PersonIdUtil.getPersonnummerRoot());
+        personIdType.setExtension(personId.getPersonnummerWithoutDash());
+        return personIdType;
+    }
+
     @Override
-    @VisibleForTesting
-    @CacheEvict(value = "personCache", allEntries = true)
-    public void clearCache() {
-        LOG.debug("personCache cleared");
-    }
+    public Map<Personnummer, PersonSvar> getPersons(List<Personnummer> personIds) {
+        Map<Personnummer, PersonSvar> responseMap = new HashMap<>();
+        if (personIds == null || personIds.size() == 0) {
+            return responseMap;
+        }
+        List<Personnummer> toQuery = new ArrayList<>();
 
-    private String buildAdress(SvenskAdressTYPE adress) {
-        return joinIgnoreNulls(", ", adress.getCareOf(), adress.getUtdelningsadress1(), adress.getUtdelningsadress2());
-    }
-
-    private String joinIgnoreNulls(String separator, String... values) {
-        StringBuilder builder = new StringBuilder();
-        for (String value : values) {
-            if (value != null) {
-                if (builder.length() > 0) {
-                    builder.append(separator);
-                }
-                builder.append(value);
+        // Query cache first, put not found ones into toQuery list.
+        for (Personnummer pnr : personIds) {
+            PersonSvar personSvar = queryCache(pnr);
+            if (personSvar != null) {
+                responseMap.put(pnr, personSvar);
+            } else {
+                toQuery.add(pnr);
             }
         }
-        return builder.toString();
+
+        // If everything was cached, just return.
+        if (toQuery.size() == 0) {
+            return responseMap;
+        }
+
+        // Build request
+        GetPersonsForProfileType parameters = new GetPersonsForProfileType();
+        parameters.setProfile(LookupProfileType.P_2);
+        for (Personnummer pnr : toQuery) {
+            parameters.getPersonId().add(buildIITypeForPersonOrSamordningsnummer(pnr));
+        }
+
+        // Execute request
+        GetPersonsForProfileResponseType response = service.getPersonsForProfile(logicaladdress, parameters);
+        if (response == null || response.getRequestedPersonRecord() == null || response.getRequestedPersonRecord().size() == 0) {
+            LOG.warn("Problem fetching PersonSvar from PU-service. Returning cached items only.");
+            return responseMap;
+        }
+
+        // Iterate over response objects, transform and store in Map.
+        for (RequestedPersonRecordType requestedPersonRecordType : response.getRequestedPersonRecord()) {
+            Personnummer pnrFromResponse = new Personnummer(requestedPersonRecordType.getRequestedPersonalIdentity().getExtension());
+            PersonSvar personSvar = personConverter.toPersonSvar(pnrFromResponse, requestedPersonRecordType.getPersonRecord());
+            responseMap.put(pnrFromResponse, personSvar);
+        }
+
+        // We need to "diff" the list of requested PNR with the ones present in the hashmap. For any missing ones, we
+        // put an NOT_FOUND in.
+        if (personIds.size() != responseMap.size()) {
+            for (Personnummer pnr : personIds) {
+                if (!responseMap.containsKey(pnr)) {
+                    PersonSvar notFoundPersonSvar = new PersonSvar(null, PersonSvar.Status.NOT_FOUND);
+                    responseMap.put(pnr, notFoundPersonSvar);
+                }
+            }
+            LOG.warn(
+                    "One or more personnummer did not yield a response from our PU cache or the PU-service. "
+                            + "They have been added as NOT_FOUND entries.");
+        }
+
+        return responseMap;
+    }
+
+    private void storeIfAbsent(PersonSvar personSvar) {
+        Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
+        cache.putIfAbsent(personSvar.getPerson().getPersonnummer(), personSvar);
+    }
+
+    private PersonSvar queryCache(Personnummer personId) {
+        Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
+        PersonSvar personSvar = cache.get(personId, PersonSvar.class);
+        if (personSvar != null) {
+            return personSvar;
+        }
+        return null;
+    }
+
+    @Override
+    @VisibleForTesting
+    public void clearCache() {
+        LOG.debug("personCache cleared");
+        Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
+        cache.clear();
+    }
+
+    public void setService(GetPersonsForProfileResponderInterface service) {
+        this.service = service;
     }
 }

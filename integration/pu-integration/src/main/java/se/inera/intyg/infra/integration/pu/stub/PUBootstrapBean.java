@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import se.riv.population.residentmaster.types.v1.ResidentType;
+import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -64,8 +64,8 @@ public class PUBootstrapBean {
 
     private void addPersoner(Resource res) throws IOException {
         LOG.debug("Loading personer from " + res.getFilename());
-        ResidentType resident = objectMapper.readValue(res.getInputStream(), ResidentType.class);
+        PersonRecordType resident = objectMapper.readValue(res.getInputStream(), PersonRecordType.class);
         residentStore.addResident(resident);
-        LOG.debug("Loaded person " + resident.getPersonpost().getPersonId());
+        LOG.debug("Loaded person " + resident.getPersonalIdentity().getExtension());
     }
 }

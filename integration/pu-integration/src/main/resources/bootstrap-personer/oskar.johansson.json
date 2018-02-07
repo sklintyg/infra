@@ -1,15 +1,1 @@
-{
-    "sekretessmarkering": "N",
-    "personpost": {
-        "personId": "199008252398",
-        "namn": {
-            "fornamn": "Oskar II",
-            "efternamn": "Johansson"
-        },
-        "folkbokforingsadress": {
-            "utdelningsadress2": "XXXXXXXX",
-            "postNr": 99999,
-            "postort": "XXXXXXXX"
-        }
-    }
-}
+{"personalIdentity":{"extension":"199008252398"},"protectedPersonIndicator":false,"testIndicator":false,"primaryIdentity":false,"name":{"givenName":{"name":"Oskar II"},"middleName":{},"surname":{"name":"Johansson"}},"addressInformation":{"residentialAddress":{"postalAddress2":"XXXXXXXX","postalCode":99999,"city":"XXXXXXXX"}}}

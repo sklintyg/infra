@@ -1,17 +1,1 @@
-{
-    "sekretessmarkering": "N",
-    "personpost": {
-        "personId": "191212129999",
-        "namn": {
-            "fornamn": "Kent",
-            "efternamn": "Tolvansson"
-        },
-        "folkbokforingsadress": {
-            "careOf": "Berg",
-            "utdelningsadress1": "Storgatan 747",
-            "utdelningsadress2": "PL 1234",
-            "postNr": 12345,
-            "postort": "Hagnesta"
-        }
-    }
-}
+{"personalIdentity":{"extension":"191212129999"},"protectedPersonIndicator":false,"testIndicator":false,"primaryIdentity":false,"name":{"givenName":{"name":"Kent"},"middleName":{},"surname":{"name":"Tolvansson"}},"addressInformation":{"residentialAddress":{"careOf":"Berg","postalAddress1":"Storgatan 747","postalAddress2":"PL 1234","postalCode":12345,"city":"Hagnesta"}}}

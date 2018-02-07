@@ -23,7 +23,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.openhft.chronicle.map.ChronicleMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.riv.population.residentmaster.types.v1.ResidentType;
+import se.inera.intyg.schemas.contract.Personnummer;
+import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -69,31 +70,34 @@ public class ChronicleResidentStore {
      *
      * @param residentType
      */
-    public void addResident(ResidentType residentType) {
-        String pnr = residentType.getPersonpost().getPersonId();
+    public void addResident(PersonRecordType residentType) {
+        String pnr = residentType.getPersonalIdentity().getExtension();
+        pnr = new Personnummer(pnr).getPersonnummerWithoutDash();
         if (residents.containsKey(pnr)) {
             residents.remove(pnr);
         }
-        residents.put(residentType.getPersonpost().getPersonId(), toJson(residentType));
+        residents.put(pnr, toJson(residentType));
     }
 
-    ResidentType getResident(String id) {
+    PersonRecordType getResident(String pnr) {
         if (!active) {
             throw new IllegalStateException("Stub is deactivated for testing purposes.");
         }
-        if (!residents.containsKey(id)) {
+        String pnrWithoutDash = new Personnummer(pnr).getPersonnummerWithoutDash();
+        if (!residents.containsKey(pnrWithoutDash)) {
             return null;
         }
-        return fromJson(residents.get(id));
+        return fromJson(residents.get(pnrWithoutDash));
     }
 
     void removeResident(String personId) {
-        if (residents.containsKey(personId)) {
-            residents.remove(personId);
+        String personIdWithoutDash = new Personnummer(personId).getPersonnummerWithoutDash();
+        if (residents.containsKey(personIdWithoutDash)) {
+            residents.remove(personIdWithoutDash);
         }
     }
 
-    List<ResidentType> getAll() {
+    List<PersonRecordType> getAll() {
         if (!active) {
             throw new IllegalStateException("Stub is deactivated for testing purposes.");
         }
@@ -131,15 +135,15 @@ public class ChronicleResidentStore {
         }
     }
 
-    private ResidentType fromJson(String json) {
+    private PersonRecordType fromJson(String json) {
         try {
-            return objectMapper.readValue(json, ResidentType.class);
+            return objectMapper.readValue(json, PersonRecordType.class);
         } catch (IOException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
     }
 
-    private String toJson(ResidentType residentPost) {
+    private String toJson(PersonRecordType residentPost) {
 
         try {
             return objectMapper.writeValueAsString(residentPost);
@@ -148,7 +152,7 @@ public class ChronicleResidentStore {
         }
     }
 
-    private List<ResidentType> fromJson(Collection<String> xml) {
+    private List<PersonRecordType> fromJson(Collection<String> xml) {
         return xml.stream().map(this::fromJson).collect(Collectors.toList());
     }
 

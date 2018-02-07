@@ -3,11 +3,14 @@ dependencies {
   compile project(':common-cache-core')
 
   compile "net.openhft:chronicle-map:${chronicleMapVersion}"
-  compile "se.riv.population.residentmaster:population-residentmaster-schemas:${rivtaResidentMasterSchemasVersion}"
+  compile "se.riv.strategicresourcemanagement.persons.person:strategicresourcemanagement-persons-person-schemas:${rivtaGetPersonsPersonSchemasVersion}"
+
   compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
   compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
 
   runtime "org.springframework:spring-context-support:${springVersion}"
+
+  testCompile "se.riv.population.residentmaster:population-residentmaster-schemas:${rivtaResidentMasterSchemasVersion}"
 
   testCompile "org.springframework:spring-test:${springVersion}"
   testCompile "org.hamcrest:hamcrest-all:${hamcrestVersion}"

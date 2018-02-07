@@ -1,0 +1,15 @@
+{
+    "sekretessmarkering": "N",
+    "personpost": {
+        "personId": "198408209990",
+        "namn": {
+            "fornamn": "Fredrik",
+            "efternamn": "Fransman"
+        },
+        "folkbokforingsadress": {
+            "utdelningsadress2": "Frankvägen 11",
+            "postNr": 56344,
+            "postort": "Frankorten"
+        }
+    }
+}

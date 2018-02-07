@@ -1,0 +1,17 @@
+{
+    "sekretessmarkering": "N",
+    "personpost": {
+        "personId": "191212129999",
+        "namn": {
+            "fornamn": "Kent",
+            "efternamn": "Tolvansson"
+        },
+        "folkbokforingsadress": {
+            "careOf": "Berg",
+            "utdelningsadress1": "Storgatan 747",
+            "utdelningsadress2": "PL 1234",
+            "postNr": 12345,
+            "postort": "Hagnesta"
+        }
+    }
+}

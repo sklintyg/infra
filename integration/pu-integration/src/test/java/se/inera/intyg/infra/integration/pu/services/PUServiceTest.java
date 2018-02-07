@@ -18,22 +18,24 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
+import org.apache.ignite.cache.spring.SpringCacheManager;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.aop.framework.Advised;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.util.ReflectionTestUtils;
+import se.inera.intyg.infra.cache.core.BasicCacheConfiguration;
 import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.schemas.contract.Personnummer;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookUpSpecificationType;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookupResidentForFullProfileResponseType;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v1.LookupResidentForFullProfileType;
-import se.riv.population.residentmaster.lookupresidentforfullprofileresponder.v11.LookupResidentForFullProfileResponderInterface;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileType;
+import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
+import se.riv.strategicresourcemanagement.persons.person.v3.LookupProfileType;
 
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPFactory;
@@ -44,6 +46,8 @@ import java.io.File;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -54,13 +58,26 @@ import static org.mockito.Mockito.when;
 public class PUServiceTest {
 
     @Autowired
-    private PUService service;
+    private PUServiceImpl service;
 
     @Autowired
-    private LookupResidentForFullProfileResponderInterface residentService;
+    private GetPersonsForProfileResponderInterface residentService;
+
+    private SpringCacheManager cacheManager;
+
+    @Autowired
+    private BasicCacheConfiguration basicCacheConfiguration;
+
+    private static IIType iiType = new IIType();
+
+    @BeforeClass
+    public static void setupIIType() {
+        iiType.setExtension("191212121212");
+    }
 
     @Before
     public void setup() {
+        cacheManager = basicCacheConfiguration.cacheManager();
         service.clearCache();
     }
 
@@ -72,7 +89,6 @@ public class PUServiceTest {
             dataFile.delete();
         }
     }
-
 
     @Test
     public void checkExistingPersonWithFullAddress() {
@@ -145,25 +161,26 @@ public class PUServiceTest {
         String logicalAddress = "${putjanst.logicaladdress}";
 
         // Create mock
-        LookupResidentForFullProfileType parameters = new LookupResidentForFullProfileType();
-        parameters.setLookUpSpecification(new LookUpSpecificationType());
-        parameters.getPersonId().add("191212121212");
+        GetPersonsForProfileType parameters = new GetPersonsForProfileType();
+        parameters.setProfile(LookupProfileType.P_1);
+        parameters.getPersonId().add(iiType);
 
-        LookupResidentForFullProfileType parameters2 = new LookupResidentForFullProfileType();
-        parameters2.setLookUpSpecification(new LookUpSpecificationType());
-        parameters2.getPersonId().add("191212121212");
+        GetPersonsForProfileType parameters2 = new GetPersonsForProfileType();
+        parameters2.setProfile(LookupProfileType.P_1);
+        parameters2.getPersonId().add(iiType);
 
         System.err.println("Are they equal: " + parameters.equals(parameters2));
 
-        LookupResidentForFullProfileResponseType response = residentService.lookupResidentForFullProfile(logicalAddress, parameters);
-        LookupResidentForFullProfileResponderInterface mockResidentService = mock(LookupResidentForFullProfileResponderInterface.class);
+        GetPersonsForProfileResponseType response = residentService.getPersonsForProfile(logicalAddress, parameters);
+        GetPersonsForProfileResponderInterface mockResidentService = mock(GetPersonsForProfileResponderInterface.class);
 
-        when(mockResidentService.lookupResidentForFullProfile(logicalAddress, parameters)).thenReturn(response);
-        ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", mockResidentService);
+        when(mockResidentService.getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class))).thenReturn(response);
+        //ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", mockResidentService);
+        service.setService(mockResidentService);
 
         // First request should call the lookup service
         Person person = service.getPerson(new Personnummer("19121212-1212")).getPerson();
-        verify(mockResidentService).lookupResidentForFullProfile(logicalAddress, parameters);
+        verify(mockResidentService).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
         assertEquals("Tolvan", person.getFornamn());
         assertEquals("Tolvansson", person.getEfternamn());
         assertEquals("Svensson, Storgatan 1, PL 1234", person.getPostadress());
@@ -173,7 +190,7 @@ public class PUServiceTest {
         // This request should be cached
         person = service.getPerson(new Personnummer("19121212-1212")).getPerson();
         // lookupResidentForFullProfile should still only be called once
-        verify(mockResidentService).lookupResidentForFullProfile(logicalAddress, parameters);
+        verify(mockResidentService).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
         // person information should still be the same
         assertEquals("Tolvan", person.getFornamn());
         assertEquals("Tolvansson", person.getEfternamn());
@@ -181,7 +198,8 @@ public class PUServiceTest {
         assertEquals("12345", person.getPostnummer());
         assertEquals("Småmåla", person.getPostort());
 
-        ReflectionTestUtils.setField(((Advised)service).getTargetSource().getTarget(), "service", residentService);
+//        ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", residentService);
+        service.setService(residentService);
     }
 
     @Test
@@ -189,36 +207,37 @@ public class PUServiceTest {
         String logicalAddress = "${putjanst.logicaladdress}";
 
         // Create mock
-        LookupResidentForFullProfileType parameters = new LookupResidentForFullProfileType();
-        parameters.setLookUpSpecification(new LookUpSpecificationType());
-        parameters.getPersonId().add("191212121212");
+        GetPersonsForProfileType parameters = new GetPersonsForProfileType();
+        parameters.setProfile(LookupProfileType.P_1);
+        parameters.getPersonId().add(iiType);
 
-        LookupResidentForFullProfileResponseType response = residentService.lookupResidentForFullProfile(logicalAddress, parameters);
-        LookupResidentForFullProfileResponderInterface mockResidentService = mock(LookupResidentForFullProfileResponderInterface.class);
+        GetPersonsForProfileResponseType response = residentService.getPersonsForProfile(logicalAddress, parameters);
+        GetPersonsForProfileResponderInterface mockResidentService = mock(GetPersonsForProfileResponderInterface.class);
 
-        when(mockResidentService.lookupResidentForFullProfile(logicalAddress, parameters))
+        when(mockResidentService.getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class)))
                 .thenThrow(new SOAPFaultException(SOAPFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL).createFault()))
                 .thenThrow(new WebServiceException())
                 .thenReturn(response);
-        ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", mockResidentService);
+       // ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", mockResidentService);
+        service.setService(mockResidentService);
 
         // First request should call the lookup service
         PersonSvar personsvar = service.getPerson(new Personnummer("19121212-1212"));
-        verify(mockResidentService).lookupResidentForFullProfile(logicalAddress, parameters);
+        verify(mockResidentService).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
         assertEquals(personsvar.getStatus(), PersonSvar.Status.ERROR);
         assertNull(personsvar.getPerson());
 
         // since first request returned an error this request should call the lookup service again
         personsvar = service.getPerson(new Personnummer("19121212-1212"));
         // lookupResidentForFullProfile should still only be called once
-        verify(mockResidentService, times(2)).lookupResidentForFullProfile(logicalAddress, parameters);
+        verify(mockResidentService, times(2)).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
         assertEquals(personsvar.getStatus(), PersonSvar.Status.ERROR);
         assertNull(personsvar.getPerson());
 
         // the third attempt will go through and should return real data
         personsvar = service.getPerson(new Personnummer("19121212-1212"));
         // lookupResidentForFullProfile should still only be called once
-        verify(mockResidentService, times(3)).lookupResidentForFullProfile(logicalAddress, parameters);
+        verify(mockResidentService, times(3)).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
         assertEquals(personsvar.getStatus(), PersonSvar.Status.FOUND);
         Person person = personsvar.getPerson();
         assertEquals("Tolvan", person.getFornamn());
@@ -230,7 +249,7 @@ public class PUServiceTest {
         // the fourth attempt will return cached data, lookupResidentForFullProfile should only be called 3 times total
         personsvar = service.getPerson(new Personnummer("19121212-1212"));
         // lookupResidentForFullProfile should still only be called once
-        verify(mockResidentService, times(3)).lookupResidentForFullProfile(logicalAddress, parameters);
+        verify(mockResidentService, times(3)).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
         assertEquals(personsvar.getStatus(), PersonSvar.Status.FOUND);
         person = personsvar.getPerson();
         assertEquals("Tolvan", person.getFornamn());
@@ -239,6 +258,7 @@ public class PUServiceTest {
         assertEquals("12345", person.getPostnummer());
         assertEquals("Småmåla", person.getPostort());
 
-        ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", residentService);
+       // ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", residentService);
+        service.setService(residentService);
     }
 }
