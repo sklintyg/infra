@@ -5,7 +5,7 @@
       <ns3:root>123456789</ns3:root>
       <ns3:extension>1234567</ns3:extension>
     </intygs-id>
-    <typ>            <!--  -->
+    <typ>            <!-- HEJ -->
       <ns3:code>LISJP</ns3:code>
       <ns3:codeSystem>b64ea353-e8f6-4832-b563-fc7d46f29548</ns3:codeSystem>
       <ns3:displayName>Läkarintyg för sjukpenning</ns3:displayName>
