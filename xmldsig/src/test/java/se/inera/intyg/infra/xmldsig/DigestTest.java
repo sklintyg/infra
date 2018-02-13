@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 
 import javax.xml.bind.DatatypeConverter;
@@ -53,13 +51,10 @@ public class DigestTest {
      * </code>
      */
     @Test
-    public void testDigestSha1() throws NoSuchAlgorithmException, DecoderException, UnsupportedEncodingException {
+    public void testDigestSha1() throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
 
         byte[] data = messageDigest.digest(DATA_TO_BE_SIGNED.getBytes("UTF-8"));
-
-        // Assert that the hex-encoded string rep is equal to the example string from SecMaker docs
-        assertEquals(original_sha1, new String(Hex.encodeHex(messageDigest.digest(DATA_TO_BE_SIGNED.getBytes()))));
 
         // Lexically, the example string in uppercase is equal to
         assertEquals(original_sha1.toUpperCase(), DatatypeConverter.printHexBinary(data));
@@ -68,15 +63,7 @@ public class DigestTest {
     }
 
     @Test
-    public void testDigestSha1FailsWhenNotNormalized() throws NoSuchAlgorithmException, DecoderException, UnsupportedEncodingException {
-
-        byte[] data = original_sha1.getBytes();
-
-        assertEquals(EXPECTED_SHA1_DIGEST, new String(java.util.Base64.getEncoder().encode(data)));
-    }
-
-    @Test
-    public void testDigestSha64() throws NoSuchAlgorithmException, DecoderException, UnsupportedEncodingException {
+    public void testDigestSha64() throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 
         byte[] data = messageDigest.digest(INTYG_DATA.getBytes("UTF-8"));

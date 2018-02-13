@@ -20,6 +20,8 @@ package se.inera.intyg.infra.xmldsig.factory;
 
 import se.inera.intyg.infra.xmldsig.model.CanonicalizationMethodType;
 import se.inera.intyg.infra.xmldsig.model.DigestMethodType;
+import se.inera.intyg.infra.xmldsig.model.KeyInfoType;
+import se.inera.intyg.infra.xmldsig.model.ObjectFactory;
 import se.inera.intyg.infra.xmldsig.model.ReferenceType;
 import se.inera.intyg.infra.xmldsig.model.SignatureMethodType;
 import se.inera.intyg.infra.xmldsig.model.SignatureType;
@@ -27,20 +29,28 @@ import se.inera.intyg.infra.xmldsig.model.SignatureValueType;
 import se.inera.intyg.infra.xmldsig.model.SignedInfoType;
 import se.inera.intyg.infra.xmldsig.model.TransformType;
 import se.inera.intyg.infra.xmldsig.model.TransformsType;
+import se.inera.intyg.infra.xmldsig.model.X509DataType;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.DigestMethod;
+import java.nio.charset.StandardCharsets;
 
 public final class PartialSignatureFactory {
 
     private static final String SIGNATURE_ALGORITHM = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
     private static final String TRANSFORM_ALGORITHM = "http://www.w3.org/2000/09/xmldsig#enveloped-signature";
 
-
     private PartialSignatureFactory() {
 
     }
 
+    /**
+     * Builds a partially populated {@link SignatureType}.
+     *
+     * Contains appropriate algorithms and elements for subsequent population of digest, signature value and
+     * keyinfo.
+     */
     public static SignatureType buildSignature() {
         SignatureType signature = new SignatureType();
         SignedInfoType signedInfo = new SignedInfoType();
@@ -71,5 +81,24 @@ public final class PartialSignatureFactory {
         SignatureValueType signatureValue = new SignatureValueType();
         signature.setSignatureValue(signatureValue);
         return signature;
+    }
+
+    /**
+     * Builds a {@link KeyInfoType} element with the supplied certificate added into a X509Data->X509Certificate element.
+     *
+     * @param certificate
+     *            Base64-encoded string of a x509 certificate.
+     * @return
+     *         A KeyInfoType object.
+     */
+    public static KeyInfoType buildKeyInfo(String certificate) {
+        KeyInfoType keyInfo = new KeyInfoType();
+
+        ObjectFactory objectFactory = new ObjectFactory();
+        X509DataType x509DataType = objectFactory.createX509DataType();
+        JAXBElement<byte[]> x509cert = objectFactory.createX509DataTypeX509Certificate(certificate.getBytes(StandardCharsets.UTF_8));
+        x509DataType.getX509IssuerSerialOrX509SKIOrX509SubjectName().add(x509cert);
+        keyInfo.getContent().add(objectFactory.createX509Data(x509DataType));
+        return keyInfo;
     }
 }

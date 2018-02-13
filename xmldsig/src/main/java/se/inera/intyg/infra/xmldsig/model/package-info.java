@@ -23,11 +23,14 @@
 // Generated on: 2018.02.08 at 11:07:51 AM CET
 //
 
-@javax.xml.bind.annotation.XmlSchema
-        (namespace = "http://www.w3.org/2000/09/xmldsig#",
-                xmlns = {@XmlNs(prefix = "", namespaceURI = "http://www.w3.org/2000/09/xmldsig#")},
-                elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+// CHECKSTYLE:OFF JavadocStyle
+
+
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.w3.org/2000/09/xmldsig#",
+        xmlns = { @XmlNs(prefix = "", namespaceURI = "http://www.w3.org/2000/09/xmldsig#") },
+        elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 
 package se.inera.intyg.infra.xmldsig.model;
 
 import javax.xml.bind.annotation.XmlNs;
+// CHECKSTYLE:ON JavadocStyle

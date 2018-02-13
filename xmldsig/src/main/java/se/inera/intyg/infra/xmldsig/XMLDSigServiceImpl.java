@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.output.NullWriter;
 import org.apache.xml.security.c14n.Canonicalizer;
 import org.slf4j.Logger;
@@ -27,6 +26,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 import se.inera.intyg.infra.xmldsig.factory.PartialSignatureFactory;
+import se.inera.intyg.infra.xmldsig.model.KeyInfoType;
 import se.inera.intyg.infra.xmldsig.model.SignatureType;
 
 import javax.annotation.PostConstruct;
@@ -84,10 +84,20 @@ public class XMLDSigServiceImpl implements XMLDSigService {
     }
 
     /**
+     * Builds a <KeyInfo/> element with the supplied certificate put into a child X509Certificate element.
+     */
+    @Override
+    public KeyInfoType buildKeyInfoForCertificate(String certificate) {
+        return PartialSignatureFactory.buildKeyInfo(certificate);
+    }
+
+    /**
      * Loads the XMLDSig schema and validates our output SignatureType vs the schema.
+     *
      * @param signatureType
      */
-    private void validate(SignatureType signatureType) {
+    @Override
+    public void validate(SignatureType signatureType) {
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
             ClassPathResource classPathResource = new ClassPathResource("schemas/xmldsig.xsd");
@@ -96,7 +106,6 @@ public class XMLDSigServiceImpl implements XMLDSigService {
             JAXBContext jc = JAXBContext.newInstance(SignatureType.class);
 
             Marshaller marshaller = jc.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.setSchema(schema);
             marshaller.setEventHandler(event -> {
                 LOG.error("Error validating Signature element vs schema: {}", event.getMessage());
@@ -115,7 +124,7 @@ public class XMLDSigServiceImpl implements XMLDSigService {
         try {
             MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
             byte[] sha256 = digest.digest(canonXmlString.getBytes("UTF-8"));
-            return Base64.encodeBase64(sha256);
+            return java.util.Base64.getEncoder().encode(sha256);
         } catch (IOException | NoSuchAlgorithmException e) {
             LOG.error("{} caught during digest and base64-encoding, message: {}", e.getClass().getSimpleName(), e.getMessage());
             throw new IllegalArgumentException(e.getMessage());

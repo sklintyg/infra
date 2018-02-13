@@ -23,8 +23,10 @@
 // Generated on: 2018.02.08 at 11:07:51 AM CET
 //
 
-
 package se.inera.intyg.infra.xmldsig.model;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -36,14 +38,13 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
- * <p>Java class for SignatureType complex type.
+ * <p>
+ * Java class for SignatureType complex type.
  *
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
  * &lt;complexType name="SignatureType">
@@ -65,10 +66,10 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Signature", propOrder = {
-    "signedInfo",
-    "signatureValue",
-    "keyInfo",
-    "object"
+        "signedInfo",
+        "signatureValue",
+        "keyInfo",
+        "object"
 })
 @XmlRootElement(name = "Signature")
 public class SignatureType {
@@ -91,8 +92,8 @@ public class SignatureType {
      * Gets the value of the signedInfo property.
      *
      * @return
-     *     possible object is
-     *     {@link SignedInfoType }
+     *         possible object is
+     *         {@link SignedInfoType }
      *
      */
     public SignedInfoType getSignedInfo() {
@@ -103,8 +104,8 @@ public class SignatureType {
      * Sets the value of the signedInfo property.
      *
      * @param value
-     *     allowed object is
-     *     {@link SignedInfoType }
+     *            allowed object is
+     *            {@link SignedInfoType }
      *
      */
     public void setSignedInfo(SignedInfoType value) {
@@ -115,8 +116,8 @@ public class SignatureType {
      * Gets the value of the signatureValue property.
      *
      * @return
-     *     possible object is
-     *     {@link SignatureValueType }
+     *         possible object is
+     *         {@link SignatureValueType }
      *
      */
     public SignatureValueType getSignatureValue() {
@@ -127,8 +128,8 @@ public class SignatureType {
      * Sets the value of the signatureValue property.
      *
      * @param value
-     *     allowed object is
-     *     {@link SignatureValueType }
+     *            allowed object is
+     *            {@link SignatureValueType }
      *
      */
     public void setSignatureValue(SignatureValueType value) {
@@ -139,8 +140,8 @@ public class SignatureType {
      * Gets the value of the keyInfo property.
      *
      * @return
-     *     possible object is
-     *     {@link KeyInfoType }
+     *         possible object is
+     *         {@link KeyInfoType }
      *
      */
     public KeyInfoType getKeyInfo() {
@@ -151,8 +152,8 @@ public class SignatureType {
      * Sets the value of the keyInfo property.
      *
      * @param value
-     *     allowed object is
-     *     {@link KeyInfoType }
+     *            allowed object is
+     *            {@link KeyInfoType }
      *
      */
     public void setKeyInfo(KeyInfoType value) {
@@ -170,8 +171,9 @@ public class SignatureType {
      *
      * <p>
      * For example, to add a new item, do as follows:
+     *
      * <pre>
-     *    getObject().add(newItem);
+     * getObject().add(newItem);
      * </pre>
      *
      *
@@ -192,8 +194,8 @@ public class SignatureType {
      * Gets the value of the id property.
      *
      * @return
-     *     possible object is
-     *     {@link String }
+     *         possible object is
+     *         {@link String }
      *
      */
     public String getId() {
@@ -204,8 +206,8 @@ public class SignatureType {
      * Sets the value of the id property.
      *
      * @param value
-     *     allowed object is
-     *     {@link String }
+     *            allowed object is
+     *            {@link String }
      *
      */
     public void setId(String value) {

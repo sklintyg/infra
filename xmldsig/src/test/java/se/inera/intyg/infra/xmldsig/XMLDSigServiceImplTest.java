@@ -26,7 +26,11 @@ import org.springframework.core.io.Resource;
 import se.inera.intyg.infra.xmldsig.model.ReferenceType;
 import se.inera.intyg.infra.xmldsig.model.SignatureType;
 import se.inera.intyg.infra.xmldsig.model.SignedInfoType;
+import se.inera.intyg.infra.xmldsig.model.X509DataType;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.DigestMethod;
 import javax.xml.crypto.dsig.Transform;
@@ -69,6 +73,15 @@ public class XMLDSigServiceImplTest {
         assertEquals(Transform.ENVELOPED, referenceType.getTransforms().getTransform().get(0).getAlgorithm());
     }
 
+    @Test
+    public void testBuildPartialSignatureCheckKeyInfo() throws IOException, JAXBException {
+        InputStream xmlResourceInputStream = getXmlResource();
+        SignatureType signatureType = testee.prepareSignature(IOUtils.toString(xmlResourceInputStream));
+        JAXBContext jc = JAXBContext.newInstance(SignatureType.class, X509DataType.class);
+
+        Marshaller marshaller = jc.createMarshaller();
+        marshaller.marshal(signatureType, System.out);
+    }
 
     private InputStream getXmlResource() {
         try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext()) {
