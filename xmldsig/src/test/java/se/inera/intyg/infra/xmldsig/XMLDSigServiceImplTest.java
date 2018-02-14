@@ -83,6 +83,13 @@ public class XMLDSigServiceImplTest {
         marshaller.marshal(signatureType, System.out);
     }
 
+    @Test
+    public void testValidate() throws IOException, JAXBException {
+        InputStream xmlResourceInputStream = getXmlResource();
+        SignatureType signatureType = testee.prepareSignature(IOUtils.toString(xmlResourceInputStream));
+        testee.validate(signatureType);
+    }
+
     private InputStream getXmlResource() {
         try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext()) {
             Resource resource = context.getResource(INTYG_XML_LOCATION);

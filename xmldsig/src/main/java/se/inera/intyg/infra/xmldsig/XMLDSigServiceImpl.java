@@ -35,9 +35,12 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -79,7 +82,6 @@ public class XMLDSigServiceImpl implements XMLDSigService {
         String canonicalizedXml = canonicalizeXml(intygXml);
         byte[] digest = generateDigest(canonicalizedXml);
         signatureType.getSignedInfo().getReference().get(0).setDigestValue(digest);
-        validate(signatureType);
         return signatureType;
     }
 
@@ -100,9 +102,11 @@ public class XMLDSigServiceImpl implements XMLDSigService {
     public void validate(SignatureType signatureType) {
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
-            ClassPathResource classPathResource = new ClassPathResource("schemas/xmldsig.xsd");
+            ClassPathResource classPathResource = new ClassPathResource("/schemas/xmldsig.xsd");
+            InputStream inputStream = classPathResource.getInputStream();
+            Source source = new StreamSource(inputStream);
 
-            Schema schema = sf.newSchema(classPathResource.getFile());
+            Schema schema = sf.newSchema(source);
             JAXBContext jc = JAXBContext.newInstance(SignatureType.class);
 
             Marshaller marshaller = jc.createMarshaller();

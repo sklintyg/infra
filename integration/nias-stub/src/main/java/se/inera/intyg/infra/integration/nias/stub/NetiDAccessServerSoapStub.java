@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.infra.integration.nias.stub;
 
-import com.secmaker.netid.nias.v1.AuthenticateResponse;
 import com.secmaker.netid.nias.v1.DeviceInfoType;
 import com.secmaker.netid.nias.v1.NetiDAccessServerSoap;
 import com.secmaker.netid.nias.v1.ResultCollect;
@@ -29,45 +28,41 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.integration.nias.stub.model.OngoingSigning;
+import se.inera.intyg.infra.integration.nias.stub.util.StubSignUtil;
 
+import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXB;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.UUID;
 
+/**
+ * NetiD Access Server stub. Will actually perform real signing of the supplied digest using
+ * private key and includes the public key in the response.
+ */
 public class NetiDAccessServerSoapStub implements NetiDAccessServerSoap {
 
     private static final Logger LOG = LoggerFactory.getLogger(NetiDAccessServerSoapStub.class);
+
     private static final int NOTBEFORE_OR_AFTER_MINUTES = 5;
 
-    // CHECKSTYLE:OFF LineLength
-    private static String testCertificate = "MIIGlzCCBH+gAwIBAgIRANKzVCto/Yfl7EFpkTKewNIwDQYJKoZIhvcNAQEFBQAwQDELMAkGA1UEBhMCU0UxETAPBgNVBAoMCEluZXJhIEFCMR4wHAYDVQQDDBVTSVRIUyBUeXBlIDIgQ0EgdjEg"
-            +
-            "UFAwHhcNMTQxMDA4MTIzMTQxWhcNMTYxMDA4MjE1ODAwWjCBqTELMAkGA1UEBhMCU0UxGDAWBgoJkiaJk/IsZAEZFghTZXJ2aWNlczEUMBIGCgmSJomT8ixkARkWBE5vZDExETAPBgNVBAoMCEluZXJhIEFCMS4wLAYDVQQDDCVpZHAyLmFjY3R"
-            +
-            "lc3Quc2FrZXJoZXRzdGphbnN0LmluZXJhLnNlMScwJQYDVQQFEx5UX1NFUlZJQ0VTX1NFMTY1NTY1NTk0MjMwLTEwQjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCTX5f9jknNAfc0oQaTSPMA8EfbQUoUktlnQ/O74yln7oxTR8"
-            +
-            "Dvna2N76E13Q3XuSi2XPAuDIPz/OO4xMJhGEgVZxMgyTOHFYGxvtvOhEfncUhVUrEMBARqTPftp+y3reqAn9qc9w9kvu6q21VKZWsvZw62u9wD9IdM1dA1m3Ilgb5cebI6vLdAUpWYQwwtVBtnxpWa1tw1rYBkDUsCoQSrOLe16HueY5sDdnWeu"
-            +
-            "J4OQ2E1GBh3dBO9ncl0x0hXwzS3wlSPb3EcLPm3N7Vv2ZMZvI5dmOka8pygNjgy6kA2ivBAAmgGbXdxwB406TCCOokPOLyYsr2Wh0MNEp1KOXEXAgMBAAGjggIgMIICHDAOBgNVHQ8BAf8EBAMCAKAwdwYDVR0fBHAwbjAxoC+gLYYraHR0cDov"
-            +
-            "L2NybDFwcC5zaXRocy5zZS9zaXRoc3R5cGUyY2F2MXBwLmNybDA5oDegNYYzaHR0cDovL2NybDJwcC5zaXRocy5zanVuZXQub3JnL3NpdGhzdHlwZTJjYXYxcHAuY3JsMIHaBggrBgEFBQcBAQSBzTCByjAjBggrBgEFBQcwAYYXaHR0cDovL29"
-            +
-            "jc3AxcHAuc2l0aHMuc2UwKwYIKwYBBQUHMAGGH2h0dHA6Ly9vY3NwMnBwLnNpdGhzLnNqdW5ldC5vcmcwNgYIKwYBBQUHMAKGKmh0dHA6Ly9haWFwcC5zaXRocy5zZS9zaXRoc3R5cGUyY2F2MXBwLmNlcjA+BggrBgEFBQcwAoYyaHR0cDovL2"
-            +
-            "FpYXBwLnNpdGhzLnNqdW5ldC5vcmcvc2l0aHN0eXBlMmNhdjFwcC5jZXIwSwYDVR0gBEQwQjBABgcqhXAjYwICMDUwMwYIKwYBBQUHAgEWJ2h0dHA6Ly9ycGFwcC5zaXRocy5zZS9zaXRoc3JwYXYxcHAuaHRtbDAnBgNVHSUEIDAeBggrBgEFB"
-            +
-            "QcDBAYIKwYBBQUHAwEGCCsGAQUFBwMCMB0GA1UdDgQWBBST0pyEqOjPdHILWq9SxARkG5e+uzAfBgNVHSMEGDAWgBT5V/vYlSUtHe5/9szrwg+78CJv0jANBgkqhkiG9w0BAQUFAAOCAgEATzZZuY9H3i/gonBANHVxQiBHJbfXcCz5TCTxENCG"
-            +
-            "TAFSlxTEF8xhXue9W41DRo78f18q/nS0WJUDXjeYgR+19PsJdxC6gbFbVFjc8I99Ml6qqCSD3T+8j9HIpqP2VMt5SRXpVGfziyqodadVhNZBo3DM1uIv/oXyKNbPSel5i/C7J+W8tffxQfo/iZpqQ/w7wpiGPO5y3BcZK47D9pFLjnG4JJZ08Pn"
-            +
-            "5ugG37en1BCMa7bvIhyTuzJjU043Mw/UDCiKty5eP/xfwCzPLkictFJFUlCVjFHGj5boOxnHDObN1dans/Z3jNZMpIT+hM7+UsGw0B2T0+h+360Et9edtJSqgTAQxqwYQcBYtvVDEwsQ5WgWGcMX+ZeBy6jglp2DusshxEuIVRARK+y37I9V8xz"
-            +
-            "FNxRmeZOZfSvJO0ztOUfifskEkAco4HF9YIg/1eM72lDYU2WVKehm/unRNFb19xKFSmvRpRLHIcP5L6VbOEXTFY7HPvHrXNVYBcGk49A38TT1oklkHPd6xvUJKjpKzQSlKz0jtjcgVYrFMqKJivTM8fjXZ/uQWNK/8E1YzU9P1yq+jBko/r3wJm"
-            +
-            "nMrTf63Bm1jN6YnlI+esTc7WYTrrwXtona4xteDxR+zD2LBYN7bgwiR9JD24P78WzUjHDB/QEKUAQwHPO0pa8FnOg5Elc4=";
-    // CHECKSTYLE:ON LineLength
+    private RSAPrivateKey privKey;
+    private RSAPublicKey pubKey;
+
+    @PostConstruct
+    void init() {
+        this.privKey = StubSignUtil.loadPrivateKey();
+        this.pubKey = StubSignUtil.loadPublicKey();
+    }
 
     @Autowired
     private NiasServiceStub niasServiceStub;
@@ -105,9 +100,9 @@ public class NetiDAccessServerSoapStub implements NetiDAccessServerSoap {
             deviceInfoType.setName("OS X");
             deviceInfoType.setVersion("10.11");
             resultCollect.setDeviceInfo(deviceInfoType);
-            resultCollect.setSignature("signature-data");
+            resultCollect.setSignature(createSignature(ongoingSigning.getUserNonVisibleData().getBytes(StandardCharsets.UTF_8)));
             UserInfoType userInfoType = new UserInfoType();
-            userInfoType.setCertificate(testCertificate);
+            userInfoType.setCertificate(Base64.getEncoder().encodeToString(pubKey.getEncoded()));
             userInfoType.setGivenName("Tolvan");
             userInfoType.setName("Tolvan Tolvansson");
             userInfoType.setPersonalNumber(ongoingSigning.getPersonalNumber());
@@ -128,14 +123,29 @@ public class NetiDAccessServerSoapStub implements NetiDAccessServerSoap {
         return resultCollect;
     }
 
+    private String createSignature(byte[] digest) {
+        try {
+            Signature rsa = Signature.getInstance("SHA256withRSA");
+            rsa.initSign(privKey);
+            rsa.update(digest);
+            byte[] signatureBytes = rsa.sign();
+            return Base64.getEncoder().encodeToString(signatureBytes);
+        } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
+            throw new IllegalStateException("Not possible to sign digest: " + e.getMessage());
+        }
+    }
+
     @Override
     public String authenticate(String personId, String s1, String s2) {
-        LOG.info("ENTER - authenticate with personId {}", personId);
-        AuthenticateResponse authenticateResponse = new AuthenticateResponse();
-        authenticateResponse.setAuthenticateResult("OK");
+        throw new IllegalStateException("Not implemented");
+    }
 
-        StringWriter sw = new StringWriter();
-        JAXB.marshal(authenticateResponse, sw);
-        return sw.toString();
+    // For testing
+    void setPrivKey(RSAPrivateKey privKey) {
+        this.privKey = privKey;
+    }
+
+    void setPubKey(RSAPublicKey pubKey) {
+        this.pubKey = pubKey;
     }
 }
