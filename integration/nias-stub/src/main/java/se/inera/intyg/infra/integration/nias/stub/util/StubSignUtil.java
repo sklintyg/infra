@@ -33,15 +33,19 @@ import java.security.spec.X509EncodedKeySpec;
 
 public final class StubSignUtil {
 
+    private static final String RSA_ALG = "RSA";
+    private static final String PUBLIC_KEY_FILE = "public_key.der";
+    private static final String PRIVATE_KEY_FILE = "private_key.der";
+
     private StubSignUtil() {
     }
 
     public static RSAPublicKey loadPublicKey() {
         try {
-            BufferedInputStream bis = loadResourceAsStream("public_key.der");
+            BufferedInputStream bis = loadResourceAsStream(PUBLIC_KEY_FILE);
 
             X509EncodedKeySpec spec1 = new X509EncodedKeySpec(IOUtils.readBytesFromStream(bis));
-            KeyFactory kf1 = KeyFactory.getInstance("RSA");
+            KeyFactory kf1 = KeyFactory.getInstance(RSA_ALG);
             return (RSAPublicKey) kf1.generatePublic(spec1);
         } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new IllegalArgumentException("Cannot load private key in stub: " + e.getMessage());
@@ -50,10 +54,10 @@ public final class StubSignUtil {
 
     public static RSAPrivateKey loadPrivateKey() {
         try {
-            BufferedInputStream bis2 = loadResourceAsStream("private_key.der");
+            BufferedInputStream bis2 = loadResourceAsStream(PRIVATE_KEY_FILE);
             byte[] privKeyBytes = IOUtils.readBytesFromStream(bis2);
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(privKeyBytes);
-            KeyFactory kf = KeyFactory.getInstance("RSA");
+            KeyFactory kf = KeyFactory.getInstance(RSA_ALG);
             return (RSAPrivateKey) kf.generatePrivate(spec);
         } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new IllegalArgumentException("Cannot load private key in stub: " + e.getMessage());
