@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 import se.funktionstjanster.grp.v1.GrpFault;
 import se.funktionstjanster.grp.v1.ProgressStatusType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,8 +37,24 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Profile({ "dev", "wc-grp-stub", "wc-all-stubs", "testability-api" })
 public class GrpServiceStub {
 
+    // orderRef => status
     private Map<String, ProgressStatusType> signatureStatus = new ConcurrentHashMap<>();
+
+    // txId => orderRef
     private Map<String, String> orderRefMapping = new ConcurrentHashMap<>();
+
+    // txId => personalNumber
+    private Map<String, String> personalNumberMapping = new ConcurrentHashMap<>();
+
+    public synchronized List<OngoingGrpSignature> getAll() {
+        List<OngoingGrpSignature> outList = new ArrayList<>();
+        for (String transactionId : orderRefMapping.keySet()) {
+            String orderRef = orderRefMapping.get(transactionId);
+            String personalNumber = personalNumberMapping.get(transactionId);
+            outList.add(new OngoingGrpSignature(personalNumber, orderRef, transactionId, signatureStatus.get(orderRef)));
+        }
+        return outList;
+    }
 
 
     public synchronized GrpSignatureStatus getStatus(String orderRef) {
@@ -91,7 +109,11 @@ public class GrpServiceStub {
         String orderRef = orderRefMapping.get(transactionId);
         signatureStatus.remove(orderRef);
         orderRefMapping.remove(transactionId);
+        personalNumberMapping.remove(transactionId);
     }
 
+    public void putPersonalNumber(String transactionId, String personalNumber) {
+        personalNumberMapping.putIfAbsent(transactionId, personalNumber);
+    }
 }
 

@@ -29,6 +29,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * @author Magnus Ekstrand on 2017-05-16.
@@ -37,6 +38,13 @@ public class GrpStubRestApi {
 
     @Autowired
     private GrpServiceStub serviceStub;
+
+    @GET
+    @Path("/statuses")
+    @Produces(MediaType.TEXT_PLAIN)
+    public List<OngoingGrpSignature> getOngoingSignatures() throws GrpFault {
+        return serviceStub.getAll();
+    }
 
     @GET
     @Path("/orderref/{transactionId}")

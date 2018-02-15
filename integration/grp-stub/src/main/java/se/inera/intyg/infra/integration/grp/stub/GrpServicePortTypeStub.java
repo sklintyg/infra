@@ -19,7 +19,6 @@
 package se.inera.intyg.infra.integration.grp.stub;
 
 import com.google.common.base.Joiner;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.funktionstjanster.grp.v1.AuthenticateRequestType;
 import se.funktionstjanster.grp.v1.CollectRequestType;
@@ -35,6 +34,8 @@ import se.funktionstjanster.grp.v1.SignatureFileRequestType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * @author Magnus Ekstrand on 2017-05-16.
@@ -65,6 +66,7 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
         // Update GRP service stub
         serviceStub.putOrderRef(response.getTransactionId(), response.getOrderRef());
         serviceStub.updateStatus(response.getOrderRef(), ProgressStatusType.STARTED);
+        serviceStub.putPersonalNumber(response.getTransactionId(), authenticateRequestType.getPersonalNumber());
 
         return response;
     }
