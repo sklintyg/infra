@@ -31,12 +31,12 @@
   </beans>
 
   <beans profile="dev,wc-all-stubs,wc-loggtjanst-stub">
-    <jaxws:endpoint address="/store-log-stub"
+    <jaxws:endpoint address="/stubs/ehr/log/store/StoreLog/1/rivtabp21"
       implementor="se.inera.intyg.infra.loggtjanststub.StoreLogStubResponder" />
   </beans>
 
   <beans profile="dev,testability-api">
-    <jaxrs:server address="/loggtjanst-stub">
+    <jaxrs:server address="/api/loggtjanst-api">
       <jaxrs:serviceBeans>
         <ref bean="loggtjanstStubRestApi" />
       </jaxrs:serviceBeans>

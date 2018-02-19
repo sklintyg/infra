@@ -121,7 +121,7 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
         Statistikbild statistikbild = new Statistikbild();
         statistikbild.setAndringstidpunkt(LocalDateTime.of(2017, 1, 1, 1, 1));
         statistikbild.setInkommandediagnos(diagnos);
-        statistikbild.setBildadress("/services/srs-statistics-stub/" + diagnos.getCode());
+        statistikbild.setBildadress("/services/stubs/srs-statistics-stub/" + diagnos.getCode());
         statistikbild.setDiagnos(diagnos);
         statistikbild.setStatistikstatus(Statistikstatus.OK);
         return statistikbild;
