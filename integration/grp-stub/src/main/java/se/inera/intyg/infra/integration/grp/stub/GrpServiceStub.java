@@ -115,5 +115,9 @@ public class GrpServiceStub {
     public void putPersonalNumber(String transactionId, String personalNumber) {
         personalNumberMapping.putIfAbsent(transactionId, personalNumber);
     }
+
+    public String getPersonalNumber(String transactionId) {
+        return personalNumberMapping.get(transactionId);
+    }
 }
 

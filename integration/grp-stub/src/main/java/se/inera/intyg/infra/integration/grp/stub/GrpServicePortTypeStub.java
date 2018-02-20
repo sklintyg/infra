@@ -42,7 +42,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  */
 public class GrpServicePortTypeStub implements GrpServicePortType {
 
-    public static final String PERSON_ID = "19121212-1212";
+    private static final String PERSON_ID = "19121212-1212";
 
     @Autowired
     private GrpServiceStub serviceStub;
@@ -92,7 +92,7 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
 
         Property p = new Property();
         p.setName("Subject.SerialNumber");
-        p.setValue(PERSON_ID);
+        p.setValue(serviceStub.getPersonalNumber(response.getTransactionId()));
         response.getAttributes().add(p);
 
         return response;

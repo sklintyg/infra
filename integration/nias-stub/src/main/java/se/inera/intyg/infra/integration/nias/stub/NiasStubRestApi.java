@@ -32,6 +32,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.LocalDateTime;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -39,6 +42,7 @@ import javax.ws.rs.core.Response;
 public class NiasStubRestApi {
 
     private static final Logger LOG = LoggerFactory.getLogger(NiasStubRestApi.class);
+    public static final int REMOVE_AFTER_MINUTES = 4;
 
     @Autowired
     private NiasServiceStub serviceStub;
@@ -47,7 +51,16 @@ public class NiasStubRestApi {
     @Path("/statuses")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStatuses() {
-        return Response.ok(serviceStub.getAll()).build();
+        List<OngoingSigning> list = serviceStub.getAll();
+        Iterator<OngoingSigning> i = list.iterator();
+        while (i.hasNext()) {
+            OngoingSigning ongoingSigning = i.next();
+            if (ongoingSigning.getCreated().isBefore(LocalDateTime.now().minusMinutes(REMOVE_AFTER_MINUTES))) {
+                serviceStub.remove(ongoingSigning.getOrderRef());
+                i.remove();
+            }
+        }
+        return Response.ok(list).build();
     }
 
     @GET

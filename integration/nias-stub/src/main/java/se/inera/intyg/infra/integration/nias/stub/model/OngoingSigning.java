@@ -18,7 +18,10 @@
  */
 package se.inera.intyg.infra.integration.nias.stub.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.inera.intyg.infra.integration.nias.stub.NiasSignatureStatus;
+
+import java.time.LocalDateTime;
 
 public class OngoingSigning {
 
@@ -28,6 +31,7 @@ public class OngoingSigning {
     private String userNonVisibleData;
     private String endUserInfo;
     private NiasSignatureStatus status;
+    private LocalDateTime created;
 
     public OngoingSigning(String orderRef, String personalNumber, String userVisibleData, String userNonVisibleData, String endUserInfo) {
         this.orderRef = orderRef;
@@ -35,6 +39,7 @@ public class OngoingSigning {
         this.userVisibleData = userVisibleData;
         this.userNonVisibleData = userNonVisibleData;
         this.endUserInfo = endUserInfo;
+        this.created = LocalDateTime.now();
     }
 
     public OngoingSigning(String orderRef, String personalNumber, String userVisibleData, String userNonVisibleData, String endUserInfo,
@@ -89,5 +94,10 @@ public class OngoingSigning {
 
     public void setStatus(NiasSignatureStatus status) {
         this.status = status;
+    }
+
+    @JsonIgnore
+    public LocalDateTime getCreated() {
+        return created;
     }
 }
