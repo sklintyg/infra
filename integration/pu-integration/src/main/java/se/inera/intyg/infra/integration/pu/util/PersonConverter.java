@@ -29,6 +29,9 @@ import se.riv.strategicresourcemanagement.persons.person.v3.ResidentialAddressTy
 public class PersonConverter {
 
     public PersonSvar toPersonSvar(Personnummer personId, PersonRecordType personRecord) {
+        if (personRecord == null) {
+            return null;
+        }
         NameType namn = personRecord.getName();
 
         String adressRader = null;

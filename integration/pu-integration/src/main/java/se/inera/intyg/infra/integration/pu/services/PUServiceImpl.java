@@ -144,8 +144,14 @@ public class PUServiceImpl implements PUService {
         // Iterate over response objects, transform and store in Map.
         for (RequestedPersonRecordType requestedPersonRecordType : response.getRequestedPersonRecord()) {
             Personnummer pnrFromResponse = new Personnummer(requestedPersonRecordType.getRequestedPersonalIdentity().getExtension());
-            PersonSvar personSvar = personConverter.toPersonSvar(pnrFromResponse, requestedPersonRecordType.getPersonRecord());
-            responseMap.put(pnrFromResponse, personSvar);
+
+            if (requestedPersonRecordType.getPersonRecord() != null) {
+                PersonSvar personSvar = personConverter.toPersonSvar(pnrFromResponse, requestedPersonRecordType.getPersonRecord());
+                responseMap.put(pnrFromResponse, personSvar);
+            } else {
+                LOG.warn("Got PU response for pnr {} but record contained no PersonRecord.", pnrFromResponse.getPnrHash());
+            }
+
         }
 
         // We need to "diff" the list of requested PNR with the ones present in the hashmap. For any missing ones, we
