@@ -158,13 +158,13 @@ public class PuStubRestApi {
 
     private boolean getAndSetAvliden(PersonRecordType resident, boolean newValue) {
         DeregistrationType avreg = resident.getDeregistration();
-        boolean oldValue = avreg != null && avreg.getDeregistrationReasonCode().equals("TODOFIXTHIS");
+        boolean oldValue = avreg != null && avreg.getDeregistrationReasonCode().equals("AV");
         if (newValue) { // is avliden
             avreg = new DeregistrationType();
             PartialDateType pdt = new PartialDateType();
             pdt.setValue(LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE));
             avreg.setDeregistrationDate(pdt);
-            avreg.setDeregistrationReasonCode("TODOFIXTHIS");
+            avreg.setDeregistrationReasonCode("AV");
         } else {
             avreg = null;
         }

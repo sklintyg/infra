@@ -49,7 +49,7 @@ public class PersonConverter {
         }
 
         DeregistrationType avregistrering = personRecord.getDeregistration();
-        boolean isDead = avregistrering != null && "TODOFIXME".equals(avregistrering.getDeregistrationReasonCode());
+        boolean isDead = avregistrering != null && "AV".equals(avregistrering.getDeregistrationReasonCode());
 
         String firstName = namn.getGivenName() != null ? namn.getGivenName().getName() : null;
         String middleName = namn.getMiddleName() != null ? namn.getMiddleName().getName() : null;
