@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.funktionstjanster.grp.v1.GrpFault;
-import se.funktionstjanster.grp.v1.ProgressStatusType;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -57,12 +56,10 @@ public class GrpStubRestApi {
         Iterator<OngoingGrpSignature> i = list.iterator();
         while (i.hasNext()) {
             OngoingGrpSignature ongoingGrpSignature = i.next();
-            if (ongoingGrpSignature.getGrpSignatureStatus() == ProgressStatusType.COMPLETE
-                    || ongoingGrpSignature.getCreated().isBefore(LocalDateTime.now().minusMinutes(REMOVE_AFTER_MINUTS))) {
+            if (ongoingGrpSignature.getCreated().isBefore(LocalDateTime.now().minusMinutes(REMOVE_AFTER_MINUTS))) {
                 serviceStub.fail(ongoingGrpSignature.getTransactionId());
                 LOG.info("GRP stub removed COMPLETE or stale entry for orderRef '{}'", ongoingGrpSignature.getOrderRef());
                 i.remove();
-
             }
         }
         return list;

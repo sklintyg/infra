@@ -95,7 +95,6 @@ public class PUServiceImpl implements PUService {
         }
     }
 
-
     private IIType buildIITypeForPersonOrSamordningsnummer(Personnummer personId) {
         IIType personIdType = new IIType();
         personIdType.setRoot(
@@ -136,6 +135,12 @@ public class PUServiceImpl implements PUService {
 
         // Execute request
         GetPersonsForProfileResponseType response = service.getPersonsForProfile(logicaladdress, parameters);
+        return handleResponse(personIds, responseMap, response);
+    }
+
+    // Visible for unit tests
+    Map<Personnummer, PersonSvar> handleResponse(List<Personnummer> personIds, Map<Personnummer, PersonSvar> responseMap,
+            GetPersonsForProfileResponseType response) {
         if (response == null || response.getRequestedPersonRecord() == null || response.getRequestedPersonRecord().size() == 0) {
             LOG.warn("Problem fetching PersonSvar from PU-service. Returning cached items only.");
             return responseMap;
@@ -145,8 +150,14 @@ public class PUServiceImpl implements PUService {
         for (RequestedPersonRecordType requestedPersonRecordType : response.getRequestedPersonRecord()) {
             Personnummer pnrFromResponse = Personnummer.createValidatedPersonnummer(
                     requestedPersonRecordType.getRequestedPersonalIdentity().getExtension()).get();
-            PersonSvar personSvar = personConverter.toPersonSvar(pnrFromResponse, requestedPersonRecordType.getPersonRecord());
-            responseMap.put(pnrFromResponse, personSvar);
+
+            if (requestedPersonRecordType.getPersonRecord() != null) {
+                PersonSvar personSvar = personConverter.toPersonSvar(pnrFromResponse, requestedPersonRecordType.getPersonRecord());
+                responseMap.put(pnrFromResponse, personSvar);
+                storeIfAbsent(personSvar);
+            } else {
+                LOG.warn("Got PU response for pnr {} but record contained no PersonRecord.", pnrFromResponse.getPersonnummerHash());
+            }
         }
 
         // We need to "diff" the list of requested PNR with the ones present in the hashmap. For any missing ones, we

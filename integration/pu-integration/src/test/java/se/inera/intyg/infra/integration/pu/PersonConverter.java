@@ -79,7 +79,7 @@ public class PersonConverter {
         AvregistreringTYPE avreg = residentType.getPersonpost().getAvregistrering();
         if (avreg != null && avreg.getAvregistreringsorsakKod() == AvregistreringsorsakKodTYPE.AV) {
             DeregistrationType avregistrering = new DeregistrationType();
-            avregistrering.setDeregistrationReasonCode("TODOFIXME");
+            avregistrering.setDeregistrationReasonCode("AV");
             personRecord.setDeregistration(avregistrering);
         }
     }
