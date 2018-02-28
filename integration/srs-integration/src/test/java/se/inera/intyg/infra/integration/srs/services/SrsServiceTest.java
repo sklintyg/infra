@@ -62,6 +62,9 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 @ContextConfiguration("classpath:SrsServiceTest/test-context.xml")
 public class SrsServiceTest {
 
+    private static final String PNR_VALID = "191212121212";
+    private static final String PNR_INVALID = "1912121212";
+
     @Autowired
     private SrsService service;
 
@@ -81,7 +84,7 @@ public class SrsServiceTest {
 
     @Test
     public void testNone() throws Exception {
-        SrsResponse response = service.getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter,
+        SrsResponse response = service.getSrs(createUser(), "intygId", createPersonnummer(PNR_VALID), "M18", utdatafilter,
                 Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNull(response.getStatistikBild());
         assertNull(response.getAtgarderObs());
@@ -93,7 +96,7 @@ public class SrsServiceTest {
     @Test
     public void testSrsPrediktion() throws Exception {
         utdatafilter.setPrediktion(true);
-        SrsResponse response = service.getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter,
+        SrsResponse response = service.getSrs(createUser(), "intygId", createPersonnummer(PNR_VALID), "M18", utdatafilter,
                 Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNotNull(response);
         assertEquals(new Integer(1), response.getPredictionLevel());
@@ -105,7 +108,7 @@ public class SrsServiceTest {
     @Test
     public void testSrsStatistik() throws Exception {
         utdatafilter.setStatistik(true);
-        SrsResponse response = service.getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter,
+        SrsResponse response = service.getSrs(createUser(), "intygId", createPersonnummer(PNR_VALID), "M18", utdatafilter,
                 Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNotNull(response.getStatistikBild());
         assertNull(response.getAtgarderRek());
@@ -118,7 +121,7 @@ public class SrsServiceTest {
     public void testSrsPrediktionAndAtgardRekommendation() throws Exception {
         utdatafilter.setPrediktion(true);
         utdatafilter.setAtgardsrekommendation(true);
-        SrsResponse response = service.getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter,
+        SrsResponse response = service.getSrs(createUser(), "intygId", createPersonnummer(PNR_VALID), "M18", utdatafilter,
                 Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNotNull(response);
         assertEquals(new Integer(1), response.getPredictionLevel());
@@ -133,7 +136,7 @@ public class SrsServiceTest {
         utdatafilter.setAtgardsrekommendation(true);
         utdatafilter.setPrediktion(true);
         utdatafilter.setStatistik(true);
-        SrsResponse response = service.getSrs(createUser(), "intygId", new Personnummer("191212121212"), "M18", utdatafilter,
+        SrsResponse response = service.getSrs(createUser(), "intygId", createPersonnummer(PNR_VALID), "M18", utdatafilter,
                 Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNotNull(response);
         assertEquals(new Integer(1), response.getPredictionLevel());
@@ -176,7 +179,7 @@ public class SrsServiceTest {
     public void testGetConsent() throws InvalidPersonNummerException {
         // Use reflection to spy on the stub to make sure we are using the correct request
         final String hsaId = "hsa";
-        final Personnummer persNr = new Personnummer("1912121212");
+        final Personnummer persNr = createPersonnummer(PNR_INVALID);
         Samtyckesstatus response = service.getConsent(hsaId, persNr);
         assertNotNull(response);
         assertEquals(Samtyckesstatus.INGET, response);
@@ -185,7 +188,7 @@ public class SrsServiceTest {
     @Test
     public void testSetConsent() throws Exception {
         final String hsaId = "hsa";
-        final Personnummer persNr = new Personnummer("1912121212");
+        final Personnummer persNr = createPersonnummer(PNR_VALID);
         ResultCodeEnum response = service.setConsent(hsaId, persNr, true);
         assertNotNull(response);
         assertEquals(ResultCodeEnum.OK, response);
@@ -247,6 +250,10 @@ public class SrsServiceTest {
     public void testGetSRSForDiagnosisCodeInvalidRequest() {
         service.getSrsForDiagnose(null);
 
+    }
+
+    private Personnummer createPersonnummer(String pnr) {
+        return Personnummer.createValidatedPersonnummer(pnr).get();
     }
 
     private IntygUser createUser() {

@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.infra.integration.pu.util;
 
-import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 /**
@@ -45,16 +44,16 @@ public final class PersonIdUtil {
      */
     public static boolean isSamordningsNummer(Personnummer personNummer) {
 
-        // In order to determine if a personnummer is a samordningsnummer, we need to have a normalized yyyyMMdd-NNNN
+        // In order to determine if a personnummer is a samordningsnummer, we need to have a normalized yyyyMMddNNNN
         // number. If we cannot parse the encapsulated string, it certainly isn't a personnummer.
-        try {
-            String normalizedPersonnummer = personNummer.getNormalizedPnr();
+        if (personNummer.isValid()) {
+            String normalizedPersonnummer = personNummer.getPersonnummer();
             char dateDigit = normalizedPersonnummer.charAt(SAMORDNING_MONTH_INDEX);
             return Character.getNumericValue(dateDigit) >= SAMORDNING_MONTH_VALUE_MIN;
-        } catch (InvalidPersonNummerException e) {
-            // An invalid personnummer cannot be a samordningsnummer.
-            return false;
         }
+
+        // An invalid personnummer cannot be a samordningsnummer.
+        return false;
     }
 
     public static String getSamordningsNummerRoot() {

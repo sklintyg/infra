@@ -62,7 +62,7 @@ public class PUServiceImpl implements PUService {
     @Override
     public PersonSvar getPerson(Personnummer personId) {
 
-        LOG.debug("Looking up person '{}'", personId.getPnrHash());
+        LOG.debug("Looking up person '{}'", personId.getPersonnummerHash());
 
         // Check cache
         PersonSvar cachedPersonSvar = queryCache(personId);
@@ -78,7 +78,7 @@ public class PUServiceImpl implements PUService {
         try {
             GetPersonsForProfileResponseType response = service.getPersonsForProfile(logicaladdress, parameters);
             if (response == null || response.getRequestedPersonRecord() == null || response.getRequestedPersonRecord().isEmpty()) {
-                LOG.warn("No person '{}' found", personId.getPnrHash());
+                LOG.warn("No person '{}' found", personId.getPersonnummerHash());
                 return new PersonSvar(null, PersonSvar.Status.NOT_FOUND);
             }
 
@@ -87,10 +87,10 @@ public class PUServiceImpl implements PUService {
             storeIfAbsent(personSvar);
             return personSvar;
         } catch (SOAPFaultException e) {
-            LOG.warn("SOAP fault occured, no person '{}' found.", personId.getPnrHash());
+            LOG.warn("SOAP fault occured, no person '{}' found.", personId.getPersonnummerHash());
             return new PersonSvar(null, PersonSvar.Status.ERROR);
         } catch (WebServiceException e) {
-            LOG.warn("Error occured, no person '{}' found.", personId.getPnrHash());
+            LOG.warn("Error occured, no person '{}' found.", personId.getPersonnummerHash());
             return new PersonSvar(null, PersonSvar.Status.ERROR);
         }
     }
@@ -100,7 +100,7 @@ public class PUServiceImpl implements PUService {
         IIType personIdType = new IIType();
         personIdType.setRoot(
                 PersonIdUtil.isSamordningsNummer(personId) ? PersonIdUtil.getSamordningsNummerRoot() : PersonIdUtil.getPersonnummerRoot());
-        personIdType.setExtension(personId.getPersonnummerWithoutDash());
+        personIdType.setExtension(personId.getPersonnummer());
         return personIdType;
     }
 
@@ -143,7 +143,8 @@ public class PUServiceImpl implements PUService {
 
         // Iterate over response objects, transform and store in Map.
         for (RequestedPersonRecordType requestedPersonRecordType : response.getRequestedPersonRecord()) {
-            Personnummer pnrFromResponse = new Personnummer(requestedPersonRecordType.getRequestedPersonalIdentity().getExtension());
+            Personnummer pnrFromResponse = Personnummer.createValidatedPersonnummer(
+                    requestedPersonRecordType.getRequestedPersonalIdentity().getExtension()).get();
             PersonSvar personSvar = personConverter.toPersonSvar(pnrFromResponse, requestedPersonRecordType.getPersonRecord());
             responseMap.put(pnrFromResponse, personSvar);
         }

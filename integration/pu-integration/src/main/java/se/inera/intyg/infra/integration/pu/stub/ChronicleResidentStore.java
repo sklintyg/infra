@@ -72,28 +72,31 @@ public class ChronicleResidentStore {
      */
     public void addResident(PersonRecordType residentType) {
         String pnr = residentType.getPersonalIdentity().getExtension();
-        pnr = new Personnummer(pnr).getPersonnummerWithoutDash();
-        if (residents.containsKey(pnr)) {
-            residents.remove(pnr);
+        Personnummer personnummer = Personnummer.createValidatedPersonnummer(pnr).get();
+        if (personnummer.isValid()) {
+            // Only add valid personnummer
+            if (residents.containsKey(pnr)) {
+                residents.remove(pnr);
+            }
+            residents.put(pnr, toJson(residentType));
         }
-        residents.put(pnr, toJson(residentType));
     }
 
     PersonRecordType getResident(String pnr) {
         if (!active) {
             throw new IllegalStateException("Stub is deactivated for testing purposes.");
         }
-        String pnrWithoutDash = new Personnummer(pnr).getPersonnummerWithoutDash();
-        if (!residents.containsKey(pnrWithoutDash)) {
+        Personnummer personnummer = Personnummer.createValidatedPersonnummer(pnr).get();
+        if (!personnummer.isValid() || !residents.containsKey(personnummer.getPersonnummer())) {
             return null;
         }
-        return fromJson(residents.get(pnrWithoutDash));
+        return fromJson(residents.get(personnummer.getPersonnummer()));
     }
 
     void removeResident(String personId) {
-        String personIdWithoutDash = new Personnummer(personId).getPersonnummerWithoutDash();
-        if (residents.containsKey(personIdWithoutDash)) {
-            residents.remove(personIdWithoutDash);
+        Personnummer personnummer = Personnummer.createValidatedPersonnummer(personId).get();
+        if (personnummer.isValid() && residents.containsKey(personnummer.getPersonnummer())) {
+            residents.remove(personnummer.getPersonnummer());
         }
     }
 
