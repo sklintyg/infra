@@ -30,7 +30,7 @@
   <bean id="niasStubRestApi" class="se.inera.intyg.infra.integration.nias.stub.NiasStubRestApi"/>
   <bean id="niasServiceStub" class="se.inera.intyg.infra.integration.nias.stub.NiasServiceStub"/>
 
-  <jaxws:endpoint address="/netid-access-server-stub" implementor="se.inera.intyg.infra.integration.nias.stub.NetiDAccessServerSoapStub"/>
+  <jaxws:endpoint address="/stubs/netid-access-server-stub" implementor="se.inera.intyg.infra.integration.nias.stub.NetiDAccessServerSoapStub"/>
 
   <jaxrs:server address="/nias-api">
     <jaxrs:serviceBeans>

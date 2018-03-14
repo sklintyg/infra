@@ -19,30 +19,30 @@
   -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jaxws="http://cxf.apache.org/jaxws"
-    xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                           http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
-                           http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd"
-       profile="dev,wc-all-stubs,wc-pu-stub">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:jaxws="http://cxf.apache.org/jaxws"
+  xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+  http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd"
+  profile="dev,wc-all-stubs,wc-pu-stub">
 
-  <jaxws:endpoint address="/pu" implementor="se.inera.intyg.infra.integration.pu.stub.GetPersonsForProfileWsStub"/>
+  <jaxws:endpoint address="/stubs/strategicresourcemanagement/persons/person/GetPersonsForProfile/3/rivtabp21" implementor="se.inera.intyg.infra.integration.pu.stub.GetPersonsForProfileWsStub"/>
 
-    <bean class="se.inera.intyg.infra.integration.pu.stub.PUBootstrapBean" lazy-init="false"/>
-    <bean class="se.inera.intyg.infra.integration.pu.stub.ChronicleResidentStore"/>
-    <bean id="puStubRestApi" class="se.inera.intyg.infra.integration.pu.stub.PuStubRestApi"/>
+  <bean class="se.inera.intyg.infra.integration.pu.stub.PUBootstrapBean" lazy-init="false"/>
+  <bean class="se.inera.intyg.infra.integration.pu.stub.ChronicleResidentStore"/>
+  <bean id="puStubRestApi" class="se.inera.intyg.infra.integration.pu.stub.PuStubRestApi"/>
 
-    <jaxrs:server address="/pu-api">
-      <jaxrs:serviceBeans>
-        <ref bean="puStubRestApi"/>
-      </jaxrs:serviceBeans>
-      <jaxrs:providers>
-        <ref bean="jacksonJsonProvider"/>
-      </jaxrs:providers>
-      <jaxrs:extensionMappings>
-        <entry key="json" value="application/json"/>
-      </jaxrs:extensionMappings>
-    </jaxrs:server>
+  <jaxrs:server address="/api/pu-api">
+    <jaxrs:serviceBeans>
+      <ref bean="puStubRestApi"/>
+    </jaxrs:serviceBeans>
+    <jaxrs:providers>
+      <ref bean="jacksonJsonProvider"/>
+    </jaxrs:providers>
+    <jaxrs:extensionMappings>
+      <entry key="json" value="application/json"/>
+    </jaxrs:extensionMappings>
+  </jaxrs:server>
 
 </beans>
