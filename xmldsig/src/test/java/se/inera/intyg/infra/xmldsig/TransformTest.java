@@ -18,42 +18,43 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.Resource;
+import se.inera.intyg.infra.xmldsig.util.XsltUtil;
 
-import javax.xml.bind.JAXBException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
-import static org.junit.Assert.assertTrue;
-
-public class XMLDSigServiceImplTest {
-
-    private XMLDSigServiceImpl testee = new XMLDSigServiceImpl();
+public class TransformTest {
 
     @Before
     public void init() {
-        testee.init();
+        org.apache.xml.security.Init.init();
     }
 
+   // @Test
+    public void testTransform() throws UnsupportedEncodingException {
+        InputStream is = getXmlResource("classpath:/unsigned/lisjp.xml");
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-    // Use this test to manually test signed documents.
-    // @Test
-    public void testValidateSignature() throws IOException, JAXBException {
+        XsltUtil.transform(is, buffer, "stripnamespaces.xslt");
+        byte[] bytes = buffer.toByteArray();
+        InputStream inputStream = new ByteArrayInputStream(bytes);
 
-        InputStream xmlResourceInputStream = getXmlResource("classpath:/netid-test/simple_after_netid_sign.xml");
-        String xml = IOUtils.toString(xmlResourceInputStream);
-        String canonXml = testee.canonicalizeXml(xml);
+        ByteArrayOutputStream out2  = new ByteArrayOutputStream();
+        XsltUtil.transform(inputStream, out2, "stripmetadata.xslt");
+        String xml = new XMLDSigServiceImpl().canonicalizeXml(new String(out2.toByteArray(), "UTF-8"));
 
-        boolean result = testee.validateSignatureValidity(canonXml);
-        assertTrue(result);
+        System.out.println(xml);
     }
 
-    private InputStream getXmlResource(String location) {
+    private InputStream getXmlResource(String source) {
         try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext()) {
-            Resource resource = context.getResource(location);
+            Resource resource = context.getResource(source);
             return resource.getInputStream();
         } catch (IOException e) {
             throw new IllegalArgumentException(e.getMessage());

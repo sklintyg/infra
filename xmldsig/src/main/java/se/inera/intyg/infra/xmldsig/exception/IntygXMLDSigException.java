@@ -16,18 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.xmldsig;
+package se.inera.intyg.infra.xmldsig.exception;
 
-import se.inera.intyg.infra.xmldsig.model.KeyInfoType;
-import se.inera.intyg.infra.xmldsig.model.SignatureType;
+public class IntygXMLDSigException extends RuntimeException {
 
-public interface XMLDSigService {
+    public IntygXMLDSigException(String message) {
+        super(message);
+    }
 
-    KeyInfoType buildKeyInfoForCertificate(String certificate);
-
-    void validateFollowsSchema(SignatureType signatureType);
-
-    boolean validateSignatureValidity(String signatureXml);
-
-    String digestToBase64(String xml);
+    public IntygXMLDSigException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

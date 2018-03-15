@@ -18,12 +18,15 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullWriter;
 import org.apache.xml.security.c14n.Canonicalizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import se.inera.intyg.infra.xmldsig.factory.PartialSignatureFactory;
 import se.inera.intyg.infra.xmldsig.model.KeyInfoType;
@@ -35,14 +38,21 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
+import javax.xml.crypto.dsig.Reference;
+import javax.xml.crypto.dsig.XMLSignature;
+import javax.xml.crypto.dsig.XMLSignatureFactory;
+import javax.xml.crypto.dsig.dom.DOMValidateContext;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Iterator;
 
 /**
  * Provides Intyg-specific functionality for preparing XMLDSig signatures.
@@ -53,7 +63,7 @@ import java.security.NoSuchAlgorithmException;
 public class XMLDSigServiceImpl implements XMLDSigService {
 
     private static final Logger LOG = LoggerFactory.getLogger(XMLDSigServiceImpl.class);
-    private static final String CANONICALIZER_ALGORITHM = CanonicalizationMethod.EXCLUSIVE_WITH_COMMENTS;
+    private static final String CANONICALIZER_ALGORITHM = CanonicalizationMethod.EXCLUSIVE;
     private static final String DIGEST_ALGORITHM = "SHA-256";
 
     @PostConstruct
@@ -61,29 +71,6 @@ public class XMLDSigServiceImpl implements XMLDSigService {
         org.apache.xml.security.Init.init();
     }
 
-    /**
-     * Prepares an XMLDSig signature.
-     *
-     * Given the supplied XML, the XML is canonicalized and a SHA-256 digest is created and Base64-encoded into the
-     * DigestValue field.
-     *
-     * Also, relevant algorithms for digest, signature and canonicalization method are specified on the body of the
-     * returned {@link SignatureType}.
-     *
-     * @param intygXml
-     *            XML document to be canonicalized and digested.
-     * @return
-     *         Partially filled SignatureType, i.e. everything except SignatureValue and KeyInfo should be populated.
-     */
-    @Override
-    public SignatureType prepareSignature(String intygXml) {
-        SignatureType signatureType = PartialSignatureFactory.buildSignature();
-
-        String canonicalizedXml = canonicalizeXml(intygXml);
-        byte[] digest = generateDigest(canonicalizedXml);
-        signatureType.getSignedInfo().getReference().get(0).setDigestValue(digest);
-        return signatureType;
-    }
 
     /**
      * Builds a <KeyInfo/> element with the supplied certificate put into a child X509Certificate element.
@@ -99,7 +86,7 @@ public class XMLDSigServiceImpl implements XMLDSigService {
      * @param signatureType
      */
     @Override
-    public void validate(SignatureType signatureType) {
+    public void validateFollowsSchema(SignatureType signatureType) {
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
             ClassPathResource classPathResource = new ClassPathResource("/schemas/xmldsig.xsd");
@@ -121,6 +108,59 @@ public class XMLDSigServiceImpl implements XMLDSigService {
         }
     }
 
+    @Override
+    public boolean validateSignatureValidity(String signatureXml) {
+        XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        try {
+            Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(signatureXml));
+            NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
+            if (nl.getLength() == 0) {
+                throw new Exception("Cannot find Signature element");
+            }
+
+            // Create a DOMValidateContext and specify a KeySelector
+            // and document context.
+            DOMValidateContext valContext = new DOMValidateContext(new X509KeySelector(), nl.item(0));
+
+            // Unmarshal the XMLSignature.
+            XMLSignature sig = fac.unmarshalXMLSignature(valContext);
+
+            // Validate the XMLSignature.
+            boolean coreValidity = sig.validate(valContext);
+
+            // Check core validation status.
+            if (!coreValidity) {
+                LOG.error("Signature failed core validation");
+                boolean sv = sig.getSignatureValue().validate(valContext);
+                LOG.info("signature validation status: " + sv);
+                if (!sv) {
+                    // Check the validation status of each Reference.
+                    Iterator i = sig.getSignedInfo().getReferences().iterator();
+                    for (int j = 0; i.hasNext(); j++) {
+                        boolean refValid = ((Reference) i.next()).validate(valContext);
+                        LOG.info("ref[" + j + "] validity status: " + refValid);
+                    }
+                }
+            } else {
+                LOG.info("Signature passed core validation");
+            }
+            return coreValidity;
+        } catch (Exception e) {
+            LOG.error("Caught {} validating signature. Msg: {}", e.getClass().getName(), e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public String digestToBase64(String xml) {
+        String canonicalizedXml = canonicalizeXml(xml);
+        byte[] digest = generateDigest(canonicalizedXml);
+        return new String(digest, Charset.forName("UTF-8"));
+    }
+
     /**
      * This method takes the canonalized string (or any string we want a digest for) and computes a SHA-256 hash of it.
      */
@@ -135,7 +175,8 @@ public class XMLDSigServiceImpl implements XMLDSigService {
         }
     }
 
-    private String canonicalizeXml(String intygXml) {
+//    @Override
+    String canonicalizeXml(String intygXml) {
         try {
             Canonicalizer canonicalizer = Canonicalizer.getInstance(CANONICALIZER_ALGORITHM);
             byte[] canonicalizedXmlAsBytes = canonicalizer.canonicalize(intygXml.getBytes("UTF-8"));

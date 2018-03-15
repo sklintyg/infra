@@ -16,18 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.xmldsig;
+package se.inera.intyg.infra.integration.nias.stub.util;
 
-import se.inera.intyg.infra.xmldsig.model.KeyInfoType;
-import se.inera.intyg.infra.xmldsig.model.SignatureType;
+import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPrivateKey;
 
-public interface XMLDSigService {
+public class Keys {
 
-    KeyInfoType buildKeyInfoForCertificate(String certificate);
+    private RSAPrivateKey privateKey;
+    private X509Certificate x509Certificate;
 
-    void validateFollowsSchema(SignatureType signatureType);
+    public Keys(RSAPrivateKey privateKey, X509Certificate x509Certificate) {
+        this.privateKey = privateKey;
+        this.x509Certificate = x509Certificate;
+    }
 
-    boolean validateSignatureValidity(String signatureXml);
+    public RSAPrivateKey getPrivateKey() {
+        return privateKey;
+    }
 
-    String digestToBase64(String xml);
+    public X509Certificate getX509Certificate() {
+        return x509Certificate;
+    }
 }
