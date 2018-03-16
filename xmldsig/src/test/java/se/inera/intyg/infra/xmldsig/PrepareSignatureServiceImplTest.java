@@ -50,13 +50,13 @@ public class PrepareSignatureServiceImplTest {
     public void testBuildPreparedSignature() throws IOException {
         InputStream xmlResource = getXmlResource("classpath:/unsigned/signed-lisjp.xml");
 
-        IntygSignature intygSignature = testee.prepareSignature(IOUtils.toString(xmlResource));
-        byte[] signature = createSignature(intygSignature.getSignedInfoForSigning().getBytes(Charset.forName("UTF-8")));
+        IntygXMLDSignature intygXMLDSignature = testee.prepareSignature(IOUtils.toString(xmlResource));
+        byte[] signature = createSignature(intygXMLDSignature.getSigningData().getBytes(Charset.forName("UTF-8")));
         SignatureValueType svt = new SignatureValueType();
         svt.setValue(signature);
-        intygSignature.getSignatureType().setSignatureValue(svt);
+        intygXMLDSignature.getSignatureType().setSignatureValue(svt);
 
-        String base64 = testee.encodeSignatureIntoSignedXml(intygSignature.getSignatureType(), intygSignature.getDigestedXml());
+        String base64 = testee.encodeSignatureIntoSignedXml(intygXMLDSignature.getSignatureType(), intygXMLDSignature.getCanonicalizedContent());
         System.out.println(base64);
         System.out.println(new String(Base64.getDecoder().decode(base64)));
     }
@@ -80,7 +80,7 @@ public class PrepareSignatureServiceImplTest {
 //        }
 //    }
 
-//    private void signSignedInfo(IntygSignature intygSignature) {
+//    private void signSignedInfo(IntygXMLDSignature intygSignature) {
 //        try {
 //            JAXBContext jc = JAXBContext.newInstance(SignatureType.class);
 //

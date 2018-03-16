@@ -3,7 +3,7 @@
   <xsl:strip-space elements="*"/>
 
   <!-- Second block removes the elements named in the select attribute below -->
-  <xsl:param name="removeElementsNamed" select="'|skickatTidpunkt|relation|status|'"/>
+  <xsl:param name="removeElementsNamed" select="'|skickatTidpunkt|relation|status|valideringsunderlag|'"/>
 
   <xsl:template match="node()|@*" name="identity">
     <xsl:copy>

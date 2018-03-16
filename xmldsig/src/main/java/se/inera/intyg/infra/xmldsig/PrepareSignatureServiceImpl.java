@@ -77,7 +77,7 @@ public class PrepareSignatureServiceImpl {
      * @param intygXml
      *            XML document to be canonicalized and digested.
      */
-    public IntygSignature prepareSignature(String intygXml) {
+    public IntygXMLDSignature prepareSignature(String intygXml) {
         // 1. Transform into our base canonical form without <Register..> and dynamic attributes.
         String xml = tranformIntoIntygXml(intygXml);
 
@@ -95,7 +95,7 @@ public class PrepareSignatureServiceImpl {
         String signedInfoForSigning = buildSignedInfoForSigning(signatureType);
 
         // 6. Populate and return
-        return new IntygSignature(signatureType, xml, signedInfoForSigning);
+        return new IntygXMLDSignature(signatureType, xml, signedInfoForSigning);
     }
 
     /**
@@ -197,10 +197,10 @@ public class PrepareSignatureServiceImpl {
         }
     }
 
-    private byte[] generateDigest(String canonXmlString) {
+    public byte[] generateDigest(String stringToDigest) {
         try {
             MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
-            byte[] sha256 = digest.digest(canonXmlString.getBytes(UTF_8));
+            byte[] sha256 = digest.digest(stringToDigest.getBytes(UTF_8));
             return Base64.getEncoder().encode(sha256);
         } catch (IOException | NoSuchAlgorithmException e) {
             LOG.error("{} caught during digest and base64-encoding, message: {}", e.getClass().getSimpleName(), e.getMessage());
