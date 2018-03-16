@@ -34,7 +34,7 @@ import se.inera.intyg.infra.xmldsig.model.X509DataType;
 import javax.xml.bind.JAXBElement;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.DigestMethod;
-import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public final class PartialSignatureFactory {
 
@@ -56,7 +56,7 @@ public final class PartialSignatureFactory {
         SignedInfoType signedInfo = new SignedInfoType();
 
         CanonicalizationMethodType canonType = new CanonicalizationMethodType();
-        canonType.setAlgorithm(CanonicalizationMethod.EXCLUSIVE_WITH_COMMENTS);
+        canonType.setAlgorithm(CanonicalizationMethod.EXCLUSIVE);
         signedInfo.setCanonicalizationMethod(canonType);
 
         SignatureMethodType signatureMethod = new SignatureMethodType();
@@ -96,7 +96,7 @@ public final class PartialSignatureFactory {
 
         ObjectFactory objectFactory = new ObjectFactory();
         X509DataType x509DataType = objectFactory.createX509DataType();
-        JAXBElement<byte[]> x509cert = objectFactory.createX509DataTypeX509Certificate(certificate.getBytes(StandardCharsets.UTF_8));
+        JAXBElement<byte[]> x509cert = objectFactory.createX509DataTypeX509Certificate(Base64.getDecoder().decode(certificate));
         x509DataType.getX509IssuerSerialOrX509SKIOrX509SubjectName().add(x509cert);
         keyInfo.getContent().add(objectFactory.createX509Data(x509DataType));
         return keyInfo;

@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.integration.nias.stub.model.OngoingSigning;
+import se.inera.intyg.infra.integration.nias.stub.util.Keys;
 import se.inera.intyg.infra.integration.nias.stub.util.StubSignUtil;
 
 import javax.annotation.PostConstruct;
@@ -38,8 +39,9 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
@@ -56,12 +58,13 @@ public class NetiDAccessServerSoapStub implements NetiDAccessServerSoap {
     private static final int NOTBEFORE_OR_AFTER_MINUTES = 5;
 
     private RSAPrivateKey privKey;
-    private RSAPublicKey pubKey;
+    private X509Certificate x509Certificate;
 
     @PostConstruct
     void init() {
-        this.privKey = StubSignUtil.loadPrivateKey();
-        this.pubKey = StubSignUtil.loadPublicKey();
+        Keys keys = StubSignUtil.loadFromKeystore();
+        this.privKey = keys.getPrivateKey();
+        this.x509Certificate = keys.getX509Certificate();
     }
 
     @Autowired
@@ -102,7 +105,11 @@ public class NetiDAccessServerSoapStub implements NetiDAccessServerSoap {
             resultCollect.setDeviceInfo(deviceInfoType);
             resultCollect.setSignature(createSignature(ongoingSigning.getUserNonVisibleData().getBytes(StandardCharsets.UTF_8)));
             UserInfoType userInfoType = new UserInfoType();
-            userInfoType.setCertificate(Base64.getEncoder().encodeToString(pubKey.getEncoded()));
+            try {
+                userInfoType.setCertificate(Base64.getEncoder().encodeToString(x509Certificate.getEncoded()));
+            } catch (CertificateEncodingException e) {
+                throw new IllegalStateException("Unable to encode X509Certificate, msg: " + e.getMessage());
+            }
             userInfoType.setGivenName("Tolvan");
             userInfoType.setName("Tolvan Tolvansson");
             userInfoType.setPersonalNumber(ongoingSigning.getPersonalNumber());
@@ -138,14 +145,5 @@ public class NetiDAccessServerSoapStub implements NetiDAccessServerSoap {
     @Override
     public String authenticate(String personId, String s1, String s2) {
         throw new IllegalStateException("Not implemented");
-    }
-
-    // For testing
-    void setPrivKey(RSAPrivateKey privKey) {
-        this.privKey = privKey;
-    }
-
-    void setPubKey(RSAPublicKey pubKey) {
-        this.pubKey = pubKey;
     }
 }

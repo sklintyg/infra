@@ -40,7 +40,7 @@ import java.io.IOException;
  * Use this class to convert from our old PU format to the new one.
  *
  */
-public class PersonConverter {
+public class PersonConverterTool {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 

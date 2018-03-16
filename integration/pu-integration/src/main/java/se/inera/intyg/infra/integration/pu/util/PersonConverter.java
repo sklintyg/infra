@@ -26,6 +26,8 @@ import se.riv.strategicresourcemanagement.persons.person.v3.NameType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 import se.riv.strategicresourcemanagement.persons.person.v3.ResidentialAddressType;
 
+import java.util.Optional;
+
 public class PersonConverter {
 
     public PersonSvar toPersonSvar(Personnummer personId, PersonRecordType personRecord) {
@@ -42,8 +44,8 @@ public class PersonConverter {
             // String careOf = null;
             if (adress != null) {
                 // careOf = adress.getCareOf();
-                adressRader = buildAdress(adress);
-                postnr = adress.getPostalCode().toString();
+                adressRader = buildAdress(adress).orElse(null);
+                postnr = buildPostnummer(adress).orElse(null);
                 postort = adress.getCity();
             }
         }
@@ -60,8 +62,22 @@ public class PersonConverter {
         return personSvar;
     }
 
-    private String buildAdress(ResidentialAddressType adress) {
-        return joinIgnoreNulls(", ", adress.getCareOf(), adress.getPostalAddress1(), adress.getPostalAddress2());
+    private Optional<String> buildAdress(ResidentialAddressType adress) {
+        if (adress.getCareOf() == null && adress.getPostalAddress1() == null && adress.getPostalAddress2() == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(joinIgnoreNulls(", ", adress.getCareOf(), adress.getPostalAddress1(), adress.getPostalAddress2()));
+        }
+    }
+
+    private Optional<String> buildPostnummer(ResidentialAddressType adress) {
+        Integer postnummer = adress.getPostalCode();
+        // INTYG-5573: PU-tjänsten kan skicka skräp (0:a) ifall postnummer saknas.
+        if (postnummer == null || postnummer.equals(0)) {
+            return Optional.empty();
+        } else {
+            return Optional.of(postnummer.toString());
+        }
     }
 
     private String joinIgnoreNulls(String separator, String... values) {

@@ -18,16 +18,29 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
-import se.inera.intyg.infra.xmldsig.model.KeyInfoType;
 import se.inera.intyg.infra.xmldsig.model.SignatureType;
 
-public interface XMLDSigService {
+public class IntygSignature {
 
-    KeyInfoType buildKeyInfoForCertificate(String certificate);
+    private SignatureType signatureType;
+    private String digestedXml;
+    private String signedInfoForSigning;
 
-    void validateFollowsSchema(SignatureType signatureType);
+    public IntygSignature(SignatureType signatureType, String digestedXml, String signedInfoForSigning) {
+        this.signatureType = signatureType;
+        this.digestedXml = digestedXml;
+        this.signedInfoForSigning = signedInfoForSigning;
+    }
 
-    boolean validateSignatureValidity(String signatureXml);
+    public SignatureType getSignatureType() {
+        return signatureType;
+    }
 
-    String digestToBase64(String xml);
+    public String getDigestedXml() {
+        return digestedXml;
+    }
+
+    public String getSignedInfoForSigning() {
+        return signedInfoForSigning;
+    }
 }
