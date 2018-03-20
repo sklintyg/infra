@@ -35,12 +35,15 @@ import static org.junit.Assert.assertNull;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PersonConverterTest {
-    private static final Personnummer PERSONNUMMER = new Personnummer("19121212-1212");
+
+    private static final Personnummer PERSONNUMMER = Personnummer.createPersonnummer("19121212-1212").get();
+
     private static final String FULLSTANDIG_ADRESS = "Storgatan 1, PL 1234";
     private static final String ADRESS1 = "Storgatan 1";
     private static final String ADRESS2 = "PL 1234";
     private static final String POSTORT = "Småmåla";
     private static final Integer POSTNUMMER = 12345;
+
     private static PersonConverter personConverter;
 
     @BeforeClass

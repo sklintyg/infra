@@ -148,7 +148,7 @@ public class PUServiceImpl implements PUService {
 
         // Iterate over response objects, transform and store in Map.
         for (RequestedPersonRecordType requestedPersonRecordType : response.getRequestedPersonRecord()) {
-            Personnummer pnrFromResponse = Personnummer.createValidatedPersonnummer(
+            Personnummer pnrFromResponse = Personnummer.createPersonnummer(
                     requestedPersonRecordType.getRequestedPersonalIdentity().getExtension()).get();
 
             if (requestedPersonRecordType.getPersonRecord() != null) {

@@ -46,7 +46,7 @@ public class GetConsentStub implements GetConsentResponderInterface {
 
         GetConsentResponseType response = new GetConsentResponseType();
 
-        Optional<Personnummer> personnummer = Personnummer.createValidatedPersonnummer(getConsentRequestType.getPersonId());
+        Optional<Personnummer> personnummer = Personnummer.createPersonnummer(getConsentRequestType.getPersonId());
         Optional<Consent> consent = consentRepository
                 .getConsent(personnummer.get(), getConsentRequestType.getVardgivareId().getExtension());
 

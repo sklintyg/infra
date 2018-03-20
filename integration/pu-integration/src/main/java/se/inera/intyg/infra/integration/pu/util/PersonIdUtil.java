@@ -20,6 +20,8 @@ package se.inera.intyg.infra.integration.pu.util;
 
 import se.inera.intyg.schemas.contract.Personnummer;
 
+import java.util.Optional;
+
 /**
  * Provides utility methods for dealing with Personnummer, without having to introduce a dependency from infra -> common.
  */
@@ -43,10 +45,9 @@ public final class PersonIdUtil {
      * @return true if the civic registration number is a 'samordningsnummer', otherwise false
      */
     public static boolean isSamordningsNummer(Personnummer personNummer) {
-
         // In order to determine if a personnummer is a samordningsnummer, we need to have a normalized yyyyMMddNNNN
         // number. If we cannot parse the encapsulated string, it certainly isn't a personnummer.
-        if (personNummer.isValid()) {
+        if (Optional.ofNullable(personNummer).isPresent()) {
             String normalizedPersonnummer = personNummer.getPersonnummer();
             char dateDigit = normalizedPersonnummer.charAt(SAMORDNING_MONTH_INDEX);
             return Character.getNumericValue(dateDigit) >= SAMORDNING_MONTH_VALUE_MIN;

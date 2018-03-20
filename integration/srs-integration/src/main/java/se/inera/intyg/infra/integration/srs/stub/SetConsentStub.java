@@ -40,7 +40,7 @@ public class SetConsentStub implements SetConsentResponderInterface {
     public SetConsentResponseType setConsent(SetConsentRequestType setConsentRequestType) {
         LOG.info("Stub received SetConsent-request for {}.", setConsentRequestType.getPersonId());
 
-        Personnummer personnummer = Personnummer.createValidatedPersonnummer(setConsentRequestType.getPersonId()).get();
+        Personnummer personnummer = Personnummer.createPersonnummer(setConsentRequestType.getPersonId()).get();
         consentRepository
                 .setConsent(personnummer, setConsentRequestType.getVardgivareId().getExtension(),
                         setConsentRequestType.isSamtycke());
