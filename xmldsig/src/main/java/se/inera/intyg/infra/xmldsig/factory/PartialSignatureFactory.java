@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.infra.xmldsig.factory;
 
+import org.springframework.core.io.ClassPathResource;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 import se.inera.intyg.infra.xmldsig.model.CanonicalizationMethodType;
 import se.inera.intyg.infra.xmldsig.model.DigestMethodType;
 import se.inera.intyg.infra.xmldsig.model.KeyInfoType;
@@ -34,6 +38,10 @@ import se.inera.intyg.infra.xmldsig.model.X509DataType;
 import javax.xml.bind.JAXBElement;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.DigestMethod;
+import javax.xml.crypto.dsig.Transform;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.util.Base64;
 
 public final class PartialSignatureFactory {
@@ -69,10 +77,33 @@ public final class PartialSignatureFactory {
         referenceType.setDigestMethod(digestMethodType);
         referenceType.setURI("");
 
-        TransformType transform = new TransformType();
-        transform.setAlgorithm(TRANSFORM_ALGORITHM);
+        TransformType can = new TransformType();
+        can.setAlgorithm("http://www.w3.org/2001/10/xml-exc-c14n#");
+
+        TransformType xslt1 = new TransformType();
+        xslt1.setAlgorithm(Transform.XSLT);
+        xslt1.getContent().add(loadXsltElement("stripnamespaces.xslt"));
+
+        TransformType xslt2 = new TransformType();
+        xslt2.setAlgorithm(Transform.XSLT);
+        xslt2.getContent().add(loadXsltElement("stripmetadata.xslt"));
+
+        TransformType xslt3 = new TransformType();
+        xslt3.setAlgorithm(Transform.XSLT);
+        xslt3.getContent().add(loadXsltElement("stripparentelement_2.xslt"));
+
+        TransformType enveloped = new TransformType();
+        enveloped.setAlgorithm(TRANSFORM_ALGORITHM);
+
         TransformsType tranforms = new TransformsType();
-        tranforms.getTransform().add(transform);
+
+        // The order here IS significant!! Otherwise, validation will not produce the expected digest.
+        tranforms.getTransform().add(enveloped);     // Having enveloped makes sure the <Signature> element is removed when digesting.
+        tranforms.getTransform().add(xslt1);
+        tranforms.getTransform().add(xslt2);
+        tranforms.getTransform().add(xslt3);
+        tranforms.getTransform().add(can);           // Canonicalization makes sure tags are not self-closed etc.
+
         referenceType.setTransforms(tranforms);
 
         signedInfo.getReference().add(referenceType);
@@ -100,5 +131,20 @@ public final class PartialSignatureFactory {
         x509DataType.getX509IssuerSerialOrX509SKIOrX509SubjectName().add(x509cert);
         keyInfo.getContent().add(objectFactory.createX509Data(x509DataType));
         return keyInfo;
+    }
+
+    private static Element loadXsltElement(String path) {
+
+        ClassPathResource cpr = new ClassPathResource(path);
+        // Append the SignatureElement as last element of the xml.
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+
+        try {
+            Document doc = dbf.newDocumentBuilder().parse(cpr.getInputStream());
+            return doc.getDocumentElement();
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            throw new RuntimeException(e.getCause());
+        }
     }
 }

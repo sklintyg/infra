@@ -20,6 +20,7 @@ package se.inera.intyg.infra.xmldsig;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.Resource;
 
@@ -40,10 +41,10 @@ public class XMLDSigServiceImplTest {
 
 
     // Use this test to manually test signed documents.
-    // @Test
+    @Test
     public void testValidateSignature() throws IOException, JAXBException {
 
-        InputStream xmlResourceInputStream = getXmlResource("classpath:/netid-test/simple_after_netid_sign.xml");
+        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-with-transforms.xml");
         String xml = IOUtils.toString(xmlResourceInputStream);
         String canonXml = testee.canonicalizeXml(xml);
 

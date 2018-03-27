@@ -27,13 +27,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import se.inera.intyg.infra.xmldsig.model.SignatureValueType;
 
+import javax.xml.bind.JAXBContext;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.security.KeyStore;
 import java.security.Signature;
-import java.security.interfaces.RSAPublicKey;
 import java.util.Base64;
 
 public class PrepareSignatureServiceImplTest {
@@ -48,17 +47,31 @@ public class PrepareSignatureServiceImplTest {
 
     @Test
     public void testBuildPreparedSignature() throws IOException {
-        InputStream xmlResource = getXmlResource("classpath:/unsigned/signed-lisjp.xml");
-
-        IntygXMLDSignature intygXMLDSignature = testee.prepareSignature(IOUtils.toString(xmlResource));
+        InputStream xmlResource = getXmlResource("classpath:/unsigned/signed-lisjp-i18n.xml");
+        String xml = IOUtils.toString(xmlResource);
+        IntygXMLDSignature intygXMLDSignature = testee.prepareSignature(xml);
         byte[] signature = createSignature(intygXMLDSignature.getSigningData().getBytes(Charset.forName("UTF-8")));
         SignatureValueType svt = new SignatureValueType();
         svt.setValue(signature);
         intygXMLDSignature.getSignatureType().setSignatureValue(svt);
 
-        String base64 = testee.encodeSignatureIntoSignedXml(intygXMLDSignature.getSignatureType(), intygXMLDSignature.getCanonicalizedContent());
-        System.out.println(base64);
-        System.out.println(new String(Base64.getDecoder().decode(base64)));
+        JAXBContext context = null;
+        try {
+//            context = JAXBContext.newInstance(intygXMLDSignature.getSignatureType().getClass());
+//            Marshaller marshaller = context.createMarshaller();
+//            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE);
+//
+//            StringWriter sw = new StringWriter();
+//            marshaller.marshal(intygXMLDSignature.getSignatureType(), sw);
+//            String canonicalizedSignatureXml = new XMLDSigServiceImpl().canonicalizeXml(sw.toString());
+//            int insertAt = xml.indexOf("</ns2:intyg>");
+//            xml = xml.substring(0, insertAt) + canonicalizedSignatureXml + xml.substring(insertAt);
+
+            String base64 = testee.encodeSignatureIntoSignedXml(intygXMLDSignature.getSignatureType(), xml);
+            System.out.println(new String(Base64.getDecoder().decode(base64), Charset.forName("UTF-8")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 //    private String extractIntygFromRegisterCertificate(InputStream xmlResource) {
@@ -130,7 +143,6 @@ public class PrepareSignatureServiceImplTest {
 
             KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry("1",
                     new KeyStore.PasswordProtection("12345678".toCharArray()));
-            BigInteger modulus = ((RSAPublicKey) ks.getCertificate("1").getPublicKey()).getModulus();
             Signature rsa = Signature.getInstance("SHA256withRSA");
             rsa.initSign(keyEntry.getPrivateKey());
             rsa.update(digest);

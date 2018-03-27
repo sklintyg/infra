@@ -18,13 +18,15 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.xml.crypto.MarshalException;
+import javax.xml.crypto.dom.DOMStructure;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.DigestMethod;
 import javax.xml.crypto.dsig.Reference;
@@ -43,27 +45,22 @@ import javax.xml.crypto.dsig.keyinfo.X509Data;
 import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.SignatureMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
+import javax.xml.crypto.dsig.spec.XSLTTransformParameterSpec;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.Key;
-import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -87,8 +84,29 @@ public class ReferenceSignatureTester {
         List transforms = new ArrayList();
         //transforms.add(fac.newTransform(
         //        "http://www.w3.org/2001/10/xml-exc-c14n#", (TransformParameterSpec) null));
-        transforms.add(
-                fac.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null));
+       // DOMStructure stylesheet = new DOMStructure(loadXslt("stripparentelement_2.xslt"));
+    //    DOMXSLTTransform stylesheet = new DOMXSLTTransform();
+    //    stylesheet.init(new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripparentelement_2.xslt"))));
+        //   XSLTTransformParameterSpec params = new XSLTTransformParameterSpec(stylesheet);
+        transforms.add(fac.newTransform("http://www.w3.org/2001/10/xml-exc-c14n#", (TransformParameterSpec) null));
+        transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripnamespaces.xslt")))));
+        transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripmetadata.xslt")))));
+        transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripparentelement_2.xslt")))));
+        transforms.add(fac.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null));
+
+
+        /*
+        <Transform Algorithm="http://www.w3.org/TR/1999/REC-xslt-19991116">
+            <xs:transform xmlns:xs="http://www.w3.org/1999/XSL/Transform" version="1.0">
+              <xs:template match="/">
+                <xs:apply-templates />
+              </xs:template>
+            <xs:template match="elementToTransform">
+                <transformedElement xmlns="" />
+              </xs:template>
+            </xs:transform>
+          </Transform>
+         */
         Reference ref = fac.newReference("", fac.newDigestMethod(DigestMethod.SHA256, null),
                 transforms, null, null);
 
@@ -116,7 +134,7 @@ public class ReferenceSignatureTester {
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
-        ClassPathResource classPathResource = new ClassPathResource("unsigned/simple.xml");
+        ClassPathResource classPathResource = new ClassPathResource("unsigned/signed-lisjp.xml");
         Document doc = dbf.newDocumentBuilder().parse(classPathResource.getInputStream());
 
         // Create a DOMSignContext and specify the RSA PrivateKey and
@@ -180,38 +198,23 @@ public class ReferenceSignatureTester {
         }
     }
 
-    private static final String RSA_ALG = "RSA";
-    private static final String PUBLIC_KEY_FILE = "public_key.der";
-    private static final String PRIVATE_KEY_FILE = "private_key.der";
+    private Node loadXslt(String path) {
 
-    public static RSAPublicKey loadPublicKey() {
+        ClassPathResource cpr = new ClassPathResource(path);
+        // Append the SignatureElement as last element of the xml.
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+
         try {
-            BufferedInputStream bis = loadResourceAsStream(PUBLIC_KEY_FILE);
-
-            X509EncodedKeySpec spec1 = new X509EncodedKeySpec(IOUtils.toByteArray(bis));
-            KeyFactory kf1 = KeyFactory.getInstance(RSA_ALG);
-            return (RSAPublicKey) kf1.generatePublic(spec1);
-        } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new IllegalArgumentException("Cannot load private key in stub: " + e.getMessage());
+            Document doc = dbf.newDocumentBuilder().parse(cpr.getInputStream());
+            return doc.getDocumentElement();
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            throw new RuntimeException(e.getCause());
         }
     }
 
-    public static RSAPrivateKey loadPrivateKey() {
-        try {
-            BufferedInputStream bis2 = loadResourceAsStream(PRIVATE_KEY_FILE);
-            byte[] privKeyBytes = IOUtils.toByteArray(bis2);
-            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(privKeyBytes);
-            KeyFactory kf = KeyFactory.getInstance(RSA_ALG);
-            return (RSAPrivateKey) kf.generatePrivate(spec);
-        } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new IllegalArgumentException("Cannot load private key in stub: " + e.getMessage());
-        }
-    }
 
-    private static BufferedInputStream loadResourceAsStream(String name) throws IOException {
-        ClassPathResource classPathResource2 = new ClassPathResource(name);
-        return new BufferedInputStream(classPathResource2.getInputStream());
-    }
+
 
     public void generateSignatureforResumen(String originalXmlFilePath, KeyStore tokenKeyStore, String pin) throws Exception {
         // Get the XML Document object

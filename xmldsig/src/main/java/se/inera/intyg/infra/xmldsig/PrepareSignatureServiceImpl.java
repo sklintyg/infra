@@ -117,7 +117,8 @@ public class PrepareSignatureServiceImpl {
             context.createMarshaller().marshal(signatureType, res);
             Node sigNode = res.getNode();
             Node importedNode = doc.importNode(sigNode.getFirstChild(), true);
-            doc.getDocumentElement().appendChild(importedNode);
+
+            doc.getDocumentElement().getFirstChild().appendChild(importedNode);
 
             TransformerFactory tf = TransformerFactory.newInstance();
             Transformer t = tf.newTransformer();
