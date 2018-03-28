@@ -18,19 +18,13 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.funktionstjanster.grp.v1.AuthenticateRequestType;
 import se.funktionstjanster.grp.v1.CollectRequestType;
 import se.funktionstjanster.grp.v1.CollectResponseType;
@@ -40,6 +34,13 @@ import se.funktionstjanster.grp.v1.OrderResponseType;
 import se.funktionstjanster.grp.v1.ProgressStatusType;
 
 import java.util.UUID;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Magnus Ekstrand on 2017-05-17.
@@ -110,7 +111,7 @@ public class GrpServicePortTypeStubTest {
             .setDisplayName(GRP_DISPLAY_NAME)
             .build();
 
-        when(serviceStub.getStatus(anyString())).thenReturn(buildCollectResponseType(orderRef));
+        when(serviceStub.getStatus(isNull())).thenReturn(buildCollectResponseType(orderRef));
 
         CollectResponseType response = testee.collect(crt);
         assertCollectResponse(response);
