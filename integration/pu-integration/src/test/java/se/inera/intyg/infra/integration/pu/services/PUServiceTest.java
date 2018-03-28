@@ -42,16 +42,14 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:PUServiceTest/test-context.xml")
@@ -88,10 +86,6 @@ public class PUServiceTest {
         if (dataFile.exists()) {
             dataFile.delete();
         }
-    }
-
-    private Personnummer createPnr(String pnr) {
-        return Personnummer.createPersonnummer(pnr).get();
     }
 
     @Test
@@ -134,8 +128,80 @@ public class PUServiceTest {
 
     @Test
     public void checkNonExistingPerson() {
-        Person person = service.getPerson(createPnr("19121212-7169")).getPerson();
-        assertNull(person);
+        PersonSvar svar = service.getPerson(createPnr("19121212-7169"));
+        assertNull(svar.getPerson());
+        assertEquals(PersonSvar.Status.NOT_FOUND, svar.getStatus());
+    }
+
+    @Test
+    public void checkNoneExistingPersons() {
+        String logicalAddress = "${putjanst.logicaladdress}";
+
+        List<Personnummer> pnrs = Arrays.asList(createPnr("19121212-7169"), createPnr("19971230-2380"),
+                createPnr("19980919-2397"), createPnr("19981029-2392"));
+
+        // Create mock
+        GetPersonsForProfileType parameters = service.buildPersonsForProfileRequest(pnrs);
+        GetPersonsForProfileResponseType response = residentService.getPersonsForProfile(logicalAddress, parameters);
+        GetPersonsForProfileResponderInterface mockResidentService = mock(GetPersonsForProfileResponderInterface.class);
+
+        when(mockResidentService.getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class))).thenReturn(response);
+        service.setService(mockResidentService);
+
+        // Make the call
+        Map<Personnummer, PersonSvar> persons = service.getPersons(pnrs);
+
+        // Verify
+        verify(mockResidentService).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
+
+        // Assert size
+        assertEquals(4, persons.size());
+
+        // Assert content
+        persons.entrySet().stream().forEach(entry -> {
+            assertNotNull(entry.getValue());
+            assertNull(entry.getValue().getPerson());
+            assertEquals(PersonSvar.Status.NOT_FOUND, entry.getValue().getStatus());
+        });
+
+    }
+
+    @Test
+    public void checkSomeExistingPersons() {
+        String logicalAddress = "${putjanst.logicaladdress}";
+
+        List<Personnummer> pnrs = Arrays.asList(createPnr("19520614-2597"), createPnr("19971230-2380"),
+                createPnr("20121212-1212"), createPnr("19981029-2392"));
+
+        // Create mock
+        GetPersonsForProfileType parameters = service.buildPersonsForProfileRequest(pnrs);
+        GetPersonsForProfileResponseType response = residentService.getPersonsForProfile(logicalAddress, parameters);
+        GetPersonsForProfileResponderInterface mockResidentService = mock(GetPersonsForProfileResponderInterface.class);
+
+        when(mockResidentService.getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class))).thenReturn(response);
+        service.setService(mockResidentService);
+
+        // Make the call
+        Map<Personnummer, PersonSvar> persons = service.getPersons(pnrs);
+
+        // Verify
+        verify(mockResidentService).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
+
+        // Assert size
+        assertEquals(4, persons.size());
+
+        // Assert content
+        persons.entrySet().stream().forEach(entry -> {
+            assertNotNull(entry.getValue());
+            if (entry.getKey().getPersonnummerWithDash().equals("19520614-2597")
+                    || entry.getKey().getPersonnummerWithDash().equals("20121212-1212")) {
+                assertNotNull(entry.getValue().getPerson());
+                assertEquals(PersonSvar.Status.FOUND, entry.getValue().getStatus());
+            } else {
+                assertNull(entry.getValue().getPerson());
+                assertEquals(PersonSvar.Status.NOT_FOUND, entry.getValue().getStatus());
+            }
+        });
     }
 
     @Test
@@ -265,4 +331,9 @@ public class PUServiceTest {
        // ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", residentService);
         service.setService(residentService);
     }
+
+    private Personnummer createPnr(String pnr) {
+        return Personnummer.createPersonnummer(pnr).get();
+    }
+
 }

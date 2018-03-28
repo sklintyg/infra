@@ -39,10 +39,8 @@ import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecor
 
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class PUServiceImpl implements PUService {
 
@@ -59,10 +57,15 @@ public class PUServiceImpl implements PUService {
 
     private PersonConverter personConverter = new PersonConverter();
 
+    /**
+     * @see PUService#getPerson(Personnummer personId)
+     */
     @Override
     public PersonSvar getPerson(Personnummer personId) {
-
-        LOG.debug("Looking up person '{}'", personId.getPersonnummerHash());
+        if (personId == null) {
+            LOG.info("Cannot look up person when argument personId is null");
+            return new PersonSvar(null, PersonSvar.Status.NOT_FOUND);
+        }
 
         // Check cache
         PersonSvar cachedPersonSvar = queryCache(personId);
@@ -70,43 +73,28 @@ public class PUServiceImpl implements PUService {
             return cachedPersonSvar;
         }
 
-        GetPersonsForProfileType parameters = new GetPersonsForProfileType();
-        parameters.setProfile(LookupProfileType.P_2);
-
-        IIType personIdType = buildIITypeForPersonOrSamordningsnummer(personId);
-        parameters.getPersonId().add(personIdType);
         try {
+            // Build request
+            GetPersonsForProfileType parameters = buildPersonsForProfileRequest(Arrays.asList(personId));
+            // Execute request
             GetPersonsForProfileResponseType response = service.getPersonsForProfile(logicaladdress, parameters);
-            if (response == null || response.getRequestedPersonRecord() == null || response.getRequestedPersonRecord().isEmpty()) {
-                LOG.warn("No person '{}' found", personId.getPersonnummerHash());
-                return new PersonSvar(null, PersonSvar.Status.NOT_FOUND);
-            }
+            return handleSinglePersonResponse(personId, response);
 
-            RequestedPersonRecordType resident = response.getRequestedPersonRecord().get(0);
-            PersonSvar personSvar = personConverter.toPersonSvar(personId, resident.getPersonRecord());
-            storeIfAbsent(personSvar);
-            return personSvar;
         } catch (SOAPFaultException e) {
-            LOG.warn("SOAP fault occured, no person '{}' found.", personId.getPersonnummerHash());
-            return new PersonSvar(null, PersonSvar.Status.ERROR);
+            return handleServiceException("SOAP fault occured, no person '{}' found.", personId);
         } catch (WebServiceException e) {
-            LOG.warn("Error occured, no person '{}' found.", personId.getPersonnummerHash());
-            return new PersonSvar(null, PersonSvar.Status.ERROR);
+            return handleServiceException("Error occured, no person '{}' found.", personId);
         }
     }
 
-    private IIType buildIITypeForPersonOrSamordningsnummer(Personnummer personId) {
-        IIType personIdType = new IIType();
-        personIdType.setRoot(
-                PersonIdUtil.isSamordningsNummer(personId) ? PersonIdUtil.getSamordningsNummerRoot() : PersonIdUtil.getPersonnummerRoot());
-        personIdType.setExtension(personId.getPersonnummer());
-        return personIdType;
-    }
-
+    /**
+     * @see PUService#getPersons(List<Personnummer> personIds)
+     */
     @Override
     public Map<Personnummer, PersonSvar> getPersons(List<Personnummer> personIds) {
         Map<Personnummer, PersonSvar> responseMap = new HashMap<>();
         if (personIds == null || personIds.size() == 0) {
+            LOG.info("Cannot look up persons when argument personIds is null or empty");
             return responseMap;
         }
         List<Personnummer> toQuery = new ArrayList<>();
@@ -126,42 +114,102 @@ public class PUServiceImpl implements PUService {
             return responseMap;
         }
 
-        // Build request
-        GetPersonsForProfileType parameters = new GetPersonsForProfileType();
-        parameters.setProfile(LookupProfileType.P_2);
-        for (Personnummer pnr : toQuery) {
-            parameters.getPersonId().add(buildIITypeForPersonOrSamordningsnummer(pnr));
-        }
+        try {
+            // Build request
+            GetPersonsForProfileType parameters = buildPersonsForProfileRequest(toQuery);
+            // Execute request
+            GetPersonsForProfileResponseType response = service.getPersonsForProfile(logicaladdress, parameters);
+            return handleMultiplePersonsResponse(personIds, responseMap, response);
 
-        // Execute request
-        GetPersonsForProfileResponseType response = service.getPersonsForProfile(logicaladdress, parameters);
-        return handleResponse(personIds, responseMap, response);
+        } catch (SOAPFaultException e) {
+            return handleServiceException("SOAP fault occured, no persons '{}' found.", personIds);
+        } catch (WebServiceException e) {
+            return handleServiceException("Error occured, no persons '{}' found.", personIds);
+        }
     }
 
-    // Visible for unit tests
-    Map<Personnummer, PersonSvar> handleResponse(List<Personnummer> personIds, Map<Personnummer, PersonSvar> responseMap,
-            GetPersonsForProfileResponseType response) {
-        if (response == null || response.getRequestedPersonRecord() == null || response.getRequestedPersonRecord().size() == 0) {
-            LOG.warn("Problem fetching PersonSvar from PU-service. Returning cached items only.");
-            return responseMap;
+    @Override
+    @VisibleForTesting
+    public void clearCache() {
+        LOG.debug("personCache cleared");
+        Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
+        cache.clear();
+    }
+
+    public void setService(GetPersonsForProfileResponderInterface service) {
+        this.service = service;
+    }
+
+    GetPersonsForProfileType buildPersonsForProfileRequest(List<Personnummer> pnrs)  {
+        GetPersonsForProfileType parameters = new GetPersonsForProfileType();
+        parameters.setProfile(LookupProfileType.P_2);
+        for (Personnummer pnr : pnrs) {
+            parameters.getPersonId().add(buildIITypeForPersonOrSamordningsnummer(pnr));
         }
+        return parameters;
+    }
 
-        // Iterate over response objects, transform and store in Map.
-        for (RequestedPersonRecordType requestedPersonRecordType : response.getRequestedPersonRecord()) {
-            Personnummer pnrFromResponse = Personnummer.createPersonnummer(
-                    requestedPersonRecordType.getRequestedPersonalIdentity().getExtension()).get();
+    private PersonSvar handleServiceException(String errMsg, Personnummer pnr) {
+        LOG.warn(errMsg, pnr.getPersonnummerHash());
+        return new PersonSvar(null, PersonSvar.Status.ERROR);
+    }
 
-            if (requestedPersonRecordType.getPersonRecord() != null) {
-                PersonSvar personSvar = personConverter.toPersonSvar(pnrFromResponse, requestedPersonRecordType.getPersonRecord());
-                responseMap.put(pnrFromResponse, personSvar);
-                storeIfAbsent(personSvar);
-            } else {
-                LOG.warn("Got PU response for pnr {} but record contained no PersonRecord.", pnrFromResponse.getPersonnummerHash());
+    private Map<Personnummer, PersonSvar> handleServiceException(String errMsg, List<Personnummer> pnrs) {
+        String arg = pnrs.stream()
+                .map(pnr -> pnr.getPersonnummerHash())
+                .collect(Collectors.joining(", "));
+
+        LOG.warn(errMsg, arg);
+        return new HashMap<>();
+    }
+
+    private PersonSvar handleSinglePersonResponse(Personnummer personId,
+                                                  GetPersonsForProfileResponseType response) {
+        boolean found = true;
+
+        if (response == null || response.getRequestedPersonRecord() == null || response.getRequestedPersonRecord().isEmpty()) {
+            found = false;
+        } else {
+            if (response.getRequestedPersonRecord().get(0).getPersonRecord() == null) {
+                found = false;
             }
         }
 
-        // We need to "diff" the list of requested PNR with the ones present in the hashmap. For any missing ones, we
-        // put an NOT_FOUND in.
+        if (!found) {
+            LOG.warn("No person '{}' found", personId.getPersonnummerHash());
+            return new PersonSvar(null, PersonSvar.Status.NOT_FOUND);
+        }
+
+        PersonSvar personSvar = personConverter.toPersonSvar(personId, response.getRequestedPersonRecord().get(0).getPersonRecord());
+        storeIfAbsent(personSvar);
+
+        return personSvar;
+    }
+
+    private Map<Personnummer, PersonSvar> handleMultiplePersonsResponse(List<Personnummer> personIds,
+                                                                Map<Personnummer, PersonSvar> responseMap,
+                                                                GetPersonsForProfileResponseType response) {
+
+        if (response == null || response.getRequestedPersonRecord() == null || response.getRequestedPersonRecord().size() == 0) {
+            LOG.warn("Problem fetching PersonSvar from PU-service. Returning cached items and items not in cache as NOT_FOUND.");
+        } else {
+            // Iterate over response objects, transform and store in Map.
+            for (RequestedPersonRecordType requestedPersonRecordType : response.getRequestedPersonRecord()) {
+                Personnummer pnrFromResponse = Personnummer.createPersonnummer(
+                        requestedPersonRecordType.getRequestedPersonalIdentity().getExtension()).get();
+
+                if (requestedPersonRecordType.getPersonRecord() != null) {
+                    PersonSvar personSvar = personConverter.toPersonSvar(pnrFromResponse, requestedPersonRecordType.getPersonRecord());
+                    responseMap.put(pnrFromResponse, personSvar);
+                    storeIfAbsent(personSvar);
+                } else {
+                    LOG.warn("Got PU response for pnr {} but record contained no PersonRecord.", pnrFromResponse.getPersonnummerHash());
+                }
+            }
+        }
+
+        // We need to "diff" the list of requested PNR with the ones present in the hashmap.
+        // For any missing ones, we put an NOT_FOUND in.
         if (personIds.size() != responseMap.size()) {
             for (Personnummer pnr : personIds) {
                 if (!responseMap.containsKey(pnr)) {
@@ -169,12 +217,19 @@ public class PUServiceImpl implements PUService {
                     responseMap.put(pnr, notFoundPersonSvar);
                 }
             }
-            LOG.warn(
-                    "One or more personnummer did not yield a response from our PU cache or the PU-service. "
-                            + "They have been added as NOT_FOUND entries.");
+            LOG.warn("One or more personnummer did not yield a response from our PU cache or the PU-service. "
+                    + "They have been added as NOT_FOUND entries.");
         }
 
         return responseMap;
+    }
+
+    private IIType buildIITypeForPersonOrSamordningsnummer(Personnummer personId) {
+        IIType personIdType = new IIType();
+        personIdType.setRoot(
+                PersonIdUtil.isSamordningsNummer(personId) ? PersonIdUtil.getSamordningsNummerRoot() : PersonIdUtil.getPersonnummerRoot());
+        personIdType.setExtension(personId.getPersonnummer());
+        return personIdType;
     }
 
     private void storeIfAbsent(PersonSvar personSvar) {
@@ -191,15 +246,4 @@ public class PUServiceImpl implements PUService {
         return null;
     }
 
-    @Override
-    @VisibleForTesting
-    public void clearCache() {
-        LOG.debug("personCache cleared");
-        Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
-        cache.clear();
-    }
-
-    public void setService(GetPersonsForProfileResponderInterface service) {
-        this.service = service;
-    }
 }
