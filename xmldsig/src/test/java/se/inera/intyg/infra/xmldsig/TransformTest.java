@@ -18,7 +18,9 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.Resource;
 import se.inera.intyg.infra.xmldsig.util.XsltUtil;
@@ -28,15 +30,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 public class TransformTest {
 
     @Before
     public void init() {
         org.apache.xml.security.Init.init();
+      //  System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.jaxp.SaxonTransformerFactory") ;
+        System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"); // "" "net.sf.saxon.jaxp.SaxonTransformerFactory");
     }
 
-   // @Test
+    @Test
     public void testTransform() throws UnsupportedEncodingException {
         InputStream is = getXmlResource("classpath:/unsigned/signed-lisjp-i18n.xml");
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -47,7 +52,12 @@ public class TransformTest {
 
         ByteArrayOutputStream out2  = new ByteArrayOutputStream();
         XsltUtil.transform(inputStream, out2, "stripmetadata.xslt");
-        String xml = new XMLDSigServiceImpl().canonicalizeXml(new String(out2.toByteArray(), "UTF-8"));
+
+        ByteArrayOutputStream out3  = new ByteArrayOutputStream();
+        XsltUtil.transform(IOUtils.toInputStream(new String(out2.toByteArray()), Charset.forName("UTF-8")), out3, "stripparentelement.xslt");
+
+
+        String xml = new String(out3.toByteArray(), Charset.forName("UTF-8"));
 
         System.out.println(xml);
     }

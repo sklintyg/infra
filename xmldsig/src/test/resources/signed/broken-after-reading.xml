@@ -4,7 +4,7 @@
                              xmlns:ns5="urn:riv:clinicalprocess:healthcond:certificate:3.2"
                              xmlns:ns4="http://www.w3.org/2000/09/xmldsig#"
                              xmlns:ns3="urn:riv:clinicalprocess:healthcond:certificate:types:3">
-    <ns2:intyg xmlns="">
+    <ns2:intyg>
         <intygs-id>
             <ns3:root>TSTNMT2321000156-1077</ns3:root>
             <ns3:extension>6aa1d0fc-1845-41d8-8d31-39c044dca592</ns3:extension>
