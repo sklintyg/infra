@@ -95,7 +95,7 @@ public class PrepareSignatureServiceImpl {
         String signedInfoForSigning = buildSignedInfoForSigning(signatureType);
 
         // 6. Populate and return
-        return new IntygXMLDSignature(signatureType, xml, signedInfoForSigning);
+        return new IntygXMLDSignature(signatureType, intygXml, signedInfoForSigning);
     }
 
     /**
@@ -108,10 +108,10 @@ public class PrepareSignatureServiceImpl {
     public String encodeSignatureIntoSignedXml(SignatureType signatureType, String xml) {
         // Append the SignatureElement as last element of the xml.
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware(false);
+        dbf.setNamespaceAware(true);
 
         try {
-            Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(xml));
+            Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(xml, Charset.forName("UTF-8")));
             DOMResult res = new DOMResult();
             JAXBContext context = JAXBContext.newInstance(signatureType.getClass());
             context.createMarshaller().marshal(signatureType, res);
@@ -128,9 +128,9 @@ public class PrepareSignatureServiceImpl {
 
             t.transform(source, result);
 
-            String xmlWithSignature = sw.toString();
+            return sw.toString();
 
-            return Base64.getEncoder().encodeToString(xmlWithSignature.getBytes(Charset.forName(UTF_8)));
+           // return xmlWithSignature.getBytes(Charset.forName(UTF_8));
         } catch (SAXException | IOException | ParserConfigurationException | JAXBException | TransformerException e) {
             throw new RuntimeException(e.getCause());
         }

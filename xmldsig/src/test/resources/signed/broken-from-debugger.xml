@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ns2:RegisterCertificateType xmlns:ns2="urn:riv:clinicalprocess:healthcond:certificate:RegisterCertificateResponder:3"
                              xmlns="urn:riv:clinicalprocess:healthcond:certificate:3"
-                             xmlns:ns3="urn:riv:clinicalprocess:healthcond:certificate:types:3">
-    <ns2:intyg ID="gdfgdf">
+                             xmlns:ns3="urn:riv:clinicalprocess:healthcond:certificate:types:3"
+                             xmlns:ns4="http://www.w3.org/2000/09/xmldsig#"
+                             xmlns:ns5="urn:riv:clinicalprocess:healthcond:certificate:3.2">
+    <ns2:intyg>
         <intygs-id>
             <ns3:root>TSTNMT2321000156-1077</ns3:root>
             <ns3:extension>9f02dd2f-f57c-4a73-8190-2fe602cd6e27</ns3:extension>
@@ -369,30 +371,14 @@
             <delsvar id="26.1">true</delsvar>
             <delsvar id="26.2">Alltid roligt att prata med FK.</delsvar>
         </svar>
-        <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
-            <SignedInfo>
-                <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-                <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
-                <Reference URI="#bla bla">
-                    <Transforms>
-                        <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-                        <Transform Algorithm="http://www.w3.org/TR/1999/REC-xslt-19991116">
-                            <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-                                <xsl:output indent="no" omit-xml-declaration="yes"/>
-                                <xsl:strip-space elements="*"/>
-                                <xsl:template match="*">
-                                    <xsl:element name="{local-name()}">
-                                        <xsl:apply-templates select="node()|@*"/>
-                                    </xsl:element>
-                                </xsl:template>
-                                <xsl:template match="@*">
-                                    <xsl:copy>
-                                        <xsl:apply-templates select="node() | @*"/>
-                                    </xsl:copy>
-                                </xsl:template>
-                            </xsl:stylesheet>
-                        </Transform>
-                        <Transform Algorithm="http://www.w3.org/TR/1999/REC-xslt-19991116">
+        <ns4:Signature>
+            <ns4:SignedInfo>
+                <ns4:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                <ns4:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+                <ns4:Reference URI="">
+                    <ns4:Transforms>
+                        <ns4:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                        <ns4:Transform Algorithm="http://www.w3.org/TR/1999/REC-xslt-19991116">
                             <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
                                 <xsl:output indent="no" omit-xml-declaration="yes"/>
                                 <xsl:strip-space elements="*"/>
@@ -409,8 +395,8 @@
                                     </xsl:if>
                                 </xsl:template>
                             </xsl:stylesheet>
-                        </Transform>
-                        <Transform Algorithm="http://www.w3.org/TR/1999/REC-xslt-19991116">
+                        </ns4:Transform>
+                        <ns4:Transform Algorithm="http://www.w3.org/TR/1999/REC-xslt-19991116">
                             <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
                                 <xsl:output indent="no" omit-xml-declaration="yes"/>
                                 <xsl:strip-space elements="*"/>
@@ -423,23 +409,39 @@
                                     </xsl:copy>
                                 </xsl:template>
                             </xsl:stylesheet>
-                        </Transform>
-                        <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-                    </Transforms>
-                    <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-                    <DigestValue>ooiyONrIELMcH71p6nBPE4+sM1oIiN6VENqkdS5yxtU=</DigestValue>
-                </Reference>
-            </SignedInfo>
-            <SignatureValue>
-                VS8hu3ro9vpzJiN1mvnyvqbXqwhjmOvSBxo4IizjtCTL19J+zD/OR/frLYP7Og46OSqcCkL2IPyLjZT0PHlhKBSFiU5RdHak5T6aS7M02gIou+9H1iie5q4i+VtIK6+l7M1PC+nvMSEj4DYoOj9egoKvhXbvSVVlM9Org+BrRkI=
-            </SignatureValue>
-            <KeyInfo>
+                        </ns4:Transform>
+                        <ns4:Transform Algorithm="http://www.w3.org/TR/1999/REC-xslt-19991116">
+                            <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+                                <xsl:output indent="no" omit-xml-declaration="yes"/>
+                                <xsl:strip-space elements="*"/>
+                                <xsl:template match="*">
+                                    <xsl:element name="{local-name()}">
+                                        <xsl:apply-templates select="node()|@*"/>
+                                    </xsl:element>
+                                </xsl:template>
+                                <xsl:template match="@*">
+                                    <xsl:copy>
+                                        <xsl:apply-templates select="node() | @*"/>
+                                    </xsl:copy>
+                                </xsl:template>
+                            </xsl:stylesheet>
+                        </ns4:Transform>
+                        <ns4:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                    </ns4:Transforms>
+                    <ns4:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                    <ns4:DigestValue>ooiyONrIELMcH71p6nBPE4+sM1oIiN6VENqkdS5yxtU=</ns4:DigestValue>
+                </ns4:Reference>
+            </ns4:SignedInfo>
+            <ns4:SignatureValue>
+                guBMxErVnKzRnC0C1KnjYK2Vy30/96nDT3kl3jJm1IaYNyc6L4xnNZU2qNkTKy1Aq2UVeGxI2f3zMJtPm8Y1iaNKsiB8pO1JmGzB2ZWMzHY87MxA6XckLcg5mXAhaMCrGV0PAwI77IikHsi6bZC4Ir20BEmVadzvQpwzKy3+d7I=
+            </ns4:SignatureValue>
+            <ns4:KeyInfo>
                 <X509Data>
                     <X509Certificate>
                         MIIB+zCCAWQCCQCUxqAHHrhg+jANBgkqhkiG9w0BAQsFADBCMQswCQYDVQQGEwJTRTELMAkGA1UECAwCVkcxEzARBgNVBAcMCkdvdGhlbmJ1cmcxETAPBgNVBAoMCENhbGxpc3RhMB4XDTE4MDMxMDIwMDY0MFoXDTIxMTIwNDIwMDY0MFowQjELMAkGA1UEBhMCU0UxCzAJBgNVBAgMAlZHMRMwEQYDVQQHDApHb3RoZW5idXJnMREwDwYDVQQKDAhDYWxsaXN0YTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEA4cB6VC0f9ne0UKC/XzsoP5ocv7WyGt5378f/DGnVAF3aWzderzLnXMqSdGbLOuEzUUdbjYgQkqQSs6wy872KLf0RzQzllxwpBQJ/2r+CrW6tROJa0FYEIhgWDdRGlS+9+hd3E9Ilz2PTZDF4c1C+4l/xq149OCgiAGfadeBZA5MCAwEAATANBgkqhkiG9w0BAQsFAAOBgQDU+Mrw98Qm8K0U8A208Ee01PZeIpqC9CIRIXJd0PFwXJjTlGIWckwrdsgbGtwOAlA2rzAx/FUhQD4/1F4G5mo/DrtOzzx9fKE0+MQreTC/HOm61ja3cWm4yI5G0W7bLTBBhsEoOzclycNK/QjeP+wYO+k11mtPM4SP4kCj3gh97g==
                     </X509Certificate>
                 </X509Data>
-            </KeyInfo>
-        </Signature>
+            </ns4:KeyInfo>
+        </ns4:Signature>
     </ns2:intyg>
 </ns2:RegisterCertificateType>

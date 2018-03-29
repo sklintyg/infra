@@ -24,9 +24,9 @@ import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.Resource;
 
-import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 
 import static org.junit.Assert.assertTrue;
 
@@ -42,13 +42,12 @@ public class XMLDSigServiceImplTest {
 
     // Use this test to manually test signed documents.
     @Test
-    public void testValidateSignature() throws IOException, JAXBException {
+    public void testValidateSignature() throws IOException {
 
-        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-with-transforms.xml");
-        String xml = IOUtils.toString(xmlResourceInputStream);
-        String canonXml = testee.canonicalizeXml(xml);
+        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/broken.xml");
+        String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
 
-        boolean result = testee.validateSignatureValidity(canonXml);
+        boolean result = testee.validateSignatureValidity(xml);
         assertTrue(result);
     }
 

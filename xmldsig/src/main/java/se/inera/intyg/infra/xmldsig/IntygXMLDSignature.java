@@ -37,7 +37,7 @@ public class IntygXMLDSignature implements IntygSignature {
     }
 
     @Override
-    public String getCanonicalizedContent() {
+    public String getOriginalXml() {
         return digestedXml;
     }
 

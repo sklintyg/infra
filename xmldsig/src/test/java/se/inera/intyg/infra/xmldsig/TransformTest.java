@@ -38,7 +38,7 @@ public class TransformTest {
 
    // @Test
     public void testTransform() throws UnsupportedEncodingException {
-        InputStream is = getXmlResource("classpath:/unsigned/lisjp.xml");
+        InputStream is = getXmlResource("classpath:/unsigned/signed-lisjp-i18n.xml");
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
         XsltUtil.transform(is, buffer, "stripnamespaces.xslt");

@@ -20,59 +20,60 @@ package se.inera.intyg.infra.xmldsig;
 
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import se.inera.intyg.infra.xmldsig.model.KeyInfoType;
 import se.inera.intyg.infra.xmldsig.model.SignatureValueType;
 
-import javax.xml.bind.JAXBContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.security.KeyStore;
 import java.security.Signature;
-import java.util.Base64;
 
 public class PrepareSignatureServiceImplTest {
 
+    private String certAtString = "MIIB+zCCAWQCCQCUxqAHHrhg+jANBgkqhkiG9w0BAQsFADBCMQswCQYDVQQGEwJTRTELMAkGA1UECAwCVkcxEzARBgNVBAcMCkdvdGhlbmJ1cmcxETAPBgNVBAoMCENhbGxpc3RhMB4XDTE4MDMxMDIwMDY0MFoXDTIxMTIwNDIwMDY0MFowQjELMAkGA1UEBhMCU0UxCzAJBgNVBAgMAlZHMRMwEQYDVQQHDApHb3RoZW5idXJnMREwDwYDVQQKDAhDYWxsaXN0YTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEA4cB6VC0f9ne0UKC/XzsoP5ocv7WyGt5378f/DGnVAF3aWzderzLnXMqSdGbLOuEzUUdbjYgQkqQSs6wy872KLf0RzQzllxwpBQJ/2r+CrW6tROJa0FYEIhgWDdRGlS+9+hd3E9Ilz2PTZDF4c1C+4l/xq149OCgiAGfadeBZA5MCAwEAATANBgkqhkiG9w0BAQsFAAOBgQDU+Mrw98Qm8K0U8A208Ee01PZeIpqC9CIRIXJd0PFwXJjTlGIWckwrdsgbGtwOAlA2rzAx/FUhQD4/1F4G5mo/DrtOzzx9fKE0+MQreTC/HOm61ja3cWm4yI5G0W7bLTBBhsEoOzclycNK/QjeP+wYO+k11mtPM4SP4kCj3gh97g==";
+
     private PrepareSignatureServiceImpl testee = new PrepareSignatureServiceImpl();
+
+
 
     @Before
     public void init() {
         org.apache.xml.security.Init.init();
+        System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.jaxp.SaxonTransformerFactory") ; //"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"); // "" "net.sf.saxon.jaxp.SaxonTransformerFactory");
     }
 
 
     @Test
     public void testBuildPreparedSignature() throws IOException {
-        InputStream xmlResource = getXmlResource("classpath:/unsigned/signed-lisjp-i18n.xml");
+        InputStream xmlResource = getXmlResource("classpath:/unsigned/signed-lisjp-i18n-noxmldsig.xml");
         String xml = IOUtils.toString(xmlResource);
         IntygXMLDSignature intygXMLDSignature = testee.prepareSignature(xml);
+
         byte[] signature = createSignature(intygXMLDSignature.getSigningData().getBytes(Charset.forName("UTF-8")));
         SignatureValueType svt = new SignatureValueType();
         svt.setValue(signature);
         intygXMLDSignature.getSignatureType().setSignatureValue(svt);
 
-        JAXBContext context = null;
-        try {
-//            context = JAXBContext.newInstance(intygXMLDSignature.getSignatureType().getClass());
-//            Marshaller marshaller = context.createMarshaller();
-//            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE);
-//
-//            StringWriter sw = new StringWriter();
-//            marshaller.marshal(intygXMLDSignature.getSignatureType(), sw);
-//            String canonicalizedSignatureXml = new XMLDSigServiceImpl().canonicalizeXml(sw.toString());
-//            int insertAt = xml.indexOf("</ns2:intyg>");
-//            xml = xml.substring(0, insertAt) + canonicalizedSignatureXml + xml.substring(insertAt);
+        // Stuff KeyInfo
+        KeyInfoType keyInfo = new XMLDSigServiceImpl().buildKeyInfoForCertificate(certAtString);
+        intygXMLDSignature.getSignatureType().setKeyInfo(keyInfo);
 
-            String base64 = testee.encodeSignatureIntoSignedXml(intygXMLDSignature.getSignatureType(), xml);
-            System.out.println(new String(Base64.getDecoder().decode(base64), Charset.forName("UTF-8")));
+        try {
+            String resXml =  testee.encodeSignatureIntoSignedXml(intygXMLDSignature.getSignatureType(), xml);
+            System.out.println(resXml);
+            Assert.assertTrue(new XMLDSigServiceImpl().validateSignatureValidity(resXml));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
 //    private String extractIntygFromRegisterCertificate(InputStream xmlResource) {
 //        try {

@@ -92,6 +92,11 @@ public final class PartialSignatureFactory {
         xslt3.setAlgorithm(Transform.XSLT);
         xslt3.getContent().add(loadXsltElement("stripparentelement_2.xslt"));
 
+        TransformType xslt4 = new TransformType();
+        xslt4.setAlgorithm(Transform.XSLT);
+        xslt4.getContent().add(loadXsltElement("stripnamespaces_2.xslt"));
+
+
         TransformType enveloped = new TransformType();
         enveloped.setAlgorithm(TRANSFORM_ALGORITHM);
 
@@ -99,9 +104,13 @@ public final class PartialSignatureFactory {
 
         // The order here IS significant!! Otherwise, validation will not produce the expected digest.
         tranforms.getTransform().add(enveloped);     // Having enveloped makes sure the <Signature> element is removed when digesting.
+
         tranforms.getTransform().add(xslt1);
+        // tranforms.getTransform().add(xslt4);
         tranforms.getTransform().add(xslt2);
-        tranforms.getTransform().add(xslt3);
+         tranforms.getTransform().add(xslt3);
+     //   tranforms.getTransform().add(xslt4);
+
         tranforms.getTransform().add(can);           // Canonicalization makes sure tags are not self-closed etc.
 
         referenceType.setTransforms(tranforms);

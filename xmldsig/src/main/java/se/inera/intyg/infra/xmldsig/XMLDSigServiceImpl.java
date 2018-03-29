@@ -111,10 +111,18 @@ public class XMLDSigServiceImpl implements XMLDSigService {
     @Override
     public boolean validateSignatureValidity(String signatureXml) {
         XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
+//        try {
+//           // Provider[] providers = Security.getProviders();
+//            Security.insertProviderAt(new org.apache.jcp.xml.dsig.internal.dom.XMLDSigRI(), 0);
+//            fac = XMLSignatureFactory.getInstance("DOM", "ApacheXMLDSig");
+//        } catch (NoSuchProviderException e) {
+//            e.printStackTrace();
+//            throw new IllegalStateException(e);
+//        }
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         try {
-            Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(signatureXml));
+            Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(signatureXml, Charset.forName("UTF-8")));
             NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
             if (nl.getLength() == 0) {
                 throw new Exception("Cannot find Signature element");
@@ -123,7 +131,6 @@ public class XMLDSigServiceImpl implements XMLDSigService {
             // Create a DOMValidateContext and specify a KeySelector
             // and document context.
             DOMValidateContext valContext = new DOMValidateContext(new X509KeySelector(), nl.item(0));
-
             // Unmarshal the XMLSignature.
             XMLSignature sig = fac.unmarshalXMLSignature(valContext);
 
