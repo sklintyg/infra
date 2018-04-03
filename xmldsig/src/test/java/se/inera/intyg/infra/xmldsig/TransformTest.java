@@ -38,7 +38,7 @@ public class TransformTest {
     public void init() {
         org.apache.xml.security.Init.init();
       //  System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.jaxp.SaxonTransformerFactory") ;
-        System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"); // "" "net.sf.saxon.jaxp.SaxonTransformerFactory");
+        // System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"); // "" "net.sf.saxon.jaxp.SaxonTransformerFactory");
     }
 
     @Test

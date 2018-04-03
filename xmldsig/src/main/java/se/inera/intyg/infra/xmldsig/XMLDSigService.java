@@ -18,8 +18,8 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
-import se.inera.intyg.infra.xmldsig.model.KeyInfoType;
-import se.inera.intyg.infra.xmldsig.model.SignatureType;
+import org.w3._2000._09.xmldsig_.KeyInfoType;
+import org.w3._2000._09.xmldsig_.SignatureType;
 
 public interface XMLDSigService {
 
@@ -27,7 +27,7 @@ public interface XMLDSigService {
 
     void validateFollowsSchema(SignatureType signatureType);
 
-    boolean validateSignatureValidity(String signatureXml);
+    boolean validateSignatureValidity(String signatureXml, boolean checkReferences);
 
     String digestToBase64(String xml);
 }

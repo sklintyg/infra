@@ -18,7 +18,8 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
-import se.inera.intyg.infra.xmldsig.model.SignatureType;
+
+import org.w3._2000._09.xmldsig_.SignatureType;
 
 public class IntygXMLDSignature implements IntygSignature {
 

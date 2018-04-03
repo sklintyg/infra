@@ -26,8 +26,8 @@ import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import se.inera.intyg.infra.xmldsig.model.KeyInfoType;
-import se.inera.intyg.infra.xmldsig.model.SignatureValueType;
+import org.w3._2000._09.xmldsig_.KeyInfoType;
+import org.w3._2000._09.xmldsig_.SignatureValueType;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,7 +46,8 @@ public class PrepareSignatureServiceImplTest {
     @Before
     public void init() {
         org.apache.xml.security.Init.init();
-        System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.jaxp.SaxonTransformerFactory") ; //"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"); // "" "net.sf.saxon.jaxp.SaxonTransformerFactory");
+        System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl") ; //"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"); // "" "net.sf.saxon.jaxp.SaxonTransformerFactory");
+
     }
 
 
@@ -68,7 +69,7 @@ public class PrepareSignatureServiceImplTest {
         try {
             String resXml =  testee.encodeSignatureIntoSignedXml(intygXMLDSignature.getSignatureType(), xml);
             System.out.println(resXml);
-            Assert.assertTrue(new XMLDSigServiceImpl().validateSignatureValidity(resXml));
+            Assert.assertTrue(new XMLDSigServiceImpl().validateSignatureValidity(resXml, true));
         } catch (Exception e) {
             e.printStackTrace();
         }

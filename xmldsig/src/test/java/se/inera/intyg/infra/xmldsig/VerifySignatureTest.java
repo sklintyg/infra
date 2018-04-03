@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import se.inera.intyg.infra.xmldsig.factory.PartialSignatureFactory;
-import se.inera.intyg.infra.xmldsig.model.SignatureType;
+import org.w3._2000._09.xmldsig_.SignatureType;
 
 import java.io.ByteArrayInputStream;
 import java.security.KeyStore;

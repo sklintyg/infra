@@ -23,16 +23,18 @@ import org.apache.xml.security.c14n.Canonicalizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.w3._2000._09.xmldsig_.ObjectFactory;
+import org.w3._2000._09.xmldsig_.SignatureType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import se.inera.intyg.infra.xmldsig.exception.IntygXMLDSigException;
 import se.inera.intyg.infra.xmldsig.factory.PartialSignatureFactory;
-import se.inera.intyg.infra.xmldsig.model.SignatureType;
 import se.inera.intyg.infra.xmldsig.util.XsltUtil;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
@@ -113,8 +115,10 @@ public class PrepareSignatureServiceImpl {
         try {
             Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(xml, Charset.forName("UTF-8")));
             DOMResult res = new DOMResult();
+
             JAXBContext context = JAXBContext.newInstance(signatureType.getClass());
-            context.createMarshaller().marshal(signatureType, res);
+            JAXBElement<SignatureType> signature = new ObjectFactory().createSignature(signatureType);
+            context.createMarshaller().marshal(signature, res);
             Node sigNode = res.getNode();
             Node importedNode = doc.importNode(sigNode.getFirstChild(), true);
 
@@ -148,12 +152,14 @@ public class PrepareSignatureServiceImpl {
      */
     private String buildSignedInfoForSigning(SignatureType signatureType) {
         try {
+            JAXBElement<SignatureType> signature = new ObjectFactory().createSignature(signatureType);
             JAXBContext jc = JAXBContext.newInstance(SignatureType.class);
 
             // Serialize SignatureType into XML (<Signature>...</Signature>)
             StringWriter sw = new StringWriter();
             Marshaller marshaller = jc.createMarshaller();
-            marshaller.marshal(signatureType, sw);
+            marshaller.marshal(signature, sw);
+
             String str = sw.toString();
 
             // Use XSLT to remove the parent element. (This transfers the xmldsig namespace declaration into the
@@ -164,6 +170,7 @@ public class PrepareSignatureServiceImpl {
             // Run the canonicalization to produce the final string we're to sign on.
             return canonicalizeXml(new String(out1.toByteArray(), Charset.forName(UTF_8)));
         } catch (JAXBException e) {
+            e.printStackTrace();
             throw new RuntimeException(e.getCause());
         }
     }

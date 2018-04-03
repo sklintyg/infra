@@ -19,21 +19,21 @@
 package se.inera.intyg.infra.xmldsig.factory;
 
 import org.springframework.core.io.ClassPathResource;
+import org.w3._2000._09.xmldsig_.CanonicalizationMethodType;
+import org.w3._2000._09.xmldsig_.DigestMethodType;
+import org.w3._2000._09.xmldsig_.KeyInfoType;
+import org.w3._2000._09.xmldsig_.ObjectFactory;
+import org.w3._2000._09.xmldsig_.ReferenceType;
+import org.w3._2000._09.xmldsig_.SignatureMethodType;
+import org.w3._2000._09.xmldsig_.SignatureType;
+import org.w3._2000._09.xmldsig_.SignatureValueType;
+import org.w3._2000._09.xmldsig_.SignedInfoType;
+import org.w3._2000._09.xmldsig_.TransformType;
+import org.w3._2000._09.xmldsig_.TransformsType;
+import org.w3._2000._09.xmldsig_.X509DataType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-import se.inera.intyg.infra.xmldsig.model.CanonicalizationMethodType;
-import se.inera.intyg.infra.xmldsig.model.DigestMethodType;
-import se.inera.intyg.infra.xmldsig.model.KeyInfoType;
-import se.inera.intyg.infra.xmldsig.model.ObjectFactory;
-import se.inera.intyg.infra.xmldsig.model.ReferenceType;
-import se.inera.intyg.infra.xmldsig.model.SignatureMethodType;
-import se.inera.intyg.infra.xmldsig.model.SignatureType;
-import se.inera.intyg.infra.xmldsig.model.SignatureValueType;
-import se.inera.intyg.infra.xmldsig.model.SignedInfoType;
-import se.inera.intyg.infra.xmldsig.model.TransformType;
-import se.inera.intyg.infra.xmldsig.model.TransformsType;
-import se.inera.intyg.infra.xmldsig.model.X509DataType;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.crypto.dsig.CanonicalizationMethod;

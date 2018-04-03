@@ -25,12 +25,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.w3._2000._09.xmldsig_.KeyInfoType;
+import org.w3._2000._09.xmldsig_.SignatureType;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import se.inera.intyg.infra.xmldsig.factory.PartialSignatureFactory;
-import se.inera.intyg.infra.xmldsig.model.KeyInfoType;
-import se.inera.intyg.infra.xmldsig.model.SignatureType;
 
 import javax.annotation.PostConstruct;
 import javax.xml.XMLConstants;
@@ -38,7 +38,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
-import javax.xml.crypto.dsig.Reference;
 import javax.xml.crypto.dsig.XMLSignature;
 import javax.xml.crypto.dsig.XMLSignatureFactory;
 import javax.xml.crypto.dsig.dom.DOMValidateContext;
@@ -52,7 +51,6 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Iterator;
 
 /**
  * Provides Intyg-specific functionality for preparing XMLDSig signatures.
@@ -69,6 +67,7 @@ public class XMLDSigServiceImpl implements XMLDSigService {
     @PostConstruct
     public void init() {
         org.apache.xml.security.Init.init();
+        //System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl") ; //"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"); // "" "net.sf.saxon.jaxp.SaxonTransformerFactory");
     }
 
 
@@ -109,18 +108,12 @@ public class XMLDSigServiceImpl implements XMLDSigService {
     }
 
     @Override
-    public boolean validateSignatureValidity(String signatureXml) {
+    public boolean validateSignatureValidity(String signatureXml, boolean checkReferences) {
         XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
-//        try {
-//           // Provider[] providers = Security.getProviders();
-//            Security.insertProviderAt(new org.apache.jcp.xml.dsig.internal.dom.XMLDSigRI(), 0);
-//            fac = XMLSignatureFactory.getInstance("DOM", "ApacheXMLDSig");
-//        } catch (NoSuchProviderException e) {
-//            e.printStackTrace();
-//            throw new IllegalStateException(e);
-//        }
+
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
+
         try {
             Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(signatureXml, Charset.forName("UTF-8")));
             NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
@@ -134,29 +127,33 @@ public class XMLDSigServiceImpl implements XMLDSigService {
             // Unmarshal the XMLSignature.
             XMLSignature sig = fac.unmarshalXMLSignature(valContext);
 
-            // Validate the XMLSignature.
-            boolean coreValidity = sig.validate(valContext);
-
-            // Check core validation status.
-            if (!coreValidity) {
-                LOG.error("Signature failed core validation");
-                boolean sv = sig.getSignatureValue().validate(valContext);
-                LOG.info("signature validation status: " + sv);
-                if (!sv) {
-                    // Check the validation status of each Reference.
-                    Iterator i = sig.getSignedInfo().getReferences().iterator();
-                    for (int j = 0; i.hasNext(); j++) {
-                        boolean refValid = ((Reference) i.next()).validate(valContext);
-                        LOG.info("ref[" + j + "] validity status: " + refValid);
-                    }
-                }
+            if (checkReferences) {
+                return sig.validate(valContext);
             } else {
-                LOG.info("Signature passed core validation");
+                return sig.getSignatureValue().validate(valContext);
             }
-            return coreValidity;
+//            // Validate the XMLSignature.
+//            boolean coreValidity = sig.validate(valContext);
+//
+//            // Check core validation status.
+//            if (!coreValidity) {
+//                LOG.error("Signature failed core validation");
+//                boolean sv = sig.getSignatureValue().validate(valContext);
+//                LOG.info("signature validation status: " + sv);
+//                if (!sv) {
+//                    // Check the validation status of each Reference.
+//                    Iterator i = sig.getSignedInfo().getReferences().iterator();
+//                    for (int j = 0; i.hasNext(); j++) {
+//                        boolean refValid = ((Reference) i.next()).validate(valContext);
+//                        LOG.info("ref[" + j + "] validity status: " + refValid);
+//                    }
+//                }
+//            } else {
+//                LOG.info("Signature passed core validation");
+//            }
+//            return coreValidity;
         } catch (Exception e) {
             LOG.error("Caught {} validating signature. Msg: {}", e.getClass().getName(), e.getMessage());
-            e.printStackTrace();
         }
         return false;
     }
