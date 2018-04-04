@@ -182,12 +182,19 @@ public class PrepareSignatureServiceImpl {
                 ByteArrayOutputStream out3 = new ByteArrayOutputStream()) {
 
             // Use XSLT to remove unwanted elements and the parent element.
+            XsltUtil.transform(IOUtils.toInputStream(xml), out1, "stripall.xslt");
+
+            return new String(out1.toByteArray(), Charset.forName(UTF_8));
+
+            /*
             XsltUtil.transform(IOUtils.toInputStream(xml), out1, "stripnamespaces.xslt");
             XsltUtil.transform(IOUtils.toInputStream(new String(out1.toByteArray(), Charset.forName(UTF_8))), out2, "stripmetadata.xslt");
             XsltUtil.transform(IOUtils.toInputStream(new String(out2.toByteArray(), Charset.forName(UTF_8))), out3,
                     "stripparentelement.xslt");
 
+
             return new String(out3.toByteArray(), Charset.forName(UTF_8));
+            */
         } catch (IOException e) {
             LOG.error(e.getMessage());
             throw new IntygXMLDSigException(e.getMessage());

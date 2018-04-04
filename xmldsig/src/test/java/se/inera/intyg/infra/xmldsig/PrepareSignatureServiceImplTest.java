@@ -41,15 +41,12 @@ public class PrepareSignatureServiceImplTest {
 
     private PrepareSignatureServiceImpl testee = new PrepareSignatureServiceImpl();
 
-
-
     @Before
     public void init() {
         org.apache.xml.security.Init.init();
         System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl") ; //"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"); // "" "net.sf.saxon.jaxp.SaxonTransformerFactory");
 
     }
-
 
     @Test
     public void testBuildPreparedSignature() throws IOException {

@@ -27,15 +27,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dom.DOMStructure;
-import javax.xml.crypto.dsig.CanonicalizationMethod;
-import javax.xml.crypto.dsig.DigestMethod;
-import javax.xml.crypto.dsig.Reference;
-import javax.xml.crypto.dsig.SignatureMethod;
-import javax.xml.crypto.dsig.SignedInfo;
-import javax.xml.crypto.dsig.Transform;
-import javax.xml.crypto.dsig.XMLSignature;
-import javax.xml.crypto.dsig.XMLSignatureException;
-import javax.xml.crypto.dsig.XMLSignatureFactory;
+import javax.xml.crypto.dsig.*;
 import javax.xml.crypto.dsig.dom.DOMSignContext;
 import javax.xml.crypto.dsig.dom.DOMValidateContext;
 import javax.xml.crypto.dsig.keyinfo.KeyInfo;
@@ -53,19 +45,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.security.Key;
-import java.security.KeyStore;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class ReferenceSignatureTester {
 
@@ -89,9 +72,13 @@ public class ReferenceSignatureTester {
     //    stylesheet.init(new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripparentelement_2.xslt"))));
         //   XSLTTransformParameterSpec params = new XSLTTransformParameterSpec(stylesheet);
         transforms.add(fac.newTransform("http://www.w3.org/2001/10/xml-exc-c14n#", (TransformParameterSpec) null));
+        /*
         transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripnamespaces.xslt")))));
         transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripmetadata.xslt")))));
         transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripparentelement_2.xslt")))));
+        transforms.add(fac.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null));
+        */
+        transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripall.xslt")))));
         transforms.add(fac.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null));
 
 
@@ -148,7 +135,8 @@ public class ReferenceSignatureTester {
         signature.sign(dsc);
 
         // Output the resulting document.
-        TransformerFactory tf = TransformerFactory.newInstance();
+        //TransformerFactory tf = TransformerFactory.newInstance();
+        TransformerFactory tf = TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl",null);
         Transformer trans = tf.newTransformer();
 
        // trans.setOutputProperty(OutputKeys.INDENT, "yes");
