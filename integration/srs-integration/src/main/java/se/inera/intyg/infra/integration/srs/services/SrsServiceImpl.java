@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.infra.integration.srs.services;
 
 import com.google.common.base.Strings;
@@ -13,10 +31,6 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDia
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgard;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendationstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardstyp;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Bedomningsunderlag;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationRequestType;
@@ -26,10 +40,20 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Indivi
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Individfaktorer;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Prediktionsfaktorer;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisRequestType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgard;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendation;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardstyp;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikbild;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
@@ -68,6 +92,8 @@ public class SrsServiceImpl implements SrsService {
     private SetConsentResponderInterface setConsent;
     @Autowired
     private GetDiagnosisCodesResponderInterface getDiagnosisCodes;
+    @Autowired
+    private GetSRSInformationForDiagnosisResponderInterface getSRSInformationForDiagnosis;
 
     @Override
     public SrsResponse getSrs(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
@@ -101,8 +127,8 @@ public class SrsServiceImpl implements SrsService {
 
         if (filter.isPrediktion()) {
             if (underlag.getPrediktion().getDiagnosprediktion().isEmpty()
-                    || underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus()
-                    == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
+                    || underlag.getPrediktion().getDiagnosprediktion().get(0)
+                            .getDiagnosprediktionstatus() == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
                 prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
             } else {
                 level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori().intValueExact();
@@ -192,6 +218,81 @@ public class SrsServiceImpl implements SrsService {
         return response.getDiagnos().stream()
                 .map(CVType::getCode)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public SrsForDiagnosisResponse getSrsForDiagnose(String diagnosCode) {
+
+        if (diagnosCode == null || diagnosCode.isEmpty()) {
+            throw new IllegalArgumentException("diagnosCode is required to construct a valid request.");
+        }
+
+        GetSRSInformationForDiagnosisRequestType request = new GetSRSInformationForDiagnosisRequestType();
+        request.setDiagnos(createDiagnos(diagnosCode));
+        GetSRSInformationForDiagnosisResponseType response = getSRSInformationForDiagnosis.getSRSInformationForDiagnosis(request);
+
+        if (response.getResultCode() != ResultCodeEnum.OK) {
+            throw new IllegalArgumentException("Bad data from SRS");
+        }
+
+        return createDiagnoseResponse(response);
+
+    }
+
+    private SrsForDiagnosisResponse createDiagnoseResponse(GetSRSInformationForDiagnosisResponseType response) {
+        String resultDiagnosCode = null;
+
+        // We need a null-check here in case there were no info available for the requested diagnosis code.
+        if (hasAtgardsrekommendationWithDiagnosisCode(response)) {
+            resultDiagnosCode = response.getAtgardsrekommendation().getDiagnos().getCode();
+        }
+
+        String atgarderStatusCode;
+        String statistikStatusCode;
+        String statistikBild;
+        String statistikDiagnosCode;
+
+        // Ugh. maybe we should create common xsd types for these common subtypes...
+        final Atgardsrekommendation atgardsrekommendation = response
+                .getAtgardsrekommendation();
+
+        // filter out all OBS types sorted by priority
+        final List<String> atgarderObs = atgardsrekommendation.getAtgard().stream().sorted(Comparator
+                .comparing(Atgard::getPrioritet))
+                .filter(a -> a.getAtgardstyp()
+                        .equals(Atgardstyp.OBS))
+                .map(Atgard::getAtgardsforslag)
+                .collect(Collectors.toList());
+
+        // filter out all REK types sorted by priority
+        final List<String> atgarderRek = atgardsrekommendation.getAtgard().stream().sorted(Comparator
+                .comparing(Atgard::getPrioritet))
+                .filter(a -> a.getAtgardstyp()
+                        .equals(Atgardstyp.REK))
+                .map(Atgard::getAtgardsforslag)
+                .collect(Collectors.toList());
+
+        atgarderStatusCode = atgardsrekommendation.getAtgardsrekommendationstatus().name();
+
+        if (response.getStatistik() != null
+                && !CollectionUtils.isEmpty(response.getStatistik().getStatistikbild())) {
+            final Statistikbild statistikbild = response.getStatistik().getStatistikbild().get(0);
+            statistikStatusCode = statistikbild.getStatistikstatus().name();
+            statistikBild = statistikbild.getBildadress();
+            statistikDiagnosCode = statistikbild.getDiagnos() != null ? statistikbild.getDiagnos().getCode() : null;
+        } else {
+            statistikStatusCode = Statistikstatus.STATISTIK_SAKNAS.name();
+            statistikBild = null;
+            statistikDiagnosCode = null;
+        }
+
+        return new SrsForDiagnosisResponse(atgarderObs, atgarderRek,
+                resultDiagnosCode, atgarderStatusCode, statistikBild, statistikStatusCode, statistikDiagnosCode);
+    }
+
+    private boolean hasAtgardsrekommendationWithDiagnosisCode(GetSRSInformationForDiagnosisResponseType response) {
+        return response.getAtgardsrekommendation().getAtgardsrekommendationstatus() != Atgardsrekommendationstatus.INFORMATION_SAKNAS
+                && response.getAtgardsrekommendation().getDiagnos() != null;
     }
 
     private GetSRSInformationRequestType createRequest(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode,

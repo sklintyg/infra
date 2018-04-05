@@ -43,6 +43,10 @@
                   serviceClass="se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponderInterface"
                   address="${srs.getdiagnosiscodes.endpoint.url}">
     </jaxws:client>
+    <jaxws:client id="getSrsForDiagnosisBean"
+        serviceClass="se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponderInterface"
+        address="${srs.getsrsfordiagnosis.endpoint.url}">
+    </jaxws:client>
 
     <bean id="srsService" class="se.inera.intyg.infra.integration.srs.services.SrsServiceImpl"/>
 </beans>

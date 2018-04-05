@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -35,7 +35,7 @@ public class PUBootstrapBean {
     private static final Logger LOG = LoggerFactory.getLogger(PUBootstrapBean.class);
 
     @Autowired
-    private ResidentStore residentStore;
+    private ChronicleResidentStore residentStore;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -65,7 +65,7 @@ public class PUBootstrapBean {
     private void addPersoner(Resource res) throws IOException {
         LOG.debug("Loading personer from " + res.getFilename());
         ResidentType resident = objectMapper.readValue(res.getInputStream(), ResidentType.class);
-        residentStore.addUser(resident);
+        residentStore.addResident(resident);
         LOG.debug("Loaded person " + resident.getPersonpost().getPersonId());
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -334,6 +334,9 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
             List<PersonInformationType> personInfo, String authenticationScheme) {
         intygUser.setNamn(compileName(personInfo.get(0).getGivenName(), personInfo.get(0).getMiddleAndSurName()));
         intygUser.setVardgivare(userAuthorizationInfo.getVardgivare());
+        //INTYG-4208: If any item has protectedPerson set, consider the user sekretessMarkerad.
+        intygUser.setSekretessMarkerad(
+                personInfo.stream().filter(pi -> pi.isProtectedPerson() != null && pi.isProtectedPerson()).findAny().isPresent());
 
         // Förskrivarkod is sensitive information, not allowed to store real value so make sure we overwrite this later
         // after role resolution.

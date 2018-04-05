@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,10 +18,10 @@
  */
 package se.inera.intyg.infra.integration.hsa.stub;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HsaPerson {
@@ -31,6 +31,8 @@ public class HsaPerson {
     private String forNamn;
 
     private String efterNamn;
+
+    private boolean sekretessMarkerad;
 
     private List<HsaSpecialicering> specialiseringar = new ArrayList<HsaSpecialicering>();
 
@@ -95,6 +97,14 @@ public class HsaPerson {
 
     public void setEfterNamn(String efterNamn) {
         this.efterNamn = efterNamn;
+    }
+
+    public boolean isSekretessMarkerad() {
+        return sekretessMarkerad;
+    }
+
+    public void setSekretessMarkerad(boolean sekretessMarkerad) {
+        this.sekretessMarkerad = sekretessMarkerad;
     }
 
     public List<HsaSpecialicering> getSpecialiseringar() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -32,8 +32,11 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstat
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
+import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
@@ -196,6 +199,54 @@ public class SrsServiceTest {
         assertTrue(response.contains("M18"));
         assertTrue(response.contains("J20"));
         assertTrue(response.contains("Q10"));
+    }
+
+    @Test
+    public void testGetSRSForDiagnosisCode() {
+        final SrsForDiagnosisResponse response = service.getSrsForDiagnose("M18");
+        assertNotNull(response);
+        assertNotNull(response.getDiagnosisCode());
+        assertEquals("M18", response.getDiagnosisCode());
+        assertEquals(3, response.getAtgarderObs().size());
+        assertEquals(3, response.getAtgarderRek().size());
+        assertEquals(Atgardsrekommendationstatus.OK.name(), response.getAtgarderStatusCode());
+
+        assertTrue(response.getStatistikBild().contains("srs-statistics-stub/M18"));
+        assertEquals(Statistikstatus.OK.name(), response.getStatistikStatusCode());
+    }
+
+    @Test
+    public void testGetSRSForHigherDiagnosisCode() {
+        final SrsForDiagnosisResponse response = service.getSrsForDiagnose("M18.1");
+        assertNotNull(response);
+        assertNotNull(response.getDiagnosisCode());
+        assertEquals("M18", response.getDiagnosisCode());
+        assertEquals(3, response.getAtgarderObs().size());
+        assertEquals(3, response.getAtgarderRek().size());
+        assertEquals(Atgardsrekommendationstatus.DIAGNOSKOD_PA_HOGRE_NIVA.name(), response.getAtgarderStatusCode());
+
+        assertEquals(Statistikstatus.DIAGNOSKOD_PA_HOGRE_NIVA.name(), response.getStatistikStatusCode());
+        assertEquals("M18", response.getStatistikDiagnosisCode());
+        assertTrue(response.getStatistikBild().contains("srs-statistics-stub/M18"));
+    }
+
+    @Test
+    public void testGetSRSForUnknownDiagnosisCode() {
+        final SrsForDiagnosisResponse response = service.getSrsForDiagnose("XX18");
+        assertNotNull(response);
+        assertNull(response.getDiagnosisCode());
+        assertEquals(0, response.getAtgarderObs().size());
+        assertEquals(0, response.getAtgarderRek().size());
+        assertEquals(Atgardsrekommendationstatus.INFORMATION_SAKNAS.name(), response.getAtgarderStatusCode());
+        assertNull(response.getStatistikBild());
+        assertEquals(Statistikstatus.STATISTIK_SAKNAS.name(), response.getStatistikStatusCode());
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetSRSForDiagnosisCodeInvalidRequest() {
+        service.getSrsForDiagnose(null);
+
     }
 
     private IntygUser createUser() {

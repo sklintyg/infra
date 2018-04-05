@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,9 +19,9 @@
 package se.inera.intyg.infra.security.authorities;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
 import se.inera.intyg.infra.security.authorities.validation.AuthoritiesValidator;
 import se.inera.intyg.infra.security.common.model.UserDetails;
+import se.inera.intyg.infra.security.common.service.Feature;
 
 import java.util.HashSet;
 import java.util.List;
@@ -43,28 +43,33 @@ public class AuthoritiesHelper {
     /**
      * Method returns all granted intygstyper for a certain user's privilege.
      * If user doesn't have a privilege, an empty set is returned.
-     *
+     * <p>
      * Note:
      * The configuration mindset of privileges is that if there are no
      * intygstyper attached to a privilege, the privilege is implicitly
      * valid for all intygstyper. However, this method will return an
      * explicit list with granted intygstyper in all cases.
      *
-     * @param user the current user
+     * @param user          the current user
      * @param privilegeName the privilege name
      * @return returns a set of granted intygstyper, an empty set means no granted intygstyper for this privilege
      */
     public Set<String> getIntygstyperForPrivilege(UserDetails user, String privilegeName) {
-        Assert.notNull(privilegeName);
-
         AuthoritiesValidator authoritiesValidator = new AuthoritiesValidator();
         List<String> knownIntygstyper = authoritiesResolver.getIntygstyper();
 
-        List<String> filteredList = knownIntygstyper.stream()
-                                        .filter(typ -> authoritiesValidator.given(user, typ).privilege(privilegeName).isVerified())
-                                        .collect(Collectors.toList());
+        return knownIntygstyper.stream()
+                .filter(typ -> authoritiesValidator.given(user, typ).privilege(privilegeName).isVerified())
+                .collect(Collectors.toSet());
+    }
 
-        return toSet(filteredList);
+    public Set<String> getIntygstyperForModuleFeature(UserDetails user, Feature... features) {
+        AuthoritiesValidator authoritiesValidator = new AuthoritiesValidator();
+        List<String> knownIntygstyper = authoritiesResolver.getIntygstyper();
+
+        return knownIntygstyper.stream()
+                .filter(typ -> authoritiesValidator.given(user, typ).features(features).isVerified())
+                .collect(Collectors.toSet());
     }
 
     public Set<String> getIntygstyperAllowedForSekretessmarkering() {

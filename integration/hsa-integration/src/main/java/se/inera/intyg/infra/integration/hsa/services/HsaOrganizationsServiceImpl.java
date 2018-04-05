@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -185,6 +185,12 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
             LOG.warn("Returning empty vardgivareList, cause: {}", e.getMessage());
         }
         return new UserAuthorizationInfo(userCredentials, vardgivareList, new HashMap<>()); // Empty
+    }
+
+    @Override
+    public String getParentUnit(String hsaId) throws HsaServiceCallException {
+        return organizationUnitService.getHealthCareUnit(hsaId).getHealthCareUnitHsaId();
+
     }
 
     private Vardenhet createVardenhet(CommissionType ct) {

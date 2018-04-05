@@ -21,7 +21,7 @@ knownPrivileges:
   - &kp005 SKRIVA_INTYG
   - &kp010 SIGNERA_INTYG
   - &kp020 MAKULERA_INTYG
-  - &kp030 KOPIERA_INTYG
+  - &kp030 FORNYA_INTYG
   - &kp070 FILTRERA_PA_LAKARE
 
 # De roller som systemet har
@@ -73,7 +73,7 @@ privileges:
       - *ro020 # DJUPINTEGRATION
   - &p030
     name: *kp030
-    desc: Kopiera intyg
+    desc: Förnya intyg
     intygstyper:
       - *ki010 # FK7263
     requestOrigins: # Implicit alla
@@ -93,7 +93,7 @@ roles:
       - *p000 # VISA_INTYG
       - *p010 # SIGNERA_INTYG
       - *p020 # MAKULERA_INTYG
-      - <<: *p030 # KOPIERA_INTYG
+      - <<: *p030 # FORNYA_INTYG
         intygstyper:
           - ts-bas
   - &r020
@@ -114,7 +114,7 @@ roles:
     desc: Vårdadministratör
     privileges:
       - *p000 # VISA_INTYG
-      - <<: *p030 # KOPIERA_INTYG
+      - <<: *p030 # FORNYA_INTYG
         intygstyper:
           - ts-diabetes
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,7 +31,7 @@ import java.util.List;
 public class LookupResidentForFullProfileWsStub implements LookupResidentForFullProfileResponderInterface {
 
     @Autowired
-    private ResidentStore personer;
+    private ChronicleResidentStore personer;
 
     @Override
     public LookupResidentForFullProfileResponseType lookupResidentForFullProfile(String logicalAddress,
@@ -40,7 +40,7 @@ public class LookupResidentForFullProfileWsStub implements LookupResidentForFull
         validate(logicalAddress, parameters);
         LookupResidentForFullProfileResponseType response = new LookupResidentForFullProfileResponseType();
         for (String id : parameters.getPersonId()) {
-            ResidentType residentPost = personer.get(id);
+            ResidentType residentPost = personer.getResident(id);
 
             if (residentPost != null) {
                 response.getResident().add(residentPost);

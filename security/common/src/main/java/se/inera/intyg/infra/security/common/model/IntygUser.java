@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,21 +18,22 @@
  */
 package se.inera.intyg.infra.security.common.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import se.inera.intyg.infra.integration.hsa.model.Mottagning;
-import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
-import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import se.inera.intyg.infra.integration.hsa.model.Mottagning;
+import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
+import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 
 /**
  * @author andreaskaltenbach
@@ -49,6 +50,7 @@ public class IntygUser implements UserDetails {
     protected String titel;
     protected String forskrivarkod;
     protected String authenticationScheme;
+    protected boolean isSekretessMarkerad;
 
     protected List<Vardgivare> vardgivare;
     protected Map<String, String> miuNamnPerEnhetsId;
@@ -136,6 +138,14 @@ public class IntygUser implements UserDetails {
 
     public void setAuthenticationScheme(String authenticationScheme) {
         this.authenticationScheme = authenticationScheme;
+    }
+
+    public boolean isSekretessMarkerad() {
+        return isSekretessMarkerad;
+    }
+
+    public void setSekretessMarkerad(boolean sekretessMarkerad) {
+        isSekretessMarkerad = sekretessMarkerad;
     }
 
     @Override

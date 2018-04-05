@@ -1,0 +1,40 @@
+{
+  "hsaId": "toth-gergo-1",
+  "forNamn": "Tóth Gergő",
+  "efterNamn": "Mészáros",
+  "legitimeradeYrkesgrupper": [
+    "Läkare"
+  ],
+  "uppdrag": [
+    {
+      "vardgivare": "TSTNMT2321000156-105M",
+      "enhet": "TSTNMT2321000156-105N",
+      "andamal": [
+        "Vård och behandling"
+      ],
+      "systemRoles": [
+        "INTYG;Rehab-TSTNMT2321000156-105N"
+      ]
+    },
+    {
+      "vardgivare": "TSTNMT2321000156-105M",
+      "enhet": "TSTNMT2321000156-105P",
+      "andamal": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["WC", "RS"],
+    "displayOrder": 340,
+    "env": "dev",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-105N",
+        "beskrivning": "Tóth Gergő Mészáros (Läkare | Har intyg och ärenden)"
+      }
+    ]
+  }
+}
+

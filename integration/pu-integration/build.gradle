@@ -1,7 +1,8 @@
 dependencies {
 
   compile project(':common-cache-core')
-  
+
+  compile "net.openhft:chronicle-map:${chronicleMapVersion}"
   compile "se.riv.population.residentmaster:population-residentmaster-schemas:${rivtaResidentMasterSchemasVersion}"
   compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
   compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"

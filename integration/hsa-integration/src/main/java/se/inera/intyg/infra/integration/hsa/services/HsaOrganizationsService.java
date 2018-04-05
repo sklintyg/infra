@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.infra.integration.hsa.services;
 
+import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsa.model.UserAuthorizationInfo;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 
@@ -66,4 +67,6 @@ public interface HsaOrganizationsService {
      *      A list of hsaId's for mottagningar.
      */
     List<String> getHsaIdForAktivaUnderenheter(String vardEnhetHsaId);
+
+    String getParentUnit(String hsaId) throws HsaServiceCallException;
 }

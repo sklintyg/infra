@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.infra.integration.hsa.stub.scanner;
 
 import com.sun.nio.file.SensitivityWatchEventModifier;
@@ -17,6 +35,7 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.stream.Stream;
 
 /**
  * Created by eriklupander on 2017-04-12.
@@ -41,9 +60,9 @@ public class ScannerBean {
     void bootstrapScan(Path path, ScanTarget scanTarget) {
         LOG.info("Performing startup scan of HSA identity folder '{}'", path.toString());
         ScanEventHandler handler = resolveHandler(scanTarget);
-        try {
-            Files.walk(path)
-                    .filter(Files::isRegularFile)
+
+        try (Stream<Path> stream = Files.walk(path)) {
+             stream.filter(Files::isRegularFile)
                     .filter(p -> p.toString().endsWith(SUFFIX_JSON))
                     .forEach(handler::created);
         } catch (IOException e) {
