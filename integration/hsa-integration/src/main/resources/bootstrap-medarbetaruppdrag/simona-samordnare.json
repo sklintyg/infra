@@ -1,0 +1,24 @@
+{
+  "hsaId": "ib-user-1",
+  "forNamn": "Simona",
+  "efterNamn": "Samordnare",
+  "uppdrag": [
+    {
+      "vardgivare": "IFV1239877878-1041",
+      "enhet": "IFV1239877878-1042",
+      "systemRoles": [
+        "INTYG;FMU-SAMORDNARE-IFV1239877878-1041"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["IB"],
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "IFV1239877878-1042",
+        "beskrivning": "Simona Samordnare (Samordnare 1 | Intygsbeställning)"
+      }
+    ]
+  }
+}

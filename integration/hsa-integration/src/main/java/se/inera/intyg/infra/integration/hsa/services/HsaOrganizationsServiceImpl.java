@@ -113,6 +113,21 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
     }
 
     @Override
+    public Vardgivare getVardgivareInfo(String vardgivareHsaId) {
+        LOG.debug("Getting info on vardgivare '{}'", vardgivareHsaId);
+
+        UnitType unit;
+        try {
+            unit = getUnit(vardgivareHsaId);
+        } catch (HsaServiceCallException e) {
+            LOG.error(e.getMessage());
+            throw new WebServiceException(e.getMessage());
+        }
+
+        return new Vardgivare(unit.getUnitHsaId(), unit.getUnitName());
+    }
+
+    @Override
     public List<String> getHsaIdForAktivaUnderenheter(String vardEnhetHsaId) {
         try {
             HealthCareUnitMembersType response = organizationUnitService.getHealthCareUnitMembers(vardEnhetHsaId);
