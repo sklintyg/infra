@@ -345,7 +345,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         intygUser.setMiuNamnPerEnhetsId(userAuthorizationInfo.getCommissionNamePerCareUnit());
     }
 
-    private void decorateIntygUserWithRoleAndAuthorities(IntygUser intygUser, List<PersonInformationType> personInfo,
+    protected void decorateIntygUserWithRoleAndAuthorities(IntygUser intygUser, List<PersonInformationType> personInfo,
             UserCredentials userCredentials) {
         Role role = commonAuthoritiesResolver.resolveRole(intygUser, personInfo, getDefaultRole(), userCredentials);
         LOG.debug("User role is set to {}", role);
