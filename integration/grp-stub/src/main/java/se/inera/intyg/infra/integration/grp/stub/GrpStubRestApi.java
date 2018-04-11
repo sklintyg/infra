@@ -21,6 +21,7 @@ package se.inera.intyg.infra.integration.grp.stub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import se.funktionstjanster.grp.v1.FaultStatusType;
 import se.funktionstjanster.grp.v1.GrpFault;
 
 import javax.ws.rs.Consumes;
@@ -41,7 +42,7 @@ import java.util.List;
 public class GrpStubRestApi {
 
     private static final Logger LOG = LoggerFactory.getLogger(GrpStubRestApi.class);
-    public static final int REMOVE_AFTER_MINUTS = 4;
+    public static final int REMOVE_AFTER_MINUTES = 4;
 
     @Autowired
     private GrpServiceStub serviceStub;
@@ -56,8 +57,8 @@ public class GrpStubRestApi {
         Iterator<OngoingGrpSignature> i = list.iterator();
         while (i.hasNext()) {
             OngoingGrpSignature ongoingGrpSignature = i.next();
-            if (ongoingGrpSignature.getCreated().isBefore(LocalDateTime.now().minusMinutes(REMOVE_AFTER_MINUTS))) {
-                serviceStub.fail(ongoingGrpSignature.getTransactionId());
+            if (ongoingGrpSignature.getCreated().isBefore(LocalDateTime.now().minusMinutes(REMOVE_AFTER_MINUTES))) {
+                serviceStub.remove(ongoingGrpSignature.getTransactionId());
                 LOG.info("GRP stub removed COMPLETE or stale entry for orderRef '{}'", ongoingGrpSignature.getOrderRef());
                 i.remove();
             }
@@ -101,10 +102,9 @@ public class GrpStubRestApi {
 
     @PUT
     @Path("/cancel/{transactionId}")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response cancel(String transactionId) {
-        serviceStub.fail(transactionId);
+    public Response cancel(@PathParam("transactionId") String transactionId) throws GrpFault {
+        serviceStub.fail(transactionId, FaultStatusType.CANCELLED);
         return Response.ok().build();
     }
 }
