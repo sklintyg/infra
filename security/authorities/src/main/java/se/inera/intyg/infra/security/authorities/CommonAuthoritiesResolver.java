@@ -149,7 +149,9 @@ public class CommonAuthoritiesResolver {
      * @return the map of all the features
      */
     public Map<String, Feature> getFeatures(List<String> hsaIds) {
-        List<Feature> featureList = new ArrayList<>(configurationLoader.getFeaturesConfiguration().getFeatures());
+        List<Feature> featureList = configurationLoader.getFeaturesConfiguration().getFeatures().stream()
+                .map(Feature::new)
+                .collect(Collectors.toList());
 
         List<Pilot> pilots = configurationLoader.getFeaturesConfiguration().getPilots().stream()
                 .filter(p -> p.getHsaIds().stream().anyMatch(hsaIds::contains))
