@@ -1,0 +1,24 @@
+{
+  "hsaId": "ib-user-4",
+  "forNamn": "Gunnel",
+  "efterNamn": "Grävling",
+  "uppdrag": [
+    {
+      "vardgivare": "IFV1239877878-1043",
+      "enhet": "IFV1239877878-1045",
+      "systemRoles": [
+        "INTYG;FMU-SAMORDNARE-IFV1239877878-1043"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["IB"],
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "IFV1239877878-1045",
+        "beskrivning": "Gunnel Grävling (Samordnare 2 | Intygsbeställning)"
+      }
+    ]
+  }
+}
