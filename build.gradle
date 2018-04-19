@@ -14,7 +14,7 @@ ext {
 
     srsSchemasVersion = "0.0.7"
 
-    schemasContractVersion = "2.1.6"
+    schemasContractVersion = "2.1.7"
 
     chronicleMapVersion = "3.13.0"
     commonsIoVersion = "2.4"

@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.infra.integration.srs.stub;
 
-import org.jetbrains.annotations.NotNull;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponseType;
@@ -51,7 +50,6 @@ public class GetSRSInformationForDiagnosisStub implements GetSRSInformationForDi
         return response;
     }
 
-    @NotNull
     private Atgardsrekommendation createRekommendationer(GetSRSInformationForDiagnosisRequestType request) {
         Diagnos diagnos = request.getDiagnos();
         Atgardsrekommendation atgardsrekommendation = new Atgardsrekommendation();
@@ -142,7 +140,6 @@ public class GetSRSInformationForDiagnosisStub implements GetSRSInformationForDi
         return diagnos;
     }
 
-    @NotNull
     private Atgard createAtgard(String atgardsforslagstext, Atgardstyp typ, int prio) {
 
         Atgard atgard = new Atgard();

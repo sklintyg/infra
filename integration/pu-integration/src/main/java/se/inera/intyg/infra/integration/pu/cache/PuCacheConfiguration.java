@@ -18,48 +18,33 @@
  */
 package se.inera.intyg.infra.integration.pu.cache;
 
-import org.apache.ignite.Ignition;
-import org.apache.ignite.cache.spring.SpringCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import se.inera.intyg.infra.cache.core.ConfigurableCache;
+import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.cache.expiry.CreatedExpiryPolicy;
-import javax.cache.expiry.Duration;
 
 /**
  * While the cacheManager.getCache(...) isn't strictly necessary for creating the cache used by
  * {@link se.inera.intyg.infra.integration.pu.services.PUServiceImpl}, this class provides us with the capability
- * of configuring individual caches based on the current state of the
- * {@link org.apache.ignite.cache.spring.SpringCacheManager#dynamicCacheCfg}
- *
+ * of configuring individual caches based on the current state of the (dynamic) configuration
+ * <p>
  * Created by eriklupander on 2016-10-20.
  */
-public class PuCacheConfiguration implements ConfigurableCache {
+public class PuCacheConfiguration {
 
     public static final String PERSON_CACHE_NAME = "personCache";
-
     private static final String PU_CACHE_EXPIRY = "pu.cache.expiry";
 
     @Value("${" + PU_CACHE_EXPIRY + "}")
     private String personCacheExpirySeconds;
 
     @Autowired
-    private SpringCacheManager cacheManager;
+    private RedisCacheOptionsSetter redisCacheOptionsSetter;
 
     @PostConstruct
     public void init() {
-        Duration duration = buildDuration(personCacheExpirySeconds, PU_CACHE_EXPIRY);
-
-        cacheManager.getDynamicCacheConfiguration().setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(duration));
-        cacheManager.getCache(PERSON_CACHE_NAME);
-    }
-
-    @PreDestroy
-    public void tearDown() {
-        Ignition.stopAll(false);
+        redisCacheOptionsSetter.createCache(PERSON_CACHE_NAME, PU_CACHE_EXPIRY);
     }
 
 }

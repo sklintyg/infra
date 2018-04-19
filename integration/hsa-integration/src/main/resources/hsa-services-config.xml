@@ -33,7 +33,7 @@
 
 
   <context:component-scan base-package="se.inera.intyg.infra.integration.hsa"/>
-  
+
   <jaxws:client id="getCredentialsForPersonIncludingProtectedPersonResponderInterface"
       serviceClass="se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponderInterface"
       address="${infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedpersonresponderinterface.endpoint.url}"/>
@@ -84,13 +84,16 @@
     </http:conduit>
   </beans>
 
-  <beans profile="caching-enabled,prod">
-    <bean class="se.inera.intyg.infra.cache.core.BasicCacheConfiguration" />
+  <beans profile="qa,prod">
     <bean class="se.inera.intyg.infra.integration.hsa.cache.HsaCacheConfiguration" />
   </beans>
+
   <beans profile="!prod">
-    <beans profile="!caching-enabled">
-      <bean id="cacheManager" class="org.springframework.cache.support.NoOpCacheManager"/>
+    <beans profile="!qa">
+      <beans profile="caching-enabled">
+        <bean class="se.inera.intyg.infra.integration.hsa.cache.HsaCacheConfiguration" />
+      </beans>
     </beans>
   </beans>
+
 </beans>

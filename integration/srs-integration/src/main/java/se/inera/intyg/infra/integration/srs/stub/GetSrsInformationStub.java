@@ -19,7 +19,6 @@
 package se.inera.intyg.infra.integration.srs.stub;
 
 import org.apache.cxf.annotations.SchemaValidation;
-import org.jetbrains.annotations.NotNull;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendationer;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Bedomningsunderlag;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktion;
@@ -57,7 +56,6 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
         return response;
     }
 
-    @NotNull
     private Bedomningsunderlag createUnderlag(GetSRSInformationRequestType request) {
         Bedomningsunderlag underlag = new Bedomningsunderlag();
         Utdatafilter filter = request.getUtdatafilter();
@@ -127,7 +125,6 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
         return statistikbild;
     }
 
-    @NotNull
     private Atgardsrekommendation createAtgardsrekommendation(String atgardsforslag, Diagnos diagnos, Atgardstyp typ, int prio) {
         Atgardsrekommendation atgardrekommendation = new Atgardsrekommendation();
         atgardrekommendation.setInkommandediagnos(diagnos);

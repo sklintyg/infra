@@ -19,7 +19,6 @@
 package se.inera.intyg.infra.integration.hsa.stub.scanner;
 
 import com.sun.nio.file.SensitivityWatchEventModifier;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,7 +132,6 @@ public class ScannerBean {
         }
     }
 
-    @NotNull
     private ScanEventHandler resolveHandler(ScanTarget scanTarget) {
         return scanTarget == ScanTarget.VARDGIVARE ? vardgivareHandler : personHandler;
     }

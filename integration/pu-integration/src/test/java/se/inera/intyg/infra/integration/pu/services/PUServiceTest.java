@@ -18,16 +18,18 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
-import org.apache.ignite.cache.spring.SpringCacheManager;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import se.inera.intyg.infra.cache.core.BasicCacheConfiguration;
+import redis.embedded.RedisServer;
+import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
 import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.schemas.contract.Personnummer;
@@ -42,14 +44,21 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:PUServiceTest/test-context.xml")
@@ -61,21 +70,19 @@ public class PUServiceTest {
     @Autowired
     private GetPersonsForProfileResponderInterface residentService;
 
-    private SpringCacheManager cacheManager;
-
     @Autowired
-    private BasicCacheConfiguration basicCacheConfiguration;
+    private CacheManager cacheManager;
 
     private static IIType iiType = new IIType();
 
     @BeforeClass
-    public static void setupIIType() {
+    public static void setupIITy() {
         iiType.setExtension("191212121212");
     }
 
     @Before
     public void setup() {
-        cacheManager = basicCacheConfiguration.cacheManager();
+        cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME).clear();
         service.clearCache();
     }
 
@@ -245,7 +252,7 @@ public class PUServiceTest {
         GetPersonsForProfileResponderInterface mockResidentService = mock(GetPersonsForProfileResponderInterface.class);
 
         when(mockResidentService.getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class))).thenReturn(response);
-        //ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", mockResidentService);
+        // ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", mockResidentService);
         service.setService(mockResidentService);
 
         // First request should call the lookup service
@@ -268,7 +275,7 @@ public class PUServiceTest {
         assertEquals("12345", person.getPostnummer());
         assertEquals("Småmåla", person.getPostort());
 
-//        ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", residentService);
+        // ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", residentService);
         service.setService(residentService);
     }
 
@@ -288,7 +295,7 @@ public class PUServiceTest {
                 .thenThrow(new SOAPFaultException(SOAPFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL).createFault()))
                 .thenThrow(new WebServiceException())
                 .thenReturn(response);
-       // ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", mockResidentService);
+        // ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", mockResidentService);
         service.setService(mockResidentService);
 
         // First request should call the lookup service
@@ -328,7 +335,7 @@ public class PUServiceTest {
         assertEquals("12345", person.getPostnummer());
         assertEquals("Småmåla", person.getPostort());
 
-       // ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", residentService);
+        // ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", residentService);
         service.setService(residentService);
     }
 

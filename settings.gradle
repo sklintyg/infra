@@ -7,8 +7,7 @@ pluginManagement {
 
 rootProject.name = 'infra'
 
-include ':common-cache-core'
-include ':common-cache-metrics'
+include ':common-redis-cache-core'
 include ':grp-stub'
 include ':nias-stub'
 include ':hsa-integration'
@@ -24,8 +23,7 @@ include ':sjukfall-engine'
 include ':dynamiclink'
 include ':xmldsig'
 
-project(':common-cache-core').projectDir = "$rootDir/cache/core" as File
-project(':common-cache-metrics').projectDir = "$rootDir/cache/metrics" as File
+project(':common-redis-cache-core').projectDir = "$rootDir/redis-cache/core" as File
 project(':dynamiclink').projectDir = "$rootDir/dynamiclink" as File
 project(':grp-stub').projectDir = "$rootDir/integration/grp-stub" as File
 project(':nias-stub').projectDir = "$rootDir/integration/nias-stub" as File

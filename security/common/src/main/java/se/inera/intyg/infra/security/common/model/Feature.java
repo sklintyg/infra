@@ -19,7 +19,6 @@
 package se.inera.intyg.infra.security.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -67,7 +66,7 @@ public class Feature implements Serializable {
         this.desc = desc;
     }
 
-    public @NotNull Boolean getGlobal() {
+    public Boolean getGlobal() {
         return Optional.ofNullable(global).orElse(false);
     }
 
