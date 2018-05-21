@@ -7,8 +7,8 @@ ext {
 
     rivtaDirectoryOrganizationSchemasVersion = "1.1.RC5.5"
     rivtaEhrLogstoreSchemasVersion = "1.2.4"
-    rivtaHsaAuthorizationmanagementSchemasVersion = "1.0.RC4.4"
-    rivtaHsaEmployeeSchemasVersion = "1.0.RC4.4"
+    rivtaHsaAuthorizationmanagementSchemasVersion = "1.0.RC4.5"
+    rivtaHsaEmployeeSchemasVersion = "1.0.RC4.5"
     rivtaResidentMasterSchemasVersion = "1.1.3.5"
     rivtaGetPersonsPersonSchemasVersion = "3.0-beta1"
 
