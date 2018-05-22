@@ -27,6 +27,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.util.StringUtils;
 
 /**
  * Initialization and activation of Redis cache for a single Redis host.
@@ -37,8 +38,10 @@ public class BasicCacheConfiguration {
 
     private @Value("${redis.host}")
     String redisHost;
-    private @Value("${redis.port}")
+    private @Value("${redis.port:6379}")
     int redisPort;
+    private @Value("${redis.password:}")
+    String redisPassword;
     private @Value("${redis.cache.default_entry_expiry_time_in_seconds}")
     int defaultEntryExpiry;
 
@@ -52,6 +55,9 @@ public class BasicCacheConfiguration {
         JedisConnectionFactory factory = new JedisConnectionFactory();
         factory.setHostName(redisHost);
         factory.setPort(redisPort);
+        if (StringUtils.hasLength(redisPassword)) {
+            factory.setPassword(redisPassword);
+        }
         factory.setUsePool(true);
         return factory;
     }
