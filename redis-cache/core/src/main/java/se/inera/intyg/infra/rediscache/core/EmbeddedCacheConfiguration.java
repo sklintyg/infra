@@ -72,7 +72,10 @@ public class EmbeddedCacheConfiguration {
         while (!redisStartedSuccessfully && it.hasNext()) {
             int port = it.next();
             try {
-                this.redisServer = new RedisServer(port);
+                this.redisServer = RedisServer.builder()
+                        .port(port)
+                        .setting("maxmemory 512M")
+                        .build();
                 this.redisServer.start();
                 System.out.println("Started Redis server at " + port);
                 redisStartedSuccessfully = true;
