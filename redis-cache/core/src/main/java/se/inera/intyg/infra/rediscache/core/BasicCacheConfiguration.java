@@ -38,9 +38,9 @@ public class BasicCacheConfiguration {
 
     private @Value("${redis.host}")
     String redisHost;
-    private @Value("${redis.port:6379}")
+    private @Value("${redis.port}")
     int redisPort;
-    private @Value("${redis.password:}")
+    private @Value("${redis.password}")
     String redisPassword;
     private @Value("${redis.cache.default_entry_expiry_time_in_seconds}")
     int defaultEntryExpiry;
