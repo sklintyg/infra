@@ -1,0 +1,42 @@
+{
+  "hsaId": "TSTNMT2321000156-1023",
+  "forNamn": "Jenny Ingrid Susanne",
+  "efterNamn": "Andersson Svensson",
+  "legitimeradeYrkesgrupper": [
+    "Läkare"
+  ],
+  "uppdrag": [
+    {
+      "vardgivare": "TSTNMT2321000156-1002",
+      "enhet": "TSTNMT2321000156-1004",
+      "andamal": [
+        "Vård och behandling"
+      ],
+      "systemRoles": [
+        "INTYG;FMU-SAMORDNARE-TSTNMT2321000156-1002"
+      ]
+    },
+    {
+      "vardgivare": "TSTNMT2321000156-1002",
+      "enhet": "TSTNMT2321000156-1003",
+      "andamal": [
+        "Vård och behandling"
+      ],
+      "systemRoles": [
+        "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1003"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["IB"],
+    "displayOrder": 505,
+    "env": "demo",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-1004",
+        "beskrivning": "Jenny Ingrid Susanne Andersson Svensson (Läkare | SITHS-kort)"
+      }
+    ]
+  }
+}
