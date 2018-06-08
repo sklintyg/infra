@@ -1,6 +1,5 @@
 dependencies {
 
-  compile project(':common-cache-core')
   compile project(':security-common')
   compile project(':hsa-integration')
 

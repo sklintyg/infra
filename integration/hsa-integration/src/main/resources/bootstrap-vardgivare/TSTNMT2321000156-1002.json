@@ -38,6 +38,17 @@
       "postort" : "Testhult",
       "agandeForm": "PRIVAT",
       "arbetsplatskod" : "1234567890"
+    },{
+      "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
+      "id" : "TSTNMT2321000156-1004",
+      "namn" : "NMT vg1 ve4",
+      "epost" : "enhet4@webcert.invalid.se",
+      "telefonnummer" : "0101234567890",
+      "postadress" : "NMT gata 4",
+      "postnummer" : "12345",
+      "postort" : "Testhult",
+      "agandeForm": "PRIVAT",
+      "arbetsplatskod" : "1234567890"
     }
   ]
 }

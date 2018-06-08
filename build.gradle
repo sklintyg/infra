@@ -5,16 +5,16 @@ plugins {
 ext {
     funktionstjansterGrpSchemasVersion = "1.0.4"
 
-    rivtaDirectoryOrganizationSchemasVersion = "1.1.RC5.4"
+    rivtaDirectoryOrganizationSchemasVersion = "1.1.RC5.5"
     rivtaEhrLogstoreSchemasVersion = "1.2.4"
-    rivtaHsaAuthorizationmanagementSchemasVersion = "1.0.RC4.4"
-    rivtaHsaEmployeeSchemasVersion = "1.0.RC4.4"
+    rivtaHsaAuthorizationmanagementSchemasVersion = "1.0.RC4.5"
+    rivtaHsaEmployeeSchemasVersion = "1.0.RC4.5"
     rivtaResidentMasterSchemasVersion = "1.1.3.5"
     rivtaGetPersonsPersonSchemasVersion = "3.0-beta1"
 
     srsSchemasVersion = "0.0.7"
 
-    schemasContractVersion = "2.1.5"
+    schemasContractVersion = "2.1.7"
 
     chronicleMapVersion = "3.13.0"
     commonsIoVersion = "2.4"
@@ -29,12 +29,12 @@ ext {
     saxonVersion = "9.8.0-10" //"9.6.0-4"
     servletApiVersion = "2.5"
     slf4jVersion = "1.7.21"
-    springSecuritySaml2CoreVersion = "1.0.1.RELEASE"
-    springSecurityVersion = "4.0.3.RELEASE"
-    springVersion = "4.2.2.RELEASE"
+    springSecuritySaml2CoreVersion = "1.0.3.RELEASE"
+    springSecurityVersion = "4.2.5.RELEASE"
+    springVersion = "4.3.16.RELEASE"
     xmlSecVersion = "2.1.1"  // org.apache.santuario:xmlsec:2.1.1
 
-    mockitoVersion = "1.9.0"
+    mockitoVersion = "2.16.0"
     servletApiTestVersion = "3.1.0"
 }
 

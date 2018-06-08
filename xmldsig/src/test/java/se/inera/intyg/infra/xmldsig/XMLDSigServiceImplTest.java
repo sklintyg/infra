@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.Resource;
+import se.inera.intyg.infra.xmldsig.service.XMLDSigServiceImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +38,6 @@ public class XMLDSigServiceImplTest {
     @Before
     public void init() {
         testee.init();
-        System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl") ; //"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"); // "" "net.sf.saxon.jaxp.SaxonTransformerFactory");
     }
 
 
@@ -45,7 +45,7 @@ public class XMLDSigServiceImplTest {
     @Test
     public void testValidateSignature() throws IOException {
 
-        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-refactored.xml");
+        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/erik-new.xml");
         String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
 
         boolean result = testee.validateSignatureValidity(xml, true);

@@ -26,15 +26,15 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-  <cache:annotation-driven cache-manager="cacheManager"/>
-
-  <beans profile="caching-enabled,prod">
-    <bean class="se.inera.intyg.infra.cache.core.BasicCacheConfiguration"/>
+  <beans profile="qa,prod">
     <bean class="se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration" />
   </beans>
+
   <beans profile="!prod">
-    <beans profile="!caching-enabled">
-      <bean id="cacheManager" class="org.springframework.cache.support.NoOpCacheManager"/>
+    <beans profile="!qa">
+      <beans profile="caching-enabled">
+        <bean class="se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration"/>
+      </beans>
     </beans>
   </beans>
 </beans>

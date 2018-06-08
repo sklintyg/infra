@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -72,28 +73,31 @@ public class ChronicleResidentStore {
      */
     public void addResident(PersonRecordType residentType) {
         String pnr = residentType.getPersonalIdentity().getExtension();
-        pnr = new Personnummer(pnr).getPersonnummerWithoutDash();
-        if (residents.containsKey(pnr)) {
-            residents.remove(pnr);
+        Personnummer personnummer = Personnummer.createPersonnummer(pnr).get();
+        if (isPersonnummerValid(personnummer)) {
+            // Only add valid personnummer
+            if (residents.containsKey(pnr)) {
+                residents.remove(pnr);
+            }
+            residents.put(pnr, toJson(residentType));
         }
-        residents.put(pnr, toJson(residentType));
     }
 
     PersonRecordType getResident(String pnr) {
         if (!active) {
             throw new IllegalStateException("Stub is deactivated for testing purposes.");
         }
-        String pnrWithoutDash = new Personnummer(pnr).getPersonnummerWithoutDash();
-        if (!residents.containsKey(pnrWithoutDash)) {
+        Personnummer personnummer = Personnummer.createPersonnummer(pnr).get();
+        if (!isPersonnummerValid(personnummer) || !residents.containsKey(personnummer.getPersonnummer())) {
             return null;
         }
-        return fromJson(residents.get(pnrWithoutDash));
+        return fromJson(residents.get(personnummer.getPersonnummer()));
     }
 
     void removeResident(String personId) {
-        String personIdWithoutDash = new Personnummer(personId).getPersonnummerWithoutDash();
-        if (residents.containsKey(personIdWithoutDash)) {
-            residents.remove(personIdWithoutDash);
+        Personnummer personnummer = Personnummer.createPersonnummer(personId).get();
+        if (isPersonnummerValid(personnummer) && residents.containsKey(personnummer.getPersonnummer())) {
+            residents.remove(personnummer.getPersonnummer());
         }
     }
 
@@ -159,4 +163,9 @@ public class ChronicleResidentStore {
     void setActive(boolean active) {
         this.active = active;
     }
+
+    private boolean isPersonnummerValid(Personnummer personnummer) {
+        return Optional.ofNullable(personnummer).isPresent();
+    }
+
 }

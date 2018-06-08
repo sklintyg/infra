@@ -61,7 +61,7 @@ public final class AuthoritiesConstants {
     public static final String FEATURE_SRS = "SRS";
     public static final String FEATURE_FORNYA_INTYG = "FORNYA_INTYG";
     public static final String FEATURE_SKICKA_INTYG = "SKICKA_INTYG";
-    public static final String FEATURE_ARBETSGIVARUTSKRIFT = "FEATURE_ARBETSGIVARUTSKRIFT";
+    public static final String FEATURE_ARBETSGIVARUTSKRIFT = "ARBETSGIVARUTSKRIFT";
     public static final String FEATURE_UTSKRIFT = "UTSKRIFT";
     public static final String FEATURE_MAKULERA_INTYG = "MAKULERA_INTYG";
     public static final String FEATURE_SIGNERA_SKICKA_DIREKT = "SIGNERA_SKICKA_DIREKT";

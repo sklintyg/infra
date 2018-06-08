@@ -24,10 +24,19 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import se.inera.intyg.infra.xmldsig.util.X509KeySelector;
 
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dom.DOMStructure;
-import javax.xml.crypto.dsig.*;
+import javax.xml.crypto.dsig.CanonicalizationMethod;
+import javax.xml.crypto.dsig.DigestMethod;
+import javax.xml.crypto.dsig.Reference;
+import javax.xml.crypto.dsig.SignatureMethod;
+import javax.xml.crypto.dsig.SignedInfo;
+import javax.xml.crypto.dsig.Transform;
+import javax.xml.crypto.dsig.XMLSignature;
+import javax.xml.crypto.dsig.XMLSignatureException;
+import javax.xml.crypto.dsig.XMLSignatureFactory;
 import javax.xml.crypto.dsig.dom.DOMSignContext;
 import javax.xml.crypto.dsig.dom.DOMValidateContext;
 import javax.xml.crypto.dsig.keyinfo.KeyInfo;
@@ -37,6 +46,7 @@ import javax.xml.crypto.dsig.keyinfo.X509Data;
 import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.SignatureMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
+import javax.xml.crypto.dsig.spec.XPathFilterParameterSpec;
 import javax.xml.crypto.dsig.spec.XSLTTransformParameterSpec;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -45,10 +55,19 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
-import java.security.*;
+import java.security.GeneralSecurityException;
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 
 public class ReferenceSignatureTester {
 
@@ -78,7 +97,8 @@ public class ReferenceSignatureTester {
         transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripparentelement_2.xslt")))));
         transforms.add(fac.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null));
         */
-        transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripall.xslt")))));
+        transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("transforms/stripall.xslt")))));
+        transforms.add(fac.newTransform(Transform.XPATH, new XPathFilterParameterSpec("//intygs-id/extension[text()='ABC123']/../.."))); // 9f02dd2f-f57c-4a73-8190-2fe602cd6e27
         transforms.add(fac.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null));
 
 
@@ -121,7 +141,7 @@ public class ReferenceSignatureTester {
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
-        ClassPathResource classPathResource = new ClassPathResource("unsigned/signed-lisjp.xml");
+        ClassPathResource classPathResource = new ClassPathResource("unsigned/wrapped.xml");
         Document doc = dbf.newDocumentBuilder().parse(classPathResource.getInputStream());
 
         // Create a DOMSignContext and specify the RSA PrivateKey and
@@ -135,12 +155,12 @@ public class ReferenceSignatureTester {
         signature.sign(dsc);
 
         // Output the resulting document.
-        //TransformerFactory tf = TransformerFactory.newInstance();
-        TransformerFactory tf = TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl",null);
+        TransformerFactory tf = TransformerFactory.newInstance();
+        //TransformerFactory tf = TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl",null);
         Transformer trans = tf.newTransformer();
 
-       // trans.setOutputProperty(OutputKeys.INDENT, "yes");
-      //  trans.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+        //trans.setOutputProperty(OutputKeys.INDENT, "yes");
+        //trans.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
         trans.transform(new DOMSource(doc), new StreamResult(System.out));
 
         // START VALIDATION

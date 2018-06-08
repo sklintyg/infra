@@ -20,7 +20,9 @@ package se.inera.intyg.infra.integration.pu.model;
 
 import se.inera.intyg.schemas.contract.Personnummer;
 
-public class Person {
+import java.io.Serializable;
+
+public class Person implements Serializable {
     private final Personnummer personnummer;
     private final boolean sekretessmarkering;
     private final boolean avliden;

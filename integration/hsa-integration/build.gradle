@@ -1,5 +1,5 @@
 dependencies {
-  compile project(':common-cache-core')
+  compile project(':common-redis-cache-core')
 
   compile "se.riv.infrastructure.directory.authorizationmanagement:infrastructure-directory-authorizationmanagement-schemas:${rivtaHsaAuthorizationmanagementSchemasVersion}"
   compile "se.riv.infrastructure.directory.employee:infrastructure-directory-employee-schemas:${rivtaHsaEmployeeSchemasVersion}"
@@ -18,4 +18,5 @@ dependencies {
   compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
 
   testCompile 'org.awaitility:awaitility:2.0.0'
+  testCompile "com.github.kstyrc:embedded-redis:0.6"
 }

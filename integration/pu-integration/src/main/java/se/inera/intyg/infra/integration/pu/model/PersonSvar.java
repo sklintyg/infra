@@ -18,7 +18,9 @@
  */
 package se.inera.intyg.infra.integration.pu.model;
 
-public class PersonSvar {
+import java.io.Serializable;
+
+public class PersonSvar implements Serializable {
 
     public enum Status {
         FOUND, NOT_FOUND, ERROR

@@ -25,11 +25,23 @@ package se.inera.intyg.infra.logmessages;
  * Created by eriklupander on 2016-03-02.
  */
 public enum ResourceType {
+
+    // WEBCERT...
     RESOURCE_TYPE_INTYG("Intyg"),
+
+    // REHABSTÖD
     RESOURCE_TYPE_OVERSIKT_SJUKFALL("Översikt sjukskrivning (diagnos, till- och fråndatum, sjukskrivningsgrad, läkare)"),
     RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK("Översikt sjukskrivninghistorik (diagnos, till- och fråndatum, "
-        + "sjukskrivningsgrad, läkare och sysselsättning per intyg)"),
-    RESOURCE_TYPE_PREDIKTION_SRS("Prediktion från SRS av risk för lång sjukskrivning");
+            + "sjukskrivningsgrad, läkare och sysselsättning per intyg)"),
+    RESOURCE_TYPE_PREDIKTION_SRS("Prediktion från SRS av risk för lång sjukskrivning"),
+
+    // INTYGSBESTALLNING
+    RESOURCE_TYPE_FMU_OVERSIKT("Översikt försäkringsmedicinska utredningar"),
+    RESOURCE_TYPE_FMU("Försäkringsmedicinsk utredning"),
+    RESOURCE_TYPE_FMU_BESOK("Besök i försäkringsmedicinsk utredning"),
+    RESOURCE_TYPE_FMU_AVVIKELSE("Avvikelse i försäkringsmedicinsk utredning"),
+    RESOURCE_TYPE_FMU_TOLK("Användning av tolk i försäkringsmedicinsk utredning"),
+    RESOURCE_TYPE_FMU_ANTECKNING("Anteckning i försäkringsmedicinsk utredning");
 
     private final String resourceTypeName;
 

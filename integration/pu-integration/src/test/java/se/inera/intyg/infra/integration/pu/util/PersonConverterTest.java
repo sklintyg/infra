@@ -21,7 +21,7 @@ package se.inera.intyg.infra.integration.pu.util;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.strategicresourcemanagement.persons.person.v3.AddressInformationType;
@@ -35,12 +35,15 @@ import static org.junit.Assert.assertNull;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PersonConverterTest {
-    private static final Personnummer PERSONNUMMER = new Personnummer("19121212-1212");
+
+    private static final Personnummer PERSONNUMMER = Personnummer.createPersonnummer("19121212-1212").get();
+
     private static final String FULLSTANDIG_ADRESS = "Storgatan 1, PL 1234";
     private static final String ADRESS1 = "Storgatan 1";
     private static final String ADRESS2 = "PL 1234";
     private static final String POSTORT = "Småmåla";
     private static final Integer POSTNUMMER = 12345;
+
     private static PersonConverter personConverter;
 
     @BeforeClass

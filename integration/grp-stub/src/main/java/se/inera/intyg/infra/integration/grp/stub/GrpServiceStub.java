@@ -20,7 +20,9 @@ package se.inera.intyg.infra.integration.grp.stub;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import se.funktionstjanster.grp.v1.FaultStatusType;
 import se.funktionstjanster.grp.v1.GrpFault;
+import se.funktionstjanster.grp.v1.GrpFaultType;
 import se.funktionstjanster.grp.v1.ProgressStatusType;
 
 import java.util.ArrayList;
@@ -34,8 +36,11 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  * @author Magnus Ekstrand on 2017-05-16.
  */
 @Service
-@Profile({ "dev", "wc-grp-stub", "wc-all-stubs", "testability-api" })
+@Profile({"dev", "wc-grp-stub", "wc-all-stubs", "testability-api"})
 public class GrpServiceStub {
+
+    // transactionId => reason for failure, will be returned to WC on next collect
+    private Map<String, FaultStatusType> failedSignings = new ConcurrentHashMap<>();
 
     // orderRef => status
     private Map<String, ProgressStatusType> signatureStatus = new ConcurrentHashMap<>();
@@ -45,6 +50,14 @@ public class GrpServiceStub {
 
     // txId => personalNumber
     private Map<String, String> personalNumberMapping = new ConcurrentHashMap<>();
+
+    public FaultStatusType getFailureReason(String transactionId) {
+        return failedSignings.get(transactionId);
+    }
+
+    public boolean isMarkedAsFailed(String transactionId) {
+        return failedSignings.get(transactionId) != null;
+    }
 
     public synchronized List<OngoingGrpSignature> getAll() {
         List<OngoingGrpSignature> outList = new ArrayList<>();
@@ -65,12 +78,15 @@ public class GrpServiceStub {
     public synchronized String getOrderRef(String transactionId) throws GrpFault {
         String orderRef = orderRefMapping.get(transactionId);
         if (isBlank(orderRef)) {
-            throw new GrpFault("No mapping between transactionId and orderRef was found");
+            // If transaction doesn't exist, we've already removed it since it's old (or WC got things backwards)
+            GrpFaultType faultType = new GrpFaultType();
+            faultType.setFaultStatus(FaultStatusType.EXPIRED_TRANSACTION);
+            throw new GrpFault("No mapping between transactionId and orderRef was found, assuming timeout", faultType);
         }
         return orderRef;
     }
 
-    public synchronized void putOrderRef(String transactionId, String orderRef) throws GrpFault  {
+    public synchronized void putOrderRef(String transactionId, String orderRef) throws GrpFault {
         if (transactionId == null || orderRef == null) {
             throw new GrpFault("Arguments must have values");
         }
@@ -105,11 +121,17 @@ public class GrpServiceStub {
         return true;
     }
 
-    public synchronized void fail(String transactionId) {
+    public synchronized void fail(String transactionId, FaultStatusType failReason) throws GrpFault {
+        // Mark transaction as failed
+        failedSignings.put(transactionId, failReason);
+    }
+
+    public synchronized void remove(String transactionId) {
         String orderRef = orderRefMapping.get(transactionId);
         signatureStatus.remove(orderRef);
         orderRefMapping.remove(transactionId);
         personalNumberMapping.remove(transactionId);
+        failedSignings.remove(transactionId);
     }
 
     public void putPersonalNumber(String transactionId, String personalNumber) {

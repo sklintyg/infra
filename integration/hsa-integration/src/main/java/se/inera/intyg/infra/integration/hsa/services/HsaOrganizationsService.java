@@ -21,6 +21,7 @@ package se.inera.intyg.infra.integration.hsa.services;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsa.model.UserAuthorizationInfo;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 
 import java.util.List;
 
@@ -57,6 +58,11 @@ public interface HsaOrganizationsService {
      *      The Vardenhet.
      */
     Vardenhet getVardenhet(String vardenhetHsaId);
+
+    /**
+     * Returns a shallow representation of a Vardgivare, which does NOT contain any Vardenheter.
+     */
+    Vardgivare getVardgivareInfo(String vardgivareHsaId);
 
     /**
      * Returns a list of hsaId's for all (any) sub units (mottagningar) on the specified care unit.

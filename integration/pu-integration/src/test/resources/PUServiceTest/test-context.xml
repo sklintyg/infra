@@ -18,15 +18,19 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:cache="http://www.springframework.org/schema/cache"
+    xmlns:cache="http://www.springframework.org/schema/cache" xmlns:util="http://www.springframework.org/schema/util"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
   <!-- <cache:annotation-driven/>  -->
-  <bean class="se.inera.intyg.infra.cache.core.BasicCacheConfiguration">
-    <property name="bindport" value="47603"/>
-    <property name="igniteIpAddresses" value="127.0.0.1:47603"/>
-    <property name="cacheExpirySeconds" value="5"/>
+  <bean name="props" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>classpath:redis-test.properties</value>
+      </list>
+    </property>
   </bean>
+
+  <bean class="se.inera.intyg.infra.rediscache.core.EmbeddedCacheConfiguration"/>
 
   <bean class="com.fasterxml.jackson.databind.ObjectMapper"/>
   <bean class="se.inera.intyg.infra.integration.pu.stub.PUBootstrapBean"/>

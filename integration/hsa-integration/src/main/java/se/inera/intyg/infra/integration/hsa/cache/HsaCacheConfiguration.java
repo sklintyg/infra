@@ -18,27 +18,20 @@
  */
 package se.inera.intyg.infra.integration.hsa.cache;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.cache.expiry.CreatedExpiryPolicy;
-import javax.cache.expiry.Duration;
-
-import org.apache.ignite.Ignition;
-import org.apache.ignite.cache.spring.SpringCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
 
-import se.inera.intyg.infra.cache.core.ConfigurableCache;
+import javax.annotation.PostConstruct;
 
 /**
  * While the cacheManager.getCache(...) isn't strictly necessary for creating the cache used by
- * {@link se.inera.intyg.infra.integration.hsa.client.OrganizationUnitServiceBean}, this class
- * provides us with the capability of configuring individual caches based on the current state of the
- * {@link org.apache.ignite.cache.spring.SpringCacheManager#dynamicCacheCfg}
- *
+ * {@link se.inera.intyg.infra.integration.hsa.client.OrganizationUnitServiceBean}, this class provides us with the capability
+ * of configuring individual caches based on the current state of the (dynamic) configuration
+ * <p>
  * Created by eriklupander on 2016-10-20.
  */
-public class HsaCacheConfiguration implements ConfigurableCache {
+public class HsaCacheConfiguration {
 
     public static final String HSA_UNIT_CACHE_NAME = "hsaUnitCache";
     public static final String HSA_HEALTH_CARE_UNIT_CACHE_NAME = "hsaHealthCareUnitCache";
@@ -58,27 +51,12 @@ public class HsaCacheConfiguration implements ConfigurableCache {
     private String hsaHeathCareUnitMembersCacheExpirySeconds;
 
     @Autowired
-    private SpringCacheManager cacheManager;
+    private RedisCacheOptionsSetter redisCacheOptionsSetter;
 
     @PostConstruct
     public void init() {
-        Duration hsaUnitDuration = buildDuration(hsaUnitCacheExpirySeconds, HSA_UNIT_CACHE_EXPIRY);
-        Duration hsaHealthCareUnitDuration = buildDuration(hsaHealthCareUnitCacheExpirySeconds, HSA_HEALTHCAREUNIT_CACHE_EXPIRY);
-        Duration hsaHealthCareUnitMembersDuration = buildDuration(hsaHeathCareUnitMembersCacheExpirySeconds,
-                HSA_HEALHCAREUNITMEMBERS_CACHE_EXPIRY);
-
-        initCache(HSA_UNIT_CACHE_NAME, hsaUnitDuration);
-        initCache(HSA_HEALTH_CARE_UNIT_CACHE_NAME, hsaHealthCareUnitDuration);
-        initCache(HSA_HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME, hsaHealthCareUnitMembersDuration);
-    }
-
-    @PreDestroy
-    public void tearDown() {
-        Ignition.stopAll(false);
-    }
-
-    private void initCache(String cacheName, Duration duration) {
-        cacheManager.getDynamicCacheConfiguration().setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(duration));
-        cacheManager.getCache(cacheName);
+        redisCacheOptionsSetter.createCache(HSA_UNIT_CACHE_NAME, hsaUnitCacheExpirySeconds);
+        redisCacheOptionsSetter.createCache(HSA_HEALTH_CARE_UNIT_CACHE_NAME, hsaHealthCareUnitCacheExpirySeconds);
+        redisCacheOptionsSetter.createCache(HSA_HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME, hsaHeathCareUnitMembersCacheExpirySeconds);
     }
 }

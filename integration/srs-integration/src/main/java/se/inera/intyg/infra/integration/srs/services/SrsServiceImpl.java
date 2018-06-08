@@ -313,7 +313,7 @@ public class SrsServiceImpl implements SrsService {
         Individfaktorer individer = new Individfaktorer();
         Individ individ = new Individ();
         individ.getDiagnos().add(createDiagnos(diagnosisCode));
-        individ.setPersonId(personnummer.getNormalizedPnr());
+        individ.setPersonId(personnummer.getPersonnummer());
         IntygId intyg = new IntygId();
         intyg.setExtension(intygId);
         intyg.setRoot(user.getValdVardenhet().getId());
@@ -357,7 +357,7 @@ public class SrsServiceImpl implements SrsService {
         SetConsentRequestType request = new SetConsentRequestType();
         HsaId hsaId = createHsaId(hsaString);
         request.setVardgivareId(hsaId);
-        request.setPersonId(personId.getNormalizedPnr());
+        request.setPersonId(personId.getPersonnummer());
         request.setSamtycke(samtycke);
         return request;
     }
@@ -369,7 +369,7 @@ public class SrsServiceImpl implements SrsService {
         hsaId.setExtension(hsaString);
         hsaId.setRoot(HSA_ROOT);
         request.setVardgivareId(hsaId);
-        request.setPersonId(personnummer.getNormalizedPnr());
+        request.setPersonId(personnummer.getPersonnummer());
         return request;
     }
 

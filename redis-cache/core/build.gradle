@@ -1,0 +1,12 @@
+dependencies {
+    compile "org.springframework.data:spring-data-redis:1.8.12.RELEASE"
+    compile "redis.clients:jedis:2.9.0"
+    compile "org.springframework:spring-core:${springVersion}"
+    compile "com.esotericsoftware:kryo:4.0.1"
+    compile "com.google.guava:guava:${guavaVersion}"
+    compile "com.github.kstyrc:embedded-redis:0.6"
+
+    runtime "org.springframework:spring-context-support:${springVersion}"
+
+    testCompile "org.springframework:spring-test:${springVersion}"
+}

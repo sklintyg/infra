@@ -44,9 +44,12 @@ public class GetConsentStub implements GetConsentResponderInterface {
     public GetConsentResponseType getConsent(GetConsentRequestType getConsentRequestType) {
         LOG.info("Stub received GetConsent-request for {}.", getConsentRequestType.getPersonId());
 
-        Optional<Consent> consent = consentRepository
-                .getConsent(new Personnummer(getConsentRequestType.getPersonId()), getConsentRequestType.getVardgivareId().getExtension());
         GetConsentResponseType response = new GetConsentResponseType();
+
+        Optional<Personnummer> personnummer = Personnummer.createPersonnummer(getConsentRequestType.getPersonId());
+        Optional<Consent> consent = consentRepository
+                .getConsent(personnummer.get(), getConsentRequestType.getVardgivareId().getExtension());
+
         if (consent.isPresent()) {
             response.setSamtycke(true);
             response.setSamtyckesstatus(Samtyckesstatus.JA);
@@ -54,6 +57,7 @@ public class GetConsentStub implements GetConsentResponderInterface {
         } else {
             response.setSamtyckesstatus(Samtyckesstatus.INGET);
         }
+
         return response;
     }
 }

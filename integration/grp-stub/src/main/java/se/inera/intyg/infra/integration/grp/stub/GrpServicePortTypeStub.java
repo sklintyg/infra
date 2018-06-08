@@ -24,6 +24,7 @@ import se.funktionstjanster.grp.v1.AuthenticateRequestType;
 import se.funktionstjanster.grp.v1.CollectRequestType;
 import se.funktionstjanster.grp.v1.CollectResponseType;
 import se.funktionstjanster.grp.v1.GrpFault;
+import se.funktionstjanster.grp.v1.GrpFaultType;
 import se.funktionstjanster.grp.v1.GrpServicePortType;
 import se.funktionstjanster.grp.v1.OrderResponseType;
 import se.funktionstjanster.grp.v1.ProgressStatusType;
@@ -81,6 +82,10 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
         String transactionId = collectRequestType.getTransactionId();
         if (isBlank(transactionId)) {
             transactionId = UUID.randomUUID().toString();
+        } else if (serviceStub.isMarkedAsFailed(transactionId)) {
+            GrpFaultType faultType = new GrpFaultType();
+            faultType.setFaultStatus(serviceStub.getFailureReason(transactionId));
+            throw new GrpFault(("Marked as failed due to" + faultType + "thru stub api"), faultType);
         }
         response.setTransactionId(transactionId);
 

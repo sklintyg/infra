@@ -366,4 +366,12 @@ public class HsaOrganizationsServiceTest {
         String vardGivareHsaId = service.getVardgivareOfVardenhet("centrum-vast");
         assertEquals("vastmanland", vardGivareHsaId);
     }
+
+    @Test
+    public void testGetVardgivareInfo() throws IOException {
+        addVardgivare("HsaOrganizationsServiceTest/landstinget-vastmanland.json");
+        Vardgivare vg = service.getVardgivareInfo("vastmanland");
+        assertEquals("vastmanland", vg.getId());
+        assertEquals("Landstinget Västmanland", vg.getNamn());
+    }
 }

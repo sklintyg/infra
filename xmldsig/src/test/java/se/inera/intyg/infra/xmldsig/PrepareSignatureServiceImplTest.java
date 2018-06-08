@@ -28,6 +28,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.w3._2000._09.xmldsig_.KeyInfoType;
 import org.w3._2000._09.xmldsig_.SignatureValueType;
+import se.inera.intyg.infra.xmldsig.model.IntygXMLDSignature;
+import se.inera.intyg.infra.xmldsig.service.PrepareSignatureServiceImpl;
+import se.inera.intyg.infra.xmldsig.service.XMLDSigServiceImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,14 +48,13 @@ public class PrepareSignatureServiceImplTest {
     public void init() {
         org.apache.xml.security.Init.init();
         System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl") ; //"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"); // "" "net.sf.saxon.jaxp.SaxonTransformerFactory");
-
     }
 
     @Test
     public void testBuildPreparedSignature() throws IOException {
-        InputStream xmlResource = getXmlResource("classpath:/unsigned/signed-lisjp-i18n-noxmldsig.xml");
+        InputStream xmlResource = getXmlResource("classpath:/unsigned/signed-lisjp-i18n.xml");
         String xml = IOUtils.toString(xmlResource);
-        IntygXMLDSignature intygXMLDSignature = testee.prepareSignature(xml);
+        IntygXMLDSignature intygXMLDSignature = testee.prepareSignature(xml, "9f02dd2f-f57c-4a73-8190-2fe602cd6e27");
 
         byte[] signature = createSignature(intygXMLDSignature.getSigningData().getBytes(Charset.forName("UTF-8")));
         SignatureValueType svt = new SignatureValueType();
