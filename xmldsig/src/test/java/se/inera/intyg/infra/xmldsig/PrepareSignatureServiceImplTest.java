@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -47,7 +46,10 @@ public class PrepareSignatureServiceImplTest {
     @Before
     public void init() {
         org.apache.xml.security.Init.init();
-        System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl") ; //"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"); // "" "net.sf.saxon.jaxp.SaxonTransformerFactory");
+        System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"); // "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+                                                                                                                                             // //
+                                                                                                                                             // ""
+                                                                                                                                             // "net.sf.saxon.jaxp.SaxonTransformerFactory");
     }
 
     @Test
@@ -66,7 +68,7 @@ public class PrepareSignatureServiceImplTest {
         intygXMLDSignature.getSignatureType().setKeyInfo(keyInfo);
 
         try {
-            String resXml =  testee.encodeSignatureIntoSignedXml(intygXMLDSignature.getSignatureType(), xml);
+            String resXml = testee.encodeSignatureIntoSignedXml(intygXMLDSignature.getSignatureType(), xml);
             System.out.println(resXml);
             Assert.assertTrue(new XMLDSigServiceImpl().validateSignatureValidity(resXml, true));
         } catch (Exception e) {
@@ -74,59 +76,59 @@ public class PrepareSignatureServiceImplTest {
         }
     }
 
+    // private String extractIntygFromRegisterCertificate(InputStream xmlResource) {
+    // try {
+    // JAXBContext jc = JAXBContext.newInstance(RegisterCertificateType.class, DatePeriodType.class);
+    // Unmarshaller unmarshaller = jc.createUnmarshaller();
+    // JAXBElement<RegisterCertificateType> jaxbElement = unmarshaller.unmarshal(new StreamSource(xmlResource),
+    // RegisterCertificateType.class);
+    //
+    // JAXBContext jc2 = JAXBContext.newInstance(Intyg.class, DatePeriodType.class);
+    // QName qname = new QName("urn:riv:clinicalprocess:healthcond:certificate:3", "Intyg");
+    // JAXBElement<Intyg> root = new JAXBElement<>(qname, Intyg.class, jaxbElement.getValue().getIntyg());
+    // Marshaller marshaller = jc2.createMarshaller();
+    // StringWriter sw = new StringWriter();
+    // marshaller.marshal(root, sw);
+    // System.out.println(sw.toString());
+    // return sw.toString();
+    // } catch (JAXBException e) {
+    // throw new RuntimeException(e);
+    // }
+    // }
 
-//    private String extractIntygFromRegisterCertificate(InputStream xmlResource) {
-//        try {
-//            JAXBContext jc = JAXBContext.newInstance(RegisterCertificateType.class, DatePeriodType.class);
-//            Unmarshaller unmarshaller = jc.createUnmarshaller();
-//            JAXBElement<RegisterCertificateType> jaxbElement = unmarshaller.unmarshal(new StreamSource(xmlResource), RegisterCertificateType.class);
-//
-//            JAXBContext jc2 = JAXBContext.newInstance(Intyg.class, DatePeriodType.class);
-//            QName qname = new QName("urn:riv:clinicalprocess:healthcond:certificate:3", "Intyg");
-//            JAXBElement<Intyg> root = new JAXBElement<>(qname, Intyg.class, jaxbElement.getValue().getIntyg());
-//            Marshaller marshaller = jc2.createMarshaller();
-//            StringWriter sw = new StringWriter();
-//            marshaller.marshal(root, sw);
-//            System.out.println(sw.toString());
-//            return sw.toString();
-//        } catch (JAXBException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
-//    private void signSignedInfo(IntygXMLDSignature intygSignature) {
-//        try {
-//            JAXBContext jc = JAXBContext.newInstance(SignatureType.class);
-//
-//            StringWriter sw = new StringWriter();
-//            Marshaller marshaller = jc.createMarshaller();
-//            marshaller.marshal(intygSignature.getSignatureType(), sw);
-//
-//            String str = sw.toString();
-//
-//            ByteArrayOutputStream out1 = new ByteArrayOutputStream();
-//            XsltUtil.transform(IOUtils.toInputStream(str), out1, "stripparentelement.xslt");
-//
-//            str = new String(out1.toByteArray(), Charset.forName("UTF-8"));
-//            System.out.println("Transformed: " + str);
-//
-//
-//            String canonicalizedSignedInfoXml = testee.canonicalizeXml(str);
-//            System.out.println("Canonicalized: " + canonicalizedSignedInfoXml);
-//
-//         //   byte[] signedInfoDigest = testee.generateDigest(canonicalizedSignedInfoXml);
-//         //   System.out.println("digest: " + new  String(signedInfoDigest));
-//
-//            byte[] signature = createSignature(canonicalizedSignedInfoXml.getBytes());
-//            System.out.println("signature: " + Base64.getEncoder().encodeToString(signature));
-//
-//            SignatureValueType svt = new SignatureValueType();
-//            svt.setValue(signature);
-//            intygSignature.getSignatureType().setSignatureValue(svt);
-//        } catch (JAXBException e) {
-//            throw new RuntimeException(e.getCause());
-//        }
-//    }
+    // private void signSignedInfo(IntygXMLDSignature intygSignature) {
+    // try {
+    // JAXBContext jc = JAXBContext.newInstance(SignatureType.class);
+    //
+    // StringWriter sw = new StringWriter();
+    // Marshaller marshaller = jc.createMarshaller();
+    // marshaller.marshal(intygSignature.getSignatureType(), sw);
+    //
+    // String str = sw.toString();
+    //
+    // ByteArrayOutputStream out1 = new ByteArrayOutputStream();
+    // XsltUtil.transform(IOUtils.toInputStream(str), out1, "stripparentelement.xslt");
+    //
+    // str = new String(out1.toByteArray(), Charset.forName("UTF-8"));
+    // System.out.println("Transformed: " + str);
+    //
+    //
+    // String canonicalizedSignedInfoXml = testee.canonicalizeXml(str);
+    // System.out.println("Canonicalized: " + canonicalizedSignedInfoXml);
+    //
+    // // byte[] signedInfoDigest = testee.generateDigest(canonicalizedSignedInfoXml);
+    // // System.out.println("digest: " + new String(signedInfoDigest));
+    //
+    // byte[] signature = createSignature(canonicalizedSignedInfoXml.getBytes());
+    // System.out.println("signature: " + Base64.getEncoder().encodeToString(signature));
+    //
+    // SignatureValueType svt = new SignatureValueType();
+    // svt.setValue(signature);
+    // intygSignature.getSignatureType().setSignatureValue(svt);
+    // } catch (JAXBException e) {
+    // throw new RuntimeException(e.getCause());
+    // }
+    // }
 
     private InputStream getXmlResource(String source) {
         try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext()) {

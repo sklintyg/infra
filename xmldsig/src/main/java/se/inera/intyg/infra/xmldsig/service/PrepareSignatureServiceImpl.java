@@ -33,7 +33,6 @@ import org.xml.sax.SAXException;
 import se.inera.intyg.infra.xmldsig.exception.IntygXMLDSigException;
 import se.inera.intyg.infra.xmldsig.factory.PartialSignatureFactory;
 import se.inera.intyg.infra.xmldsig.model.IntygXMLDSignature;
-import se.inera.intyg.infra.xmldsig.service.XMLDSigServiceImpl;
 import se.inera.intyg.infra.xmldsig.util.XsltUtil;
 
 import javax.annotation.PostConstruct;
@@ -123,12 +122,11 @@ public class PrepareSignatureServiceImpl {
         XPath xpath = xpathFactory.newXPath();
         InputSource inputSource = new InputSource(new StringReader(xml));
         try {
-            xml = nodeToString((Node) xpath.compile("//intygs-id/extension[text()='" + intygsId + "']/../..")
+            return nodeToString((Node) xpath.compile("//intygs-id/extension[text()='" + intygsId + "']/../..")
                     .evaluate(inputSource, XPathConstants.NODE));
         } catch (XPathExpressionException e) {
             throw new RuntimeException(e);
         }
-        return xml;
     }
 
     private static String nodeToString(Node node) {

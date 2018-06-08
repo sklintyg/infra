@@ -40,12 +40,11 @@ public class XMLDSigServiceImplTest {
         testee.init();
     }
 
-
     // Use this test to manually test signed documents.
     @Test
     public void testValidateSignature() throws IOException {
 
-        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/erik-new.xml");
+        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-lisjp-i18n.xml");
         String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
 
         boolean result = testee.validateSignatureValidity(xml, true);

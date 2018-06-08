@@ -18,16 +18,6 @@
  */
 package se.inera.intyg.infra.xmldsig.factory;
 
-import java.io.IOException;
-import java.util.Base64;
-
-import javax.xml.bind.JAXBElement;
-import javax.xml.crypto.dsig.CanonicalizationMethod;
-import javax.xml.crypto.dsig.DigestMethod;
-import javax.xml.crypto.dsig.Transform;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.springframework.core.io.ClassPathResource;
 import org.w3._2000._09.xmldsig_.CanonicalizationMethodType;
 import org.w3._2000._09.xmldsig_.DigestMethodType;
@@ -46,10 +36,22 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import javax.xml.bind.JAXBElement;
+import javax.xml.crypto.dsig.CanonicalizationMethod;
+import javax.xml.crypto.dsig.DigestMethod;
+import javax.xml.crypto.dsig.Transform;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.util.Base64;
+
 public final class PartialSignatureFactory {
 
     private static final String SIGNATURE_ALGORITHM = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
     private static final String TRANSFORM_ALGORITHM = "http://www.w3.org/2000/09/xmldsig#enveloped-signature";
+    public static final String FILTER_INTERSECT = "intersect";
+    public static final String XPATH_PART1 = "//extension[text()='";
+    public static final String XPATH_PART2 = "']/../..";
 
     private PartialSignatureFactory() {
 
@@ -92,14 +94,14 @@ public final class PartialSignatureFactory {
         TransformType xpathFilterTransform = new TransformType();
         xpathFilterTransform.setAlgorithm(Transform.XPATH2);
         XPathType xp = new XPathType();
-        xp.setFilter("intersect");
-        xp.setValue("//extension[text() = '" + intygsId + "']/../..");
+        xp.setFilter(FILTER_INTERSECT);
+        xp.setValue(XPATH_PART1 + intygsId + XPATH_PART2);
         xpathFilterTransform.getContent().add(new org.w3._2002._06.xmldsig_filter2.ObjectFactory().createXPath(xp));
-
 
         // The order here IS significant!! Otherwise, validation will not produce the expected digest.
         TransformsType transforms = new TransformsType();
-        transforms.getTransform().add(envelopedTransform); // Having envelopedTransform makes sure the <Signature> element is removed when digesting.
+        transforms.getTransform().add(envelopedTransform); // Having envelopedTransform makes sure the <Signature> element is removed when
+                                                           // digesting.
         transforms.getTransform().add(intygCanonicalizationTransform);
         transforms.getTransform().add(xpathFilterTransform);
         transforms.getTransform().add(canonicalizationTransform); // Canonicalization makes sure tags are not self-closed etc.
