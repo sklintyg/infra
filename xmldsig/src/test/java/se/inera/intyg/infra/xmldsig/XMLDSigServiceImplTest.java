@@ -51,6 +51,16 @@ public class XMLDSigServiceImplTest {
         assertTrue(result);
     }
 
+    @Test
+    public void testValidateSignatureInListCertificatesForCare() throws IOException {
+
+        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/list-certificates-for-care-response.xml");
+        String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
+
+        boolean result = testee.validateSignatureValidity(xml, true);
+        assertTrue(result);
+    }
+
     private InputStream getXmlResource(String location) {
         try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext()) {
             Resource resource = context.getResource(location);
