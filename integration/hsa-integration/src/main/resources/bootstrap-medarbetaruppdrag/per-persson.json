@@ -1,5 +1,5 @@
 {
-  "hsaId": "perpersson",
+  "hsaId": "TSTNMT2321000156-10J0",
   "forNamn": "Per",
   "efterNamn": "Persson",
   "legitimeradeYrkesgrupper": [
@@ -7,24 +7,35 @@
   ],
   "uppdrag": [
     {
-      "enhet": "anestesikliniken"
+      "vardgivare": "TSTNMT2321000156-1002",
+      "enhet": "TSTNMT2321000156-1004",
+      "andamal": [
+        "Vård och behandling"
+      ],
+      "systemRoles": [
+        "INTYG;FMU-SAMORDNARE-TSTNMT2321000156-1002"
+      ]
     },
     {
-      "enhet": "kvinnokliniken"
-    },
-    {
-      "enhet": "medicinkliniken"
+      "vardgivare": "TSTNMT2321000156-1002",
+      "enhet": "TSTNMT2321000156-1003",
+      "andamal": [
+        "Vård och behandling"
+      ],
+      "systemRoles": [
+        "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1003"
+      ]
     }
   ],
   "fakeProperties": {
-    "allowedInApplications": ["WC"],
+    "allowedInApplications": ["WC", "IB"],
     "displayOrder": 240,
-    "env": "dev",
+    "env": "demo",
     "readOnly": true,
     "logins": [
       {
-        "forvaldEnhet": "anestesikliniken",
-        "beskrivning": "Per Persson (Läkare | Anestesikliniken, Kvinnokliniken, Medicinkliniken)"
+        "forvaldEnhet": "TSTNMT2321000156-1003",
+        "beskrivning": "Per Persson (Läkare | SITHS-kort)"
       }
     ]
   }
