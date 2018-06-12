@@ -98,6 +98,7 @@ public class PrepareSignatureServiceImpl {
         // 2. Run XPath to pick out <intyg> element.
         xml = applyXPath(intygsId, xml);
 
+
         // 3. Run EXCLUSIVE canonicalization
         xml = canonicalizeXml(xml);
 

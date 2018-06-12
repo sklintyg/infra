@@ -98,12 +98,20 @@ public final class PartialSignatureFactory {
         xp.setValue(XPATH_PART1 + intygsId + XPATH_PART2);
         xpathFilterTransform.getContent().add(new org.w3._2002._06.xmldsig_filter2.ObjectFactory().createXPath(xp));
 
+        TransformType xpathRemoveUnwantedTransform = new TransformType();
+        xpathRemoveUnwantedTransform.setAlgorithm(Transform.XPATH2);
+        XPathType xp2 = new XPathType();
+        xp2.setFilter("subtract");
+        xp2.setValue("//*[local-name() = 'skickatTidpunkt']|//*[local-name() = 'relation']|//*[local-name() = 'status']");
+        xpathRemoveUnwantedTransform.getContent().add(new org.w3._2002._06.xmldsig_filter2.ObjectFactory().createXPath(xp2));
+
         // The order here IS significant!! Otherwise, validation will not produce the expected digest.
         TransformsType transforms = new TransformsType();
         transforms.getTransform().add(envelopedTransform); // Having envelopedTransform makes sure the <Signature> element is removed when
                                                            // digesting.
         transforms.getTransform().add(intygCanonicalizationTransform);
         transforms.getTransform().add(xpathFilterTransform);
+        transforms.getTransform().add(xpathRemoveUnwantedTransform);
         transforms.getTransform().add(canonicalizationTransform); // Canonicalization makes sure tags are not self-closed etc.
 
         referenceType.setTransforms(transforms);

@@ -52,6 +52,27 @@ public class XMLDSigServiceImplTest {
     }
 
     @Test
+    public void testValidateSignatureAfterStoreInIT() throws IOException {
+
+        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-after-store-in-intygstjansten.xml");
+        String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
+
+        boolean result = testee.validateSignatureValidity(xml, true);
+        assertTrue(result);
+    }
+
+    @Test
+    public void testValidateSignatureAfterStoreInITI18n() throws IOException {
+
+        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-after-store-i18n.xml");
+        String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
+
+        boolean result = testee.validateSignatureValidity(xml, true);
+        assertTrue(result);
+    }
+
+
+    @Test
     public void testValidateSignatureInListCertificatesForCare() throws IOException {
 
         InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/list-certificates-for-care-response.xml");
