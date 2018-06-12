@@ -73,7 +73,7 @@ public class XMLDSigServiceImpl implements XMLDSigService {
     @PostConstruct
     public void init() {
         org.apache.xml.security.Init.init();
-        System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+        // System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
     }
 
     /**

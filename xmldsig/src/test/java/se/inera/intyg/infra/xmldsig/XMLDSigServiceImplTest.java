@@ -38,6 +38,7 @@ public class XMLDSigServiceImplTest {
     @Before
     public void init() {
         testee.init();
+        System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
     }
 
     // Use this test to manually test signed documents.
