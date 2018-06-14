@@ -21,7 +21,7 @@ Lägg till följande i enhetstest:
     - digest-värde för kanoniserad <intyg>-XML.
     - Innehålle ej: SignatureValue och KeyInfo.   
 5. Backend skapar upp SignaturTicket i REDIS. SignaturTicket skall innehålla:
-    - ticketId (uuid)
+    - id (uuid)
     - intygsId
     - version (concurrency)
     - status (STARTED, IN_PROGRESS, COMPLETE, FAILED osv)
@@ -32,15 +32,15 @@ Lägg till följande i enhetstest:
 
 ##### Delflöde 2:
 
-1. Frontend skapar upp sin "poll-timeout" som 1 gång per sekund anropar _/pollsignature/{ticketId}_ i backend.
-2. I backend så hämtar _/pollsignature/{ticketId}_ SignaturTicket från REDIS och returnerar den.
+1. Frontend skapar upp sin "poll-timeout" som 1 gång per sekund anropar _/pollsignature/{id}_ i backend.
+2. I backend så hämtar _/pollsignature/{id}_ SignaturTicket från REDIS och returnerar den.
 3. Frontend tittar på status. Om COMPLETE kör success-callback. Om FAILED kör error-callback.
 
 ##### Delflöde 3a: NetiD-plugin
 1. Frontend anropar iid_Invoke med <SignedInfo>-digesten alternativt JSON-digesten (för ts-bas/ts-diabetes).
 2. Användaren signerar.
 3. NetiD-plugin anropar javascript callback med raw-signatur + X509Certificate
-4. Frontend anropar _/completesignature/{ticketId}_ med raw + x509.
+4. Frontend anropar _/completesignature/{id}_ med raw + x509.
 5. Backend tar emot raw + x509
 6. Backend hämtar SignatureTicket från REDIS
   - SignatureTicket hämtas från REDIS
@@ -56,7 +56,7 @@ Lägg till följande i enhetstest:
 forts...
 
 ##### Delflöde 3b: NetiD access
-1. Frontend anropar _/signeranias/{ticketId}_ och visar samtidigt sin signerings-modal.
+1. Frontend anropar _/signeranias/{id}_ och visar samtidigt sin signerings-modal.
 2. Backend hämtar SignatureTicket från REDIS
 3. Backend startar NIAS-processen:
 3.1 Utför /sign över NIAS-API för att initiera signeringen.
@@ -80,7 +80,7 @@ Alternativt har fel uppstått:
 6. Se delflöde 2 efter att frontend tagit emot ERROR.
 
 ##### Delflöde 3c: BankID/Mobilt BankID
-1. Frontend anropar _/signeragrp/{ticketId}_ och visar samtidigt sin signerings-modal.
+1. Frontend anropar _/signeragrp/{id}_ och visar samtidigt sin signerings-modal.
 2. Backend hämtar SignatureTicket från REDIS
 3. Backend startar GRP-processen:
 3.1 Utför /authenticate över GRP-API för att initiera signeringen.

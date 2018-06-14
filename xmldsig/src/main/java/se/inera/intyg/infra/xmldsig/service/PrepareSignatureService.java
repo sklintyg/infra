@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.infra.xmldsig.service;
 
-import org.w3._2000._09.xmldsig_.KeyInfoType;
+import org.w3._2000._09.xmldsig_.SignatureType;
+import se.inera.intyg.infra.xmldsig.model.IntygXMLDSignature;
 
-public interface XMLDSigService {
+public interface PrepareSignatureService {
+    IntygXMLDSignature prepareSignature(String intygXml, String intygsId);
 
-    KeyInfoType buildKeyInfoForCertificate(String certificate);
-
-    boolean validateSignatureValidity(String signatureXml, boolean checkReferences);
+    String encodeSignatureIntoSignedXml(SignatureType signatureType, String xml);
 }

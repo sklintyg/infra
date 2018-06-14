@@ -52,6 +52,10 @@ public final class PartialSignatureFactory {
     public static final String FILTER_INTERSECT = "intersect";
     public static final String XPATH_PART1 = "//extension[text()='";
     public static final String XPATH_PART2 = "']/../..";
+    public static final String XSLT_STRIP_ALL = "transforms/stripall.xslt";
+    public static final String FILTER_SUBTRACT = "subtract";
+    public static final String XPATH_SUBTRACT_METADATA_EXPRESSION = "//*[local-name() = 'skickatTidpunkt']|"
+            + "//*[local-name() = 'relation']|//*[local-name() = 'status']";
 
     private PartialSignatureFactory() {
 
@@ -89,7 +93,7 @@ public final class PartialSignatureFactory {
 
         TransformType intygCanonicalizationTransform = new TransformType();
         intygCanonicalizationTransform.setAlgorithm(Transform.XSLT);
-        intygCanonicalizationTransform.getContent().add(loadXsltElement("transforms/stripall.xslt"));
+        intygCanonicalizationTransform.getContent().add(loadXsltElement(XSLT_STRIP_ALL));
 
         TransformType xpathFilterTransform = new TransformType();
         xpathFilterTransform.setAlgorithm(Transform.XPATH2);
@@ -101,8 +105,8 @@ public final class PartialSignatureFactory {
         TransformType xpathRemoveUnwantedTransform = new TransformType();
         xpathRemoveUnwantedTransform.setAlgorithm(Transform.XPATH2);
         XPathType xp2 = new XPathType();
-        xp2.setFilter("subtract");
-        xp2.setValue("//*[local-name() = 'skickatTidpunkt']|//*[local-name() = 'relation']|//*[local-name() = 'status']");
+        xp2.setFilter(FILTER_SUBTRACT);
+        xp2.setValue(XPATH_SUBTRACT_METADATA_EXPRESSION);
         xpathRemoveUnwantedTransform.getContent().add(new org.w3._2002._06.xmldsig_filter2.ObjectFactory().createXPath(xp2));
 
         // The order here IS significant!! Otherwise, validation will not produce the expected digest.

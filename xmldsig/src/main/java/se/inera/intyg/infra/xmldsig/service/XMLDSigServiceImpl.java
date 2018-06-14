@@ -19,44 +19,29 @@
 package se.inera.intyg.infra.xmldsig.service;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.NullWriter;
 import org.apache.xml.security.c14n.Canonicalizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.w3._2000._09.xmldsig_.KeyInfoType;
-import org.w3._2000._09.xmldsig_.SignatureType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 import se.inera.intyg.infra.xmldsig.factory.PartialSignatureFactory;
 import se.inera.intyg.infra.xmldsig.util.X509KeySelector;
 
 import javax.annotation.PostConstruct;
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
-import javax.xml.crypto.dsig.Reference;
 import javax.xml.crypto.dsig.XMLSignature;
 import javax.xml.crypto.dsig.XMLSignatureException;
 import javax.xml.crypto.dsig.XMLSignatureFactory;
 import javax.xml.crypto.dsig.dom.DOMValidateContext;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Iterator;
 
 /**
  * Provides Intyg-specific functionality for preparing XMLDSig signatures.
@@ -73,7 +58,6 @@ public class XMLDSigServiceImpl implements XMLDSigService {
     @PostConstruct
     public void init() {
         org.apache.xml.security.Init.init();
-        // System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
     }
 
     /**
@@ -82,34 +66,6 @@ public class XMLDSigServiceImpl implements XMLDSigService {
     @Override
     public KeyInfoType buildKeyInfoForCertificate(String certificate) {
         return PartialSignatureFactory.buildKeyInfo(certificate);
-    }
-
-    /**
-     * Loads the XMLDSig schema and validates our output SignatureType vs the schema.
-     *
-     * @param signatureType
-     */
-    @Override
-    public void validateFollowsSchema(SignatureType signatureType) {
-        SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        try {
-            ClassPathResource classPathResource = new ClassPathResource("/schemas/xmldsig.xsd");
-            InputStream inputStream = classPathResource.getInputStream();
-            Source source = new StreamSource(inputStream);
-
-            Schema schema = sf.newSchema(source);
-            JAXBContext jc = JAXBContext.newInstance(SignatureType.class);
-
-            Marshaller marshaller = jc.createMarshaller();
-            marshaller.setSchema(schema);
-            marshaller.setEventHandler(event -> {
-                LOG.error("Error validating Signature element vs schema: {}", event.getMessage());
-                return false;
-            });
-            marshaller.marshal(signatureType, new NullWriter());
-        } catch (SAXException | JAXBException | IOException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        }
     }
 
     @Override
@@ -147,35 +103,12 @@ public class XMLDSigServiceImpl implements XMLDSigService {
 
         // Unmarshal the XMLSignature.
         XMLSignature sig = fac.unmarshalXMLSignature(valContext);
-        boolean coreValidity = sig.validate(valContext);
 
-        // Check core validation status.
-        if (!coreValidity) {
-            LOG.error("Signature failed core validation");
-            boolean sv = sig.getSignatureValue().validate(valContext);
-            LOG.info("signature validation status: " + sv);
-
-            // Check the validation status of each Reference.
-            Iterator i = sig.getSignedInfo().getReferences().iterator();
-            for (int j = 0; i.hasNext(); j++) {
-                boolean refValid = ((Reference) i.next()).validate(valContext);
-                LOG.info("ref[" + j + "] validity status: " + refValid);
-            }
-        } else {
-            LOG.info("Signature passed core validation");
-        }
         if (checkReferences) {
             return sig.validate(valContext);
         } else {
             return sig.getSignatureValue().validate(valContext);
         }
-    }
-
-    @Override
-    public String digestToBase64(String xml) {
-        String canonicalizedXml = canonicalizeXml(xml);
-        byte[] digest = generateDigest(canonicalizedXml);
-        return new String(digest, Charset.forName("UTF-8"));
     }
 
     /**
@@ -192,8 +125,7 @@ public class XMLDSigServiceImpl implements XMLDSigService {
         }
     }
 
-    // @Override
-    String canonicalizeXml(String intygXml) {
+    private String canonicalizeXml(String intygXml) {
         try {
             Canonicalizer canonicalizer = Canonicalizer.getInstance(CANONICALIZER_ALGORITHM);
             byte[] canonicalizedXmlAsBytes = canonicalizer.canonicalize(intygXml.getBytes("UTF-8"));

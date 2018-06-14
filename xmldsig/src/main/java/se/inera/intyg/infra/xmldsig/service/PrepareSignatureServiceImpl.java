@@ -64,7 +64,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 @Service
-public class PrepareSignatureServiceImpl {
+public class PrepareSignatureServiceImpl implements PrepareSignatureService {
 
     private static final Logger LOG = LoggerFactory.getLogger(XMLDSigServiceImpl.class);
 
@@ -90,6 +90,7 @@ public class PrepareSignatureServiceImpl {
      * @param intygsId
      *          The ID of the intyg is required for the XPath expression selecting the content to be digested.
      */
+    @Override
     public IntygXMLDSignature prepareSignature(String intygXml, String intygsId) {
 
         // 1. Transform into our base canonical form without namespaces and dynamic attributes.
@@ -115,7 +116,13 @@ public class PrepareSignatureServiceImpl {
         String signedInfoForSigning = buildSignedInfoForSigning(signatureType);
 
         // 6. Populate and return
-        return new IntygXMLDSignature(signatureType, intygXml, signedInfoForSigning);
+        return IntygXMLDSignature.IntygXMLDSignatureBuilder.anIntygXMLDSignature()
+            .withIntygJson("set later...")
+            .withCanonicalizedIntygXml(xml)
+            .withSignedInfoForSigning(signedInfoForSigning)
+            .withSignatureType(signatureType)
+            .build();
+        // IntygXMLDSignature(signatureType, intygXml, signedInfoForSigning);
     }
 
     private String applyXPath(String intygsId, String xml) {
@@ -150,6 +157,7 @@ public class PrepareSignatureServiceImpl {
      * @param xml
      * @return
      */
+    @Override
     public String encodeSignatureIntoSignedXml(SignatureType signatureType, String xml) {
         // Append the SignatureElement as last element of the xml.
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -242,7 +250,7 @@ public class PrepareSignatureServiceImpl {
         }
     }
 
-    public byte[] generateDigest(String stringToDigest) {
+    private byte[] generateDigest(String stringToDigest) {
         try {
             MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
             byte[] sha256 = digest.digest(stringToDigest.getBytes(UTF_8));
