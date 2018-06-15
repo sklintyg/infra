@@ -25,7 +25,9 @@ import se.funktionstjanster.grp.v1.GrpFault;
 import se.funktionstjanster.grp.v1.GrpFaultType;
 import se.funktionstjanster.grp.v1.ProgressStatusType;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,6 +41,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Profile({"dev", "wc-grp-stub", "wc-all-stubs", "testability-api"})
 public class GrpServiceStub {
 
+    public static final int FOUR = 4;
     // transactionId => reason for failure, will be returned to WC on next collect
     private Map<String, FaultStatusType> failedSignings = new ConcurrentHashMap<>();
 
@@ -50,6 +53,9 @@ public class GrpServiceStub {
 
     // txId => personalNumber
     private Map<String, String> personalNumberMapping = new ConcurrentHashMap<>();
+
+    // txId => created
+    private Map<String, LocalDateTime> orderRefCreatedMapping = new ConcurrentHashMap<>();
 
     public FaultStatusType getFailureReason(String transactionId) {
         return failedSignings.get(transactionId);
@@ -66,6 +72,7 @@ public class GrpServiceStub {
             String personalNumber = personalNumberMapping.get(transactionId);
             outList.add(new OngoingGrpSignature(personalNumber, orderRef, transactionId, signatureStatus.get(orderRef)));
         }
+        prune();
         return outList;
     }
 
@@ -95,6 +102,7 @@ public class GrpServiceStub {
         }
         try {
             orderRefMapping.put(transactionId, orderRef);
+            orderRefCreatedMapping.put(transactionId, LocalDateTime.now());
         } catch (Exception exception) {
             throw new GrpFault(exception.getMessage());
         }
@@ -140,6 +148,26 @@ public class GrpServiceStub {
 
     public String getPersonalNumber(String transactionId) {
         return personalNumberMapping.get(transactionId);
+    }
+
+    // Ugliest code ever.
+    private void prune() {
+        Iterator<Map.Entry<String, String>> i = orderRefMapping.entrySet().iterator();
+        while (i.hasNext()) {
+            Map.Entry<String, String> entry = i.next();
+            String transactionId = entry.getKey();
+            String orderRef = entry.getValue();
+            // Find ongoing tx
+            LocalDateTime created = orderRefCreatedMapping.get(entry.getKey());
+            if (LocalDateTime.now().compareTo(created.plusMinutes(FOUR)) > 0) {
+                // Remove!!
+                orderRefCreatedMapping.remove(entry.getKey());
+                signatureStatus.remove(orderRef);
+                personalNumberMapping.remove(transactionId);
+                failedSignings.remove(transactionId);
+                i.remove();
+            }
+        }
     }
 }
 
