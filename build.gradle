@@ -26,12 +26,13 @@ ext {
     jacksonDataformatVersion = "2.4.5"
     jacksonVersion = "2.8.1"
     logbackVersion = "1.0.11"
+    saxonVersion = "9.8.0-10" //"9.6.0-4"
     servletApiVersion = "2.5"
     slf4jVersion = "1.7.21"
     springSecuritySaml2CoreVersion = "1.0.3.RELEASE"
     springSecurityVersion = "4.2.5.RELEASE"
     springVersion = "4.3.16.RELEASE"
-    xmlSecVersion = "1.5.6"
+    xmlSecVersion = "2.1.1"  // org.apache.santuario:xmlsec:2.1.1
 
     mockitoVersion = "2.16.0"
     servletApiTestVersion = "3.1.0"

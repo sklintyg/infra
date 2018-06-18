@@ -31,8 +31,18 @@ import se.funktionstjanster.grp.v1.ProgressStatusType;
 import se.funktionstjanster.grp.v1.Property;
 import se.funktionstjanster.grp.v1.SignRequestType;
 import se.funktionstjanster.grp.v1.SignatureFileRequestType;
+import se.inera.intyg.infra.integration.grp.stub.util.Keys;
+import se.inera.intyg.infra.integration.grp.stub.util.StubSignUtil;
 
+import javax.annotation.PostConstruct;
+import java.nio.charset.Charset;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.interfaces.RSAPrivateKey;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,6 +57,13 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
 
     @Autowired
     private GrpServiceStub serviceStub;
+    private RSAPrivateKey privKey;
+
+    @PostConstruct
+    void init() {
+        Keys keys = StubSignUtil.loadFromKeystore();
+        this.privKey = keys.getPrivateKey();
+    }
 
     @Override
     public OrderResponseType authenticate(AuthenticateRequestType authenticateRequestType) throws GrpFault {
@@ -89,11 +106,16 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
         }
         response.setTransactionId(transactionId);
 
-        String signature = "{\"signatur\":\"SIGNATURE\"}";
-        response.setSignature(signature);
+
 
         String orderRef = serviceStub.getOrderRef(response.getTransactionId());
         response.setProgressStatus(serviceStub.getStatus(orderRef).getStatus());
+
+        // Sign using a make-believe private key if complete.
+        if (response.getProgressStatus() == ProgressStatusType.COMPLETE) {
+            String signature = createSignature(orderRef.getBytes(Charset.forName("UTF-8")));
+            response.setSignature(signature);
+        }
 
         Property p = new Property();
         p.setName("Subject.SerialNumber");
@@ -101,6 +123,18 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
         response.getAttributes().add(p);
 
         return response;
+    }
+
+    private String createSignature(byte[] digest) {
+        try {
+            Signature rsa = Signature.getInstance("SHA256withRSA");
+            rsa.initSign(privKey);
+            rsa.update(digest);
+            byte[] signatureBytes = rsa.sign();
+            return Base64.getEncoder().encodeToString(signatureBytes);
+        } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
+            throw new IllegalStateException("Not possible to sign digest: " + e.getMessage());
+        }
     }
 
     @Override

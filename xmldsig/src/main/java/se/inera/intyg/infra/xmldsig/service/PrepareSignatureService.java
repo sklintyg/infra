@@ -16,31 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.xmldsig;
+package se.inera.intyg.infra.xmldsig.service;
 
-import se.inera.intyg.infra.xmldsig.model.SignatureType;
+import org.w3._2000._09.xmldsig_.SignatureType;
+import se.inera.intyg.infra.xmldsig.model.IntygXMLDSignature;
 
-public class IntygSignature {
+public interface PrepareSignatureService {
+    IntygXMLDSignature prepareSignature(String intygXml, String intygsId);
 
-    private SignatureType signatureType;
-    private String digestedXml;
-    private String signedInfoForSigning;
-
-    public IntygSignature(SignatureType signatureType, String digestedXml, String signedInfoForSigning) {
-        this.signatureType = signatureType;
-        this.digestedXml = digestedXml;
-        this.signedInfoForSigning = signedInfoForSigning;
-    }
-
-    public SignatureType getSignatureType() {
-        return signatureType;
-    }
-
-    public String getDigestedXml() {
-        return digestedXml;
-    }
-
-    public String getSignedInfoForSigning() {
-        return signedInfoForSigning;
-    }
+    String encodeSignatureIntoSignedXml(SignatureType signatureType, String xml);
 }

@@ -18,28 +18,44 @@
  */
 package se.inera.intyg.infra.xmldsig.factory;
 
-import se.inera.intyg.infra.xmldsig.model.CanonicalizationMethodType;
-import se.inera.intyg.infra.xmldsig.model.DigestMethodType;
-import se.inera.intyg.infra.xmldsig.model.KeyInfoType;
-import se.inera.intyg.infra.xmldsig.model.ObjectFactory;
-import se.inera.intyg.infra.xmldsig.model.ReferenceType;
-import se.inera.intyg.infra.xmldsig.model.SignatureMethodType;
-import se.inera.intyg.infra.xmldsig.model.SignatureType;
-import se.inera.intyg.infra.xmldsig.model.SignatureValueType;
-import se.inera.intyg.infra.xmldsig.model.SignedInfoType;
-import se.inera.intyg.infra.xmldsig.model.TransformType;
-import se.inera.intyg.infra.xmldsig.model.TransformsType;
-import se.inera.intyg.infra.xmldsig.model.X509DataType;
+import org.springframework.core.io.ClassPathResource;
+import org.w3._2000._09.xmldsig_.CanonicalizationMethodType;
+import org.w3._2000._09.xmldsig_.DigestMethodType;
+import org.w3._2000._09.xmldsig_.KeyInfoType;
+import org.w3._2000._09.xmldsig_.ObjectFactory;
+import org.w3._2000._09.xmldsig_.ReferenceType;
+import org.w3._2000._09.xmldsig_.SignatureMethodType;
+import org.w3._2000._09.xmldsig_.SignatureType;
+import org.w3._2000._09.xmldsig_.SignatureValueType;
+import org.w3._2000._09.xmldsig_.SignedInfoType;
+import org.w3._2000._09.xmldsig_.TransformType;
+import org.w3._2000._09.xmldsig_.TransformsType;
+import org.w3._2000._09.xmldsig_.X509DataType;
+import org.w3._2002._06.xmldsig_filter2.XPathType;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.DigestMethod;
+import javax.xml.crypto.dsig.Transform;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.util.Base64;
 
 public final class PartialSignatureFactory {
 
     private static final String SIGNATURE_ALGORITHM = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
     private static final String TRANSFORM_ALGORITHM = "http://www.w3.org/2000/09/xmldsig#enveloped-signature";
+    public static final String FILTER_INTERSECT = "intersect";
+    public static final String XPATH_PART1 = "//extension[text()='";
+    public static final String XPATH_PART2 = "']/../..";
+    public static final String XSLT_STRIP_ALL = "transforms/stripall.xslt";
+    public static final String FILTER_SUBTRACT = "subtract";
+    public static final String XPATH_SUBTRACT_METADATA_EXPRESSION = "//*[local-name() = 'skickatTidpunkt']|"
+            + "//*[local-name() = 'relation']|//*[local-name() = 'status']";
 
     private PartialSignatureFactory() {
 
@@ -51,7 +67,7 @@ public final class PartialSignatureFactory {
      * Contains appropriate algorithms and elements for subsequent population of digest, signature value and
      * keyinfo.
      */
-    public static SignatureType buildSignature() {
+    public static SignatureType buildSignature(String intygsId, byte[] digestBytes) {
         SignatureType signature = new SignatureType();
         SignedInfoType signedInfo = new SignedInfoType();
 
@@ -69,11 +85,43 @@ public final class PartialSignatureFactory {
         referenceType.setDigestMethod(digestMethodType);
         referenceType.setURI("");
 
-        TransformType transform = new TransformType();
-        transform.setAlgorithm(TRANSFORM_ALGORITHM);
-        TransformsType tranforms = new TransformsType();
-        tranforms.getTransform().add(transform);
-        referenceType.setTransforms(tranforms);
+        TransformType envelopedTransform = new TransformType();
+        envelopedTransform.setAlgorithm(TRANSFORM_ALGORITHM);
+
+        TransformType canonicalizationTransform = new TransformType();
+        canonicalizationTransform.setAlgorithm("http://www.w3.org/2001/10/xml-exc-c14n#");
+
+        TransformType intygCanonicalizationTransform = new TransformType();
+        intygCanonicalizationTransform.setAlgorithm(Transform.XSLT);
+        intygCanonicalizationTransform.getContent().add(loadXsltElement(XSLT_STRIP_ALL));
+
+        TransformType xpathFilterTransform = new TransformType();
+        xpathFilterTransform.setAlgorithm(Transform.XPATH2);
+        XPathType xp = new XPathType();
+        xp.setFilter(FILTER_INTERSECT);
+        xp.setValue(XPATH_PART1 + intygsId + XPATH_PART2);
+        xpathFilterTransform.getContent().add(new org.w3._2002._06.xmldsig_filter2.ObjectFactory().createXPath(xp));
+
+        TransformType xpathRemoveUnwantedTransform = new TransformType();
+        xpathRemoveUnwantedTransform.setAlgorithm(Transform.XPATH2);
+        XPathType xp2 = new XPathType();
+        xp2.setFilter(FILTER_SUBTRACT);
+        xp2.setValue(XPATH_SUBTRACT_METADATA_EXPRESSION);
+        xpathRemoveUnwantedTransform.getContent().add(new org.w3._2002._06.xmldsig_filter2.ObjectFactory().createXPath(xp2));
+
+        // The order here IS significant!! Otherwise, validation will not produce the expected digest.
+        TransformsType transforms = new TransformsType();
+        transforms.getTransform().add(envelopedTransform); // Having envelopedTransform makes sure the <Signature> element is removed when
+                                                           // digesting.
+        transforms.getTransform().add(intygCanonicalizationTransform);
+        transforms.getTransform().add(xpathFilterTransform);
+        transforms.getTransform().add(xpathRemoveUnwantedTransform);
+        transforms.getTransform().add(canonicalizationTransform); // Canonicalization makes sure tags are not self-closed etc.
+
+        referenceType.setTransforms(transforms);
+
+        // Set the raw digest bytes.
+        referenceType.setDigestValue(Base64.getDecoder().decode(digestBytes));
 
         signedInfo.getReference().add(referenceType);
         signature.setSignedInfo(signedInfo);
@@ -100,5 +148,19 @@ public final class PartialSignatureFactory {
         x509DataType.getX509IssuerSerialOrX509SKIOrX509SubjectName().add(x509cert);
         keyInfo.getContent().add(objectFactory.createX509Data(x509DataType));
         return keyInfo;
+    }
+
+    private static Element loadXsltElement(String path) {
+
+        ClassPathResource cpr = new ClassPathResource(path);
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+
+        try {
+            Document doc = dbf.newDocumentBuilder().parse(cpr.getInputStream());
+            return doc.getDocumentElement();
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            throw new RuntimeException(e.getCause());
+        }
     }
 }

@@ -52,6 +52,8 @@ public final class XsltUtil {
             // Create transformer factory
             TransformerFactory factory = TransformerFactory.newInstance();
 
+            System.out.println("FACTORY: " + factory.getClass().getName());
+
             // Use the factory to create a template containing the xsl file
             Templates template = factory.newTemplates(new StreamSource(
                     cpr.getInputStream()));

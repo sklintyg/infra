@@ -16,36 +16,47 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.xmldsig;
+package se.inera.intyg.infra.xmldsig.service;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.xml.security.c14n.Canonicalizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.w3._2000._09.xmldsig_.ObjectFactory;
+import org.w3._2000._09.xmldsig_.SignatureType;
+import org.w3._2002._06.xmldsig_filter2.XPathType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import se.inera.intyg.infra.xmldsig.exception.IntygXMLDSigException;
 import se.inera.intyg.infra.xmldsig.factory.PartialSignatureFactory;
-import se.inera.intyg.infra.xmldsig.model.SignatureType;
+import se.inera.intyg.infra.xmldsig.model.IntygXMLDSignature;
 import se.inera.intyg.infra.xmldsig.util.XsltUtil;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
@@ -53,7 +64,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 @Service
-public class PrepareSignatureServiceImpl {
+public class PrepareSignatureServiceImpl implements PrepareSignatureService {
 
     private static final Logger LOG = LoggerFactory.getLogger(XMLDSigServiceImpl.class);
 
@@ -76,26 +87,67 @@ public class PrepareSignatureServiceImpl {
      *
      * @param intygXml
      *            XML document to be canonicalized and digested.
+     * @param intygsId
+     *          The ID of the intyg is required for the XPath expression selecting the content to be digested.
      */
-    public IntygSignature prepareSignature(String intygXml) {
-        // 1. Transform into our base canonical form without <Register..> and dynamic attributes.
+    @Override
+    public IntygXMLDSignature prepareSignature(String intygXml, String intygsId) {
+
+        // 1. Transform into our base canonical form without namespaces and dynamic attributes.
         String xml = tranformIntoIntygXml(intygXml);
 
-        // 2. Run EXCLUSIVE canonicalization
+        // 2. Run XPath to pick out <intyg> element.
+        xml = applyXPath(intygsId, xml);
+
+
+        // 3. Run EXCLUSIVE canonicalization
         xml = canonicalizeXml(xml);
 
-        // 3. Produce digest
+        // 4. Produce digest of the <intyg>...</intyg> in canonical form.
         byte[] digestBytes = generateDigest(xml);
 
-        // 4. Produce partial SignatureType
-        SignatureType signatureType = PartialSignatureFactory.buildSignature();
+        // 5. Produce unfinished SignatureType
+        SignatureType signatureType = PartialSignatureFactory.buildSignature(intygsId, digestBytes);
+
+        // 6.
         signatureType.getSignedInfo().getReference().get(0).setDigestValue(Base64.getDecoder().decode(digestBytes));
 
         // 5. Build the actual canonicalized <SignedInfo> to pass as payload to a sign function.
         String signedInfoForSigning = buildSignedInfoForSigning(signatureType);
 
         // 6. Populate and return
-        return new IntygSignature(signatureType, xml, signedInfoForSigning);
+        return IntygXMLDSignature.IntygXMLDSignatureBuilder.anIntygXMLDSignature()
+            .withIntygJson("set later...")
+            .withCanonicalizedIntygXml(xml)
+            .withSignedInfoForSigning(signedInfoForSigning)
+            .withSignatureType(signatureType)
+            .build();
+        // IntygXMLDSignature(signatureType, intygXml, signedInfoForSigning);
+    }
+
+    private String applyXPath(String intygsId, String xml) {
+        XPathFactory xpathFactory = XPathFactory.newInstance();
+        XPath xpath = xpathFactory.newXPath();
+        InputSource inputSource = new InputSource(new StringReader(xml));
+        try {
+            return nodeToString((Node) xpath.compile("//intygs-id/extension[text()='" + intygsId + "']/../..")
+                    .evaluate(inputSource, XPathConstants.NODE));
+        } catch (XPathExpressionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String nodeToString(Node node) {
+        StringWriter sw = new StringWriter();
+        try {
+            Transformer t = TransformerFactory.newInstance().newTransformer();
+            t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            t.setOutputProperty(OutputKeys.INDENT, "no");
+            t.transform(new DOMSource(node), new StreamResult(sw));
+        } catch (TransformerException te) {
+            System.out.println("nodeToString Transformer Exception");
+        }
+        return sw.toString();
     }
 
     /**
@@ -105,19 +157,23 @@ public class PrepareSignatureServiceImpl {
      * @param xml
      * @return
      */
+    @Override
     public String encodeSignatureIntoSignedXml(SignatureType signatureType, String xml) {
         // Append the SignatureElement as last element of the xml.
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware(false);
+        dbf.setNamespaceAware(true);
 
         try {
-            Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(xml));
+            Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(xml, Charset.forName("UTF-8")));
             DOMResult res = new DOMResult();
-            JAXBContext context = JAXBContext.newInstance(signatureType.getClass());
-            context.createMarshaller().marshal(signatureType, res);
+
+            JAXBContext context = JAXBContext.newInstance(SignatureType.class, XPathType.class);
+            JAXBElement<SignatureType> signature = new ObjectFactory().createSignature(signatureType);
+            context.createMarshaller().marshal(signature, res);
             Node sigNode = res.getNode();
             Node importedNode = doc.importNode(sigNode.getFirstChild(), true);
-            doc.getDocumentElement().appendChild(importedNode);
+
+            doc.getDocumentElement().getFirstChild().appendChild(importedNode);
 
             TransformerFactory tf = TransformerFactory.newInstance();
             Transformer t = tf.newTransformer();
@@ -127,9 +183,9 @@ public class PrepareSignatureServiceImpl {
 
             t.transform(source, result);
 
-            String xmlWithSignature = sw.toString();
+            return sw.toString();
 
-            return Base64.getEncoder().encodeToString(xmlWithSignature.getBytes(Charset.forName(UTF_8)));
+            // return xmlWithSignature.getBytes(Charset.forName(UTF_8));
         } catch (SAXException | IOException | ParserConfigurationException | JAXBException | TransformerException e) {
             throw new RuntimeException(e.getCause());
         }
@@ -147,39 +203,36 @@ public class PrepareSignatureServiceImpl {
      */
     private String buildSignedInfoForSigning(SignatureType signatureType) {
         try {
-            JAXBContext jc = JAXBContext.newInstance(SignatureType.class);
-
+            JAXBElement<SignatureType> signature = new ObjectFactory().createSignature(signatureType);
+            JAXBContext jc = JAXBContext.newInstance(SignatureType.class, XPathType.class);
             // Serialize SignatureType into XML (<Signature>...</Signature>)
             StringWriter sw = new StringWriter();
             Marshaller marshaller = jc.createMarshaller();
-            marshaller.marshal(signatureType, sw);
+            marshaller.marshal(signature, sw);
+
             String str = sw.toString();
 
             // Use XSLT to remove the parent element. (This transfers the xmldsig namespace declaration into the
             // <SignedInfo> element which is according to spec.)
             ByteArrayOutputStream out1 = new ByteArrayOutputStream();
-            XsltUtil.transform(IOUtils.toInputStream(str), out1, "stripparentelement.xslt");
+            XsltUtil.transform(IOUtils.toInputStream(str), out1, "transforms/stripparentelement.xslt");
 
             // Run the canonicalization to produce the final string we're to sign on.
             return canonicalizeXml(new String(out1.toByteArray(), Charset.forName(UTF_8)));
         } catch (JAXBException e) {
+            e.printStackTrace();
             throw new RuntimeException(e.getCause());
         }
     }
 
     private String tranformIntoIntygXml(String xml) {
 
-        try (ByteArrayOutputStream out1 = new ByteArrayOutputStream();
-                ByteArrayOutputStream out2 = new ByteArrayOutputStream();
-                ByteArrayOutputStream out3 = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream out1 = new ByteArrayOutputStream()) {
 
             // Use XSLT to remove unwanted elements and the parent element.
-            XsltUtil.transform(IOUtils.toInputStream(xml), out1, "stripnamespaces.xslt");
-            XsltUtil.transform(IOUtils.toInputStream(new String(out1.toByteArray(), Charset.forName(UTF_8))), out2, "stripmetadata.xslt");
-            XsltUtil.transform(IOUtils.toInputStream(new String(out2.toByteArray(), Charset.forName(UTF_8))), out3,
-                    "stripparentelement.xslt");
+            XsltUtil.transform(IOUtils.toInputStream(xml), out1, "transforms/stripall.xslt");
 
-            return new String(out3.toByteArray(), Charset.forName(UTF_8));
+            return new String(out1.toByteArray(), Charset.forName(UTF_8));
         } catch (IOException e) {
             LOG.error(e.getMessage());
             throw new IntygXMLDSigException(e.getMessage());
@@ -197,10 +250,10 @@ public class PrepareSignatureServiceImpl {
         }
     }
 
-    private byte[] generateDigest(String canonXmlString) {
+    private byte[] generateDigest(String stringToDigest) {
         try {
             MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
-            byte[] sha256 = digest.digest(canonXmlString.getBytes(UTF_8));
+            byte[] sha256 = digest.digest(stringToDigest.getBytes(UTF_8));
             return Base64.getEncoder().encode(sha256);
         } catch (IOException | NoSuchAlgorithmException e) {
             LOG.error("{} caught during digest and base64-encoding, message: {}", e.getClass().getSimpleName(), e.getMessage());

@@ -20,12 +20,14 @@ package se.inera.intyg.infra.xmldsig;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.Resource;
+import se.inera.intyg.infra.xmldsig.service.XMLDSigServiceImpl;
 
-import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 
 import static org.junit.Assert.assertTrue;
 
@@ -36,18 +38,48 @@ public class XMLDSigServiceImplTest {
     @Before
     public void init() {
         testee.init();
+        System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+    }
+
+    // Use this test to manually test signed documents.
+    @Test
+    public void testValidateSignature() throws IOException {
+
+        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-lisjp-i18n.xml");
+        String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
+
+        boolean result = testee.validateSignatureValidity(xml, true);
+        assertTrue(result);
+    }
+
+    @Test
+    public void testValidateSignatureAfterStoreInIT() throws IOException {
+
+        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-after-store-in-intygstjansten.xml");
+        String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
+
+        boolean result = testee.validateSignatureValidity(xml, true);
+        assertTrue(result);
+    }
+
+    @Test
+    public void testValidateSignatureAfterStoreInITI18n() throws IOException {
+
+        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-after-store-i18n.xml");
+        String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
+
+        boolean result = testee.validateSignatureValidity(xml, true);
+        assertTrue(result);
     }
 
 
-    // Use this test to manually test signed documents.
-    // @Test
-    public void testValidateSignature() throws IOException, JAXBException {
+    @Test
+    public void testValidateSignatureInListCertificatesForCare() throws IOException {
 
-        InputStream xmlResourceInputStream = getXmlResource("classpath:/netid-test/simple_after_netid_sign.xml");
-        String xml = IOUtils.toString(xmlResourceInputStream);
-        String canonXml = testee.canonicalizeXml(xml);
+        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/list-certificates-for-care-response.xml");
+        String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
 
-        boolean result = testee.validateSignatureValidity(canonXml);
+        boolean result = testee.validateSignatureValidity(xml, true);
         assertTrue(result);
     }
 

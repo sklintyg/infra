@@ -16,42 +16,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.xmldsig;
+package se.inera.intyg.infra.integration.grp.stub.util;
 
-import org.springframework.context.annotation.Profile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.security.KeyStore;
-import java.security.Signature;
-import java.util.Base64;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPrivateKey;
 
-@Service
-@Profile("!prod")
-public class FakeSignatureServiceImpl {
+public final class StubSignUtil {
 
-    /**
-     * Signs the supplied digest using a self-signed cert. Only for fake purposes!!
-     * @param digest
-     *      Base64-encoded string to sign.
-     */
-    public String createSignature(String digest) {
+    private static final Logger LOG = LoggerFactory.getLogger(StubSignUtil.class);
+
+    private StubSignUtil() {
+    }
+
+    public static Keys loadFromKeystore() {
         try {
             KeyStore ks = KeyStore.getInstance("JKS");
             ks.load(new ClassPathResource("keystore.jks").getInputStream(), "12345678".toCharArray());
 
             KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry("1",
                     new KeyStore.PasswordProtection("12345678".toCharArray()));
+            return new Keys((RSAPrivateKey) keyEntry.getPrivateKey(), (X509Certificate) ks.getCertificate("1"));
 
-            Signature rsa = Signature.getInstance("SHA256withRSA");
-            rsa.initSign(keyEntry.getPrivateKey());
-            rsa.update(Base64.getDecoder().decode(digest));
-            byte[] signatureBytes = rsa.sign();
-
-            return Base64.getEncoder().encodeToString(signatureBytes);
-        } catch (Exception e) {
-            throw new IllegalStateException("Not possible to sign digest: " + e.getMessage());
+        } catch (KeyStoreException | UnrecoverableEntryException | CertificateException | NoSuchAlgorithmException | IOException e) {
+            LOG.error("Error loading fake signing keys from keystore.jks: {}", e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 }
-
