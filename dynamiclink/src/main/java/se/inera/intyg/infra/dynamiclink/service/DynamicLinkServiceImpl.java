@@ -84,6 +84,9 @@ public class DynamicLinkServiceImpl implements DynamicLinkService {
             buf.append(" target=\"").append(dynamicLink.getTarget()).append("\"");
         }
         buf.append(">").append(dynamicLink.getText()).append("</a>");
+        if (dynamicLink.getTarget() != null) {
+            buf.append(" <i class=\"material-icons md-18\">launch</i>");
+        }
         return buf.toString();
     }
 }
