@@ -1,0 +1,24 @@
+{
+  "hsaId": "ib-user-5",
+  "forNamn": "Grillbritt",
+  "efterNamn": "Gunnarsson",
+  "uppdrag": [
+    {
+      "vardgivare": "IFV1239877878-1043",
+      "enhet": "IFV1239877878-1045",
+      "systemRoles": [
+        "INTYG;FMU-VARDADMIN-IFV1239877878-1045"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["IB"],
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "IFV1239877878-1045",
+        "beskrivning": "Grillbritt Gunnarsson (Vårdadminstratör 2 | Intygsbeställning)"
+      }
+    ]
+  }
+}
