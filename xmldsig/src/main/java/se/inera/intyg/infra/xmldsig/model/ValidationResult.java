@@ -16,21 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.xmldsig.service;
+package se.inera.intyg.infra.xmldsig.model;
 
-import org.w3._2000._09.xmldsig_.KeyInfoType;
-import se.inera.intyg.infra.xmldsig.model.CertificateInfo;
-import se.inera.intyg.infra.xmldsig.model.ValidationResponse;
-
-import java.util.Map;
-
-public interface XMLDSigService {
-
-    KeyInfoType buildKeyInfoForCertificate(String certificate);
-
-    ValidationResponse validateSignatureValidity(String signatureXml, boolean checkReferences);
-
-    Map<String, ValidationResponse> validateSignatureValidityMulti(String signatureXml, boolean checkReferences);
-
-    Map<String, CertificateInfo> extractCertificateInfo(String signatureXml);
+public enum ValidationResult {
+    OK, INVALID, NOT_CHCEKED;
 }

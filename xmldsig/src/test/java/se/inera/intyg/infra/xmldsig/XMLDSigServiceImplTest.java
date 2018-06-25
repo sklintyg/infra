@@ -23,12 +23,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.Resource;
+import se.inera.intyg.infra.xmldsig.model.CertificateInfo;
+import se.inera.intyg.infra.xmldsig.model.ValidationResponse;
 import se.inera.intyg.infra.xmldsig.service.XMLDSigServiceImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Map;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class XMLDSigServiceImplTest {
@@ -48,8 +52,8 @@ public class XMLDSigServiceImplTest {
         InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-lisjp-i18n.xml");
         String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
 
-        boolean result = testee.validateSignatureValidity(xml, true);
-        assertTrue(result);
+        ValidationResponse response = testee.validateSignatureValidity(xml, true);
+        assertTrue(response.isValid());
     }
 
     @Test
@@ -58,8 +62,8 @@ public class XMLDSigServiceImplTest {
         InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-after-store-in-intygstjansten.xml");
         String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
 
-        boolean result = testee.validateSignatureValidity(xml, true);
-        assertTrue(result);
+        ValidationResponse response = testee.validateSignatureValidity(xml, true);
+        assertTrue(response.isValid());
     }
 
     @Test
@@ -68,8 +72,8 @@ public class XMLDSigServiceImplTest {
         InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-after-store-i18n.xml");
         String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
 
-        boolean result = testee.validateSignatureValidity(xml, true);
-        assertTrue(result);
+        ValidationResponse response = testee.validateSignatureValidity(xml, true);
+        assertTrue(response.isValid());
     }
 
 
@@ -79,8 +83,16 @@ public class XMLDSigServiceImplTest {
         InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/list-certificates-for-care-response.xml");
         String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
 
-        boolean result = testee.validateSignatureValidity(xml, true);
-        assertTrue(result);
+        ValidationResponse response = testee.validateSignatureValidity(xml, true);
+        assertTrue(response.isValid());
+    }
+
+    @Test
+    public void testExtractCertificateInfo() throws IOException {
+        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-after-store-i18n.xml");
+        String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
+        Map<String, CertificateInfo> map = testee.extractCertificateInfo(xml);
+        assertNotNull(map);
     }
 
     private InputStream getXmlResource(String location) {

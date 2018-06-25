@@ -22,7 +22,6 @@ import com.secmaker.netid.nias.v1.DeviceInfoType;
 import com.secmaker.netid.nias.v1.NetiDAccessServerSoap;
 import com.secmaker.netid.nias.v1.ResultCollect;
 import com.secmaker.netid.nias.v1.ResultRegister;
-import com.secmaker.netid.nias.v1.SignResponse;
 import com.secmaker.netid.nias.v1.UserInfoType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +31,6 @@ import se.inera.intyg.infra.integration.nias.stub.util.Keys;
 import se.inera.intyg.infra.integration.nias.stub.util.StubSignUtil;
 
 import javax.annotation.PostConstruct;
-import javax.xml.bind.JAXB;
-import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -77,12 +74,8 @@ public class NetiDAccessServerSoapStub implements NetiDAccessServerSoap {
                 NiasSignatureStatus.OUTSTANDING_TRANSACTION);
         niasServiceStub.put(orderRef, ongoingSigning);
 
-        SignResponse signResponse = new SignResponse();
-        signResponse.setSignResult(orderRef);
-
-        StringWriter sw = new StringWriter();
-        JAXB.marshal(signResponse, sw);
-        return sw.toString();
+        // Seems as the "real" NIAS showroom server just returns a plain string instead of a <SignResponse/>
+        return orderRef;
     }
 
     @Override

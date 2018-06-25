@@ -67,7 +67,7 @@ public class PrepareSignatureServiceImplTest {
         try {
             String resXml = testee.encodeSignatureIntoSignedXml(intygXMLDSignature.getSignatureType(), xml);
             System.out.println(resXml);
-            Assert.assertTrue(new XMLDSigServiceImpl().validateSignatureValidity(resXml, true));
+            Assert.assertTrue(new XMLDSigServiceImpl().validateSignatureValidity(resXml, true).isValid());
         } catch (Exception e) {
             e.printStackTrace();
         }
