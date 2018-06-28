@@ -76,34 +76,20 @@ public class MethodTimer {
 
         assert (annot != null);
 
-        Summary summary;
-
         // We use a writeLock here to guarantee no concurrent reads.
         final Lock writeLock = summaryLock.writeLock();
         writeLock.lock();
         try {
             // Check one last time with full mutual exclusion in case multiple readers got null before creation.
-            summary = summaries.get(key);
+            Summary summary = summaries.get(key);
             if (summary != null) {
                 return summary;
             }
 
-            // Now we know for sure that we have never before registered.
-            // IMPORTANT: The try catch here is a horrible work-around for the fact that
-            // the register() and the summaries here in this class doesn't quite sync
-            // correctly. There must be a proper way to solve this...
-            try {
-                summary = Summary.build()
-                        .name(annot.name())
-                        .help(annot.help())
-                        .register();
-            } catch (IllegalArgumentException e) {
-                // Due to some strange behaviour, we're registerering
-                // unnecessarily.
-                summary = Summary.build()
-                        .name(annot.name())
-                        .help(annot.help()).create();
-            }
+            summary = Summary.build()
+                    .name(annot.name())
+                    .help(annot.help())
+                    .register();
 
             // Even a rehash of the underlying table will not cause issues as we mutually exclude readers while we
             // perform our updates.
