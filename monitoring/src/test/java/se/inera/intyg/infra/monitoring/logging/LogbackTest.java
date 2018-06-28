@@ -119,7 +119,8 @@ public class LogbackTest {
         logMDCHelper.run(() -> {
             String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Marker test"));
 
-            Matcher m = Pattern.compile("^.* \\[test-app,monitoring,([" + String.valueOf(LogMDCHelper.BASE62CHARS) + ")]+),.*$").matcher(out);
+            String regex = String.format("^.* \\[test-app,monitoring,([%s)]+),.*$", String.valueOf(LogMDCHelper.BASE62CHARS));
+            Matcher m = Pattern.compile(regex).matcher(out);
 
             assertTrue(m.find());
             assertEquals(LogMDCHelper.IDLEN, m.group(1).length());
