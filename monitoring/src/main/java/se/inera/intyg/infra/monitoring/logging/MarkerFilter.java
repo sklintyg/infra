@@ -52,7 +52,7 @@ public class MarkerFilter extends AbstractMatcherFilter<ILoggingEvent> {
 
         final Marker marker = event.getMarker();
         return Objects.nonNull(marker)
-                && this.markersToMatch.stream().anyMatch(m -> m.contains(marker)) ? getOnMatch(): getOnMismatch();
+                && this.markersToMatch.stream().anyMatch(m -> m.contains(marker)) ? getOnMatch() : getOnMismatch();
     }
 
     /**

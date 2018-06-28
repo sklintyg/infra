@@ -24,7 +24,7 @@ import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 @Controller
 public class TestController {
 
-    static final String SAMPLE_NAME = "service_method_duration_seconds";
+    public static final String SAMPLE_NAME = "service_method_duration_seconds";
 
     @PrometheusTimeMethod(name = SAMPLE_NAME, help = "API endpoint for test")
     public void invoke() throws InterruptedException {

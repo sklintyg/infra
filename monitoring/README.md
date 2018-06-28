@@ -28,7 +28,7 @@ För loggning finns en bas-konfiguration som lämpligen inkluderas i applikation
     
     <!-- Map application stuff to appenders -->
 
-    <logger name="se.inera.intyg.infra.monitoring.LogbackTest" level="INFO">
+    <logger name="se.inera.intyg.infra.monitoring.logging.LogbackTest" level="INFO">
         <appender-ref ref="PROCESS" />
     </logger>
 

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.monitoring;
+package se.inera.intyg.infra.monitoring.annotation;
 
 import io.prometheus.client.Collector;
 import io.prometheus.client.CollectorRegistry;
@@ -27,6 +27,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
+import se.inera.intyg.infra.monitoring.TestController;
 
 
 import static org.junit.Assert.assertFalse;

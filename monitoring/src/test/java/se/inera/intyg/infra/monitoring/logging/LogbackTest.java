@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.monitoring;
+package se.inera.intyg.infra.monitoring.logging;
 
 
 import ch.qos.logback.classic.spi.LoggingEvent;
@@ -24,6 +24,8 @@ import ch.qos.logback.core.Appender;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.PrintStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,8 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import se.inera.intyg.infra.monitoring.logging.LogMDCHelper;
-import se.inera.intyg.infra.monitoring.logging.MarkerFilter;
+import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 
 
 import static org.junit.Assert.assertEquals;
@@ -55,8 +56,8 @@ public class LogbackTest {
         ((ch.qos.logback.classic.Logger) LOG).addAppender(mockedAppender);
     }
 
-    //
-    byte[] captureStdout(final Runnable runnable) {
+    // returns stdout as a string (default encoding)
+    String captureStdout(final Runnable runnable) {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         final PrintStream old = System.out;
         System.setOut(new PrintStream(out));
@@ -66,7 +67,7 @@ public class LogbackTest {
             System.out.flush();
             System.setOut(old);
         }
-        return out.toByteArray();
+        return new String(out.toByteArray());
     }
 
     @Test
@@ -88,7 +89,7 @@ public class LogbackTest {
 
     @Test
     public void log_content_context() {
-        String out = new String(captureStdout(() -> LOG.info("Hello")));
+        String out = captureStdout(() -> LOG.info("Hello"));
 
         ArgumentCaptor<Appender> ac = ArgumentCaptor.forClass(Appender.class);
         Mockito.verify(mockedAppender).doAppend(ac.capture());
@@ -102,20 +103,32 @@ public class LogbackTest {
     }
 
     @Test
-    public void log_with_trace_id(){
+    public void log_with_explicit_trace_id(){
         String traceId = logMDCHelper.traceHeader();
         Closeable trace = logMDCHelper.openTrace(traceId);
         try {
-            String out = new String(captureStdout(() -> LOG.info("Hello")));
+            String out = captureStdout(() -> LOG.info("Hello"));
             assertTrue(out.contains("[test-app,process," + traceId));
         } finally {
             IOUtils.closeQuietly(trace);
         }
     }
 
+   @Test
+   public void log_with_lambda_implicit_trace_id() {
+        logMDCHelper.run(() -> {
+            String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Marker test"));
+
+            Matcher m = Pattern.compile("^.* \\[test-app,monitoring,([" + String.valueOf(LogMDCHelper.BASE62CHARS) + ")]+),.*$").matcher(out);
+
+            assertTrue(m.find());
+            assertEquals(LogMDCHelper.IDLEN, m.group(1).length());
+        });
+   }
+
     @Test
     public void log_marker() {
-        String out = new String(captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Marker test")));
+        String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Marker test"));
         assertTrue(out.contains("[test-app,monitoring,-,"));
         assertEquals("Monitor appender only should be triggered (1 record)", 1, out.split(System.lineSeparator()).length);
     }

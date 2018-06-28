@@ -106,3 +106,4 @@ Om en användare aldrig slutför NetiD Access eller GRP-signering så kommer Pol
 För NetiD plugin finns inget sätt att detektera att användaren klickat Avbryt. I det fallet ligger SignatureTicket kvar i REDIS.
 - Vi bör överväga att tidsstämpla SignatureTicket när sådan skapas eller sätta en TTL i Redis för den posten på t.ex. 15 minuter.
 
+ ..
