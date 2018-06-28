@@ -88,6 +88,16 @@ public class XMLDSigServiceImplTest {
     }
 
     @Test
+    public void testFromIntygstjanstenNewSchema() throws IOException {
+
+        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-after-new-schema.xml");
+        String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));
+
+        ValidationResponse response = testee.validateSignatureValidity(xml, true);
+        assertTrue(response.isValid());
+    }
+
+    @Test
     public void testExtractCertificateInfo() throws IOException {
         InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-after-store-i18n.xml");
         String xml = IOUtils.toString(xmlResourceInputStream, Charset.forName("UTF-8"));

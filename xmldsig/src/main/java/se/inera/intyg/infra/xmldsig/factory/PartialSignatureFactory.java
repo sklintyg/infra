@@ -55,7 +55,7 @@ public final class PartialSignatureFactory {
     public static final String XSLT_STRIP_ALL = "transforms/stripall.xslt";
     public static final String FILTER_SUBTRACT = "subtract";
     public static final String XPATH_SUBTRACT_METADATA_EXPRESSION = "//*[local-name() = 'skickatTidpunkt']|"
-            + "//*[local-name() = 'relation']|//*[local-name() = 'status']";
+            + "//*[local-name() = 'relation']|//*[local-name() = 'status']|//*[local-name() = 'underskrift']";
 
     private PartialSignatureFactory() {
 
