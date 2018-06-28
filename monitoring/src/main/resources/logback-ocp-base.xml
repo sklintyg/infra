@@ -1,0 +1,85 @@
+<included>
+    <!-- Default logging configuration for openshift. To be included by web-apps. -->
+    <property name="APP_NAME" value="${APP_NAME:-appName}"/>
+    <property name="TIMESTAMP" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level"/>
+    <property name="TRACE" value="%X{req.traceId:--}"/>
+    <property name="HOST" value="%X{env.localHost:--}"/>
+    <property name="LINE" value="--- %-40.40logger{39} : %msg%n%rEx"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="se.inera.intyg.infra.monitoring.logging.MarkerFilter">
+            <marker>Monitoring</marker>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${TIMESTAMP} [${APP_NAME},console,${TRACE},${HOST}] ${LINE}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="MONITORING" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="se.inera.intyg.infra.monitoring.logging.MarkerFilter">
+            <marker>Monitoring</marker>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${TIMESTAMP} [${APP_NAME},monitoring,${TRACE},${HOST}] ${LINE}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="PROCESS" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="se.inera.intyg.infra.monitoring.logging.MarkerFilter">
+            <marker>Monitoring</marker>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${TIMESTAMP} [${APP_NAME},process,${TRACE},${HOST}] ${LINE}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ACCESS" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="se.inera.intyg.infra.monitoring.logging.MarkerFilter">
+            <marker>Monitoring</marker>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${TIMESTAMP} [${APP_NAME},access,${TRACE},${HOST}] ${LINE}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FRONTEND" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="se.inera.intyg.infra.monitoring.logging.MarkerFilter">
+            <marker>Monitoring</marker>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${TIMESTAMP} [${APP_NAME},frontend,${TRACE},${HOST}] ${LINE}</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.apache.camel" level="WARN"/>
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.springframework.core.env.PropertySourcesPropertyResolver" level="WARN"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="org.springframework.http" level="WARN"/>
+    <logger name="org.springframework.security.saml.log" level="INFO" />
+    <logger name="org.opensaml" level="INFO" />
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <root level="WARN">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <root level="ERROR">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</included>
+
