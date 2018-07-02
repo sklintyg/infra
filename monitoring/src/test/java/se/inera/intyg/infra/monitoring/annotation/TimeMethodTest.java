@@ -31,6 +31,7 @@ import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.infra.monitoring.TestController;
 
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -62,11 +63,20 @@ public class TimeMethodTest {
         this.testController.unnamed("", Collections.EMPTY_LIST);
 
         final Optional<Collector.MetricFamilySamples> sample = Collections.list(registry.metricFamilySamples()).stream()
-                .filter(s -> s.name.startsWith("void_"))
+                .filter(s -> s.name.startsWith("api_"))
                 .findFirst();
 
         assertTrue(sample.isPresent());
         assertFalse(sample.get().samples.isEmpty());
         assertNotNull(sample.get().help);
+    }
+
+    @Test
+    public void sig_to_key() {
+        assertEquals("api_infra_monitoring_TestController_testMethod_calls", MethodTimer.signatureToKeyName(TestController.class.getName(),
+                "testMethod", new Object[0]));
+
+        assertEquals("api_infra_monitoring_TestController_testMethod_arg1_calls", MethodTimer.signatureToKeyName(TestController.class.getName(),
+                "testMethod", new Object[] { "arg" }));
     }
 }
