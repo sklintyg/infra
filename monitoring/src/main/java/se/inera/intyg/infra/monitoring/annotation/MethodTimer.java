@@ -18,12 +18,9 @@
  */
 package se.inera.intyg.infra.monitoring.annotation;
 
-import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import com.google.common.collect.Sets;
 import io.prometheus.client.Summary;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -44,7 +41,8 @@ public class MethodTimer {
     private final ReadWriteLock summaryLock = new ReentrantReadWriteLock();
     private final HashMap<String, Summary> summaries = new HashMap<>();
 
-    static Set<String> stripParts = Sets.newHashSet("se", "inera", "intyg");
+    static final String P2 = "se.inera.";
+    static final String P1 = P2 + "intyg.";
 
 
     @Pointcut("@annotation(se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod)")
@@ -138,22 +136,28 @@ public class MethodTimer {
         }
     }
 
+    // strips usual prefixes and replaces dots to underscores
+    private static String clean(final String declaringType) {
+        String type;
+        if (declaringType.startsWith(P1)) {
+            type = declaringType.substring(P1.length());
+        } else if (declaringType.startsWith(P2)) {
+            type = declaringType.substring(P2.length());
+        } else {
+            type = declaringType;
+        }
+        return type.replace('.', '_');
+    }
+
     // returns a prometheus compatible metrics name formatted as "api_[class_method]_calls".
     // skip common non-differentiating package names to get a terse and unique name.
     static String signatureToKeyName(final String declaringType, final String method, final Object[] args) {
-
         final StringBuilder sb = new StringBuilder(declaringType.length() + 16);
-        sb.append("api");
-        Splitter.on(".").split(declaringType).forEach(w -> {
-            if (!stripParts.contains(w)) {
-                sb.append('_').append(w);
-            }
-        });
+        sb.append("api_").append(clean(declaringType));
         sb.append('_').append(method);
         if (args.length > 0) {
             sb.append("_arg").append(String.valueOf(args.length));
         }
-
         return sb.append("_calls").toString();
     }
 }
