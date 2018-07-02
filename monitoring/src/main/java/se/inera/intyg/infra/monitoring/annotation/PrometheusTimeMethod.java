@@ -30,11 +30,11 @@ public @interface PrometheusTimeMethod {
      * The metric name to use for recording latencies.
      * @return A metric name specific to your use case.
      */
-    String name();
+    String name() default "";
 
     /**
      * The help message to show in metrics.
      * @return A help string
      */
-    String help();
+    String help() default "Timed Method";
 }

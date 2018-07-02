@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.monitoring.annotation;
 
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Strings;
 import io.prometheus.client.Summary;
 import java.util.HashMap;
 import java.util.concurrent.locks.Lock;
@@ -38,6 +40,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 public class MethodTimer {
     private final ReadWriteLock summaryLock = new ReentrantReadWriteLock();
     private final HashMap<String, Summary> summaries = new HashMap<>();
+
+    private static CharMatcher keyReplaceMatcher =  CharMatcher.anyOf(" (),.");
 
     @Pointcut("@annotation(se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod)")
     public void annotatedMethod() {
@@ -86,8 +90,10 @@ public class MethodTimer {
                 return summary;
             }
 
+            final String name = annot.name();
+
             summary = Summary.build()
-                    .name(annot.name())
+                    .name(Strings.isNullOrEmpty(name) ? key : name)
                     .help(annot.help())
                     .register();
 
@@ -102,8 +108,8 @@ public class MethodTimer {
     }
 
     @Around("timeable()")
-    public Object timeMethod(ProceedingJoinPoint pjp) throws Throwable {
-        String key = pjp.getSignature().toLongString();
+    public Object timeMethod(final ProceedingJoinPoint pjp) throws Throwable {
+        final String key = keyReplaceMatcher.replaceFrom(pjp.getSignature().toString(), "_");
 
         Summary summary;
         final Lock r = summaryLock.readLock();

@@ -45,11 +45,24 @@ public class TimeMethodTest {
     TestController testController;
 
     @Test
-    public void instrumented_controller() throws InterruptedException {
-        this.testController.invoke();
+    public void instrumented_named_method() throws InterruptedException {
+        this.testController.named();
 
         final Optional<Collector.MetricFamilySamples> sample = Collections.list(registry.metricFamilySamples()).stream()
                 .filter(s -> TestController.SAMPLE_NAME.equals(s.name))
+                .findFirst();
+
+        assertTrue(sample.isPresent());
+        assertFalse(sample.get().samples.isEmpty());
+        assertNotNull(sample.get().help);
+    }
+
+    @Test
+    public void instrumented_unnamed_method() throws InterruptedException {
+        this.testController.unnamed("", Collections.EMPTY_LIST);
+
+        final Optional<Collector.MetricFamilySamples> sample = Collections.list(registry.metricFamilySamples()).stream()
+                .filter(s -> s.name.startsWith("void_"))
                 .findFirst();
 
         assertTrue(sample.isPresent());
