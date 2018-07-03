@@ -31,8 +31,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+
+
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 @Aspect("pertarget(se.inera.intyg.infra.monitoring.annotation.MethodTimer.timeable())")
 @Scope("prototype")
@@ -46,41 +48,28 @@ public class MethodTimer {
 
 
     @Pointcut("@annotation(se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod)")
-    public void annotatedMethod() {
-
-    }
-
-    @Pointcut("annotatedMethod()")
     public void timeable() {
-
     }
 
-    private PrometheusTimeMethod getAnnotation(ProceedingJoinPoint pjp) throws NoSuchMethodException {
-        assert (pjp.getSignature() instanceof MethodSignature);
-        MethodSignature signature = (MethodSignature) pjp.getSignature();
-
-        PrometheusTimeMethod annot = AnnotationUtils.findAnnotation(pjp.getTarget().getClass(), PrometheusTimeMethod.class);
-        if (annot != null) {
-            return annot;
+    //
+    private PrometheusTimeMethod getAnnotation(final Class targetClass, final MethodSignature signature) throws NoSuchMethodException {
+        PrometheusTimeMethod annot = findAnnotation(targetClass, PrometheusTimeMethod.class);
+        if (annot == null) {
+            // When target is an AOP interface proxy but annotation is on class method (rather than Interface method).
+            annot = findAnnotation(targetClass.getDeclaredMethod(signature.getName(), signature.getParameterTypes()),
+                    PrometheusTimeMethod.class);
         }
-
-        // When target is an AOP interface proxy but annotation is on class method (rather than Interface method).
-        final String name = signature.getName();
-        final Class[] parameterTypes = signature.getParameterTypes();
-
-        return AnnotationUtils.findAnnotation(pjp.getTarget().getClass().getDeclaredMethod(name, parameterTypes),
-                PrometheusTimeMethod.class);
+        return annot;
     }
 
-    private Summary ensureSummary(ProceedingJoinPoint pjp, String key) throws IllegalStateException {
-        PrometheusTimeMethod annot;
+    //
+    private Summary ensureSummary(final ProceedingJoinPoint pjp, final String key) throws IllegalStateException {
+        final PrometheusTimeMethod annot;
         try {
-            annot = getAnnotation(pjp);
+            annot = getAnnotation(pjp.getTarget().getClass(), (MethodSignature) pjp.getSignature());
         } catch (NoSuchMethodException | NullPointerException e) {
             throw new IllegalStateException("Annotation could not be found for pjp \"" + pjp.toShortString() + "\"", e);
         }
-
-        assert (annot != null);
 
         // We use a writeLock here to guarantee no concurrent reads.
         final Lock writeLock = summaryLock.writeLock();
