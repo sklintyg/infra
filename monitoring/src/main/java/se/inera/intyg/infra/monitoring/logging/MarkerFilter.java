@@ -21,6 +21,7 @@ package se.inera.intyg.infra.monitoring.logging;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.filter.AbstractMatcherFilter;
 import ch.qos.logback.core.spi.FilterReply;
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,11 @@ public class MarkerFilter extends AbstractMatcherFilter<ILoggingEvent> {
     /** The Monitoring marker. */
     public static final Marker MONITORING = MarkerFactory.getMarker("Monitoring");
 
-    private List<Marker> markersToMatch = new ArrayList<>();
+    /** Validation marker. */
+    public static final Marker VALIDATION = MarkerFactory.getMarker("Validation");
+
+
+    List<Marker> markersToMatch = new ArrayList<>();
 
     @Override
     public void start() {
@@ -66,4 +71,14 @@ public class MarkerFilter extends AbstractMatcherFilter<ILoggingEvent> {
         }
     }
 
+    /**
+     * Allow multiple markers.
+     *
+     * @param names comma separated list of names.
+     */
+    public void setMarkers(final String names) {
+        if (!Strings.isNullOrEmpty(names)) {
+            Splitter.on(",").split(names).forEach(n -> this.markersToMatch.add(MarkerFactory.getMarker(n.trim())));
+        }
+    }
 }
