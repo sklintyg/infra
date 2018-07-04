@@ -9,4 +9,16 @@
         <appender-ref ref="MONITORING" />
     </logger>
 
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <root level="WARN">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <root level="ERROR">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
 </configuration>
