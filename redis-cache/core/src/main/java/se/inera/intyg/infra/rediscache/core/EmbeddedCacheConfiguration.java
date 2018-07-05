@@ -18,7 +18,12 @@
  */
 package se.inera.intyg.infra.rediscache.core;
 
-import com.google.common.collect.ImmutableList;
+import javax.annotation.PreDestroy;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -27,13 +32,9 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import redis.embedded.RedisServer;
 
-import javax.annotation.PreDestroy;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import com.google.common.collect.ImmutableList;
+import redis.embedded.RedisServer;
 
 import static se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter.REDIS_DEFAULT_PORT;
 
@@ -103,7 +104,7 @@ public class EmbeddedCacheConfiguration {
         return factory;
     }
 
-    @Bean
+    @Bean(name = "rediscache")
     RedisTemplate<Object, Object> redisTemplate() {
         RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory());
