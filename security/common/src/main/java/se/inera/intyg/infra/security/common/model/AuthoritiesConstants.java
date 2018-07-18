@@ -73,6 +73,7 @@ public final class AuthoritiesConstants {
     public static final String FEATURE_TAK_KONTROLL_TRADKLATTRING = "TAK_KONTROLL_TRADKLATTRING";
     public static final String FEATURE_TAK_KONTROLL = "TAK_KONTROLL";
     public static final String FEATURE_SEKRETESSMARKERING = "SEKRETESSMARKERING";
+    public static final String FEATURE_NOTIFICATION_DISCARD_FELB = "NOTIFICATION_DISCARD_FELB";
 
     private AuthoritiesConstants() {
     }
