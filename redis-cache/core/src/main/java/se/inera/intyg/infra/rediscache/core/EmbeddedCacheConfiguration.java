@@ -48,7 +48,6 @@ public class EmbeddedCacheConfiguration extends BasicCacheConfiguration {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmbeddedCacheConfiguration.class);
 
-    private static final String REDIS_HOST = "127.0.0.1";
     private static final int NUMBER_OF_PORTS_TO_TRY = 10;
 
     private @Value("${redis.cache.default_entry_expiry_time_in_seconds}") int defaultEntryExpiry;
