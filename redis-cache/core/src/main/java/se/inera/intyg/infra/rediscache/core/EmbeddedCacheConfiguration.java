@@ -34,9 +34,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import redis.embedded.RedisServer;
 
@@ -46,7 +44,7 @@ import redis.embedded.RedisServer;
  */
 @Configuration
 @EnableCaching
-public class EmbeddedCacheConfiguration {
+public class EmbeddedCacheConfiguration extends BasicCacheConfiguration {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmbeddedCacheConfiguration.class);
 
@@ -94,33 +92,10 @@ public class EmbeddedCacheConfiguration {
 
     @Bean
     @DependsOn("redisServer")
+    @Override
     JedisConnectionFactory jedisConnectionFactory() {
-        JedisConnectionFactory factory = new JedisConnectionFactory();
-        factory.setHostName(REDIS_HOST);
+        JedisConnectionFactory factory = super.jedisConnectionFactory();
         factory.setPort(redisServer.ports().get(0));
-        factory.setUsePool(true);
         return factory;
-    }
-
-    @Bean(name = "rediscache")
-    RedisTemplate<Object, Object> redisTemplate() {
-        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(jedisConnectionFactory());
-        return redisTemplate;
-    }
-
-    @Bean
-    RedisCacheManager cacheManager() {
-        RedisCacheManager redisCacheManager = new RedisCacheManager(redisTemplate());
-        redisCacheManager.setUsePrefix(true);
-        redisCacheManager.setDefaultExpiration(defaultEntryExpiry);
-
-        return redisCacheManager;
-    }
-
-    @Bean
-    @DependsOn("cacheManager")
-    RedisCacheOptionsSetter redisCacheOptionsSetter() {
-        return new RedisCacheOptionsSetter(defaultEntryExpiry);
     }
 }
