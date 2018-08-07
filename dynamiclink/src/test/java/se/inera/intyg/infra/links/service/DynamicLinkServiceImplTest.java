@@ -65,13 +65,13 @@ public class DynamicLinkServiceImplTest {
     @Test
     public void applyOne() {
         String finalMessage = testee.apply("<LINK:", MESSAGE1);
-        assertEquals("This message is sponsored by <a href=\"" + URL1 + "\">" + TEXT1 + "</a>", finalMessage);
+        assertEquals("This message is sponsored by <a class=\"external-link\" href=\"" + URL1 + "\">" + TEXT1 + "</a>", finalMessage);
     }
 
     @Test
     public void applyTwo() {
         String finalMessage = testee.apply("<LINK:", MESSAGE2);
-        assertEquals("This <a href=\"" + URL1 + "\">" + TEXT1 + "</a> is sponsored by <a href=\"" + URL2 + "\">" + TEXT2 + "</a>", finalMessage);
+        assertEquals("This <a class=\"external-link\" href=\"" + URL1 + "\">" + TEXT1 + "</a> is sponsored by <a class=\"external-link\" href=\"" + URL2 + "\">" + TEXT2 + "</a>", finalMessage);
     }
 
     @Test(expected = IllegalArgumentException.class)

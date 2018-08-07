@@ -76,7 +76,12 @@ public class DynamicLinkServiceImpl implements DynamicLinkService {
         }
 
         StringBuilder buf = new StringBuilder();
-        buf.append("<a href=\"").append(dynamicLink.getUrl()).append("\"");
+
+        if (dynamicLink.getTarget() != null) {
+            buf.append("<span class=\"unbreakable\">");
+        }
+
+        buf.append("<a class=\"external-link\" href=\"").append(dynamicLink.getUrl()).append("\"");
         if (dynamicLink.getTooltip() != null) {
             buf.append(" title=\"").append(dynamicLink.getTooltip()).append("\"");
         }
@@ -85,7 +90,7 @@ public class DynamicLinkServiceImpl implements DynamicLinkService {
         }
         buf.append(">").append(dynamicLink.getText()).append("</a>");
         if (dynamicLink.getTarget() != null) {
-            buf.append(" <i class=\"material-icons md-18\">launch</i>");
+            buf.append(" <i class=\"external-link-icon material-icons\">launch</i></span>");
         }
         return buf.toString();
     }
