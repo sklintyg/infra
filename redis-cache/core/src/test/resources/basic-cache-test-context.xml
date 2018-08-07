@@ -2,7 +2,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+
   <bean class="se.inera.intyg.infra.rediscache.core.BasicCacheConfiguration"/>
+  <bean class="se.inera.intyg.infra.rediscache.core.EmbeddedCacheConfiguration"/>
 
   <bean name="props" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">

@@ -18,6 +18,11 @@
  */
 package se.inera.intyg.infra.rediscache.core;
 
+import static org.junit.Assert.assertEquals;
+
+
+import java.util.stream.IntStream;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,12 +32,8 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import redis.embedded.RedisServer;
-
-import java.io.IOException;
-import java.util.stream.IntStream;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Tests
@@ -40,25 +41,18 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value = "classpath:basic-cache-test-context.xml")
 public class BasicRedisCacheConfigurationTest {
-
-    private static final int REDIS_PORT = 7344;
-
     @Autowired
     private CacheManager cacheManager;
 
     private Cache testCache;
 
-    private RedisServer redisServer;
+    @Autowired
+    RedisServer redisServer;
+
 
     @Before
     public void init() {
-        try {
-            redisServer = new RedisServer(REDIS_PORT);
-            redisServer.start();
-            testCache = cacheManager.getCache("testCache");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        testCache = cacheManager.getCache("testCache");
     }
 
     @After

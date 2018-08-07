@@ -18,12 +18,17 @@
  */
 package se.inera.intyg.infra.rediscache.core;
 
-import javax.annotation.PreDestroy;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import static se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter.REDIS_DEFAULT_PORT;
 
+
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
+
+import javax.annotation.PreDestroy;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -33,10 +38,8 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import com.google.common.collect.ImmutableList;
 import redis.embedded.RedisServer;
 
-import static se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter.REDIS_DEFAULT_PORT;
 
 /**
  * Embedded cache meant for use in 'dev' profile and during testing.
@@ -45,53 +48,48 @@ import static se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter.REDIS
 @EnableCaching
 public class EmbeddedCacheConfiguration {
 
-    private static final String REDIS_HOST = "localhost";
+    private static final Logger LOG = LoggerFactory.getLogger(EmbeddedCacheConfiguration.class);
+
+    private static final String REDIS_HOST = "127.0.0.1";
     private static final int NUMBER_OF_PORTS_TO_TRY = 10;
-    private int redisPort;
-    private @Value("${redis.cache.default_entry_expiry_time_in_seconds}")
-    int defaultEntryExpiry;
+
+    private @Value("${redis.cache.default_entry_expiry_time_in_seconds}") int defaultEntryExpiry;
 
     private RedisServer redisServer;
 
     @PreDestroy
     public void shutdownRedis() {
-        redisServer.stop();
+        this.redisServer.stop();
     }
 
     @Bean
     public RedisServer redisServer() {
-        redisServer = null;
-        //Checkstyle:OFF MagicNumber
-        List<Integer> portsToTry = IntStream.range(0, NUMBER_OF_PORTS_TO_TRY)
-                .map(portOffset -> REDIS_DEFAULT_PORT + portOffset)
-                .boxed().collect(Collectors.collectingAndThen(Collectors.toList(), ImmutableList::copyOf));
-        //Checkstyle:ON MagicNumber
+        final AtomicInteger port = new AtomicInteger(REDIS_DEFAULT_PORT);
 
-        boolean redisStartedSuccessfully = false;
-        Iterator<Integer> it = portsToTry.iterator();
-        Exception lastFailure = null;
-        while (!redisStartedSuccessfully && it.hasNext()) {
-            int port = it.next();
-            try {
-                this.redisServer = RedisServer.builder()
-                        .port(port)
-                        .setting("maxmemory 512M")
-                        .build();
-                this.redisServer.start();
-                System.out.println("Started Redis server at " + port);
-                redisStartedSuccessfully = true;
-            } catch (Exception e) {
-                lastFailure = e;
-                System.out.println("Failed to start embedded redis at port " + port);
-            }
-        }
+        this.redisServer = Stream.generate(() -> port.getAndIncrement())
+                .limit(NUMBER_OF_PORTS_TO_TRY)
+                .map(this::create)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Failed to start embedded redis server"));
 
-        if (!redisStartedSuccessfully) {
-            throw new RuntimeException(lastFailure);
-        } else {
-            this.redisPort = redisServer.ports().get(0);
+        return this.redisServer;
+    }
+
+    //
+    RedisServer create(final int port) {
+        final RedisServer redisServer = RedisServer.builder()
+                .port(port)
+                .setting("maxmemory 512M")
+                .build();
+        try {
+            redisServer.start();
+            LOG.info("Embedded redis server listens on port {}", port);
             return redisServer;
+        } catch (Exception e) {
+            LOG.warn("Unable to start embedded redis server on port {}", port);
         }
+        return null;
     }
 
     @Bean
@@ -99,7 +97,7 @@ public class EmbeddedCacheConfiguration {
     JedisConnectionFactory jedisConnectionFactory() {
         JedisConnectionFactory factory = new JedisConnectionFactory();
         factory.setHostName(REDIS_HOST);
-        factory.setPort(redisPort);
+        factory.setPort(redisServer.ports().get(0));
         factory.setUsePool(true);
         return factory;
     }
