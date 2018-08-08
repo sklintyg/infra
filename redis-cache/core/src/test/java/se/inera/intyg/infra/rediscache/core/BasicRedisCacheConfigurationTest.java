@@ -39,7 +39,7 @@ import redis.embedded.RedisServer;
  * Tests
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(value = "classpath:basic-cache-test-context.xml")
+@ContextConfiguration(classes = TestConfig.class)
 public class BasicRedisCacheConfigurationTest {
     @Autowired
     private CacheManager cacheManager;
@@ -48,7 +48,6 @@ public class BasicRedisCacheConfigurationTest {
 
     @Autowired
     RedisServer redisServer;
-
 
     @Before
     public void init() {

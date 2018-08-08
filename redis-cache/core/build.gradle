@@ -8,5 +8,7 @@ dependencies {
 
     runtime "org.springframework:spring-context-support:${springVersion}"
 
+    testRuntime "ch.qos.logback:logback-classic:${logbackVersion}"
+
     testCompile "org.springframework:spring-test:${springVersion}"
 }

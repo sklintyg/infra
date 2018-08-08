@@ -18,9 +18,6 @@
  */
 package se.inera.intyg.infra.rediscache.core;
 
-import static se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter.REDIS_DEFAULT_PORT;
-
-
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
@@ -55,26 +52,27 @@ public class EmbeddedCacheConfiguration extends BasicCacheConfiguration {
     private RedisServer redisServer;
 
     @PreDestroy
-    public void shutdownRedis() {
-        this.redisServer.stop();
+    public void stopRedis() {
+        LOG.info("Stop embedded redis server");
+        redisServer.stop();
     }
 
     @Bean
     public RedisServer redisServer() {
-        final AtomicInteger port = new AtomicInteger(REDIS_DEFAULT_PORT);
+        final AtomicInteger port = new AtomicInteger(redisPort);
 
-        this.redisServer = Stream.generate(() -> port.getAndIncrement())
+        redisServer = Stream.generate(() -> port.getAndIncrement())
                 .limit(NUMBER_OF_PORTS_TO_TRY)
-                .map(this::create)
+                .map(this::startServer)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Failed to start embedded redis server"));
 
-        return this.redisServer;
+        return redisServer;
     }
 
     //
-    RedisServer create(final int port) {
+    RedisServer startServer(final int port) {
         final RedisServer redisServer = RedisServer.builder()
                 .port(port)
                 .setting("maxmemory 512M")

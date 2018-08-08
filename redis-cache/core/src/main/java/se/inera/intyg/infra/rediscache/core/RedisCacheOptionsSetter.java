@@ -18,13 +18,12 @@
  */
 package se.inera.intyg.infra.rediscache.core;
 
-import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.cache.RedisCacheManager;
 
-public class RedisCacheOptionsSetter {
-    public static final int REDIS_DEFAULT_PORT = 6379;
+import com.google.common.collect.ImmutableMap;
 
+public class RedisCacheOptionsSetter {
     private long defaultEntryExpiry;
 
     @Autowired
