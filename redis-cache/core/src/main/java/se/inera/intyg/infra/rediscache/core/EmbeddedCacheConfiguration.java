@@ -26,7 +26,6 @@ import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,8 +45,6 @@ public class EmbeddedCacheConfiguration extends BasicCacheConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(EmbeddedCacheConfiguration.class);
 
     private static final int NUMBER_OF_PORTS_TO_TRY = 10;
-
-    private @Value("${redis.cache.default_entry_expiry_time_in_seconds}") int defaultEntryExpiry;
 
     private RedisServer redisServer;
 
@@ -79,10 +76,10 @@ public class EmbeddedCacheConfiguration extends BasicCacheConfiguration {
                 .build();
         try {
             redisServer.start();
-            LOG.info("Embedded redis server listens on port {}", port);
+            LOG.info("Embedded redis server started and listens on port {}", port);
             return redisServer;
         } catch (Exception e) {
-            LOG.warn("Unable to start embedded redis server on port {}", port);
+            LOG.warn("Unable to start embedded redis server on port {} (port already in use)", port);
         }
         return null;
     }
