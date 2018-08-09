@@ -14,5 +14,5 @@ dependencies {
 
   testCompile "org.springframework:spring-test:${springVersion}"
   testCompile "org.hamcrest:hamcrest-all:${hamcrestVersion}"
-  testCompile "com.github.kstyrc:embedded-redis:0.6"
+  testCompile "it.ozimov:embedded-redis:0.7.2"
 }

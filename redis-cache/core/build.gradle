@@ -4,7 +4,7 @@ dependencies {
     compile "org.springframework:spring-core:${springVersion}"
     compile "com.esotericsoftware:kryo:4.0.1"
     compile "com.google.guava:guava:${guavaVersion}"
-    compile "com.github.kstyrc:embedded-redis:0.6"
+    compile "it.ozimov:embedded-redis:0.7.2"
 
     runtime "org.springframework:spring-context-support:${springVersion}"
 

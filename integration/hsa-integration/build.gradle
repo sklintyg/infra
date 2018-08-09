@@ -18,5 +18,5 @@ dependencies {
   compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
 
   testCompile 'org.awaitility:awaitility:2.0.0'
-  testCompile "com.github.kstyrc:embedded-redis:0.6"
+  testCompile "it.ozimov:embedded-redis:0.7.2"
 }
