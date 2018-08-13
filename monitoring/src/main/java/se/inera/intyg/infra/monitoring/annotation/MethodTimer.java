@@ -105,7 +105,7 @@ public class MethodTimer {
         int n = 1;
         String name = startName;
         while (nameSet.contains(name)) {
-            name += ("_" + n++);
+            name = startName + "_" + n++;
         }
         nameSet.add(name);
         return name;
