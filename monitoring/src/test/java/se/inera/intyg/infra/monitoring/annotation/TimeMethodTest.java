@@ -22,6 +22,7 @@ import io.prometheus.client.Collector;
 import io.prometheus.client.CollectorRegistry;
 import java.util.Collections;
 import java.util.Optional;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +46,15 @@ public class TimeMethodTest {
     @Autowired
     TestController testController;
 
+    @Before
+    public void before() throws InterruptedException {
+        this.testController.named();
+        this.testController.named2();
+        this.testController.unnamed("", Collections.EMPTY_LIST);
+    }
+
     @Test
     public void instrumented_named_method() throws InterruptedException {
-        this.testController.named();
 
         final Optional<Collector.MetricFamilySamples> sample = Collections.list(registry.metricFamilySamples()).stream()
                 .filter(s -> TestController.SAMPLE_NAME.equals(s.name))
@@ -59,9 +66,19 @@ public class TimeMethodTest {
     }
 
     @Test
-    public void instrumented_unnamed_method() throws InterruptedException {
-        this.testController.unnamed("", Collections.EMPTY_LIST);
+    public void instrumented_duplicate_named_method() throws InterruptedException {
 
+        final Optional<Collector.MetricFamilySamples> sample = Collections.list(registry.metricFamilySamples()).stream()
+                .filter(s -> s.name.equalsIgnoreCase(TestController.SAMPLE_NAME + "_1"))
+                .findFirst();
+
+        assertTrue(sample.isPresent());
+        assertFalse(sample.get().samples.isEmpty());
+        assertNotNull(sample.get().help);
+    }
+
+    @Test
+    public void instrumented_unnamed_method() throws InterruptedException {
         final Optional<Collector.MetricFamilySamples> sample = Collections.list(registry.metricFamilySamples()).stream()
                 .filter(s -> s.name.startsWith("api_"))
                 .findFirst();
@@ -71,12 +88,4 @@ public class TimeMethodTest {
         assertNotNull(sample.get().help);
     }
 
-    @Test
-    public void sig_to_key() {
-        assertEquals("api_infra_monitoring_TestController_testMethod_calls", MethodTimer.signatureToKeyName(TestController.class.getName(),
-                "testMethod", new Object[0]));
-
-        assertEquals("api_infra_monitoring_TestController_testMethod_arg1_calls", MethodTimer.signatureToKeyName(TestController.class.getName(),
-                "testMethod", new Object[] { "arg" }));
-    }
 }

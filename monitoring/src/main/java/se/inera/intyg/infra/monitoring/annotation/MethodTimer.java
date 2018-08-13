@@ -18,12 +18,15 @@
  */
 package se.inera.intyg.infra.monitoring.annotation;
 
-import com.google.common.base.Strings;
-import io.prometheus.client.Summary;
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
+
+
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -33,8 +36,9 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
+import com.google.common.base.Strings;
 
-import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
+import io.prometheus.client.Summary;
 
 @Aspect("pertarget(se.inera.intyg.infra.monitoring.annotation.MethodTimer.timeable())")
 @Scope("prototype")
@@ -42,10 +46,7 @@ import static org.springframework.core.annotation.AnnotationUtils.findAnnotation
 public class MethodTimer {
     private final ReadWriteLock summaryLock = new ReentrantReadWriteLock();
     private final HashMap<String, Summary> summaries = new HashMap<>();
-
-    static final String P2 = "se.inera.";
-    static final String P1 = P2 + "intyg.";
-
+    private final HashSet<String> nameSet = new HashSet<>();
 
     @Pointcut("@annotation(se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod)")
     public void timeable() {
@@ -63,7 +64,9 @@ public class MethodTimer {
     }
 
     //
-    private Summary ensureSummary(final ProceedingJoinPoint pjp, final String key) throws IllegalStateException {
+    private Summary ensureSummary(final ProceedingJoinPoint pjp,
+                                  final String key,
+                                  final String methodDisplayName) throws IllegalStateException {
         final PrometheusTimeMethod annot;
         try {
             annot = getAnnotation(pjp.getTarget().getClass(), (MethodSignature) pjp.getSignature());
@@ -80,16 +83,15 @@ public class MethodTimer {
             if (summary != null) {
                 return summary;
             }
-
             final String name = annot.name();
+            // make sure no duplicates exists
+            final String registerName = ensureUniqueName(Strings.isNullOrEmpty(name) ? methodDisplayName : name);
 
             summary = Summary.build()
-                    .name(Strings.isNullOrEmpty(name) ? key : name)
+                    .name(registerName)
                     .help(annot.help())
                     .register();
 
-            // Even a rehash of the underlying table will not cause issues as we mutually exclude readers while we
-            // perform our updates.
             summaries.put(key, summary);
 
             return summary;
@@ -98,10 +100,22 @@ public class MethodTimer {
         }
     }
 
+    //
+    String ensureUniqueName(final String startName) {
+        int n = 1;
+        String name = startName;
+        while (nameSet.contains(name)) {
+            name += ("_" + n);
+        }
+        nameSet.add(name);
+        return name;
+    }
+
     @Around("timeable()")
     public Object timeMethod(final ProceedingJoinPoint pjp) throws Throwable {
+
         final Signature signature = pjp.getSignature();
-        final String key = signatureToKeyName(signature.getDeclaringTypeName(), signature.getName(), pjp.getArgs());
+        final String key = signature.toLongString();
 
         Summary summary;
         final Lock r = summaryLock.readLock();
@@ -111,13 +125,11 @@ public class MethodTimer {
         } finally {
             r.unlock();
         }
-
         if (summary == null) {
-            summary = ensureSummary(pjp, key);
+            summary = ensureSummary(pjp, key, toDisplayName(signature));
         }
 
         final Summary.Timer t = summary.startTimer();
-
         try {
             return pjp.proceed();
         } finally {
@@ -125,28 +137,10 @@ public class MethodTimer {
         }
     }
 
-    // strips usual prefixes and replaces dots to underscores
-    private static String clean(final String declaringType) {
-        String type;
-        if (declaringType.startsWith(P1)) {
-            type = declaringType.substring(P1.length());
-        } else if (declaringType.startsWith(P2)) {
-            type = declaringType.substring(P2.length());
-        } else {
-            type = declaringType;
-        }
-        return type.replace('.', '_');
-    }
-
-    // returns a prometheus compatible metrics name formatted as "api_[class_method]_calls".
-    // skip common non-differentiating package names to get a terse and unique name.
-    static String signatureToKeyName(final String declaringType, final String method, final Object[] args) {
-        final StringBuilder sb = new StringBuilder(declaringType.length() + 16);
-        sb.append("api_").append(clean(declaringType));
-        sb.append('_').append(method);
-        if (args.length > 0) {
-            sb.append("_arg").append(String.valueOf(args.length));
-        }
-        return sb.append("_calls").toString();
+    // Returns a java class dot method name prefixed with api_
+    String toDisplayName(final Signature signature) {
+        final String cls = signature.getDeclaringTypeName();
+        int index = cls.lastIndexOf('.');
+        return "api_" + ((index > 0) ? cls.substring(index + 1) : cls) + "_" + signature.getName();
     }
 }

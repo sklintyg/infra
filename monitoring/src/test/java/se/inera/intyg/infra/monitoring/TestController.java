@@ -32,8 +32,12 @@ public class TestController {
         Thread.currentThread().sleep(10);
     }
 
+    @PrometheusTimeMethod(name = SAMPLE_NAME, help = "API endpoint for test")
+    public void named2() throws InterruptedException {
+        Thread.currentThread().sleep(10);
+    }
+
     @PrometheusTimeMethod
     public void unnamed(String s, List<?> l) throws InterruptedException {
     }
-
 }
