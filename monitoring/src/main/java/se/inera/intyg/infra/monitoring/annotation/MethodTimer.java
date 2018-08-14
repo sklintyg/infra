@@ -64,9 +64,14 @@ public class MethodTimer {
     }
 
     //
-    private Summary ensureSummary(final ProceedingJoinPoint pjp,
+    private synchronized Summary ensureSummary(final ProceedingJoinPoint pjp,
                                   final String key,
                                   final String methodDisplayName) throws IllegalStateException {
+        Summary summary = summaries.get(key);
+        if (summary != null) {
+            return summary;
+        }
+
         final PrometheusTimeMethod annot;
         try {
             annot = getAnnotation(pjp.getTarget().getClass(), (MethodSignature) pjp.getSignature());
@@ -74,30 +79,18 @@ public class MethodTimer {
             throw new IllegalStateException("Annotation could not be found for pjp \"" + pjp.toShortString() + "\"", e);
         }
 
-        // We use a writeLock here to guarantee no concurrent reads.
-        final Lock writeLock = summaryLock.writeLock();
-        writeLock.lock();
-        try {
-            // Check one last time with full mutual exclusion in case multiple readers got null before creation.
-            Summary summary = summaries.get(key);
-            if (summary != null) {
-                return summary;
-            }
-            final String name = annot.name();
-            // make sure no duplicates exists
-            final String registerName = ensureUniqueName(Strings.isNullOrEmpty(name) ? methodDisplayName : name);
+        final String name = annot.name();
+        // make sure no duplicates exists
+        final String registerName = ensureUniqueName(Strings.isNullOrEmpty(name) ? methodDisplayName : name);
 
-            summary = Summary.build()
-                    .name(registerName)
-                    .help(annot.help())
-                    .register();
+        summary = Summary.build()
+                .name(registerName)
+                .help(annot.help())
+                .register();
 
-            summaries.put(key, summary);
+        summaries.put(key, summary);
 
-            return summary;
-        } finally {
-            writeLock.unlock();
-        }
+        return summary;
     }
 
     //
