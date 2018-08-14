@@ -52,19 +52,56 @@ public class MethodTimer {
     public void timeable() {
     }
 
-    //
-    private PrometheusTimeMethod getAnnotation(final Class targetClass, final MethodSignature signature) throws NoSuchMethodException {
-        PrometheusTimeMethod annot = findAnnotation(targetClass, PrometheusTimeMethod.class);
-        if (annot == null) {
-            // When target is an AOP interface proxy but annotation is on class method (rather than Interface method).
-            annot = findAnnotation(targetClass.getDeclaredMethod(signature.getName(), signature.getParameterTypes()),
-                    PrometheusTimeMethod.class);
+    @Around("timeable()")
+    public Object timeMethod(final ProceedingJoinPoint pjp) throws Throwable {
+
+        final Signature signature = pjp.getSignature();
+        final String key = signature.toLongString();
+
+        Summary summary = getSummary(key);
+        if (summary == null) {
+            summary = ensureSummary(pjp, key, toDisplayName(signature));
         }
-        return annot;
+
+        final Summary.Timer t = summary.startTimer();
+        try {
+            return pjp.proceed();
+        } finally {
+            t.observeDuration();
+        }
     }
 
     //
-    private synchronized Summary ensureSummary(final ProceedingJoinPoint pjp,
+    Summary getSummary(final String key) {
+        final Lock r = summaryLock.readLock();
+        r.lock();
+        try {
+            return summaries.get(key);
+        } finally {
+            r.unlock();
+        }
+    }
+
+    //
+    PrometheusTimeMethod getAnnotation(final ProceedingJoinPoint pjp) {
+        try {
+            final Class targetClass = pjp.getTarget().getClass();
+            final MethodSignature signature = (MethodSignature) pjp.getSignature();
+            PrometheusTimeMethod annotation = findAnnotation(targetClass, PrometheusTimeMethod.class);
+            if (annotation == null) {
+                // When target is an AOP interface proxy but annotation is on class method (rather than Interface method).
+                annotation = findAnnotation(targetClass.getDeclaredMethod(signature.getName(),
+                        signature.getParameterTypes()),
+                        PrometheusTimeMethod.class);
+            }
+            return annotation;
+        } catch (NoSuchMethodException | NullPointerException e) {
+            throw new IllegalStateException("Annotation could not be found for pjp \"" + pjp.toShortString() + "\"", e);
+        }
+    }
+
+    //
+    synchronized Summary ensureSummary(final ProceedingJoinPoint pjp,
                                   final String key,
                                   final String methodDisplayName) throws IllegalStateException {
         Summary summary = summaries.get(key);
@@ -72,20 +109,14 @@ public class MethodTimer {
             return summary;
         }
 
-        final PrometheusTimeMethod annot;
-        try {
-            annot = getAnnotation(pjp.getTarget().getClass(), (MethodSignature) pjp.getSignature());
-        } catch (NoSuchMethodException | NullPointerException e) {
-            throw new IllegalStateException("Annotation could not be found for pjp \"" + pjp.toShortString() + "\"", e);
-        }
-
-        final String name = annot.name();
+        final PrometheusTimeMethod annotation = getAnnotation(pjp);
+        final String name = annotation.name();
         // make sure no duplicates exists
         final String registerName = ensureUniqueName(Strings.isNullOrEmpty(name) ? methodDisplayName : name);
 
         summary = Summary.build()
                 .name(registerName)
-                .help(annot.help())
+                .help(annotation.help())
                 .register();
 
         summaries.put(key, summary);
@@ -102,32 +133,6 @@ public class MethodTimer {
         }
         nameSet.add(name);
         return name;
-    }
-
-    @Around("timeable()")
-    public Object timeMethod(final ProceedingJoinPoint pjp) throws Throwable {
-
-        final Signature signature = pjp.getSignature();
-        final String key = signature.toLongString();
-
-        Summary summary;
-        final Lock r = summaryLock.readLock();
-        r.lock();
-        try {
-            summary = summaries.get(key);
-        } finally {
-            r.unlock();
-        }
-        if (summary == null) {
-            summary = ensureSummary(pjp, key, toDisplayName(signature));
-        }
-
-        final Summary.Timer t = summary.startTimer();
-        try {
-            return pjp.proceed();
-        } finally {
-            t.observeDuration();
-        }
     }
 
     // Returns a java class dot method name prefixed with api_
