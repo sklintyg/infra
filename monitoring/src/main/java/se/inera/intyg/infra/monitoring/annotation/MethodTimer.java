@@ -86,9 +86,9 @@ public class MethodTimer {
     PrometheusTimeMethod getAnnotation(final ProceedingJoinPoint pjp) {
         try {
             final Class targetClass = pjp.getTarget().getClass();
-            final MethodSignature signature = (MethodSignature) pjp.getSignature();
             PrometheusTimeMethod annotation = findAnnotation(targetClass, PrometheusTimeMethod.class);
             if (annotation == null) {
+                final MethodSignature signature = (MethodSignature) pjp.getSignature();
                 // When target is an AOP interface proxy but annotation is on class method (rather than Interface method).
                 annotation = findAnnotation(targetClass.getDeclaredMethod(signature.getName(),
                         signature.getParameterTypes()),
