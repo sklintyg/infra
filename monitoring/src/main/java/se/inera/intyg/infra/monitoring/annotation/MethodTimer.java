@@ -33,6 +33,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
@@ -44,9 +46,11 @@ import io.prometheus.client.Summary;
 @Scope("prototype")
 @ControllerAdvice
 public class MethodTimer {
-    private final ReadWriteLock summaryLock = new ReentrantReadWriteLock();
-    private final HashMap<String, Summary> summaries = new HashMap<>();
-    private final HashSet<String> nameSet = new HashSet<>();
+    private static ReadWriteLock summaryLock = new ReentrantReadWriteLock();
+    private static HashMap<String, Summary> summaries = new HashMap<>();
+    private static HashSet<String> nameSet = new HashSet<>();
+
+    static final Logger LOG = LoggerFactory.getLogger(MethodTimer.class);
 
     @Pointcut("@annotation(se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod)")
     public void timeable() {
@@ -60,7 +64,11 @@ public class MethodTimer {
 
         Summary summary = getSummary(key);
         if (summary == null) {
-            summary = ensureSummary(pjp, key, toDisplayName(signature));
+            summary = registerSummary(pjp, key, toDisplayName(signature));
+        }
+
+        if (summary == null) {
+            return pjp.proceed();
         }
 
         final Summary.Timer t = summary.startTimer();
@@ -101,27 +109,35 @@ public class MethodTimer {
     }
 
     //
-    synchronized Summary ensureSummary(final ProceedingJoinPoint pjp,
-                                  final String key,
-                                  final String methodDisplayName) throws IllegalStateException {
-        Summary summary = summaries.get(key);
-        if (summary != null) {
+    Summary registerSummary(final ProceedingJoinPoint pjp,
+            final String key,
+            final String methodDisplayName) throws IllegalStateException {
+        final Lock r = summaryLock.writeLock();
+        r.lock();
+        try {
+            Summary summary = summaries.get(key);
+            if (summary != null) {
+                return summary;
+            }
+
+            final PrometheusTimeMethod annotation = getAnnotation(pjp);
+            final String name = annotation.name();
+            // make sure no duplicates exists
+            final String registerName = ensureUniqueName(Strings.isNullOrEmpty(name) ? methodDisplayName : name);
+
+            try {
+                summary = Summary.build()
+                        .name(registerName)
+                        .help(annotation.help())
+                        .register();
+                summaries.put(key, summary);
+            } catch (IllegalArgumentException e) {
+                LOG.warn("Unable to register PrometheusTimeMethod {}: {} (ignored)", registerName, e.toString());
+            }
             return summary;
+        } finally {
+            r.unlock();
         }
-
-        final PrometheusTimeMethod annotation = getAnnotation(pjp);
-        final String name = annotation.name();
-        // make sure no duplicates exists
-        final String registerName = ensureUniqueName(Strings.isNullOrEmpty(name) ? methodDisplayName : name);
-
-        summary = Summary.build()
-                .name(registerName)
-                .help(annotation.help())
-                .register();
-
-        summaries.put(key, summary);
-
-        return summary;
     }
 
     //
