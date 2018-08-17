@@ -21,12 +21,12 @@ package se.inera.intyg.infra.security.authorities;
 import static java.util.Optional.ofNullable;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import se.inera.intyg.infra.security.common.model.Feature;
 
-/**
- * @author Joy Zomborszki on 2018-06-18.
- */
+@Component
 public class FeaturesHelper {
 
     private CommonFeaturesResolver featuresResolver;
