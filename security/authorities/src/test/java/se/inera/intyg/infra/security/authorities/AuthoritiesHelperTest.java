@@ -73,8 +73,7 @@ public class AuthoritiesHelperTest {
     }
 
     // Kända intygstyper
-    List<String> knownIntygstyper = Arrays.asList(new String[] { "fk7263", "ts-bas", "ts-diabetes" });
-
+    private List<String> knownIntygstyper = Arrays.asList("fk7263", "ts-bas", "ts-diabetes");
 
     @Test
     public void whenPrivilegeHasNoIntygstyperAndNoRequestOrigins() throws Exception {

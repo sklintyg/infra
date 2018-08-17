@@ -22,8 +22,6 @@ import static java.util.Optional.ofNullable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
 import se.inera.intyg.infra.security.common.model.Feature;
 
 @Component
