@@ -27,6 +27,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import java.util.function.Supplier;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -46,9 +47,9 @@ import io.prometheus.client.Summary;
 @Scope("prototype")
 @ControllerAdvice
 public class MethodTimer {
-    private static ReadWriteLock summaryLock = new ReentrantReadWriteLock();
-    private static HashMap<String, Summary> summaries = new HashMap<>();
-    private static HashSet<String> nameSet = new HashSet<>();
+    private static final ReadWriteLock LOCK = new ReentrantReadWriteLock();
+    private static final HashMap<String, Summary> SUMMARIES = new HashMap<>();
+    private static final HashSet<String> NAME_SET = new HashSet<>();
 
     static final Logger LOG = LoggerFactory.getLogger(MethodTimer.class);
 
@@ -62,13 +63,9 @@ public class MethodTimer {
         final Signature signature = pjp.getSignature();
         final String key = signature.toLongString();
 
-        Summary summary = getSummary(key);
+        Summary summary = lockOp(LOCK.readLock(), () -> SUMMARIES.get(key));
         if (summary == null) {
             summary = registerSummary(pjp, key, toDisplayName(signature));
-        }
-
-        if (summary == null) {
-            return pjp.proceed();
         }
 
         final Summary.Timer t = summary.startTimer();
@@ -80,74 +77,61 @@ public class MethodTimer {
     }
 
     //
-    Summary getSummary(final String key) {
-        final Lock r = summaryLock.readLock();
-        r.lock();
-        try {
-            return summaries.get(key);
-        } finally {
-            r.unlock();
-        }
-    }
-
-    //
     PrometheusTimeMethod getAnnotation(final ProceedingJoinPoint pjp) {
         try {
             final Class targetClass = pjp.getTarget().getClass();
-            PrometheusTimeMethod annotation = findAnnotation(targetClass, PrometheusTimeMethod.class);
-            if (annotation == null) {
-                final MethodSignature signature = (MethodSignature) pjp.getSignature();
-                // When target is an AOP interface proxy but annotation is on class method (rather than Interface method).
-                annotation = findAnnotation(targetClass.getDeclaredMethod(signature.getName(),
-                        signature.getParameterTypes()),
-                        PrometheusTimeMethod.class);
-            }
-            return annotation;
-        } catch (NoSuchMethodException | NullPointerException e) {
+            final MethodSignature signature = (MethodSignature) pjp.getSignature();
+            return findAnnotation(
+                    targetClass.getDeclaredMethod(signature.getName(), signature.getParameterTypes()),
+                    PrometheusTimeMethod.class);
+        } catch (NoSuchMethodException e) {
             throw new IllegalStateException("Annotation could not be found for pjp \"" + pjp.toShortString() + "\"", e);
         }
     }
 
-    //
-    Summary registerSummary(final ProceedingJoinPoint pjp,
-            final String key,
-            final String methodDisplayName) throws IllegalStateException {
-        final Lock r = summaryLock.writeLock();
-        r.lock();
+
+    // run locked protected lambda expr.
+    <T> T lockOp(final Lock lock, final Supplier<T> supplier) {
+        lock.lock();
         try {
-            Summary summary = summaries.get(key);
-            if (summary != null) {
-                return summary;
-            }
-
-            final PrometheusTimeMethod annotation = getAnnotation(pjp);
-            final String name = annotation.name();
-            // make sure no duplicates exists
-            final String registerName = ensureUniqueName(Strings.isNullOrEmpty(name) ? methodDisplayName : name);
-
-            try {
-                summary = Summary.build()
-                        .name(registerName)
-                        .help(annotation.help())
-                        .register();
-                summaries.put(key, summary);
-            } catch (IllegalArgumentException e) {
-                LOG.warn("Unable to register PrometheusTimeMethod {}: {} (ignored)", registerName, e.toString());
-            }
-            return summary;
+            return supplier.get();
         } finally {
-            r.unlock();
+            lock.unlock();
         }
     }
 
     //
+    Summary registerSummary(
+            final ProceedingJoinPoint pjp,
+            final String key,
+            final String methodDisplayName) {
+
+        final PrometheusTimeMethod annotation = getAnnotation(pjp);
+
+        return lockOp(LOCK.writeLock(), () -> {
+            Summary summary = SUMMARIES.get(key);
+            if (summary != null) {
+                return summary;
+            }
+            final String name = annotation.name();
+            final String registerName = ensureUniqueName(Strings.isNullOrEmpty(name) ? methodDisplayName : name);
+
+            summary = Summary.build(registerName, annotation.help()).register();
+
+            SUMMARIES.put(key, summary);
+
+            return summary;
+        });
+    }
+
+    // make sure no duplicates exists
     String ensureUniqueName(final String startName) {
         int n = 1;
         String name = startName;
-        while (nameSet.contains(name)) {
+        while (NAME_SET.contains(name)) {
             name = startName + "_" + n++;
         }
-        nameSet.add(name);
+        NAME_SET.add(name);
         return name;
     }
 
