@@ -213,6 +213,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         vardenhet.setStart(ct.getHealthCareUnitStartDate());
         vardenhet.setEnd(ct.getHealthCareUnitEndDate());
         vardenhet.setVardgivareHsaId(ct.getHealthCareProviderHsaId());
+        vardenhet.setVardgivareOrgnr(ct.getHealthCareProviderOrgNo());
         AgandeForm agandeForm = getAgandeForm(ct.getHealthCareProviderOrgNo());
         vardenhet.setAgandeForm(agandeForm);
 

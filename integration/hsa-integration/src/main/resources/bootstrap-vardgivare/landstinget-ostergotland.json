@@ -18,7 +18,8 @@
                     "id" : "lkpg-akuten",
                     "namn" : "Akuten"
                 }
-            ]
+            ],
+            "vardgivareOrgnr" : "2-orgnr-ostergotland"
         },
         {
         	"@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
@@ -35,12 +36,14 @@
                   "id" : "nkpg-akuten",
                   "namn" : "Akuten"
                 }
-            ]
+            ],
+            "vardgivareOrgnr" : "2-orgnr-ostergotland"
         },
         {
         	"@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
             "id" : "motala",
-            "namn" : "Vårdcentralen i Motala"
+            "namn" : "Vårdcentralen i Motala",
+            "vardgivareOrgnr" : "2-orgnr-ostergotland"
         }
     ]
 }

@@ -12,8 +12,8 @@
       "postadress" : "NMT gata 1",
       "postnummer" : "12345",
       "postort" : "Testhult",
-      "agandeForm": "PRIVAT",
-      "arbetsplatskod" : "1234567890"
+      "arbetsplatskod" : "1234567890",
+      "vardgivareOrgnr" : "5-orgnr-1002"
     },
     {
       "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
@@ -24,8 +24,8 @@
       "postadress" : "NMT gata 2",
       "postnummer" : "12345",
       "postort" : "Testhult",
-      "agandeForm": "PRIVAT",
-      "arbetsplatskod" : "1234567890"
+      "arbetsplatskod" : "1234567890",
+      "vardgivareOrgnr" : "5-orgnr-1002"
     },
     {
       "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
@@ -36,8 +36,8 @@
       "postadress" : "NMT gata 3",
       "postnummer" : "12345",
       "postort" : "Testhult",
-      "agandeForm": "PRIVAT",
-      "arbetsplatskod" : "1234567890"
+      "arbetsplatskod" : "1234567890",
+      "vardgivareOrgnr" : "5-orgnr-1002"
     },{
       "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
       "id" : "TSTNMT2321000156-1004",
@@ -47,8 +47,8 @@
       "postadress" : "NMT gata 4",
       "postnummer" : "12345",
       "postort" : "Testhult",
-      "agandeForm": "PRIVAT",
-      "arbetsplatskod" : "1234567890"
+      "arbetsplatskod" : "1234567890",
+      "vardgivareOrgnr" : "5-orgnr-1002"
     }
   ]
 }

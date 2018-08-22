@@ -12,7 +12,8 @@
             "postadress" : "Tandgatan 1",
             "postnummer" : "12345",
             "postort" : "Plombhult",
-            "arbetsplatskod" : "1234567890"
+            "arbetsplatskod" : "1234567890",
+            "vardgivareOrgnr" : "2-orgnr-tandlakare-1"
         }
     ]
 }

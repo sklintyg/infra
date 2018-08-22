@@ -68,6 +68,7 @@ public class GetHealthCareUnitResponderStub implements GetHealthCareUnitResponde
             unit.setHealthCareProviderEndDate(vardenhet.getEnd());
             unit.setUnitIsHealthCareUnit(true);
             unit.setHealthCareProviderHsaId(vardenhet.getVardgivareHsaId());
+            unit.setHealthCareProviderOrgNo(vardenhet.getVardgivareOrgnr());
             responseType.setHealthCareUnit(unit);
             responseType.setResultCode(ResultCodeEnum.OK);
             return responseType;

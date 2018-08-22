@@ -36,7 +36,8 @@
                     "postort" : "Småmåla",
                     "arbetsplatskod" : "1234567890"
                 }
-            ]
+            ],
+            "vardgivareOrgnr" : "2-orgnr-1043"
         },
         {
         	"@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
@@ -46,7 +47,8 @@
             "postadress" : "Storgatan 1",
             "postnummer" : "12345",
             "postort" : "Småmåla",
-            "arbetsplatskod" : "1234567890"
+            "arbetsplatskod" : "1234567890",
+            "vardgivareOrgnr" : "2-orgnr-1041"
         }
     ]
 }

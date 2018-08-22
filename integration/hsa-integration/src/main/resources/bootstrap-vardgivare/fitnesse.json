@@ -13,12 +13,14 @@
                     "id" : "mottagning-fit-1",
                     "namn" : "Motagning FitNesse 1"
                 }
-            ]
+            ],
+            "vardgivareOrgnr" : "2-orgnr-fitnesse"
         },
         {
         	"@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
             "id" : "vardenhet-fit-2",
-            "namn" : "Vardenhet Fitnesse 2"
+            "namn" : "Vardenhet Fitnesse 2",
+            "vardgivareOrgnr" : "2-orgnr-fitnesse"
         }
     ]
 }

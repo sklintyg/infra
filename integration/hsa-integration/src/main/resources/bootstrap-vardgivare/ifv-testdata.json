@@ -6,7 +6,8 @@
         {
         	"@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
             "id" : "IFV1239877878-103C",
-            "namn" : "OrgEnhet1"
+            "namn" : "OrgEnhet1",
+            "vardgivareOrgnr" : "2-orgnr-testdata"
         },
         {
         	"@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
@@ -17,7 +18,8 @@
             "postadress" : "Storgatan 1",
             "postnummer" : "12345",
             "postort" : "Småmåla",
-            "arbetsplatskod" : "1234567890"
+            "arbetsplatskod" : "1234567890",
+            "vardgivareOrgnr" : "2-orgnr-testdata"
         },
         {
         	"@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
@@ -28,7 +30,8 @@
             "postadress" : "Storgatan 1",
             "postnummer" : "012345",
             "postort" : "Småmåla",
-            "arbetsplatskod" : "1234567890"
+            "arbetsplatskod" : "1234567890",
+            "vardgivareOrgnr" : "2-orgnr-testdata"
         },
         {
         	"@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
@@ -52,7 +55,8 @@
                     "postort" : "Småmåla",
                     "arbetsplatskod" : "1234567890"
                 }
-            ]
+            ],
+            "vardgivareOrgnr" : "2-orgnr-testdata"
         },
         {
         	"@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
@@ -63,7 +67,8 @@
             "postadress" : "Storgatan 1",
             "postnummer" : "12345",
             "postort" : "Småmåla",
-            "arbetsplatskod" : "1234567890"
+            "arbetsplatskod" : "1234567890",
+            "vardgivareOrgnr" : "2-orgnr-testdata"
         }
     ]
 }

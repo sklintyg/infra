@@ -19,7 +19,6 @@
 package se.inera.intyg.infra.integration.hsa.stub;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import se.inera.intyg.infra.integration.hsa.model.AgandeForm;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponderInterface;
@@ -99,8 +98,7 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
 
                             miuInfo.setHealthCareProviderHsaId(vardgivare.getId());
                             miuInfo.setHealthCareProviderName(vardgivare.getNamn());
-                            miuInfo.setHealthCareProviderOrgNo(
-                                    AgandeForm.PRIVAT.equals(enhet.getAgandeForm()) ? "5555555555" : "2222222222");
+                            miuInfo.setHealthCareProviderOrgNo(enhet.getVardgivareOrgnr());
 
                             cit.getCommission().add(miuInfo);
                         }

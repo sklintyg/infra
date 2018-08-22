@@ -23,7 +23,8 @@
                     "id" : "vardavdelning-C",
                     "namn" : "vardavdelning-C"
                 }
-            ]
+            ],
+            "vardgivareOrgnr" : "2-orgnr-kronoberg"
         },
         {
             "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
@@ -45,7 +46,8 @@
                     "id" : "vardavdelning-F",
                     "namn" : "vardavdelning-F"
                 }
-            ]
+            ],
+            "vardgivareOrgnr" : "2-orgnr-kronoberg"
         },
         {
             "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
@@ -57,7 +59,8 @@
                     "id" : "vardavdelning-G",
                     "namn" : "vardavdelning-G"
                 }
-            ]
+            ],
+            "vardgivareOrgnr" : "2-orgnr-kronoberg"
         }
     ]
 }

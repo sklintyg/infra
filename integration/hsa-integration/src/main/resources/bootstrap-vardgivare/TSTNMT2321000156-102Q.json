@@ -12,8 +12,8 @@
       "postadress" : "NMT gata 3",
       "postnummer" : "12345",
       "postort" : "Testhult",
-      "agandeForm": "PRIVAT",
-      "arbetsplatskod" : "1234567890"
+      "arbetsplatskod" : "1234567890",
+      "vardgivareOrgnr" : "5-orgnr-102Q"
     }
   ]
 }

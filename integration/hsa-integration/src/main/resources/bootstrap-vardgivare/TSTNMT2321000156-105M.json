@@ -12,7 +12,8 @@
       "postadress" : "Lasarettsgatan 1",
       "postnummer" : "12345",
       "postort" : "Testhult",
-      "arbetsplatskod" : "1234567890"
+      "arbetsplatskod" : "1234567890",
+      "vardgivareOrgnr" : "2-orgnr-105M"
     },
     {
       "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
@@ -23,7 +24,8 @@
       "postadress" : "Lasarettsgatan 1",
       "postnummer" : "12345",
       "postort" : "Testhult",
-      "arbetsplatskod" : "1234567890"
+      "arbetsplatskod" : "1234567890",
+      "vardgivareOrgnr" : "2-orgnr-105M"
     },
     {
       "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
@@ -34,7 +36,8 @@
       "postadress" : "Lasarettsgatan 1",
       "postnummer" : "12345",
       "postort" : "Testhult",
-      "arbetsplatskod" : "1234567890"
+      "arbetsplatskod" : "1234567890",
+      "vardgivareOrgnr" : "2-orgnr-105M"
     }
   ]
 }

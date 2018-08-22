@@ -40,6 +40,10 @@ public abstract class AbstractVardenhet implements SelectableVardenhet, Comparab
 
     private String arbetsplatskod;
 
+    // Store vardgivareOrgnr here instead of Vardgivare to match structure from HSA
+    // If vardgivareOrgnr begins with 2 agandeFrom will be set to OFFENTLIG
+    private String vardgivareOrgnr;
+
     private AgandeForm agandeForm;
 
     public AbstractVardenhet() {
@@ -49,6 +53,12 @@ public abstract class AbstractVardenhet implements SelectableVardenhet, Comparab
     public AbstractVardenhet(String id, String namn) {
         this.id = id;
         this.namn = namn;
+    }
+
+    public AbstractVardenhet(String id, String namn, String vardgivareOrgnr) {
+        this.id = id;
+        this.namn = namn;
+        this.vardgivareOrgnr = vardgivareOrgnr;
     }
 
     @Override
@@ -115,6 +125,14 @@ public abstract class AbstractVardenhet implements SelectableVardenhet, Comparab
 
     public void setArbetsplatskod(String arbetsplatskod) {
         this.arbetsplatskod = arbetsplatskod;
+    }
+
+    public String getVardgivareOrgnr() {
+        return vardgivareOrgnr;
+    }
+
+    public void setVardgivareOrgnr(String vardgivareOrgnr) {
+        this.vardgivareOrgnr = vardgivareOrgnr;
     }
 
     public AgandeForm getAgandeForm() {

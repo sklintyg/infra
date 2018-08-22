@@ -18,7 +18,8 @@
                     "id" : "akuten",
                     "namn" : "Akuten"
                 }
-            ]
+            ],
+            "vardgivareOrgnr" : "2-orgnr-vastmanland"
         },
         {
         	"@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
@@ -30,12 +31,14 @@
                     "id" : "nagel",
                     "namn" : "Nagelmottagningen"
                 }
-            ]
+            ],
+            "vardgivareOrgnr" : "2-orgnr-vastmanland"
         },
         {
         	"@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
             "id" : "centrum-norr",
-            "namn" : "Vårdcentrum i Norr"
+            "namn" : "Vårdcentrum i Norr",
+            "vardgivareOrgnr" : "2-orgnr-vastmanland"
         }
     ]
 }

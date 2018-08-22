@@ -12,7 +12,8 @@
       "postadress" : "Cambio gata 1",
       "postnummer" : "12345",
       "postort" : "Cambiostad",
-      "arbetsplatskod" : "2234567890"
+      "arbetsplatskod" : "2234567890",
+      "vardgivareOrgnr" : "2-orgnr-1061"
     },
     {
       "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
@@ -23,7 +24,8 @@
       "postadress" : "Cambio gata 2",
       "postnummer" : "12345",
       "postort" : "Cambiostad",
-      "arbetsplatskod" : "2234567891"
+      "arbetsplatskod" : "2234567891",
+      "vardgivareOrgnr" : "2-orgnr-1061"
     }
   ]
 }
