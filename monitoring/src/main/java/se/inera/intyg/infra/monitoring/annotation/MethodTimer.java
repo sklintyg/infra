@@ -26,8 +26,8 @@ import java.util.HashSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import java.util.function.Supplier;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -60,12 +60,12 @@ public class MethodTimer {
     @Around("timeable()")
     public Object timeMethod(final ProceedingJoinPoint pjp) throws Throwable {
 
-        final Signature signature = pjp.getSignature();
+        final MethodSignature signature = (MethodSignature) pjp.getSignature();
         final String key = signature.toLongString();
 
         Summary summary = lockOp(LOCK.readLock(), () -> SUMMARIES.get(key));
         if (summary == null) {
-            summary = registerSummary(pjp, key, toDisplayName(signature));
+            summary = registerSummary(signature, key, toDisplayName(signature));
         }
 
         final Summary.Timer t = summary.startTimer();
@@ -75,20 +75,6 @@ public class MethodTimer {
             t.observeDuration();
         }
     }
-
-    //
-    PrometheusTimeMethod getAnnotation(final ProceedingJoinPoint pjp) {
-        try {
-            final Class targetClass = pjp.getTarget().getClass();
-            final MethodSignature signature = (MethodSignature) pjp.getSignature();
-            return findAnnotation(
-                    targetClass.getDeclaredMethod(signature.getName(), signature.getParameterTypes()),
-                    PrometheusTimeMethod.class);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalStateException("Annotation could not be found for pjp \"" + pjp.toShortString() + "\"", e);
-        }
-    }
-
 
     // run locked protected lambda expr.
     <T> T lockOp(final Lock lock, final Supplier<T> supplier) {
@@ -102,11 +88,11 @@ public class MethodTimer {
 
     //
     Summary registerSummary(
-            final ProceedingJoinPoint pjp,
+            final MethodSignature signature,
             final String key,
             final String methodDisplayName) {
 
-        final PrometheusTimeMethod annotation = getAnnotation(pjp);
+        final PrometheusTimeMethod annotation = findAnnotation(signature.getMethod(), PrometheusTimeMethod.class);
 
         return lockOp(LOCK.writeLock(), () -> {
             Summary summary = SUMMARIES.get(key);
