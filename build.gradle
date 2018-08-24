@@ -12,7 +12,7 @@ ext {
     rivtaResidentMasterSchemasVersion = "1.1.3.5"
     rivtaGetPersonsPersonSchemasVersion = "3.0-beta1"
 
-    intygClinicalProcessHealthcondVersion = "1.0.13-beta4"
+    intygClinicalProcessHealthcondVersion = "1.0.13-beta5"
 
     srsSchemasVersion = "0.0.7"
 
