@@ -34,8 +34,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
@@ -51,8 +49,6 @@ public class MethodTimer {
     private static final HashMap<String, Summary> SUMMARIES = new HashMap<>();
     private static final HashSet<String> NAME_SET = new HashSet<>();
 
-    static final Logger LOG = LoggerFactory.getLogger(MethodTimer.class);
-
     @Pointcut("@annotation(se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod)")
     public void timeable() {
     }
@@ -65,7 +61,7 @@ public class MethodTimer {
 
         Summary summary = lockOp(LOCK.readLock(), () -> SUMMARIES.get(key));
         if (summary == null) {
-            summary = registerSummary(signature, key, toDisplayName(signature));
+            summary = registerSummary(signature, key);
         }
 
         final Summary.Timer t = summary.startTimer();
@@ -87,10 +83,7 @@ public class MethodTimer {
     }
 
     //
-    Summary registerSummary(
-            final MethodSignature signature,
-            final String key,
-            final String methodDisplayName) {
+    Summary registerSummary(final MethodSignature signature, final String key) {
 
         final PrometheusTimeMethod annotation = findAnnotation(signature.getMethod(), PrometheusTimeMethod.class);
 
@@ -100,7 +93,7 @@ public class MethodTimer {
                 return summary;
             }
             final String name = annotation.name();
-            final String registerName = ensureUniqueName(Strings.isNullOrEmpty(name) ? methodDisplayName : name);
+            final String registerName = ensureUniqueName(Strings.isNullOrEmpty(name) ? toDisplayName(signature) : name);
 
             summary = Summary.build(registerName, annotation.help()).register();
 
