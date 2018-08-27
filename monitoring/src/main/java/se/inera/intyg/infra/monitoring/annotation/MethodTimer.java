@@ -18,16 +18,8 @@
  */
 package se.inera.intyg.infra.monitoring.annotation;
 
-import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
-
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.function.Supplier;
-
+import com.google.common.base.Strings;
+import io.prometheus.client.Summary;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -37,9 +29,14 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
-import com.google.common.base.Strings;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Supplier;
 
-import io.prometheus.client.Summary;
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 @Aspect("pertarget(se.inera.intyg.infra.monitoring.annotation.MethodTimer.timeable())")
 @Scope("prototype")
@@ -55,13 +52,14 @@ public class MethodTimer {
 
     @Around("timeable()")
     public Object timeMethod(final ProceedingJoinPoint pjp) throws Throwable {
-
-        final MethodSignature signature = (MethodSignature) pjp.getSignature();
+        final Signature signature = pjp.getSignature();
+        // final MethodSignature signature = (MethodSignature) pjp.getSignature();
         final String key = signature.toLongString();
 
         Summary summary = lockOp(LOCK.readLock(), () -> SUMMARIES.get(key));
         if (summary == null) {
-            summary = registerSummary(signature, key);
+            // summary = registerSummary(signature, key);
+            summary = registerSummary(pjp, key);
         }
 
         final Summary.Timer t = summary.startTimer();
@@ -69,6 +67,18 @@ public class MethodTimer {
             return pjp.proceed();
         } finally {
             t.observeDuration();
+        }
+    }
+
+    PrometheusTimeMethod getAnnotation(final ProceedingJoinPoint pjp) {
+        try {
+            final Class targetClass = pjp.getTarget().getClass();
+            final MethodSignature signature = (MethodSignature) pjp.getSignature();
+            return findAnnotation(
+                    targetClass.getDeclaredMethod(signature.getName(), signature.getParameterTypes()),
+                    PrometheusTimeMethod.class);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException("Annotation could not be found for pjp \"" + pjp.toShortString() + "\"", e);
         }
     }
 
@@ -83,17 +93,17 @@ public class MethodTimer {
     }
 
     //
-    Summary registerSummary(final MethodSignature signature, final String key) {
+    Summary registerSummary(final ProceedingJoinPoint pjp, final String key) {
 
-        final PrometheusTimeMethod annotation = findAnnotation(signature.getMethod(), PrometheusTimeMethod.class);
-
+        // final PrometheusTimeMethod annotation = findAnnotation(signature.getMethod(), PrometheusTimeMethod.class);
+        final PrometheusTimeMethod annotation = getAnnotation(pjp);
         return lockOp(LOCK.writeLock(), () -> {
             Summary summary = SUMMARIES.get(key);
             if (summary != null) {
                 return summary;
             }
             final String name = annotation.name();
-            final String registerName = ensureUniqueName(Strings.isNullOrEmpty(name) ? toDisplayName(signature) : name);
+            final String registerName = ensureUniqueName(Strings.isNullOrEmpty(name) ? toDisplayName(pjp.getSignature()) : name);
 
             summary = Summary.build(registerName, annotation.help()).register();
 
