@@ -34,10 +34,11 @@ ext {
     springSecuritySaml2CoreVersion = "1.0.3.RELEASE"
     springSecurityVersion = "4.2.5.RELEASE"
     springVersion = "4.3.17.RELEASE"
-    xmlSecVersion = "2.1.1"  // org.apache.santuario:xmlsec:2.1.1
+    xmlSecVersion = "2.1.1"
     prometheusClientVersion = "0.4.0"
     aspectjWeaverVersion = "1.8.9"
 
+    awaitilityVersion = "2.0.0"
     mockitoVersion = "2.16.0"
     servletApiTestVersion = "3.1.0"
 }
