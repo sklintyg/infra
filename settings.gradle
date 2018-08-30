@@ -18,6 +18,7 @@ include ':log-messages'
 include ':loggtjanst-stub'
 include ':security-common'
 include ':security-authorities'
+include ':security-filter'
 include ':security-siths'
 include ':sjukfall-engine'
 include ':dynamiclink'
@@ -37,6 +38,7 @@ project(':log-messages').projectDir = "$rootDir/loggtjanst/log-messages" as File
 project(':loggtjanst-stub').projectDir = "$rootDir/loggtjanst/loggtjanst-stub" as File
 project(':security-common').projectDir = "$rootDir/security/common" as File
 project(':security-authorities').projectDir = "$rootDir/security/authorities" as File
+project(':security-filter').projectDir = "$rootDir/security/filter" as File
 project(':security-siths').projectDir = "$rootDir/security/siths" as File
 project(':sjukfall-engine').projectDir = "$rootDir/sjukfall/engine" as File
 project(':xmldsig').projectDir = "$rootDir/xmldsig" as File
