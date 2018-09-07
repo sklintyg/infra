@@ -109,20 +109,16 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
         // 5. Produce unfinished SignatureType
         SignatureType signatureType = PartialSignatureFactory.buildSignature(intygsId, digestBytes);
 
-        // 6.
-        signatureType.getSignedInfo().getReference().get(0).setDigestValue(Base64.getDecoder().decode(digestBytes));
-
-        // 5. Build the actual canonicalized <SignedInfo> to pass as payload to a sign function.
+        // 6. Build the actual canonicalized <SignedInfo> to pass as payload to a sign function.
         String signedInfoForSigning = buildSignedInfoForSigning(signatureType);
 
-        // 6. Populate and return
+        // 7. Populate and return
         return IntygXMLDSignature.IntygXMLDSignatureBuilder.anIntygXMLDSignature()
             .withIntygJson("set later...")
             .withCanonicalizedIntygXml(xml)
             .withSignedInfoForSigning(signedInfoForSigning)
             .withSignatureType(signatureType)
             .build();
-        // IntygXMLDSignature(signatureType, intygXml, signedInfoForSigning);
     }
 
     private String applyXPath(String intygsId, String xml) {
