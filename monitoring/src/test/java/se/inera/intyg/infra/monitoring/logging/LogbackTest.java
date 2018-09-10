@@ -19,13 +19,16 @@
 package se.inera.intyg.infra.monitoring.logging;
 
 
-import ch.qos.logback.classic.spi.LoggingEvent;
-import ch.qos.logback.core.Appender;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.PrintStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,11 +39,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import ch.qos.logback.classic.spi.LoggingEvent;
+import ch.qos.logback.core.Appender;
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
-
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import se.inera.intyg.infra.monitoring.logging.LogMDCHelper.LogMDCRequestInfo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {MonitoringConfiguration.class})
@@ -84,7 +87,6 @@ public class LogbackTest {
 
         assertEquals("Hello", le.getMessage());
         assertEquals("ERROR", le.getLevel().levelStr);
-        assertTrue(le.getMDCPropertyMap().containsKey("env.localHost"));
     }
 
     @Test
@@ -94,21 +96,31 @@ public class LogbackTest {
         ArgumentCaptor<Appender> ac = ArgumentCaptor.forClass(Appender.class);
         Mockito.verify(mockedAppender).doAppend(ac.capture());
         LoggingEvent le = (LoggingEvent) ac.getAllValues().get(0);
-        String host = le.getMDCPropertyMap().get("env.localHost");
 
         assertEquals("Process and console appender should be triggered (2 records)", 2, out.split(System.lineSeparator()).length);
-        assertTrue(out.contains("[test-app,process,-," + host));
-        assertTrue(out.contains("[test-app,console,-," + host));
+        assertTrue(out.contains("[process,-,"));
+        assertTrue(out.contains("[console,-,"));
         assertTrue(out.endsWith(": Hello" + System.lineSeparator()));
     }
 
     @Test
-    public void log_with_explicit_trace_id(){
-        String traceId = logMDCHelper.traceHeader();
-        Closeable trace = logMDCHelper.openTrace(traceId);
+    public void log_with_explicit_request_info() {
+        final String traceId = logMDCHelper.traceHeader();
+        final String sessionInfo = "NO SESSION";
+        Closeable trace = logMDCHelper.openTrace(new LogMDCRequestInfo() {
+            @Override
+            public String getTraceId() {
+                return logMDCHelper.traceHeader();
+            }
+
+            @Override
+            public String getSessionInfo() {
+                return sessionInfo;
+            }
+        });
         try {
             String out = captureStdout(() -> LOG.info("Hello"));
-            assertTrue(out.contains("[test-app,process," + traceId));
+            assertTrue(out.contains("[process," + sessionInfo + "," + traceId));
         } finally {
             IOUtils.closeQuietly(trace);
         }
@@ -119,7 +131,7 @@ public class LogbackTest {
         logMDCHelper.run(() -> {
             String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Marker test"));
 
-            String regex = String.format("^.* \\[test-app,monitoring,([%s)]+),.*$", String.valueOf(LogMDCHelper.BASE62CHARS));
+            String regex = String.format("^.* \\[monitoring,-,([%s)]+)\\].*$", String.valueOf(LogMDCHelper.BASE62CHARS));
             Matcher m = Pattern.compile(regex).matcher(out);
 
             assertTrue(m.find());
@@ -130,7 +142,7 @@ public class LogbackTest {
     @Test
     public void log_marker() {
         String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Marker test"));
-        assertTrue(out.contains("[test-app,monitoring,-,"));
+        assertTrue(out.contains("[monitoring,-,-]"));
         assertEquals("Monitor appender only should be triggered (1 record)", 1, out.split(System.lineSeparator()).length);
     }
 }

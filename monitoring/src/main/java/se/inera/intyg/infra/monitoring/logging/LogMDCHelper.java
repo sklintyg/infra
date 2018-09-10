@@ -18,30 +18,56 @@
  */
 package se.inera.intyg.infra.monitoring.logging;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import java.io.Closeable;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.CharBuffer;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
+
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
+import com.google.common.base.Strings;
 
 public class LogMDCHelper {
     static final int IDLEN = 8;
-    static final String LOCALHOST = "env.localHost";
     static final String TRACEID = "req.traceId";
+    static final String SESSIONINFO = "req.sessionInfo";
     static final char[] BASE62CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
+    static final LogMDCRequestInfo EMPTY_REQUEST_INFO = new LogMDCRequestInfo() {
+        @Override
+        public String getTraceId() {
+            return null;
+        }
+
+        @Override
+        public String getSessionInfo() {
+            return null;
+        }
+    };
+
+    /**
+     * Enables an app to define logging tags such as trace-id and session info.
+     */
+    public interface LogMDCRequestInfo {
+        String getTraceId();
+        String getSessionInfo();
+    }
+
+    @Autowired(required = false)
+    LogMDCRequestInfo logMDCRequestInfo;
 
     @Value("${log.trace.header:x-trace-id}")
-    private String header;
+    String header;
 
-    public LogMDCHelper() {
-        MDC.setContextMap(Maps.newHashMap(ImmutableMap.of(LOCALHOST, localHost())));
+    @PostConstruct
+    void postConstruct() {
+        if (logMDCRequestInfo == null) {
+            logMDCRequestInfo = EMPTY_REQUEST_INFO;
+        }
     }
 
     /**
@@ -57,22 +83,28 @@ public class LogMDCHelper {
      * @return the trace to close when done.
      */
     public Closeable openTrace() {
-        return openTrace(null);
+        return openTrace(logMDCRequestInfo);
+    }
+
+    /**
+     * Returns if an explicitly defined info bean exists.
+     */
+    boolean isCustomized() {
+        return (logMDCRequestInfo != EMPTY_REQUEST_INFO);
     }
 
     /**
      * Opens a trace.
      *
-     * @param traceId the trace id to use.
+     * @param requestInfo the request info to use.
      * @return the trace to close when done.
      */
-    public Closeable openTrace(final String traceId) {
-        final String localHost = MDC.get(LOCALHOST);
-        if (Strings.isNullOrEmpty(localHost)) {
-            MDC.put(LOCALHOST, localHost());
+    public Closeable openTrace(final LogMDCRequestInfo requestInfo) {
+        final String traceId = Strings.isNullOrEmpty(requestInfo.getTraceId()) ? traceId(IDLEN) : requestInfo.getTraceId();
+        MDC.put(TRACEID, traceId);
+        if (requestInfo.getSessionInfo() != null) {
+            MDC.put(SESSIONINFO, requestInfo.getSessionInfo());
         }
-
-        MDC.put(TRACEID, Strings.isNullOrEmpty(traceId) ? traceId(IDLEN) : traceId);
 
         return () -> closeTrace();
     }
@@ -92,6 +124,7 @@ public class LogMDCHelper {
     // Clean-up.
     void closeTrace() {
         MDC.remove(TRACEID);
+        MDC.remove(SESSIONINFO);
     }
 
     /**
@@ -106,13 +139,5 @@ public class LogMDCHelper {
                 .limit(len)
                 .forEach(value -> charBuffer.append(BASE62CHARS[value]));
         return charBuffer.rewind().toString();
-    }
-
-    String localHost() {
-        try {
-            return InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException ex) {
-        }
-        return "unknown";
     }
 }

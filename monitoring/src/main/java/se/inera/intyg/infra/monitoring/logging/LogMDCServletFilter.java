@@ -20,6 +20,7 @@ package se.inera.intyg.infra.monitoring.logging;
 
 import java.io.Closeable;
 import java.io.IOException;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -27,10 +28,18 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import se.inera.intyg.infra.monitoring.logging.LogMDCHelper.LogMDCRequestInfo;
+
+/**
+ * Tags log records with trace id and session id. <p>
+ *    Might be defined by the application using a {@link LogMDCHelper.LogMDCRequestInfo} bean.
+ * </p>
+ */
 public class LogMDCServletFilter implements Filter {
 
     @Autowired
@@ -57,9 +66,23 @@ public class LogMDCServletFilter implements Filter {
     }
 
     Closeable open(final ServletRequest request) {
-        if (request instanceof HttpServletRequest) {
-            return mdcHelper.openTrace(((HttpServletRequest) request).getHeader(mdcHelper.traceHeader()));
+        if (mdcHelper.isCustomized()) {
+            return mdcHelper.openTrace();
         }
-        return null;
+        if (request instanceof HttpServletRequest) {
+            final HttpServletRequest http = ((HttpServletRequest) request);
+            return mdcHelper.openTrace(new LogMDCRequestInfo() {
+                @Override
+                public String getTraceId() {
+                    return http.getHeader(mdcHelper.traceHeader());
+                }
+
+                @Override
+                public String getSessionInfo() {
+                    return http.getSession().getId();
+                }
+            });
+        }
+        return mdcHelper.openTrace();
     }
 }

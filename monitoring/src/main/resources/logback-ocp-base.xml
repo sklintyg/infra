@@ -1,9 +1,8 @@
 <included>
     <!-- Default logging configuration for openshift. To be included by web-apps. -->
-    <property name="APP_NAME" value="${APP_NAME:-appName}"/>
     <property name="TIMESTAMP" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level"/>
+    <property name="SESSION" value="%X{req.sessionInfo:--}"/>
     <property name="TRACE" value="%X{req.traceId:--}"/>
-    <property name="HOST" value="%X{env.localHost:--}"/>
     <property name="LINE" value="--- %-40.40logger{39} : %msg%n%rEx"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -13,7 +12,7 @@
             <onMismatch>ACCEPT</onMismatch>
         </filter>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${TIMESTAMP} [${APP_NAME},console,${TRACE},${HOST}] ${LINE}</pattern>
+            <pattern>${TIMESTAMP} [console,${SESSION},${TRACE}] ${LINE}</pattern>
         </encoder>
     </appender>
 
@@ -24,7 +23,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${TIMESTAMP} [${APP_NAME},monitoring,${TRACE},${HOST}] ${LINE}</pattern>
+            <pattern>${TIMESTAMP} [monitoring,${SESSION},${TRACE}] ${LINE}</pattern>
         </encoder>
     </appender>
 
@@ -35,7 +34,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${TIMESTAMP} [${APP_NAME},validation,${TRACE},${HOST}] ${LINE}</pattern>
+            <pattern>${TIMESTAMP} [validation,${SESSION},${TRACE}] ${LINE}</pattern>
         </encoder>
     </appender>
 
@@ -46,7 +45,7 @@
             <onMismatch>ACCEPT</onMismatch>
         </filter>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${TIMESTAMP} [${APP_NAME},process,${TRACE},${HOST}] ${LINE}</pattern>
+            <pattern>${TIMESTAMP} [process,${SESSION},${TRACE}] ${LINE}</pattern>
         </encoder>
     </appender>
 
@@ -57,7 +56,7 @@
             <onMismatch>ACCEPT</onMismatch>
         </filter>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${TIMESTAMP} [${APP_NAME},access,${TRACE},${HOST}] ${LINE}</pattern>
+            <pattern>${TIMESTAMP} [access,${SESSION},${TRACE}] ${LINE}</pattern>
         </encoder>
     </appender>
 
@@ -68,7 +67,7 @@
             <onMismatch>ACCEPT</onMismatch>
         </filter>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${TIMESTAMP} [${APP_NAME},frontend,${TRACE},${HOST}] ${LINE}</pattern>
+            <pattern>${TIMESTAMP} [frontend,${SESSION},${TRACE}] ${LINE}</pattern>
         </encoder>
     </appender>
 
