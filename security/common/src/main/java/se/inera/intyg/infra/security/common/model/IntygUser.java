@@ -36,6 +36,7 @@ import java.util.Map;
 public class IntygUser implements UserDetails {
 
     private static final long serialVersionUID = -2624303818412468774L;
+    public static final int THIRTYONE = 31;
 
     protected boolean privatLakareAvtalGodkand;
 
@@ -48,7 +49,7 @@ public class IntygUser implements UserDetails {
     protected boolean isSekretessMarkerad;
 
     protected List<Vardgivare> vardgivare;
-    protected Map<String, String> miuNamnPerEnhetsId;
+    protected Map<String, String> miuNamnPerEnhetsId = new HashMap<>();
     protected List<String> befattningar;
     protected List<String> specialiseringar;
     protected List<String> legitimeradeYrkesgrupper;
@@ -60,9 +61,9 @@ public class IntygUser implements UserDetails {
     protected AuthenticationMethod authenticationMethod;
 
     // Fields related to the authority context
-    protected Map<String, Feature> features;
-    protected Map<String, Role> roles;
-    protected Map<String, Privilege> authorities;
+    protected Map<String, Feature> features = new HashMap<>();
+    protected Map<String, Role> roles = new HashMap<>();
+    protected Map<String, Privilege> authorities = new HashMap<>();
     protected String origin;
 
     /**
@@ -364,9 +365,10 @@ public class IntygUser implements UserDetails {
      * Utility method to get the name "medarbetaruppdrag" that the user has on the currently selected vårdenhet.
      *
      * @return The name of the medarbetaruppdrag. (Derived from infrastructure:directory:authorizationmanagement
-     * CommissionType#commissionName)
-     * @throws IllegalStateException if no vardenhet is selected or if the map that maps enhetsId to commissionName hasn't been
-     *                               initialized.
+     *         CommissionType#commissionName)
+     * @throws IllegalStateException
+     *             if no vardenhet is selected or if the map that maps enhetsId to commissionName hasn't been
+     *             initialized.
      */
     @JsonIgnore
     public String getSelectedMedarbetarUppdragNamn() {
@@ -419,6 +421,87 @@ public class IntygUser implements UserDetails {
     public void setPrivatLakareAvtalGodkand(boolean privatLakareAvtalGodkand) {
         this.privatLakareAvtalGodkand = privatLakareAvtalGodkand;
     }
+
+    // CHECKSTYLE:OFF NeedBraces
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        IntygUser intygUser = (IntygUser) o;
+
+        if (privatLakareAvtalGodkand != intygUser.privatLakareAvtalGodkand)
+            return false;
+        if (isSekretessMarkerad != intygUser.isSekretessMarkerad)
+            return false;
+        if (personId != null ? !personId.equals(intygUser.personId) : intygUser.personId != null)
+            return false;
+        if (!hsaId.equals(intygUser.hsaId))
+            return false;
+        if (namn != null ? !namn.equals(intygUser.namn) : intygUser.namn != null)
+            return false;
+        if (titel != null ? !titel.equals(intygUser.titel) : intygUser.titel != null)
+            return false;
+        if (forskrivarkod != null ? !forskrivarkod.equals(intygUser.forskrivarkod) : intygUser.forskrivarkod != null)
+            return false;
+        if (!authenticationScheme.equals(intygUser.authenticationScheme))
+            return false;
+        if (vardgivare != null ? !vardgivare.equals(intygUser.vardgivare) : intygUser.vardgivare != null)
+            return false;
+        if (miuNamnPerEnhetsId != null ? !miuNamnPerEnhetsId.equals(intygUser.miuNamnPerEnhetsId) : intygUser.miuNamnPerEnhetsId != null)
+            return false;
+        if (befattningar != null ? !befattningar.equals(intygUser.befattningar) : intygUser.befattningar != null)
+            return false;
+        if (specialiseringar != null ? !specialiseringar.equals(intygUser.specialiseringar) : intygUser.specialiseringar != null)
+            return false;
+        if (legitimeradeYrkesgrupper != null ? !legitimeradeYrkesgrupper.equals(intygUser.legitimeradeYrkesgrupper)
+                : intygUser.legitimeradeYrkesgrupper != null)
+            return false;
+        if (systemRoles != null ? !systemRoles.equals(intygUser.systemRoles) : intygUser.systemRoles != null)
+            return false;
+        if (valdVardenhet != null ? !valdVardenhet.equals(intygUser.valdVardenhet) : intygUser.valdVardenhet != null)
+            return false;
+        if (valdVardgivare != null ? !valdVardgivare.equals(intygUser.valdVardgivare) : intygUser.valdVardgivare != null)
+            return false;
+        if (authenticationMethod != intygUser.authenticationMethod)
+            return false;
+        if (features != null ? !features.equals(intygUser.features) : intygUser.features != null)
+            return false;
+        if (roles != null ? !roles.equals(intygUser.roles) : intygUser.roles != null)
+            return false;
+        if (authorities != null ? !authorities.equals(intygUser.authorities) : intygUser.authorities != null)
+            return false;
+        return (origin != null ? !origin.equals(intygUser.origin) : intygUser.origin != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (privatLakareAvtalGodkand ? 1 : 0);
+        result = THIRTYONE * result + (personId != null ? personId.hashCode() : 0);
+        result = THIRTYONE * result + hsaId.hashCode();
+        result = THIRTYONE * result + (namn != null ? namn.hashCode() : 0);
+        result = THIRTYONE * result + (titel != null ? titel.hashCode() : 0);
+        result = THIRTYONE * result + (forskrivarkod != null ? forskrivarkod.hashCode() : 0);
+        result = THIRTYONE * result + authenticationScheme.hashCode();
+        result = THIRTYONE * result + (isSekretessMarkerad ? 1 : 0);
+        result = THIRTYONE * result + (vardgivare != null ? vardgivare.hashCode() : 0);
+        result = THIRTYONE * result + (miuNamnPerEnhetsId != null ? miuNamnPerEnhetsId.hashCode() : 0);
+        result = THIRTYONE * result + (befattningar != null ? befattningar.hashCode() : 0);
+        result = THIRTYONE * result + (specialiseringar != null ? specialiseringar.hashCode() : 0);
+        result = THIRTYONE * result + (legitimeradeYrkesgrupper != null ? legitimeradeYrkesgrupper.hashCode() : 0);
+        result = THIRTYONE * result + (systemRoles != null ? systemRoles.hashCode() : 0);
+        result = THIRTYONE * result + (valdVardenhet != null ? valdVardenhet.hashCode() : 0);
+        result = THIRTYONE * result + (valdVardgivare != null ? valdVardgivare.hashCode() : 0);
+        result = THIRTYONE * result + (authenticationMethod != null ? authenticationMethod.hashCode() : 0);
+        result = THIRTYONE * result + (features != null ? features.hashCode() : 0);
+        result = THIRTYONE * result + (roles != null ? roles.hashCode() : 0);
+        result = THIRTYONE * result + (authorities != null ? authorities.hashCode() : 0);
+        result = THIRTYONE * result + (origin != null ? origin.hashCode() : 0);
+        return result;
+    }
+    // CHECKSTYLE:ON NeedBraces
 
     @JsonIgnore
     @Override

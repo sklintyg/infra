@@ -18,7 +18,12 @@
  */
 
 dependencies {
+    compile "org.slf4j:slf4j-api:${slf4jVersion}"
     compile "org.springframework:spring-web:${springVersion}"
+    compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
 
-    compileOnly "javax.servlet:servlet-api:${servletApiVersion}"
+    compile "javax.servlet:servlet-api:${servletApiVersion}"
+
+    testCompile "org.hamcrest:hamcrest-all:${hamcrestVersion}"
+    testCompile "org.mockito:mockito-core:${mockitoVersion}"
 }
