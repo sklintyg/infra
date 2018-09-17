@@ -38,13 +38,18 @@ import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileres
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileType;
 import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
 import se.riv.strategicresourcemanagement.persons.person.v3.LookupProfileType;
+import se.riv.strategicresourcemanagement.persons.person.v3.NamePartType;
+import se.riv.strategicresourcemanagement.persons.person.v3.NameType;
+import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
+import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
+import shaded.org.codehaus.plexus.util.StringUtils;
 
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPFactory;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +89,8 @@ public class PUServiceTest {
     public void setup() {
         cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME).clear();
         service.clearCache();
+        // Some tests uses mocked residentService, reset here
+        service.setService(residentService);
     }
 
     @Before
@@ -274,9 +281,6 @@ public class PUServiceTest {
         assertEquals("Svensson, Storgatan 1, PL 1234", person.getPostadress());
         assertEquals("12345", person.getPostnummer());
         assertEquals("Småmåla", person.getPostort());
-
-        // ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", residentService);
-        service.setService(residentService);
     }
 
     @Test
@@ -334,9 +338,80 @@ public class PUServiceTest {
         assertEquals("Svensson, Storgatan 1, PL 1234", person.getPostadress());
         assertEquals("12345", person.getPostnummer());
         assertEquals("Småmåla", person.getPostort());
+    }
 
-        // ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", residentService);
-        service.setService(residentService);
+    @Test
+    public void testGetPersonsSinglePage() throws Exception {
+        GetPersonsForProfileResponderInterface mockResidentService = createGetPersonsMock();
+        service.setService(mockResidentService);
+
+        List<Personnummer> pnrList = new ArrayList<>();
+        for (int i = 0; i < 500; i++) {
+            pnrList.add(createPnr("19121212-" + StringUtils.leftPad(Integer.toString(i), 4, "0")));
+        }
+
+        Map<Personnummer, PersonSvar> response = service.getPersons(pnrList);
+
+        verify(mockResidentService, times(1)).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
+
+        assertEquals(response.size(), 500);
+    }
+
+    @Test
+    public void testGetPersonsWithPaging() throws Exception {
+
+        // Create a mock returning max 500 entries
+        GetPersonsForProfileResponderInterface mockResidentService = createGetPersonsMock();
+        service.setService(mockResidentService);
+
+        // Create request requesting 1001 entries
+        List<Personnummer> pnrList = new ArrayList<>();
+        for (int i = 0; i < 1001; i++) {
+            pnrList.add(createPnr("19121212-" + StringUtils.leftPad(Integer.toString(i), 4, "0")));
+        }
+
+        Map<Personnummer, PersonSvar> response = service.getPersons(pnrList);
+
+        verify(mockResidentService, times(3)).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
+
+        // Verify all requested personnummer are present and has correct name
+        assertEquals(response.size(), 1001);
+        for (int i = 0; i < pnrList.size(); i++) {
+            Personnummer requestedPnr = pnrList.get(i);
+            PersonSvar personSvar = response.get(requestedPnr);
+
+            assertEquals(PersonSvar.Status.FOUND, personSvar.getStatus());
+            Person person = personSvar.getPerson();
+            assertEquals(requestedPnr, person.getPersonnummer());
+            assertEquals("Testpersonnamn " + requestedPnr.getPersonnummer(), person.getFornamn());
+        }
+    }
+
+    private GetPersonsForProfileResponderInterface createGetPersonsMock() {
+        // Create a mock returning max 500 entries
+        GetPersonsForProfileResponderInterface mockResidentService = mock(GetPersonsForProfileResponderInterface.class);
+        GetPersonsForProfileResponseType mockResponse = new GetPersonsForProfileResponseType();
+        when(mockResidentService.getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class)))
+                .thenAnswer((invocation) -> {
+                    GetPersonsForProfileType request = invocation.getArgument(1);
+                    GetPersonsForProfileResponseType response = new GetPersonsForProfileResponseType();
+                    int responseCount = Math.min(request.getPersonId().size(), 500);
+                    for (int i = 0; i < responseCount; i++) {
+                        IIType personId = request.getPersonId().get(i);
+                        RequestedPersonRecordType requestedPersonRecordType = new RequestedPersonRecordType();
+                        requestedPersonRecordType.setRequestedPersonalIdentity(personId);
+                        PersonRecordType personRecordType = new PersonRecordType();
+                        NameType nameType = new NameType();
+                        NamePartType namePartType = new NamePartType();
+                        namePartType.setName("Testpersonnamn " + personId.getExtension());
+                        nameType.setGivenName(namePartType);
+                        personRecordType.setName(nameType);
+                        requestedPersonRecordType.setPersonRecord(personRecordType);
+                        response.getRequestedPersonRecord().add(requestedPersonRecordType);
+                    }
+                    return response;
+                });
+        return mockResidentService;
     }
 
     private Personnummer createPnr(String pnr) {

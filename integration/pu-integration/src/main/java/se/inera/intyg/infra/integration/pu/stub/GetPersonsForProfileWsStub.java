@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileType;
+import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
 
@@ -31,6 +32,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GetPersonsForProfileWsStub implements GetPersonsForProfileResponderInterface {
+
+    private static final int LIMIT_GET_PERSONS_FOR_PROFILE = 500;
 
     @Autowired
     private ChronicleResidentStore personer;
@@ -44,11 +47,22 @@ public class GetPersonsForProfileWsStub implements GetPersonsForProfileResponder
         for (String id : parameters.getPersonId().stream().map(pid -> pid.getExtension()).collect(Collectors.toList())) {
             PersonRecordType residentPost = personer.getResident(id);
 
-            if (residentPost != null) {
-                RequestedPersonRecordType requestedPersonRecordType = new RequestedPersonRecordType();
-                requestedPersonRecordType.setPersonRecord(residentPost);
-                requestedPersonRecordType.setRequestedPersonalIdentity(residentPost.getPersonalIdentity());
-                response.getRequestedPersonRecord().add(requestedPersonRecordType);
+            if (response.getRequestedPersonRecord().size() < LIMIT_GET_PERSONS_FOR_PROFILE) {
+                // TKB Regel #1: En producent skall alltid i responset svara med requestedPersonalIdentity samt PersonRecord.
+                // Vilket innebär att om konsumenten skickar in 3st personidentiteter men det endast finns 2st personposter som motsvarar
+                // anropet så skall likväl 3 respons erhållas, varav 1 i så fall med en tom PersonRecord.
+                if (residentPost == null) {
+                    RequestedPersonRecordType requestedPersonRecordType = new RequestedPersonRecordType();
+                    IIType peronalIndentity = new IIType();
+                    peronalIndentity.setExtension(id);
+                    requestedPersonRecordType.setRequestedPersonalIdentity(peronalIndentity);
+                    response.getRequestedPersonRecord().add(requestedPersonRecordType);
+                } else {
+                    RequestedPersonRecordType requestedPersonRecordType = new RequestedPersonRecordType();
+                    requestedPersonRecordType.setPersonRecord(residentPost);
+                    requestedPersonRecordType.setRequestedPersonalIdentity(residentPost.getPersonalIdentity());
+                    response.getRequestedPersonRecord().add(requestedPersonRecordType);
+                }
             }
         }
         return response;

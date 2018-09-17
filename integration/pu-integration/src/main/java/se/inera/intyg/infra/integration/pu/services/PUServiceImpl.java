@@ -46,6 +46,8 @@ public class PUServiceImpl implements PUService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PUServiceImpl.class);
 
+    private static final int GET_PERSONS_FOR_PROFILE_PAGE_LIMIT = 500;
+
     @Autowired
     private GetPersonsForProfileResponderInterface service;
 
@@ -115,12 +117,21 @@ public class PUServiceImpl implements PUService {
         }
 
         try {
-            // Build request
-            GetPersonsForProfileType parameters = buildPersonsForProfileRequest(toQuery);
-            // Execute request
-            GetPersonsForProfileResponseType response = service.getPersonsForProfile(logicaladdress, parameters);
-            return handleMultiplePersonsResponse(personIds, responseMap, response);
+            int fromIndex = 0;
+            while (fromIndex < toQuery.size()) {
+                // Perform paging
+                int toIndex = Math.min(toQuery.size(), fromIndex + GET_PERSONS_FOR_PROFILE_PAGE_LIMIT);
+                List<Personnummer> pagedQuery = toQuery.subList(fromIndex, toIndex);
+                fromIndex += pagedQuery.size();
 
+                // Build request
+                GetPersonsForProfileType parameters = buildPersonsForProfileRequest(pagedQuery);
+                // Execute request
+                GetPersonsForProfileResponseType response = service.getPersonsForProfile(logicaladdress, parameters);
+
+                handleMultiplePersonsResponse(personIds, responseMap, response);
+            }
+            return responseMap;
         } catch (SOAPFaultException e) {
             return handleServiceException("SOAP fault occured, no persons '{}' found.", personIds);
         } catch (WebServiceException e) {

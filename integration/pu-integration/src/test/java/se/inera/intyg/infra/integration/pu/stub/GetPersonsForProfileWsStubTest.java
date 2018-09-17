@@ -90,6 +90,19 @@ public class GetPersonsForProfileWsStubTest {
         assertEquals("191212121212", address.getRequestedPersonRecord().get(0).getRequestedPersonalIdentity().getExtension());
     }
 
+    @Test
+    public void testLookupLimit() throws Exception {
+        GetPersonsForProfileType parameters = new GetPersonsForProfileType();
+        for (int i = 0; i < 501; i++) {
+            IIType iitype = new IIType();
+            iitype.setExtension("191212121212");
+            parameters.getPersonId().add(iitype);
+        }
+        parameters.setProfile(LookupProfileType.P_1);
+        GetPersonsForProfileResponseType address = ws.getPersonsForProfile("address", parameters);
+        assertEquals(500, address.getRequestedPersonRecord().size());
+    }
+
     private GetPersonsForProfileType defaultRequest() {
         GetPersonsForProfileType parameters = new GetPersonsForProfileType();
         IIType iitype = new IIType();
