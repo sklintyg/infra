@@ -43,7 +43,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
-import se.inera.intyg.infra.monitoring.logging.LogMDCHelper.LogMDCRequestInfo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {MonitoringConfiguration.class})
@@ -107,17 +106,7 @@ public class LogbackTest {
     public void log_with_explicit_request_info() {
         final String traceId = logMDCHelper.traceHeader();
         final String sessionInfo = "NO SESSION";
-        Closeable trace = logMDCHelper.openTrace(new LogMDCRequestInfo() {
-            @Override
-            public String getTraceId() {
-                return logMDCHelper.traceHeader();
-            }
-
-            @Override
-            public String getSessionInfo() {
-                return sessionInfo;
-            }
-        });
+        Closeable trace = logMDCHelper.withSessionInfo(sessionInfo).withTraceId(traceId).openTrace();
         try {
             String out = captureStdout(() -> LOG.info("Hello"));
             assertTrue(out.contains("[process," + sessionInfo + "," + traceId));

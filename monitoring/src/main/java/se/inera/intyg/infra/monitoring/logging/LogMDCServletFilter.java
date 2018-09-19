@@ -33,12 +33,8 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import se.inera.intyg.infra.monitoring.logging.LogMDCHelper.LogMDCRequestInfo;
-
 /**
- * Tags log records with trace id and session id. <p>
- *    Might be defined by the application using a {@link LogMDCHelper.LogMDCRequestInfo} bean.
- * </p>
+ * Tags log records with trace id and session id.
  */
 public class LogMDCServletFilter implements Filter {
 
@@ -66,22 +62,10 @@ public class LogMDCServletFilter implements Filter {
     }
 
     Closeable open(final ServletRequest request) {
-        if (mdcHelper.isCustomized()) {
-            return mdcHelper.openTrace();
-        }
         if (request instanceof HttpServletRequest) {
             final HttpServletRequest http = ((HttpServletRequest) request);
-            return mdcHelper.openTrace(new LogMDCRequestInfo() {
-                @Override
-                public String getTraceId() {
-                    return http.getHeader(mdcHelper.traceHeader());
-                }
-
-                @Override
-                public String getSessionInfo() {
-                    return http.getSession().getId();
-                }
-            });
+            mdcHelper.withTraceId(http.getHeader(mdcHelper.traceHeader()))
+                    .withSessionInfo(http.getSession().getId());
         }
         return mdcHelper.openTrace();
     }

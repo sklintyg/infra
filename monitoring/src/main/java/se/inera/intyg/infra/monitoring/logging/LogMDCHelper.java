@@ -23,52 +23,20 @@ import java.nio.CharBuffer;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.google.common.base.Strings;
 
 public class LogMDCHelper {
-    static final int IDLEN = 8;
     static final String TRACEID = "req.traceId";
     static final String SESSIONINFO = "req.sessionInfo";
+    static final int IDLEN = 8;
     static final char[] BASE62CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
-    static final LogMDCRequestInfo EMPTY_REQUEST_INFO = new LogMDCRequestInfo() {
-        @Override
-        public String getTraceId() {
-            return null;
-        }
-
-        @Override
-        public String getSessionInfo() {
-            return null;
-        }
-    };
-
-    /**
-     * Enables an app to define logging tags such as trace-id and session info.
-     */
-    public interface LogMDCRequestInfo {
-        String getTraceId();
-        String getSessionInfo();
-    }
-
-    @Autowired(required = false)
-    LogMDCRequestInfo logMDCRequestInfo;
 
     @Value("${log.trace.header:x-trace-id}")
     String header;
-
-    @PostConstruct
-    void postConstruct() {
-        if (logMDCRequestInfo == null) {
-            logMDCRequestInfo = EMPTY_REQUEST_INFO;
-        }
-    }
 
     /**
      * Returns the trace HTTP header name.
@@ -77,35 +45,39 @@ public class LogMDCHelper {
         return this.header;
     }
 
+
+    /**
+     * Sets traceId for a request and returns the helper.
+     *
+     * @param traceId the trace id to use. If no trace id is defined a value is generated.
+     * @return this helper.
+     */
+    public LogMDCHelper withTraceId(final String traceId) {
+        MDC.put(TRACEID, traceId);
+        return this;
+    }
+
+    /**
+     * Sets session ifno for a request and returns the helper.
+     *
+     * @param sessionInfo the trace id to use. If no trace id is defined a value is generated.
+     * @return this helper.
+     */
+    public LogMDCHelper withSessionInfo(final String sessionInfo) {
+        MDC.put(SESSIONINFO, sessionInfo);
+        return this;
+    }
+
     /**
      * Opens a trace.
      *
      * @return the trace to close when done.
      */
     public Closeable openTrace() {
-        return openTrace(logMDCRequestInfo);
-    }
-
-    /**
-     * Returns if an explicitly defined info bean exists.
-     */
-    boolean isCustomized() {
-        return (logMDCRequestInfo != EMPTY_REQUEST_INFO);
-    }
-
-    /**
-     * Opens a trace.
-     *
-     * @param requestInfo the request info to use.
-     * @return the trace to close when done.
-     */
-    public Closeable openTrace(final LogMDCRequestInfo requestInfo) {
-        final String traceId = Strings.isNullOrEmpty(requestInfo.getTraceId()) ? traceId(IDLEN) : requestInfo.getTraceId();
-        MDC.put(TRACEID, traceId);
-        if (requestInfo.getSessionInfo() != null) {
-            MDC.put(SESSIONINFO, requestInfo.getSessionInfo());
+        final String traceId = MDC.get(TRACEID);
+        if (Strings.isNullOrEmpty(traceId)) {
+            MDC.put(TRACEID, traceId(IDLEN));
         }
-
         return () -> closeTrace();
     }
 
