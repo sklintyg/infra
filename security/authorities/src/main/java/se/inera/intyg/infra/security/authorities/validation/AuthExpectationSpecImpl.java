@@ -18,18 +18,19 @@
  */
 package se.inera.intyg.infra.security.authorities.validation;
 
-import se.inera.intyg.infra.security.authorities.AuthoritiesException;
-import se.inera.intyg.infra.security.common.model.Privilege;
-import se.inera.intyg.infra.security.common.model.RequestOrigin;
-import se.inera.intyg.infra.security.common.model.Role;
-import se.inera.intyg.infra.security.common.model.UserDetails;
-import se.inera.intyg.infra.security.common.model.UserOriginType;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import se.inera.intyg.infra.security.authorities.AuthoritiesException;
+import se.inera.intyg.infra.security.common.model.Feature;
+import se.inera.intyg.infra.security.common.model.Privilege;
+import se.inera.intyg.infra.security.common.model.RequestOrigin;
+import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.infra.security.common.model.UserDetails;
+import se.inera.intyg.infra.security.common.model.UserOriginType;
 
 /**
  * Created by marced on 18/12/15.
@@ -166,14 +167,14 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
         return this;
     }
 
-    private boolean checkHasFeature(String feature) {
-        if (!user.getFeatures().containsKey(feature)) {
+    private boolean checkHasFeature(String featureName) {
+        Feature feature = user.getFeatures().get(featureName);
+        if (feature == null) {
             return false;
-        }
-        if (intygsTypeContext.isPresent()) {
-            return user.getFeatures().get(feature).getIntygstyper().contains(intygsTypeContext.get());
+        } else if (intygsTypeContext.isPresent()) {
+            return feature.getGlobal() && feature.getIntygstyper().contains(intygsTypeContext.get());
         } else {
-            return user.getFeatures().get(feature).getGlobal();
+            return feature.getGlobal();
         }
     }
 
