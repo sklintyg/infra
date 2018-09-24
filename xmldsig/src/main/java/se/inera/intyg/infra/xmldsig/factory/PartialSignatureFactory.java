@@ -49,12 +49,12 @@ public final class PartialSignatureFactory {
 
     private static final String SIGNATURE_ALGORITHM = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
     private static final String TRANSFORM_ALGORITHM = "http://www.w3.org/2000/09/xmldsig#enveloped-signature";
-    public static final String FILTER_INTERSECT = "intersect";
-    public static final String XPATH_PART1 = "//extension[text()='";
-    public static final String XPATH_PART2 = "']/../..";
-    public static final String XSLT_STRIP_ALL = "transforms/stripall.xslt";
-    public static final String FILTER_SUBTRACT = "subtract";
-    public static final String XPATH_SUBTRACT_METADATA_EXPRESSION = "//*[local-name() = 'skickatTidpunkt']|"
+    private static final String FILTER_INTERSECT = "intersect";
+    private static final String XPATH_PART1 = "//extension[text()='";
+    private static final String XPATH_PART2 = "']/../..";
+    private static final String XSLT_STRIP_NAMESPACE = "transforms/stripnamespace.xslt";
+    private static final String FILTER_SUBTRACT = "subtract";
+    private static final String XPATH_SUBTRACT_METADATA_EXPRESSION = "//*[local-name() = 'skickatTidpunkt']|"
             + "//*[local-name() = 'relation']|//*[local-name() = 'status']|//*[local-name() = 'underskrift']";
 
     private PartialSignatureFactory() {
@@ -91,9 +91,10 @@ public final class PartialSignatureFactory {
         TransformType canonicalizationTransform = new TransformType();
         canonicalizationTransform.setAlgorithm("http://www.w3.org/2001/10/xml-exc-c14n#");
 
+        // Add XSLT stylesheet that runs local() on all nodes to strip namespaces and prefixes.
         TransformType intygCanonicalizationTransform = new TransformType();
         intygCanonicalizationTransform.setAlgorithm(Transform.XSLT);
-        intygCanonicalizationTransform.getContent().add(loadXsltElement(XSLT_STRIP_ALL));
+        intygCanonicalizationTransform.getContent().add(loadXsltElement(XSLT_STRIP_NAMESPACE));
 
         TransformType xpathFilterTransform = new TransformType();
         xpathFilterTransform.setAlgorithm(Transform.XPATH2);

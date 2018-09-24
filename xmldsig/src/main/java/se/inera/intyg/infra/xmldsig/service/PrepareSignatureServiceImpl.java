@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.w3._2000._09.xmldsig_.ObjectFactory;
 import org.w3._2000._09.xmldsig_.SignatureType;
+import org.w3._2000._09.xmldsig_.SignedInfoType;
 import org.w3._2002._06.xmldsig_filter2.XPathType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -88,7 +89,7 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
      * @param intygXml
      *            XML document to be canonicalized and digested.
      * @param intygsId
-     *          The ID of the intyg is required for the XPath expression selecting the content to be digested.
+     *            The ID of the intyg is required for the XPath expression selecting the content to be digested.
      */
     @Override
     public IntygXMLDSignature prepareSignature(String intygXml, String intygsId) {
@@ -98,7 +99,6 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
 
         // 2. Run XPath to pick out <intyg> element.
         xml = applyXPath(intygsId, xml);
-
 
         // 3. Run EXCLUSIVE canonicalization
         xml = canonicalizeXml(xml);
@@ -114,11 +114,11 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
 
         // 7. Populate and return
         return IntygXMLDSignature.IntygXMLDSignatureBuilder.anIntygXMLDSignature()
-            .withIntygJson("set later...")
-            .withCanonicalizedIntygXml(xml)
-            .withSignedInfoForSigning(signedInfoForSigning)
-            .withSignatureType(signatureType)
-            .build();
+                .withIntygJson("set later...")
+                .withCanonicalizedIntygXml(xml)
+                .withSignedInfoForSigning(signedInfoForSigning)
+                .withSignatureType(signatureType)
+                .build();
     }
 
     private String applyXPath(String intygsId, String xml) {
@@ -188,7 +188,8 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
     }
 
     /**
-     * Takes the SignedInfo element, marshals it, runs exclusive canonicalizxation and returns the resulting XML as string.
+     * Takes the SignedInfoType from the signatureType element, marshals it, runs exclusive canonicalization and returns
+     * the resulting SignedInfo XML as string.
      *
      * The SignedInfo element serves as input to the sign function in XMLDSig.
      *
@@ -199,22 +200,15 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
      */
     private String buildSignedInfoForSigning(SignatureType signatureType) {
         try {
-            JAXBElement<SignatureType> signature = new ObjectFactory().createSignature(signatureType);
-            JAXBContext jc = JAXBContext.newInstance(SignatureType.class, XPathType.class);
-            // Serialize SignatureType into XML (<Signature>...</Signature>)
+            JAXBElement<SignedInfoType> signature = new ObjectFactory().createSignedInfo(signatureType.getSignedInfo());
+            JAXBContext jc = JAXBContext.newInstance(SignedInfoType.class, XPathType.class);
+            // Serialize SignedInfoType into XML (<SignedInfo>...</SignedInfo>)
             StringWriter sw = new StringWriter();
             Marshaller marshaller = jc.createMarshaller();
             marshaller.marshal(signature, sw);
 
-            String str = sw.toString();
-
-            // Use XSLT to remove the parent element. (This transfers the xmldsig namespace declaration into the
-            // <SignedInfo> element which is according to spec.)
-            ByteArrayOutputStream out1 = new ByteArrayOutputStream();
-            XsltUtil.transform(IOUtils.toInputStream(str), out1, "transforms/stripparentelement.xslt");
-
             // Run the canonicalization to produce the final string we're to sign on.
-            return canonicalizeXml(new String(out1.toByteArray(), Charset.forName(UTF_8)));
+            return canonicalizeXml(sw.toString());
         } catch (JAXBException e) {
             e.printStackTrace();
             throw new RuntimeException(e.getCause());
@@ -226,6 +220,7 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
         try (ByteArrayOutputStream out1 = new ByteArrayOutputStream()) {
 
             // Use XSLT to remove unwanted elements and the parent element.
+            // Note that the "stripall.xslt" performs BOTH local() on all nodes AND filters unwanted stuff out.
             XsltUtil.transform(IOUtils.toInputStream(xml), out1, "transforms/stripall.xslt");
 
             return new String(out1.toByteArray(), Charset.forName(UTF_8));
