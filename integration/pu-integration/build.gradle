@@ -2,7 +2,7 @@ dependencies {
 
   compile project(':common-redis-cache-core')
 
-  compile "net.openhft:chronicle-map:${chronicleMapVersion}"
+  compile "org.springframework.data:spring-data-redis:${springDataRedisVersion}"
   compile "se.riv.strategicresourcemanagement.persons.person:strategicresourcemanagement-persons-person-schemas:${rivtaGetPersonsPersonSchemasVersion}"
 
   compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"

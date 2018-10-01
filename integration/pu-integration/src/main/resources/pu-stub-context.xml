@@ -30,7 +30,7 @@
   <jaxws:endpoint address="/stubs/strategicresourcemanagement/persons/person/GetPersonsForProfile/3/rivtabp21" implementor="se.inera.intyg.infra.integration.pu.stub.GetPersonsForProfileWsStub"/>
 
   <bean class="se.inera.intyg.infra.integration.pu.stub.PUBootstrapBean" lazy-init="false"/>
-  <bean class="se.inera.intyg.infra.integration.pu.stub.ChronicleResidentStore"/>
+  <bean class="se.inera.intyg.infra.integration.pu.stub.StubResidentStore"/>
   <bean id="puStubRestApi" class="se.inera.intyg.infra.integration.pu.stub.PuStubRestApi"/>
 
   <jaxrs:server address="/api/pu-api">

@@ -36,7 +36,7 @@ public class GetPersonsForProfileWsStub implements GetPersonsForProfileResponder
     private static final int LIMIT_GET_PERSONS_FOR_PROFILE = 500;
 
     @Autowired
-    private ChronicleResidentStore personer;
+    private StubResidentStore personer;
 
     @Override
     public GetPersonsForProfileResponseType getPersonsForProfile(String logicalAddress,

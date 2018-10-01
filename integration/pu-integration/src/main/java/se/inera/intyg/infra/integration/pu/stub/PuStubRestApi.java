@@ -45,7 +45,7 @@ public class PuStubRestApi {
     private static final int BAD_REQUEST = 400;
 
     @Autowired
-    private ChronicleResidentStore residentStore;
+    private StubResidentStore residentStore;
 
     @Autowired
     private PUService puService;

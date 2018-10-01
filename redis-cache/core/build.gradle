@@ -1,5 +1,5 @@
 dependencies {
-    compile "org.springframework.data:spring-data-redis:1.8.12.RELEASE"
+    compile "org.springframework.data:spring-data-redis:${springDataRedisVersion}"
     compile "redis.clients:jedis:2.9.0"
     compile "org.springframework:spring-core:${springVersion}"
     compile "com.esotericsoftware:kryo:4.0.1"

@@ -18,63 +18,59 @@
  */
 package se.inera.intyg.infra.loggtjanststub;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import net.openhft.chronicle.map.ChronicleMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import se.inera.intyg.infra.loggtjanststub.json.LogStoreObjectMapper;
-import se.riv.ehr.log.v1.LogType;
-
-import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.support.collections.DefaultRedisMap;
+import org.springframework.stereotype.Repository;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import se.inera.intyg.infra.loggtjanststub.json.LogStoreObjectMapper;
+import se.riv.ehr.log.v1.LogType;
+
 /**
- * Storage for the PU-stub based on {@link ChronicleMap}, providing disk-based replication for multiple
- * application instances having access to the same file system.
- *
- * Typically creates a memory-mapped file somewhere under the java.io.tmpdir.
+ * Storage for the PU-stub based on {@link DefaultRedisMap}, providing redis-based replication for multiple
+ * application instances having access to the same redis instance.
  *
  * @author eriklupander
  */
 @Repository
-public class ChronicleLogStore {
+public class LogStore {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChronicleLogStore.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LogStore.class);
 
-    private static final String LOG_STUB_DATA_FOLDER = "log.stub.data.folder";
-    private static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
     private static final String LOGSTORE = "logstore";
     private static final int MAX_SIZE = 300;
 
     private static final int OVERFLOW_SIZE = 100;
-    private static final int DEFAULT_ENTRIES_SIZE = 400;
-    private static final int DEFAULT_KEY_SIZE = 32;
-    private static final int DEFAULT_AVERAGE_VALUE_SIZE = 1000;
 
-    private ChronicleMap<String, String> logEntries;
+    private Map<String, String> logEntries;
+
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private RedisConnectionFactory redisConnectionFactory;
 
     @Autowired
     private LogStoreObjectMapper logStoreObjectMapper;
 
     @PostConstruct
     public void init() {
-        File file = new File(getStubDataFile(LOGSTORE));
-        try {
-            logEntries = ChronicleMap.of(String.class, String.class)
-                    .entries(DEFAULT_ENTRIES_SIZE)
-                    .averageKeySize(DEFAULT_KEY_SIZE)
-                    .averageValueSize(DEFAULT_AVERAGE_VALUE_SIZE)
-                    .createPersistedTo(file);
-        } catch (IOException e) {
-            LOG.error("Error creating ChronicleMap for PDL log stub: " + e.getMessage());
-            throw new IllegalStateException(e.getMessage());
-        }
+        stringRedisTemplate = new StringRedisTemplate();
+        stringRedisTemplate.setConnectionFactory(redisConnectionFactory);
+        stringRedisTemplate.afterPropertiesSet();
+        logEntries = new DefaultRedisMap<String, String>(LOGSTORE, stringRedisTemplate);
     }
 
     List<LogType> getAll() {
@@ -91,15 +87,6 @@ public class ChronicleLogStore {
         } catch (IOException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
-    }
-
-    private static String getStubDataFile(String name) {
-        if (System.getProperty(LOG_STUB_DATA_FOLDER) != null) {
-            return System.getProperty(LOG_STUB_DATA_FOLDER) + File.separator + name + ".data";
-        } else if (System.getProperty(JAVA_IO_TMPDIR) != null) {
-            return System.getProperty(JAVA_IO_TMPDIR) + File.separator + name + ".data";
-        }
-        throw new IllegalStateException("Error booting stub - cannot determine stub data folder from system properties.");
     }
 
     void addLogItem(LogType lt) {

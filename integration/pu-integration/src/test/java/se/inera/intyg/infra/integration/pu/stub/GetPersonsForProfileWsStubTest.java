@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 public class GetPersonsForProfileWsStubTest {
 
     @Mock
-    private ChronicleResidentStore residentStore;
+    private StubResidentStore residentStore;
 
     @InjectMocks
     private GetPersonsForProfileResponderInterface ws = new GetPersonsForProfileWsStub();

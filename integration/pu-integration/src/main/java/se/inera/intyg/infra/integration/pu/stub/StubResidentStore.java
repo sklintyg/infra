@@ -20,49 +20,52 @@ package se.inera.intyg.infra.integration.pu.stub;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.openhft.chronicle.map.ChronicleMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.support.collections.DefaultRedisMap;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Storage for the PU-stub based on {@link ChronicleMap}, providing disk-based replication for multiple
- * application instances having access to the same file system.
- *
- * Typically creates a memory-mapped file somewhere under the java.io.tmpdir.
+ * Storage for the PU-stub based on {@link org.springframework.data.redis.support.collections.RedisMap
+ * providing disk-based replication for multiple application instances having access to the same file system.
  *
  * @author eriklupander
  */
-public class ChronicleResidentStore {
+public class StubResidentStore {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChronicleResidentStore.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StubResidentStore.class);
 
-    private static final String PU_STUB_DATA_FOLDER = "pu.stub.data.folder";
-    private static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
     private static final String RESIDENTSTORE = "residentstore";
-
-    private static final int MAX_SIZE = 4000;
-    private static final int AVERAGE_VALUE_SIZE = 720;
-    private static final int AVERAGE_KEY_SIZE = 12;
 
     private boolean active = true;
 
-    private ChronicleMap<String, String> residents;
+    private Map<String, String> residents;
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    @Autowired
+    private RedisConnectionFactory redisConnectionFactory;
+
+    private StringRedisTemplate stringRedisTemplate;
 
     @PostConstruct
     public void init() {
-        residents = getChronicleMap(RESIDENTSTORE, MAX_SIZE, AVERAGE_VALUE_SIZE, AVERAGE_KEY_SIZE);
+        stringRedisTemplate = new StringRedisTemplate();
+        stringRedisTemplate.setConnectionFactory(redisConnectionFactory);
+        stringRedisTemplate.afterPropertiesSet();
+        residents = new DefaultRedisMap<String, String>(RESIDENTSTORE, stringRedisTemplate);
     }
 
     /**
@@ -106,37 +109,6 @@ public class ChronicleResidentStore {
             throw new IllegalStateException("Stub is deactivated for testing purposes.");
         }
         return new ArrayList<>(fromJson(residents.values()));
-    }
-
-    private static ChronicleMap<String, String> getChronicleMap(String name, int maxSize, int averageValueSize, int averageKeySize) {
-        String puStubFile = getStubDataFile(name);
-
-        LOG.info("Creating disk-persistent ChronicleMap for pustub at {} with maxsize {}.", puStubFile, maxSize);
-
-        try {
-            ChronicleMap<String, String> notificationsMap = ChronicleMap
-                    .of(String.class, String.class)
-                    .name(name)
-                    .entries(maxSize)
-                    .averageValueSize(averageValueSize)
-                    .averageKeySize(averageKeySize)
-                    .createPersistedTo(new File(puStubFile));
-            LOG.info("Successfully created disk-persistent ChronicleMap for pustub at {}", puStubFile);
-            return notificationsMap;
-        } catch (IOException e) {
-            LOG.error("Could not create persistent notifications store: " + e.getMessage());
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private static String getStubDataFile(String name) {
-        if (System.getProperty(PU_STUB_DATA_FOLDER) != null) {
-            return System.getProperty(PU_STUB_DATA_FOLDER) + File.separator + name + ".data";
-        } else if (System.getProperty(JAVA_IO_TMPDIR) != null) {
-            return System.getProperty(JAVA_IO_TMPDIR) + File.separator + name + ".data";
-        } else {
-            throw new IllegalStateException("Error booting stub - cannot determine stub data folder from system properties.");
-        }
     }
 
     private PersonRecordType fromJson(String json) {

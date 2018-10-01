@@ -40,7 +40,7 @@ public class StoreLogStubResponder implements StoreLogResponderInterface {
     private static final Logger LOG = LoggerFactory.getLogger(StoreLogStubResponder.class);
 
     @Autowired
-    private ChronicleLogStore logStore;
+    private LogStore logStore;
 
     @Autowired(required = false)
     private StubState stubState;

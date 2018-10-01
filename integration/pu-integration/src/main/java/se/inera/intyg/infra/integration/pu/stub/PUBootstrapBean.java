@@ -35,7 +35,7 @@ public class PUBootstrapBean {
     private static final Logger LOG = LoggerFactory.getLogger(PUBootstrapBean.class);
 
     @Autowired
-    private ChronicleResidentStore residentStore;
+    private StubResidentStore residentStore;
 
     @Autowired
     private ObjectMapper objectMapper;

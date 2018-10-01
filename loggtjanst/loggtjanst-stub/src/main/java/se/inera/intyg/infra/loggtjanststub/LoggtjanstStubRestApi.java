@@ -36,7 +36,7 @@ import java.util.Collection;
 public class LoggtjanstStubRestApi {
 
     @Autowired
-    private ChronicleLogStore logStore;
+    private LogStore logStore;
 
     @Autowired
     private StubState stubState;
