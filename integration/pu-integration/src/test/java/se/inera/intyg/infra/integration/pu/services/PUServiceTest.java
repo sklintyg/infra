@@ -18,8 +18,8 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
+import com.google.common.base.Strings;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import redis.embedded.RedisServer;
 import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
 import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
@@ -42,7 +41,6 @@ import se.riv.strategicresourcemanagement.persons.person.v3.NamePartType;
 import se.riv.strategicresourcemanagement.persons.person.v3.NameType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
-import shaded.org.codehaus.plexus.util.StringUtils;
 
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPFactory;
@@ -347,7 +345,7 @@ public class PUServiceTest {
 
         List<Personnummer> pnrList = new ArrayList<>();
         for (int i = 0; i < 500; i++) {
-            pnrList.add(createPnr("19121212-" + StringUtils.leftPad(Integer.toString(i), 4, "0")));
+            pnrList.add(createPnr("19121212-" + Strings.padStart(Integer.toString(i), 4, '0')));
         }
 
         Map<Personnummer, PersonSvar> response = service.getPersons(pnrList);
@@ -367,7 +365,7 @@ public class PUServiceTest {
         // Create request requesting 1001 entries
         List<Personnummer> pnrList = new ArrayList<>();
         for (int i = 0; i < 1001; i++) {
-            pnrList.add(createPnr("19121212-" + StringUtils.leftPad(Integer.toString(i), 4, "0")));
+            pnrList.add(createPnr("19121212-" + Strings.padStart(Integer.toString(i), 4, '0')));
         }
 
         Map<Personnummer, PersonSvar> response = service.getPersons(pnrList);
