@@ -94,7 +94,7 @@ public class ScannerBean {
             pollForEvents(path, service, scanTarget);
 
         } catch (IOException | InterruptedException ioe) {
-            throw new IllegalStateException(ioe.getMessage());
+            throw new IllegalStateException(ioe);
         }
 
     }
