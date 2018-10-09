@@ -222,7 +222,7 @@ public class SjukfallLangdCalculatorTest {
         IntygData intygData = new IntygData();
         intygData.setFormagor(formagor);
 
-        SjukfallIntyg.SjukfallIntygBuilder builder = new SjukfallIntyg.SjukfallIntygBuilder(intygData, LocalDate.now());
+        SjukfallIntyg.SjukfallIntygBuilder builder = new SjukfallIntyg.SjukfallIntygBuilder(intygData, LocalDate.now(), 0);
         return builder.build();
     }
 

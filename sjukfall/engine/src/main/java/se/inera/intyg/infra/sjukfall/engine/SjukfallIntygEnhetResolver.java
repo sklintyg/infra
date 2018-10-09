@@ -21,7 +21,9 @@ package se.inera.intyg.infra.sjukfall.engine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
+import se.inera.intyg.infra.sjukfall.services.SjukfallEngineServiceException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -48,10 +50,11 @@ public class SjukfallIntygEnhetResolver {
      * Method is resolving sjukfall for a health care unit based on the unit's certificate information.
      * A map with patient id as key and a list of certificates associated with a sjukfall as value, will be returned.
      */
-    public Map<String, List<SjukfallIntyg>> resolve(List<IntygData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum) {
+    public Map<String, List<SjukfallIntyg>> resolve(List<IntygData> intygsData, IntygParametrar parameters) {
 
+        int maxIntygsGlapp = parameters.getMaxIntygsGlapp();
         LOG.debug("Start resolving certificate information...");
-        LOG.debug("  - max days between certificates: {}, active date: {}", maxIntygsGlapp, aktivtDatum);
+        LOG.debug("  - max days between certificates: {}, active date: {}", maxIntygsGlapp, parameters.getAktivtDatum());
 
         if (intygsData == null || intygsData.isEmpty()) {
             LOG.info("There was no in-data! Returning empty list");
@@ -65,7 +68,7 @@ public class SjukfallIntygEnhetResolver {
 
         // Create an map with personnummer as key holding each person's intygsdata
         // The map's values are sorted by slutDatum with ascending order.
-        Map<String, List<SjukfallIntyg>> createdMap = createMap(intygsData, aktivtDatum);
+        Map<String, List<SjukfallIntyg>> createdMap = createMap(intygsData, parameters);
 
         // Reduce the list
         Map<String, List<SjukfallIntyg>> reducedMap = reduceMap(createdMap, maxIntygsGlapp);
@@ -84,11 +87,11 @@ public class SjukfallIntygEnhetResolver {
      * @param aktivtDatum a date used for decision if a certificate is active or not
      * @return a map with a patients current certificates
      */
-    Map<String, List<SjukfallIntyg>> createMap(List<IntygData> intygsData, LocalDate aktivtDatum) {
+    Map<String, List<SjukfallIntyg>> createMap(List<IntygData> intygsData, IntygParametrar parameters) {
         if (intygsData == null || intygsData.isEmpty()) {
             return new HashMap<>();
         }
-        return creator.create(intygsData, aktivtDatum);
+        return creator.create(intygsData, parameters);
     }
 
     Map<String, List<SjukfallIntyg>> reduceMap(Map<String, List<SjukfallIntyg>> intygsDataMap, int maxIntygsGlapp) {
@@ -111,8 +114,14 @@ public class SjukfallIntygEnhetResolver {
 
     List<SjukfallIntyg> reduceList(List<SjukfallIntyg> values, int maxIntygsGlapp)  {
 
+
         // filter out active "sjukfallIntyg"
-        SjukfallIntyg sjukfallIntyg = values.stream().filter(e -> e.isAktivtIntyg()).findFirst().get();
+        SjukfallIntyg sjukfallIntyg = values.stream().filter(e -> e.isAktivtIntyg()).findFirst().orElse(null);
+
+        if (sjukfallIntyg == null) {
+            sjukfallIntyg = values.stream().filter(e -> e.isNyligenAvslutat()).findFirst()
+                    .orElseThrow(() -> new SjukfallEngineServiceException("Unable to find a 'aktivt eller nyligen avslutat intyg'"));
+        }
 
         // get position of the "sjukfallIntyg"
         int aktivtIndex = values.indexOf(sjukfallIntyg);

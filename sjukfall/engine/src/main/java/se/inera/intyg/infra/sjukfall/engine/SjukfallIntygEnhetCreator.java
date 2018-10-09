@@ -21,9 +21,9 @@ package se.inera.intyg.infra.sjukfall.engine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -43,12 +43,12 @@ public class SjukfallIntygEnhetCreator {
 
     // - - - API - - -
 
-    public Map<String, List<SjukfallIntyg>> create(List<IntygData> intygData, LocalDate aktivtDatum) {
+    public Map<String, List<SjukfallIntyg>> create(List<IntygData> intygData, IntygParametrar parameters) {
         LOG.debug("Start creating a map of 'sjukfallintyg'...");
 
         Map<String, List<SjukfallIntyg>> map;
 
-        map = createMap(intygData, aktivtDatum);
+        map = createMap(intygData, parameters);
         map = reduceMap(map);
         map = sortValues(map);
         map = setActive(map);
@@ -59,7 +59,7 @@ public class SjukfallIntygEnhetCreator {
 
     // - - - Package scope - - -
 
-    Map<String, List<SjukfallIntyg>> createMap(List<IntygData> intygsData, LocalDate aktivtDatum) {
+    Map<String, List<SjukfallIntyg>> createMap(List<IntygData> intygsData, IntygParametrar parameters) {
         LOG.debug("  1. Create the map");
 
         Map<String, List<SjukfallIntyg>> map = new HashMap<>();
@@ -68,8 +68,8 @@ public class SjukfallIntygEnhetCreator {
             String k = i.getPatientId();
 
             map.computeIfAbsent(k, k1 -> new ArrayList<>());
-
-            SjukfallIntyg v = new SjukfallIntyg.SjukfallIntygBuilder(i, aktivtDatum).build();
+            SjukfallIntyg v = new SjukfallIntyg.SjukfallIntygBuilder(i, parameters.getAktivtDatum(),
+                    parameters.getMaxAntalDagarSedanSjukfallAvslut()).build();
             map.get(k).add(v);
         }
 
@@ -81,7 +81,7 @@ public class SjukfallIntygEnhetCreator {
 
         return map.entrySet().stream()
                 .filter(e -> e.getValue().stream()
-                        .filter(o -> o.isAktivtIntyg()).count() > 0)
+                        .filter(o -> o.isAktivtIntyg() || o.isNyligenAvslutat()).count() > 0)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 

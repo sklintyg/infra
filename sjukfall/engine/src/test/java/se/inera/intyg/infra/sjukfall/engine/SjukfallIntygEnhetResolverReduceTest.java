@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 
@@ -130,10 +131,6 @@ public class SjukfallIntygEnhetResolverReduceTest {
     }
 
     private Map<String, List<SjukfallIntyg>> getTestData(String aktivtDatum) {
-        return resolver.createMap(intygDataList, LocalDate.parse(aktivtDatum));
-    }
-
-    private Map<String, List<SjukfallIntyg>> getTestData(LocalDate aktivtDatum) {
-        return resolver.createMap(intygDataList, aktivtDatum);
+        return resolver.createMap(intygDataList, new IntygParametrar(5, LocalDate.parse(aktivtDatum)));
     }
 }

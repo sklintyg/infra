@@ -26,10 +26,16 @@ import java.time.LocalDate;
 public class IntygParametrar {
 
     private int maxIntygsGlapp;
+    private int maxAntalDagarSedanSjukfallAvslut;
     private LocalDate aktivtDatum;
 
     public IntygParametrar(int maxIntygsGlapp, LocalDate aktivtDatum) {
+        this(maxIntygsGlapp, 0, aktivtDatum);
+    }
+
+    public IntygParametrar(int maxIntygsGlapp, int maxAntalDagarSedanSjukfallAvslut, LocalDate aktivtDatum) {
         this.maxIntygsGlapp = maxIntygsGlapp;
+        this.maxAntalDagarSedanSjukfallAvslut = maxAntalDagarSedanSjukfallAvslut;
         this.aktivtDatum = aktivtDatum;
     }
 
@@ -37,6 +43,10 @@ public class IntygParametrar {
 
     public int getMaxIntygsGlapp() {
         return maxIntygsGlapp;
+    }
+
+    public int getMaxAntalDagarSedanSjukfallAvslut() {
+        return maxAntalDagarSedanSjukfallAvslut;
     }
 
     public LocalDate getAktivtDatum() {

@@ -73,7 +73,7 @@ public class SjukfallIntygPatientCreator {
 
         List<SjukfallIntyg> list = new ArrayList<>();
         for (IntygData i : intygsData) {
-            SjukfallIntyg v = new SjukfallIntyg.SjukfallIntygBuilder(i, aktivtDatum).build();
+            SjukfallIntyg v = new SjukfallIntyg.SjukfallIntygBuilder(i, aktivtDatum, 0).build();
             list.add(v);
         }
 

@@ -48,12 +48,15 @@ public class SjukfallIntyg extends IntygData {
 
     private boolean aktivtIntyg;
 
+    private boolean nyligenAvslutat;
+
     public SjukfallIntyg(SjukfallIntygBuilder builder) {
         super();
 
         this.startDatum = builder.startDatum;
         this.slutDatum = builder.slutDatum;
         this.aktivtIntyg = builder.aktivtIntyg;
+        this.nyligenAvslutat = builder.nyligenAvslutat;
         this.dagar = builder.dagar;
         this.grader = builder.grader;
 
@@ -101,6 +104,10 @@ public class SjukfallIntyg extends IntygData {
         this.aktivtIntyg = aktivtIntyg;
     }
 
+    public boolean isNyligenAvslutat() {
+        return nyligenAvslutat;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -138,7 +145,9 @@ public class SjukfallIntyg extends IntygData {
 
         private boolean aktivtIntyg;
 
-        public SjukfallIntygBuilder(IntygData intygData, LocalDate aktivtDatum) {
+        private boolean nyligenAvslutat;
+
+        public SjukfallIntygBuilder(IntygData intygData, LocalDate aktivtDatum, int maxAntalDagarSedanSjukfallAvslut) {
             this.intygData = intygData;
             this.startDatum = lookupStartDatum(intygData.getFormagor());
             this.slutDatum = lookupSlutDatum(intygData.getFormagor());
@@ -146,6 +155,9 @@ public class SjukfallIntyg extends IntygData {
             this.grader = getGrader(intygData.getFormagor());
             this.sysselsattning = getSysselsattning(intygData.getSysselsattning());
             this.aktivtIntyg = isAktivtIntyg(intygData, aktivtDatum);
+            this.nyligenAvslutat = !aktivtIntyg
+                    && slutDatum.isBefore(aktivtDatum)
+                    && slutDatum.plusDays(maxAntalDagarSedanSjukfallAvslut + 1).isAfter(aktivtDatum);
         }
 
         public SjukfallIntyg build() {
@@ -158,9 +170,9 @@ public class SjukfallIntyg extends IntygData {
 
         private List<Integer> getGrader(List<Formaga> formagor) {
             return formagor.stream()
-                .sorted(Comparator.comparing(Formaga::getStartdatum))
-                .map(Formaga::getNedsattning)
-                .collect(Collectors.toList());
+                    .sorted(Comparator.comparing(Formaga::getStartdatum))
+                    .map(Formaga::getNedsattning)
+                    .collect(Collectors.toList());
         }
 
         private List<String> getSysselsattning(List<String> sysselsattning) {
@@ -192,7 +204,12 @@ public class SjukfallIntyg extends IntygData {
             Formaga formaga = formagor.stream().max(Comparator.comparing(Formaga::getSlutdatum)).get();
             return formaga.getSlutdatum();
         }
+    }
 
+    @Override
+    public String toString() {
+        return "SjukfallIntyg [startDatum=" + startDatum + ", slutDatum=" + slutDatum + ", dagar=" + dagar + ", grader="
+                + grader + ", aktivtIntyg=" + aktivtIntyg + ", nyligenAvslutat=" + nyligenAvslutat + "]";
     }
 
 }

@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 
@@ -49,30 +50,30 @@ public class SjukfallIntygEnhetCreatorTest {
 
     private SjukfallIntygEnhetCreator creator;
 
-    private LocalDate activeDate = LocalDate.parse("2016-02-16");
+    private IntygParametrar parameters;
 
     @BeforeClass
     public static void initTestData() throws IOException {
         SjukfallIntygGenerator generator = new SjukfallIntygGenerator(LOCATION_INTYGSDATA);
         intygDataList = generator.generate().get();
-
         assertTrue("Expected 16 but was " + intygDataList.size(), intygDataList.size() == 16);
     }
 
     @Before
     public void setup() {
         creator = new SjukfallIntygEnhetCreator();
+        parameters = new IntygParametrar(5, LocalDate.parse("2016-02-16"));
     }
 
     @Test
     public void testCreatingMap() {
-        Map<String, List<SjukfallIntyg>> map = creator.createMap(intygDataList, activeDate);
+        Map<String, List<SjukfallIntyg>> map = creator.createMap(intygDataList, parameters);
         assertTrue("Expected 7 but was " + map.size(), map.size() == 7);
     }
 
     @Test
     public void testReducedMap() {
-        Map<String, List<SjukfallIntyg>> map = creator.createMap(intygDataList, activeDate);
+        Map<String, List<SjukfallIntyg>> map = creator.createMap(intygDataList, parameters);
         Map<String, List<SjukfallIntyg>> reducedMap = creator.reduceMap(map);
 
         // Map should be reduced with one entry
@@ -81,7 +82,7 @@ public class SjukfallIntygEnhetCreatorTest {
 
     @Test
     public void testSortedMap() {
-        Map<String, List<SjukfallIntyg>> map = creator.createMap(intygDataList, activeDate);
+        Map<String, List<SjukfallIntyg>> map = creator.createMap(intygDataList, parameters);
         Map<String, List<SjukfallIntyg>> sortedMap = creator.sortValues(map);
 
         for (Map.Entry<String, List<SjukfallIntyg>> entry : sortedMap.entrySet()) {
@@ -97,7 +98,7 @@ public class SjukfallIntygEnhetCreatorTest {
 
     @Test
     public void testSetActiveCertificate() {
-        Map<String, List<SjukfallIntyg>> map = creator.createMap(intygDataList, activeDate);
+        Map<String, List<SjukfallIntyg>> map = creator.createMap(intygDataList, parameters);
         Map<String, List<SjukfallIntyg>> activeMap = creator.setActive(map);
 
         // It can only be zero or one active object
@@ -115,7 +116,7 @@ public class SjukfallIntygEnhetCreatorTest {
     @Test
     public void testFall1() {
         String key = "19791110-9291";
-        Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, activeDate);
+        Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, parameters);
 
         List<SjukfallIntyg> list = map.get(key);
 
@@ -128,7 +129,7 @@ public class SjukfallIntygEnhetCreatorTest {
     @Test
     public void testFall2() {
         String key = "19791123-9262";
-        Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, activeDate);
+        Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, parameters);
 
         List<SjukfallIntyg> list = map.get(key);
 
@@ -141,7 +142,7 @@ public class SjukfallIntygEnhetCreatorTest {
     @Test
     public void testFall3() {
         String key = "19791212-9280";
-        Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, activeDate);
+        Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, parameters);
 
         List<SjukfallIntyg> list = map.get(key);
 
@@ -154,7 +155,7 @@ public class SjukfallIntygEnhetCreatorTest {
     @Test
     public void testFall4() {
         String key = "19800113-9297";
-        Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, activeDate);
+        Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, parameters);
 
         List<SjukfallIntyg> list = map.get(key);
 
@@ -167,7 +168,7 @@ public class SjukfallIntygEnhetCreatorTest {
     @Test
     public void testFall5() {
         String key = "19800124-9286";
-        Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, activeDate);
+        Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, parameters);
 
         List<SjukfallIntyg> list = map.get(key);
 
@@ -181,7 +182,7 @@ public class SjukfallIntygEnhetCreatorTest {
     @Test
     public void testFall6() {
         String key = "19800207-9294";
-        Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, activeDate);
+        Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, parameters);
 
         List<SjukfallIntyg> list = map.get(key);
 
@@ -195,7 +196,7 @@ public class SjukfallIntygEnhetCreatorTest {
     @Test
     public void testFall7() {
         String key = "19800228-9224";
-        Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, activeDate);
+        Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, parameters);
 
         assertNull(map.get(key));
     }

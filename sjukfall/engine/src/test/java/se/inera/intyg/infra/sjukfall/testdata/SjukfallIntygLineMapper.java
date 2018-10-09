@@ -42,7 +42,7 @@ public class SjukfallIntygLineMapper {
 
 
     public SjukfallIntygLineMapper() {
-        fields = new HashSet();
+        fields = new HashSet<>();
     }
 
     public static List<IntygData> map(List<String> lines) {
@@ -59,7 +59,7 @@ public class SjukfallIntygLineMapper {
     }
 
     private List<IntygData> map(Set<String[]> fields) {
-        List<IntygData> intygData = new ArrayList();
+        List<IntygData> intygData = new ArrayList<>();
 
         Iterator<String[]> iter = fields.iterator();
         while (iter.hasNext()) {
@@ -119,7 +119,7 @@ public class SjukfallIntygLineMapper {
     class FormagaFieldMapper {
 
         public List<Formaga> map(String arbetsformaga) {
-            List<Formaga> formagaList = new ArrayList();
+            List<Formaga> formagaList = new ArrayList<>();
             String[] formagor = arbetsformaga.replace("[", "").replace("]", "").split("\\|");
 
             for (String formaga : formagor) {
@@ -139,7 +139,7 @@ public class SjukfallIntygLineMapper {
 
         public List<String> map(String str) {
             if (str == null || str.length() == 0) {
-                return new ArrayList();
+                return new ArrayList<>();
             }
 
             String[] arr = str.replace("[", "").replace("]", "").split(";");

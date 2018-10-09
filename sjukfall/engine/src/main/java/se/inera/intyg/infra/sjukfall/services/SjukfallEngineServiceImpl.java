@@ -72,11 +72,10 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
     public List<SjukfallEnhet> beraknaSjukfallForEnhet(List<IntygData> intygsData, IntygParametrar parameters) {
         LOG.debug("Start calculation of sjukfall for health care unit...");
 
-        int maxIntygsGlapp = parameters.getMaxIntygsGlapp();
         LocalDate aktivtDatum = parameters.getAktivtDatum();
 
         Map<String, List<SjukfallIntyg>> resolvedIntygsData =
-                resolverEnhet.resolve(intygsData, maxIntygsGlapp, aktivtDatum);
+                resolverEnhet.resolve(intygsData, parameters);
 
         // Assemble SjukfallEnhet objects
         List<SjukfallEnhet> result = assembleSjukfallEnhetList(resolvedIntygsData, aktivtDatum);
@@ -98,7 +97,7 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         // Reverse order since we need the information in descending order
 
         // Assemble SjukfallPatient objects
-        List<SjukfallPatient> result = assembleSjukfallPatientList(resolvedIntygsData, maxIntygsGlapp, aktivtDatum);
+        List<SjukfallPatient> result = assembleSjukfallPatientList(resolvedIntygsData, aktivtDatum);
 
         LOG.debug("...stop calculation of sjukfall for a patient.");
         return result;
@@ -120,7 +119,9 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         sjukfallEnhet.setDagar(SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(values));
         sjukfallEnhet.setIntyg(values.size());
         sjukfallEnhet.setGrader(getGrader(aktivtIntyg.getFormagor()));
-        sjukfallEnhet.setAktivGrad(getAktivGrad(aktivtIntyg.getFormagor(), aktivtDatum));
+        if (!aktivtIntyg.isNyligenAvslutat()) {
+            sjukfallEnhet.setAktivGrad(getAktivGrad(aktivtIntyg.getFormagor(), aktivtDatum));
+        }
         sjukfallEnhet.setAktivIntygsId(aktivtIntyg.getIntygId());
         return sjukfallEnhet;
     }
@@ -182,8 +183,7 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
                 .collect(Collectors.toList());
     }
 
-    private List<SjukfallPatient> assembleSjukfallPatientList(Map<Integer, List<SjukfallIntyg>> intygsData, int maxIntygsGlapp,
-                                                              LocalDate aktivtDatum) {
+    private List<SjukfallPatient> assembleSjukfallPatientList(Map<Integer, List<SjukfallIntyg>> intygsData, LocalDate aktivtDatum) {
         LOG.debug("  - Assembling 'sjukfall for patient'");
 
         Comparator<SjukfallPatient> dateComparator
@@ -194,17 +194,25 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         // 3. Sort by start date with descending order
         return intygsData.entrySet().stream()
             .map(e -> buildSjukfallPatient(e.getValue()))
-            .filter(value -> aktivtDatum.plusDays(maxIntygsGlapp + 1).isAfter(value.getStart()))
+            .filter(sjukfall -> aktivtDatum.plusDays(1).isAfter(sjukfall.getStart()))
             .sorted(dateComparator)
             .collect(Collectors.toList());
     }
 
     private SjukfallEnhet toSjukfallEnhet(List<SjukfallIntyg> list, LocalDate aktivtDatum) {
+
         // 1. Find the active object
         SjukfallIntyg aktivtIntyg = list.stream()
-                .filter(o -> o.isAktivtIntyg())
+                .filter(SjukfallIntyg::isAktivtIntyg)
                 .findFirst()
-                .orElseThrow(() -> new SjukfallEngineServiceException("Unable to find a 'aktivt intyg'"));
+                .orElse(null);
+
+        if (aktivtIntyg == null) {
+            aktivtIntyg = list.stream()
+                    .filter(SjukfallIntyg::isNyligenAvslutat)
+                    .findFirst()
+                    .orElseThrow(() -> new SjukfallEngineServiceException("Unable to find a 'aktivt eller nyligen avslutat intyg'"));
+        }
 
         // 2. Build sjukfall for enhet object
         return buildSjukfallEnhet(list, aktivtIntyg, aktivtDatum);

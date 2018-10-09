@@ -48,4 +48,9 @@ public class Formaga {
         return this.nedsattning;
     }
 
+    @Override
+    public String toString() {
+        return "Formaga [startdatum=" + startdatum + ", slutdatum=" + slutdatum + ", nedsattning=" + nedsattning + "]";
+    }
+
 }
