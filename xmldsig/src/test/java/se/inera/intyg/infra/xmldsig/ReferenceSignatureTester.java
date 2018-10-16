@@ -69,6 +69,10 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_ALIAS;
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_NAME;
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_PASSWORD;
+
 public class ReferenceSignatureTester {
 
     @Test
@@ -127,10 +131,10 @@ public class ReferenceSignatureTester {
                 Collections.singletonList(ref));
 
         KeyStore ks = KeyStore.getInstance("JKS");
-        ks.load(new ClassPathResource("keystore.jks").getInputStream(), "12345678".toCharArray());
+        ks.load(new ClassPathResource(FAKE_KEYSTORE_NAME).getInputStream(), FAKE_KEYSTORE_PASSWORD.toCharArray());
 
-        KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry("1",
-                new KeyStore.PasswordProtection("12345678".toCharArray()));
+        KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(FAKE_KEYSTORE_ALIAS,
+                new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
         X509Certificate cert = (X509Certificate) keyEntry.getCertificate();
         KeyInfoFactory kif = fac.getKeyInfoFactory();
         List x509Content = new ArrayList();

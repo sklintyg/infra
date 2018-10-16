@@ -22,26 +22,44 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Base64;
+
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_ALIAS;
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_NAME;
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_PASSWORD;
 
 @Service
 @Profile("!prod")
 public class FakeSignatureServiceImpl {
 
+
+
+    private KeyStore ks;
+
+    @PostConstruct
+    public void init() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
+        this.ks = KeyStore.getInstance("JKS");
+        this.ks.load(new ClassPathResource(FAKE_KEYSTORE_NAME).getInputStream(), FAKE_KEYSTORE_PASSWORD.toCharArray());
+    }
+
     /**
      * Signs the supplied digest using a self-signed cert. Only for fake purposes!!
+
      * @param digest
-     *      Base64-encoded string to sign.
+     *            Base64-encoded string to sign.
      */
     public String createSignature(String digest) {
         try {
-            KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load(new ClassPathResource("keystore.jks").getInputStream(), "12345678".toCharArray());
-
-            KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry("1",
-                    new KeyStore.PasswordProtection("12345678".toCharArray()));
+            KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(FAKE_KEYSTORE_ALIAS,
+                    new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
 
             Signature rsa = Signature.getInstance("SHA256withRSA");
             rsa.initSign(keyEntry.getPrivateKey());
@@ -53,5 +71,12 @@ public class FakeSignatureServiceImpl {
             throw new IllegalStateException("Not possible to sign digest: " + e.getMessage());
         }
     }
-}
 
+    public X509Certificate getX509Certificate() {
+        try {
+            return (X509Certificate) this.ks.getCertificate("1");
+        } catch (KeyStoreException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

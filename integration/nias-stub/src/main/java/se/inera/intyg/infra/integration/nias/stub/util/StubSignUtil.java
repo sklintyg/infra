@@ -31,6 +31,10 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_ALIAS;
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_NAME;
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_PASSWORD;
+
 public final class StubSignUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(StubSignUtil.class);
@@ -41,11 +45,11 @@ public final class StubSignUtil {
     public static Keys loadFromKeystore() {
         try {
             KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load(new ClassPathResource("keystore.jks").getInputStream(), "12345678".toCharArray());
+            ks.load(new ClassPathResource(FAKE_KEYSTORE_NAME).getInputStream(), FAKE_KEYSTORE_PASSWORD.toCharArray());
 
-            KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry("1",
-                    new KeyStore.PasswordProtection("12345678".toCharArray()));
-            return new Keys((RSAPrivateKey) keyEntry.getPrivateKey(), (X509Certificate) ks.getCertificate("1"));
+            KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(FAKE_KEYSTORE_ALIAS,
+                    new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
+            return new Keys((RSAPrivateKey) keyEntry.getPrivateKey(), (X509Certificate) ks.getCertificate(FAKE_KEYSTORE_ALIAS));
 
         } catch (KeyStoreException | UnrecoverableEntryException | CertificateException | NoSuchAlgorithmException | IOException e) {
             LOG.error("Error loading fake signing keys from keystore.jks: {}", e.getMessage());
