@@ -70,6 +70,7 @@ public final class AuthoritiesConstants {
     public static final String FEATURE_UNIKT_INTYG = "UNIKT_INTYG";
     public static final String FEATURE_UNIKT_INTYG_INOM_VG = "UNIKT_INTYG_INOM_VG";
     public static final String FEATURE_UNIKT_UTKAST_INOM_VG = "UNIKT_UTKAST_INOM_VG";
+    public static final String FEATURE_UNIKT_UNDANTAG_OM_SENASTE_INTYG = "FEATURE_UNIKT_UNDANTAG_OM_SENASTE_INTYG";
     public static final String FEATURE_TAK_KONTROLL_TRADKLATTRING = "TAK_KONTROLL_TRADKLATTRING";
     public static final String FEATURE_TAK_KONTROLL = "TAK_KONTROLL";
     public static final String FEATURE_SEKRETESSMARKERING = "SEKRETESSMARKERING";
