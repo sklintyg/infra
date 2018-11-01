@@ -18,13 +18,22 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
-import com.google.common.annotations.VisibleForTesting;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+
+import com.google.common.annotations.VisibleForTesting;
+
 import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.integration.pu.util.PersonConverter;
@@ -36,11 +45,6 @@ import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileres
 import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
 import se.riv.strategicresourcemanagement.persons.person.v3.LookupProfileType;
 import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
-
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.soap.SOAPFaultException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 public class PUServiceImpl implements PUService {
 
@@ -81,10 +85,8 @@ public class PUServiceImpl implements PUService {
             // Execute request
             GetPersonsForProfileResponseType response = service.getPersonsForProfile(logicaladdress, parameters);
             return handleSinglePersonResponse(personId, response);
-
-        } catch (SOAPFaultException e) {
-            return handleServiceException("SOAP fault occured, no person '{}' found.", personId);
-        } catch (WebServiceException e) {
+        } catch (Exception e) {
+            LOG.error("Unexpected Error", e);
             return handleServiceException("Error occured, no person '{}' found.", personId);
         }
     }
@@ -132,9 +134,8 @@ public class PUServiceImpl implements PUService {
                 handleMultiplePersonsResponse(personIds, responseMap, response);
             }
             return responseMap;
-        } catch (SOAPFaultException e) {
-            return handleServiceException("SOAP fault occured, no persons '{}' found.", personIds);
-        } catch (WebServiceException e) {
+        } catch (Exception e) {
+            LOG.error("Unexpected Error", e);
             return handleServiceException("Error occured, no persons '{}' found.", personIds);
         }
     }
