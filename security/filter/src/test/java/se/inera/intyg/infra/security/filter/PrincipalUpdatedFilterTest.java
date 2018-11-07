@@ -18,6 +18,26 @@
  */
 package se.inera.intyg.infra.security.filter;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+
+import com.google.common.hash.HashCode;
+import java.io.Serializable;
+
+import javax.servlet.FilterChain;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,19 +48,7 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-
-import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.springframework.util.StopWatch;
 
 /**
  * Tests so the session.setAttribute is invoked only when the underlying authentication principal has changed during
@@ -115,6 +123,25 @@ public class PrincipalUpdatedFilterTest {
 
     }
 
+    @Test
+    public void hashFunctionEqualsTest() {
+        SomeUser u1 = new SomeUser("1", "x");
+        SomeUser u2 = new SomeUser("1", "x");
+
+        assertThat(testee.hashCode(u1), is(testee.hashCode(u2)));
+    }
+
+    @Test
+    public void hashFunctionNotEqualsTest() {
+        SomeUser someUser = new SomeUser("1", "x");
+
+        HashCode hb = testee.hashCode(someUser);
+        someUser.mutableThing = "y";
+        HashCode ha = testee.hashCode(someUser);
+
+        assertThat(hb, not(ha));
+    }
+
     private Authentication buildAuthentication(String state) {
         return new AbstractAuthenticationToken(null) {
             @Override
@@ -129,7 +156,7 @@ public class PrincipalUpdatedFilterTest {
         };
     }
 
-    private class SomeUser {
+    private static class SomeUser implements Serializable {
         String hsaId;
         String mutableThing;
 

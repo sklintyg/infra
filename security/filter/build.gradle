@@ -23,6 +23,7 @@ dependencies {
     compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
 
     compile "javax.servlet:servlet-api:${servletApiVersion}"
+    compile "com.google.guava:guava:${guavaVersion}"
 
     testCompile "org.hamcrest:hamcrest-all:${hamcrestVersion}"
     testCompile "org.mockito:mockito-core:${mockitoVersion}"
