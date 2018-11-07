@@ -23,8 +23,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.cxf.interceptor.Fault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,8 +88,8 @@ public class PUServiceImpl implements PUService {
             GetPersonsForProfileResponseType response = service.getPersonsForProfile(logicaladdress, parameters);
             return handleSinglePersonResponse(personId, response);
         } catch (Exception e) {
-            LOG.error("Unexpected Error", e);
-            return handleServiceException("Error occured, no person '{}' found.", personId);
+            log(e);
+            return handleServiceException("Error occurred, no person '{}' found.", personId);
         }
     }
 
@@ -135,10 +137,26 @@ public class PUServiceImpl implements PUService {
             }
             return responseMap;
         } catch (Exception e) {
-            LOG.error("Unexpected Error", e);
-            return handleServiceException("Error occured, no persons '{}' found.", personIds);
+            log(e);
+            return handleServiceException("Error occurred, no persons '{}' found.", personIds);
         }
     }
+
+    // Workaround for bad error handling in PU-service: Log less for SOAP Errors, the PU service signals errors
+    // when no person matches the query
+    private void log(Exception e) {
+        final Throwable root = rootOf(e);
+        if (root instanceof Fault) {
+            LOG.warn("SOAP Error: " + root.toString());
+        } else {
+            LOG.error("Unexpected Error", root);
+        }
+    }
+
+    static Throwable rootOf(Throwable t) {
+        return Objects.isNull(t.getCause()) ? t : rootOf(t.getCause());
+    }
+
 
     @Override
     @VisibleForTesting
