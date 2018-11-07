@@ -18,17 +18,26 @@
  */
 package se.inera.intyg.infra.security.filter;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.web.filter.OncePerRequestFilter;
+import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
+
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Objects;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
+
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.SerializationUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 
 /**
  * This filter checks if the user Principal has changed (new vald vardenhet, some consent given etc). If true,
@@ -44,42 +53,55 @@ import java.io.IOException;
  */
 public class PrincipalUpdatedFilter extends OncePerRequestFilter {
 
+    static final int HF_BITS = 128;
+
+    HashFunction hf = Hashing.goodFastHash(HF_BITS);
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        int beforeHash = -1;
-        boolean hasAuthentication = hasAuthentication();
 
-        // If we're authenticated, calculate hashcode of current user principal.
-        if (hasAuthentication) {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            beforeHash = auth.getPrincipal().hashCode();
-        }
+        final SecurityContext context = authContext();
+
+        final HashCode beforeHash = Objects.nonNull(context)
+                ? hashCode(context.getAuthentication().getPrincipal())
+                : null;
 
         // Invoke next filter in chain.
         filterChain.doFilter(request, response);
 
         // If we were authenticated and calculated a hash before invoke...
-        if (hasAuthentication && beforeHash != -1) {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            int afterHash = auth.getPrincipal().hashCode();
+        if (Objects.nonNull(context)) {
+            final HashCode afterHash = hashCode(context.getAuthentication().getPrincipal());
             // Check if principal hash has changed
-            if (beforeHash != afterHash) {
-                updatePrincipalOnSession(request);
+            if (!beforeHash.equals(afterHash)) {
+                request.getSession(false)
+                        .setAttribute(SPRING_SECURITY_CONTEXT_KEY, context);
             }
         }
     }
 
-    private void updatePrincipalOnSession(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.setAttribute(
-                    HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-                    SecurityContextHolder.getContext());
-        }
+    /**
+     * Returns context if authentication exists.
+     *
+     * @return context if context and it's authentication exists, otherwise null.
+     */
+    private SecurityContext authContext() {
+        final SecurityContext sc = SecurityContextHolder.getContext();
+        return Objects.nonNull(sc.getAuthentication()) ? sc : null;
     }
 
-    private boolean hasAuthentication() {
-        return SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null;
+    /**
+     * Returns a 128 bit hash code of the object if it's a Serializable (which is strongly recommended).
+     *
+     * @param object
+     *            the object.
+     *
+     * @return the hash code for the objects state if it's serializable, otherwise is hashCode() used.
+     */
+    HashCode hashCode(final Object object) {
+        return (object instanceof Serializable)
+                ? hf.hashBytes(SerializationUtils.serialize(object))
+                : hf.hashInt(object.hashCode());
     }
 }
