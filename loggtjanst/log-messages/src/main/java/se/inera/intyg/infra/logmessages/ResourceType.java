@@ -29,9 +29,7 @@ public enum ResourceType {
     RESOURCE_TYPE_INTYG("Intyg"),
 
     RESOURCE_TYPE_SJUKFALL("Sjukfall"),
-    //RESOURCE_TYPE_OVERSIKT_SJUKFALL("Översikt sjukskrivning (diagnos, till- och fråndatum, sjukskrivningsgrad, läkare)"),
-    //RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK("Översikt sjukskrivninghistorik (diagnos, till- och fråndatum, "
-    //        + "sjukskrivningsgrad, läkare och sysselsättning per intyg)"),
+
     RESOURCE_TYPE_SAMTYCKE("Samtycke"),
 
     RESOURCE_TYPE_PREDIKTION_SRS("Prediktion från SRS av risk för lång sjukskrivning"),
