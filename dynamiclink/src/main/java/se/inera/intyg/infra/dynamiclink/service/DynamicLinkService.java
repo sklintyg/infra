@@ -33,6 +33,4 @@ public interface DynamicLinkService {
     List<DynamicLink> getAllAsList();
     DynamicLink get(String key);
 
-    String apply(String placeholderToken, String message);
-
 }

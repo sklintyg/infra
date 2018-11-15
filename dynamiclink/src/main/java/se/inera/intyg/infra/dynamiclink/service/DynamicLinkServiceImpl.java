@@ -53,45 +53,4 @@ public class DynamicLinkServiceImpl implements DynamicLinkService {
         return dynamicLinkRepository.getAll().get(key);
     }
 
-    @Override
-    public String apply(String placeholderToken, String message) {
-        String finalMessage = message;
-        Map<String, DynamicLink> linkMap = dynamicLinkRepository.getAll();
-
-        Pattern p = Pattern.compile(placeholderToken + "(.*?)>");
-        Matcher m = p.matcher(message);
-        while (m.find()) {
-            String match = m.group(0);
-            String key = m.group(1);
-            finalMessage = finalMessage.replaceAll(match, buildDynamicUrl(key, linkMap));
-        }
-
-        return finalMessage;
-    }
-
-    private String buildDynamicUrl(String key, Map<String, DynamicLink> linkMap) {
-        DynamicLink dynamicLink = linkMap.get(key);
-        if (dynamicLink == null) {
-            throw new IllegalArgumentException("No link found in DynamicLinkRepository for key '" + key + "'");
-        }
-
-        StringBuilder buf = new StringBuilder();
-
-        if (dynamicLink.getTarget() != null) {
-            buf.append("<span class=\"unbreakable\">");
-        }
-
-        buf.append("<a class=\"external-link\" href=\"").append(dynamicLink.getUrl()).append("\"");
-        if (dynamicLink.getTooltip() != null) {
-            buf.append(" title=\"").append(dynamicLink.getTooltip()).append("\"");
-        }
-        if (dynamicLink.getTarget() != null) {
-            buf.append(" target=\"").append(dynamicLink.getTarget()).append("\"");
-        }
-        buf.append(">").append(dynamicLink.getText()).append("</a>");
-        if (dynamicLink.getTarget() != null) {
-            buf.append(" <i class=\"external-link-icon material-icons\">launch</i></span>");
-        }
-        return buf.toString();
-    }
 }
