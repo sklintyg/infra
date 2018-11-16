@@ -33,6 +33,17 @@
 
   <bean id="puService" class="se.inera.intyg.infra.integration.pu.services.PUServiceImpl" />
 
+
+  <beans profile="qa,prod">
+    <bean id="puValidatorProd" class="se.inera.intyg.infra.integration.pu.services.validator.ProdPUResponseValidator" />
+  </beans>
+
+  <beans profile="!prod">
+    <beans profile="!qa">
+      <bean id="puValidatorTest" class="se.inera.intyg.infra.integration.pu.services.validator.TestPUResponseValidator" />
+    </beans>
+  </beans>
+
   <beans profile="!dev">
     <http:conduit
       name="{urn:riv:strategicresourcemanagement:persons:person:GetPersonsForProfile:3:rivtabp21}GetPersonsForProfileResponderInterfacePort.http-conduit">

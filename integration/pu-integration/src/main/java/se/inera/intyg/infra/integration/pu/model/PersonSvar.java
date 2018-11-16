@@ -23,21 +23,24 @@ import java.io.Serializable;
 public class PersonSvar implements Serializable {
     private static final long serialVersionUID = 2L;
 
-    public enum Status {
-        FOUND, NOT_FOUND, ERROR
+    public static PersonSvar found(final Person person) {
+        return new PersonSvar(person, Status.FOUND);
+    }
+
+    public static PersonSvar notFound() {
+        return new PersonSvar(null, Status.NOT_FOUND);
+    }
+
+    public static PersonSvar error() {
+        return new PersonSvar(null, Status.ERROR);
     }
 
     private final Person person;
     private final Status status;
 
-    public PersonSvar(Person person, Status status) {
+    protected PersonSvar(Person person, Status status) {
         this.person = person;
         this.status = status;
-    }
-
-    public PersonSvar(PersonSvar personSvar) {
-        this.person = personSvar.person;
-        this.status = personSvar.status;
     }
 
     public Person getPerson() {
@@ -46,5 +49,11 @@ public class PersonSvar implements Serializable {
 
     public Status getStatus() {
         return status;
+    }
+
+    public enum Status {
+        FOUND,
+        NOT_FOUND,
+        ERROR
     }
 }

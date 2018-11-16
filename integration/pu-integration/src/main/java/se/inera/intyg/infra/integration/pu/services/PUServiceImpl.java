@@ -18,14 +18,9 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import static com.google.common.base.Preconditions.checkArgument;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.cxf.interceptor.Fault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,20 +28,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-
-import com.google.common.annotations.VisibleForTesting;
-
-import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
-import se.inera.intyg.infra.integration.pu.model.PersonSvar;
-import se.inera.intyg.infra.integration.pu.util.PersonConverter;
-import se.inera.intyg.infra.integration.pu.util.PersonIdUtil;
-import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileType;
 import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
 import se.riv.strategicresourcemanagement.persons.person.v3.LookupProfileType;
+import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
+import se.inera.intyg.infra.integration.pu.model.PersonSvar;
+import se.inera.intyg.infra.integration.pu.services.validator.PUResponseValidator;
+import se.inera.intyg.infra.integration.pu.util.PersonConverter;
+import se.inera.intyg.infra.integration.pu.util.PersonIdUtil;
+import se.inera.intyg.schemas.contract.Personnummer;
 
 public class PUServiceImpl implements PUService {
 
@@ -60,6 +62,9 @@ public class PUServiceImpl implements PUService {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
+    private PUResponseValidator puResponseValidator;
+
     @Value("${putjanst.logicaladdress}")
     private String logicaladdress;
 
@@ -72,7 +77,7 @@ public class PUServiceImpl implements PUService {
     public PersonSvar getPerson(Personnummer personId) {
         if (personId == null) {
             LOG.info("Cannot look up person when argument personId is null");
-            return new PersonSvar(null, PersonSvar.Status.NOT_FOUND);
+            return PersonSvar.notFound();
         }
 
         // Check cache
@@ -166,11 +171,12 @@ public class PUServiceImpl implements PUService {
         cache.clear();
     }
 
-    public void setService(GetPersonsForProfileResponderInterface service) {
+    @VisibleForTesting
+    void setService(GetPersonsForProfileResponderInterface service) {
         this.service = service;
     }
 
-    GetPersonsForProfileType buildPersonsForProfileRequest(List<Personnummer> pnrs)  {
+    GetPersonsForProfileType buildPersonsForProfileRequest(List<Personnummer> pnrs) {
         GetPersonsForProfileType parameters = new GetPersonsForProfileType();
         parameters.setProfile(LookupProfileType.P_2);
         for (Personnummer pnr : pnrs) {
@@ -181,44 +187,33 @@ public class PUServiceImpl implements PUService {
 
     private PersonSvar handleServiceException(String errMsg, Personnummer pnr) {
         LOG.warn(errMsg, pnr.getPersonnummerHash());
-        return new PersonSvar(null, PersonSvar.Status.ERROR);
+        return PersonSvar.error();
     }
 
     private Map<Personnummer, PersonSvar> handleServiceException(String errMsg, List<Personnummer> pnrs) {
-        String arg = pnrs.stream()
-                .map(pnr -> pnr.getPersonnummerHash())
+        final String arg = pnrs.stream()
+                .map(Personnummer::getPersonnummerHash)
                 .collect(Collectors.joining(", "));
 
         LOG.warn(errMsg, arg);
         return new HashMap<>();
     }
 
-    private PersonSvar handleSinglePersonResponse(Personnummer personId,
-                                                  GetPersonsForProfileResponseType response) {
-        boolean found = true;
+    private PersonSvar handleSinglePersonResponse(final Personnummer personId, final GetPersonsForProfileResponseType response) {
 
-        if (response == null || response.getRequestedPersonRecord() == null || response.getRequestedPersonRecord().isEmpty()) {
-            found = false;
-        } else {
-            if (response.getRequestedPersonRecord().get(0).getPersonRecord() == null) {
-                found = false;
-            }
+        if (puResponseValidator.isFoundAndCorrectStatus(response)) {
+            final PersonSvar personSvar = personConverter.toPersonSvar(personId, getFoundPersonRecord(response));
+            storeIfAbsent(personSvar);
+            return personSvar;
         }
 
-        if (!found) {
-            LOG.warn("No person '{}' found", personId.getPersonnummerHash());
-            return new PersonSvar(null, PersonSvar.Status.NOT_FOUND);
-        }
-
-        PersonSvar personSvar = personConverter.toPersonSvar(personId, response.getRequestedPersonRecord().get(0).getPersonRecord());
-        storeIfAbsent(personSvar);
-
-        return personSvar;
+        LOG.warn(MessageFormat.format("No person '{0}' found", personId.getPersonnummerHash()));
+        return PersonSvar.notFound();
     }
 
     private Map<Personnummer, PersonSvar> handleMultiplePersonsResponse(List<Personnummer> personIds,
-                                                                Map<Personnummer, PersonSvar> responseMap,
-                                                                GetPersonsForProfileResponseType response) {
+                                                                        Map<Personnummer, PersonSvar> responseMap,
+                                                                        GetPersonsForProfileResponseType response) {
 
         if (response == null || response.getRequestedPersonRecord() == null || response.getRequestedPersonRecord().size() == 0) {
             LOG.warn("Problem fetching PersonSvar from PU-service. Returning cached items and items not in cache as NOT_FOUND.");
@@ -243,7 +238,7 @@ public class PUServiceImpl implements PUService {
         if (personIds.size() != responseMap.size()) {
             for (Personnummer pnr : personIds) {
                 if (!responseMap.containsKey(pnr)) {
-                    PersonSvar notFoundPersonSvar = new PersonSvar(null, PersonSvar.Status.NOT_FOUND);
+                    PersonSvar notFoundPersonSvar = PersonSvar.notFound();
                     responseMap.put(pnr, notFoundPersonSvar);
                 }
             }
@@ -276,4 +271,9 @@ public class PUServiceImpl implements PUService {
         return null;
     }
 
+    private PersonRecordType getFoundPersonRecord(final GetPersonsForProfileResponseType response) {
+        checkArgument(puResponseValidator.isFoundAndCorrectStatus(response));
+        return response.getRequestedPersonRecord().get(0).getPersonRecord();
+
+    }
 }

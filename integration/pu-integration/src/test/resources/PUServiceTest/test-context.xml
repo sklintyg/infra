@@ -40,4 +40,12 @@
 
   <bean class="se.inera.intyg.infra.integration.pu.stub.GetPersonsForProfileWsStub"/>
 
+  <beans profile="prod">
+    <bean id="puValidatorProd" class="se.inera.intyg.infra.integration.pu.services.validator.ProdPUResponseValidator" />
+  </beans>
+
+  <beans profile="!prod">
+    <bean id="puValidatorTest" class="se.inera.intyg.infra.integration.pu.services.validator.TestPUResponseValidator" />
+  </beans>
+
 </beans>

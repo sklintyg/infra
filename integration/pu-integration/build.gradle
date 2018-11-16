@@ -7,7 +7,8 @@ dependencies {
 
   compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
   compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
-
+  compile "org.apache.commons:commons-lang3:${commonsLangVersion}"
+  compile "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
   runtime "org.springframework:spring-context-support:${springVersion}"
 
   testCompile "se.riv.population.residentmaster:population-residentmaster-schemas:${rivtaResidentMasterSchemasVersion}"
