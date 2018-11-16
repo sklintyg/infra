@@ -58,8 +58,7 @@ public class PersonConverter {
         String lastName = namn.getSurname() != null ? namn.getSurname().getName() : null;
         Person person = new Person(personId, personRecord.isProtectedPersonIndicator(), isDead, firstName,
                 middleName, lastName, adressRader, postnr, postort);
-        PersonSvar personSvar = new PersonSvar(person, PersonSvar.Status.FOUND);
-        return personSvar;
+        return PersonSvar.found(person);
     }
 
     private Optional<String> buildAdress(ResidentialAddressType adress) {

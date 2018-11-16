@@ -18,40 +18,6 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
-import com.google.common.base.Strings;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
-import se.inera.intyg.infra.integration.pu.model.Person;
-import se.inera.intyg.infra.integration.pu.model.PersonSvar;
-import se.inera.intyg.schemas.contract.Personnummer;
-import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;
-import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
-import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileType;
-import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
-import se.riv.strategicresourcemanagement.persons.person.v3.LookupProfileType;
-import se.riv.strategicresourcemanagement.persons.person.v3.NamePartType;
-import se.riv.strategicresourcemanagement.persons.person.v3.NameType;
-import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
-import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
-
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPFactory;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.soap.SOAPFaultException;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -62,8 +28,45 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static se.inera.intyg.infra.integration.pu.model.PersonSvar.Status.NOT_FOUND;
+
+import com.google.common.base.Strings;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileType;
+import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
+import se.riv.strategicresourcemanagement.persons.person.v3.LookupProfileType;
+import se.riv.strategicresourcemanagement.persons.person.v3.NamePartType;
+import se.riv.strategicresourcemanagement.persons.person.v3.NameType;
+import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
+import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPFactory;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.soap.SOAPFaultException;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
+import se.inera.intyg.infra.integration.pu.model.Person;
+import se.inera.intyg.infra.integration.pu.model.PersonSvar;
+import se.inera.intyg.schemas.contract.Personnummer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@DirtiesContext
 @ContextConfiguration("classpath:PUServiceTest/test-context.xml")
 public class PUServiceTest {
 
@@ -85,6 +88,10 @@ public class PUServiceTest {
 
     @Before
     public void setup() {
+
+        Properties properties = System.getProperties();
+        properties.setProperty("spring.profiles.active", "test");
+
         cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME).clear();
         service.clearCache();
         // Some tests uses mocked residentService, reset here
@@ -142,7 +149,7 @@ public class PUServiceTest {
     public void checkNonExistingPerson() {
         PersonSvar svar = service.getPerson(createPnr("19121212-7169"));
         assertNull(svar.getPerson());
-        assertEquals(PersonSvar.Status.NOT_FOUND, svar.getStatus());
+        assertEquals(NOT_FOUND, svar.getStatus());
     }
 
     @Test
@@ -173,7 +180,7 @@ public class PUServiceTest {
         persons.entrySet().stream().forEach(entry -> {
             assertNotNull(entry.getValue());
             assertNull(entry.getValue().getPerson());
-            assertEquals(PersonSvar.Status.NOT_FOUND, entry.getValue().getStatus());
+            assertEquals(NOT_FOUND, entry.getValue().getStatus());
         });
 
     }
@@ -203,15 +210,14 @@ public class PUServiceTest {
         assertEquals(4, persons.size());
 
         // Assert content
-        persons.entrySet().stream().forEach(entry -> {
-            assertNotNull(entry.getValue());
-            if (entry.getKey().getPersonnummerWithDash().equals("19520614-2597")
-                    || entry.getKey().getPersonnummerWithDash().equals("20121212-1212")) {
-                assertNotNull(entry.getValue().getPerson());
-                assertEquals(PersonSvar.Status.FOUND, entry.getValue().getStatus());
+        persons.forEach((key, value) -> {
+            assertNotNull(value);
+            if (key.getPersonnummerWithDash().equals("19520614-2597") || key.getPersonnummerWithDash().equals("20121212-1212")) {
+                assertNotNull(value.getPerson());
+                assertEquals(PersonSvar.Status.FOUND, value.getStatus());
             } else {
-                assertNull(entry.getValue().getPerson());
-                assertEquals(PersonSvar.Status.NOT_FOUND, entry.getValue().getStatus());
+                assertNull(value.getPerson());
+                assertEquals(NOT_FOUND, value.getStatus());
             }
         });
     }
@@ -374,8 +380,7 @@ public class PUServiceTest {
 
         // Verify all requested personnummer are present and has correct name
         assertEquals(response.size(), 1001);
-        for (int i = 0; i < pnrList.size(); i++) {
-            Personnummer requestedPnr = pnrList.get(i);
+        for (Personnummer requestedPnr : pnrList) {
             PersonSvar personSvar = response.get(requestedPnr);
 
             assertEquals(PersonSvar.Status.FOUND, personSvar.getStatus());
