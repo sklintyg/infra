@@ -21,13 +21,19 @@ package se.inera.intyg.infra.monitoring.logging;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -36,13 +42,19 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
+import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
+import se.inera.intyg.infra.security.common.model.IntygUser;
+import se.inera.intyg.infra.security.common.model.Role;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {MonitoringConfiguration.class})
@@ -57,6 +69,9 @@ public class LogbackTest {
     public LogbackTest() {
         ((ch.qos.logback.classic.Logger) LOG).addAppender(mockedAppender);
     }
+
+    @Autowired
+    LogMDCServletFilter logMDCServletFilter;
 
     // returns stdout as a string (default encoding)
     String captureStdout(final Runnable runnable) {
@@ -73,7 +88,7 @@ public class LogbackTest {
     }
 
     @Test
-    public void log_event() {
+    public void logEventTest() {
 
         LOG.error("Hello");
         ArgumentCaptor<Appender> ac = ArgumentCaptor.forClass(Appender.class);
@@ -89,7 +104,7 @@ public class LogbackTest {
     }
 
     @Test
-    public void log_content_context() {
+    public void logContenContextTest() {
         String out = captureStdout(() -> LOG.info("Hello"));
 
         ArgumentCaptor<Appender> ac = ArgumentCaptor.forClass(Appender.class);
@@ -103,7 +118,7 @@ public class LogbackTest {
     }
 
     @Test
-    public void log_with_explicit_request_info() {
+    public void logExplicitTraceIdTest() {
         final String traceId = logMDCHelper.traceHeader();
         final String sessionInfo = "NO SESSION";
         Closeable trace = logMDCHelper.withSessionInfo(sessionInfo).withTraceId(traceId).openTrace();
@@ -116,11 +131,11 @@ public class LogbackTest {
     }
 
    @Test
-   public void log_with_lambda_implicit_trace_id() {
+   public void logImplicitTraceIdTest() {
         logMDCHelper.run(() -> {
             String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Marker test"));
 
-            String regex = String.format("^.* \\[monitoring,-,([%s)]+)\\].*$", String.valueOf(LogMDCHelper.BASE62CHARS));
+            String regex = String.format("^.* \\[monitoring,-,([%s)]+)\\,noUser].*$", String.valueOf(LogMDCHelper.BASE62CHARS));
             Matcher m = Pattern.compile(regex).matcher(out);
 
             assertTrue(m.find());
@@ -129,9 +144,38 @@ public class LogbackTest {
    }
 
     @Test
-    public void log_marker() {
+    public void logMarkerTest() {
         String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Marker test"));
-        assertTrue(out.contains("[monitoring,-,-]"));
+        assertTrue(out.contains("[monitoring,-,-,-]"));
         assertEquals("Monitor appender only should be triggered (1 record)", 1, out.split(System.lineSeparator()).length);
     }
+
+    @Test
+    public void logAuthenticatedPrincipalTest() throws IOException {
+        Authentication authentication = Mockito.mock(Authentication.class);
+        IntygUser intygUser = Mockito.mock(IntygUser.class);
+        when(intygUser.getHsaId()).thenReturn("hasId");
+        when(intygUser.getOrigin()).thenReturn("origin");
+        when(intygUser.getRoles()).thenReturn(Collections.singletonMap("role", Mockito.mock(Role.class)));
+
+
+        SelectableVardenhet ve = Mockito.mock(SelectableVardenhet.class);
+        when(ve.getId()).thenReturn("sevId");
+        when(intygUser.getValdVardenhet()).thenReturn(ve);
+
+        when(authentication.getPrincipal()).thenReturn(intygUser);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        HttpServletRequest  mockedRequest = Mockito.mock(HttpServletRequest.class);
+        HttpSession session = Mockito.mock(HttpSession.class);
+        when(session.getId()).thenReturn("sessionId");
+        when(mockedRequest.getSession()).thenReturn(session);
+
+        Closeable c = logMDCServletFilter.open(mockedRequest);
+        assertEquals("sessionId", MDC.get(LogMDCHelper.SESSIONINFO));
+        assertEquals("hasId,sevId,origin,role", MDC.get(LogMDCHelper.USERINFO));
+        c.close();
+    }
+
 }

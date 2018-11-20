@@ -2,6 +2,7 @@
     <!-- Default logging configuration for openshift. To be included by web-apps. -->
     <property name="TIMESTAMP" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level"/>
     <property name="SESSION" value="%X{req.sessionInfo:--}"/>
+    <property name="USER" value="%X{req.userInfo:--}"/>
     <property name="TRACE" value="%X{req.traceId:--}"/>
     <property name="LINE" value="--- %-40.40logger{39} : %msg%n%rEx"/>
 
@@ -23,7 +24,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${TIMESTAMP} [monitoring,${SESSION},${TRACE}] ${LINE}</pattern>
+            <pattern>${TIMESTAMP} [monitoring,${SESSION},${TRACE},${USER}] ${LINE}</pattern>
         </encoder>
     </appender>
 
