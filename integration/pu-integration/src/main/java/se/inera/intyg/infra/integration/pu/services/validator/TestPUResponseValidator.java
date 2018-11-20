@@ -33,7 +33,7 @@ public class TestPUResponseValidator implements PUResponseValidator {
 
     @Override
     public boolean isFoundAndCorrectStatus(final GetPersonsForProfileResponseType response) {
-        LOG.info("profile is not set to prod - allows test-indicated persons");
+        LOG.debug("profile is not set to prod - allows test-indicated persons");
         final boolean found = nonNull(response)
                 && isNotEmpty(response.getRequestedPersonRecord())
                 && nonNull(response.getRequestedPersonRecord().get(0))
@@ -43,9 +43,9 @@ public class TestPUResponseValidator implements PUResponseValidator {
             final boolean isTest = BooleanUtils.toBoolean(response.getRequestedPersonRecord().get(0).getPersonRecord().isTestIndicator());
 
             if (isTest) {
-                LOG.info("Fetched person IS a test-indicated person");
+                LOG.debug("Fetched person IS a test-indicated person");
             } else {
-                LOG.info("Fetched person is NOT a test-indicated person");
+                LOG.debug("Fetched person is NOT a test-indicated person");
             }
         }
 

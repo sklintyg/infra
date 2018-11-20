@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.cxf.interceptor.Fault;
 import org.slf4j.Logger;
@@ -33,7 +31,6 @@ import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileres
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileType;
 import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
 import se.riv.strategicresourcemanagement.persons.person.v3.LookupProfileType;
-import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -202,7 +199,8 @@ public class PUServiceImpl implements PUService {
     private PersonSvar handleSinglePersonResponse(final Personnummer personId, final GetPersonsForProfileResponseType response) {
 
         if (puResponseValidator.isFoundAndCorrectStatus(response)) {
-            final PersonSvar personSvar = personConverter.toPersonSvar(personId, getFoundPersonRecord(response));
+            final PersonSvar personSvar = personConverter.toPersonSvar(
+                    personId, response.getRequestedPersonRecord().get(0).getPersonRecord());
             storeIfAbsent(personSvar);
             return personSvar;
         }
@@ -269,11 +267,5 @@ public class PUServiceImpl implements PUService {
             return personSvar;
         }
         return null;
-    }
-
-    private PersonRecordType getFoundPersonRecord(final GetPersonsForProfileResponseType response) {
-        checkArgument(puResponseValidator.isFoundAndCorrectStatus(response));
-        return response.getRequestedPersonRecord().get(0).getPersonRecord();
-
     }
 }
