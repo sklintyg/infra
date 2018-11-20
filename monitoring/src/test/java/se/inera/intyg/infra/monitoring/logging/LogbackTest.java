@@ -42,7 +42,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -146,7 +145,7 @@ public class LogbackTest {
     @Test
     public void logMarkerTest() {
         String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Marker test"));
-        assertTrue(out.contains("[monitoring,-,-,-]"));
+        assertTrue(out.contains("[monitoring,-,-,noUser]"));
         assertEquals("Monitor appender only should be triggered (1 record)", 1, out.split(System.lineSeparator()).length);
     }
 
@@ -154,7 +153,7 @@ public class LogbackTest {
     public void logAuthenticatedPrincipalTest() throws IOException {
         Authentication authentication = Mockito.mock(Authentication.class);
         IntygUser intygUser = Mockito.mock(IntygUser.class);
-        when(intygUser.getHsaId()).thenReturn("hasId");
+        when(intygUser.getHsaId()).thenReturn("hsaId");
         when(intygUser.getOrigin()).thenReturn("origin");
         when(intygUser.getRoles()).thenReturn(Collections.singletonMap("role", Mockito.mock(Role.class)));
 
@@ -173,8 +172,8 @@ public class LogbackTest {
         when(mockedRequest.getSession()).thenReturn(session);
 
         Closeable c = logMDCServletFilter.open(mockedRequest);
-        assertEquals("sessionId", MDC.get(LogMDCHelper.SESSIONINFO));
-        assertEquals("hasId,sevId,origin,role", MDC.get(LogMDCHelper.USERINFO));
+        String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Auth Test"));
+        assertTrue(out.contains("hsaId,sevId,origin,role]"));
         c.close();
     }
 

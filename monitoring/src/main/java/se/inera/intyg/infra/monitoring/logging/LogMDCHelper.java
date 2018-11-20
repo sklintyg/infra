@@ -20,25 +20,18 @@ package se.inera.intyg.infra.monitoring.logging;
 
 import java.io.Closeable;
 import java.nio.CharBuffer;
-import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.google.common.base.Strings;
-
-import se.inera.intyg.infra.security.common.model.IntygUser;
 
 public class LogMDCHelper {
     static final String TRACEID = "req.traceId";
     static final String SESSIONINFO = "req.sessionInfo";
-    static final String USERINFO = "req.userInfo";
-
     static final int IDLEN = 8;
     static final char[] BASE62CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
 
@@ -51,7 +44,6 @@ public class LogMDCHelper {
     public String traceHeader() {
         return this.header;
     }
-
 
     /**
      * Sets traceId for a request and returns the helper.
@@ -85,23 +77,7 @@ public class LogMDCHelper {
         if (Strings.isNullOrEmpty(traceId)) {
             MDC.put(TRACEID, traceId(IDLEN));
         }
-        final String userInfo = userInfo();
-        if (Objects.nonNull(userInfo)) {
-            MDC.put(USERINFO, userInfo);
-        }
         return () -> closeTrace();
-    }
-
-    private String userInfo() {
-        final IntygUser u = intygUser();
-        if (Objects.isNull(u)) {
-           return "noUser";
-        }
-
-        return u.getHsaId()
-                + "," + (Objects.nonNull(u.getValdVardenhet()) ? u.getValdVardenhet().getId() : "noUnit")
-                + "," + (Objects.nonNull(u.getOrigin()) ? u.getOrigin() : "noOrigin")
-                + "," + ((u.getRoles().size() == 1) ? u.getRoles().keySet().iterator().next() : "noRole");
     }
 
     /**
@@ -120,20 +96,6 @@ public class LogMDCHelper {
     void closeTrace() {
         MDC.remove(TRACEID);
         MDC.remove(SESSIONINFO);
-        MDC.remove(USERINFO);
-    }
-
-    //
-    IntygUser intygUser() {
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (Objects.isNull(auth)) {
-            return null;
-        }
-
-        final Object principal = auth.getPrincipal();
-
-        return (principal instanceof IntygUser) ? (IntygUser) principal : null;
     }
 
     /**
