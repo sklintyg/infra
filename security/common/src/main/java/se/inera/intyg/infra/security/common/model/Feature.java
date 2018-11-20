@@ -27,6 +27,8 @@ import java.util.Optional;
 
 public class Feature implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @JsonProperty
     private String name;
     @JsonProperty

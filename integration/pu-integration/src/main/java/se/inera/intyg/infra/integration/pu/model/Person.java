@@ -23,6 +23,7 @@ import se.inera.intyg.schemas.contract.Personnummer;
 import java.io.Serializable;
 
 public class Person implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final Personnummer personnummer;
     private final boolean sekretessmarkering;
     private final boolean avliden;
