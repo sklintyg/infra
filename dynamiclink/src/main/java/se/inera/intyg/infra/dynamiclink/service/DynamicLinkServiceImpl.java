@@ -26,8 +26,6 @@ import se.inera.intyg.infra.dynamiclink.repository.DynamicLinkRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by eriklupander on 2017-05-03.
