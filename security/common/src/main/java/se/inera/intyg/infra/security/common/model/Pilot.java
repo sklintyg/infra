@@ -18,31 +18,81 @@
  */
 package se.inera.intyg.infra.security.common.model;
 
-import java.util.List;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.ImmutableList;
 
-public final class Pilot {
+import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
 
+public final class Pilot implements Serializable {
+
+    @JsonProperty
+    private String name;
+    @JsonProperty
+    private String desc;
     @JsonProperty
     private List<String> hsaIds;
     @JsonProperty
-    private Map<String, Boolean> features;
+    private List<Feature> activated;
+    @JsonProperty
+    private List<Feature> deactivated;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
 
     public List<String> getHsaIds() {
         return hsaIds;
     }
 
     public void setHsaIds(List<String> hsaIds) {
-        this.hsaIds = hsaIds;
+        if (hsaIds == null) {
+            this.hsaIds = ImmutableList.of();
+        } else {
+            this.hsaIds = ImmutableList.copyOf(hsaIds);
+        }
     }
 
-    public Map<String, Boolean> getFeatures() {
-        return features;
+    public List<Feature> getActivated() {
+        if (activated == null) {
+            return ImmutableList.of();
+        }
+        return activated;
     }
 
-    public void setFeatures(Map<String, Boolean> features) {
-        this.features = features;
+    public void setActivated(List<Feature> features) {
+        if (features == null) {
+            activated = ImmutableList.of();
+        } else {
+            activated = ImmutableList.copyOf(features.stream().map(Feature::new).collect(Collectors.toList()));
+        }
+    }
+
+    public List<Feature> getDeactivated() {
+        if (deactivated == null) {
+            return ImmutableList.of();
+        }
+        return deactivated;
+    }
+
+    public void setDeactivated(List<Feature> features) {
+        if (features == null) {
+            deactivated = ImmutableList.of();
+        } else {
+            deactivated = ImmutableList.copyOf(features.stream().map(Feature::new).collect(Collectors.toList()));
+        }
     }
 }

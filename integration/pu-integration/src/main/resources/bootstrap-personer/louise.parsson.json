@@ -1,10 +1,1 @@
-{
-    "sekretessmarkering": "N",
-    "personpost": {
-        "personId": "195205292260",
-        "namn": {
-            "fornamn": "Maria Lousie",
-            "efternamn": "Pärsson"
-        }
-    }
-}
+{"personalIdentity":{"extension":"195205292260"},"protectedPersonIndicator":false,"testIndicator":false,"primaryIdentity":false,"name":{"givenName":{"name":"Maria Lousie"},"middleName":{},"surname":{"name":"Pärsson"}}}

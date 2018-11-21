@@ -19,23 +19,23 @@
   -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-    xmlns:jaxws="http://cxf.apache.org/jaxws"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                            http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
-                            http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+  xmlns:jaxws="http://cxf.apache.org/jaxws"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+  http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
   <beans profile="dev,wc-all-stubs,wc-hsa-stub">
-    <jaxws:endpoint address="/hsa-authorization" implementor="se.inera.intyg.infra.integration.hsa.stub.GetAuthorizationsForPersonResponderStub"/>
-    <jaxws:endpoint address="/hsa-employee" implementor="se.inera.intyg.infra.integration.hsa.stub.GetEmployeeResponderStub"/>
-    <jaxws:endpoint address="/hsa-healthcareunit" implementor="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitResponderStub"/>
-    <jaxws:endpoint address="/hsa-healthcareunit-members" implementor="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitMembersResponderStub"/>
-    <jaxws:endpoint address="/hsa-unit" implementor="se.inera.intyg.infra.integration.hsa.stub.GetUnitResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/authorizationmanagement/GetCredentialsForPersonIncludingProtectedPerson/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetAuthorizationsForPersonResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/employee/GetEmployeeIncludingProtectedPerson/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetEmployeeResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetHealthCareUnit/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetHealthCareUnitMembers/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitMembersResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetUnit/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetUnitResponderStub"/>
   </beans>
 
   <beans profile="dev,testability-api">
-    <jaxrs:server address="/hsa-api">
+    <jaxrs:server address="/api/hsa-api">
       <jaxrs:serviceBeans>
         <ref bean="hsaStubRestApi"/>
       </jaxrs:serviceBeans>

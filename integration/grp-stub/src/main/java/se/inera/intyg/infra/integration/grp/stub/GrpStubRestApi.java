@@ -18,6 +18,11 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import se.funktionstjanster.grp.v1.GrpFault;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -26,17 +31,39 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import se.funktionstjanster.grp.v1.GrpFault;
+import java.time.LocalDateTime;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Magnus Ekstrand on 2017-05-16.
  */
 public class GrpStubRestApi {
 
+    private static final Logger LOG = LoggerFactory.getLogger(GrpStubRestApi.class);
+    public static final int REMOVE_AFTER_MINUTS = 4;
+
     @Autowired
     private GrpServiceStub serviceStub;
+
+    @GET
+    @Path("/statuses")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<OngoingGrpSignature> getOngoingSignatures() throws GrpFault {
+        List<OngoingGrpSignature> list = serviceStub.getAll();
+
+        // Let the stub do self-janitoring every time someone calls this endpoint, removing old unfinished entries.
+        Iterator<OngoingGrpSignature> i = list.iterator();
+        while (i.hasNext()) {
+            OngoingGrpSignature ongoingGrpSignature = i.next();
+            if (ongoingGrpSignature.getCreated().isBefore(LocalDateTime.now().minusMinutes(REMOVE_AFTER_MINUTS))) {
+                serviceStub.fail(ongoingGrpSignature.getTransactionId());
+                LOG.info("GRP stub removed COMPLETE or stale entry for orderRef '{}'", ongoingGrpSignature.getOrderRef());
+                i.remove();
+            }
+        }
+        return list;
+    }
 
     @GET
     @Path("/orderref/{transactionId}")
@@ -61,7 +88,7 @@ public class GrpStubRestApi {
         if (serviceStub.getStatus(status.getOrderRef()) == null) {
             // Signal that the method has been invoked at an illegal or inappropriate time.
             throw new IllegalStateException("A cal to GrpServicePortType.authenticate must have been done "
-                + "before doing a status update");
+                    + "before doing a status update");
         } else {
             try {
                 serviceStub.updateStatus(status);
@@ -69,8 +96,15 @@ public class GrpStubRestApi {
                 return Response.serverError().build();
             }
         }
-
         return Response.ok().build();
     }
 
+    @PUT
+    @Path("/cancel/{transactionId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response cancel(String transactionId) {
+        serviceStub.fail(transactionId);
+        return Response.ok().build();
+    }
 }

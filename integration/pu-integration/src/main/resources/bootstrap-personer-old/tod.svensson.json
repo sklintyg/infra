@@ -1,0 +1,22 @@
+{
+    "sekretessmarkering": "N",
+    "personpost": {
+        "personId": "190005259809",
+        "avregistrering": {
+            "avregistreringsorsakKod":"AV",
+            "avregistreringsdatum":"2017-01-01",
+            "avregistreringsorsakKodKomplett":"AV"
+        },
+        "namn": {
+            "fornamn": "Tod",
+            "efternamn": "Svensson"
+        },
+        "folkbokforingsadress": {
+            "careOf": "Tolvansson",
+            "utdelningsadress1": "Storgatan 1",
+            "utdelningsadress2": "PL 1234",
+            "postNr": 12345,
+            "postort": "Småmåla"
+        }
+    }
+}

@@ -107,7 +107,7 @@ public class GetSRSInformationForDiagnosisStub implements GetSRSInformationForDi
             statistikbild.setStatistikstatus(Statistikstatus.OK);
             statistikbild.setAndringstidpunkt(LocalDateTime.of(2017, 1, 1, 1, 1));
             statistikbild.setInkommandediagnos(diagnos);
-            statistikbild.setBildadress("/services/srs-statistics-stub/" + diagnos.getCode() + ".jpg");
+            statistikbild.setBildadress("/services/stubs/srs-statistics-stub/" + diagnos.getCode() + ".jpg");
             statistikbild.setDiagnos(diagnos);
 
             statistik.getStatistikbild().add(statistikbild);
@@ -119,7 +119,7 @@ public class GetSRSInformationForDiagnosisStub implements GetSRSInformationForDi
             statistikbild.setStatistikstatus(Statistikstatus.DIAGNOSKOD_PA_HOGRE_NIVA);
             statistikbild.setAndringstidpunkt(LocalDateTime.of(2017, 1, 1, 1, 1));
             statistikbild.setInkommandediagnos(diagnos);
-            statistikbild.setBildadress("/services/srs-statistics-stub/" + actualDiagnose.getCode() + ".jpg");
+            statistikbild.setBildadress("/services/stubs/srs-statistics-stub/" + actualDiagnose.getCode() + ".jpg");
             statistikbild.setDiagnos(actualDiagnose);
             statistik.getStatistikbild().add(statistikbild);
         } else {

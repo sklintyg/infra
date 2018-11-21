@@ -25,9 +25,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
 import se.inera.intyg.infra.integration.hsa.util.HsaAttributeExtractor;
-import se.inera.intyg.infra.security.authorities.bootstrap.AuthoritiesConfigurationLoader;
+import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
 import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
+import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.security.common.model.IntygUser;
+import se.inera.intyg.infra.security.common.model.Pilot;
 import se.inera.intyg.infra.security.common.model.Privilege;
 import se.inera.intyg.infra.security.common.model.RequestOrigin;
 import se.inera.intyg.infra.security.common.model.Role;
@@ -36,10 +38,18 @@ import se.inera.intyg.infra.security.common.model.TitleCode;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static se.inera.intyg.infra.security.authorities.AuthoritiesResolverUtil.toMap;
 
 /**
  * Created by Magnus Ekstrand on 20/11/15.
@@ -50,10 +60,19 @@ public class CommonAuthoritiesResolver {
     private static final Logger LOG = LoggerFactory.getLogger(CommonAuthoritiesResolver.class);
 
     @Autowired
-    private AuthoritiesConfigurationLoader configurationLoader;
-
-    // ~ API
-    // ======================================================================================
+    private SecurityConfigurationLoader configurationLoader;
+    private Function<String, RequestOrigin> fnRequestOrigin = (name) -> getRequestOrigins().stream()
+            .filter(isRequestOrigin(name))
+            .findFirst()
+            .orElse(null);
+    private Function<String, Role> fnRole = (name) -> getRoles().stream()
+            .filter(isRole(name))
+            .findFirst()
+            .orElse(null);
+    private BiFunction<String, String, TitleCode> fnTitleCode = (titleCode, groupPrescriptionCode) -> getTitleCodes().stream()
+            .filter(isTitleCode(titleCode).and(isGroupPrescriptionCode(groupPrescriptionCode)))
+            .findFirst()
+            .orElse(null);
 
     public Role resolveRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole, UserCredentials userCredentials) {
         Assert.notNull(user, "Argument 'user' cannot be null");
@@ -67,16 +86,7 @@ public class CommonAuthoritiesResolver {
      * @return a list with intygstyper
      */
     public List<String> getIntygstyper() {
-        return configurationLoader.getConfiguration().getKnownIntygstyper();
-    }
-
-    /**
-     * Get all intygstyper that may be issued for a patient having sekretessmarkering.
-     *
-     * @return a list with intygstyper that can be handled for a sekretessmarkerad patient.
-     */
-    public List<String> getSekretessmarkeringAllowed() {
-        return configurationLoader.getConfiguration().getSekretessmarkeringAllowed();
+        return configurationLoader.getAuthoritiesConfiguration().getKnownIntygstyper();
     }
 
     /**
@@ -85,7 +95,7 @@ public class CommonAuthoritiesResolver {
      * @return a list with privileges
      */
     public List<Privilege> getPrivileges() {
-        return configurationLoader.getConfiguration().getPrivileges();
+        return configurationLoader.getAuthoritiesConfiguration().getPrivileges();
     }
 
     public Role getRole(String name) {
@@ -102,7 +112,7 @@ public class CommonAuthoritiesResolver {
      * @return a list with request origins
      */
     public List<RequestOrigin> getRequestOrigins() {
-        return configurationLoader.getConfiguration().getRequestOrigins();
+        return configurationLoader.getAuthoritiesConfiguration().getRequestOrigins();
     }
 
     /**
@@ -111,7 +121,7 @@ public class CommonAuthoritiesResolver {
      * @return a list with roles
      */
     public List<Role> getRoles() {
-        return configurationLoader.getConfiguration().getRoles();
+        return configurationLoader.getAuthoritiesConfiguration().getRoles();
     }
 
     /**
@@ -120,7 +130,7 @@ public class CommonAuthoritiesResolver {
      * @return a list with titles
      */
     public List<Title> getTitles() {
-        return configurationLoader.getConfiguration().getTitles();
+        return configurationLoader.getAuthoritiesConfiguration().getTitles();
     }
 
     /**
@@ -129,26 +139,40 @@ public class CommonAuthoritiesResolver {
      * @return a list with title codes
      */
     public List<TitleCode> getTitleCodes() {
-        return configurationLoader.getConfiguration().getTitleCodes();
+        return configurationLoader.getAuthoritiesConfiguration().getTitleCodes();
     }
 
-    // ~ Getter and setter
-    // ======================================================================================
+    /**
+     * Gets all the features active for the user with active hsaIds.
+     *
+     * @param hsaIds the active hsaIds (vardenhet and vardgivare)
+     * @return the map of all the features
+     */
+    public Map<String, Feature> getFeatures(List<String> hsaIds) {
+        List<Feature> featureList = configurationLoader.getFeaturesConfiguration().getFeatures().stream()
+                .map(Feature::new)
+                .collect(Collectors.toList());
 
-    public AuthoritiesConfigurationLoader getConfigurationLoader() {
+        List<Pilot> pilots = configurationLoader.getFeaturesConfiguration().getPilots().stream()
+                .filter(p -> p.getHsaIds().stream().anyMatch(hsaIds::contains))
+                .collect(Collectors.toList());
+
+        handleActivatedPilots(featureList, pilots);
+        handleDeactivatedPilots(featureList, pilots);
+        return toMap(featureList, Feature::getName);
+    }
+
+    public SecurityConfigurationLoader getConfigurationLoader() {
         return configurationLoader;
     }
 
-    public void setConfigurationLoader(AuthoritiesConfigurationLoader configurationLoader) {
+    public void setConfigurationLoader(SecurityConfigurationLoader configurationLoader) {
         this.configurationLoader = configurationLoader;
     }
 
-    // ~ Package methods
-    // ======================================================================================
-
     /**
      * Resolve a user role using SAML credential and HSA information.
-     *
+     * <p>
      * Please note that the title attribute is not taken into account anymore, see INTYG-2627
      *
      * @return the resolved role
@@ -208,12 +232,10 @@ public class CommonAuthoritiesResolver {
      * <li>Tandläkare</li>
      * </ul>
      *
-     * @param legitimeradeYrkesgrupper
-     *            string array with 'legitimerade yrkesgrupper'
+     * @param legitimeradeYrkesgrupper string array with 'legitimerade yrkesgrupper'
      * @return a user role if valid 'yrkesgrupper', otherwise null
      */
     Role lookupUserRoleByLegitimeradeYrkesgrupper(List<String> legitimeradeYrkesgrupper) {
-        LOG.debug("  * legitimerade yrkesgrupper");
         if (legitimeradeYrkesgrupper == null || legitimeradeYrkesgrupper.size() == 0) {
             return null;
         }
@@ -257,19 +279,14 @@ public class CommonAuthoritiesResolver {
     }
 
     Role lookupUserRoleByBefattningskodAndGruppforskrivarkod(String befattningsKod, String gruppforskrivarKod) {
-        LOG.debug("  * befattningskod i kombination med gruppförskrivarkod");
-        LOG.debug("    befattningskod = {}, gruppförskrivarkod = {}", befattningsKod, gruppforskrivarKod);
-
         if (befattningsKod == null || gruppforskrivarKod == null) {
             return null;
         }
 
         TitleCode titleCode = fnTitleCode.apply(befattningsKod, gruppforskrivarKod);
         if (titleCode == null) {
-            LOG.debug("    kombinationen befattningskod and gruppförskrivarkod finns inte i konfigurationen");
             return null;
         }
-        LOG.debug("    kombinationen befattningskod and gruppförskrivarkod hittad");
 
         Role role = fnRole.apply(titleCode.getRole().getName());
         if (role == null) {
@@ -296,25 +313,47 @@ public class CommonAuthoritiesResolver {
         return tc -> tc.getGroupPrescriptionCode() != null && tc.getGroupPrescriptionCode().equalsIgnoreCase(groupPrescriptionCode);
     }
 
-    private Function<String, RequestOrigin> fnRequestOrigin = (name) -> {
-        return getRequestOrigins().stream()
-                .filter(isRequestOrigin(name))
-                .findFirst()
-                .orElse(null);
-    };
+    private void handleActivatedPilots(List<Feature> featureList, List<Pilot> pilots) {
+        for (Feature feature : getFeatures(pilots, Pilot::getActivated)) {
+            Optional<Feature> existing = getExisting(featureList, feature);
+            if (existing.isPresent()) {
+                Feature existingFeature = existing.get();
+                existingFeature.setGlobal(existingFeature.getGlobal() || feature.getGlobal());
+                existingFeature.setIntygstyper(union(existingFeature.getIntygstyper(), feature.getIntygstyper()));
+            } else {
+                featureList.add(feature);
+            }
+        }
+    }
 
-    private Function<String, Role> fnRole = (name) -> {
-        return getRoles().stream()
-                .filter(isRole(name))
-                .findFirst()
-                .orElse(null);
-    };
+    private void handleDeactivatedPilots(List<Feature> featureList, List<Pilot> pilots) {
+        for (Feature feature : getFeatures(pilots, Pilot::getDeactivated)) {
+            getExisting(featureList, feature).ifPresent(f -> {
+                // In a deactivated feature in a pilot we remove all functionality in the pilot.
+                // This means that if global == true in deactivated pilot then global == false in the actual resulting feature for the
+                // logged in user.
+                f.setGlobal(f.getGlobal() && !feature.getGlobal());
+                f.getIntygstyper().removeAll(feature.getIntygstyper());
+            });
+        }
+    }
 
-    private BiFunction<String, String, TitleCode> fnTitleCode = (titleCode, groupPrescriptionCode) -> {
-        return getTitleCodes().stream()
-                .filter(isTitleCode(titleCode).and(isGroupPrescriptionCode(groupPrescriptionCode)))
-                .findFirst()
-                .orElse(null);
-    };
+    private List<Feature> getFeatures(List<Pilot> pilots, Function<Pilot, List<Feature>> fun) {
+        return pilots.stream()
+                .map(fun)
+                .filter(Objects::nonNull)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    private Optional<Feature> getExisting(List<Feature> featureList, Feature feature) {
+        return featureList.stream().filter(f -> Objects.equals(f.getName(), feature.getName())).findFirst();
+    }
+
+    private List<String> union(List<String> listOne, List<String> listTwo) {
+        Set<String> set = new HashSet<>(listOne);
+        set.addAll(listTwo);
+        return new ArrayList<>(set);
+    }
 
 }

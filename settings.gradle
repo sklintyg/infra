@@ -10,6 +10,7 @@ rootProject.name = 'infra'
 include ':common-cache-core'
 include ':common-cache-metrics'
 include ':grp-stub'
+include ':nias-stub'
 include ':hsa-integration'
 include ':pu-integration'
 include ':srs-integration'
@@ -21,11 +22,13 @@ include ':security-authorities'
 include ':security-siths'
 include ':sjukfall-engine'
 include ':dynamiclink'
+include ':xmldsig'
 
 project(':common-cache-core').projectDir = "$rootDir/cache/core" as File
 project(':common-cache-metrics').projectDir = "$rootDir/cache/metrics" as File
 project(':dynamiclink').projectDir = "$rootDir/dynamiclink" as File
 project(':grp-stub').projectDir = "$rootDir/integration/grp-stub" as File
+project(':nias-stub').projectDir = "$rootDir/integration/nias-stub" as File
 project(':hsa-integration').projectDir = "$rootDir/integration/hsa-integration" as File
 project(':pu-integration').projectDir = "$rootDir/integration/pu-integration" as File
 project(':srs-integration').projectDir = "$rootDir/integration/srs-integration" as File
@@ -36,4 +39,5 @@ project(':security-common').projectDir = "$rootDir/security/common" as File
 project(':security-authorities').projectDir = "$rootDir/security/authorities" as File
 project(':security-siths').projectDir = "$rootDir/security/siths" as File
 project(':sjukfall-engine').projectDir = "$rootDir/sjukfall/engine" as File
+project(':xmldsig').projectDir = "$rootDir/xmldsig" as File
 

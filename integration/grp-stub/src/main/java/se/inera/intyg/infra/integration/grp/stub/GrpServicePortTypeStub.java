@@ -19,7 +19,6 @@
 package se.inera.intyg.infra.integration.grp.stub;
 
 import com.google.common.base.Joiner;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.funktionstjanster.grp.v1.AuthenticateRequestType;
 import se.funktionstjanster.grp.v1.CollectRequestType;
@@ -36,12 +35,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 /**
  * @author Magnus Ekstrand on 2017-05-16.
  */
 public class GrpServicePortTypeStub implements GrpServicePortType {
 
-    public static final String PERSON_ID = "19121212-1212";
+    private static final String PERSON_ID = "19121212-1212";
 
     @Autowired
     private GrpServiceStub serviceStub;
@@ -65,6 +66,7 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
         // Update GRP service stub
         serviceStub.putOrderRef(response.getTransactionId(), response.getOrderRef());
         serviceStub.updateStatus(response.getOrderRef(), ProgressStatusType.STARTED);
+        serviceStub.putPersonalNumber(response.getTransactionId(), authenticateRequestType.getPersonalNumber());
 
         return response;
     }
@@ -90,7 +92,7 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
 
         Property p = new Property();
         p.setName("Subject.SerialNumber");
-        p.setValue(PERSON_ID);
+        p.setValue(serviceStub.getPersonalNumber(response.getTransactionId()));
         response.getAttributes().add(p);
 
         return response;

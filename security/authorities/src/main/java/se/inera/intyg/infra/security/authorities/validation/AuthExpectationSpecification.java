@@ -20,7 +20,6 @@ package se.inera.intyg.infra.security.authorities.validation;
 
 
 import se.inera.intyg.infra.security.common.model.UserOriginType;
-import se.inera.intyg.infra.security.common.service.Feature;
 
 /**
  * Created by marced on 18/12/15.
@@ -38,7 +37,7 @@ public interface AuthExpectationSpecification {
      *            The features(s) that the user should have
      * @return
      */
-    AuthExpectationSpecification features(Feature... featureConstraints);
+    AuthExpectationSpecification features(String... featureConstraints);
 
     /**
      * To pass, the user must NOT have ANY of the given features active.
@@ -50,7 +49,7 @@ public interface AuthExpectationSpecification {
      *            The features(s) that the user should NOT have
      * @return
      */
-    AuthExpectationSpecification notFeatures(Feature... invalidFeatureConstraints);
+    AuthExpectationSpecification notFeatures(String... invalidFeatureConstraints);
 
     /**
      * To pass, the user's request origin must match one of the given validOriginTypes.

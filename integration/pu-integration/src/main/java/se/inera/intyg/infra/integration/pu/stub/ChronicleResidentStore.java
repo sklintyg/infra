@@ -23,7 +23,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.openhft.chronicle.map.ChronicleMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.riv.population.residentmaster.types.v1.ResidentType;
+import se.inera.intyg.schemas.contract.Personnummer;
+import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -31,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -69,31 +71,37 @@ public class ChronicleResidentStore {
      *
      * @param residentType
      */
-    public void addResident(ResidentType residentType) {
-        String pnr = residentType.getPersonpost().getPersonId();
-        if (residents.containsKey(pnr)) {
-            residents.remove(pnr);
+    public void addResident(PersonRecordType residentType) {
+        String pnr = residentType.getPersonalIdentity().getExtension();
+        Personnummer personnummer = Personnummer.createPersonnummer(pnr).get();
+        if (isPersonnummerValid(personnummer)) {
+            // Only add valid personnummer
+            if (residents.containsKey(pnr)) {
+                residents.remove(pnr);
+            }
+            residents.put(pnr, toJson(residentType));
         }
-        residents.put(residentType.getPersonpost().getPersonId(), toJson(residentType));
     }
 
-    ResidentType getResident(String id) {
+    PersonRecordType getResident(String pnr) {
         if (!active) {
             throw new IllegalStateException("Stub is deactivated for testing purposes.");
         }
-        if (!residents.containsKey(id)) {
+        Personnummer personnummer = Personnummer.createPersonnummer(pnr).get();
+        if (!isPersonnummerValid(personnummer) || !residents.containsKey(personnummer.getPersonnummer())) {
             return null;
         }
-        return fromJson(residents.get(id));
+        return fromJson(residents.get(personnummer.getPersonnummer()));
     }
 
     void removeResident(String personId) {
-        if (residents.containsKey(personId)) {
-            residents.remove(personId);
+        Personnummer personnummer = Personnummer.createPersonnummer(personId).get();
+        if (isPersonnummerValid(personnummer) && residents.containsKey(personnummer.getPersonnummer())) {
+            residents.remove(personnummer.getPersonnummer());
         }
     }
 
-    List<ResidentType> getAll() {
+    List<PersonRecordType> getAll() {
         if (!active) {
             throw new IllegalStateException("Stub is deactivated for testing purposes.");
         }
@@ -131,15 +139,15 @@ public class ChronicleResidentStore {
         }
     }
 
-    private ResidentType fromJson(String json) {
+    private PersonRecordType fromJson(String json) {
         try {
-            return objectMapper.readValue(json, ResidentType.class);
+            return objectMapper.readValue(json, PersonRecordType.class);
         } catch (IOException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
     }
 
-    private String toJson(ResidentType residentPost) {
+    private String toJson(PersonRecordType residentPost) {
 
         try {
             return objectMapper.writeValueAsString(residentPost);
@@ -148,11 +156,16 @@ public class ChronicleResidentStore {
         }
     }
 
-    private List<ResidentType> fromJson(Collection<String> xml) {
+    private List<PersonRecordType> fromJson(Collection<String> xml) {
         return xml.stream().map(this::fromJson).collect(Collectors.toList());
     }
 
     void setActive(boolean active) {
         this.active = active;
     }
+
+    private boolean isPersonnummerValid(Personnummer personnummer) {
+        return Optional.ofNullable(personnummer).isPresent();
+    }
+
 }

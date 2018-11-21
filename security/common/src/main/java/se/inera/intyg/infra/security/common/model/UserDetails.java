@@ -20,12 +20,9 @@ package se.inera.intyg.infra.security.common.model;
 
 import java.io.Serializable;
 import java.util.Map;
-import java.util.Set;
 
 /**
- *
  * Created by Magnus Ekstrand on 2015-08-27.
- *
  */
 public interface UserDetails extends Serializable {
 
@@ -48,12 +45,12 @@ public interface UserDetails extends Serializable {
      *
      * @return the features
      */
-    Set<String> getFeatures();
+    Map<String, Feature> getFeatures();
 
     /**
      * Sets the system wide features on user.
      */
-    void setFeatures(Set<String> features);
+    void setFeatures(Map<String, Feature> features);
 
     /**
      * Returns the role granted to the user. Cannot return <code>null</code>.

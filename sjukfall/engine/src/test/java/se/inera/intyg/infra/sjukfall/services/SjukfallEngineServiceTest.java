@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.sjukfall.dto.*;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetCreator;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetResolver;
