@@ -178,7 +178,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         LOG.debug("Retrieving authorized units from HSA...");
 
         try {
-            return hsaOrganizationsService.getVardenhet().getAuthorizedEnheterForHosPerson(employeeHsaId);
+            return hsaOrganizationsService.getAuthorizedEnheterForHosPerson(employeeHsaId);
 
         } catch (Exception e) {
             LOG.error("Failed retrieving authorized units from HSA for user {}, error message {}", employeeHsaId, e.getMessage());
