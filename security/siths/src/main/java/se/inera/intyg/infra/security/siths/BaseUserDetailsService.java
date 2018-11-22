@@ -136,7 +136,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
     }
 
     private IntygUser buildUserPrincipal(String employeeHsaId, String authenticationScheme) {
-        LOG.debug("Creating Webcert user object...");
+        LOG.debug("Creating user object...");
 
         List<PersonInformationType> personInfo = getPersonInfo(employeeHsaId);
         UserAuthorizationInfo userAuthorizationInfo = getAuthorizedVardgivare(employeeHsaId);
@@ -178,7 +178,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         LOG.debug("Retrieving authorized units from HSA...");
 
         try {
-            return hsaOrganizationsService.getAuthorizedEnheterForHosPerson(employeeHsaId);
+            return hsaOrganizationsService.getVardenhet().getAuthorizedEnheterForHosPerson(employeeHsaId);
 
         } catch (Exception e) {
             LOG.error("Failed retrieving authorized units from HSA for user {}, error message {}", employeeHsaId, e.getMessage());
