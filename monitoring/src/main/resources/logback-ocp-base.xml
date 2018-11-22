@@ -71,14 +71,5 @@
         </encoder>
     </appender>
 
-    <logger name="org.apache.camel" level="WARN"/>
-    <logger name="org.springframework" level="WARN"/>
-    <logger name="org.springframework.security" level="WARN"/>
-    <logger name="org.springframework.core.env.PropertySourcesPropertyResolver" level="WARN"/>
-    <logger name="org.springframework.web" level="WARN"/>
-    <logger name="org.springframework.http" level="WARN"/>
-    <logger name="org.springframework.security.saml.log" level="INFO" />
-    <logger name="org.opensaml" level="INFO" />
-
 </included>
 
