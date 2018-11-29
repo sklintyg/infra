@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.rediscache.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
 import org.springframework.data.redis.cache.RedisCacheManager;
 
 import com.google.common.collect.ImmutableMap;
@@ -33,7 +34,7 @@ public class RedisCacheOptionsSetter {
         this.defaultEntryExpiry = defaultEntryExpiry;
     }
 
-    public void createCache(String cacheName, String expiryTimeInSeconds) {
+    public Cache createCache(String cacheName, String expiryTimeInSeconds) {
         long expiryValue;
         try {
             expiryValue = Long.parseLong(expiryTimeInSeconds);
@@ -42,6 +43,6 @@ public class RedisCacheOptionsSetter {
         }
         redisCacheManager.setExpires(ImmutableMap.of(cacheName, expiryValue));
         // First access of cache triggers building it, see implementation of RedisCacheManager for details.
-        redisCacheManager.getCache(cacheName);
+        return redisCacheManager.getCache(cacheName);
    }
 }

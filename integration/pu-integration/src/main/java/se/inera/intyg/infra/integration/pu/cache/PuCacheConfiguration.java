@@ -20,31 +20,33 @@ package se.inera.intyg.infra.integration.pu.cache;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
+import org.springframework.cache.Cache;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
+import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
 
 /**
  * While the cacheManager.getCache(...) isn't strictly necessary for creating the cache used by
- * {@link se.inera.intyg.infra.integration.pu.services.PUServiceImpl}, this class provides us with the capability
+ * {@link se.inera.intyg.infra.integration.pu.services.PUService}, this class provides us with the capability
  * of configuring individual caches based on the current state of the (dynamic) configuration
  * <p>
  * Created by eriklupander on 2016-10-20.
  */
+@Configuration
 public class PuCacheConfiguration {
 
-    public static final String PERSON_CACHE_NAME = "personCache";
-    private static final String PU_CACHE_EXPIRY = "pu.cache.expiry";
+    @Value("${app.name:noname}")
+    private String appName;
 
-    @Value("${" + PU_CACHE_EXPIRY + "}")
+    @Value("${pu.cache.expiry}")
     private String personCacheExpirySeconds;
 
     @Autowired
     private RedisCacheOptionsSetter redisCacheOptionsSetter;
 
-    @PostConstruct
-    public void init() {
-        redisCacheOptionsSetter.createCache(PERSON_CACHE_NAME, PU_CACHE_EXPIRY);
+    @Bean
+    public Cache puCache() {
+        return redisCacheOptionsSetter.createCache("personCache:" + appName, personCacheExpirySeconds);
     }
-
 }

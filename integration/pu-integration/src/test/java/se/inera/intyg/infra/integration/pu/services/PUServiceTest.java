@@ -30,17 +30,35 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static se.inera.intyg.infra.integration.pu.model.PersonSvar.Status.NOT_FOUND;
 
-import com.google.common.base.Strings;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPFactory;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.soap.SOAPFaultException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
+import org.springframework.cache.Cache;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.google.common.base.Strings;
+
+import se.inera.intyg.infra.integration.pu.model.Person;
+import se.inera.intyg.infra.integration.pu.model.PersonSvar;
+import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileType;
@@ -50,20 +68,6 @@ import se.riv.strategicresourcemanagement.persons.person.v3.NamePartType;
 import se.riv.strategicresourcemanagement.persons.person.v3.NameType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPFactory;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.soap.SOAPFaultException;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
-import se.inera.intyg.infra.integration.pu.model.Person;
-import se.inera.intyg.infra.integration.pu.model.PersonSvar;
-import se.inera.intyg.schemas.contract.Personnummer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext
@@ -77,7 +81,7 @@ public class PUServiceTest {
     private GetPersonsForProfileResponderInterface residentService;
 
     @Autowired
-    private CacheManager cacheManager;
+    private Cache puCache;
 
     private static IIType iiType = new IIType();
 
@@ -92,7 +96,7 @@ public class PUServiceTest {
         Properties properties = System.getProperties();
         properties.setProperty("spring.profiles.active", "test");
 
-        cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME).clear();
+        puCache.clear();
         service.clearCache();
         // Some tests uses mocked residentService, reset here
         service.setService(residentService);

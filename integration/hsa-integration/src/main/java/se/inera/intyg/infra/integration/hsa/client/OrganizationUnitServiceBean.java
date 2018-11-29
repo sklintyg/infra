@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.infra.integration.hsa.client;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +25,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.riv.infrastructure.directory.organization.gethealthcareunit.v1.rivtabp21.GetHealthCareUnitResponderInterface;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v1.rivtabp21.GetHealthCareUnitMembersResponderInterface;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.*;
-import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.*;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersResponseType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.GetHealthCareUnitResponseType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.GetHealthCareUnitType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.HealthCareUnitType;
 import se.riv.infrastructure.directory.organization.getunit.v1.rivtabp21.GetUnitResponderInterface;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.*;
+import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitResponseType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
-
-import static se.inera.intyg.infra.integration.hsa.cache.HsaCacheConfiguration.*;
 
 /**
  * Provides a common interface to the {@link GetUnitResponderInterface}, {@link GetHealthCareUnitResponderInterface} and
@@ -61,7 +66,7 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
     private String logicalAddress;
 
     @Override
-    @Cacheable(value = HSA_UNIT_CACHE_NAME, key = "#unitHsaId", unless = "#result == null")
+    @Cacheable(cacheResolver = "hsaCacheResolver", key = "#unitHsaId", unless = "#result == null")
     public UnitType getUnit(String unitHsaId) throws HsaServiceCallException {
         GetUnitType parameters = new GetUnitType();
         parameters.setUnitHsaId(unitHsaId);
@@ -80,7 +85,7 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
     }
 
     @Override
-    @Cacheable(value = HSA_HEALTH_CARE_UNIT_CACHE_NAME, key = "#hsaId", unless = "#result == null")
+    @Cacheable(cacheResolver = "hsaCacheResolver", key = "#hsaId", unless = "#result == null")
     public HealthCareUnitType getHealthCareUnit(String hsaId) throws HsaServiceCallException {
         GetHealthCareUnitType parameters = new GetHealthCareUnitType();
         parameters.setHealthCareUnitMemberHsaId(hsaId);
@@ -99,7 +104,7 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
     }
 
     @Override
-    @Cacheable(value = HSA_HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME, key = "#unitHsaId", unless = "#result == null")
+    @Cacheable(cacheResolver = "hsaCacheResolver", key = "#unitHsaId", unless = "#result == null")
     public HealthCareUnitMembersType getHealthCareUnitMembers(String unitHsaId) throws HsaServiceCallException {
         GetHealthCareUnitMembersType parameters = new GetHealthCareUnitMembersType();
         parameters.setHealthCareUnitHsaId(unitHsaId);

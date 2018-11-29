@@ -31,7 +31,7 @@
   </bean>
 
   <bean class="se.inera.intyg.infra.rediscache.core.EmbeddedCacheConfiguration"/>
-
+  <bean class="se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration"/>
   <bean class="com.fasterxml.jackson.databind.ObjectMapper"/>
   <bean class="se.inera.intyg.infra.integration.pu.stub.PUBootstrapBean"/>
   <bean class="se.inera.intyg.infra.integration.pu.stub.StubResidentStore"/>

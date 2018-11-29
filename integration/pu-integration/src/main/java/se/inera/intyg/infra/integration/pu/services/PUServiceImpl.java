@@ -18,20 +18,6 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
-import com.google.common.annotations.VisibleForTesting;
-import org.apache.cxf.interceptor.Fault;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
-import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;
-import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
-import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileType;
-import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
-import se.riv.strategicresourcemanagement.persons.person.v3.LookupProfileType;
-import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,12 +26,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
+
+import org.apache.cxf.interceptor.Fault;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.Cache;
+
+import com.google.common.annotations.VisibleForTesting;
+
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.integration.pu.services.validator.PUResponseValidator;
 import se.inera.intyg.infra.integration.pu.util.PersonConverter;
 import se.inera.intyg.infra.integration.pu.util.PersonIdUtil;
 import se.inera.intyg.schemas.contract.Personnummer;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
+import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileType;
+import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
+import se.riv.strategicresourcemanagement.persons.person.v3.LookupProfileType;
+import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
 
 public class PUServiceImpl implements PUService {
 
@@ -57,7 +58,7 @@ public class PUServiceImpl implements PUService {
     private GetPersonsForProfileResponderInterface service;
 
     @Autowired
-    private CacheManager cacheManager;
+    private Cache puCache;
 
     @Autowired
     private PUResponseValidator puResponseValidator;
@@ -96,7 +97,7 @@ public class PUServiceImpl implements PUService {
     }
 
     /**
-     * @see PUService#getPersons(List<Personnummer> personIds)
+     * @see PUService#getPersons
      */
     @Override
     public Map<Personnummer, PersonSvar> getPersons(List<Personnummer> personIds) {
@@ -164,8 +165,7 @@ public class PUServiceImpl implements PUService {
     @VisibleForTesting
     public void clearCache() {
         LOG.debug("personCache cleared");
-        Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
-        cache.clear();
+        puCache.clear();
     }
 
     @VisibleForTesting
@@ -256,13 +256,11 @@ public class PUServiceImpl implements PUService {
     }
 
     private void storeIfAbsent(PersonSvar personSvar) {
-        Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
-        cache.putIfAbsent(personSvar.getPerson().getPersonnummer(), personSvar);
+        puCache.putIfAbsent(personSvar.getPerson().getPersonnummer(), personSvar);
     }
 
     private PersonSvar queryCache(Personnummer personId) {
-        Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
-        PersonSvar personSvar = cache.get(personId, PersonSvar.class);
+        PersonSvar personSvar = puCache.get(personId, PersonSvar.class);
         if (personSvar != null) {
             return personSvar;
         }
