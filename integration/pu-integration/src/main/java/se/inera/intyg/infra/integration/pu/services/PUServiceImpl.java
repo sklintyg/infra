@@ -257,12 +257,12 @@ public class PUServiceImpl implements PUService {
 
     private void storeIfAbsent(PersonSvar personSvar) {
         Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
-        cache.putIfAbsent(personSvar.getPerson().getPersonnummer(), personSvar);
+        cache.putIfAbsent(personSvar.getPerson().getPersonnummer().getPersonnummerHash(), personSvar);
     }
 
     private PersonSvar queryCache(Personnummer personId) {
         Cache cache = cacheManager.getCache(PuCacheConfiguration.PERSON_CACHE_NAME);
-        PersonSvar personSvar = cache.get(personId, PersonSvar.class);
+        PersonSvar personSvar = cache.get(personId.getPersonnummerHash(), PersonSvar.class);
         if (personSvar != null) {
             return personSvar;
         }
