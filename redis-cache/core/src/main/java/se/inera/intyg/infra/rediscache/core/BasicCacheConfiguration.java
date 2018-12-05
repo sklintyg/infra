@@ -30,6 +30,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.util.StringUtils;
 import se.inera.intyg.infra.rediscache.core.util.ConnectionStringUtil;
 
@@ -80,6 +81,7 @@ public class BasicCacheConfiguration {
     RedisTemplate<Object, Object> redisTemplate() {
         RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
         return redisTemplate;
     }
 
