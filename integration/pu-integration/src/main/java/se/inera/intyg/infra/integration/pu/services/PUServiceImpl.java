@@ -256,14 +256,10 @@ public class PUServiceImpl implements PUService {
     }
 
     private void storeIfAbsent(PersonSvar personSvar) {
-        puCache.putIfAbsent(personSvar.getPerson().getPersonnummer(), personSvar);
+        puCache.putIfAbsent(personSvar.getPerson().getPersonnummer().getPersonnummerHash(), personSvar);
     }
 
     private PersonSvar queryCache(Personnummer personId) {
-        PersonSvar personSvar = puCache.get(personId, PersonSvar.class);
-        if (personSvar != null) {
-            return personSvar;
-        }
-        return null;
+        return puCache.get(personId.getPersonnummerHash(), PersonSvar.class);
     }
 }
