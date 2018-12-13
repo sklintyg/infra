@@ -108,7 +108,7 @@ public class Vardgivare implements SelectableVardenhet, Comparable<Vardgivare>, 
     public boolean equals(Object o) {
         if (this == o) {
             return true;
-        } else if (o == null || getClass() != o.getClass()) {
+        } else if (!(o instanceof Vardgivare)) {
             return false;
         } else {
             Vardgivare that = (Vardgivare) o;

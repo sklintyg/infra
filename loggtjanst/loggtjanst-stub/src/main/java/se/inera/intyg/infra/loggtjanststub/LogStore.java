@@ -70,7 +70,7 @@ public class LogStore {
         stringRedisTemplate = new StringRedisTemplate();
         stringRedisTemplate.setConnectionFactory(redisConnectionFactory);
         stringRedisTemplate.afterPropertiesSet();
-        logEntries = new DefaultRedisMap<String, String>(LOGSTORE, stringRedisTemplate);
+        logEntries = new DefaultRedisMap<>(LOGSTORE, stringRedisTemplate);
     }
 
     List<LogType> getAll() {
@@ -98,6 +98,7 @@ public class LogStore {
     }
 
     // Ugly hack to sort and remove the oldest log items. Shoud go from MAX_SIZE + OVERFLOW_SIZE -> MAX_SIZE.
+    @SuppressWarnings("SynchronizeOnNonFinalField") // lazy init
     private void cleanup() {
         synchronized (logEntries) {
             Collection<String> values = logEntries.values();

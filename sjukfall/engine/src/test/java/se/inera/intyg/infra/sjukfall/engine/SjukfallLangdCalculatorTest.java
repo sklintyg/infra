@@ -18,17 +18,18 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
-import static org.junit.Assert.assertEquals;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-import junit.framework.Assert;
 import org.junit.Test;
+
 import se.inera.intyg.infra.sjukfall.dto.Formaga;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -176,8 +177,8 @@ public class SjukfallLangdCalculatorTest {
         final List<LocalDateInterval> result = SjukfallLangdCalculator.mergeIntervals(intervals);
 
         assertEquals(2, result.size());
-        Assert.assertTrue(result.contains(a));
-        Assert.assertTrue(result.contains(b));
+        assertTrue(result.contains(a));
+        assertTrue(result.contains(b));
 
     }
 
@@ -212,7 +213,7 @@ public class SjukfallLangdCalculatorTest {
     }
 
     private SjukfallIntyg createIntyg(LocalDateInterval... intervals) {
-        final List<Formaga> formagor = new ArrayList();
+        final List<Formaga> formagor = new ArrayList<>();
 
         for (LocalDateInterval i : intervals) {
             int nedsattning = 100;

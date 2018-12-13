@@ -18,22 +18,22 @@
  */
 package se.inera.intyg.infra.sjukfall.testdata;
 
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+
 /**
  * Created by Magnus Ekstrand on 2016-02-11.
  */
 public class SjukfallIntygReader {
 
-    private List<String> lines = new ArrayList();
+    private List<String> lines = new ArrayList<>();
 
     private String location;
     private int linesToSkip;

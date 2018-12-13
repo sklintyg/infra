@@ -18,14 +18,20 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
-import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import se.inera.intyg.infra.xmldsig.util.X509KeySelector;
-
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dom.DOMStructure;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
@@ -54,20 +60,15 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.security.Key;
-import java.security.KeyStore;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
+
+import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import se.inera.intyg.infra.xmldsig.util.X509KeySelector;
 
 import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_ALIAS;
 import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_NAME;
@@ -137,7 +138,7 @@ public class ReferenceSignatureTester {
                 new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
         X509Certificate cert = (X509Certificate) keyEntry.getCertificate();
         KeyInfoFactory kif = fac.getKeyInfoFactory();
-        List x509Content = new ArrayList();
+        List<X509Certificate> x509Content = new ArrayList<>();
         // x509Content.add(cert.getSubjectX500Principal().getName());
         x509Content.add(cert);
         X509Data xd = kif.newX509Data(x509Content);

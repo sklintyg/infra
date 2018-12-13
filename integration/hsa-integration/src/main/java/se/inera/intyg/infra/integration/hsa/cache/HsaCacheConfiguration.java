@@ -101,7 +101,8 @@ public class HsaCacheConfiguration {
                 if (context.getMethod().getReturnType() == HealthCareUnitMembersType.class) {
                     return Collections.singleton(hsaCareUnitMemberCache());
                 }
-                return Collections.EMPTY_LIST;
+
+                return Collections.emptyList();
             }
         };
     }

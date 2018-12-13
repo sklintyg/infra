@@ -18,6 +18,12 @@
  */
 package se.inera.intyg.infra.security.common.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,12 +32,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class IntygUser implements UserDetails {
 
@@ -427,8 +427,9 @@ public class IntygUser implements UserDetails {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (o == null || getClass() != o.getClass())
+        if (!(o instanceof IntygUser)) {
             return false;
+        }
 
         IntygUser intygUser = (IntygUser) o;
 

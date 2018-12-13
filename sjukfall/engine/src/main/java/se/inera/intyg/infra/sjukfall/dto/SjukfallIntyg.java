@@ -18,14 +18,14 @@
  */
 package se.inera.intyg.infra.sjukfall.dto;
 
-import se.inera.intyg.infra.sjukfall.engine.SjukfallLangdCalculator;
-import se.inera.intyg.infra.sjukfall.util.SysselsattningMapper;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import se.inera.intyg.infra.sjukfall.engine.SjukfallLangdCalculator;
+import se.inera.intyg.infra.sjukfall.util.SysselsattningMapper;
 
 /**
  * @author Magnus Ekstrand on 2017-02-10.
@@ -114,7 +114,7 @@ public class SjukfallIntyg extends IntygData {
             return true;
         }
 
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof SjukfallIntyg)) {
             return false;
         }
 
@@ -196,7 +196,7 @@ public class SjukfallIntyg extends IntygData {
         }
 
         private LocalDate lookupStartDatum(List<Formaga> formagor) {
-            Formaga formaga = formagor.stream().min((Comparator.comparing(Formaga::getStartdatum))).get();
+            Formaga formaga = formagor.stream().min(Comparator.comparing(Formaga::getStartdatum)).get();
             return formaga.getStartdatum();
         }
 
