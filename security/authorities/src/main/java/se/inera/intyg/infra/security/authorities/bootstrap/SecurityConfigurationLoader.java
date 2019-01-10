@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.infra.security.authorities.bootstrap;
 
-import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.Yaml;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
