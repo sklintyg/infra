@@ -29,13 +29,16 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.util.ResourceUtils;
 import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 
 /**
@@ -47,16 +50,25 @@ public class DynamicLinkRepositoryImpl implements DynamicLinkRepository {
     static final Logger LOG = LoggerFactory.getLogger(DynamicLinkRepositoryImpl.class);
 
     @Value("${dynamic.links.file}")
-    Resource location;
+    String location;
+
+    @Autowired
+    ResourceLoader resourceLoader;
 
     Map<String, DynamicLink> linkMap;
 
     @PostConstruct
     void initialize() {
+        // FIXME: Legacy support, can be removed when local config has been substituted by refdata (INTYG-7701)
+        if (!ResourceUtils.isUrl(location)) {
+            location = "file://" + location;
+        }
+
         try {
             List<DynamicLink> dynamicLinks =
-                    new ObjectMapper().readValue(location.getInputStream(), new TypeReference<List<DynamicLink>>() {
-                    });
+                    new ObjectMapper().readValue(resourceLoader.getResource(location).getInputStream(),
+                            new TypeReference<List<DynamicLink>>() {
+                            });
             this.linkMap = Collections.unmodifiableMap(
                     dynamicLinks.stream().collect(Collectors.toMap(DynamicLink::getKey, Function.identity()))
             );

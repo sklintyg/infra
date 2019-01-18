@@ -29,6 +29,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
+import org.springframework.util.ResourceUtils;
 import se.inera.intyg.infra.integration.postnummer.model.Omrade;
 
 @Component
@@ -60,13 +61,16 @@ public class PostnummerRepositoryFactory {
             return;
         }
 
-        LOG.debug("Loading postnummer file '{}' using encoding '{}'", fileUrl, sourceFileEncoding);
+        // FIXME: Legacy support, can be removed when local config has been substituted by refdata (INTYG-7701)
+        final String location = ResourceUtils.isUrl(fileUrl) ? fileUrl : "file://" + fileUrl;
+
+        LOG.debug("Loading postnummer from '{}' using encoding '{}'", location, sourceFileEncoding);
 
         try {
-            Resource resource = resourceLoader.getResource(fileUrl);
+            Resource resource = resourceLoader.getResource(location);
 
             if (!resource.exists()) {
-                LOG.error("Could not load postnummer file since the resource '{}' does not exists", fileUrl);
+                LOG.error("Could not load postnummer file since '{}' does not exists", location);
                 return;
             }
 
@@ -79,8 +83,8 @@ public class PostnummerRepositoryFactory {
             }
 
         } catch (IOException ioe) {
-            LOG.error("IOException occured when loading postnummer file '{}'", fileUrl);
-            throw new RuntimeException("Error occured when loading postnummer file", ioe);
+            LOG.error("Error occurred  when loading postnummer from: '{}'", location);
+            throw new RuntimeException("Error occurred when loading postnummer file", ioe);
         }
     }
 
