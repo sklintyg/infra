@@ -18,7 +18,12 @@
  */
 package se.inera.intyg.infra.dynamiclink.repository;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -27,8 +32,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,14 +49,18 @@ public class DynamicLinkRepositoryImpl implements DynamicLinkRepository {
     private static final Logger LOG = LoggerFactory.getLogger(DynamicLinkRepositoryImpl.class);
 
     @Value("${dynamic.links.file}")
-    private Resource location;
+    private String sourceFile;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Map<String, DynamicLink> getAll() {
         try {
-            List<DynamicLink> dynamicLinks = new ObjectMapper().readValue(location.getInputStream(),
-                    new TypeReference<List<DynamicLink>>() {
-                    });
+            File file = ResourceUtils.getFile(sourceFile);
+            Path path = file.toPath();
+            InputStream inputStream = Files.newInputStream(path, StandardOpenOption.READ);
+            List<DynamicLink> dynamicLinks = objectMapper.readValue(inputStream, new TypeReference<List<DynamicLink>>() {
+            });
             return dynamicLinks.stream().collect(Collectors.toMap(DynamicLink::getKey, Function.identity()));
         } catch (IOException e) {
             LOG.error("Error loading dynamic links from file: " + e.getMessage());
