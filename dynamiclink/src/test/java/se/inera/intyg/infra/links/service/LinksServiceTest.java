@@ -36,7 +36,7 @@ import se.inera.intyg.infra.dynamiclink.service.DynamicLinkService;
  * Created by eriklupander on 2017-05-03.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = se.inera.intyg.infra.links.service.TestConfig.class)
+@ContextConfiguration(classes = TestConfig.class)
 public class LinksServiceTest {
 
     @Autowired
