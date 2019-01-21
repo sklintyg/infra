@@ -18,15 +18,16 @@
  */
 package se.inera.intyg.infra.security.siths;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.Attribute;
 import org.opensaml.saml2.core.AttributeStatement;
 import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.schema.impl.XSAnyImpl;
+import org.opensaml.xml.schema.impl.XSStringImpl;
 import org.springframework.security.saml.SAMLCredential;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This SAML-assertion is adapted for "uppdragslös inloggning", specifying only employeeHsaId.
@@ -110,6 +111,8 @@ public class BaseSakerhetstjanstAssertion {
                 values.add(xmlObject.getDOM().getTextContent());
             } else if (xmlObject instanceof XSAnyImpl) {
                 values.add(((XSAnyImpl) xmlObject).getTextContent());
+            } else if (xmlObject instanceof XSStringImpl) {
+                values.add(((XSStringImpl) xmlObject).getValue());
             }
         }
         return values;
