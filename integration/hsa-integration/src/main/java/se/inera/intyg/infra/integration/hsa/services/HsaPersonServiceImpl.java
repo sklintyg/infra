@@ -18,24 +18,21 @@
  */
 package se.inera.intyg.infra.integration.hsa.services;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.xml.ws.WebServiceException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import se.riv.infrastructure.directory.v1.CommissionType;
+import se.riv.infrastructure.directory.v1.CredentialInformationType;
+import se.riv.infrastructure.directory.v1.PersonInformationType;
+import javax.xml.ws.WebServiceException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import se.inera.intyg.infra.integration.hsa.client.AuthorizationManagementService;
 import se.inera.intyg.infra.integration.hsa.client.EmployeeService;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsa.stub.Medarbetaruppdrag;
-import se.riv.infrastructure.directory.v1.CommissionType;
-import se.riv.infrastructure.directory.v1.CredentialInformationType;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**
  * Provides person related services using TJK over NTjP.
@@ -62,7 +59,7 @@ public class HsaPersonServiceImpl implements HsaPersonService {
      * @see HsaPersonService#getHsaPersonInfo(java.lang.String)
      */
     @Override
-    public List<PersonInformationType> getHsaPersonInfo(String personHsaId) {
+    public List<PersonInformationType> getHsaPersonInfo(final String personHsaId) {
 
         LOG.debug("Getting info from HSA for person '{}'", personHsaId);
 
@@ -75,7 +72,7 @@ public class HsaPersonServiceImpl implements HsaPersonService {
     }
 
     @Override
-    public List<CommissionType> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, final String unitHsaId) throws HsaServiceCallException {
+    public List<CommissionType> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, String unitHsaId) throws HsaServiceCallException {
 
         LOG.debug("Checking if person with HSA id '{}' has MIUs on unit '{}'", hosPersonHsaId, unitHsaId);
 

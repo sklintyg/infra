@@ -28,5 +28,5 @@ public interface HsaPersonService {
 
     List<PersonInformationType> getHsaPersonInfo(String personHsaId);
 
-    List<CommissionType> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, final String unitHsaId) throws HsaServiceCallException;
+    List<CommissionType> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, String unitHsaId) throws HsaServiceCallException;
 }
