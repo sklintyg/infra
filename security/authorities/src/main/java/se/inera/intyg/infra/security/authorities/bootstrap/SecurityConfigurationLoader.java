@@ -26,6 +26,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.util.ResourceUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import se.inera.intyg.infra.security.authorities.AuthoritiesConfiguration;
@@ -81,16 +82,8 @@ public class SecurityConfigurationLoader implements InitializingBean {
      */
     @Override
     public void afterPropertiesSet() throws AuthoritiesException {
-
-        Resource authoritiesResource = getResource(authoritiesConfigurationFile);
-        Resource featuresResource = getResource(featuresConfigurationFile);
-        try {
-            authoritiesConfiguration = loadConfiguration(authoritiesResource, AuthoritiesConfiguration.class);
-            featuresConfiguration = loadConfiguration(featuresResource, FeaturesConfiguration.class);
-        } catch (IOException ioe) {
-            throw new AuthoritiesException("Could not load configuration files", ioe);
-        }
-
+      authoritiesConfiguration = loadConfiguration(authoritiesConfigurationFile, AuthoritiesConfiguration.class);
+      featuresConfiguration = loadConfiguration(featuresConfigurationFile, FeaturesConfiguration.class);
     }
 
     /**
@@ -112,13 +105,18 @@ public class SecurityConfigurationLoader implements InitializingBean {
     }
 
     private Resource getResource(String location) {
+        final String url = ResourceUtils.isUrl(location) ? location : "file:" + location;
         PathMatchingResourcePatternResolver r = new PathMatchingResourcePatternResolver();
-        return r.getResource(location);
+        return r.getResource(url);
     }
 
-    private <T> T loadConfiguration(Resource resource, Class<T> type) throws IOException {
+    private <T> T loadConfiguration(String location, Class<T> type) {
         Yaml yaml = new Yaml();
-        return yaml.loadAs(resource.getInputStream(), type);
+        try {
+            return yaml.loadAs(getResource(location).getInputStream(), type);
+        } catch (IOException e) {
+            throw new AuthoritiesException("Could not load configuration file: " + location, e);
+        }
     }
 
 }
