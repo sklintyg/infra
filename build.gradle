@@ -62,7 +62,9 @@ allprojects {
 
     group = 'se.inera.intyg.infra'
     version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
-
+    
+    compileJava.options.encoding = 'UTF-8'
+    
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
