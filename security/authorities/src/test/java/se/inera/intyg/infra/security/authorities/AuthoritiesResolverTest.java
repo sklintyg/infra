@@ -46,8 +46,8 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class AuthoritiesResolverTest {
 
-    private String authoritiesConfigurationLocation = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
-    private String featuresConfigurationLocation = "AuthoritiesConfigurationLoaderTest/features-test.yaml";
+    private String authoritiesConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    private String featuresConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
 
     @Mock
     private HsaPersonService hsaPersonService;
