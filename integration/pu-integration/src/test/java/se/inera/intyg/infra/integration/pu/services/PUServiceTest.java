@@ -18,31 +18,7 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static se.inera.intyg.infra.integration.pu.model.PersonSvar.Status.NOT_FOUND;
-
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPFactory;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.soap.SOAPFaultException;
-
+import com.google.common.base.Strings;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -53,9 +29,6 @@ import org.springframework.cache.Cache;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.google.common.base.Strings;
-
 import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.schemas.contract.Personnummer;
@@ -68,6 +41,29 @@ import se.riv.strategicresourcemanagement.persons.person.v3.NamePartType;
 import se.riv.strategicresourcemanagement.persons.person.v3.NameType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
+
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPFactory;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.soap.SOAPFaultException;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static se.inera.intyg.infra.integration.pu.model.PersonSvar.Status.NOT_FOUND;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext
@@ -142,7 +138,7 @@ public class PUServiceTest {
     @Test
     public void checkExistingPersonWithoutAddress() {
         Person person = service.getPerson(createPnr("19520529-2260")).getPerson();
-        assertEquals("Maria Lousie", person.getFornamn());
+        assertEquals("Maria Louise", person.getFornamn());
         assertEquals("Pärsson", person.getEfternamn());
         assertNull(person.getPostadress());
         assertNull(person.getPostnummer());
