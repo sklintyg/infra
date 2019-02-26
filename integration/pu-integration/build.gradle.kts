@@ -1,0 +1,29 @@
+dependencies {
+
+  val springDataRedisVersion: String by rootProject.extra
+  val rivtaGetPersonsPersonSchemasVersion: String by rootProject.extra
+  val schemasContractVersion: String by rootProject.extra
+  val cxfVersion: String by rootProject.extra
+  val commonsLangVersion: String by rootProject.extra
+  val commonsCollectionsVersion: String by rootProject.extra
+  val springVersion: String by rootProject.extra
+  val rivtaResidentMasterSchemasVersion: String by rootProject.extra
+  val hamcrestVersion: String by rootProject.extra
+
+  compile(project(":common-redis-cache-core"))
+
+  compile("org.springframework.data:spring-data-redis:$springDataRedisVersion")
+  compile("se.riv.strategicresourcemanagement.persons.person:strategicresourcemanagement-persons-person-schemas:$rivtaGetPersonsPersonSchemasVersion")
+
+  compile("se.inera.intyg.schemas:schemas-contract:$schemasContractVersion")
+  compile("org.apache.cxf:cxf-rt-frontend-jaxrs:$cxfVersion")
+  compile("org.apache.commons:commons-lang3:$commonsLangVersion")
+  compile("org.apache.commons:commons-collections4:$commonsCollectionsVersion")
+  runtime("org.springframework:spring-context-support:$springVersion")
+
+  testCompile("se.riv.population.residentmaster:population-residentmaster-schemas:$rivtaResidentMasterSchemasVersion")
+
+  testCompile("org.springframework:spring-test:$springVersion")
+  testCompile("org.hamcrest:hamcrest-all:$hamcrestVersion")
+  testCompile("it.ozimov:embedded-redis:0.7.2")
+}
