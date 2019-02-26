@@ -1,6 +1,5 @@
+import se.inera.intyg.infra.build.Properties
+
 dependencies {
-
-  val jacksonVersion: String by rootProject.extra
-
-  compile("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
+  compile("com.fasterxml.jackson.core:jackson-annotations:${Properties.jacksonVersion}")
 }

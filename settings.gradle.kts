@@ -24,6 +24,7 @@ include(":security-siths")
 include(":sjukfall-engine")
 include(":xmldsig")
 include(":monitoring")
+//include(":buildSrc")
 
 //Detta gör att vi kan migrera sub-modulerna till kotlin-DSL en modul i taget
 val groovyBuildScriptProjects = listOf(
@@ -65,6 +66,7 @@ fun getProjectDirName(project: String): String {
        "sjukfall-engine" ->"$rootDir/sjukfall/engine"
        "xmldsig" ->"$rootDir/xmldsig"
        "monitoring" ->"$rootDir/monitoring"
+//       "buildSrc" ->"$rootDir/buildSrc"
     else -> "unknown"
   }
 }

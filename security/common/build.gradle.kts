@@ -1,18 +1,13 @@
+import se.inera.intyg.infra.build.Properties
+
 dependencies {
-
-    val jacksonVersion: String by rootProject.extra
-    val jacksonDataformatVersion: String by rootProject.extra
-    val springVersion: String by rootProject.extra
-    val slf4jVersion: String by rootProject.extra
-    val servletApiVersion: String by rootProject.extra
-
     compile(project(":hsa-integration"))
 
-    compile("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
-    compile("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonDataformatVersion")
+    compile("com.fasterxml.jackson.core:jackson-annotations:${Properties.jacksonVersion}")
+    compile("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${Properties.jacksonDataformatVersion}")
 
-    compile("org.springframework:spring-context:$springVersion")
-    compile("org.slf4j:slf4j-api:$slf4jVersion")
+    compile("org.springframework:spring-context:${Properties.springVersion}")
+    compile("org.slf4j:slf4j-api:${Properties.slf4jVersion}")
 
-    compileOnly("javax.servlet:servlet-api:$servletApiVersion")
+    compileOnly("javax.servlet:servlet-api:${Properties.servletApiVersion}")
 }

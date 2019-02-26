@@ -1,9 +1,7 @@
-dependencies {
-    val commonsLangVersion: String by rootProject.extra
-    val logbackVersion: String by rootProject.extra
-    val springVersion: String by rootProject.extra
+import se.inera.intyg.infra.build.Properties
 
-    compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
-    compile("ch.qos.logback:logback-classic:${logbackVersion}")
-    compile("org.springframework:spring-context:${springVersion}")
+dependencies {
+    compile("org.apache.commons:commons-lang3:${Properties.commonsLangVersion}")
+    compile("ch.qos.logback:logback-classic:${Properties.logbackVersion}")
+    compile("org.springframework:spring-context:${Properties.springVersion}")
 }

@@ -1,20 +1,16 @@
+import se.inera.intyg.infra.build.Properties
+
 dependencies {
+    compile("org.springframework.data:spring-data-redis:${Properties.springDataRedisVersion}")
+    compile("redis.clients:jedis:2.9.0")
+    compile("org.springframework:spring-core:${Properties.springVersion}")
+    compile("com.esotericsoftware:kryo:4.0.1")
+    compile("com.google.guava:guava:${Properties.guavaVersion}")
+    compile("it.ozimov:embedded-redis:0.7.2")
 
-    val springDataRedisVersion: String by rootProject.extra
-    val springVersion: String by rootProject.extra
-    val guavaVersion: String by rootProject.extra
-    val logbackVersion: String by rootProject.extra
-    
-    implementation("org.springframework.data:spring-data-redis:$springDataRedisVersion")
-    implementation("redis.clients:jedis:2.9.0")
-    implementation("org.springframework:spring-core:$springVersion")
-    implementation("com.esotericsoftware:kryo:4.0.1")
-    implementation("com.google.guava:guava:$guavaVersion")
-    implementation("it.ozimov:embedded-redis:0.7.2")
+    runtime("org.springframework:spring-context-support:${Properties.springVersion}")
 
-    runtime("org.springframework:spring-context-support:$springVersion")
+    testImplementation("org.springframework:spring-test:${Properties.springVersion}")
 
-    testImplementation("org.springframework:spring-test:$springVersion")
-
-    testRuntime("ch.qos.logback:logback-classic:$logbackVersion")
+    testRuntime("ch.qos.logback:logback-classic:${Properties.logbackVersion}")
 }

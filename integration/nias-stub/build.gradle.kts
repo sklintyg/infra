@@ -1,25 +1,20 @@
-dependencies {
+import se.inera.intyg.infra.build.Properties
 
-  val springSecurityVersion: String by rootProject.extra
-  val commonsLangVersion: String by rootProject.extra
-  val logbackVersion: String by rootProject.extra
-  val guavaVersion: String by rootProject.extra
-  val jacksonVersion: String by rootProject.extra
-  val cxfVersion: String by rootProject.extra
+dependencies {
 
   compileOnly(project(":xmldsig"))
 
   compile("com.secmaker.netid.nias:netid-access-server-schemas:1.0.0")
 
-  compile("org.springframework.security:spring-security-web:$springSecurityVersion")
+  compile("org.springframework.security:spring-security-web:${Properties.springSecurityVersion}")
 
-  compile("org.apache.commons:commons-lang3:$commonsLangVersion")
-  compile("ch.qos.logback:logback-classic:$logbackVersion")
-  compile("com.google.guava:guava:$guavaVersion")
+  compile("org.apache.commons:commons-lang3:${Properties.commonsLangVersion}")
+  compile("ch.qos.logback:logback-classic:${Properties.logbackVersion}")
+  compile("com.google.guava:guava:${Properties.guavaVersion}")
 
-  compile("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
-  compile("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion")
-  compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+  compile("com.fasterxml.jackson.core:jackson-databind:${Properties.jacksonVersion}")
+  compile("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${Properties.jacksonVersion}")
+  compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${Properties.jacksonVersion}")
 
-  compile("org.apache.cxf:cxf-rt-frontend-jaxrs:$cxfVersion")
+  compile("org.apache.cxf:cxf-rt-frontend-jaxrs:${Properties.cxfVersion}")
 }
