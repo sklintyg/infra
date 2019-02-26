@@ -5,7 +5,7 @@ pluginManagement {
   }
 }
 
-rootProject.name = "infra"
+rootProject.name = "se.inera.intyg.infra"
 
 include(":common-redis-cache-core")
 include(":dynamiclink")
@@ -24,28 +24,6 @@ include(":security-siths")
 include(":sjukfall-engine")
 include(":xmldsig")
 include(":monitoring")
-//include(":buildSrc")
-
-//Detta gör att vi kan migrera sub-modulerna till kotlin-DSL en modul i taget
-val groovyBuildScriptProjects = listOf(
-//   "common-redis-cache-core",
-//   "dynamiclink",
-//   "grp-stub",
-//   "nias-stub",
-//   "hsa-integration",
-//   "pu-integration",
-//   "srs-integration",
-//   "postnummerservice-integration",
-//   "log-messages",
-//   "loggtjanst-stub",
-//   "security-common",
-//   "security-authorities",
-//   "security-filter",
-//   "security-siths",
-//   "sjukfall-engine",
-//   "xmldsig",
-//   "monitoring"
-)
 
 fun getProjectDirName(project: String): String {
   return when(project) {
@@ -66,19 +44,15 @@ fun getProjectDirName(project: String): String {
        "sjukfall-engine" ->"$rootDir/sjukfall/engine"
        "xmldsig" ->"$rootDir/xmldsig"
        "monitoring" ->"$rootDir/monitoring"
-//       "buildSrc" ->"$rootDir/buildSrc"
     else -> "unknown"
   }
 }
-
-fun buildFileNameFor(projectDirName: String) = "build" + buildFileExtensionFor(projectDirName)
-fun buildFileExtensionFor(projectDirName: String) = if (projectDirName in groovyBuildScriptProjects) ".gradle" else ".gradle.kts"
 
 for (project in rootProject.children) {
   val projectName = project.name
 
   project.projectDir = file(getProjectDirName(projectName))
-  project.buildFileName = buildFileNameFor(projectName)
+  project.buildFileName = "build.gradle.kts"
 
   if (!project.projectDir.isDirectory) {
     throw IllegalArgumentException("Project directory ${project.projectDir} for project ${project.name} does not exist.")
