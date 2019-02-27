@@ -8,10 +8,10 @@ plugins {
   maven
 }
 
-group = "se.inera.intyg.infra"
-version = System.getenv("buildVersion") ?: "0-SNAPSHOT"
-
 allprojects {
+
+  group = "se.inera.intyg.infra"
+  version = System.getenv("buildVersion") ?: "0-SNAPSHOT"
 
   repositories {
     mavenLocal()
