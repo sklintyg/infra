@@ -5,7 +5,7 @@ pluginManagement {
   }
 }
 
-rootProject.name = "se.inera.intyg.infra"
+rootProject.name = "infra"
 
 include(":common-redis-cache-core")
 include(":dynamiclink")
