@@ -26,7 +26,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -87,11 +89,8 @@ public class BasicCacheConfiguration {
 
     @Bean
     RedisCacheManager cacheManager() {
-        RedisCacheManager redisCacheManager = new RedisCacheManager(redisTemplate());
-        redisCacheManager.setUsePrefix(true);
-        redisCacheManager.setDefaultExpiration(defaultEntryExpiry);
-
-        return redisCacheManager;
+        RedisCacheWriter cacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(jedisConnectionFactory());
+        return new RedisCacheManager(cacheWriter, RedisCacheConfiguration.defaultCacheConfig());
     }
 
     @Bean

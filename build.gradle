@@ -18,7 +18,7 @@ ext {
 
     schemasContractVersion = "2.1.7"
 
-    springDataRedisVersion = "1.8.12.RELEASE"
+    springDataRedisVersion = "2.1.5.RELEASE"
     commonsIoVersion = "2.4"
     commonsLangVersion = "3.8.1"
     commonsCollectionsVersion = "4.2"
@@ -34,7 +34,7 @@ ext {
     slf4jVersion = "1.7.21"
     springSecuritySaml2CoreVersion = "1.0.3.RELEASE"
     springSecurityVersion = "4.2.5.RELEASE"
-    springVersion = "4.3.17.RELEASE"
+    springVersion = "5.1.5.RELEASE"
     xmlSecVersion = "2.1.1"
     prometheusClientVersion = "0.4.0"
     aspectjWeaverVersion = "1.8.9"

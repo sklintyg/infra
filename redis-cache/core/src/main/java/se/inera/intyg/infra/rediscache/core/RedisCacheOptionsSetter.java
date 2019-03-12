@@ -41,7 +41,7 @@ public class RedisCacheOptionsSetter {
         } catch (NumberFormatException e) {
             expiryValue = defaultEntryExpiry;
         }
-        redisCacheManager.setExpires(ImmutableMap.of(cacheName, expiryValue));
+        //redisCacheManager.setExpires(ImmutableMap.of(cacheName, expiryValue));
         // First access of cache triggers building it, see implementation of RedisCacheManager for details.
         return redisCacheManager.getCache(cacheName);
    }
