@@ -1,14 +1,19 @@
 dependencies {
     compile "org.springframework.data:spring-data-redis:${springDataRedisVersion}"
-    compile "redis.clients:jedis:2.9.0"
     compile "org.springframework:spring-core:${springVersion}"
-    compile "com.esotericsoftware:kryo:4.0.1"
+
+    compile "com.esotericsoftware:kryo:${kryoVersion}"
     compile "com.google.guava:guava:${guavaVersion}"
-    compile "it.ozimov:embedded-redis:0.7.2"
+    compile "it.ozimov:embedded-redis:${embeddedRedisVersion}"
+    compile "redis.clients:jedis:${jedisVersion}"
 
     runtime "org.springframework:spring-context-support:${springVersion}"
 
-    testRuntime "ch.qos.logback:logback-classic:${logbackVersion}"
+
+    // Test dependencies
 
     testCompile "org.springframework:spring-test:${springVersion}"
+
+    testRuntime "ch.qos.logback:logback-classic:${logbackVersion}"
+
 }
