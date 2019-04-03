@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Inera AB (http://www.inera.se)
+ * Copyright (C) 2019 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -41,7 +41,7 @@ public class LinksServiceTest {
 
     @Autowired
     private DynamicLinkService dynamicLinkService;
-    
+
     @Test
     public void testLoadAndGetLink() {
         List<DynamicLink> allAsList = dynamicLinkService.getAllAsList();

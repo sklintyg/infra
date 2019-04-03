@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Inera AB (http://www.inera.se)
+ * Copyright (C) 2019 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -98,7 +98,7 @@ public class ScannerBeanTest {
         await().atMost(15, SECONDS).until(() -> personInStubHasLastName(HSA_ID, EFTERNAMN2));
         assertEquals(EFTERNAMN2, hsaServiceStub.getHsaPerson(HSA_ID).getEfterNamn());
     }
-    
+
     @Test
     @Ignore("Unstable")
     public void testDeleteFile() throws IOException, URISyntaxException, InterruptedException {
