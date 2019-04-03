@@ -31,7 +31,7 @@ import org.springframework.util.CollectionUtils;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Utdatafilter;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
@@ -83,7 +83,7 @@ public class SrsServiceTest {
     }
 
     @Test
-    public void testNone() throws Exception {
+    public void testNoneWithSRSDiagnosis() throws Exception {
         SrsResponse response = service.getSrs(createUser(), "intygId", createPnr(PNR_VALID), "M18", utdatafilter,
                 Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNull(response.getStatistikBild());
@@ -91,6 +91,19 @@ public class SrsServiceTest {
         assertNull(response.getAtgarderRek());
         assertNull(response.getPredictionLevel());
         assertNull(response.getPredictionDescription());
+        assertNotNull(response.getPredictionPrevalence());
+    }
+
+    @Test
+    public void testNoneWithUnknownDiagnosis() throws Exception {
+        SrsResponse response = service.getSrs(createUser(), "intygId", createPnr(PNR_VALID), "X99", utdatafilter,
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
+        assertNull(response.getStatistikBild());
+        assertNull(response.getAtgarderObs());
+        assertNull(response.getAtgarderRek());
+        assertNull(response.getPredictionLevel());
+        assertNull(response.getPredictionDescription());
+        assertNull(response.getPredictionPrevalence());
     }
 
     @Test

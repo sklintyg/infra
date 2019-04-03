@@ -35,13 +35,17 @@ public class SrsResponse {
     private String atgarderDiagnosisCode;
     private String atgarderDiagnosisDescription;
     private String atgarderStatusCode;
+    private ImmutableList<Integer> statistikNationellStatistik;
     private String statistikDiagnosisCode;
     private String statistikDiagnosisDescription;
     private String statistikStatusCode;
+    private Double predictionProbabilityOverLimit;
+    private Double predictionPrevalence;
 
     public SrsResponse(Integer level, String description, List<String> atgarderObs, List<String> atgarderRek, String statistikBild,
             String predictionDiagnosisCode, String predictionStatusCode, String atgarderDiagnosisCode, String atgarderStatusCode,
-            String statistikDiagnosisCode, String statistikStatusCode) {
+            String statistikDiagnosisCode, String statistikStatusCode, Double predictionProbabilityOverLimit,
+            Double predictionPrevalence, List<Integer> statistikNationellStatistikData) {
         this.predictionLevel = level;
         this.predictionDescription = description;
         if (atgarderObs == null) {
@@ -54,6 +58,13 @@ public class SrsResponse {
         } else {
             this.atgarderRek = ImmutableList.copyOf(atgarderRek);
         }
+
+        if (statistikNationellStatistikData == null) {
+            this.statistikNationellStatistik = null;
+        } else {
+            this.statistikNationellStatistik = ImmutableList.copyOf(statistikNationellStatistikData);
+        }
+
         this.statistikBild = statistikBild;
 
         this.predictionDiagnosisCode = predictionDiagnosisCode;
@@ -64,6 +75,9 @@ public class SrsResponse {
 
         this.statistikDiagnosisCode = statistikDiagnosisCode;
         this.statistikStatusCode = statistikStatusCode;
+
+        this.predictionProbabilityOverLimit = predictionProbabilityOverLimit;
+        this.predictionPrevalence = predictionPrevalence;
     }
 
     public Integer getPredictionLevel() {
@@ -120,6 +134,18 @@ public class SrsResponse {
 
     public String getStatistikDiagnosisDescription() {
         return statistikDiagnosisDescription;
+    }
+
+    public List<Integer> getStatistikNationellStatistik() {
+        return statistikNationellStatistik;
+    }
+
+    public Double getPredictionProbabilityOverLimit() {
+        return predictionProbabilityOverLimit;
+    }
+
+    public Double getPredictionPrevalence() {
+        return predictionPrevalence;
     }
 
     public void setPredictionDiagnosisDescription(String predictionDiagnosisDescription) {

@@ -19,6 +19,8 @@
 package se.inera.intyg.infra.integration.srs.services;
 
 import com.google.common.base.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentRequestType;
@@ -31,15 +33,15 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDia
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Bedomningsunderlag;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationRequestType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Individ;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Individfaktorer;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Prediktionsfaktorer;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Bedomningsunderlag;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Diagnosprediktionstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationRequestType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Individ;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Individfaktorer;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Prediktionsfaktorer;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Utdatafilter;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponseType;
@@ -102,7 +104,6 @@ public class SrsServiceImpl implements SrsService {
         if (questions == null || questions.isEmpty()) {
             throw new IllegalArgumentException("Answers are required to construct a valid request.");
         }
-
         GetSRSInformationResponseType response = getSRSInformation.getSRSInformation(
                 createRequest(user, intygId, personnummer, diagnosisCode, filter, questions));
 
@@ -118,26 +119,32 @@ public class SrsServiceImpl implements SrsService {
         String prediktionStatusCode = null;
         String statistikBild = null;
         String statistikStatusCode = null;
+        List<Integer> statistikNationellStatistik = null;
         String predictionDiagnosisCode = null;
         String atgarderDiagnosisCode = null;
         String statistikDiagnosisCode = null;
         List<String> atgarderObs = null;
         List<String> atgarderRek = null;
         String atgarderStatusCode = null;
+        Double predictionProbabilityOverLimit = null;
+        Double predictionPrevalence = null;
 
-        if (filter.isPrediktion()) {
-            if (underlag.getPrediktion().getDiagnosprediktion().isEmpty()
-                    || underlag.getPrediktion().getDiagnosprediktion().get(0)
-                            .getDiagnosprediktionstatus() == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
-                prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
-            } else {
+        if (underlag == null || underlag.getPrediktion() == null || underlag.getPrediktion().getDiagnosprediktion().isEmpty()
+                || underlag.getPrediktion().getDiagnosprediktion().get(0)
+                .getDiagnosprediktionstatus() == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
+            prediktionStatusCode = Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS.value();
+        } else if (filter.isPrediktion()) {
                 level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori().intValueExact();
                 description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
                 prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
                 predictionDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
                         .map(CVType::getCode)
                         .orElse(null);
-            }
+                predictionProbabilityOverLimit = underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde();
+                predictionPrevalence = underlag.getPrediktion().getDiagnosprediktion().get(0).getPrevalens();
+        } else if (underlag.getPrediktion().getDiagnosprediktion().get(0) != null) {
+            // Always add prevalence if we have it regardless if the user requested prediction on a personal level
+            predictionPrevalence = underlag.getPrediktion().getDiagnosprediktion().get(0).getPrevalens();
         }
 
         if (filter.isAtgardsrekommendation()) {
@@ -150,7 +157,6 @@ public class SrsServiceImpl implements SrsService {
                     .getAtgardsrekommendationer().getRekommendation().stream()
                     .flatMap(a -> a.getAtgard().stream())
                     .collect(Collectors.groupingBy(Atgard::getAtgardstyp));
-
             if (tmp.containsKey(Atgardstyp.OBS)) {
                 atgarderObs = tmp.get(Atgardstyp.OBS).stream()
                         .sorted(Comparator.comparing(Atgard::getPrioritet))
@@ -168,6 +174,7 @@ public class SrsServiceImpl implements SrsService {
             } else {
                 atgarderRek = Collections.emptyList();
             }
+
             // They are all for the same diagnosis and all have the same code.
             atgarderStatusCode = underlag.getAtgardsrekommendationer().getRekommendation().stream()
                     .map(Atgardsrekommendation::getAtgardsrekommendationstatus)
@@ -183,10 +190,13 @@ public class SrsServiceImpl implements SrsService {
                     .orElse(null);
             statistikBild = underlag.getStatistik().getStatistikbild().get(0).getBildadress();
             statistikStatusCode = underlag.getStatistik().getStatistikbild().get(0).getStatistikstatus().toString();
+            statistikNationellStatistik =
+                    underlag.getStatistik().getStatistikbild().get(0).getData().stream()
+                            .map((d)->d.getIndividerAckumulerat().intValue()).collect(Collectors.toList());
         }
-
-        return new SrsResponse(level, description, atgarderObs, atgarderRek, statistikBild, predictionDiagnosisCode, prediktionStatusCode,
-                atgarderDiagnosisCode, atgarderStatusCode, statistikDiagnosisCode, statistikStatusCode);
+        return new SrsResponse(level, description, atgarderObs, atgarderRek, statistikBild, predictionDiagnosisCode,
+                prediktionStatusCode, atgarderDiagnosisCode, atgarderStatusCode, statistikDiagnosisCode,
+                statistikStatusCode, predictionProbabilityOverLimit, predictionPrevalence, statistikNationellStatistik);
     }
 
     @Override

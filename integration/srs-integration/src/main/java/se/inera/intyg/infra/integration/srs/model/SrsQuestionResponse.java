@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.infra.integration.srs.model;
 
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.FragaSvar;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.FragaSvar;
 
 public class SrsQuestionResponse {
 
