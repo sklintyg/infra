@@ -366,10 +366,11 @@ public class HsaOrganizationsServiceTest {
     }
 
     @Test
-    public void testGetCareGiverIdForCareUnit() throws IOException {
+    public void testGetCareGiverIdAndCareGiverOrgIdForCareUnit() throws IOException {
         addVardgivare("HsaOrganizationsServiceTest/landstinget-vastmanland.json");
-        String vardGivareHsaId = service.getVardgivareOfVardenhet("centrum-vast");
-        assertEquals("vastmanland", vardGivareHsaId);
+        Vardgivare vardGivare = service.getVardgivareOfVardenhet("centrum-vast");
+        assertEquals("vastmanland", vardGivare.getId());
+        assertEquals("2-orgnr-vastmanland", vardGivare.getOrgId());
     }
 
     @Test

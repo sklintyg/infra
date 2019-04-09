@@ -77,10 +77,10 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
     private HsaUnitAddressParser hsaUnitAddressParser = new HsaUnitAddressParser();
 
     @Override
-    public String getVardgivareOfVardenhet(String careUnitHsaId) {
+    public Vardgivare getVardgivareOfVardenhet(String careUnitHsaId) {
         try {
             HealthCareUnitType healthCareUnit = organizationUnitService.getHealthCareUnit(careUnitHsaId);
-            return healthCareUnit.getHealthCareProviderHsaId();
+            return Vardgivare.of(healthCareUnit);
         } catch (HsaServiceCallException e) {
             LOG.error("Could not look up vardgivarId for vardEnhet {}. Does vardEnhet exist?", careUnitHsaId);
             return null;

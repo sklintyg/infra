@@ -18,12 +18,11 @@
  */
 package se.inera.intyg.infra.integration.hsa.services;
 
+import java.util.List;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsa.model.UserAuthorizationInfo;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-
-import java.util.List;
 
 /**
  *
@@ -48,7 +47,7 @@ public interface HsaOrganizationsService {
      * @return
      *      HsaId of the parent vårdgivare. If no vårdgivare could be found, null is returned.
      */
-    String getVardgivareOfVardenhet(String vardenhetHsaId);
+    Vardgivare getVardgivareOfVardenhet(String vardenhetHsaId);
 
     /**
      * Returns a fully recursively populated Vardenhet for the specified hsaId.

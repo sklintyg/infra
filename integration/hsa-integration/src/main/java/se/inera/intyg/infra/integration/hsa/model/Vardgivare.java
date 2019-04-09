@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.HealthCareUnitType;
 
 /**
  * @author andreaskaltenbach
@@ -33,6 +34,7 @@ public class Vardgivare implements SelectableVardenhet, Comparable<Vardgivare>, 
 
     private String id;
     private String namn;
+    private String orgId;
 
     private List<Vardenhet> vardenheter;
 
@@ -43,6 +45,19 @@ public class Vardgivare implements SelectableVardenhet, Comparable<Vardgivare>, 
     public Vardgivare(String id, String namn) {
         this.id = id;
         this.namn = namn;
+    }
+
+    private Vardgivare(String id, String namn, String orgId) {
+        this.id = id;
+        this.namn = namn;
+        this.orgId = orgId;
+    }
+
+    public static Vardgivare of(HealthCareUnitType healthCareUnitType) {
+        return new Vardgivare(
+                healthCareUnitType.getHealthCareProviderHsaId(),
+                healthCareUnitType.getHealthCareProviderName(),
+                healthCareUnitType.getHealthCareProviderOrgNo());
     }
 
     @Override
@@ -61,6 +76,14 @@ public class Vardgivare implements SelectableVardenhet, Comparable<Vardgivare>, 
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(String orgId) {
+        this.orgId = orgId;
     }
 
     public List<Vardenhet> getVardenheter() {
