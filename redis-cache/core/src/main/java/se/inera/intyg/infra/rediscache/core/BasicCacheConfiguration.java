@@ -107,7 +107,7 @@ public class BasicCacheConfiguration {
         if (StringUtils.hasLength(redisPassword)) {
             factory.setPassword(redisPassword);
         }
-        //factory.setUsePool(true);
+        factory.setUsePool(true);
         return factory;
     }
 
