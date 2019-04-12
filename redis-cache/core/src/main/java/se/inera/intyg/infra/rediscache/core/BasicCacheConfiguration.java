@@ -130,6 +130,8 @@ public class BasicCacheConfiguration {
             sentinelConfig = sentinelConfig.sentinel(hosts.get(a), Integer.parseInt(ports.get(a)));
         }
 
-        return new JedisConnectionFactory(sentinelConfig);
+        JedisConnectionFactory factory = new JedisConnectionFactory(sentinelConfig);
+        factory.setUsePool(true);
+        return factory;
     }
 }
