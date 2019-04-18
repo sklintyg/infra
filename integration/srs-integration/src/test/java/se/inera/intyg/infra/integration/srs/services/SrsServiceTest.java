@@ -157,15 +157,15 @@ public class SrsServiceTest {
 
         assertEquals(3, response.getAtgarderRek().size());
         assertNotNull(response.getAtgarderRek().get(0));
-        assertEquals("Atgardsforslag REK 1", response.getAtgarderRek().get(0));
-        assertEquals("Atgardsforslag REK 2", response.getAtgarderRek().get(1));
-        assertEquals("Atgardsforslag REK 3", response.getAtgarderRek().get(2));
+        assertEquals("Atgardsforslag REK 1", response.getAtgarderRek().get(0).getRecommendationText());
+        assertEquals("Atgardsforslag REK 2", response.getAtgarderRek().get(1).getRecommendationText());
+        assertEquals("Atgardsforslag REK 3", response.getAtgarderRek().get(2).getRecommendationText());
 
         assertEquals(3, response.getAtgarderObs().size());
         assertNotNull(response.getAtgarderObs().get(0));
-        assertEquals("Atgardsforslag OBS 1", response.getAtgarderObs().get(0));
-        assertEquals("Atgardsforslag OBS 2", response.getAtgarderObs().get(1));
-        assertEquals("Atgardsforslag OBS 3", response.getAtgarderObs().get(2));
+        assertEquals("Atgardsforslag OBS 1", response.getAtgarderObs().get(0).getRecommendationText());
+        assertEquals("Atgardsforslag OBS 2", response.getAtgarderObs().get(1).getRecommendationText());
+        assertEquals("Atgardsforslag OBS 3", response.getAtgarderObs().get(2).getRecommendationText());
         assertNotNull(response.getStatistikBild());
     }
 

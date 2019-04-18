@@ -20,18 +20,22 @@ package se.inera.intyg.infra.integration.srs.model;
 
 import com.google.common.collect.ImmutableList;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 // CHECKSTYLE:OFF ParameterNumber
 public class SrsResponse {
     private Integer predictionLevel;
     private String predictionDescription;
-    private ImmutableList<String> atgarderObs;
-    private ImmutableList<String> atgarderRek;
+    private ImmutableList<SrsRecommendation> atgarderObs;
+    private ImmutableList<SrsRecommendation> atgarderRek;
     private String statistikBild;
     private String predictionDiagnosisCode;
     private String predictionDiagnosisDescription;
     private String predictionStatusCode;
+    private ImmutableList<SrsQuestionResponse> predictionQuestionsResponses;
+    private String predictionPhysiciansOwnOpinionRisk;
+    private LocalDateTime predictionTimestamp;
     private String atgarderDiagnosisCode;
     private String atgarderDiagnosisDescription;
     private String atgarderStatusCode;
@@ -42,10 +46,14 @@ public class SrsResponse {
     private Double predictionProbabilityOverLimit;
     private Double predictionPrevalence;
 
-    public SrsResponse(Integer level, String description, List<String> atgarderObs, List<String> atgarderRek, String statistikBild,
-            String predictionDiagnosisCode, String predictionStatusCode, String atgarderDiagnosisCode, String atgarderStatusCode,
-            String statistikDiagnosisCode, String statistikStatusCode, Double predictionProbabilityOverLimit,
-            Double predictionPrevalence, List<Integer> statistikNationellStatistikData) {
+    public SrsResponse(Integer level, String description, List<SrsRecommendation> atgarderObs, List<SrsRecommendation> atgarderRek, String statistikBild,
+                       String predictionDiagnosisCode, String predictionStatusCode,
+                       List<SrsQuestionResponse> predictionQuestionsResponses,
+                       String predictionPhysiciansOwnOpinionRisk,
+                       LocalDateTime predictionTimestamp,
+                       String atgarderDiagnosisCode, String atgarderStatusCode,
+                       String statistikDiagnosisCode, String statistikStatusCode, Double predictionProbabilityOverLimit,
+                       Double predictionPrevalence, List<Integer> statistikNationellStatistikData) {
         this.predictionLevel = level;
         this.predictionDescription = description;
         if (atgarderObs == null) {
@@ -64,6 +72,15 @@ public class SrsResponse {
         } else {
             this.statistikNationellStatistik = ImmutableList.copyOf(statistikNationellStatistikData);
         }
+
+        if (predictionQuestionsResponses == null) {
+            this.predictionQuestionsResponses = null;
+        } else {
+            this.predictionQuestionsResponses = ImmutableList.copyOf(predictionQuestionsResponses);
+        }
+
+        this.predictionPhysiciansOwnOpinionRisk = predictionPhysiciansOwnOpinionRisk;
+        this.predictionTimestamp = predictionTimestamp;
 
         this.statistikBild = statistikBild;
 
@@ -88,11 +105,11 @@ public class SrsResponse {
         return predictionDescription;
     }
 
-    public ImmutableList<String> getAtgarderObs() {
+    public ImmutableList<SrsRecommendation> getAtgarderObs() {
         return atgarderObs;
     }
 
-    public ImmutableList<String> getAtgarderRek() {
+    public ImmutableList<SrsRecommendation> getAtgarderRek() {
         return atgarderRek;
     }
 
@@ -142,6 +159,18 @@ public class SrsResponse {
 
     public Double getPredictionProbabilityOverLimit() {
         return predictionProbabilityOverLimit;
+    }
+
+    public String getPredictionPhysiciansOwnOpinionRisk() {
+        return predictionPhysiciansOwnOpinionRisk;
+    }
+
+    public LocalDateTime getPredictionTimestamp() {
+        return predictionTimestamp;
+    }
+
+    public ImmutableList<SrsQuestionResponse> getPredictionQuestionsResponses() {
+        return predictionQuestionsResponses;
     }
 
     public Double getPredictionPrevalence() {

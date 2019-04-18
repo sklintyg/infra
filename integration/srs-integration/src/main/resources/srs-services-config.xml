@@ -47,6 +47,14 @@
         serviceClass="se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponderInterface"
         address="${srs.getsrsfordiagnosis.endpoint.url}">
     </jaxws:client>
+    <jaxws:client id="getOwnOpinionBean"
+                  serviceClass="se.inera.intyg.clinicalprocess.healthcond.srs.getownopinion.v1.GetOwnOpinionResponderInterface"
+                  address="${srs.getownopinion.endpoint.url}">
+    </jaxws:client>
+    <jaxws:client id="setOwnOpinionBean"
+                  serviceClass="se.inera.intyg.clinicalprocess.healthcond.srs.setownopinion.v1.SetOwnOpinionResponderInterface"
+                  address="${srs.setownopinion.endpoint.url}">
+    </jaxws:client>
 
     <bean id="srsService" class="se.inera.intyg.infra.integration.srs.services.SrsServiceImpl"/>
 </beans>
