@@ -5,38 +5,23 @@
   "uppdrag": [
     {
       "vardgivare": "IFV1239877878-1041",
-      "enhet": "IFV1239877878-1042",
-      "systemRoles": [
-        "INTYG;FMU-VARDADMIN-IFV1239877878-1042"
-      ]
+      "enhet": "IFV1239877878-1042"
     },
     {
       "vardgivare": "ostergotland",
-      "enhet": "linkoping",
-      "systemRoles": [
-        "INTYG;FMU-VARDADMIN-linkoping"
-      ]
+      "enhet": "linkoping"
     },
     {
       "vardgivare": "vastmanland",
-      "enhet": "centrum-ost",
-      "systemRoles": [
-        "INTYG;FMU-SAMORDNARE-kronoberg"
-      ]
+      "enhet": "centrum-ost"
     },
     {
       "vardgivare": "IFV1239877878-1043",
-      "enhet": "IFV1239877878-1045",
-      "systemRoles": [
-        "INTYG;FMU-SAMORDNARE-IFV1239877878-1041"
-      ]
+      "enhet": "IFV1239877878-1045"
     },
     {
       "vardgivare": "IFV1239877878-1043",
-      "enhet": "IFV1239877878-104D",
-      "systemRoles": [
-        "INTYG;FMU-VARDADMIN-IFV1239877878-104D"
-      ]
+      "enhet": "IFV1239877878-104D"
     }
   ],
   "fakeProperties": {

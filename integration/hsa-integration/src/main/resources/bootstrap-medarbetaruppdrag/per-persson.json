@@ -11,9 +11,6 @@
       "enhet": "TSTNMT2321000156-1004",
       "andamal": [
         "Vård och behandling"
-      ],
-      "systemRoles": [
-        "INTYG;FMU-SAMORDNARE-TSTNMT2321000156-1002"
       ]
     },
     {
@@ -21,9 +18,6 @@
       "enhet": "TSTNMT2321000156-1003",
       "andamal": [
         "Vård och behandling"
-      ],
-      "systemRoles": [
-        "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1003"
       ]
     }
   ],

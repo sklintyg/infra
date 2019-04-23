@@ -5,10 +5,7 @@
   "uppdrag": [
     {
       "vardgivare": "IFV1239877878-1043",
-      "enhet": "IFV1239877878-1045",
-      "systemRoles": [
-        "INTYG;FMU-SAMORDNARE-IFV1239877878-1043"
-      ]
+      "enhet": "IFV1239877878-1045"
     }
   ],
   "fakeProperties": {

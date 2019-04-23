@@ -5,7 +5,7 @@
   "uppdrag": [
   ],
   "fakeProperties": {
-    "allowedInApplications": ["RS"],
+    "allowedInApplications": ["RS", "IB"],
     "readOnly": true,
     "logins": [
       {
