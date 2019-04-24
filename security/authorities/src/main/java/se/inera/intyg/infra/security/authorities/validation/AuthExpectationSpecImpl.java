@@ -149,6 +149,11 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
     }
 
     @Override
+    public String error() {
+        return errors.isEmpty() ? "" : "Authorization Validation failed because " + String.join(", ", errors);
+    }
+
+    @Override
     public void orThrow(RuntimeException exception) {
         if (!isVerified()) {
             throw exception;
