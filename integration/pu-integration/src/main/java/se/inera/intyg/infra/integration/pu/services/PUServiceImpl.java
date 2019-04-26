@@ -81,6 +81,10 @@ public class PUServiceImpl implements PUService {
         // Check cache
         PersonSvar cachedPersonSvar = queryCache(personId);
         if (cachedPersonSvar != null) {
+            if (!personId.getPersonnummer().equals(cachedPersonSvar.getPerson().getPersonnummer().getPersonnummer())) {
+                LOG.info("PU-cache returned another personId {} then the argument to getPerson {}. This might be ok.",
+                        cachedPersonSvar.getPerson().getPersonnummer().getPersonnummerHash(), personId.getPersonnummerHash());
+            }
             return cachedPersonSvar;
         }
 
