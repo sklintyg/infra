@@ -16,7 +16,7 @@ ext {
 
     srsSchemasVersion = "0.0.7"
 
-    schemasContractVersion = "2.1.7"
+    schemasContractVersion = "2.1.8"
 
     springDataRedisVersion = "1.8.12.RELEASE"
     commonsIoVersion = "2.4"
