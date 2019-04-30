@@ -54,8 +54,8 @@ public class AuthoritiesHelperTest {
     public static final String DJUPINTEGRATION = "DJUPINTEGRATION";
     public static final String UTHOPP = "UTHOPP";
 
-    private final String authoritiesConfigurationLocation = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
-    private final String featuresConfigurationLocation = "AuthoritiesConfigurationLoaderTest/features-test.yaml";
+    private final String authoritiesConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    private final String featuresConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
 
     private SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationLocation, featuresConfigurationLocation);
     private CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();

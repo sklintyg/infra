@@ -93,7 +93,7 @@ public class PostnummerRepositoryFactory {
             return null;
         }
 
-        String[] elements = line.split(";");
+        String[] elements = line.split(";", -1);
         // CHECKSTYLE:OFF MagicNumber
         if (elements.length != 7) {
             LOG.error("Unexpected line in postnummer file. Expected 7 elements separated by semicolon");

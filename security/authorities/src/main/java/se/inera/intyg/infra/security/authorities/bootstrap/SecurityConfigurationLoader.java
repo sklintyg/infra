@@ -18,22 +18,20 @@
  */
 package se.inera.intyg.infra.security.authorities.bootstrap;
 
-import org.yaml.snakeyaml.Yaml;
+import java.io.IOException;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.util.ResourceUtils;
+import org.yaml.snakeyaml.Yaml;
+
 import se.inera.intyg.infra.security.authorities.AuthoritiesConfiguration;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.authorities.FeaturesConfiguration;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * The security configuration is read from two seperate YAML files which are
@@ -84,16 +82,8 @@ public class SecurityConfigurationLoader implements InitializingBean {
      */
     @Override
     public void afterPropertiesSet() throws AuthoritiesException {
-
-        Resource authoritiesResource = getResource(authoritiesConfigurationFile);
-        Resource featuresResource = getResource(featuresConfigurationFile);
-        try {
-            authoritiesConfiguration = loadConfiguration(Paths.get(authoritiesResource.getURI()), AuthoritiesConfiguration.class);
-            featuresConfiguration = loadConfiguration(Paths.get(featuresResource.getURI()), FeaturesConfiguration.class);
-        } catch (IOException ioe) {
-            throw new AuthoritiesException("Could not load configuration files", ioe);
-        }
-
+      authoritiesConfiguration = loadConfiguration(authoritiesConfigurationFile, AuthoritiesConfiguration.class);
+      featuresConfiguration = loadConfiguration(featuresConfigurationFile, FeaturesConfiguration.class);
     }
 
     /**
@@ -115,14 +105,17 @@ public class SecurityConfigurationLoader implements InitializingBean {
     }
 
     private Resource getResource(String location) {
+        final String url = ResourceUtils.isUrl(location) ? location : "file:" + location;
         PathMatchingResourcePatternResolver r = new PathMatchingResourcePatternResolver();
-        return r.getResource(location);
+        return r.getResource(url);
     }
 
-    private <T> T loadConfiguration(Path path, Class<T> type) throws IOException {
+    private <T> T loadConfiguration(String location, Class<T> type) {
         Yaml yaml = new Yaml();
-        try (InputStream in = Files.newInputStream(path)) {
-            return yaml.loadAs(in, type);
+        try {
+            return yaml.loadAs(getResource(location).getInputStream(), type);
+        } catch (IOException e) {
+            throw new AuthoritiesException("Could not load configuration file: " + location, e);
         }
     }
 

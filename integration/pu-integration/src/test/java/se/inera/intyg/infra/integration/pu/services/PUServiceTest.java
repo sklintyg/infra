@@ -18,32 +18,7 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static se.inera.intyg.infra.integration.pu.model.PersonSvar.Status.NOT_FOUND;
-
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPFactory;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.soap.SOAPFaultException;
-
-import org.junit.After;
+import com.google.common.base.Strings;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -51,11 +26,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.google.common.base.Strings;
-
 import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.schemas.contract.Personnummer;
@@ -69,9 +42,31 @@ import se.riv.strategicresourcemanagement.persons.person.v3.NameType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
 
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPFactory;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.soap.SOAPFaultException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static se.inera.intyg.infra.integration.pu.model.PersonSvar.Status.NOT_FOUND;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext
 @ContextConfiguration("classpath:PUServiceTest/test-context.xml")
+@ActiveProfiles({"test"})
 public class PUServiceTest {
 
     @Autowired
@@ -83,6 +78,8 @@ public class PUServiceTest {
     @Autowired
     private Cache puCache;
 
+    static String logicalAddress = "${putjanst.logicaladdress}";
+
     private static IIType iiType = new IIType();
 
     @BeforeClass
@@ -92,23 +89,10 @@ public class PUServiceTest {
 
     @Before
     public void setup() {
-
-        Properties properties = System.getProperties();
-        properties.setProperty("spring.profiles.active", "test");
-
         puCache.clear();
         service.clearCache();
         // Some tests uses mocked residentService, reset here
         service.setService(residentService);
-    }
-
-    @Before
-    @After
-    public void init() {
-        File dataFile = new File(System.getProperty("java.io.tmpdir") + File.separator + "residentstore.data");
-        if (dataFile.exists()) {
-            dataFile.delete();
-        }
     }
 
     @Test
@@ -142,7 +126,7 @@ public class PUServiceTest {
     @Test
     public void checkExistingPersonWithoutAddress() {
         Person person = service.getPerson(createPnr("19520529-2260")).getPerson();
-        assertEquals("Maria Lousie", person.getFornamn());
+        assertEquals("Maria Louise", person.getFornamn());
         assertEquals("Pärsson", person.getEfternamn());
         assertNull(person.getPostadress());
         assertNull(person.getPostnummer());
@@ -158,8 +142,6 @@ public class PUServiceTest {
 
     @Test
     public void checkNoneExistingPersons() {
-        String logicalAddress = "${putjanst.logicaladdress}";
-
         List<Personnummer> pnrs = Arrays.asList(createPnr("19121212-7169"), createPnr("19971230-2380"),
                 createPnr("19980919-2397"), createPnr("19981029-2392"));
 
@@ -191,8 +173,6 @@ public class PUServiceTest {
 
     @Test
     public void checkSomeExistingPersons() {
-        String logicalAddress = "${putjanst.logicaladdress}";
-
         List<Personnummer> pnrs = Arrays.asList(createPnr("19520614-2597"), createPnr("19971230-2380"),
                 createPnr("20121212-1212"), createPnr("19981029-2392"));
 
@@ -250,18 +230,10 @@ public class PUServiceTest {
 
     @Test
     public void checkCachedPerson() throws Exception {
-        String logicalAddress = "${putjanst.logicaladdress}";
-
         // Create mock
         GetPersonsForProfileType parameters = new GetPersonsForProfileType();
         parameters.setProfile(LookupProfileType.P_1);
         parameters.getPersonId().add(iiType);
-
-        GetPersonsForProfileType parameters2 = new GetPersonsForProfileType();
-        parameters2.setProfile(LookupProfileType.P_1);
-        parameters2.getPersonId().add(iiType);
-
-        System.err.println("Are they equal: " + parameters.equals(parameters2));
 
         GetPersonsForProfileResponseType response = residentService.getPersonsForProfile(logicalAddress, parameters);
         GetPersonsForProfileResponderInterface mockResidentService = mock(GetPersonsForProfileResponderInterface.class);
@@ -293,8 +265,6 @@ public class PUServiceTest {
 
     @Test
     public void dontCachePersonLookupError() throws Exception {
-        String logicalAddress = "${putjanst.logicaladdress}";
-
         // Create mock
         GetPersonsForProfileType parameters = new GetPersonsForProfileType();
         parameters.setProfile(LookupProfileType.P_1);

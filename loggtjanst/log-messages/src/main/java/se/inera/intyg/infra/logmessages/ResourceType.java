@@ -39,7 +39,9 @@ public enum ResourceType {
     RESOURCE_TYPE_FMU_BESOK("Besök i försäkringsmedicinsk utredning"),
     RESOURCE_TYPE_FMU_AVVIKELSE("Avvikelse i försäkringsmedicinsk utredning"),
     RESOURCE_TYPE_FMU_TOLK("Användning av tolk i försäkringsmedicinsk utredning"),
-    RESOURCE_TYPE_FMU_ANTECKNING("Anteckning i försäkringsmedicinsk utredning");
+    RESOURCE_TYPE_FMU_ANTECKNING("Anteckning i försäkringsmedicinsk utredning"),
+
+    RESOURCE_TYPE_BESTALLNING("Beställning");
 
     private final String resourceTypeName;
 

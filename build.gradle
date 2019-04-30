@@ -1,5 +1,5 @@
 plugins {
-    id "se.inera.intyg.plugin.common" version "2.0.2" apply false
+    id "se.inera.intyg.plugin.common" version "2.0.3" apply false
 }
 
 ext {
@@ -16,7 +16,7 @@ ext {
 
     srsSchemasVersion = "0-SNAPSHOT" //"0.0.7"//
 
-    schemasContractVersion = "2.1.7"
+    schemasContractVersion = "2.1.8"
 
     springDataRedisVersion = "1.8.12.RELEASE"
     commonsIoVersion = "2.4"
@@ -62,7 +62,9 @@ allprojects {
 
     group = 'se.inera.intyg.infra'
     version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
-
+    
+    compileJava.options.encoding = 'UTF-8'
+    
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
