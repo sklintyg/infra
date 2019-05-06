@@ -14,7 +14,7 @@ ext {
 
     intygClinicalprocessSchemasVersion = "1.0.16"
 
-    srsSchemasVersion = "0-SNAPSHOT" //"0.0.7"//
+    srsSchemasVersion = "0.0.8"
 
     schemasContractVersion = "2.1.8"
 

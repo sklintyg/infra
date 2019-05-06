@@ -29,7 +29,6 @@ import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.EgenBedomningRiskType;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
 import java.util.List;
@@ -71,7 +70,7 @@ public interface SrsService {
     ResultCodeEnum setConsent(String hsaId, Personnummer personId, boolean samtycke) throws InvalidPersonNummerException;
 
     /**
-     * Get's a previously set "user's own opinion" on a given care giver and certificate
+     * Get's a previously set "user's own opinion" on a given care giver and certificate.
      * @param careGiverHsaId the hsa id of the care giver
      * @param careUnitHsaId the HSA-id of the certificate's/user's care unit
      * @param certificateId the id of the certificate
@@ -80,7 +79,7 @@ public interface SrsService {
     EgenBedomningRiskType getOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId);
 
     /**
-     * Sets the user's own opinion on the risk prediction
+     * Sets the user's own opinion on the risk prediction.
      * @param careGiverHsaId the HSA-id of the user's care giver
      * @param careUnitHsaId the HSA-id of the certificate's/user's care unit
      * @param certificateId the id of the certificate for which this risk was predicted

@@ -46,7 +46,8 @@ public class SrsResponse {
     private Double predictionProbabilityOverLimit;
     private Double predictionPrevalence;
 
-    public SrsResponse(Integer level, String description, List<SrsRecommendation> atgarderObs, List<SrsRecommendation> atgarderRek, String statistikBild,
+    public SrsResponse(Integer level, String description, List<SrsRecommendation> atgarderObs, List<SrsRecommendation> atgarderRek,
+                       String statistikBild,
                        String predictionDiagnosisCode, String predictionStatusCode,
                        List<SrsQuestionResponse> predictionQuestionsResponses,
                        String predictionPhysiciansOwnOpinionRisk,

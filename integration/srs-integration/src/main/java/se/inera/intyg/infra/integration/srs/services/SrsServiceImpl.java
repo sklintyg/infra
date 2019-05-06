@@ -19,7 +19,6 @@
 package se.inera.intyg.infra.integration.srs.services;
 
 import com.google.common.base.Strings;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentRequestType;
@@ -145,7 +144,8 @@ public class SrsServiceImpl implements SrsService {
                 predictionProbabilityOverLimit = underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde();
 
                 if (underlag.getPrediktion().getDiagnosprediktion().get(0).getPrediktionsfaktorer() != null) {
-                    prediktionsFragorSvar = underlag.getPrediktion().getDiagnosprediktion().get(0).getPrediktionsfaktorer().getFragasvar().stream()
+                    prediktionsFragorSvar = underlag.getPrediktion().getDiagnosprediktion().get(0)
+                            .getPrediktionsfaktorer().getFragasvar().stream()
                             .map((fs) -> SrsQuestionResponse.create(fs.getFrageidSrs(), fs.getSvarsidSrs()))
                             .collect(Collectors.toList());
                 }
@@ -201,7 +201,7 @@ public class SrsServiceImpl implements SrsService {
             statistikStatusCode = underlag.getStatistik().getStatistikbild().get(0).getStatistikstatus().toString();
             statistikNationellStatistik =
                     underlag.getStatistik().getStatistikbild().get(0).getData().stream()
-                            .map((d)->d.getIndividerAckumulerat().intValue()).collect(Collectors.toList());
+                            .map((d) -> d.getIndividerAckumulerat().intValue()).collect(Collectors.toList());
         }
         return new SrsResponse(level, description, atgarderObs, atgarderRek, statistikBild, predictionDiagnosisCode,
                 prediktionStatusCode, prediktionsFragorSvar, prediktionLakarbedomningRisk, prediktionBerakningstidpunkt,
@@ -234,12 +234,14 @@ public class SrsServiceImpl implements SrsService {
 
     @Override
     public EgenBedomningRiskType getOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId) {
-        GetOwnOpinionResponseType resp = getOwnOpinion.getOwnOpinion(createGetOwnOpinionRequest(careGiverHsaId, careUnitHsaId, certificateId));
+        GetOwnOpinionResponseType resp =
+                getOwnOpinion.getOwnOpinion(createGetOwnOpinionRequest(careGiverHsaId, careUnitHsaId, certificateId));
         return resp.getEgenBedomningRisk();
     }
 
     @Override
-    public ResultCodeEnum setOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId, EgenBedomningRiskType ownOpinion) {
+    public ResultCodeEnum setOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId,
+                                        EgenBedomningRiskType ownOpinion) {
         SetOwnOpinionResponseType resp =
                 setOwnOpinion.setOwnOpinion(createSetOwnOpinionRequest(careGiverHsaId, careUnitHsaId, certificateId, ownOpinion));
         return resp.getResultCode();
@@ -385,7 +387,8 @@ public class SrsServiceImpl implements SrsService {
         return hsaId;
     }
 
-    private SetOwnOpinionRequestType createSetOwnOpinionRequest(String careGiverHsaId, String careUnitHsaId, String certificateId, EgenBedomningRiskType opinion) {
+    private SetOwnOpinionRequestType createSetOwnOpinionRequest(String careGiverHsaId, String careUnitHsaId,
+                                                                String certificateId, EgenBedomningRiskType opinion) {
         SetOwnOpinionRequestType request = new SetOwnOpinionRequestType();
         request.setVardgivareId(createHsaId(careGiverHsaId));
         request.setVardenhetId(createHsaId(careUnitHsaId));

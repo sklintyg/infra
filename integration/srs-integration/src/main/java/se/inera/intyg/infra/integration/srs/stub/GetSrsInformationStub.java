@@ -61,7 +61,8 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
         Utdatafilter filter = request.getUtdatafilter();
         String personId = request.getIndivider().getIndivid().stream().map(Individ::getPersonId)
                 .findFirst().orElseThrow(IllegalArgumentException::new);
-        Optional<Diagnos> incomingDiagnosis = request.getIndivider().getIndivid().stream().flatMap(i -> i.getDiagnos().stream()).findFirst();
+        Optional<Diagnos> incomingDiagnosis = request.getIndivider().getIndivid().stream()
+                .flatMap(i -> i.getDiagnos().stream()).findFirst();
         Optional<Diagnos> srsDiagnos = request.getIndivider().getIndivid().stream().flatMap(i -> i.getDiagnos().stream())
                 .filter(d -> GetDiagnosisCodesStub.allValidDiagnosis.contains(d.getCode()))
                 .findFirst();
@@ -89,22 +90,28 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
         if (filter.isAtgardsrekommendation()) {
             Atgardsrekommendationer rekommendationer = new Atgardsrekommendationer();
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag REK 1", srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                    .add(createAtgardsrekommendation("Atgardsforslag REK 1",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
                             Atgardstyp.REK, 1));
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag REK 2", srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                    .add(createAtgardsrekommendation("Atgardsforslag REK 2",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
                             Atgardstyp.REK, 2));
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag REK 3", srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                    .add(createAtgardsrekommendation("Atgardsforslag REK 3",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
                             Atgardstyp.REK, 3));
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag OBS 1", srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                    .add(createAtgardsrekommendation("Atgardsforslag OBS 1",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
                             Atgardstyp.OBS, 1));
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag OBS 2", srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                    .add(createAtgardsrekommendation("Atgardsforslag OBS 2",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
                             Atgardstyp.OBS, 2));
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag OBS 3", srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                    .add(createAtgardsrekommendation("Atgardsforslag OBS 3",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
                             Atgardstyp.OBS, 3));
             underlag.setAtgardsrekommendationer(rekommendationer);
         }
