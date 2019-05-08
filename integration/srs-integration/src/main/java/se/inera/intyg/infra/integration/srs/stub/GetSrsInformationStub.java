@@ -19,17 +19,17 @@
 package se.inera.intyg.infra.integration.srs.stub;
 
 import org.apache.cxf.annotations.SchemaValidation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Atgardsrekommendationer;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Bedomningsunderlag;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktion;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationRequestType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Individ;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Prediktion;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Risksignal;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Atgardsrekommendationer;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Bedomningsunderlag;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Diagnosprediktion;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Diagnosprediktionstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationRequestType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Individ;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Prediktion;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Risksignal;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Utdatafilter;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgard;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendation;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
@@ -61,14 +61,20 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
         Utdatafilter filter = request.getUtdatafilter();
         String personId = request.getIndivider().getIndivid().stream().map(Individ::getPersonId)
                 .findFirst().orElseThrow(IllegalArgumentException::new);
-        Optional<Diagnos> diagnos = request.getIndivider().getIndivid().stream().flatMap(i -> i.getDiagnos().stream())
+        Optional<Diagnos> incomingDiagnosis = request.getIndivider().getIndivid().stream()
+                .flatMap(i -> i.getDiagnos().stream()).findFirst();
+        Optional<Diagnos> srsDiagnos = request.getIndivider().getIndivid().stream().flatMap(i -> i.getDiagnos().stream())
                 .filter(d -> GetDiagnosisCodesStub.allValidDiagnosis.contains(d.getCode()))
                 .findFirst();
         underlag.setPersonId(personId);
 
+        Diagnosprediktion diagnosprediktion = new Diagnosprediktion();
+        diagnosprediktion.setInkommandediagnos(incomingDiagnosis.orElseThrow(IllegalArgumentException::new));
+        if (srsDiagnos.isPresent()) {
+            diagnosprediktion.setPrevalens(0.35);
+        }
+
         if (filter.isPrediktion()) {
-            Diagnosprediktion diagnosprediktion = new Diagnosprediktion();
-            diagnosprediktion.setInkommandediagnos(diagnos.orElseThrow(IllegalArgumentException::new));
             diagnosprediktion.setSannolikhetOvergransvarde(Math.random());
             diagnosprediktion.setDiagnosprediktionstatus(Diagnosprediktionstatus.OK);
 
@@ -76,39 +82,43 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
             riskSignal.setRiskkategori(BigInteger.ONE);
             riskSignal.setBeskrivning("test");
             diagnosprediktion.setRisksignal(riskSignal);
-
-            Prediktion prediktion = new Prediktion();
-            prediktion.getDiagnosprediktion().add(diagnosprediktion);
-            underlag.setPrediktion(prediktion);
-
         }
+        Prediktion prediktion = new Prediktion();
+        prediktion.getDiagnosprediktion().add(diagnosprediktion);
+        underlag.setPrediktion(prediktion);
 
         if (filter.isAtgardsrekommendation()) {
             Atgardsrekommendationer rekommendationer = new Atgardsrekommendationer();
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag REK 1", diagnos.orElseThrow(IllegalArgumentException::new),
+                    .add(createAtgardsrekommendation("Atgardsforslag REK 1",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
                             Atgardstyp.REK, 1));
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag REK 2", diagnos.orElseThrow(IllegalArgumentException::new),
+                    .add(createAtgardsrekommendation("Atgardsforslag REK 2",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
                             Atgardstyp.REK, 2));
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag REK 3", diagnos.orElseThrow(IllegalArgumentException::new),
+                    .add(createAtgardsrekommendation("Atgardsforslag REK 3",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
                             Atgardstyp.REK, 3));
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag OBS 1", diagnos.orElseThrow(IllegalArgumentException::new),
+                    .add(createAtgardsrekommendation("Atgardsforslag OBS 1",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
                             Atgardstyp.OBS, 1));
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag OBS 2", diagnos.orElseThrow(IllegalArgumentException::new),
+                    .add(createAtgardsrekommendation("Atgardsforslag OBS 2",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
                             Atgardstyp.OBS, 2));
             rekommendationer.getRekommendation()
-                    .add(createAtgardsrekommendation("Atgardsforslag OBS 3", diagnos.orElseThrow(IllegalArgumentException::new),
+                    .add(createAtgardsrekommendation("Atgardsforslag OBS 3",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
                             Atgardstyp.OBS, 3));
             underlag.setAtgardsrekommendationer(rekommendationer);
         }
 
         if (filter.isStatistik()) {
             Statistik statistik = new Statistik();
-            statistik.getStatistikbild().add(createStatistikBild(diagnos.orElseThrow(IllegalArgumentException::new)));
+            statistik.getStatistikbild().add(createStatistikBild(srsDiagnos.orElseThrow(IllegalArgumentException::new)));
             underlag.setStatistik(statistik);
         }
 

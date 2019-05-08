@@ -28,50 +28,32 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstat
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getownopinion.v1.GetOwnOpinionRequestType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getownopinion.v1.GetOwnOpinionResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getownopinion.v1.GetOwnOpinionResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Bedomningsunderlag;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationRequestType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.GetSRSInformationResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Individ;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Individfaktorer;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Prediktionsfaktorer;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.*;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgard;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardstyp;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikbild;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.setownopinion.v1.SetOwnOpinionRequestType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.setownopinion.v1.SetOwnOpinionResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.srs.setownopinion.v1.SetOwnOpinionResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.*;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
-import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
-import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
-import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
-import se.inera.intyg.infra.integration.srs.model.SrsResponse;
+import se.inera.intyg.infra.integration.srs.model.*;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.CVType;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.*;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SrsServiceImpl implements SrsService {
@@ -94,6 +76,10 @@ public class SrsServiceImpl implements SrsService {
     private GetDiagnosisCodesResponderInterface getDiagnosisCodes;
     @Autowired
     private GetSRSInformationForDiagnosisResponderInterface getSRSInformationForDiagnosis;
+    @Autowired
+    private GetOwnOpinionResponderInterface getOwnOpinion;
+    @Autowired
+    private SetOwnOpinionResponderInterface setOwnOpinion;
 
     @Override
     public SrsResponse getSrs(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
@@ -102,7 +88,6 @@ public class SrsServiceImpl implements SrsService {
         if (questions == null || questions.isEmpty()) {
             throw new IllegalArgumentException("Answers are required to construct a valid request.");
         }
-
         GetSRSInformationResponseType response = getSRSInformation.getSRSInformation(
                 createRequest(user, intygId, personnummer, diagnosisCode, filter, questions));
 
@@ -118,25 +103,56 @@ public class SrsServiceImpl implements SrsService {
         String prediktionStatusCode = null;
         String statistikBild = null;
         String statistikStatusCode = null;
+        List<Integer> statistikNationellStatistik = null;
         String predictionDiagnosisCode = null;
         String atgarderDiagnosisCode = null;
         String statistikDiagnosisCode = null;
-        List<String> atgarderObs = null;
-        List<String> atgarderRek = null;
+        List<SrsRecommendation> atgarderObs = null;
+        List<SrsRecommendation> atgarderRek = null;
         String atgarderStatusCode = null;
+        Double predictionProbabilityOverLimit = null;
+        Double predictionPrevalence = null;
+        String prediktionLakarbedomningRisk = null;
+        List<SrsQuestionResponse> prediktionsFragorSvar = null;
+        LocalDateTime prediktionBerakningstidpunkt = null;
 
-        if (filter.isPrediktion()) {
-            if (underlag.getPrediktion().getDiagnosprediktion().isEmpty()
-                    || underlag.getPrediktion().getDiagnosprediktion().get(0)
-                            .getDiagnosprediktionstatus() == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
-                prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
-            } else {
+        if (underlag == null || underlag.getPrediktion() == null || underlag.getPrediktion().getDiagnosprediktion().isEmpty()
+                || underlag.getPrediktion().getDiagnosprediktion().get(0)
+                .getDiagnosprediktionstatus() == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
+            prediktionStatusCode = Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS.value();
+        } else if (filter.isPrediktion()) {
                 level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori().intValueExact();
                 description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
                 prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
                 predictionDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
                         .map(CVType::getCode)
                         .orElse(null);
+                predictionProbabilityOverLimit = underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde();
+                predictionPrevalence = underlag.getPrediktion().getDiagnosprediktion().get(0).getPrevalens();
+        } else if (underlag.getPrediktion().getDiagnosprediktion().get(0) != null) {
+            // Always add prevalence if we have it regardless if the user requested prediction on a personal level
+            predictionPrevalence = underlag.getPrediktion().getDiagnosprediktion().get(0).getPrevalens();
+
+            // Also check if we have a historic prediction
+            if (underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde() != null) {
+                level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori().intValueExact();
+                description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
+                prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
+                predictionDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
+                        .map(CVType::getCode)
+                        .orElse(null);
+                predictionProbabilityOverLimit = underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde();
+
+                if (underlag.getPrediktion().getDiagnosprediktion().get(0).getPrediktionsfaktorer() != null) {
+                    prediktionsFragorSvar = underlag.getPrediktion().getDiagnosprediktion().get(0)
+                            .getPrediktionsfaktorer().getFragasvar().stream()
+                            .map((fs) -> SrsQuestionResponse.create(fs.getFrageidSrs(), fs.getSvarsidSrs()))
+                            .collect(Collectors.toList());
+                }
+                if (underlag.getPrediktion().getDiagnosprediktion().get(0).getLakarbedomningRisk() != null) {
+                    prediktionLakarbedomningRisk = underlag.getPrediktion().getDiagnosprediktion().get(0).getLakarbedomningRisk().value();
+                }
+                prediktionBerakningstidpunkt = underlag.getPrediktion().getDiagnosprediktion().get(0).getBerakningstidpunkt();
             }
         }
 
@@ -150,11 +166,10 @@ public class SrsServiceImpl implements SrsService {
                     .getAtgardsrekommendationer().getRekommendation().stream()
                     .flatMap(a -> a.getAtgard().stream())
                     .collect(Collectors.groupingBy(Atgard::getAtgardstyp));
-
             if (tmp.containsKey(Atgardstyp.OBS)) {
                 atgarderObs = tmp.get(Atgardstyp.OBS).stream()
                         .sorted(Comparator.comparing(Atgard::getPrioritet))
-                        .map(Atgard::getAtgardsforslag)
+                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsforslag()))
                         .collect(Collectors.toList());
             } else {
                 atgarderObs = Collections.emptyList();
@@ -163,11 +178,12 @@ public class SrsServiceImpl implements SrsService {
             if (tmp.containsKey(Atgardstyp.REK)) {
                 atgarderRek = tmp.get(Atgardstyp.REK).stream()
                         .sorted(Comparator.comparing(Atgard::getPrioritet))
-                        .map(Atgard::getAtgardsforslag)
+                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsforslag()))
                         .collect(Collectors.toList());
             } else {
                 atgarderRek = Collections.emptyList();
             }
+
             // They are all for the same diagnosis and all have the same code.
             atgarderStatusCode = underlag.getAtgardsrekommendationer().getRekommendation().stream()
                     .map(Atgardsrekommendation::getAtgardsrekommendationstatus)
@@ -183,10 +199,14 @@ public class SrsServiceImpl implements SrsService {
                     .orElse(null);
             statistikBild = underlag.getStatistik().getStatistikbild().get(0).getBildadress();
             statistikStatusCode = underlag.getStatistik().getStatistikbild().get(0).getStatistikstatus().toString();
+            statistikNationellStatistik =
+                    underlag.getStatistik().getStatistikbild().get(0).getData().stream()
+                            .map((d) -> d.getIndividerAckumulerat().intValue()).collect(Collectors.toList());
         }
-
-        return new SrsResponse(level, description, atgarderObs, atgarderRek, statistikBild, predictionDiagnosisCode, prediktionStatusCode,
-                atgarderDiagnosisCode, atgarderStatusCode, statistikDiagnosisCode, statistikStatusCode);
+        return new SrsResponse(level, description, atgarderObs, atgarderRek, statistikBild, predictionDiagnosisCode,
+                prediktionStatusCode, prediktionsFragorSvar, prediktionLakarbedomningRisk, prediktionBerakningstidpunkt,
+                atgarderDiagnosisCode, atgarderStatusCode, statistikDiagnosisCode,
+                statistikStatusCode, predictionProbabilityOverLimit, predictionPrevalence, statistikNationellStatistik);
     }
 
     @Override
@@ -209,6 +229,21 @@ public class SrsServiceImpl implements SrsService {
     @Override
     public ResultCodeEnum setConsent(String hsaId, Personnummer personId, boolean samtycke) throws InvalidPersonNummerException {
         SetConsentResponseType resp = setConsent.setConsent(createSetConsentRequest(hsaId, personId, samtycke));
+        return resp.getResultCode();
+    }
+
+    @Override
+    public EgenBedomningRiskType getOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId) {
+        GetOwnOpinionResponseType resp =
+                getOwnOpinion.getOwnOpinion(createGetOwnOpinionRequest(careGiverHsaId, careUnitHsaId, certificateId));
+        return resp.getEgenBedomningRisk();
+    }
+
+    @Override
+    public ResultCodeEnum setOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId,
+                                        EgenBedomningRiskType ownOpinion) {
+        SetOwnOpinionResponseType resp =
+                setOwnOpinion.setOwnOpinion(createSetOwnOpinionRequest(careGiverHsaId, careUnitHsaId, certificateId, ownOpinion));
         return resp.getResultCode();
     }
 
@@ -300,7 +335,7 @@ public class SrsServiceImpl implements SrsService {
             throws InvalidPersonNummerException {
 
         GetSRSInformationRequestType request = new GetSRSInformationRequestType();
-        request.setVersion("1.0");
+        request.setVersion("2.0");
         request.setKonsumentId(createHsaId(CONSUMER_HSA_ID));
 
         request.setAnvandareId(createHsaId(user.getHsaId()));
@@ -350,6 +385,30 @@ public class SrsServiceImpl implements SrsService {
         hsaId.setRoot(HSA_ROOT);
         hsaId.setExtension(hsaIdCode);
         return hsaId;
+    }
+
+    private SetOwnOpinionRequestType createSetOwnOpinionRequest(String careGiverHsaId, String careUnitHsaId,
+                                                                String certificateId, EgenBedomningRiskType opinion) {
+        SetOwnOpinionRequestType request = new SetOwnOpinionRequestType();
+        request.setVardgivareId(createHsaId(careGiverHsaId));
+        request.setVardenhetId(createHsaId(careUnitHsaId));
+        IntygId intyg = new IntygId();
+        intyg.setExtension(certificateId);
+        intyg.setRoot(careUnitHsaId);
+        request.setIntygId(intyg);
+        request.setEgenBedomningRisk(opinion);
+        return request;
+    }
+
+    private GetOwnOpinionRequestType createGetOwnOpinionRequest(String careGiverHsaId, String careUnitHsaId, String certificateId) {
+        GetOwnOpinionRequestType request = new GetOwnOpinionRequestType();
+        request.setVardgivareId(createHsaId(careGiverHsaId));
+        request.setVardenhetId(createHsaId(careUnitHsaId));
+        IntygId intyg = new IntygId();
+        intyg.setExtension(certificateId);
+        intyg.setRoot(careUnitHsaId);
+        request.setIntygId(intyg);
+        return request;
     }
 
     private SetConsentRequestType createSetConsentRequest(String hsaString, Personnummer personId, boolean samtycke)
