@@ -20,28 +20,41 @@ package se.inera.intyg.infra.integration.srs.model;
 
 import com.google.common.collect.ImmutableList;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 // CHECKSTYLE:OFF ParameterNumber
 public class SrsResponse {
     private Integer predictionLevel;
     private String predictionDescription;
-    private ImmutableList<String> atgarderObs;
-    private ImmutableList<String> atgarderRek;
+    private ImmutableList<SrsRecommendation> atgarderObs;
+    private ImmutableList<SrsRecommendation> atgarderRek;
     private String statistikBild;
     private String predictionDiagnosisCode;
     private String predictionDiagnosisDescription;
     private String predictionStatusCode;
+    private ImmutableList<SrsQuestionResponse> predictionQuestionsResponses;
+    private String predictionPhysiciansOwnOpinionRisk;
+    private LocalDateTime predictionTimestamp;
     private String atgarderDiagnosisCode;
     private String atgarderDiagnosisDescription;
     private String atgarderStatusCode;
+    private ImmutableList<Integer> statistikNationellStatistik;
     private String statistikDiagnosisCode;
     private String statistikDiagnosisDescription;
     private String statistikStatusCode;
+    private Double predictionProbabilityOverLimit;
+    private Double predictionPrevalence;
 
-    public SrsResponse(Integer level, String description, List<String> atgarderObs, List<String> atgarderRek, String statistikBild,
-            String predictionDiagnosisCode, String predictionStatusCode, String atgarderDiagnosisCode, String atgarderStatusCode,
-            String statistikDiagnosisCode, String statistikStatusCode) {
+    public SrsResponse(Integer level, String description, List<SrsRecommendation> atgarderObs, List<SrsRecommendation> atgarderRek,
+                       String statistikBild,
+                       String predictionDiagnosisCode, String predictionStatusCode,
+                       List<SrsQuestionResponse> predictionQuestionsResponses,
+                       String predictionPhysiciansOwnOpinionRisk,
+                       LocalDateTime predictionTimestamp,
+                       String atgarderDiagnosisCode, String atgarderStatusCode,
+                       String statistikDiagnosisCode, String statistikStatusCode, Double predictionProbabilityOverLimit,
+                       Double predictionPrevalence, List<Integer> statistikNationellStatistikData) {
         this.predictionLevel = level;
         this.predictionDescription = description;
         if (atgarderObs == null) {
@@ -54,6 +67,22 @@ public class SrsResponse {
         } else {
             this.atgarderRek = ImmutableList.copyOf(atgarderRek);
         }
+
+        if (statistikNationellStatistikData == null) {
+            this.statistikNationellStatistik = null;
+        } else {
+            this.statistikNationellStatistik = ImmutableList.copyOf(statistikNationellStatistikData);
+        }
+
+        if (predictionQuestionsResponses == null) {
+            this.predictionQuestionsResponses = null;
+        } else {
+            this.predictionQuestionsResponses = ImmutableList.copyOf(predictionQuestionsResponses);
+        }
+
+        this.predictionPhysiciansOwnOpinionRisk = predictionPhysiciansOwnOpinionRisk;
+        this.predictionTimestamp = predictionTimestamp;
+
         this.statistikBild = statistikBild;
 
         this.predictionDiagnosisCode = predictionDiagnosisCode;
@@ -64,6 +93,9 @@ public class SrsResponse {
 
         this.statistikDiagnosisCode = statistikDiagnosisCode;
         this.statistikStatusCode = statistikStatusCode;
+
+        this.predictionProbabilityOverLimit = predictionProbabilityOverLimit;
+        this.predictionPrevalence = predictionPrevalence;
     }
 
     public Integer getPredictionLevel() {
@@ -74,11 +106,11 @@ public class SrsResponse {
         return predictionDescription;
     }
 
-    public ImmutableList<String> getAtgarderObs() {
+    public ImmutableList<SrsRecommendation> getAtgarderObs() {
         return atgarderObs;
     }
 
-    public ImmutableList<String> getAtgarderRek() {
+    public ImmutableList<SrsRecommendation> getAtgarderRek() {
         return atgarderRek;
     }
 
@@ -120,6 +152,30 @@ public class SrsResponse {
 
     public String getStatistikDiagnosisDescription() {
         return statistikDiagnosisDescription;
+    }
+
+    public List<Integer> getStatistikNationellStatistik() {
+        return statistikNationellStatistik;
+    }
+
+    public Double getPredictionProbabilityOverLimit() {
+        return predictionProbabilityOverLimit;
+    }
+
+    public String getPredictionPhysiciansOwnOpinionRisk() {
+        return predictionPhysiciansOwnOpinionRisk;
+    }
+
+    public LocalDateTime getPredictionTimestamp() {
+        return predictionTimestamp;
+    }
+
+    public ImmutableList<SrsQuestionResponse> getPredictionQuestionsResponses() {
+        return predictionQuestionsResponses;
+    }
+
+    public Double getPredictionPrevalence() {
+        return predictionPrevalence;
     }
 
     public void setPredictionDiagnosisDescription(String predictionDiagnosisDescription) {

@@ -29,4 +29,6 @@
     <bean class="se.inera.intyg.infra.integration.srs.stub.GetSRSInformationForDiagnosisStub"/>
     <bean class="se.inera.intyg.infra.integration.srs.services.SrsServiceImpl"/>
     <bean class="se.inera.intyg.infra.integration.srs.stub.repository.ConsentRepository"/>
+    <bean class="se.inera.intyg.infra.integration.srs.stub.GetOwnOpinionStub"/>
+    <bean class="se.inera.intyg.infra.integration.srs.stub.SetOwnOpinionStub"/>
 </beans>
