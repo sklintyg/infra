@@ -1,0 +1,36 @@
+{
+  "hsaId": "TSTNMT2321000156-10KL",
+  "forNamn": "Lena",
+  "efterNamn": "Svensson",
+  "uppdrag": [
+    {
+      "vardgivare": "TSTNMT2321000156-102Q",
+      "enhet": "TSTNMT2321000156-1077",
+      "andamal": [
+        "Vård och behandling"
+      ],
+      "systemRoles": [
+        "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1077"
+      ]
+    },
+    {
+      "vardgivare": "TSTNMT2321000156-105M",
+      "enhet": "TSTNMT2321000156-105N",
+      "systemRoles": [
+        "INTYG;Rehab-TSTNMT2321000156-105N"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["WC","IB","RS"],
+    "displayOrder": 500,
+    "env": "demo",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-1077",
+        "beskrivning": "Lena Svensson (Vårdadmin | SITHS-kort)"
+      }
+    ]
+  }
+}
