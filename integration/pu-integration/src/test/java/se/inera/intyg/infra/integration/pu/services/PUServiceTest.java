@@ -218,6 +218,11 @@ public class PUServiceTest {
     }
 
     @Test
+    public void checkIsProtectedPopulationRecord() {
+        Person person = service.getPerson(createPnr("20051231-2398")).getPerson();
+        assertTrue(person.isSekretessmarkering());    }
+
+    @Test
     public void checkDeadPerson() {
         Person person = service.getPerson(createPnr("19000525-9809")).getPerson();
         assertEquals("Tod", person.getFornamn());

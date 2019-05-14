@@ -56,9 +56,15 @@ public class PersonConverter {
         String firstName = namn.getGivenName() != null ? namn.getGivenName().getName() : null;
         String middleName = namn.getMiddleName() != null ? namn.getMiddleName().getName() : null;
         String lastName = namn.getSurname() != null ? namn.getSurname().getName() : null;
-        Person person = new Person(personId, personRecord.isProtectedPersonIndicator(), isDead, firstName,
-                middleName, lastName, adressRader, postnr, postort);
+        Person person = new Person(personId,
+                isSekretessmarkering(personRecord),
+                isDead, firstName, middleName, lastName, adressRader, postnr, postort);
         return PersonSvar.found(person);
+    }
+
+    private boolean isSekretessmarkering(PersonRecordType personRecord) {
+        return personRecord.isProtectedPersonIndicator()
+                || (personRecord.isProtectedPopulationRecord() != null && personRecord.isProtectedPopulationRecord());
     }
 
     private Optional<String> buildAdress(ResidentialAddressType adress) {
