@@ -11,6 +11,7 @@ include ':common-redis-cache-core'
 include ':grp-stub'
 include ':nias-stub'
 include ':hsa-integration'
+include ':ia-integration'
 include ':pu-integration'
 include ':srs-integration'
 include ':postnummerservice-integration'
@@ -31,6 +32,7 @@ project(':dynamiclink').projectDir = "$rootDir/dynamiclink" as File
 project(':grp-stub').projectDir = "$rootDir/integration/grp-stub" as File
 project(':nias-stub').projectDir = "$rootDir/integration/nias-stub" as File
 project(':hsa-integration').projectDir = "$rootDir/integration/hsa-integration" as File
+project(':ia-integration').projectDir = "$rootDir/integration/ia-integration" as File
 project(':pu-integration').projectDir = "$rootDir/integration/pu-integration" as File
 project(':srs-integration').projectDir = "$rootDir/integration/srs-integration" as File
 project(':postnummerservice-integration').projectDir = "$rootDir/integration/postnummerservice-integration" as File
