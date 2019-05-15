@@ -54,6 +54,10 @@ public class Banner implements Serializable {
         this.priority = priority;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public UUID getId() {
         return id;
     }

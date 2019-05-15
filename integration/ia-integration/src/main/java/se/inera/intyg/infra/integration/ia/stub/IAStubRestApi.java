@@ -22,6 +22,7 @@ package se.inera.intyg.infra.integration.ia.stub;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -42,7 +43,7 @@ public class IAStubRestApi {
     private Cache iaCache;
 
     @GET
-    @Path("/banner")
+    @Path("/")
     public Response getBanners() {
         List<Banner> banners = queryCache();
 
@@ -53,6 +54,7 @@ public class IAStubRestApi {
     @Path("/banner")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addBanner(Banner banner) {
+        banner.setId(UUID.randomUUID());
 
         List<Banner> banners = queryCache();
         banners.add(banner);

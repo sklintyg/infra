@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
@@ -39,16 +40,15 @@ import se.inera.intyg.infra.integration.ia.model.Banner;
 public class IABannerServiceImpl implements IABannerService {
     private static final Logger LOG = LoggerFactory.getLogger(IABannerServiceImpl.class);
 
+    @Autowired
+    @Qualifier("iaRestTemplate")
     private RestTemplate restTemplate;
+
+    @Autowired
     private Cache iaCache;
 
     @Value("${intygsadmin.url}")
     private String iaUrl;
-
-    public IABannerServiceImpl(@Qualifier("iaRestTemplate") RestTemplate restTemplate, Cache iaCache) {
-        this.restTemplate = restTemplate;
-        this.iaCache = iaCache;
-    }
 
     @Override
     public List<Banner> getCurrentBanners() {
