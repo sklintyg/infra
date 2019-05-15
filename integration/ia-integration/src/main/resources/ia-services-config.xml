@@ -24,7 +24,14 @@
         http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd
        ">
 
-  <bean id="iaBannerService" class="se.inera.intyg.infra.integration.ia.services.IABannerServiceImpl" />
+  <beans profile="ia-stub">
+    <bean class="se.inera.intyg.infra.integration.ia.stub.IABannerServiceStub" />
+    <bean class="se.inera.intyg.infra.integration.ia.stub.IAStubRestApi" />
+  </beans>
+
+  <beans profile="!ia-stub">
+    <bean class="se.inera.intyg.infra.integration.ia.services.IABannerServiceImpl" />
+  </beans>
 
   <beans profile="qa,prod">
     <bean class="se.inera.intyg.infra.integration.ia.cache.IaCacheConfiguration" />

@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -80,8 +81,8 @@ public class IABannerServiceTest {
     @BeforeClass
     public static void init() {
         mapper.registerModule(new JavaTimeModule()
-                .addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'+0200'")))
-                .addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'+0200'"))));
+                .addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(Banner.FORMAT)))
+                .addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(Banner.FORMAT))));
     }
 
     @Before
@@ -120,7 +121,7 @@ public class IABannerServiceTest {
         LocalDateTime now = LocalDateTime.now();
         List<Banner> banners = new ArrayList<>();
 
-        Banner banner = new Banner(1L, now, Application.WEBCERT, "test msg", now.minusDays(10), now.plusDays(10), BannerPriority.HIGH);
+        Banner banner = new Banner(UUID.randomUUID(), now, Application.WEBCERT, "test msg", now.minusDays(10), now.plusDays(10), BannerPriority.HIGH);
         banners.add(banner);
 
         mockServer.expect(ExpectedCount.once(),

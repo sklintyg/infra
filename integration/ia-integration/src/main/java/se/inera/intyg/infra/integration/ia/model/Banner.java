@@ -21,14 +21,15 @@ package se.inera.intyg.infra.integration.ia.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Banner implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static final String FORMAT = "yyyy-MM-dd'T'HH:mm:ss'+0200'";
+    public static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    private Long id;
+    private UUID id;
     @JsonFormat(pattern = FORMAT)
     private LocalDateTime createdAt;
     private Application application;
@@ -42,7 +43,7 @@ public class Banner implements Serializable {
     public Banner() {
     }
 
-    public Banner(Long id, LocalDateTime createdAt, Application application, String message, LocalDateTime displayFrom,
+    public Banner(UUID id, LocalDateTime createdAt, Application application, String message, LocalDateTime displayFrom,
                   LocalDateTime displayTo, BannerPriority priority) {
         this.id = id;
         this.createdAt = createdAt;
@@ -53,7 +54,7 @@ public class Banner implements Serializable {
         this.priority = priority;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 

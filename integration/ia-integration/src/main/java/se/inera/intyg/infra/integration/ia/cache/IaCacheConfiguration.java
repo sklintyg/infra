@@ -30,6 +30,8 @@ import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
 @Configuration
 public class IaCacheConfiguration {
 
+    public static final String CACHE_KEY = "BANNER";
+
     @Value("${app.name:noname}")
     private String appName;
 
@@ -44,7 +46,7 @@ public class IaCacheConfiguration {
         return redisCacheOptionsSetter.createCache("iaCache:" + appName, iaCacheExpirySeconds);
     }
 
-    @Bean
+    @Bean("iaRestTemplate")
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }

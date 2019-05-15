@@ -27,26 +27,28 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.web.client.RestTemplate;
 
+import se.inera.intyg.infra.integration.ia.cache.IaCacheConfiguration;
 import se.inera.intyg.infra.integration.ia.model.Application;
 import se.inera.intyg.infra.integration.ia.model.Banner;
 
 public class IABannerServiceImpl implements IABannerService {
     private static final Logger LOG = LoggerFactory.getLogger(IABannerServiceImpl.class);
-    private static final String CACHE_KEY = "BANNER";
 
-    @Autowired
     private RestTemplate restTemplate;
-
-    @Autowired
     private Cache iaCache;
 
     @Value("${intygsadmin.url}")
     private String iaUrl;
+
+    public IABannerServiceImpl(@Qualifier("iaRestTemplate") RestTemplate restTemplate, Cache iaCache) {
+        this.restTemplate = restTemplate;
+        this.iaCache = iaCache;
+    }
 
     @Override
     public List<Banner> getCurrentBanners() {
@@ -74,11 +76,11 @@ public class IABannerServiceImpl implements IABannerService {
     }
 
     private void store(Banner[] banners) {
-        iaCache.put(CACHE_KEY, banners);
+        iaCache.put(IaCacheConfiguration.CACHE_KEY, banners);
     }
 
     private List<Banner> queryCache() {
-        Banner[] banners = iaCache.get(CACHE_KEY, Banner[].class);
+        Banner[] banners = iaCache.get(IaCacheConfiguration.CACHE_KEY, Banner[].class);
 
         if (banners == null) {
             return new ArrayList<>();

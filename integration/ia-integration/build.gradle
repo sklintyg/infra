@@ -4,6 +4,7 @@ dependencies {
   compile "org.springframework.data:spring-data-redis:${springDataRedisVersion}"
   compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
 
+  compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
   compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
   compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jacksonVersion}"
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
