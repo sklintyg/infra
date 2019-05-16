@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.sjukfall.dto;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,6 +43,9 @@ public class SjukfallEnhet {
 
     // Totalt antal intyg som ingår i sjukfallet
     private int intyg;
+
+    //IntygsIdn för ingående intyg i sjukfallet
+    private List<String> intygLista = new ArrayList<>();
 
     // Nedsättning
     private int aktivGrad;
@@ -155,5 +159,13 @@ public class SjukfallEnhet {
 
     public void setAktivIntygsId(String aktivIntygsId) {
         this.aktivIntygsId = aktivIntygsId;
+    }
+
+    public List<String> getIntygLista() {
+        return intygLista;
+    }
+
+    public void setIntygLista(List<String> intygLista) {
+        this.intygLista = intygLista;
     }
 }
