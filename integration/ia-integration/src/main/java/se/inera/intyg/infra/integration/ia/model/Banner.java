@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Banner implements Serializable {
     private static final long serialVersionUID = 1L;
-    public static final String FORMAT = "yyyy-MM-ddTHH:mm:ss";
+    public static final String FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
     private UUID id;
     @JsonFormat(pattern = FORMAT)
