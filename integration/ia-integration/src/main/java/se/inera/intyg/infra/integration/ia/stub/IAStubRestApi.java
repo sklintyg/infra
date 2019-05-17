@@ -75,7 +75,7 @@ public class IAStubRestApi {
             return new ArrayList<>();
         }
 
-        return Arrays.asList(banners);
+        return new ArrayList<>(Arrays.asList(banners));
     }
 
     /**
