@@ -88,7 +88,8 @@ public interface SrsService {
      * @param ownOpinion the users own opinion
      * @return
      */
-    ResultCodeEnum setOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId, String diagnosisCode, EgenBedomningRiskType ownOpinion);
+    ResultCodeEnum setOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId, String diagnosisCode,
+                                 EgenBedomningRiskType ownOpinion);
 
     /**
      * Fetches all the diagnosis codes which are supported by SRS.

@@ -404,7 +404,8 @@ public class SrsServiceImpl implements SrsService {
         return request;
     }
 
-    private GetOwnOpinionRequestType createGetOwnOpinionRequest(String careGiverHsaId, String careUnitHsaId, String certificateId, String diagnosis) {
+    private GetOwnOpinionRequestType createGetOwnOpinionRequest(String careGiverHsaId, String careUnitHsaId, String certificateId,
+                                                                String diagnosis) {
         GetOwnOpinionRequestType request = new GetOwnOpinionRequestType();
         request.setVardgivareId(createHsaId(careGiverHsaId));
         request.setVardenhetId(createHsaId(careUnitHsaId));
