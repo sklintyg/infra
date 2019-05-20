@@ -65,28 +65,30 @@ public interface SrsService {
      */
     List<SrsQuestion> getQuestions(String diagnos);
 
-    Samtyckesstatus getConsent(String hsaId, Personnummer personId) throws InvalidPersonNummerException;
+    Samtyckesstatus getConsent(String careUnitHsaId, Personnummer personId) throws InvalidPersonNummerException;
 
-    ResultCodeEnum setConsent(String hsaId, Personnummer personId, boolean samtycke) throws InvalidPersonNummerException;
+    ResultCodeEnum setConsent(String careUnitHsaId, Personnummer personId, boolean samtycke) throws InvalidPersonNummerException;
 
     /**
      * Get's a previously set "user's own opinion" on a given care giver and certificate.
      * @param careGiverHsaId the hsa id of the care giver
      * @param careUnitHsaId the HSA-id of the certificate's/user's care unit
      * @param certificateId the id of the certificate
+     * @param diagnosisCode the diagnosis code for which the risk was predicted
      * @return a previously set opinion or null if no such opinion has been set for the given care unit and certificate
      */
-    EgenBedomningRiskType getOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId);
+    EgenBedomningRiskType getOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId, String diagnosisCode);
 
     /**
      * Sets the user's own opinion on the risk prediction.
      * @param careGiverHsaId the HSA-id of the user's care giver
      * @param careUnitHsaId the HSA-id of the certificate's/user's care unit
-     * @param certificateId the id of the certificate for which this risk was predicted
+     * @param certificateId the id of the certificate for which the risk was predicted
+     * @param diagnosisCode the diagnosis code for which the risk was predicted
      * @param ownOpinion the users own opinion
      * @return
      */
-    ResultCodeEnum setOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId, EgenBedomningRiskType ownOpinion);
+    ResultCodeEnum setOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId, String diagnosisCode, EgenBedomningRiskType ownOpinion);
 
     /**
      * Fetches all the diagnosis codes which are supported by SRS.
