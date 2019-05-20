@@ -171,7 +171,7 @@ public class SrsServiceImpl implements SrsService {
             if (tmp.containsKey(Atgardstyp.OBS)) {
                 atgarderObs = tmp.get(Atgardstyp.OBS).stream()
                         .sorted(Comparator.comparing(Atgard::getPrioritet))
-                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsforslag()))
+                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsrubrik(), atgard.getAtgardsforslag()))
                         .collect(Collectors.toList());
             } else {
                 atgarderObs = Collections.emptyList();
@@ -180,7 +180,7 @@ public class SrsServiceImpl implements SrsService {
             if (tmp.containsKey(Atgardstyp.REK)) {
                 atgarderRek = tmp.get(Atgardstyp.REK).stream()
                         .sorted(Comparator.comparing(Atgard::getPrioritet))
-                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsforslag()))
+                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsrubrik(), atgard.getAtgardsforslag()))
                         .collect(Collectors.toList());
             } else {
                 atgarderRek = Collections.emptyList();
