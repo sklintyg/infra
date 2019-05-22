@@ -48,7 +48,7 @@ public class GetConsentStub implements GetConsentResponderInterface {
 
         Optional<Personnummer> personnummer = Personnummer.createPersonnummer(getConsentRequestType.getPersonId());
         Optional<Consent> consent = consentRepository
-                .getConsent(personnummer.get(), getConsentRequestType.getVardgivareId().getExtension());
+                .getConsent(personnummer.get(), getConsentRequestType.getVardenhetId().getExtension());
 
         if (consent.isPresent()) {
             response.setSamtycke(true);
