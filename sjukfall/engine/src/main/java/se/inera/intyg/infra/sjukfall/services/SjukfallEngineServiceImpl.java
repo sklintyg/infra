@@ -118,6 +118,7 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         sjukfallEnhet.setSlut(getMaximumDate(values));
         sjukfallEnhet.setDagar(SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(values));
         sjukfallEnhet.setIntyg(values.size());
+        sjukfallEnhet.setIntygLista(values.stream().map(IntygData::getIntygId).collect(Collectors.toList()));
         sjukfallEnhet.setGrader(getGrader(aktivtIntyg.getFormagor()));
         if (!aktivtIntyg.isNyligenAvslutat()) {
             sjukfallEnhet.setAktivGrad(getAktivGrad(aktivtIntyg.getFormagor(), aktivtDatum));

@@ -18,29 +18,40 @@
  */
 package se.inera.intyg.infra.sjukfall.services;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
-import se.inera.intyg.infra.sjukfall.dto.*;
-import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetCreator;
-import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetResolver;
-import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
+import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import se.inera.intyg.infra.sjukfall.dto.Formaga;
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
+import se.inera.intyg.infra.sjukfall.dto.Lakare;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallPatient;
+import se.inera.intyg.infra.sjukfall.dto.Vardenhet;
+import se.inera.intyg.infra.sjukfall.dto.Vardgivare;
+import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetCreator;
+import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetResolver;
+import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 
 
 /**
@@ -140,12 +151,14 @@ public class SjukfallEngineServiceTest {
 
     @Test
     public void testCalculateSjukfallEnhet11() {
-        assertSjukfallEnhet("19630206-2846", "2016-02-01", "2016-03-04", 4, 29);
+        assertSjukfallEnhet("19630206-2846", "2016-02-01", "2016-03-04", 4, 29,
+                Arrays.asList("fall-11-intyg-1", "fall-11-intyg-2", "fall-11-intyg-3", "fall-11-intyg-4"));
     }
 
     @Test
     public void testCalculateSjukfallEnhet12() {
-        assertSjukfallEnhet("19710301-1032", "2016-02-15", "2016-03-04", 3, 19);
+        assertSjukfallEnhet("19710301-1032", "2016-02-15", "2016-03-04", 3, 19,
+                Arrays.asList("fall-12-intyg-2", "fall-12-intyg-3", "fall-12-intyg-4"));
     }
 
     @Test
@@ -164,8 +177,10 @@ public class SjukfallEngineServiceTest {
     private static void assertInit(List<?> list, int expectedListSize) {
         assertTrue("Expected " + expectedListSize + " but was " + list.size(), list.size() == expectedListSize);
     }
-
     private static void assertSjukfallEnhet(String patientId, String startDatum, String slutDatum, int antalIntyg, int effektivSjukskrivningslangd) {
+        assertSjukfallEnhet(patientId,startDatum,slutDatum,antalIntyg,effektivSjukskrivningslangd, null);
+    }
+    private static void assertSjukfallEnhet(String patientId, String startDatum, String slutDatum, int antalIntyg, int effektivSjukskrivningslangd, List<String> expectedIntygsIds) {
         SjukfallEnhet sjukfallEnhet = sjukfallListUnit.stream().
                 filter(o -> o.getPatient().getId().equals(patientId)).findFirst().orElse(null);
 
@@ -178,6 +193,11 @@ public class SjukfallEngineServiceTest {
         assertTrue(sjukfallEnhet.getSlut().isEqual(LocalDate.parse(slutDatum)));
         assertTrue(sjukfallEnhet.getIntyg() == antalIntyg);
         assertTrue(sjukfallEnhet.getDagar() == effektivSjukskrivningslangd);
+        if (expectedIntygsIds != null) {
+            assertEquals(expectedIntygsIds.size(), sjukfallEnhet.getIntygLista().size());
+            assertTrue(sjukfallEnhet.getIntygLista().containsAll(expectedIntygsIds));
+        }
+
     }
 
     private static void assertSjukfallPatient(SjukfallPatient sjukfallPatient, String startDatum, String slutDatum,
