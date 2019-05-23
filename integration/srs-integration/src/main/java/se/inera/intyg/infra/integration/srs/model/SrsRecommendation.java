@@ -20,12 +20,14 @@ package se.inera.intyg.infra.integration.srs.model;
 
 public class SrsRecommendation {
 
+    private String recommendationTitle;
     private String recommendationText;
 
-    public static SrsRecommendation create(String recommendationText) {
-        SrsRecommendation srr = new SrsRecommendation();
-        srr.setRecommendationText(recommendationText);
-        return srr;
+    public static SrsRecommendation create(String recommendationTitle, String recommendationText) {
+        SrsRecommendation recommendation = new SrsRecommendation();
+        recommendation.setRecommendationTitle(recommendationTitle);
+        recommendation.setRecommendationText(recommendationText);
+        return recommendation;
     }
 
     public String getRecommendationText() {
@@ -36,4 +38,11 @@ public class SrsRecommendation {
         this.recommendationText = recommendationText;
     }
 
+    public String getRecommendationTitle() {
+        return recommendationTitle;
+    }
+
+    public void setRecommendationTitle(String recommendationTitle) {
+        this.recommendationTitle = recommendationTitle;
+    }
 }

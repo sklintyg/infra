@@ -132,15 +132,17 @@ public class SrsServiceImpl implements SrsService {
         } else if (underlag.getPrediktion().getDiagnosprediktion().get(0) != null) {
             // Always add prevalence if we have it regardless if the user requested prediction on a personal level
             predictionPrevalence = underlag.getPrediktion().getDiagnosprediktion().get(0).getPrevalens();
-
+            predictionDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
+                    .map(CVType::getCode)
+                    .orElse(null);
             // Also check if we have a historic prediction
             if (underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde() != null) {
                 level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori().intValueExact();
                 description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
                 prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
-                predictionDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
-                        .map(CVType::getCode)
-                        .orElse(null);
+//                predictionDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
+//                        .map(CVType::getCode)
+//                        .orElse(null);
                 predictionProbabilityOverLimit = underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde();
 
                 if (underlag.getPrediktion().getDiagnosprediktion().get(0).getPrediktionsfaktorer() != null) {
@@ -169,7 +171,7 @@ public class SrsServiceImpl implements SrsService {
             if (tmp.containsKey(Atgardstyp.OBS)) {
                 atgarderObs = tmp.get(Atgardstyp.OBS).stream()
                         .sorted(Comparator.comparing(Atgard::getPrioritet))
-                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsforslag()))
+                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsrubrik(), atgard.getAtgardsforslag()))
                         .collect(Collectors.toList());
             } else {
                 atgarderObs = Collections.emptyList();
@@ -178,7 +180,7 @@ public class SrsServiceImpl implements SrsService {
             if (tmp.containsKey(Atgardstyp.REK)) {
                 atgarderRek = tmp.get(Atgardstyp.REK).stream()
                         .sorted(Comparator.comparing(Atgard::getPrioritet))
-                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsforslag()))
+                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsrubrik(), atgard.getAtgardsforslag()))
                         .collect(Collectors.toList());
             } else {
                 atgarderRek = Collections.emptyList();
@@ -221,29 +223,30 @@ public class SrsServiceImpl implements SrsService {
     }
 
     @Override
-    public Samtyckesstatus getConsent(String hsaId, Personnummer personId) throws InvalidPersonNummerException {
-        GetConsentResponseType response = getConsent.getConsent(createGetConsentRequest(hsaId, personId));
+    public Samtyckesstatus getConsent(String careUnitHsaId, Personnummer personId) throws InvalidPersonNummerException {
+        GetConsentResponseType response = getConsent.getConsent(createGetConsentRequest(careUnitHsaId, personId));
         return response.getSamtyckesstatus();
     }
 
     @Override
-    public ResultCodeEnum setConsent(String hsaId, Personnummer personId, boolean samtycke) throws InvalidPersonNummerException {
-        SetConsentResponseType resp = setConsent.setConsent(createSetConsentRequest(hsaId, personId, samtycke));
+    public ResultCodeEnum setConsent(String careUnitHsaId, Personnummer personId, boolean samtycke) throws InvalidPersonNummerException {
+        SetConsentResponseType resp = setConsent.setConsent(createSetConsentRequest(careUnitHsaId, personId, samtycke));
         return resp.getResultCode();
     }
 
     @Override
-    public EgenBedomningRiskType getOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId) {
+    public EgenBedomningRiskType getOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId, String diagnosisCode) {
         GetOwnOpinionResponseType resp =
-                getOwnOpinion.getOwnOpinion(createGetOwnOpinionRequest(careGiverHsaId, careUnitHsaId, certificateId));
+                getOwnOpinion.getOwnOpinion(createGetOwnOpinionRequest(careGiverHsaId, careUnitHsaId, certificateId, diagnosisCode));
         return resp.getEgenBedomningRisk();
     }
 
     @Override
-    public ResultCodeEnum setOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId,
+    public ResultCodeEnum setOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId, String diagnosisCode,
                                         EgenBedomningRiskType ownOpinion) {
         SetOwnOpinionResponseType resp =
-                setOwnOpinion.setOwnOpinion(createSetOwnOpinionRequest(careGiverHsaId, careUnitHsaId, certificateId, ownOpinion));
+                setOwnOpinion.setOwnOpinion(createSetOwnOpinionRequest(careGiverHsaId, careUnitHsaId,
+                        certificateId, diagnosisCode, ownOpinion));
         return resp.getResultCode();
     }
 
@@ -388,10 +391,11 @@ public class SrsServiceImpl implements SrsService {
     }
 
     private SetOwnOpinionRequestType createSetOwnOpinionRequest(String careGiverHsaId, String careUnitHsaId,
-                                                                String certificateId, EgenBedomningRiskType opinion) {
+                                                                String certificateId, String diagnosis, EgenBedomningRiskType opinion) {
         SetOwnOpinionRequestType request = new SetOwnOpinionRequestType();
         request.setVardgivareId(createHsaId(careGiverHsaId));
         request.setVardenhetId(createHsaId(careUnitHsaId));
+        request.setDiagnos(createDiagnos(diagnosis));
         IntygId intyg = new IntygId();
         intyg.setExtension(certificateId);
         intyg.setRoot(careUnitHsaId);
@@ -400,10 +404,12 @@ public class SrsServiceImpl implements SrsService {
         return request;
     }
 
-    private GetOwnOpinionRequestType createGetOwnOpinionRequest(String careGiverHsaId, String careUnitHsaId, String certificateId) {
+    private GetOwnOpinionRequestType createGetOwnOpinionRequest(String careGiverHsaId, String careUnitHsaId, String certificateId,
+                                                                String diagnosis) {
         GetOwnOpinionRequestType request = new GetOwnOpinionRequestType();
         request.setVardgivareId(createHsaId(careGiverHsaId));
         request.setVardenhetId(createHsaId(careUnitHsaId));
+        request.setDiagnos(createDiagnos(diagnosis));
         IntygId intyg = new IntygId();
         intyg.setExtension(certificateId);
         intyg.setRoot(careUnitHsaId);
@@ -411,23 +417,23 @@ public class SrsServiceImpl implements SrsService {
         return request;
     }
 
-    private SetConsentRequestType createSetConsentRequest(String hsaString, Personnummer personId, boolean samtycke)
+    private SetConsentRequestType createSetConsentRequest(String careUnitHsaId, Personnummer personId, boolean samtycke)
             throws InvalidPersonNummerException {
         SetConsentRequestType request = new SetConsentRequestType();
-        HsaId hsaId = createHsaId(hsaString);
-        request.setVardgivareId(hsaId);
+        HsaId hsaId = createHsaId(careUnitHsaId);
+        request.setVardenhetId(hsaId);
         request.setPersonId(personId.getPersonnummer());
         request.setSamtycke(samtycke);
         return request;
     }
 
-    private GetConsentRequestType createGetConsentRequest(String hsaString, Personnummer personnummer)
+    private GetConsentRequestType createGetConsentRequest(String careUnitHsaId, Personnummer personnummer)
             throws InvalidPersonNummerException {
         GetConsentRequestType request = new GetConsentRequestType();
         HsaId hsaId = new HsaId();
-        hsaId.setExtension(hsaString);
+        hsaId.setExtension(careUnitHsaId);
         hsaId.setRoot(HSA_ROOT);
-        request.setVardgivareId(hsaId);
+        request.setVardenhetId(hsaId);
         request.setPersonId(personnummer.getPersonnummer());
         return request;
     }
