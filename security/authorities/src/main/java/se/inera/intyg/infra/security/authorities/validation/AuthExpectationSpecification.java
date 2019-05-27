@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.infra.security.authorities.validation;
 
-
 import se.inera.intyg.infra.security.common.model.UserOriginType;
 
 /**
@@ -123,7 +122,7 @@ public interface AuthExpectationSpecification {
      *
      * @param privilegeConstraint
      * @param evaluate
-     *      If false, the privilege will not be evaluated.
+     *            If false, the privilege will not be evaluated.
      * @return
      */
     AuthExpectationSpecification privilegeIf(String privilegeConstraint, boolean evaluate);
@@ -142,7 +141,7 @@ public interface AuthExpectationSpecification {
      *
      * @param privilegeNotConstraint
      * @param evaluate
-     *      If false, this privilege will not be evaluated.
+     *            If false, this privilege will not be evaluated.
      * @return
      */
     AuthExpectationSpecification notPrivilegeIf(String privilegeNotConstraint, boolean evaluate);
@@ -156,6 +155,14 @@ public interface AuthExpectationSpecification {
     boolean isVerified();
 
     /**
+     * Reason for authoritzation failed. Can be used as message when throwing AuthoritiesException.
+     *
+     * @return
+     *         String is empty if no errors.
+     */
+    String error();
+
+    /**
      * Throws AuthoritiesException if any of the added check fails.
      */
     void orThrow();
@@ -164,6 +171,5 @@ public interface AuthExpectationSpecification {
      * Throws a user-defined RuntimeException if any of the added check fails.
      */
     void orThrow(RuntimeException exception);
-
 
 }

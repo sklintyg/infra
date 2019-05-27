@@ -53,6 +53,9 @@ public final class AuthoritiesConstants {
     public static final String PRIVILEGE_NOTIFIERING_UTKAST = "NOTIFIERING_UTKAST";
     public static final String PRIVILEGE_HANTERA_SEKRETESSMARKERAD_PATIENT = "HANTERA_SEKRETESSMARKERAD_PATIENT";
     public static final String PRIVILEGE_GODKANNA_MOTTAGARE = "GODKANNA_MOTTAGARE";
+    public static final String PRIVILEGE_SKAPA_NYFRAGA = "SKAPA_NY_FRAGA";
+    public static final String PRIVILEGE_LASA_FRAGA = "LASA_FRAGA";
+    public static final String PRIVILEGE_BESVARA_FRAGA = "BESVARA_FRAGA";
 
     public static final String FEATURE_JS_LOGGNING = "JS_LOGGING";
     public static final String FEATURE_HANTERA_INTYGSUTKAST = "HANTERA_INTYGSUTKAST";
@@ -76,6 +79,7 @@ public final class AuthoritiesConstants {
     public static final String FEATURE_SEKRETESSMARKERING = "SEKRETESSMARKERING";
     public static final String FEATURE_NOTIFICATION_DISCARD_FELB = "NOTIFICATION_DISCARD_FELB";
     public static final String FEATURE_OAUTH_AUTHENTICATION = "OAUTH_AUTHENTICATION";
+
     private AuthoritiesConstants() {
     }
 }
