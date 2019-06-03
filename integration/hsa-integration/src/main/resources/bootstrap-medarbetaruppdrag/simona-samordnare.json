@@ -2,10 +2,12 @@
   "hsaId": "ib-user-1",
   "forNamn": "Simona",
   "efterNamn": "Samordnare",
+  "titel": "Samordnare",
   "uppdrag": [
     {
       "vardgivare": "IFV1239877878-1041",
-      "enhet": "IFV1239877878-1042"
+      "enhet": "IFV1239877878-1042",
+      "namn": "Admin"
     }
   ],
   "fakeProperties": {

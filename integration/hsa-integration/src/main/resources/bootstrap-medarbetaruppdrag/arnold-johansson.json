@@ -2,6 +2,7 @@
   "hsaId": "TSTNMT2321000156-1079",
   "forNamn": "Arnold",
   "efterNamn": "Johansson",
+  "titel": "Läkare",
   "legitimeradeYrkesgrupper": [
     "Läkare"
   ],
@@ -11,7 +12,8 @@
       "enhet": "TSTNMT2321000156-1077",
       "andamal": [
         "Vård och behandling"
-      ]
+      ],
+      "namn": "VardOchBehandling"
     }
   ],
   "fakeProperties": {
