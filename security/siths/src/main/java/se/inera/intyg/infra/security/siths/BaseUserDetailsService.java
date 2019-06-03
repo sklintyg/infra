@@ -157,6 +157,12 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         }
     }
 
+    @Autowired
+    public void setCommonAuthoritiesResolver(CommonAuthoritiesResolver commonAuthoritiesResolver) {
+        this.commonAuthoritiesResolver = commonAuthoritiesResolver;
+    }
+
+
     // ~ Protected scope
     // =====================================================================================
 
@@ -249,12 +255,39 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         return intygUser;
     }
 
-    /**
-     * Each application must override this method in order to specify it's fallback default role.
-     *
-     * @return
-     */
-    protected abstract String getDefaultRole();
+    protected void decorateIntygUserWithBasicInfo(IntygUser intygUser, UserAuthorizationInfo userAuthorizationInfo,
+                                                  List<PersonInformationType> personInfo, String authenticationScheme) {
+        intygUser.setNamn(compileName(personInfo.get(0).getGivenName(), personInfo.get(0).getMiddleAndSurName()));
+        intygUser.setVardgivare(userAuthorizationInfo.getVardgivare());
+        //INTYG-4208: If any item has protectedPerson set, consider the user sekretessMarkerad.
+        intygUser.setSekretessMarkerad(
+                personInfo.stream().filter(pi -> pi.isProtectedPerson() != null && pi.isProtectedPerson()).findAny().isPresent());
+
+        // Förskrivarkod is sensitive information, not allowed to store real value so make sure we overwrite this later
+        // after role resolution.
+        intygUser.setForskrivarkod(userAuthorizationInfo.getUserCredentials().getPersonalPrescriptionCode());
+
+        // Set user's authentication scheme
+        intygUser.setAuthenticationScheme(authenticationScheme);
+
+        // Set application mode / request origin if applicable
+        if (userOrigin.isPresent()) {
+            intygUser.setOrigin(commonAuthoritiesResolver.getRequestOrigin(userOrigin.get().resolveOrigin(getCurrentRequest())).getName());
+        }
+
+        // Set commission names per enhetsId (required for PDL logging)
+        intygUser.setMiuNamnPerEnhetsId(userAuthorizationInfo.getCommissionNamePerCareUnit());
+    }
+
+    protected void decorateIntygUserWithRoleAndAuthorities(IntygUser intygUser, List<PersonInformationType> personInfo,
+                                                           UserCredentials userCredentials) {
+        Role role = commonAuthoritiesResolver.resolveRole(intygUser, personInfo, getDefaultRole(), userCredentials);
+        LOG.debug("User role is set to {}", role);
+
+        // Set role and privileges
+        intygUser.setRoles(toMap(role));
+        intygUser.setAuthorities(toMap(role.getPrivileges(), Privilege::getName));
+    }
 
     protected void decorateIntygUserWithAdditionalInfo(IntygUser intygUser, List<PersonInformationType> hsaPersonInfo) {
         defaultUserDetailsDecorator.decorateIntygUserWithAdditionalInfo(intygUser, hsaPersonInfo);
@@ -304,6 +337,13 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     }
 
+    /**
+     * Each application must override this method in order to specify it's fallback default role.
+     *
+     * @return
+     */
+    protected abstract String getDefaultRole();
+
     // Allow subclasses to use HSA services.
     protected HsaOrganizationsService getHsaOrganizationsService() {
         return hsaOrganizationsService;
@@ -314,46 +354,9 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         return hsaPersonService;
     }
 
-    @Autowired
-    public void setCommonAuthoritiesResolver(CommonAuthoritiesResolver commonAuthoritiesResolver) {
-        this.commonAuthoritiesResolver = commonAuthoritiesResolver;
-    }
 
     // ~ Private scope
     // =====================================================================================
-    private void decorateIntygUserWithBasicInfo(IntygUser intygUser, UserAuthorizationInfo userAuthorizationInfo,
-            List<PersonInformationType> personInfo, String authenticationScheme) {
-        intygUser.setNamn(compileName(personInfo.get(0).getGivenName(), personInfo.get(0).getMiddleAndSurName()));
-        intygUser.setVardgivare(userAuthorizationInfo.getVardgivare());
-        //INTYG-4208: If any item has protectedPerson set, consider the user sekretessMarkerad.
-        intygUser.setSekretessMarkerad(
-                personInfo.stream().filter(pi -> pi.isProtectedPerson() != null && pi.isProtectedPerson()).findAny().isPresent());
-
-        // Förskrivarkod is sensitive information, not allowed to store real value so make sure we overwrite this later
-        // after role resolution.
-        intygUser.setForskrivarkod(userAuthorizationInfo.getUserCredentials().getPersonalPrescriptionCode());
-
-        // Set user's authentication scheme
-        intygUser.setAuthenticationScheme(authenticationScheme);
-
-        // Set application mode / request origin if applicable
-        if (userOrigin.isPresent()) {
-            intygUser.setOrigin(commonAuthoritiesResolver.getRequestOrigin(userOrigin.get().resolveOrigin(getCurrentRequest())).getName());
-        }
-
-        // Set commission names per enhetsId (required for PDL logging)
-        intygUser.setMiuNamnPerEnhetsId(userAuthorizationInfo.getCommissionNamePerCareUnit());
-    }
-
-    protected void decorateIntygUserWithRoleAndAuthorities(IntygUser intygUser, List<PersonInformationType> personInfo,
-            UserCredentials userCredentials) {
-        Role role = commonAuthoritiesResolver.resolveRole(intygUser, personInfo, getDefaultRole(), userCredentials);
-        LOG.debug("User role is set to {}", role);
-
-        // Set role and privileges
-        intygUser.setRoles(toMap(role));
-        intygUser.setAuthorities(toMap(role.getPrivileges(), Privilege::getName));
-    }
 
     private void assertEmployee(String employeeHsaId, List<PersonInformationType> personInfo) {
         if (personInfo == null || personInfo.isEmpty()) {
