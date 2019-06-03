@@ -76,7 +76,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -136,8 +135,8 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
         when(userOrigin.resolveOrigin(any())).thenReturn(UserOriginType.NORMAL.name());
-
         when(hsaPersonService.getHsaPersonInfo(anyString())).thenReturn(Collections.emptyList());
+
         ReflectionTestUtils.setField(userDetailsService, "userOrigin", Optional.of(userOrigin));
         userDetailsService.setCommonAuthoritiesResolver(AUTHORITIES_RESOLVER);
     }
@@ -150,31 +149,31 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         setupCallToGetHsaPersonInfoWithBefattningskoder();
 
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
-        assertEquals("TSTNMT2321000156-1024", webCertUser.getHsaId());
-        assertEquals("Danne Doktor", webCertUser.getNamn());
-        assertEquals("Överläkare", webCertUser.getTitel());
-        assertEquals("0000000", webCertUser.getForskrivarkod());
-        assertEquals(AuthenticationMethod.SITHS, webCertUser.getAuthenticationMethod());
-        assertEquals(AuthConstants.URN_OASIS_NAMES_TC_SAML_2_0_AC_CLASSES_TLSCLIENT, webCertUser.getAuthenticationScheme());
-        assertEquals(UserOriginType.NORMAL.name(), webCertUser.getOrigin());
-        assertEquals(2, webCertUser.getIdsOfSelectedVardgivare().size());
-        assertEquals(2, webCertUser.getIdsOfAllVardenheter().size());
-        assertEquals(3, webCertUser.getSpecialiseringar().size());
-        assertEquals(0, webCertUser.getBefattningar().size());
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        assertEquals("TSTNMT2321000156-1024", user.getHsaId());
+        assertEquals("Danne Doktor", user.getNamn());
+        assertEquals("Överläkare", user.getTitel());
+        assertEquals("0000000", user.getForskrivarkod());
+        assertEquals(AuthenticationMethod.SITHS, user.getAuthenticationMethod());
+        assertEquals(AuthConstants.URN_OASIS_NAMES_TC_SAML_2_0_AC_CLASSES_TLSCLIENT, user.getAuthenticationScheme());
+        assertEquals(UserOriginType.NORMAL.name(), user.getOrigin());
+        assertEquals(2, user.getIdsOfSelectedVardgivare().size());
+        assertEquals(2, user.getIdsOfAllVardenheter().size());
+        assertEquals(3, user.getSpecialiseringar().size());
+        assertEquals(0, user.getBefattningar().size());
         //TODO
-//        assertEquals(2, webCertUser.getActivated().size());
-        assertEquals(VARDGIVARE_HSAID, webCertUser.getValdVardgivare().getId());
-        assertEquals(ENHET_HSAID_1, webCertUser.getValdVardenhet().getId());
+//        assertEquals(2, user.getActivated().size());
+        assertEquals(VARDGIVARE_HSAID, user.getValdVardgivare().getId());
+        assertEquals(ENHET_HSAID_1, user.getValdVardenhet().getId());
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
-        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
+        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, user);
 
-        assertEquals(2, webCertUser.getMiuNamnPerEnhetsId().size());
-        assertTrue(webCertUser.getMiuNamnPerEnhetsId().keySet().contains(ENHET_HSAID_1));
-        assertTrue(webCertUser.getMiuNamnPerEnhetsId().keySet().contains(ENHET_HSAID_2));
+        assertEquals(2, user.getMiuNamnPerEnhetsId().size());
+        assertTrue(user.getMiuNamnPerEnhetsId().keySet().contains(ENHET_HSAID_1));
+        assertTrue(user.getMiuNamnPerEnhetsId().keySet().contains(ENHET_HSAID_2));
 
-        assertEquals("Läkare på VårdEnhet2A", webCertUser.getSelectedMedarbetarUppdragNamn());
+        assertEquals("Läkare på VårdEnhet2A", user.getSelectedMedarbetarUppdragNamn());
     }
 
     @Test
@@ -194,8 +193,8 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
 
         when(hsaPersonService.getHsaPersonInfo(PERSONAL_HSAID)).thenReturn(userTypes);
 
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
-        assertTrue(webCertUser.isLakare());
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        assertTrue(user.isLakare());
     }
 
     @Test
@@ -214,8 +213,8 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
 
         when(hsaPersonService.getHsaPersonInfo(PERSONAL_HSAID)).thenReturn(userTypes);
 
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
-        assertTrue(webCertUser.isLakare());
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        assertTrue(user.isLakare());
     }
 
     @Test(expected = MissingMedarbetaruppdragException.class)
@@ -274,10 +273,10 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         setupCallToGetHsaPersonInfoNotADoctor("Läkare");
 
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_ADMIN));
-        assertUserPrivileges(AuthoritiesConstants.ROLE_ADMIN, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_ADMIN));
+        assertUserPrivileges(AuthoritiesConstants.ROLE_ADMIN, user);
     }
 
     @Test
@@ -287,10 +286,10 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         setupCallToAuthorizedEnheterForHosPerson();
         setupCallToGetHsaPersonInfoNotADoctor("Tandläkare");
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_ADMIN));
-        assertUserPrivileges(AuthoritiesConstants.ROLE_ADMIN, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_ADMIN));
+        assertUserPrivileges(AuthoritiesConstants.ROLE_ADMIN, user);
     }
 
     @Test
@@ -300,10 +299,10 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         setupCallToAuthorizedEnheterForHosPerson();
         setupCallToGetHsaPersonInfoTandlakare();
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_TANDLAKARE));
-        assertUserPrivileges(AuthoritiesConstants.ROLE_TANDLAKARE, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_TANDLAKARE));
+        assertUserPrivileges(AuthoritiesConstants.ROLE_TANDLAKARE, user);
     }
 
     @Test
@@ -314,10 +313,10 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         setupCallToGetHsaPersonInfoWithLegitimeradeYrkesgrupper(Arrays.asList("Läkare", "Barnmorska"));
 
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
-        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
+        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, user);
     }
 
     @Test
@@ -327,10 +326,10 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         setupCallToAuthorizedEnheterForHosPerson();
         setupCallToGetHsaPersonInfoWithBefattningskoder(Arrays.asList("204010"));
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
-        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
+        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, user);
     }
 
     @Test
@@ -341,10 +340,10 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         setupCallToGetHsaPersonInfoWithBefattningskoder(Arrays.asList("203090"));
 
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
-        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
+        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, user);
     }
 
     @Test
@@ -355,10 +354,10 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         setupCallToGetHsaPersonInfoWithBefattningskoder(Arrays.asList("204090"));
 
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
-        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
+        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, user);
     }
 
     @Test
@@ -369,11 +368,11 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         setupCallToGetHsaPersonInfoWithBefattningskoder(Arrays.asList("204090"));
 
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
-        assertTrue("0000000".equals(webCertUser.getForskrivarkod()));
-        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
+        assertTrue("0000000".equals(user.getForskrivarkod()));
+        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, user);
     }
 
     @Test
@@ -383,10 +382,10 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         setupCallToGetHsaPersonInfoWithBefattningskoder(Arrays.asList("101010", "102010", "204010"));
 
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
-        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
+        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, user);
     }
 
     @Test
@@ -395,10 +394,10 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         setupCallToAuthorizedEnheterForHosPerson();
         setupCallToGetHsaPersonInfoNotADoctor();
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_ADMIN));
-        assertUserPrivileges(AuthoritiesConstants.ROLE_ADMIN, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_ADMIN));
+        assertUserPrivileges(AuthoritiesConstants.ROLE_ADMIN, user);
     }
 
     // Consider moving this test to WebcertUserDetailsServiceTest as it is Webcert-specific.
@@ -413,11 +412,11 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         setupCallToGetHsaPersonInfoWithBefattningskoder();
         when(userOrigin.resolveOrigin(any())).thenReturn(UserOriginType.DJUPINTEGRATION.name());
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
-        assertEquals(UserOriginType.DJUPINTEGRATION.name(), webCertUser.getOrigin());
-        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
+        assertEquals(UserOriginType.DJUPINTEGRATION.name(), user.getOrigin());
+        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, user);
     }
 
     // Consider moving this test to WebcertUserDetailsServiceTest as it is Webcert-specific.
@@ -433,11 +432,11 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         when(userOrigin.resolveOrigin(any())).thenReturn(UserOriginType.UTHOPP.name());
 
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
-        assertEquals(webCertUser.getOrigin(), (UserOriginType.UTHOPP.name()));
-        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
+        assertEquals(user.getOrigin(), (UserOriginType.UTHOPP.name()));
+        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, user);
     }
 
     @Test
@@ -452,11 +451,11 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         when(userOrigin.resolveOrigin(any())).thenReturn(UserOriginType.DJUPINTEGRATION.name());
 
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_TANDLAKARE));
-        assertEquals(webCertUser.getOrigin(), UserOriginType.DJUPINTEGRATION.name());
-        assertUserPrivileges(AuthoritiesConstants.ROLE_TANDLAKARE, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_TANDLAKARE));
+        assertEquals(user.getOrigin(), UserOriginType.DJUPINTEGRATION.name());
+        assertUserPrivileges(AuthoritiesConstants.ROLE_TANDLAKARE, user);
     }
 
     @Test
@@ -471,11 +470,11 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         when(userOrigin.resolveOrigin(any())).thenReturn(UserOriginType.UTHOPP.name());
 
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_TANDLAKARE));
-        assertEquals(webCertUser.getOrigin(), UserOriginType.UTHOPP.name());
-        assertUserPrivileges(AuthoritiesConstants.ROLE_TANDLAKARE, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_TANDLAKARE));
+        assertEquals(user.getOrigin(), UserOriginType.UTHOPP.name());
+        assertUserPrivileges(AuthoritiesConstants.ROLE_TANDLAKARE, user);
     }
 
     @Test
@@ -490,11 +489,11 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         when(userOrigin.resolveOrigin(any())).thenReturn(UserOriginType.DJUPINTEGRATION.name());
 
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_ADMIN));
-        assertEquals(webCertUser.getOrigin(), UserOriginType.DJUPINTEGRATION.name());
-        assertUserPrivileges(AuthoritiesConstants.ROLE_ADMIN, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_ADMIN));
+        assertEquals(user.getOrigin(), UserOriginType.DJUPINTEGRATION.name());
+        assertUserPrivileges(AuthoritiesConstants.ROLE_ADMIN, user);
     }
 
     @Test
@@ -509,11 +508,11 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         when(userOrigin.resolveOrigin(any())).thenReturn(UserOriginType.UTHOPP.name());
 
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_ADMIN));
-        assertEquals(webCertUser.getOrigin(), UserOriginType.UTHOPP.name());
-        assertUserPrivileges(AuthoritiesConstants.ROLE_ADMIN, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_ADMIN));
+        assertEquals(user.getOrigin(), UserOriginType.UTHOPP.name());
+        assertUserPrivileges(AuthoritiesConstants.ROLE_ADMIN, user);
     }
 
     @Test(expected = MissingMedarbetaruppdragException.class)
@@ -534,9 +533,9 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         setupCallToGetHsaPersonInfoWithNames("", "Gran");
 
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertEquals("Gran", webCertUser.getNamn());
+        assertEquals("Gran", user.getNamn());
     }
 
     @Test
@@ -547,25 +546,25 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         setupCallToGetHsaPersonInfoWithBefattningskoder(true);
 
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertEquals(PERSONAL_HSAID, webCertUser.getHsaId());
-        assertEquals("Danne Doktor", webCertUser.getNamn());
-        assertEquals(1, webCertUser.getVardgivare().size());
-        assertEquals(VARDGIVARE_HSAID, webCertUser.getVardgivare().get(0).getId());
-        assertNotNull(webCertUser.getVardgivare().get(0));
-        assertEquals(webCertUser.getVardgivare().get(0), webCertUser.getValdVardgivare());
-        assertNotNull(webCertUser.getValdVardenhet());
-        assertEquals(ENHET_HSAID_1, webCertUser.getValdVardenhet().getId());
-        assertEquals(3, webCertUser.getSpecialiseringar().size());
-        assertEquals(2, webCertUser.getLegitimeradeYrkesgrupper().size());
-        assertEquals(TITLE_HEAD_DOCTOR, webCertUser.getTitel());
+        assertEquals(PERSONAL_HSAID, user.getHsaId());
+        assertEquals("Danne Doktor", user.getNamn());
+        assertEquals(1, user.getVardgivare().size());
+        assertEquals(VARDGIVARE_HSAID, user.getVardgivare().get(0).getId());
+        assertNotNull(user.getVardgivare().get(0));
+        assertEquals(user.getVardgivare().get(0), user.getValdVardgivare());
+        assertNotNull(user.getValdVardenhet());
+        assertEquals(ENHET_HSAID_1, user.getValdVardenhet().getId());
+        assertEquals(3, user.getSpecialiseringar().size());
+        assertEquals(2, user.getLegitimeradeYrkesgrupper().size());
+        assertEquals(TITLE_HEAD_DOCTOR, user.getTitel());
         //TODO
-//        assertFalse(webCertUser.getActivated().isEmpty());
-        assertTrue(webCertUser.isSekretessMarkerad());
+//        assertFalse(user.getActivated().isEmpty());
+        assertTrue(user.isSekretessMarkerad());
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
-        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
+        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, user);
 
         verify(hsaOrganizationsService).getAuthorizedEnheterForHosPerson(PERSONAL_HSAID);
         verify(hsaPersonService, atLeastOnce()).getHsaPersonInfo(PERSONAL_HSAID);
@@ -591,20 +590,20 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         when(hsaPersonService.getHsaPersonInfo(anyString())).thenReturn(userTypes);
 
         // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser user = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
-        assertEquals(PERSONAL_HSAID, webCertUser.getHsaId());
-        assertEquals("Danne Doktor", webCertUser.getNamn());
+        assertEquals(PERSONAL_HSAID, user.getHsaId());
+        assertEquals("Danne Doktor", user.getNamn());
         //Any indication of sekretessmarkerad/protectedPerson should be enough
-        assertTrue(webCertUser.isSekretessMarkerad());
+        assertTrue(user.isSekretessMarkerad());
 
-        assertEquals(3, webCertUser.getSpecialiseringar().size());
-        assertEquals(2, webCertUser.getLegitimeradeYrkesgrupper().size());
+        assertEquals(3, user.getSpecialiseringar().size());
+        assertEquals(2, user.getLegitimeradeYrkesgrupper().size());
 
-        assertEquals("Titel1, Titel2", webCertUser.getTitel());
+        assertEquals("Titel1, Titel2", user.getTitel());
 
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
-        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, webCertUser);
+        assertTrue(user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
+        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, user);
 
         verify(hsaOrganizationsService).getAuthorizedEnheterForHosPerson(PERSONAL_HSAID);
         verify(hsaPersonService, atLeastOnce()).getHsaPersonInfo(PERSONAL_HSAID);
