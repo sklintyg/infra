@@ -19,29 +19,12 @@
 package se.inera.intyg.infra.integration.srs.stub;
 
 import org.apache.cxf.annotations.SchemaValidation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Atgardsrekommendationer;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Bedomningsunderlag;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Diagnosprediktion;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Diagnosprediktionstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationRequestType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Individ;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Prediktion;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Risksignal;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Utdatafilter;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgard;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardstyp;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistik;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikbild;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.*;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.*;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 //CHECKSTYLE:OFF MagicNumber
@@ -79,7 +62,7 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
             diagnosprediktion.setDiagnosprediktionstatus(Diagnosprediktionstatus.OK);
 
             Risksignal riskSignal = new Risksignal();
-            riskSignal.setRiskkategori(BigInteger.ONE);
+            riskSignal.setRiskkategori(1);
             riskSignal.setBeskrivning("test");
             diagnosprediktion.setRisksignal(riskSignal);
         }
@@ -118,18 +101,16 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
 
         if (filter.isStatistik()) {
             Statistik statistik = new Statistik();
-            statistik.getStatistikbild().add(createStatistikBild(srsDiagnos.orElseThrow(IllegalArgumentException::new)));
+            statistik.getDiagnosstatistik().add(createDiagnosStatistik(srsDiagnos.orElseThrow(IllegalArgumentException::new)));
             underlag.setStatistik(statistik);
         }
 
         return underlag;
     }
 
-    private Statistikbild createStatistikBild(Diagnos diagnos) {
-        Statistikbild statistikbild = new Statistikbild();
-        statistikbild.setAndringstidpunkt(LocalDateTime.of(2017, 1, 1, 1, 1));
+    private Diagnosstatistik createDiagnosStatistik(Diagnos diagnos) {
+        Diagnosstatistik statistikbild = new Diagnosstatistik();
         statistikbild.setInkommandediagnos(diagnos);
-        statistikbild.setBildadress("/services/stubs/srs-statistics-stub/" + diagnos.getCode());
         statistikbild.setDiagnos(diagnos);
         statistikbild.setStatistikstatus(Statistikstatus.OK);
         return statistikbild;

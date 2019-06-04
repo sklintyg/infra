@@ -21,18 +21,11 @@ package se.inera.intyg.infra.integration.srs.stub;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgard;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardstyp;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistik;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikbild;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.*;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -101,32 +94,26 @@ public class GetSRSInformationForDiagnosisStub implements GetSRSInformationForDi
         Diagnos diagnos = request.getDiagnos();
         Statistik statistik = new Statistik();
         if (diagnos != null && GetDiagnosisCodesStub.allValidDiagnosis.contains(diagnos.getCode())) {
-            Statistikbild statistikbild = new Statistikbild();
-            statistikbild.setStatistikstatus(Statistikstatus.OK);
-            statistikbild.setAndringstidpunkt(LocalDateTime.of(2017, 1, 1, 1, 1));
-            statistikbild.setInkommandediagnos(diagnos);
-            statistikbild.setBildadress("/services/stubs/srs-statistics-stub/" + diagnos.getCode() + ".jpg");
-            statistikbild.setDiagnos(diagnos);
+            Diagnosstatistik diagnosstatistik = new Diagnosstatistik();
+            diagnosstatistik.setStatistikstatus(Statistikstatus.OK);
+            diagnosstatistik.setInkommandediagnos(diagnos);
+            diagnosstatistik.setDiagnos(diagnos);
 
-            statistik.getStatistikbild().add(statistikbild);
+            statistik.getDiagnosstatistik().add(diagnosstatistik);
 
         } else if (diagnos != null && getHigherMatchingDiagnoseCode(diagnos.getCode()).isPresent()) {
             // ..partial match on less specific diagnose (i.e the given diagnose is under this one e.g M18.1 -> M18)
             final Diagnos actualDiagnose = createDiagnos(getHigherMatchingDiagnoseCode(diagnos.getCode()).get());
-            Statistikbild statistikbild = new Statistikbild();
-            statistikbild.setStatistikstatus(Statistikstatus.DIAGNOSKOD_PA_HOGRE_NIVA);
-            statistikbild.setAndringstidpunkt(LocalDateTime.of(2017, 1, 1, 1, 1));
-            statistikbild.setInkommandediagnos(diagnos);
-            statistikbild.setBildadress("/services/stubs/srs-statistics-stub/" + actualDiagnose.getCode() + ".jpg");
-            statistikbild.setDiagnos(actualDiagnose);
-            statistik.getStatistikbild().add(statistikbild);
+            Diagnosstatistik diagnosstatistik = new Diagnosstatistik();
+            diagnosstatistik.setStatistikstatus(Statistikstatus.DIAGNOSKOD_PA_HOGRE_NIVA);
+            diagnosstatistik.setInkommandediagnos(diagnos);
+            diagnosstatistik.setDiagnos(actualDiagnose);
+            statistik.getDiagnosstatistik().add(diagnosstatistik);
         } else {
             //No match
-            Statistikbild statistikbild = new Statistikbild();
-            statistikbild.setStatistikstatus(Statistikstatus.STATISTIK_SAKNAS);
-            statistikbild.setAndringstidpunkt(LocalDateTime.of(2017, 1, 1, 1, 1));
-            statistikbild.setInkommandediagnos(diagnos);
-            statistik.getStatistikbild().add(statistikbild);
+            Diagnosstatistik diagnosstatistik = new Diagnosstatistik();
+            diagnosstatistik.setStatistikstatus(Statistikstatus.STATISTIK_SAKNAS);
+            diagnosstatistik.setInkommandediagnos(diagnos);
         }
 
         return statistik;

@@ -30,12 +30,11 @@ public final class SrsForDiagnosisResponse {
     private final String atgarderStatusCode;
     private final ImmutableList<String> atgarderObs;
     private final ImmutableList<String> atgarderRek;
-    private final String statistikBild;
     private final String statistikStatusCode;
     private final String statistikDiagnosisCode;
 
     public SrsForDiagnosisResponse(List<String> atgarderObs, List<String> atgarderRek,
-            String diagnosisCode, String atgarderStatusCode, String statistikBild, String statistikStatusCode,
+            String diagnosisCode, String atgarderStatusCode, String statistikStatusCode,
             String statistikDiagnosisCode) {
         if (atgarderObs == null) {
             this.atgarderObs = null;
@@ -47,7 +46,6 @@ public final class SrsForDiagnosisResponse {
         } else {
             this.atgarderRek = ImmutableList.copyOf(atgarderRek);
         }
-        this.statistikBild = statistikBild;
         this.diagnosisCode = diagnosisCode;
         this.atgarderStatusCode = atgarderStatusCode;
         this.statistikStatusCode = statistikStatusCode;
@@ -60,10 +58,6 @@ public final class SrsForDiagnosisResponse {
 
     public ImmutableList<String> getAtgarderRek() {
         return atgarderRek;
-    }
-
-    public String getStatistikBild() {
-        return statistikBild;
     }
 
     public String getDiagnosisCode() {

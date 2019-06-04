@@ -28,9 +28,6 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstat
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getownopinion.v1.GetOwnOpinionRequestType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getownopinion.v1.GetOwnOpinionResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getownopinion.v1.GetOwnOpinionResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
@@ -77,8 +74,6 @@ public class SrsServiceImpl implements SrsService {
     @Autowired
     private GetSRSInformationForDiagnosisResponderInterface getSRSInformationForDiagnosis;
     @Autowired
-    private GetOwnOpinionResponderInterface getOwnOpinion;
-    @Autowired
     private SetOwnOpinionResponderInterface setOwnOpinion;
 
     @Override
@@ -101,7 +96,6 @@ public class SrsServiceImpl implements SrsService {
         Integer level = null;
         String description = null;
         String prediktionStatusCode = null;
-        String statistikBild = null;
         String statistikStatusCode = null;
         List<Integer> statistikNationellStatistik = null;
         String predictionDiagnosisCode = null;
@@ -121,7 +115,7 @@ public class SrsServiceImpl implements SrsService {
                 .getDiagnosprediktionstatus() == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
             prediktionStatusCode = Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS.value();
         } else if (filter.isPrediktion()) {
-                level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori().intValueExact();
+                level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori();
                 description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
                 prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
                 predictionDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
@@ -137,7 +131,7 @@ public class SrsServiceImpl implements SrsService {
                     .orElse(null);
             // Also check if we have a historic prediction
             if (underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde() != null) {
-                level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori().intValueExact();
+                level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori();
                 description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
                 prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
 //                predictionDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
@@ -195,17 +189,16 @@ public class SrsServiceImpl implements SrsService {
         }
 
         if (filter.isStatistik() && underlag.getStatistik() != null
-                && !CollectionUtils.isEmpty(underlag.getStatistik().getStatistikbild())) {
-            statistikDiagnosisCode = Optional.ofNullable(underlag.getStatistik().getStatistikbild().get(0).getDiagnos())
+                && !CollectionUtils.isEmpty(underlag.getStatistik().getDiagnosstatistik())) {
+            statistikDiagnosisCode = Optional.ofNullable(underlag.getStatistik().getDiagnosstatistik().get(0).getDiagnos())
                     .map(CVType::getCode)
                     .orElse(null);
-            statistikBild = underlag.getStatistik().getStatistikbild().get(0).getBildadress();
-            statistikStatusCode = underlag.getStatistik().getStatistikbild().get(0).getStatistikstatus().toString();
+            statistikStatusCode = underlag.getStatistik().getDiagnosstatistik().get(0).getStatistikstatus().toString();
             statistikNationellStatistik =
-                    underlag.getStatistik().getStatistikbild().get(0).getData().stream()
+                    underlag.getStatistik().getDiagnosstatistik().get(0).getData().stream()
                             .map((d) -> d.getIndividerAckumulerat().intValue()).collect(Collectors.toList());
         }
-        return new SrsResponse(level, description, atgarderObs, atgarderRek, statistikBild, predictionDiagnosisCode,
+        return new SrsResponse(level, description, atgarderObs, atgarderRek, predictionDiagnosisCode,
                 prediktionStatusCode, prediktionsFragorSvar, prediktionLakarbedomningRisk, prediktionBerakningstidpunkt,
                 atgarderDiagnosisCode, atgarderStatusCode, statistikDiagnosisCode,
                 statistikStatusCode, predictionProbabilityOverLimit, predictionPrevalence, statistikNationellStatistik);
@@ -232,13 +225,6 @@ public class SrsServiceImpl implements SrsService {
     public ResultCodeEnum setConsent(String careUnitHsaId, Personnummer personId, boolean samtycke) throws InvalidPersonNummerException {
         SetConsentResponseType resp = setConsent.setConsent(createSetConsentRequest(careUnitHsaId, personId, samtycke));
         return resp.getResultCode();
-    }
-
-    @Override
-    public EgenBedomningRiskType getOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId, String diagnosisCode) {
-        GetOwnOpinionResponseType resp =
-                getOwnOpinion.getOwnOpinion(createGetOwnOpinionRequest(careGiverHsaId, careUnitHsaId, certificateId, diagnosisCode));
-        return resp.getEgenBedomningRisk();
     }
 
     @Override
@@ -287,7 +273,6 @@ public class SrsServiceImpl implements SrsService {
 
         String atgarderStatusCode;
         String statistikStatusCode;
-        String statistikBild;
         String statistikDiagnosCode;
 
         // Ugh. maybe we should create common xsd types for these common subtypes...
@@ -313,19 +298,17 @@ public class SrsServiceImpl implements SrsService {
         atgarderStatusCode = atgardsrekommendation.getAtgardsrekommendationstatus().name();
 
         if (response.getStatistik() != null
-                && !CollectionUtils.isEmpty(response.getStatistik().getStatistikbild())) {
-            final Statistikbild statistikbild = response.getStatistik().getStatistikbild().get(0);
-            statistikStatusCode = statistikbild.getStatistikstatus().name();
-            statistikBild = statistikbild.getBildadress();
-            statistikDiagnosCode = statistikbild.getDiagnos() != null ? statistikbild.getDiagnos().getCode() : null;
+                && !CollectionUtils.isEmpty(response.getStatistik().getDiagnosstatistik())) {
+            final Diagnosstatistik diagnosstatistik = response.getStatistik().getDiagnosstatistik().get(0);
+            statistikStatusCode = diagnosstatistik.getStatistikstatus().name();
+            statistikDiagnosCode = diagnosstatistik.getDiagnos() != null ? diagnosstatistik.getDiagnos().getCode() : null;
         } else {
             statistikStatusCode = Statistikstatus.STATISTIK_SAKNAS.name();
-            statistikBild = null;
             statistikDiagnosCode = null;
         }
 
         return new SrsForDiagnosisResponse(atgarderObs, atgarderRek,
-                resultDiagnosCode, atgarderStatusCode, statistikBild, statistikStatusCode, statistikDiagnosCode);
+                resultDiagnosCode, atgarderStatusCode, statistikStatusCode, statistikDiagnosCode);
     }
 
     private boolean hasAtgardsrekommendationWithDiagnosisCode(GetSRSInformationForDiagnosisResponseType response) {
@@ -401,19 +384,6 @@ public class SrsServiceImpl implements SrsService {
         intyg.setRoot(careUnitHsaId);
         request.setIntygId(intyg);
         request.setEgenBedomningRisk(opinion);
-        return request;
-    }
-
-    private GetOwnOpinionRequestType createGetOwnOpinionRequest(String careGiverHsaId, String careUnitHsaId, String certificateId,
-                                                                String diagnosis) {
-        GetOwnOpinionRequestType request = new GetOwnOpinionRequestType();
-        request.setVardgivareId(createHsaId(careGiverHsaId));
-        request.setVardenhetId(createHsaId(careUnitHsaId));
-        request.setDiagnos(createDiagnos(diagnosis));
-        IntygId intyg = new IntygId();
-        intyg.setExtension(certificateId);
-        intyg.setRoot(careUnitHsaId);
-        request.setIntygId(intyg);
         return request;
     }
 
