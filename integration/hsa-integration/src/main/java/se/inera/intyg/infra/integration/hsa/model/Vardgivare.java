@@ -18,12 +18,12 @@
  */
 package se.inera.intyg.infra.integration.hsa.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.HealthCareUnitType;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.HealthCareUnitType;
 
 /**
  * @author andreaskaltenbach
@@ -47,7 +47,7 @@ public class Vardgivare implements SelectableVardenhet, Comparable<Vardgivare>, 
         this.namn = namn;
     }
 
-    private Vardgivare(String id, String namn, String orgId) {
+    public Vardgivare(String id, String namn, String orgId) {
         this.id = id;
         this.namn = namn;
         this.orgId = orgId;

@@ -142,7 +142,7 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
     }
 
     @Test
-    public void assertWebCertUserBuiltForLakare() throws Exception {
+    public void assertUserBuiltForLakare() throws Exception {
         // given
         SAMLCredential samlCredential = createSamlCredential("assertion-1.xml");
         setupCallToAuthorizedEnheterForHosPerson();
