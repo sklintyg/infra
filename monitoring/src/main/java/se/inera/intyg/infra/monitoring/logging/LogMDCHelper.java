@@ -20,6 +20,7 @@ package se.inera.intyg.infra.monitoring.logging;
 
 import java.io.Closeable;
 import java.nio.CharBuffer;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
@@ -63,7 +64,9 @@ public class LogMDCHelper {
      * @return this helper.
      */
     public LogMDCHelper withSessionInfo(final String sessionInfo) {
-        MDC.put(SESSIONINFO, sessionInfo);
+        if (Objects.nonNull(sessionInfo)) {
+            MDC.put(SESSIONINFO, sessionInfo);
+        }
         return this;
     }
 
