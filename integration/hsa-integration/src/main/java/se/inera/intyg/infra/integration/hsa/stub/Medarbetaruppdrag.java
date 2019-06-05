@@ -108,6 +108,7 @@ public class Medarbetaruppdrag {
         private String enhet;
         private List<String> andamal;
         private List<String> systemRoles;
+
         /**
          * Medarbetaruppdragets namn, motsv. CommissionType#commissionName
          */
