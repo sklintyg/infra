@@ -28,7 +28,7 @@ import se.inera.intyg.infra.integration.srs.model.SrsResponse;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.EgenBedomningRiskType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.EgenBedomningRiskType;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
 import java.util.List;
@@ -68,16 +68,6 @@ public interface SrsService {
     Samtyckesstatus getConsent(String careUnitHsaId, Personnummer personId) throws InvalidPersonNummerException;
 
     ResultCodeEnum setConsent(String careUnitHsaId, Personnummer personId, boolean samtycke) throws InvalidPersonNummerException;
-
-    /**
-     * Get's a previously set "user's own opinion" on a given care giver and certificate.
-     * @param careGiverHsaId the hsa id of the care giver
-     * @param careUnitHsaId the HSA-id of the certificate's/user's care unit
-     * @param certificateId the id of the certificate
-     * @param diagnosisCode the diagnosis code for which the risk was predicted
-     * @return a previously set opinion or null if no such opinion has been set for the given care unit and certificate
-     */
-    EgenBedomningRiskType getOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId, String diagnosisCode);
 
     /**
      * Sets the user's own opinion on the risk prediction.
