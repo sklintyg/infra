@@ -29,6 +29,7 @@ public class SrsResponse {
     private String predictionDescription;
     private ImmutableList<SrsRecommendation> atgarderObs;
     private ImmutableList<SrsRecommendation> atgarderRek;
+    private ImmutableList<SrsRecommendation> atgarderExt;
     private String predictionDiagnosisCode;
     private String predictionDiagnosisDescription;
     private String predictionStatusCode;
@@ -46,7 +47,7 @@ public class SrsResponse {
     private Double predictionPrevalence;
 
     public SrsResponse(Integer level, String description, List<SrsRecommendation> atgarderObs, List<SrsRecommendation> atgarderRek,
-                       String predictionDiagnosisCode, String predictionStatusCode,
+                       List<SrsRecommendation> atgarderExt, String predictionDiagnosisCode, String predictionStatusCode,
                        List<SrsQuestionResponse> predictionQuestionsResponses,
                        String predictionPhysiciansOwnOpinionRisk,
                        LocalDateTime predictionTimestamp,
@@ -64,6 +65,11 @@ public class SrsResponse {
             this.atgarderRek = null;
         } else {
             this.atgarderRek = ImmutableList.copyOf(atgarderRek);
+        }
+        if (atgarderExt == null) {
+            this.atgarderExt = null;
+        } else {
+            this.atgarderExt = ImmutableList.copyOf(atgarderExt);
         }
 
         if (statistikNationellStatistikData == null) {
@@ -108,6 +114,10 @@ public class SrsResponse {
 
     public ImmutableList<SrsRecommendation> getAtgarderRek() {
         return atgarderRek;
+    }
+
+    public ImmutableList<SrsRecommendation> getAtgarderExt() {
+        return atgarderExt;
     }
 
     public String getPredictionStatusCode() {
