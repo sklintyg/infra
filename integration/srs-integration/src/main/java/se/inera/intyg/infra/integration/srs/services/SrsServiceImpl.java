@@ -101,6 +101,7 @@ public class SrsServiceImpl implements SrsService {
         String predictionDiagnosisCode = null;
         String atgarderDiagnosisCode = null;
         String statistikDiagnosisCode = null;
+        List<SrsRecommendation> atgarderExt = null;
         List<SrsRecommendation> atgarderObs = null;
         List<SrsRecommendation> atgarderRek = null;
         String atgarderStatusCode = null;
@@ -180,6 +181,15 @@ public class SrsServiceImpl implements SrsService {
                 atgarderRek = Collections.emptyList();
             }
 
+            if (tmp.containsKey(Atgardstyp.EXT)) {
+                atgarderExt = tmp.get(Atgardstyp.EXT).stream()
+                        .sorted(Comparator.comparing(Atgard::getPrioritet))
+                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsrubrik(), atgard.getAtgardsforslag()))
+                        .collect(Collectors.toList());
+            } else {
+                atgarderExt = Collections.emptyList();
+            }
+
             // They are all for the same diagnosis and all have the same code.
             atgarderStatusCode = underlag.getAtgardsrekommendationer().getRekommendation().stream()
                     .map(Atgardsrekommendation::getAtgardsrekommendationstatus)
@@ -198,7 +208,7 @@ public class SrsServiceImpl implements SrsService {
                     underlag.getStatistik().getDiagnosstatistik().get(0).getData().stream()
                             .map((d) -> d.getIndividerAckumulerat().intValue()).collect(Collectors.toList());
         }
-        return new SrsResponse(level, description, atgarderObs, atgarderRek, predictionDiagnosisCode,
+        return new SrsResponse(level, description, atgarderObs, atgarderRek, atgarderExt, predictionDiagnosisCode,
                 prediktionStatusCode, prediktionsFragorSvar, prediktionLakarbedomningRisk, prediktionBerakningstidpunkt,
                 atgarderDiagnosisCode, atgarderStatusCode, statistikDiagnosisCode,
                 statistikStatusCode, predictionProbabilityOverLimit, predictionPrevalence, statistikNationellStatistik);
