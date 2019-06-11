@@ -29,7 +29,8 @@ public class SrsResponse {
     private String predictionDescription;
     private ImmutableList<SrsRecommendation> atgarderObs;
     private ImmutableList<SrsRecommendation> atgarderRek;
-    private ImmutableList<SrsRecommendation> atgarderExt;
+    private ImmutableList<SrsRecommendation> atgarderFrl;
+    private ImmutableList<SrsRecommendation> atgarderReh;
     private String predictionDiagnosisCode;
     private String predictionDiagnosisDescription;
     private String predictionStatusCode;
@@ -47,8 +48,8 @@ public class SrsResponse {
     private Double predictionPrevalence;
 
     public SrsResponse(Integer level, String description, List<SrsRecommendation> atgarderObs, List<SrsRecommendation> atgarderRek,
-                       List<SrsRecommendation> atgarderExt, String predictionDiagnosisCode, String predictionStatusCode,
-                       List<SrsQuestionResponse> predictionQuestionsResponses,
+                       List<SrsRecommendation> atgarderFrl, List<SrsRecommendation> atgarderReh,
+                       String predictionDiagnosisCode, String predictionStatusCode, List<SrsQuestionResponse> predictionQuestionsResponses,
                        String predictionPhysiciansOwnOpinionRisk,
                        LocalDateTime predictionTimestamp,
                        String atgarderDiagnosisCode, String atgarderStatusCode,
@@ -66,10 +67,15 @@ public class SrsResponse {
         } else {
             this.atgarderRek = ImmutableList.copyOf(atgarderRek);
         }
-        if (atgarderExt == null) {
-            this.atgarderExt = null;
+        if (atgarderFrl == null) {
+            this.atgarderFrl = null;
         } else {
-            this.atgarderExt = ImmutableList.copyOf(atgarderExt);
+            this.atgarderFrl = ImmutableList.copyOf(atgarderFrl);
+        }
+        if (atgarderReh == null) {
+            this.atgarderReh = null;
+        } else {
+            this.atgarderReh = ImmutableList.copyOf(atgarderReh);
         }
 
         if (statistikNationellStatistikData == null) {
@@ -116,8 +122,12 @@ public class SrsResponse {
         return atgarderRek;
     }
 
-    public ImmutableList<SrsRecommendation> getAtgarderExt() {
-        return atgarderExt;
+    public ImmutableList<SrsRecommendation> getAtgarderFrl() {
+        return atgarderFrl;
+    }
+
+    public ImmutableList<SrsRecommendation> getAtgarderReh() {
+        return atgarderReh;
     }
 
     public String getPredictionStatusCode() {
