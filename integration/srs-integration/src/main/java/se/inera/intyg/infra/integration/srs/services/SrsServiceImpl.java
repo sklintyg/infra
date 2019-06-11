@@ -101,9 +101,10 @@ public class SrsServiceImpl implements SrsService {
         String predictionDiagnosisCode = null;
         String atgarderDiagnosisCode = null;
         String statistikDiagnosisCode = null;
-        List<SrsRecommendation> atgarderExt = null;
         List<SrsRecommendation> atgarderObs = null;
         List<SrsRecommendation> atgarderRek = null;
+        List<SrsRecommendation> atgarderFrl = null;
+        List<SrsRecommendation> atgarderReh = null;
         String atgarderStatusCode = null;
         Double predictionProbabilityOverLimit = null;
         Double predictionPrevalence = null;
@@ -181,13 +182,22 @@ public class SrsServiceImpl implements SrsService {
                 atgarderRek = Collections.emptyList();
             }
 
-            if (tmp.containsKey(Atgardstyp.EXT)) {
-                atgarderExt = tmp.get(Atgardstyp.EXT).stream()
+            if (tmp.containsKey(Atgardstyp.FRL)) {
+                atgarderFrl = tmp.get(Atgardstyp.FRL).stream()
                         .sorted(Comparator.comparing(Atgard::getPrioritet))
                         .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsrubrik(), atgard.getAtgardsforslag()))
                         .collect(Collectors.toList());
             } else {
-                atgarderExt = Collections.emptyList();
+                atgarderFrl = Collections.emptyList();
+            }
+
+            if (tmp.containsKey(Atgardstyp.REH)) {
+                atgarderReh = tmp.get(Atgardstyp.REH).stream()
+                        .sorted(Comparator.comparing(Atgard::getPrioritet))
+                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsrubrik(), atgard.getAtgardsforslag()))
+                        .collect(Collectors.toList());
+            } else {
+                atgarderReh = Collections.emptyList();
             }
 
             // They are all for the same diagnosis and all have the same code.
@@ -208,7 +218,7 @@ public class SrsServiceImpl implements SrsService {
                     underlag.getStatistik().getDiagnosstatistik().get(0).getData().stream()
                             .map((d) -> d.getIndividerAckumulerat().intValue()).collect(Collectors.toList());
         }
-        return new SrsResponse(level, description, atgarderObs, atgarderRek, atgarderExt, predictionDiagnosisCode,
+        return new SrsResponse(level, description, atgarderObs, atgarderRek, atgarderFrl, atgarderReh, predictionDiagnosisCode,
                 prediktionStatusCode, prediktionsFragorSvar, prediktionLakarbedomningRisk, prediktionBerakningstidpunkt,
                 atgarderDiagnosisCode, atgarderStatusCode, statistikDiagnosisCode,
                 statistikStatusCode, predictionProbabilityOverLimit, predictionPrevalence, statistikNationellStatistik);
