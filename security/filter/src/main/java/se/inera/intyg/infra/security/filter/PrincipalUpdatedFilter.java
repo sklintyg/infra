@@ -18,13 +18,9 @@
  */
 package se.inera.intyg.infra.security.filter;
 
-import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
-
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +34,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
+
+import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
 /**
  * This filter checks if the user Principal has changed (new vald vardenhet, some consent given etc). If true,
@@ -100,8 +98,16 @@ public class PrincipalUpdatedFilter extends OncePerRequestFilter {
      * @return the hash code for the objects state if it's serializable, otherwise is hashCode() used.
      */
     HashCode hashCode(final Object object) {
-        return (object instanceof Serializable)
-                ? hf.hashBytes(SerializationUtils.serialize(object))
-                : hf.hashInt(object.hashCode());
-    }
+        if (object instanceof Serializable) {
+            byte[] bytes = SerializationUtils.serialize(object);
+
+            if (bytes == null) {
+                bytes = new byte[0];
+            }
+
+            return hf.hashBytes(bytes);
+        }
+
+        return hf.hashInt(object.hashCode());
+     }
 }

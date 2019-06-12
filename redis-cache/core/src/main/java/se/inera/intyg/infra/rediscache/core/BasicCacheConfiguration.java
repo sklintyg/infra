@@ -18,7 +18,10 @@
  */
 package se.inera.intyg.infra.rediscache.core;
 
-import com.google.common.base.Strings;
+import java.util.List;
+import java.util.stream.Stream;
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -34,11 +37,9 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.util.StringUtils;
-import se.inera.intyg.infra.rediscache.core.util.ConnectionStringUtil;
 
-import javax.annotation.Resource;
-import java.util.List;
-import java.util.stream.Stream;
+import com.google.common.base.Strings;
+import se.inera.intyg.infra.rediscache.core.util.ConnectionStringUtil;
 
 /**
  * Initialization and activation of Redis cache for a single Redis host.
