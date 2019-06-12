@@ -14,12 +14,11 @@ ext {
     rivtaResidentMasterSchemasVersion = "1.1.3.5"
     rivtaGetPersonsPersonSchemasVersion = "3.1"
 
-    intygClinicalprocessSchemasVersion = "1.0.16"
+    intygClinicalprocessSchemasVersion = "1.0.21"
 
-    srsSchemasVersion = "0.0.7"
+    srsSchemasVersion = "0.0.12"
 
     schemasContractVersion = "2.1.8"
-
 
     // External dependencies
 
@@ -53,6 +52,8 @@ ext {
     awaitilityVersion = "2.0.0"
     mockitoVersion = "2.16.0"
     servletApiTestVersion = "3.1.0"
+
+    embeddedRedisVersion = "0.7.2"
 }
 
 allprojects {

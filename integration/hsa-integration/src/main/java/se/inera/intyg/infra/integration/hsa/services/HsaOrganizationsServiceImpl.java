@@ -106,6 +106,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
             attachMottagningar(vardenhet, response);
             setArbetsplatskod(vardenhet, response);
         });
+
         updateWithEmailAndPhone(vardenhet, unit);
         hsaUnitAddressParser.updateWithAddress(vardenhet, unit.getPostalAddress(), unit.getPostalCode());
 
@@ -249,6 +250,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
             HealthCareUnitMembersType response = organizationUnitService.getHealthCareUnitMembers(vardenhet.getId());
             return Optional.ofNullable(response);
         } catch (HsaServiceCallException e) {
+            LOG.info("HSA_HEALTHCAREUNITMEMBERS_LOOKUP: Health care unit members lookup on '{}' throw an exception.", vardenhet.getId());
             return Optional.empty();
         }
     }

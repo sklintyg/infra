@@ -119,7 +119,7 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
             } else {
                 LOG.warn("Error received when calling GetHealthCareUnitMembers for {}, result text: {}", unitHsaId,
                         response.getResultText());
-                LOG.warn("Continuing anyway because information was delivered with the ERROR code.");
+                LOG.warn("Continuing even though the information was delivered together with and ERROR code.");
             }
         }
         return response.getHealthCareUnitMembers();

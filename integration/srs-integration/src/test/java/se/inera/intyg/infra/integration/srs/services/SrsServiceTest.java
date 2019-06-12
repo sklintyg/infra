@@ -31,7 +31,7 @@ import org.springframework.util.CollectionUtils;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Utdatafilter;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
@@ -83,14 +83,27 @@ public class SrsServiceTest {
     }
 
     @Test
-    public void testNone() throws Exception {
+    public void testNoneWithSRSDiagnosis() throws Exception {
         SrsResponse response = service.getSrs(createUser(), "intygId", createPnr(PNR_VALID), "M18", utdatafilter,
                 Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
-        assertNull(response.getStatistikBild());
+        assertNull(response.getStatistikNationellStatistik());
         assertNull(response.getAtgarderObs());
         assertNull(response.getAtgarderRek());
         assertNull(response.getPredictionLevel());
         assertNull(response.getPredictionDescription());
+        assertNotNull(response.getPredictionPrevalence());
+    }
+
+    @Test
+    public void testNoneWithUnknownDiagnosis() throws Exception {
+        SrsResponse response = service.getSrs(createUser(), "intygId", createPnr(PNR_VALID), "X99", utdatafilter,
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
+        assertNull(response.getStatistikNationellStatistik());
+        assertNull(response.getAtgarderObs());
+        assertNull(response.getAtgarderRek());
+        assertNull(response.getPredictionLevel());
+        assertNull(response.getPredictionDescription());
+        assertNull(response.getPredictionPrevalence());
     }
 
     @Test
@@ -110,7 +123,7 @@ public class SrsServiceTest {
         utdatafilter.setStatistik(true);
         SrsResponse response = service.getSrs(createUser(), "intygId", createPnr(PNR_VALID), "M18", utdatafilter,
                 Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
-        assertNotNull(response.getStatistikBild());
+        assertNotNull(response.getStatistikNationellStatistik());
         assertNull(response.getAtgarderRek());
         assertNull(response.getAtgarderObs());
         assertNull(response.getPredictionLevel());
@@ -144,16 +157,16 @@ public class SrsServiceTest {
 
         assertEquals(3, response.getAtgarderRek().size());
         assertNotNull(response.getAtgarderRek().get(0));
-        assertEquals("Atgardsforslag REK 1", response.getAtgarderRek().get(0));
-        assertEquals("Atgardsforslag REK 2", response.getAtgarderRek().get(1));
-        assertEquals("Atgardsforslag REK 3", response.getAtgarderRek().get(2));
+        assertEquals("Atgardsforslag REK 1", response.getAtgarderRek().get(0).getRecommendationText());
+        assertEquals("Atgardsforslag REK 2", response.getAtgarderRek().get(1).getRecommendationText());
+        assertEquals("Atgardsforslag REK 3", response.getAtgarderRek().get(2).getRecommendationText());
 
         assertEquals(3, response.getAtgarderObs().size());
         assertNotNull(response.getAtgarderObs().get(0));
-        assertEquals("Atgardsforslag OBS 1", response.getAtgarderObs().get(0));
-        assertEquals("Atgardsforslag OBS 2", response.getAtgarderObs().get(1));
-        assertEquals("Atgardsforslag OBS 3", response.getAtgarderObs().get(2));
-        assertNotNull(response.getStatistikBild());
+        assertEquals("Atgardsforslag OBS 1", response.getAtgarderObs().get(0).getRecommendationText());
+        assertEquals("Atgardsforslag OBS 2", response.getAtgarderObs().get(1).getRecommendationText());
+        assertEquals("Atgardsforslag OBS 3", response.getAtgarderObs().get(2).getRecommendationText());
+        assertNotNull(response.getStatistikNationellStatistik());
     }
 
     @Test
@@ -213,8 +226,6 @@ public class SrsServiceTest {
         assertEquals(3, response.getAtgarderObs().size());
         assertEquals(3, response.getAtgarderRek().size());
         assertEquals(Atgardsrekommendationstatus.OK.name(), response.getAtgarderStatusCode());
-
-        assertTrue(response.getStatistikBild().contains("srs-statistics-stub/M18"));
         assertEquals(Statistikstatus.OK.name(), response.getStatistikStatusCode());
     }
 
@@ -230,7 +241,6 @@ public class SrsServiceTest {
 
         assertEquals(Statistikstatus.DIAGNOSKOD_PA_HOGRE_NIVA.name(), response.getStatistikStatusCode());
         assertEquals("M18", response.getStatistikDiagnosisCode());
-        assertTrue(response.getStatistikBild().contains("srs-statistics-stub/M18"));
     }
 
     @Test
@@ -241,7 +251,6 @@ public class SrsServiceTest {
         assertEquals(0, response.getAtgarderObs().size());
         assertEquals(0, response.getAtgarderRek().size());
         assertEquals(Atgardsrekommendationstatus.INFORMATION_SAKNAS.name(), response.getAtgarderStatusCode());
-        assertNull(response.getStatistikBild());
         assertEquals(Statistikstatus.STATISTIK_SAKNAS.name(), response.getStatistikStatusCode());
 
     }

@@ -18,19 +18,20 @@
  */
 package se.inera.intyg.infra.integration.srs.services;
 
-import java.util.List;
-
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Diagnosprediktionstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v1.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Diagnosprediktionstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Utdatafilter;
+import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsResponse;
-import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.EgenBedomningRiskType;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
+
+import java.util.List;
 
 public interface SrsService {
 
@@ -64,9 +65,21 @@ public interface SrsService {
      */
     List<SrsQuestion> getQuestions(String diagnos);
 
-    Samtyckesstatus getConsent(String hsaId, Personnummer personId) throws InvalidPersonNummerException;
+    Samtyckesstatus getConsent(String careUnitHsaId, Personnummer personId) throws InvalidPersonNummerException;
 
-    ResultCodeEnum setConsent(String hsaId, Personnummer personId, boolean samtycke) throws InvalidPersonNummerException;
+    ResultCodeEnum setConsent(String careUnitHsaId, Personnummer personId, boolean samtycke) throws InvalidPersonNummerException;
+
+    /**
+     * Sets the user's own opinion on the risk prediction.
+     * @param careGiverHsaId the HSA-id of the user's care giver
+     * @param careUnitHsaId the HSA-id of the certificate's/user's care unit
+     * @param certificateId the id of the certificate for which the risk was predicted
+     * @param diagnosisCode the diagnosis code for which the risk was predicted
+     * @param ownOpinion the users own opinion
+     * @return
+     */
+    ResultCodeEnum setOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId, String diagnosisCode,
+                                 EgenBedomningRiskType ownOpinion);
 
     /**
      * Fetches all the diagnosis codes which are supported by SRS.
