@@ -50,16 +50,17 @@ OR
 
 If your application stores stuff in the user principal, we need an extra custom filter to make sure Redis stores those changes.
 
-Add the following filter _directly after_ the springSecurityFilterChain:
-
-    FilterRegistration.Dynamic principalUpdatedFilter = servletContext.addFilter("principalUpdatedFilter",
-            DelegatingFilterProxy.class);
-    principalUpdatedFilter.setInitParameter("targetFilterLifecycle", "true");
-    principalUpdatedFilter.addMappingForUrlPatterns(null, false, "/*");
-    
-The filter needs to be declared in @Configuration class or <bean> xml:
+Add the following webConfig to add the filter  _directly after_ the springSecurityFilterChain:
 
     @Bean
-    public PrincipalUpdatedFilter principalUpdatedFilter() {
-        return new PrincipalUpdatedFilter();
+    public FilterRegistrationBean<PrincipalUpdatedFilter> principalUpdatedFilter() {
+        FilterRegistrationBean<PrincipalUpdatedFilter> registrationBean
+                = new FilterRegistrationBean<>();
+
+        registrationBean.setFilter(new PrincipalUpdatedFilter());
+        registrationBean.addUrlPatterns("/*");
+        registrationBean.setOrder(SecurityProperties.DEFAULT_FILTER_ORDER - 1);
+
+        return registrationBean;
     }
+    
