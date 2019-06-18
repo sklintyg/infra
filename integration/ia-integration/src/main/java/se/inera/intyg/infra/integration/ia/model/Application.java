@@ -20,5 +20,5 @@
 package se.inera.intyg.infra.integration.ia.model;
 
 public enum Application {
-    WEBCERT, REHABSTOD, STATISTIK
+    WEBCERT, REHABSTOD, INTYGSSTATISTIK
 }
