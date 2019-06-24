@@ -19,6 +19,7 @@
 
 package se.inera.intyg.infra.integration.ia.model;
 
+// KV_Prioritet
 public enum BannerPriority {
-    LOW, MEDIUM, HIGH
+    LAG, MEDEL, HOG
 }
