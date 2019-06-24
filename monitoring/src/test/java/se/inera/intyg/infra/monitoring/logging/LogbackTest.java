@@ -19,11 +19,8 @@
 package se.inera.intyg.infra.monitoring.logging;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-
-
+import ch.qos.logback.classic.spi.LoggingEvent;
+import ch.qos.logback.core.Appender;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
@@ -31,10 +28,8 @@ import java.io.PrintStream;
 import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,13 +42,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import ch.qos.logback.classic.spi.LoggingEvent;
-import ch.qos.logback.core.Appender;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.common.model.Role;
+
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {MonitoringConfiguration.class})
@@ -167,13 +164,13 @@ public class LogbackTest {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         HttpServletRequest  mockedRequest = Mockito.mock(HttpServletRequest.class);
-        HttpSession session = Mockito.mock(HttpSession.class);
-        when(session.getId()).thenReturn("sessionId");
-        when(mockedRequest.getSession()).thenReturn(session);
+        Cookie sessionCookie = new Cookie("SESSION", "sessionCookieValue");
+        when(mockedRequest.getCookies()).thenReturn(new Cookie[] { new Cookie("test", "test"), sessionCookie });
 
         Closeable c = logMDCServletFilter.open(mockedRequest);
         String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Auth Test"));
         assertTrue(out.contains("hsaId,sevId,origin,role]"));
+        assertTrue(out.contains(sessionCookie.getValue()));
         c.close();
     }
 
