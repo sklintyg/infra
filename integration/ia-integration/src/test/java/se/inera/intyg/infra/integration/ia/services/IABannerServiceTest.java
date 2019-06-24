@@ -121,7 +121,7 @@ public class IABannerServiceTest {
         LocalDateTime now = LocalDateTime.now();
         List<Banner> banners = new ArrayList<>();
 
-        Banner banner = new Banner(UUID.randomUUID(), now, Application.WEBCERT, "test msg", now.minusDays(10), now.plusDays(10), BannerPriority.HIGH);
+        Banner banner = new Banner(UUID.randomUUID(), now, Application.WEBCERT, "test msg", now.minusDays(10), now.plusDays(10), BannerPriority.HOG);
         banners.add(banner);
 
         mockServer.expect(ExpectedCount.once(),
