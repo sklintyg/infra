@@ -21,14 +21,15 @@ package se.inera.intyg.infra.monitoring.logging;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.stream.Stream;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -64,10 +65,21 @@ public class LogMDCServletFilter implements Filter {
     Closeable open(final ServletRequest request) {
         if (request instanceof HttpServletRequest) {
             final HttpServletRequest http = ((HttpServletRequest) request);
-            final HttpSession httpSession = ((HttpServletRequest) request).getSession(false);
             mdcHelper.withTraceId(http.getHeader(mdcHelper.traceHeader()))
-                    .withSessionInfo(Objects.isNull(httpSession) ? null : httpSession.getId());
+                    .withSessionInfo(sessionId(http));
         }
         return mdcHelper.openTrace();
+    }
+
+    // check cookie instead of http session, since this filer shall not create or use
+    // sessions
+    String sessionId(HttpServletRequest http) {
+        final Cookie[] cookies = http.getCookies();
+
+        return Objects.isNull(cookies) ? null
+                : Stream.of(cookies)
+                .filter(c -> "SESSION".equals(c.getName()))
+                .map(Cookie::getValue)
+                .findFirst().orElse(null);
     }
 }

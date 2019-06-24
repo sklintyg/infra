@@ -28,6 +28,7 @@ import java.io.PrintStream;
 import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -163,11 +164,13 @@ public class LogbackTest {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         HttpServletRequest  mockedRequest = Mockito.mock(HttpServletRequest.class);
-        when(mockedRequest.getSession(false)).thenReturn(null);
+        Cookie sessionCookie = new Cookie("SESSION", "sessionCookieValue");
+        when(mockedRequest.getCookies()).thenReturn(new Cookie[] { new Cookie("test", "test"), sessionCookie });
 
         Closeable c = logMDCServletFilter.open(mockedRequest);
         String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Auth Test"));
         assertTrue(out.contains("hsaId,sevId,origin,role]"));
+        assertTrue(out.contains(sessionCookie.getValue()));
         c.close();
     }
 
