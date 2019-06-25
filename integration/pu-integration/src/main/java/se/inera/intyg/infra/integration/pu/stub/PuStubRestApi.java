@@ -162,7 +162,7 @@ public class PuStubRestApi {
         if (newValue) { // is avliden
             avreg = new DeregistrationType();
             PartialDateType pdt = new PartialDateType();
-            pdt.setValue(LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE));
+            pdt.setValue(LocalDateTime.now(ZoneId.systemDefault()).format(DateTimeFormatter.BASIC_ISO_DATE));
             avreg.setDeregistrationDate(pdt);
             avreg.setDeregistrationReasonCode("AV");
         } else {
