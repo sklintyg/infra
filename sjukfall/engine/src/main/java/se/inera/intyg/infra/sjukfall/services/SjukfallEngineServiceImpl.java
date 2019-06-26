@@ -61,7 +61,7 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
     private SjukfallIntygPatientResolver resolverPatient;
 
     public SjukfallEngineServiceImpl() {
-        clock = Clock.system(ZoneId.of("Europe/Paris"));
+        clock = Clock.system(ZoneId.systemDefault());
         resolverEnhet = new SjukfallIntygEnhetResolver(new SjukfallIntygEnhetCreator());
         resolverPatient = new SjukfallIntygPatientResolver(new SjukfallIntygPatientCreator());
     }
