@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.support.collections.DefaultRedisMap;
@@ -55,6 +56,9 @@ public class StubResidentStore {
     private Map<String, String> residents;
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    @Value("${app.name:noname}")
+    private String appName;
+
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
 
@@ -65,7 +69,7 @@ public class StubResidentStore {
         stringRedisTemplate = new StringRedisTemplate();
         stringRedisTemplate.setConnectionFactory(redisConnectionFactory);
         stringRedisTemplate.afterPropertiesSet();
-        residents = new DefaultRedisMap<String, String>(RESIDENTSTORE, stringRedisTemplate);
+        residents = new DefaultRedisMap<String, String>(appName + ":" + RESIDENTSTORE, stringRedisTemplate);
     }
 
     /**
