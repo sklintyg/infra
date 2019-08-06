@@ -19,7 +19,7 @@
 package se.inera.intyg.infra.loggtjanststub;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import se.riv.ehr.log.v1.LogType;
+import se.riv.informationsecurity.auditing.log.v2.LogType;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;

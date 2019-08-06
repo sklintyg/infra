@@ -21,12 +21,12 @@ package se.inera.intyg.infra.loggtjanststub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import se.riv.ehr.log.store.storelog.rivtabp21.v1.StoreLogResponderInterface;
-import se.riv.ehr.log.store.storelogresponder.v1.StoreLogRequestType;
-import se.riv.ehr.log.store.storelogresponder.v1.StoreLogResponseType;
-import se.riv.ehr.log.store.v1.ResultType;
-import se.riv.ehr.log.v1.LogType;
-import se.riv.ehr.log.v1.ResultCodeType;
+import se.riv.informationsecurity.auditing.log.StoreLog.v2.rivtabp21.StoreLogResponderInterface;
+import se.riv.informationsecurity.auditing.log.StoreLogResponder.v2.StoreLogType;
+import se.riv.informationsecurity.auditing.log.StoreLogResponder.v2.StoreLogResponseType;
+import se.riv.informationsecurity.auditing.log.v2.ResultType;
+import se.riv.informationsecurity.auditing.log.v2.LogType;
+import se.riv.informationsecurity.auditing.log.v2.ResultCodeType;
 
 import javax.xml.ws.WebServiceException;
 import java.util.List;
@@ -46,7 +46,7 @@ public class StoreLogStubResponder implements StoreLogResponderInterface {
     private StubState stubState;
 
     @Override
-    public StoreLogResponseType storeLog(String logicalAddress, StoreLogRequestType request) {
+    public StoreLogResponseType storeLog(String logicalAddress, StoreLogType request) {
         StoreLogResponseType response = new StoreLogResponseType();
         ResultType result = new ResultType();
 
@@ -66,7 +66,7 @@ public class StoreLogStubResponder implements StoreLogResponderInterface {
             } else if (stubState.isActive() && stubState.isFakeError()) {
                 result.setResultCode(ResultCodeType.ERROR);
                 result.setResultText("Stub is faking errors.");
-                response.setResultType(result);
+                response.setResult(result);
                 return response;
             }
 
@@ -82,7 +82,7 @@ public class StoreLogStubResponder implements StoreLogResponderInterface {
                         result.setResultCode(ResultCodeType.OK);
                         break;
                 }
-                response.setResultType(result);
+                response.setResult(result);
                 result.setResultText("Stub is triggering error: " + stubState.getErrorState().name());
                 return response;
             }
@@ -95,7 +95,7 @@ public class StoreLogStubResponder implements StoreLogResponderInterface {
 
         result.setResultCode(ResultCodeType.OK);
         result.setResultText("Done");
-        response.setResultType(result);
+        response.setResult(result);
         return response;
     }
 
