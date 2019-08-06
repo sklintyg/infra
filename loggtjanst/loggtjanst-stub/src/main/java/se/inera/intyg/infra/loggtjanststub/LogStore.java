@@ -37,7 +37,7 @@ import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import se.inera.intyg.infra.loggtjanststub.json.LogStoreObjectMapper;
-import se.riv.ehr.log.v1.LogType;
+import se.riv.informationsecurity.auditing.log.v2.LogType;
 
 /**
  * Storage for the PU-stub based on {@link DefaultRedisMap}, providing redis-based replication for multiple
