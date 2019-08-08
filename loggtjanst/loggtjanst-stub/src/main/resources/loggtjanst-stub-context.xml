@@ -18,21 +18,26 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
-  xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-       http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+        http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
-  <beans profile="dev,wc-all-stubs,wc-loggtjanst-stub,testability-api">
+  <import resource="classpath:basic-cache-config.xml" />
+
+  <beans profile="dev,wc-all-stubs,wc-loggtjanst-stub">
     <bean id="logStore" class="se.inera.intyg.infra.loggtjanststub.LogStore" />
     <bean id="stubState" class="se.inera.intyg.infra.loggtjanststub.StubState"/>
     <bean id="logStoreObjectMapper" class="se.inera.intyg.infra.loggtjanststub.json.LogStoreObjectMapper" />
-  </beans>
 
-  <beans profile="dev,wc-all-stubs,wc-loggtjanst-stub">
-    <jaxws:endpoint address="/stubs/ehr/log/store/StoreLog/1/rivtabp21"
-      implementor="se.inera.intyg.infra.loggtjanststub.StoreLogStubResponder" />
+    <jaxws:endpoint
+        address="/stubs/informationsecurity/auditing/log/StoreLog/v2/rivtabp21"
+        implementor="se.inera.intyg.infra.loggtjanststub.StoreLogStubResponder" />
   </beans>
 
   <beans profile="dev,testability-api">
@@ -47,18 +52,14 @@
         <entry key="json" value="application/json" />
       </jaxrs:extensionMappings>
     </jaxrs:server>
+
     <bean id="loggtjanstStubRestApi" class="se.inera.intyg.infra.loggtjanststub.LoggtjanstStubRestApi" />
 
-
-    <bean id="jacksonJsonProvider"
-      class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider">
-
+    <bean id="jacksonJsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider">
       <property name="mapper">
         <bean class="se.inera.intyg.infra.loggtjanststub.json.LogStoreObjectMapper" />
       </property>
-
     </bean>
-
   </beans>
 
 </beans>
