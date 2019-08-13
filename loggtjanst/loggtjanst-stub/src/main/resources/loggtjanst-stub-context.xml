@@ -28,8 +28,6 @@
         http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
         http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
-  <import resource="classpath:basic-cache-config.xml" />
-
   <beans profile="dev,wc-all-stubs,wc-loggtjanst-stub">
     <bean id="logStore" class="se.inera.intyg.infra.loggtjanststub.LogStore" />
     <bean id="stubState" class="se.inera.intyg.infra.loggtjanststub.StubState"/>
