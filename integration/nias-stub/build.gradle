@@ -2,7 +2,7 @@ dependencies {
 
   compileOnly project(":xmldsig")
 
-  compile "com.secmaker.netid.nias:netid-access-server-schemas:1.0.0"
+  compile "com.secmaker.netid.nias:netid-access-server-schemas:1.0.1"
 
   compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
 

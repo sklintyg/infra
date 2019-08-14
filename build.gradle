@@ -3,18 +3,17 @@ plugins {
 }
 
 ext {
-    funktionstjansterGrpSchemasVersion = "1.0.4"
+    funktionstjansterGrpSchemasVersion = "1.0.6"
 
-    rivtaDirectoryOrganizationSchemasVersion = "1.1.RC5.5"
-    rivtaStoreLogSchemasVersion = "2.0"
-    rivtaHsaAuthorizationmanagementSchemasVersion = "1.0.RC4.5"
-    rivtaHsaEmployeeSchemasVersion = "1.0.RC4.5"
-    rivtaResidentMasterSchemasVersion = "1.1.3.5"
-    rivtaGetPersonsPersonSchemasVersion = "3.1"
+    rivtaDirectoryOrganizationSchemasVersion = "1.1.RC5.6"
+    rivtaStoreLogSchemasVersion = "2.0.1"
+    rivtaHsaAuthorizationmanagementSchemasVersion = "1.0.RC4.6"
+    rivtaHsaEmployeeSchemasVersion = "1.0.RC4.6"
+    rivtaGetPersonsPersonSchemasVersion = "3.1.1"
 
-    intygClinicalprocessSchemasVersion = "1.0.21"
+    intygClinicalprocessSchemasVersion = "1.0.22"
 
-    srsSchemasVersion = "0.0.12"
+    srsSchemasVersion = "0.0.13"
 
     schemasContractVersion = "2.1.8"
 
@@ -22,7 +21,7 @@ ext {
     commonsIoVersion = "2.4"
     commonsLangVersion = "3.8.1"
     commonsCollectionsVersion = "4.2"
-    cxfVersion = "3.1.3"
+    cxfVersion = "3.2.4"
     guavaVersion = "14.0.1"
     hamcrestVersion = "1.3"
     igniteSpringVersion = "1.8.0"
