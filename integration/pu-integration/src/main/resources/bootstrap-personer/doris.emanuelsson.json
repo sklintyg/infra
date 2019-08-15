@@ -1,1 +1,26 @@
-{"addressInformation":{"residentialAddress":{"city":"Landskrona","postalAddress1":"Stadsgatan 10","postalCode":26134}},"name":{"givenName":{"name":"Doris"},"middleName":{"name":"Leila"},"surname":{"name":"Emanuelsson"}},"personalIdentity":{"extension":"199206282387"},"primaryIdentity":false,"protectedPersonIndicator":false,"testIndicator":false}
+{
+  "addressInformation": {
+    "residentialAddress": {
+      "city": "Landskrona",
+      "postalAddress1": "Stadsgatan 10",
+      "postalCode": 26134
+    }
+  },
+  "name": {
+    "givenName": {
+      "name": "Doris"
+    },
+    "middleName": {
+      "name": "Leila"
+    },
+    "surname": {
+      "name": "Emanuelsson"
+    }
+  },
+  "personalIdentity": {
+    "extension": "199206282387"
+  },
+  "primaryIdentity": false,
+  "protectedPersonIndicator": false,
+  "testIndicator": false
+}

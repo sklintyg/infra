@@ -23,7 +23,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -31,13 +30,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 /**
  * Replace org.apache.catalina.connect.Request in RequestContextHolder with the request used by spring session.
  * https://github.com/spring-projects/spring-session/issues/135
- *
  */
-public class RequestContextHolderUpdateFilter  extends OncePerRequestFilter {
+public class RequestContextHolderUpdateFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
 
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 

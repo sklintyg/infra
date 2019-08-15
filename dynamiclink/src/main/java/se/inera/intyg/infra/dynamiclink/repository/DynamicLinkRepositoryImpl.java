@@ -18,15 +18,15 @@
  */
 package se.inera.intyg.infra.dynamiclink.repository;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +34,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 
 /**
@@ -65,11 +61,11 @@ public class DynamicLinkRepositoryImpl implements DynamicLinkRepository {
 
         try {
             List<DynamicLink> dynamicLinks =
-                    new ObjectMapper().readValue(resourceLoader.getResource(location).getInputStream(),
-                            new TypeReference<List<DynamicLink>>() {
-                            });
+                new ObjectMapper().readValue(resourceLoader.getResource(location).getInputStream(),
+                    new TypeReference<List<DynamicLink>>() {
+                    });
             this.linkMap = Collections.unmodifiableMap(
-                    dynamicLinks.stream().collect(Collectors.toMap(DynamicLink::getKey, Function.identity()))
+                dynamicLinks.stream().collect(Collectors.toMap(DynamicLink::getKey, Function.identity()))
             );
         } catch (IOException e) {
             LOG.error("Error loading dynamic links from: " + location);

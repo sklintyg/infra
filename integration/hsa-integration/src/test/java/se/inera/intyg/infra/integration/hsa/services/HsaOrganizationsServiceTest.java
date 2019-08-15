@@ -18,12 +18,23 @@
  */
 package se.inera.intyg.infra.integration.hsa.services;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,11 +43,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import se.inera.intyg.infra.integration.hsa.model.AgandeForm;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
@@ -44,14 +50,6 @@ import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.integration.hsa.stub.HsaPerson;
 import se.inera.intyg.infra.integration.hsa.stub.HsaServiceStub;
 import se.inera.intyg.infra.integration.hsa.stub.Medarbetaruppdrag;
-
-import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author andreaskaltenbach
@@ -309,7 +307,8 @@ public class HsaOrganizationsServiceTest {
     public void testUppdragFiltering() {
 
         // user has a different medarbetaruppdrag ändamål 'Animatör' in one enhet
-        serviceStub.getMedarbetaruppdrag().add(new Medarbetaruppdrag(PERSON_HSA_ID, asList(new Medarbetaruppdrag.Uppdrag("centrum-ost", "Animatör"))));
+        serviceStub.getMedarbetaruppdrag()
+            .add(new Medarbetaruppdrag(PERSON_HSA_ID, asList(new Medarbetaruppdrag.Uppdrag("centrum-ost", "Animatör"))));
 
         List<Vardgivare> vardgivareList = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
 

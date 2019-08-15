@@ -28,4 +28,5 @@ import org.springframework.context.annotation.PropertySource;
 @Import(EmbeddedCacheConfiguration.class)
 @PropertySource("classpath:cache.properties")
 public class TestConfig {
+
 }

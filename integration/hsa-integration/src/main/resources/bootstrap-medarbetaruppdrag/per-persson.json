@@ -28,7 +28,10 @@
     }
   ],
   "fakeProperties": {
-    "allowedInApplications": ["WC", "IB"],
+    "allowedInApplications": [
+      "WC",
+      "IB"
+    ],
     "displayOrder": 240,
     "env": "demo",
     "readOnly": true,

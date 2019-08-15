@@ -26,69 +26,55 @@ import se.inera.intyg.infra.security.common.model.UserOriginType;
 public interface AuthExpectationSpecification {
 
     /**
-     * To pass, the user must have at least one of the given features active.
-     * Also, if intygstyp context is given, that intygsmodule must also have given feature active.
+     * To pass, the user must have at least one of the given features active. Also, if intygstyp context is given, that intygsmodule must
+     * also have given feature active.
      *
-     * If multiple invalidFeatureConstraints are given, this is effectively an OR condition. To express an AND condition
-     * you can simply chain multiple features("x").features("y")
+     * If multiple invalidFeatureConstraints are given, this is effectively an OR condition. To express an AND condition you can simply
+     * chain multiple features("x").features("y")
      *
-     * @param featureConstraints
-     *            The features(s) that the user should have
-     * @return
+     * @param featureConstraints The features(s) that the user should have
      */
     AuthExpectationSpecification features(String... featureConstraints);
 
     /**
-     * To pass, the user must NOT have ANY of the given features active.
-     * Also, if intygstyp context is given that intygsmodule must also have given feature active to be considered
-     * active.
+     * To pass, the user must NOT have ANY of the given features active. Also, if intygstyp context is given that intygsmodule must also
+     * have given feature active to be considered active.
      *
-     *
-     * @param invalidFeatureConstraints
-     *            The features(s) that the user should NOT have
-     * @return
+     * @param invalidFeatureConstraints The features(s) that the user should NOT have
      */
     AuthExpectationSpecification notFeatures(String... invalidFeatureConstraints);
 
     /**
      * To pass, the user's request origin must match one of the given validOriginTypes.
      *
-     * If multiple validOriginTypes are given, this is effectively an OR condition. To express an AND condition you can
-     * simply chain multiple origins(type1).origins(type2)
+     * If multiple validOriginTypes are given, this is effectively an OR condition. To express an AND condition you can simply chain
+     * multiple origins(type1).origins(type2)
      *
-     * @param validOriginTypes
-     *            The origin(s) the user should have
-     * @return
+     * @param validOriginTypes The origin(s) the user should have
      */
     AuthExpectationSpecification origins(UserOriginType... validOriginTypes);
 
     /**
      * To pass, the user's request origin must NOT match any of the given invalidOriginTypes.
      *
-     * @param invalidOriginTypes
-     *            The origin(s) the user must NOT have
-     * @return
+     * @param invalidOriginTypes The origin(s) the user must NOT have
      */
     AuthExpectationSpecification notOrigins(UserOriginType... invalidOriginTypes);
 
     /**
      * To pass, the user's must have a role matching one of the given validRoles.
      *
-     * If multiple validRoles are given, this is effectively an OR condition. To express an AND condition you can simply
-     * chain multiple roles(type1).roles(type2)
+     * If multiple validRoles are given, this is effectively an OR condition. To express an AND condition you can simply chain multiple
+     * roles(type1).roles(type2)
      *
-     * @param validRoles
-     *            The role(s) the user mut NOT have
-     * @return
+     * @param validRoles The role(s) the user mut NOT have
      */
     AuthExpectationSpecification roles(String... validRoles);
 
     /**
      * To pass, the user's role must NOT match any of the given invalidRoles.
      *
-     * @param invalidRoles
-     *            The role(s) the user mut NOT have
-     * @return
+     * @param invalidRoles The role(s) the user mut NOT have
      */
     AuthExpectationSpecification notRoles(String... invalidRoles);
 
@@ -101,15 +87,12 @@ public interface AuthExpectationSpecification {
      * <li>If the privilegeConstraint's requestOrigin constraint itself has a intygstype constraint - that must also
      * match given intygstype context.</li>
      * </ul>
-     *
-     * @param privilegeConstraint
-     * @return
      */
     AuthExpectationSpecification privilege(String privilegeConstraint);
 
     /**
-     * This version of privilege(..) adds a conditional parameter that can be used for only checking a privilege if the
-     * passed parameter is true.
+     * This version of privilege(..) adds a conditional parameter that can be used for only checking a privilege if the passed parameter is
+     * true.
      *
      * To pass, the following must be fulfilled.
      * <ul>
@@ -120,45 +103,34 @@ public interface AuthExpectationSpecification {
      * match given intygstype context.</li>
      * </ul>
      *
-     * @param privilegeConstraint
-     * @param evaluate
-     *            If false, the privilege will not be evaluated.
-     * @return
+     * @param evaluate If false, the privilege will not be evaluated.
      */
     AuthExpectationSpecification privilegeIf(String privilegeConstraint, boolean evaluate);
 
     /**
      * A negation of privilege method to be able to express privilege a user must NOT.
-     *
-     * @param privilegeConstraint
-     * @return
      */
     AuthExpectationSpecification notPrivilege(String privilegeConstraint);
 
     /**
-     * A negation of privilege method to be able to express privilege a user must NOT. Can be ignored if the
-     * passed evaluate parameter is false.
+     * A negation of privilege method to be able to express privilege a user must NOT. Can be ignored if the passed evaluate parameter is
+     * false.
      *
-     * @param privilegeNotConstraint
-     * @param evaluate
-     *            If false, this privilege will not be evaluated.
-     * @return
+     * @param evaluate If false, this privilege will not be evaluated.
      */
     AuthExpectationSpecification notPrivilegeIf(String privilegeNotConstraint, boolean evaluate);
 
     /**
      * Verify all given expectations.
      *
-     * @return
-     *         Returns true if all added checks passes, otherwise false.
+     * @return Returns true if all added checks passes, otherwise false.
      */
     boolean isVerified();
 
     /**
      * Reason for authoritzation failed. Can be used as message when throwing AuthoritiesException.
      *
-     * @return
-     *         String is empty if no errors.
+     * @return String is empty if no errors.
      */
     String error();
 

@@ -1,15 +1,15 @@
 {
-    "sekretessmarkering": "N",
-    "personpost": {
-        "personId": "199608112380",
-        "namn": {
-            "fornamn": "Fitnesse",
-            "efternamn": "Testsson"
-        },
-        "folkbokforingsadress": {
-            "utdelningsadress1": "Privatgatan 1",
-            "postNr": 12345,
-            "postort": "Privatstan"
-        }
+  "sekretessmarkering": "N",
+  "personpost": {
+    "personId": "199608112380",
+    "namn": {
+      "fornamn": "Fitnesse",
+      "efternamn": "Testsson"
+    },
+    "folkbokforingsadress": {
+      "utdelningsadress1": "Privatgatan 1",
+      "postNr": 12345,
+      "postort": "Privatstan"
     }
+  }
 }

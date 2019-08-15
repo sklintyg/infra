@@ -55,7 +55,7 @@ public class LogMDCServletFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {
         SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
-                filterConfig.getServletContext());
+            filterConfig.getServletContext());
     }
 
     @Override
@@ -66,7 +66,7 @@ public class LogMDCServletFilter implements Filter {
         if (request instanceof HttpServletRequest) {
             final HttpServletRequest http = ((HttpServletRequest) request);
             mdcHelper.withTraceId(http.getHeader(mdcHelper.traceHeader()))
-                    .withSessionInfo(sessionId(http));
+                .withSessionInfo(sessionId(http));
         }
         return mdcHelper.openTrace();
     }
@@ -77,7 +77,7 @@ public class LogMDCServletFilter implements Filter {
         final Cookie[] cookies = http.getCookies();
 
         return Objects.isNull(cookies) ? null
-                : Stream.of(cookies)
+            : Stream.of(cookies)
                 .filter(c -> "SESSION".equals(c.getName()))
                 .map(Cookie::getValue)
                 .findFirst().orElse(null);

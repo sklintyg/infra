@@ -51,7 +51,7 @@ public class CollectRequestTypeBuilder {
         return this;
     }
 
-    public CollectRequestType build(){
+    public CollectRequestType build() {
         CollectRequestType crt = new CollectRequestType();
         crt.setPolicy(this.policy);
         crt.setProvider(this.provider);

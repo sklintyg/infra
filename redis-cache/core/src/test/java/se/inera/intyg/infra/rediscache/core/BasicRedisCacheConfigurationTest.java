@@ -20,9 +20,7 @@ package se.inera.intyg.infra.rediscache.core;
 
 import static org.junit.Assert.assertEquals;
 
-
 import java.util.stream.IntStream;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +30,6 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import redis.embedded.RedisServer;
 
 /**
@@ -41,6 +38,7 @@ import redis.embedded.RedisServer;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class BasicRedisCacheConfigurationTest {
+
     @Autowired
     private CacheManager cacheManager;
 
@@ -62,7 +60,7 @@ public class BasicRedisCacheConfigurationTest {
     @Test
     public void testCache() throws InterruptedException {
 
-        IntStream.range(0, 100).forEach(i ->  testCache.put("key" + i, "value" + i));
+        IntStream.range(0, 100).forEach(i -> testCache.put("key" + i, "value" + i));
         IntStream.range(0, 100).forEach(i -> assertEquals("value" + i, testCache.get("key" + i).get()));
 
         Object o = testCache.get("key1").get();

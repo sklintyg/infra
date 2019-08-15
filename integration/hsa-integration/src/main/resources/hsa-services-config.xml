@@ -31,7 +31,6 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://cxf.apache.org/configuration/security http://cxf.apache.org/schemas/configuration/security.xsd">
 
-
   <context:component-scan base-package="se.inera.intyg.infra.integration.hsa"/>
 
   <jaxws:client id="getCredentialsForPersonIncludingProtectedPersonResponderInterface"
@@ -85,13 +84,13 @@
   </beans>
 
   <beans profile="qa,prod">
-    <bean class="se.inera.intyg.infra.integration.hsa.cache.HsaCacheConfiguration" />
+    <bean class="se.inera.intyg.infra.integration.hsa.cache.HsaCacheConfiguration"/>
   </beans>
 
   <beans profile="!prod">
     <beans profile="!qa">
       <beans profile="caching-enabled">
-        <bean class="se.inera.intyg.infra.integration.hsa.cache.HsaCacheConfiguration" />
+        <bean class="se.inera.intyg.infra.integration.hsa.cache.HsaCacheConfiguration"/>
       </beans>
     </beans>
   </beans>

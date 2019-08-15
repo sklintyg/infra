@@ -24,16 +24,19 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD })
+@Target({ElementType.METHOD})
 public @interface PrometheusTimeMethod {
+
     /**
      * The metric name to use for recording latencies.
+     *
      * @return A metric name specific to your use case.
      */
     String name() default "";
 
     /**
      * The help message to show in metrics.
+     *
      * @return A help string
      */
     String help() default "Timed Method";

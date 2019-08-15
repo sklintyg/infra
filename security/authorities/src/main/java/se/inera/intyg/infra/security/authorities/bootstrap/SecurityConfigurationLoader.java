@@ -19,7 +19,6 @@
 package se.inera.intyg.infra.security.authorities.bootstrap;
 
 import java.io.IOException;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -28,18 +27,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ResourceUtils;
 import org.yaml.snakeyaml.Yaml;
-
 import se.inera.intyg.infra.security.authorities.AuthoritiesConfiguration;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.authorities.FeaturesConfiguration;
 
 /**
- * The security configuration is read from two seperate YAML files which are
- * injected into the constructor upon creating an object of this class.
+ * The security configuration is read from two seperate YAML files which are injected into the constructor upon creating an object of this
+ * class.
  * <p>
- * The YAML files are parsed and the resulting configuration can be fetched
- * by calling the {@link SecurityConfigurationLoader#getAuthoritiesConfiguration()}
- * and {@link SecurityConfigurationLoader#getFeaturesConfiguration()} method.
+ * The YAML files are parsed and the resulting configuration can be fetched by calling the {@link
+ * SecurityConfigurationLoader#getAuthoritiesConfiguration()} and {@link SecurityConfigurationLoader#getFeaturesConfiguration()} method.
  */
 @Component("AuthoritiesConfigurationLoader")
 public class SecurityConfigurationLoader implements InitializingBean {
@@ -70,26 +67,21 @@ public class SecurityConfigurationLoader implements InitializingBean {
     }
 
     /**
-     * Invoked by a BeanFactory after it has set all bean properties supplied
-     * (and satisfied BeanFactoryAware and ApplicationContextAware).
+     * Invoked by a BeanFactory after it has set all bean properties supplied (and satisfied BeanFactoryAware and ApplicationContextAware).
      * <p>
-     * This method allows the bean instance to perform initialization only
-     * possible when all bean properties have been set and to throw an
+     * This method allows the bean instance to perform initialization only possible when all bean properties have been set and to throw an
      * exception in the event of misconfiguration.
      *
-     * @throws Exception in the event of misconfiguration (such
-     *                   as failure to set an essential property) or if initialization fails.
+     * @throws Exception in the event of misconfiguration (such as failure to set an essential property) or if initialization fails.
      */
     @Override
     public void afterPropertiesSet() throws AuthoritiesException {
-      authoritiesConfiguration = loadConfiguration(authoritiesConfigurationFile, AuthoritiesConfiguration.class);
-      featuresConfiguration = loadConfiguration(featuresConfigurationFile, FeaturesConfiguration.class);
+        authoritiesConfiguration = loadConfiguration(authoritiesConfigurationFile, AuthoritiesConfiguration.class);
+        featuresConfiguration = loadConfiguration(featuresConfigurationFile, FeaturesConfiguration.class);
     }
 
     /**
      * Gets the loaded authorities configuration.
-     *
-     * @return
      */
     public AuthoritiesConfiguration getAuthoritiesConfiguration() {
         return this.authoritiesConfiguration;
@@ -97,8 +89,6 @@ public class SecurityConfigurationLoader implements InitializingBean {
 
     /**
      * Gets the loaded features configuration.
-     *
-     * @return
      */
     public FeaturesConfiguration getFeaturesConfiguration() {
         return this.featuresConfiguration;

@@ -12,7 +12,10 @@
     }
   ],
   "fakeProperties": {
-    "allowedInApplications": ["WC","RS"],
+    "allowedInApplications": [
+      "WC",
+      "RS"
+    ],
     "displayOrder": 15,
     "readOnly": true,
     "logins": [

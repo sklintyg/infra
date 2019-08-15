@@ -24,8 +24,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import se.inera.intyg.infra.monitoring.annotation.EnablePrometheusTiming;
-import se.inera.intyg.infra.monitoring.logging.LogMDCServletFilter;
 import se.inera.intyg.infra.monitoring.logging.LogMDCHelper;
+import se.inera.intyg.infra.monitoring.logging.LogMDCServletFilter;
 
 @Configuration
 @EnablePrometheusTiming

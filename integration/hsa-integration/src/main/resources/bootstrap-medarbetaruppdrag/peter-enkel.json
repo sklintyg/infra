@@ -24,7 +24,9 @@
     }
   ],
   "fakeProperties": {
-    "allowedInApplications": ["RS"],
+    "allowedInApplications": [
+      "RS"
+    ],
     "readOnly": true,
     "logins": [
       {

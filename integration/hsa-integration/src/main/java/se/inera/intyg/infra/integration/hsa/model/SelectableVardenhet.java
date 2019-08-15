@@ -20,7 +20,6 @@ package se.inera.intyg.infra.integration.hsa.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import java.io.Serializable;
 import java.util.List;
 

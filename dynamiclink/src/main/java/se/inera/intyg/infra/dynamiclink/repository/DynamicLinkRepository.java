@@ -18,9 +18,8 @@
  */
 package se.inera.intyg.infra.dynamiclink.repository;
 
-import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
-
 import java.util.Map;
+import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 
 /**
  * Created by eriklupander on 2017-05-03.

@@ -1,1 +1,26 @@
-{"personalIdentity":{"extension":"191212121212"},"protectedPersonIndicator":false,"testIndicator":true,"primaryIdentity":false,"name":{"givenName":{"name":"Tolvan"},"middleName":{},"surname":{"name":"Tolvansson"}},"addressInformation":{"residentialAddress":{"careOf":"Svensson","postalAddress1":"Storgatan 1","postalAddress2":"PL 1234","postalCode":12345,"city":"Småmåla"}}}
+{
+  "personalIdentity": {
+    "extension": "191212121212"
+  },
+  "protectedPersonIndicator": false,
+  "testIndicator": true,
+  "primaryIdentity": false,
+  "name": {
+    "givenName": {
+      "name": "Tolvan"
+    },
+    "middleName": {},
+    "surname": {
+      "name": "Tolvansson"
+    }
+  },
+  "addressInformation": {
+    "residentialAddress": {
+      "careOf": "Svensson",
+      "postalAddress1": "Storgatan 1",
+      "postalAddress2": "PL 1234",
+      "postalCode": 12345,
+      "city": "Småmåla"
+    }
+  }
+}

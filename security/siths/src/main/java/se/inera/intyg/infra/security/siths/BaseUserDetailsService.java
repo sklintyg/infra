@@ -18,6 +18,12 @@
  */
 package se.inera.intyg.infra.security.siths;
 
+import static se.inera.intyg.infra.security.authorities.AuthoritiesResolverUtil.toMap;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.opensaml.saml2.core.Assertion;
 import org.slf4j.Logger;
@@ -45,16 +51,8 @@ import se.inera.intyg.infra.security.exception.MissingHsaEmployeeInformation;
 import se.inera.intyg.infra.security.exception.MissingMedarbetaruppdragException;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static se.inera.intyg.infra.security.authorities.AuthoritiesResolverUtil.toMap;
-
 /**
- * Base class for providing authorization based on minimal SAML-tickets containing only the employeeHsaId and
- * authnMethod.
+ * Base class for providing authorization based on minimal SAML-tickets containing only the employeeHsaId and authnMethod.
  * <p>
  * Each application must extend this base class, with the option of overriding most methods.
  *
@@ -79,13 +77,9 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
     /**
      * Entry-point method for building a user principal given a SAMLCredential.
      * <p>
-     * Implementing subclasses may override this method, but are recommended to _not_ do so. Instead overriding
-     * {@link BaseUserDetailsService#buildUserPrincipal} and/or
-     * {@link BaseUserDetailsService#createIntygUser(String, String, UserAuthorizationInfo, List)} is the recommended
-     * way.
-     *
-     * @param credential
-     * @return
+     * Implementing subclasses may override this method, but are recommended to _not_ do so. Instead overriding {@link
+     * BaseUserDetailsService#buildUserPrincipal} and/or {@link BaseUserDetailsService#createIntygUser(String, String,
+     * UserAuthorizationInfo, List)} is the recommended way.
      */
     @Override
     public Object loadUserBySAML(SAMLCredential credential) {
@@ -122,12 +116,8 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
      * <p>
      * Note that this default implementation only uses employeeHsaId and authnMethod from a supplied SAML ticket.
      * <p>
-     * Implementing subclasses should override this method, call super.buildUserPrincipal(..) and then dececorate their
-     * own Principal based
+     * Implementing subclasses should override this method, call super.buildUserPrincipal(..) and then dececorate their own Principal based
      * on the {@link IntygUser} returned by this base method.
-     *
-     * @param credential
-     * @return
      */
     protected IntygUser buildUserPrincipal(SAMLCredential credential) {
         String employeeHsaId = getAssertion(credential).getHsaId();
@@ -165,14 +155,10 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
     }
 
     /**
-     * Fetches a list of {@link Vardgivare} from HSA (over NTjP) that the specified employeeHsaId
-     * has medarbetaruppdrag "Vård och behandling" for. Uses
-     * infrastructure:directory:authorizationmanagement:GetCredentialsForPersonIncludingProtectedPerson.
+     * Fetches a list of {@link Vardgivare} from HSA (over NTjP) that the specified employeeHsaId has medarbetaruppdrag "Vård och
+     * behandling" for. Uses infrastructure:directory:authorizationmanagement:GetCredentialsForPersonIncludingProtectedPerson.
      * <p>
      * Override to provide your own mechanism for fetching Vardgivare.
-     *
-     * @param employeeHsaId
-     * @return
      */
     protected UserAuthorizationInfo getAuthorizedVardgivare(String employeeHsaId) {
         LOG.debug("Retrieving authorized units from HSA...");
@@ -187,13 +173,9 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
     }
 
     /**
-     * Fetches a list of PersonInformationType from HSA using
-     * infrastructure:directory:employee:GetEmployeeIncludingProtectedPerson.
+     * Fetches a list of PersonInformationType from HSA using infrastructure:directory:employee:GetEmployeeIncludingProtectedPerson.
      * <p>
      * Override to provide your own implementation for fetching PersonInfo.
-     *
-     * @param employeeHsaId
-     * @return
      */
     protected List<PersonInformationType> getPersonInfo(String employeeHsaId) {
         LOG.debug("Retrieving user information from HSA...");
@@ -222,20 +204,18 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
     }
 
     /**
-     * Creates the base {@link IntygUser} instance that implementing subclasses then can decorate on their own.
-     * Optionally,
-     * all of the decorate* methods can be individually overridden by implementing subclasses.
+     * Creates the base {@link IntygUser} instance that implementing subclasses then can decorate on their own. Optionally, all of the
+     * decorate* methods can be individually overridden by implementing subclasses.
      *
-     * @param employeeHsaId         hsaId for the authorizing user. From SAML ticket.
-     * @param authenticationScheme  auth scheme, i.e. what auth method used, typically :siths or :fake
-     * @param userAuthorizationInfo UserCredentials and List of vardgivare fetched from HSA, each entry is actually a tree of vardgivare
-     *                              -> vardenhet(er) -> mottagning(ar)
-     *                              where the user has medarbetaruppdrag 'Vård och Behandling'.
-     * @param personInfo            Employee information from HSA.
+     * @param employeeHsaId hsaId for the authorizing user. From SAML ticket.
+     * @param authenticationScheme auth scheme, i.e. what auth method used, typically :siths or :fake
+     * @param userAuthorizationInfo UserCredentials and List of vardgivare fetched from HSA, each entry is actually a tree of vardgivare ->
+     * vardenhet(er) -> mottagning(ar) where the user has medarbetaruppdrag 'Vård och Behandling'.
+     * @param personInfo Employee information from HSA.
      * @return A base IntygUser Principal.
      */
     protected IntygUser createIntygUser(String employeeHsaId, String authenticationScheme, UserAuthorizationInfo userAuthorizationInfo,
-            List<PersonInformationType> personInfo) {
+        List<PersonInformationType> personInfo) {
         LOG.debug("Decorate/populate user object with additional information");
 
         IntygUser intygUser = new IntygUser(employeeHsaId);
@@ -251,8 +231,6 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
 
     /**
      * Each application must override this method in order to specify it's fallback default role.
-     *
-     * @return
      */
     protected abstract String getDefaultRole();
 
@@ -274,8 +252,6 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
 
     /**
      * Note that features are optional.
-     *
-     * @param intygUser
      */
     public void decorateIntygUserWithAvailableFeatures(IntygUser intygUser) {
         List<String> hsaIds = new ArrayList<>();
@@ -322,12 +298,12 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
     // ~ Private scope
     // =====================================================================================
     private void decorateIntygUserWithBasicInfo(IntygUser intygUser, UserAuthorizationInfo userAuthorizationInfo,
-            List<PersonInformationType> personInfo, String authenticationScheme) {
+        List<PersonInformationType> personInfo, String authenticationScheme) {
         intygUser.setNamn(compileName(personInfo.get(0).getGivenName(), personInfo.get(0).getMiddleAndSurName()));
         intygUser.setVardgivare(userAuthorizationInfo.getVardgivare());
         //INTYG-4208: If any item has protectedPerson set, consider the user sekretessMarkerad.
         intygUser.setSekretessMarkerad(
-                personInfo.stream().filter(pi -> pi.isProtectedPerson() != null && pi.isProtectedPerson()).findAny().isPresent());
+            personInfo.stream().filter(pi -> pi.isProtectedPerson() != null && pi.isProtectedPerson()).findAny().isPresent());
 
         // Förskrivarkod is sensitive information, not allowed to store real value so make sure we overwrite this later
         // after role resolution.
@@ -346,7 +322,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
     }
 
     protected void decorateIntygUserWithRoleAndAuthorities(IntygUser intygUser, List<PersonInformationType> personInfo,
-            UserCredentials userCredentials) {
+        UserCredentials userCredentials) {
         Role role = commonAuthoritiesResolver.resolveRole(intygUser, personInfo, getDefaultRole(), userCredentials);
         LOG.debug("User role is set to {}", role);
 

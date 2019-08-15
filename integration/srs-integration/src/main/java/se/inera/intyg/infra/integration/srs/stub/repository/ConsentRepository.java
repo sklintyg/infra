@@ -18,13 +18,12 @@
  */
 package se.inera.intyg.infra.integration.srs.stub.repository;
 
-import se.inera.intyg.infra.integration.srs.stub.repository.model.Consent;
-import se.inera.intyg.infra.integration.srs.stub.repository.model.Individ;
-import se.inera.intyg.schemas.contract.Personnummer;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import se.inera.intyg.infra.integration.srs.stub.repository.model.Consent;
+import se.inera.intyg.infra.integration.srs.stub.repository.model.Individ;
+import se.inera.intyg.schemas.contract.Personnummer;
 
 public class ConsentRepository {
 

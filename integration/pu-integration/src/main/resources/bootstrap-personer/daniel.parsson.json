@@ -1,1 +1,26 @@
-{"personalIdentity":{"extension":"195206172339"},"protectedPersonIndicator":false,"testIndicator":true,"primaryIdentity":false,"name":{"givenName":{"name":"Björn Anders Daniel"},"middleName":{"name":"Annat"},"surname":{"name":"Pärsson"}},"addressInformation":{"residentialAddress":{"postalAddress2":"KUNGSGATAN 5","postalCode":41234,"city":"GÖTEBORG"}}}
+{
+  "personalIdentity": {
+    "extension": "195206172339"
+  },
+  "protectedPersonIndicator": false,
+  "testIndicator": true,
+  "primaryIdentity": false,
+  "name": {
+    "givenName": {
+      "name": "Björn Anders Daniel"
+    },
+    "middleName": {
+      "name": "Annat"
+    },
+    "surname": {
+      "name": "Pärsson"
+    }
+  },
+  "addressInformation": {
+    "residentialAddress": {
+      "postalAddress2": "KUNGSGATAN 5",
+      "postalCode": 41234,
+      "city": "GÖTEBORG"
+    }
+  }
+}

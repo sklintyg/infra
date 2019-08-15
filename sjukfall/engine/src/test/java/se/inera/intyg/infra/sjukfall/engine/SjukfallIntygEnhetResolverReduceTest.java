@@ -21,6 +21,10 @@ package se.inera.intyg.infra.sjukfall.engine;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -31,17 +35,13 @@ import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-
 
 /**
  * Created by Magnus Ekstrand on 10/02/16.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SjukfallIntygEnhetResolverReduceTest {
+
     private static final String LOCATION_INTYGSDATA = "classpath:Sjukfall/Enhet/intygsdata-resolver.csv";
 
     private static List<IntygData> intygDataList;
@@ -125,7 +125,7 @@ public class SjukfallIntygEnhetResolverReduceTest {
         assertEquals("fall-7-intyg-2", result.get(0).getIntygId());
     }
 
-    private List<SjukfallIntyg> getTestData(String key, String aktivtDatum , int maxIntygsGlapp) {
+    private List<SjukfallIntyg> getTestData(String key, String aktivtDatum, int maxIntygsGlapp) {
         Map<String, List<SjukfallIntyg>> data = getTestData(aktivtDatum);
         return resolver.reduceList(data.get(key), maxIntygsGlapp);
     }

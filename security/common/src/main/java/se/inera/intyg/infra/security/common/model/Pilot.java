@@ -20,7 +20,6 @@ package se.inera.intyg.infra.security.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;

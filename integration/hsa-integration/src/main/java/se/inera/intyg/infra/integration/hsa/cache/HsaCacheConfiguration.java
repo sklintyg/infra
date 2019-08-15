@@ -46,86 +46,86 @@ import se.riv.infrastructure.directory.v1.PersonInformationType;
 @Configuration
 public class HsaCacheConfiguration {
 
-  static final String HSA_UNIT_CACHE_PREFIX = "hsaUnitCache:";
-  static final String HSA_HEALTH_CARE_UNIT_CACHE_PREFIX = "hsaHealthCareUnitCache:";
-  static final String HSA_HEALTH_CARE_UNIT_MEMBERS_CACHE_PREFIX = "hsaHealthCareUnitMembersCache:";
-  static final String HSA_EMPLOYEE_CACHE_PREFIX = "hsaEmployeeCache:";
+    static final String HSA_UNIT_CACHE_PREFIX = "hsaUnitCache:";
+    static final String HSA_HEALTH_CARE_UNIT_CACHE_PREFIX = "hsaHealthCareUnitCache:";
+    static final String HSA_HEALTH_CARE_UNIT_MEMBERS_CACHE_PREFIX = "hsaHealthCareUnitMembersCache:";
+    static final String HSA_EMPLOYEE_CACHE_PREFIX = "hsaEmployeeCache:";
 
-  private static final String HSA_UNIT_CACHE_EXPIRY = "hsa.unit.cache.expiry";
-  private static final String HSA_HEALTHCAREUNIT_CACHE_EXPIRY = "hsa.healthcareunit.cache.expiry";
-  private static final String HSA_HEALHCAREUNITMEMBERS_CACHE_EXPIRY = "hsa.healhcareunitmembers.cache.expiry";
-  private static final String HSA_EMPLOYEE_CACHE_EXPIRY = "hsa.employee.cache.expiry";
+    private static final String HSA_UNIT_CACHE_EXPIRY = "hsa.unit.cache.expiry";
+    private static final String HSA_HEALTHCAREUNIT_CACHE_EXPIRY = "hsa.healthcareunit.cache.expiry";
+    private static final String HSA_HEALHCAREUNITMEMBERS_CACHE_EXPIRY = "hsa.healhcareunitmembers.cache.expiry";
+    private static final String HSA_EMPLOYEE_CACHE_EXPIRY = "hsa.employee.cache.expiry";
 
-  @Value("${" + HSA_UNIT_CACHE_EXPIRY + "}")
-  private String hsaUnitCacheExpirySeconds;
+    @Value("${" + HSA_UNIT_CACHE_EXPIRY + "}")
+    private String hsaUnitCacheExpirySeconds;
 
-  @Value("${" + HSA_HEALTHCAREUNIT_CACHE_EXPIRY + "}")
-  private String hsaHealthCareUnitCacheExpirySeconds;
+    @Value("${" + HSA_HEALTHCAREUNIT_CACHE_EXPIRY + "}")
+    private String hsaHealthCareUnitCacheExpirySeconds;
 
-  @Value("${" + HSA_HEALHCAREUNITMEMBERS_CACHE_EXPIRY + "}")
-  private String hsaHeathCareUnitMembersCacheExpirySeconds;
+    @Value("${" + HSA_HEALHCAREUNITMEMBERS_CACHE_EXPIRY + "}")
+    private String hsaHeathCareUnitMembersCacheExpirySeconds;
 
-  @Value("${" + HSA_EMPLOYEE_CACHE_EXPIRY + ":60}")
-  private String hsaEmployeeCacheExpirySeconds;
+    @Value("${" + HSA_EMPLOYEE_CACHE_EXPIRY + ":60}")
+    private String hsaEmployeeCacheExpirySeconds;
 
-  @Value("${app.name:noname}")
-  private String appName;
+    @Value("${app.name:noname}")
+    private String appName;
 
 
-  @Autowired
-  private RedisCacheOptionsSetter redisCacheOptionsSetter;
+    @Autowired
+    private RedisCacheOptionsSetter redisCacheOptionsSetter;
 
-  @Bean
-  Cache hsaUnitCache() {
-    return newHsaCache(HSA_UNIT_CACHE_PREFIX, hsaUnitCacheExpirySeconds);
-  }
+    @Bean
+    Cache hsaUnitCache() {
+        return newHsaCache(HSA_UNIT_CACHE_PREFIX, hsaUnitCacheExpirySeconds);
+    }
 
-  @Bean
-  Cache hsaCareUnitCache() {
-    return newHsaCache(HSA_HEALTH_CARE_UNIT_CACHE_PREFIX, hsaHealthCareUnitCacheExpirySeconds);
-  }
+    @Bean
+    Cache hsaCareUnitCache() {
+        return newHsaCache(HSA_HEALTH_CARE_UNIT_CACHE_PREFIX, hsaHealthCareUnitCacheExpirySeconds);
+    }
 
-  @Bean
-  Cache hsaCareUnitMemberCache() {
-    return newHsaCache(HSA_HEALTH_CARE_UNIT_MEMBERS_CACHE_PREFIX, hsaHeathCareUnitMembersCacheExpirySeconds);
-  }
+    @Bean
+    Cache hsaCareUnitMemberCache() {
+        return newHsaCache(HSA_HEALTH_CARE_UNIT_MEMBERS_CACHE_PREFIX, hsaHeathCareUnitMembersCacheExpirySeconds);
+    }
 
-  @Bean
-  Cache hsaEmployeeCache() {
-    return newHsaCache(HSA_EMPLOYEE_CACHE_PREFIX, hsaEmployeeCacheExpirySeconds);
-  }
+    @Bean
+    Cache hsaEmployeeCache() {
+        return newHsaCache(HSA_EMPLOYEE_CACHE_PREFIX, hsaEmployeeCacheExpirySeconds);
+    }
 
-  private Cache newHsaCache(String prefix, String expiry) {
-    return redisCacheOptionsSetter.createCache(prefix + appName, expiry);
-  }
+    private Cache newHsaCache(String prefix, String expiry) {
+        return redisCacheOptionsSetter.createCache(prefix + appName, expiry);
+    }
 
-  @Bean
-  CacheResolver hsaCacheResolver() {
-    return new CacheResolver() {
-      @Override
-      public Collection<? extends Cache> resolveCaches(CacheOperationInvocationContext<?> context) {
-        if (context.getMethod().getReturnType() == UnitType.class) {
-          return Collections.singleton(hsaUnitCache());
-        }
-        if (context.getMethod().getReturnType() == HealthCareUnitType.class) {
-          return Collections.singleton(hsaCareUnitCache());
-        }
-        if (context.getMethod().getReturnType() == HealthCareUnitMembersType.class) {
-          return Collections.singleton(hsaCareUnitMemberCache());
-        }
+    @Bean
+    CacheResolver hsaCacheResolver() {
+        return new CacheResolver() {
+            @Override
+            public Collection<? extends Cache> resolveCaches(CacheOperationInvocationContext<?> context) {
+                if (context.getMethod().getReturnType() == UnitType.class) {
+                    return Collections.singleton(hsaUnitCache());
+                }
+                if (context.getMethod().getReturnType() == HealthCareUnitType.class) {
+                    return Collections.singleton(hsaCareUnitCache());
+                }
+                if (context.getMethod().getReturnType() == HealthCareUnitMembersType.class) {
+                    return Collections.singleton(hsaCareUnitMemberCache());
+                }
 
-        if (context.getMethod().getReturnType() == List.class) {
-          ParameterizedType parameterizedReturnType = (ParameterizedType) context.getMethod().getGenericReturnType();
-          Type[] actualTypeArguments = parameterizedReturnType.getActualTypeArguments();
-          if (actualTypeArguments.length == 1) {
-            if (actualTypeArguments[0] == PersonInformationType.class) {
-              return Collections.singleton(hsaEmployeeCache());
+                if (context.getMethod().getReturnType() == List.class) {
+                    ParameterizedType parameterizedReturnType = (ParameterizedType) context.getMethod().getGenericReturnType();
+                    Type[] actualTypeArguments = parameterizedReturnType.getActualTypeArguments();
+                    if (actualTypeArguments.length == 1) {
+                        if (actualTypeArguments[0] == PersonInformationType.class) {
+                            return Collections.singleton(hsaEmployeeCache());
+                        }
+                    }
+                }
+
+                return Collections.emptyList();
             }
-          }
-        }
-
-        return Collections.emptyList();
-      }
-    };
-  }
+        };
+    }
 }

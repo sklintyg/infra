@@ -1,15 +1,15 @@
 {
-    "sekretessmarkering": "N",
-    "personpost": {
-        "personId": "199008252398",
-        "namn": {
-            "fornamn": "Oskar II",
-            "efternamn": "Johansson"
-        },
-        "folkbokforingsadress": {
-            "utdelningsadress2": "XXXXXXXX",
-            "postNr": 99999,
-            "postort": "XXXXXXXX"
-        }
+  "sekretessmarkering": "N",
+  "personpost": {
+    "personId": "199008252398",
+    "namn": {
+      "fornamn": "Oskar II",
+      "efternamn": "Johansson"
+    },
+    "folkbokforingsadress": {
+      "utdelningsadress2": "XXXXXXXX",
+      "postNr": 99999,
+      "postort": "XXXXXXXX"
     }
+  }
 }

@@ -24,13 +24,13 @@ import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
 
 /**
- * Note: Avoid using this class directly from external applications. Use
- * {@link se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService}
- * instead.
+ * Note: Avoid using this class directly from external applications.
+ * Use {@link se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService} instead.
  *
  * Created by eriklupander on 2015-12-03.
  */
 public interface OrganizationUnitService {
+
     UnitType getUnit(String unitHsaId) throws HsaServiceCallException;
 
     HealthCareUnitType getHealthCareUnit(String hsaId) throws HsaServiceCallException;

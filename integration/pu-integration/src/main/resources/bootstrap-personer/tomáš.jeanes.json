@@ -1,1 +1,26 @@
-{"addressInformation":{"residentialAddress":{"city":"Str\u00f6msund","postalAddress1":"Lindhagsgatan 76","postalCode":83396}},"name":{"givenName":{"name":"Tom\u00e1\u0161"},"middleName":{"name":"Nikolaus"},"surname":{"name":"Jeanes"}},"personalIdentity":{"extension":"195205162331"},"primaryIdentity":false,"protectedPersonIndicator":false,"testIndicator":false}
+{
+  "addressInformation": {
+    "residentialAddress": {
+      "city": "Str\u00f6msund",
+      "postalAddress1": "Lindhagsgatan 76",
+      "postalCode": 83396
+    }
+  },
+  "name": {
+    "givenName": {
+      "name": "Tom\u00e1\u0161"
+    },
+    "middleName": {
+      "name": "Nikolaus"
+    },
+    "surname": {
+      "name": "Jeanes"
+    }
+  },
+  "personalIdentity": {
+    "extension": "195205162331"
+  },
+  "primaryIdentity": false,
+  "protectedPersonIndicator": false,
+  "testIndicator": false
+}

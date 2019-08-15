@@ -21,8 +21,8 @@ package se.inera.intyg.infra.logmessages;
 import java.io.Serializable;
 
 /**
- * Defines a single PDL logged "resource", e.g. which patient on which care unit that was logged and what
- * type of information ({@link ResourceType}) that was logged about the patient.
+ * Defines a single PDL logged "resource", e.g. which patient on which care unit that was logged and what type of information ({@link
+ * ResourceType}) that was logged about the patient.
  *
  * Created by eriklupander on 2016-03-02.
  */

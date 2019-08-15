@@ -18,9 +18,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:cache="http://www.springframework.org/schema/cache" xmlns:util="http://www.springframework.org/schema/util"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
   <!-- <cache:annotation-driven/>  -->
   <bean name="props" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">
@@ -41,11 +39,11 @@
   <bean class="se.inera.intyg.infra.integration.pu.stub.GetPersonsForProfileWsStub"/>
 
   <beans profile="prod">
-    <bean id="puValidatorProd" class="se.inera.intyg.infra.integration.pu.services.validator.ProdPUResponseValidator" />
+    <bean id="puValidatorProd" class="se.inera.intyg.infra.integration.pu.services.validator.ProdPUResponseValidator"/>
   </beans>
 
   <beans profile="!prod">
-    <bean id="puValidatorTest" class="se.inera.intyg.infra.integration.pu.services.validator.TestPUResponseValidator" />
+    <bean id="puValidatorTest" class="se.inera.intyg.infra.integration.pu.services.validator.TestPUResponseValidator"/>
   </beans>
 
 </beans>

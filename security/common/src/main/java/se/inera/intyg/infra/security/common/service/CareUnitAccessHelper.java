@@ -18,14 +18,13 @@
  */
 package se.inera.intyg.infra.security.common.service;
 
+import java.util.HashSet;
+import java.util.Set;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.security.common.model.IntygUser;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Helper class for checking whether a {@link IntygUser} has access to a given vardenhet/mottagning.
@@ -40,9 +39,8 @@ public final class CareUnitAccessHelper {
     }
 
     /**
-     * Since the WebCertUser#getValdVardenhet may either return a
-     * {@link se.inera.intyg.infra.integration.hsa.model.Vardenhet} or a
-     * {@link se.inera.intyg.infra.integration.hsa.model.Mottagning}, this method can be used to determine if:
+     * Since the WebCertUser#getValdVardenhet may either return a {@link se.inera.intyg.infra.integration.hsa.model.Vardenhet} or a {@link
+     * se.inera.intyg.infra.integration.hsa.model.Mottagning}, this method can be used to determine if:
      *
      * <ul>
      * <li>If the selectedVardenhet is a Vardenhet: The supplied enhetsId is for the Vardenhet or one of its
@@ -51,10 +49,8 @@ public final class CareUnitAccessHelper {
      * its parent Vardenhet or one of the sibling Mottagningar.</li>
      * </ul>
      *
-     * @param enhetsId
-     *            HSA-id of a vardenhet or mottagning.
-     * @return
-     *         true if match is found.
+     * @param enhetsId HSA-id of a vardenhet or mottagning.
+     * @return true if match is found.
      */
     public static boolean userIsLoggedInOnEnhetOrUnderenhet(IntygUser user, String enhetsId) {
 

@@ -19,7 +19,6 @@
 package se.inera.intyg.infra.integration.hsa.stub;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.riv.infrastructure.directory.organization.gethealthcareunit.v1.rivtabp21.GetHealthCareUnitResponderInterface;
@@ -75,7 +74,7 @@ public class GetHealthCareUnitResponderStub implements GetHealthCareUnitResponde
         }
 
         responseType
-                .setResultText("HsaServiceStub returned NULL Mottagning for hsaId: '" + parameters.getHealthCareUnitMemberHsaId() + "'");
+            .setResultText("HsaServiceStub returned NULL Mottagning for hsaId: '" + parameters.getHealthCareUnitMemberHsaId() + "'");
         responseType.setResultCode(ResultCodeEnum.ERROR);
         return responseType;
     }

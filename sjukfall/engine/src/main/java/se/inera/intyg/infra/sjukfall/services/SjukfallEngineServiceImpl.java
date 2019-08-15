@@ -18,6 +18,13 @@
  */
 package se.inera.intyg.infra.sjukfall.services;
 
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,23 +36,15 @@ import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.infra.sjukfall.dto.Patient;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallPatient;
 import se.inera.intyg.infra.sjukfall.dto.Vardenhet;
 import se.inera.intyg.infra.sjukfall.dto.Vardgivare;
-import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetCreator;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetResolver;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygPatientCreator;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygPatientResolver;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallLangdCalculator;
-
-import java.time.Clock;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Magnus Ekstrand on 2017-02-10.
@@ -75,7 +74,7 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         LocalDate aktivtDatum = parameters.getAktivtDatum();
 
         Map<String, List<SjukfallIntyg>> resolvedIntygsData =
-                resolverEnhet.resolve(intygsData, parameters);
+            resolverEnhet.resolve(intygsData, parameters);
 
         // Assemble SjukfallEnhet objects
         List<SjukfallEnhet> result = assembleSjukfallEnhetList(resolvedIntygsData, aktivtDatum);
@@ -92,7 +91,7 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         LocalDate aktivtDatum = parameters.getAktivtDatum();
 
         Map<Integer, List<SjukfallIntyg>> resolvedIntygsData =
-                resolverPatient.resolve(intygData, maxIntygsGlapp, aktivtDatum);
+            resolverPatient.resolve(intygData, maxIntygsGlapp, aktivtDatum);
 
         // Reverse order since we need the information in descending order
 
@@ -102,7 +101,6 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         LOG.debug("...stop calculation of sjukfall for a patient.");
         return result;
     }
-
 
     // package scope
 
@@ -180,8 +178,8 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         LOG.debug("  - Assembling 'sjukfall for healt care unit'");
 
         return intygsData.entrySet().stream()
-                .map(e -> toSjukfallEnhet(e.getValue(), aktivtDatum))
-                .collect(Collectors.toList());
+            .map(e -> toSjukfallEnhet(e.getValue(), aktivtDatum))
+            .collect(Collectors.toList());
     }
 
     private List<SjukfallPatient> assembleSjukfallPatientList(Map<Integer, List<SjukfallIntyg>> intygsData, LocalDate aktivtDatum) {
@@ -204,15 +202,15 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
 
         // 1. Find the active object
         SjukfallIntyg aktivtIntyg = list.stream()
-                .filter(SjukfallIntyg::isAktivtIntyg)
-                .findFirst()
-                .orElse(null);
+            .filter(SjukfallIntyg::isAktivtIntyg)
+            .findFirst()
+            .orElse(null);
 
         if (aktivtIntyg == null) {
             aktivtIntyg = list.stream()
-                    .filter(SjukfallIntyg::isNyligenAvslutat)
-                    .findFirst()
-                    .orElseThrow(() -> new SjukfallEngineServiceException("Unable to find a 'aktivt eller nyligen avslutat intyg'"));
+                .filter(SjukfallIntyg::isNyligenAvslutat)
+                .findFirst()
+                .orElseThrow(() -> new SjukfallEngineServiceException("Unable to find a 'aktivt eller nyligen avslutat intyg'"));
         }
 
         // 2. Build sjukfall for enhet object
@@ -234,10 +232,10 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
     private Integer getAktivGrad(List<Formaga> list, LocalDate aktivtDatum) {
         LOG.debug("  - Lookup 'aktiv grad'");
         return list.stream()
-                .filter(f -> f.getStartdatum().compareTo(aktivtDatum) < 1 && f.getSlutdatum().compareTo(aktivtDatum) > -1)
-                .findFirst()
-                .orElseThrow(() -> new SjukfallEngineServiceException("Unable to find an active 'arbetsförmåga'"))
-                .getNedsattning();
+            .filter(f -> f.getStartdatum().compareTo(aktivtDatum) < 1 && f.getSlutdatum().compareTo(aktivtDatum) > -1)
+            .findFirst()
+            .orElseThrow(() -> new SjukfallEngineServiceException("Unable to find an active 'arbetsförmåga'"))
+            .getNedsattning();
     }
 
     private List<Integer> getGrader(List<Formaga> list) {

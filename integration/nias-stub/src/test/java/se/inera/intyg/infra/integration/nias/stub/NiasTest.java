@@ -18,16 +18,12 @@
  */
 package se.inera.intyg.infra.integration.nias.stub;
 
-import com.secmaker.netid.nias.v1.ResultCollect;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import se.inera.intyg.infra.integration.nias.stub.model.OngoingSigning;
-import se.inera.intyg.infra.integration.nias.stub.util.Keys;
-import se.inera.intyg.infra.integration.nias.stub.util.StubSignUtil;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
+import com.secmaker.netid.nias.v1.ResultCollect;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -36,11 +32,14 @@ import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import se.inera.intyg.infra.integration.nias.stub.model.OngoingSigning;
+import se.inera.intyg.infra.integration.nias.stub.util.Keys;
+import se.inera.intyg.infra.integration.nias.stub.util.StubSignUtil;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NiasTest {
@@ -58,7 +57,7 @@ public class NiasTest {
         Keys keys = StubSignUtil.loadFromKeystore();
 
         when(niasServiceStub.get(anyString()))
-                .thenReturn(new OngoingSigning("ref", "19121212-1212", null, "my digest", null, NiasSignatureStatus.COMPLETE));
+            .thenReturn(new OngoingSigning("ref", "19121212-1212", null, "my digest", null, NiasSignatureStatus.COMPLETE));
         ResultCollect collectedResult = testee.collect("ref");
 
         try {

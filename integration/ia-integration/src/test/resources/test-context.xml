@@ -18,8 +18,8 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:http="http://cxf.apache.org/transports/http/configuration"
-  xsi:schemaLocation="
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:http="http://cxf.apache.org/transports/http/configuration"
+    xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd
        ">
@@ -33,7 +33,7 @@
   </bean>
 
   <bean class="se.inera.intyg.infra.rediscache.core.EmbeddedCacheConfiguration"/>
-  <bean id="iaBannerService" class="se.inera.intyg.infra.integration.ia.services.IABannerServiceImpl" />
-  <bean class="se.inera.intyg.infra.integration.ia.cache.IaCacheConfiguration" />
+  <bean id="iaBannerService" class="se.inera.intyg.infra.integration.ia.services.IABannerServiceImpl"/>
+  <bean class="se.inera.intyg.infra.integration.ia.cache.IaCacheConfiguration"/>
 
 </beans>

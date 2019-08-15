@@ -39,7 +39,7 @@ public class UserAuthorizationInfo {
     private Map<String, String> commissionNamePerCareUnit;
 
     public UserAuthorizationInfo(UserCredentials userCredentials, List<Vardgivare> vardgivare,
-            Map<String, String> commissionNamePerCareUnit) {
+        Map<String, String> commissionNamePerCareUnit) {
         this.userCredentials = userCredentials;
         this.vardgivare = vardgivare;
         this.commissionNamePerCareUnit = commissionNamePerCareUnit;

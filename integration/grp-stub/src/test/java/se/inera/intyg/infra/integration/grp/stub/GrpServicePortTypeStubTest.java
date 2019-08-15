@@ -18,6 +18,14 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.when;
+
+import java.util.UUID;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -33,20 +41,12 @@ import se.funktionstjanster.grp.v1.GrpServicePortType;
 import se.funktionstjanster.grp.v1.OrderResponseType;
 import se.funktionstjanster.grp.v1.ProgressStatusType;
 
-import java.util.UUID;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.when;
-
 /**
  * @author Magnus Ekstrand on 2017-05-17.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GrpServicePortTypeStubTest {
+
     private final String AUTHENTICATEREQUEST_VALIDATIONMESSAGE = "AuthenticateRequestType cannot be null";
     private final String AUTHENTICATEREQUEST_ARGUMENTS_VALIDATIONMESSAGE = "A policy must be supplied, " +
         "A provider must be supplied";
