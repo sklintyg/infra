@@ -31,7 +31,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 public class InternalApiFilter extends OncePerRequestFilter {
 
-    private static final int NOT_FOUND = 404;
+    private static final int FORBIDDEN = 403;
 
     @Value("${internal.api.port}")
     private int internalApiPort;
@@ -43,7 +43,7 @@ public class InternalApiFilter extends OncePerRequestFilter {
         if (request.getLocalPort() == internalApiPort) {
             filterChain.doFilter(request, response);
         } else {
-            response.sendError(NOT_FOUND);
+            response.sendError(FORBIDDEN);
         }
     }
 }
