@@ -18,10 +18,10 @@
  */
 package se.inera.intyg.infra.xmldsig.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.SourceLocator;
@@ -32,10 +32,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 
 public final class XsltUtil {
 
@@ -54,7 +53,7 @@ public final class XsltUtil {
 
             // Use the factory to create a template containing the xsl file
             Templates template = factory.newTemplates(new StreamSource(
-                    cpr.getInputStream()));
+                cpr.getInputStream()));
 
             // Use the template to create a transformer
             Transformer xformer = template.newTransformer();

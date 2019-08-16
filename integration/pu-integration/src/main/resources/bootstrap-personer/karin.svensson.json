@@ -1,1 +1,26 @@
-{"addressInformation":{"residentialAddress":{"city":"H\u00e4ssleholm","postalAddress1":"L\u00e5ngv\u00e4gen 123","postalCode":10223}},"name":{"givenName":{"name":"Karin"},"middleName":{"name":"Eva"},"surname":{"name":"Svensson"}},"personalIdentity":{"extension":"195506072882"},"primaryIdentity":false,"protectedPersonIndicator":false,"testIndicator":false}
+{
+  "addressInformation": {
+    "residentialAddress": {
+      "city": "H\u00e4ssleholm",
+      "postalAddress1": "L\u00e5ngv\u00e4gen 123",
+      "postalCode": 10223
+    }
+  },
+  "name": {
+    "givenName": {
+      "name": "Karin"
+    },
+    "middleName": {
+      "name": "Eva"
+    },
+    "surname": {
+      "name": "Svensson"
+    }
+  },
+  "personalIdentity": {
+    "extension": "195506072882"
+  },
+  "primaryIdentity": false,
+  "protectedPersonIndicator": false,
+  "testIndicator": false
+}

@@ -18,6 +18,14 @@
  */
 package se.inera.intyg.infra.integration.hsa.caching;
 
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.aop.framework.Advised;
@@ -31,14 +39,6 @@ import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresp
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
-
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by eriklupander on 2016-10-19.
@@ -55,9 +55,12 @@ public class HsaOrganizationServiceCachingTest {
     @Test
     public void testHealthCareUnitMembersUsesCaching() throws Exception {
         GetHealthCareUnitMembersResponderStub stub = mock(GetHealthCareUnitMembersResponderStub.class);
-        when(stub.getHealthCareUnitMembers(any(), any(GetHealthCareUnitMembersType.class))).thenReturn(buildHealthCareUnitMembersResponse());
+        when(stub.getHealthCareUnitMembers(any(), any(GetHealthCareUnitMembersType.class)))
+            .thenReturn(buildHealthCareUnitMembersResponse());
 
-        ReflectionTestUtils.setField(((Advised) organizationUnitService).getTargetSource().getTarget(), "getHealthCareUnitMembersResponderInterface", stub);
+        ReflectionTestUtils
+            .setField(((Advised) organizationUnitService).getTargetSource().getTarget(), "getHealthCareUnitMembersResponderInterface",
+                stub);
 
         HealthCareUnitMembersType healthCareUnitMembers = organizationUnitService.getHealthCareUnitMembers(UNIT_HSA_ID);
         assertNotNull(healthCareUnitMembers);

@@ -18,18 +18,17 @@
  */
 package se.inera.intyg.infra.loggtjanststub;
 
+import java.util.List;
+import javax.xml.ws.WebServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.riv.informationsecurity.auditing.log.StoreLog.v2.rivtabp21.StoreLogResponderInterface;
-import se.riv.informationsecurity.auditing.log.StoreLogResponder.v2.StoreLogType;
 import se.riv.informationsecurity.auditing.log.StoreLogResponder.v2.StoreLogResponseType;
-import se.riv.informationsecurity.auditing.log.v2.ResultType;
+import se.riv.informationsecurity.auditing.log.StoreLogResponder.v2.StoreLogType;
 import se.riv.informationsecurity.auditing.log.v2.LogType;
 import se.riv.informationsecurity.auditing.log.v2.ResultCodeType;
-
-import javax.xml.ws.WebServiceException;
-import java.util.List;
+import se.riv.informationsecurity.auditing.log.v2.ResultType;
 
 
 /**
@@ -98,7 +97,6 @@ public class StoreLogStubResponder implements StoreLogResponderInterface {
         response.setResult(result);
         return response;
     }
-
 
 
 }

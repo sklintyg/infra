@@ -19,10 +19,9 @@
 package se.inera.intyg.infra.dynamiclink.service;
 
 
-import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
-
 import java.util.List;
 import java.util.Map;
+import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 
 /**
  * Created by eriklupander on 2017-05-03.
@@ -30,7 +29,9 @@ import java.util.Map;
 public interface DynamicLinkService {
 
     Map<String, DynamicLink> getAllAsMap();
+
     List<DynamicLink> getAllAsList();
+
     DynamicLink get(String key);
 
 }

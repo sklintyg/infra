@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.infra.rediscache.core;
 
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
+import javax.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.EnableCaching;
@@ -26,11 +30,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import redis.embedded.RedisServer;
-
-import javax.annotation.PreDestroy;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
 
 
 /**
@@ -57,11 +56,11 @@ public class EmbeddedCacheConfiguration extends BasicCacheConfiguration {
         final AtomicInteger port = new AtomicInteger(Integer.parseInt(redisPort));
 
         redisServer = Stream.generate(() -> port.getAndIncrement())
-                .limit(NUMBER_OF_PORTS_TO_TRY)
-                .map(this::startServer)
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Failed to start embedded redis server"));
+            .limit(NUMBER_OF_PORTS_TO_TRY)
+            .map(this::startServer)
+            .filter(Objects::nonNull)
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Failed to start embedded redis server"));
 
         return redisServer;
     }
@@ -69,9 +68,9 @@ public class EmbeddedCacheConfiguration extends BasicCacheConfiguration {
     //
     RedisServer startServer(final int port) {
         final RedisServer redisServer = RedisServer.builder()
-                .port(port)
-                .setting("maxmemory 512M")
-                .build();
+            .port(port)
+            .setting("maxmemory 512M")
+            .build();
         try {
             redisServer.start();
             LOG.info("Embedded redis server started and listens on port {}", port);

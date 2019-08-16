@@ -18,13 +18,12 @@
  */
 package se.inera.intyg.infra.integration.postnummer.repository;
 
-import org.springframework.stereotype.Component;
-import se.inera.intyg.infra.integration.postnummer.model.Omrade;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Component;
+import se.inera.intyg.infra.integration.postnummer.model.Omrade;
 
 @Component
 public class PostnummerRepositoryImpl implements PostnummerRepository {

@@ -44,72 +44,72 @@ import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 @Service
 public class EmployeeServiceBean implements EmployeeService {
 
-  private static final Logger LOG = LoggerFactory.getLogger(EmployeeServiceBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EmployeeServiceBean.class);
 
-  @Autowired
-  private GetEmployeeIncludingProtectedPersonResponderInterface getEmployeeIncludingProtectedPersonResponderInterface;
+    @Autowired
+    private GetEmployeeIncludingProtectedPersonResponderInterface getEmployeeIncludingProtectedPersonResponderInterface;
 
-  @Value("${infrastructure.directory.logicalAddress}")
-  private String logicalAddress;
+    @Value("${infrastructure.directory.logicalAddress}")
+    private String logicalAddress;
 
-  @Override
-  @Cacheable(cacheResolver = "hsaCacheResolver", key = "#personHsaId + #personalIdentityNumber + #searchBase", unless = "#result == null")
-  public List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase)
-      throws HsaServiceCallException {
+    @Override
+    @Cacheable(cacheResolver = "hsaCacheResolver", key = "#personHsaId + #personalIdentityNumber + #searchBase", unless = "#result == null")
+    public List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase)
+        throws HsaServiceCallException {
 
-    LOG.debug("Getting info from HSA for person '{}'", personHsaId);
+        LOG.debug("Getting info from HSA for person '{}'", personHsaId);
 
-    // Exakt ett av fälten personHsaId och personalIdentityNumber ska anges.
-    if (StringUtils.isEmpty(personHsaId) && StringUtils.isEmpty(personalIdentityNumber)) {
-      throw new IllegalArgumentException(
-          "Inget av argumenten personHsaId och personalIdentityNumber är satt. Ett av dem måste ha ett värde.");
-    }
-
-    if (!StringUtils.isEmpty(personHsaId) && !StringUtils.isEmpty(personalIdentityNumber)) {
-      throw new IllegalArgumentException("Endast ett av argumenten personHsaId och personalIdentityNumber får vara satt.");
-    }
-
-    GetEmployeeIncludingProtectedPersonType employeeType = createEmployeeType(personHsaId, personalIdentityNumber, searchBase);
-    return getEmployee(logicalAddress, employeeType);
-  }
-
-  private List<PersonInformationType> getEmployee(String logicalAddress, GetEmployeeIncludingProtectedPersonType employeeType)
-      throws HsaServiceCallException {
-
-    GetEmployeeIncludingProtectedPersonResponseType response;
-
-    try {
-      response = getEmployeeIncludingProtectedPersonResponderInterface.getEmployeeIncludingProtectedPerson(logicalAddress,
-          employeeType);
-
-      // check whether call was successful or not
-      if (response.getResultCode() == ResultCodeEnum.ERROR) {
-        if (response.getPersonInformation() == null || response.getPersonInformation().isEmpty()) {
-          LOG.error("Failed getting employee information from HSA; personHsaId = '{}'. Result text: {}",
-              employeeType.getPersonHsaId(),
-              response.getResultText());
-          throw new HsaServiceCallException(response.getResultText());
-        } else {
-          LOG.warn("Failed getting employee information from HSA; personHsaId = '{}'. Result text: {}",
-              employeeType.getPersonHsaId(),
-              response.getResultText());
-          LOG.warn("Continuing anyway because information was delivered with the ERROR code.");
+        // Exakt ett av fälten personHsaId och personalIdentityNumber ska anges.
+        if (StringUtils.isEmpty(personHsaId) && StringUtils.isEmpty(personalIdentityNumber)) {
+            throw new IllegalArgumentException(
+                "Inget av argumenten personHsaId och personalIdentityNumber är satt. Ett av dem måste ha ett värde.");
         }
-      }
-    } catch (SOAPFaultException e) {
-      throw new HsaServiceCallException(e);
+
+        if (!StringUtils.isEmpty(personHsaId) && !StringUtils.isEmpty(personalIdentityNumber)) {
+            throw new IllegalArgumentException("Endast ett av argumenten personHsaId och personalIdentityNumber får vara satt.");
+        }
+
+        GetEmployeeIncludingProtectedPersonType employeeType = createEmployeeType(personHsaId, personalIdentityNumber, searchBase);
+        return getEmployee(logicalAddress, employeeType);
     }
 
-    return response.getPersonInformation();
-  }
+    private List<PersonInformationType> getEmployee(String logicalAddress, GetEmployeeIncludingProtectedPersonType employeeType)
+        throws HsaServiceCallException {
 
-  private GetEmployeeIncludingProtectedPersonType createEmployeeType(String personHsaId, String personalIdentityNumber,
-      String searchBase) {
-    GetEmployeeIncludingProtectedPersonType employeeType = new GetEmployeeIncludingProtectedPersonType();
-    employeeType.setPersonHsaId(personHsaId);
-    employeeType.setPersonalIdentityNumber(personalIdentityNumber);
-    employeeType.setSearchBase(searchBase);
+        GetEmployeeIncludingProtectedPersonResponseType response;
 
-    return employeeType;
-  }
+        try {
+            response = getEmployeeIncludingProtectedPersonResponderInterface.getEmployeeIncludingProtectedPerson(logicalAddress,
+                employeeType);
+
+            // check whether call was successful or not
+            if (response.getResultCode() == ResultCodeEnum.ERROR) {
+                if (response.getPersonInformation() == null || response.getPersonInformation().isEmpty()) {
+                    LOG.error("Failed getting employee information from HSA; personHsaId = '{}'. Result text: {}",
+                        employeeType.getPersonHsaId(),
+                        response.getResultText());
+                    throw new HsaServiceCallException(response.getResultText());
+                } else {
+                    LOG.warn("Failed getting employee information from HSA; personHsaId = '{}'. Result text: {}",
+                        employeeType.getPersonHsaId(),
+                        response.getResultText());
+                    LOG.warn("Continuing anyway because information was delivered with the ERROR code.");
+                }
+            }
+        } catch (SOAPFaultException e) {
+            throw new HsaServiceCallException(e);
+        }
+
+        return response.getPersonInformation();
+    }
+
+    private GetEmployeeIncludingProtectedPersonType createEmployeeType(String personHsaId, String personalIdentityNumber,
+        String searchBase) {
+        GetEmployeeIncludingProtectedPersonType employeeType = new GetEmployeeIncludingProtectedPersonType();
+        employeeType.setPersonHsaId(personHsaId);
+        employeeType.setPersonalIdentityNumber(personalIdentityNumber);
+        employeeType.setSearchBase(searchBase);
+
+        return employeeType;
+    }
 }

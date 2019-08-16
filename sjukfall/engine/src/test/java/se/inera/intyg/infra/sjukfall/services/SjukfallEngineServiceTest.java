@@ -18,6 +18,20 @@
  */
 package se.inera.intyg.infra.sjukfall.services;
 
+import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,27 +51,13 @@ import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetCreator;
 import se.inera.intyg.infra.sjukfall.engine.SjukfallIntygEnhetResolver;
 import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 
-import java.io.IOException;
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 
 /**
  * Created by martin on 11/02/16.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SjukfallEngineServiceTest {
+
     private static final String LOCATION_INTYGSDATA = "classpath:SjukfallServiceTest/intygsdata-engine.csv";
 
     private static List<IntygData> intygDataList;
@@ -151,13 +151,13 @@ public class SjukfallEngineServiceTest {
     @Test
     public void testCalculateSjukfallEnhet11() {
         assertSjukfallEnhet("19630206-2846", "2016-02-01", "2016-03-04", 4, 29,
-                Arrays.asList("fall-11-intyg-1", "fall-11-intyg-2", "fall-11-intyg-3", "fall-11-intyg-4"));
+            Arrays.asList("fall-11-intyg-1", "fall-11-intyg-2", "fall-11-intyg-3", "fall-11-intyg-4"));
     }
 
     @Test
     public void testCalculateSjukfallEnhet12() {
         assertSjukfallEnhet("19710301-1032", "2016-02-15", "2016-03-04", 3, 19,
-                Arrays.asList("fall-12-intyg-2", "fall-12-intyg-3", "fall-12-intyg-4"));
+            Arrays.asList("fall-12-intyg-2", "fall-12-intyg-3", "fall-12-intyg-4"));
     }
 
     @Test
@@ -176,12 +176,16 @@ public class SjukfallEngineServiceTest {
     private static void assertInit(List<?> list, int expectedListSize) {
         assertTrue("Expected " + expectedListSize + " but was " + list.size(), list.size() == expectedListSize);
     }
-    private static void assertSjukfallEnhet(String patientId, String startDatum, String slutDatum, int antalIntyg, int effektivSjukskrivningslangd) {
-        assertSjukfallEnhet(patientId,startDatum,slutDatum,antalIntyg,effektivSjukskrivningslangd, null);
+
+    private static void assertSjukfallEnhet(String patientId, String startDatum, String slutDatum, int antalIntyg,
+        int effektivSjukskrivningslangd) {
+        assertSjukfallEnhet(patientId, startDatum, slutDatum, antalIntyg, effektivSjukskrivningslangd, null);
     }
-    private static void assertSjukfallEnhet(String patientId, String startDatum, String slutDatum, int antalIntyg, int effektivSjukskrivningslangd, List<String> expectedIntygsIds) {
+
+    private static void assertSjukfallEnhet(String patientId, String startDatum, String slutDatum, int antalIntyg,
+        int effektivSjukskrivningslangd, List<String> expectedIntygsIds) {
         SjukfallEnhet sjukfallEnhet = sjukfallListUnit.stream().
-                filter(o -> o.getPatient().getId().equals(patientId)).findFirst().orElse(null);
+            filter(o -> o.getPatient().getId().equals(patientId)).findFirst().orElse(null);
 
         if (antalIntyg == 0) {
             assertNull(sjukfallEnhet);
@@ -200,7 +204,7 @@ public class SjukfallEngineServiceTest {
     }
 
     private static void assertSjukfallPatient(SjukfallPatient sjukfallPatient, String startDatum, String slutDatum,
-                                              int antalIntyg, int effektivSjukskrivningslangd) {
+        int antalIntyg, int effektivSjukskrivningslangd) {
 
         assertTrue(sjukfallPatient.getStart().isEqual(LocalDate.parse(startDatum)));
         assertTrue(sjukfallPatient.getSlut().isEqual(LocalDate.parse(slutDatum)));
@@ -244,7 +248,7 @@ public class SjukfallEngineServiceTest {
     private static void assertGrader(String intygId, List<Integer> grader) {
         IntygData data = intygDataList.stream().filter(obj -> obj.getIntygId().equalsIgnoreCase(intygId)).findFirst().get();
         List<Formaga> formagor =
-                data.getFormagor().stream().sorted(Comparator.comparing(Formaga::getStartdatum)).collect(Collectors.toList());
+            data.getFormagor().stream().sorted(Comparator.comparing(Formaga::getStartdatum)).collect(Collectors.toList());
 
         assertTrue(grader.size() == formagor.size());
 
@@ -259,6 +263,7 @@ public class SjukfallEngineServiceTest {
     }
 
     private class SjukfallEngineServiceImplTest extends SjukfallEngineServiceImpl {
+
         public SjukfallEngineServiceImplTest() {
             super();
             // 2016-02-11

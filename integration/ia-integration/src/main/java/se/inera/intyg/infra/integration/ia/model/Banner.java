@@ -19,17 +19,17 @@
 
 package se.inera.intyg.infra.integration.ia.model;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class Banner implements Serializable {
+
     private static final long serialVersionUID = 1L;
     public static final String FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
@@ -54,7 +54,7 @@ public class Banner implements Serializable {
     }
 
     public Banner(UUID id, LocalDateTime createdAt, Application application, String message, LocalDateTime displayFrom,
-                  LocalDateTime displayTo, BannerPriority priority) {
+        LocalDateTime displayTo, BannerPriority priority) {
         this.id = id;
         this.createdAt = createdAt;
         this.application = application;

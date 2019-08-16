@@ -1,1 +1,24 @@
-{"personalIdentity":{"extension":"199008252398"},"protectedPersonIndicator":false,"testIndicator":true,"primaryIdentity":false,"name":{"givenName":{"name":"Oskar II"},"middleName":{},"surname":{"name":"Johansson"}},"addressInformation":{"residentialAddress":{"postalAddress2":"XXXXXXXX","postalCode":99999,"city":"XXXXXXXX"}}}
+{
+  "personalIdentity": {
+    "extension": "199008252398"
+  },
+  "protectedPersonIndicator": false,
+  "testIndicator": true,
+  "primaryIdentity": false,
+  "name": {
+    "givenName": {
+      "name": "Oskar II"
+    },
+    "middleName": {},
+    "surname": {
+      "name": "Johansson"
+    }
+  },
+  "addressInformation": {
+    "residentialAddress": {
+      "postalAddress2": "XXXXXXXX",
+      "postalCode": 99999,
+      "city": "XXXXXXXX"
+    }
+  }
+}

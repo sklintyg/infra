@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_ALIAS;
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_NAME;
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_PASSWORD;
+
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.Key;
@@ -60,19 +64,13 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 import se.inera.intyg.infra.xmldsig.util.X509KeySelector;
-
-import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_ALIAS;
-import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_NAME;
-import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_PASSWORD;
 
 public class ReferenceSignatureTester {
 
@@ -91,9 +89,9 @@ public class ReferenceSignatureTester {
         List transforms = new ArrayList();
         //transforms.add(fac.newTransform(
         //        "http://www.w3.org/2001/10/xml-exc-c14n#", (TransformParameterSpec) null));
-       // DOMStructure stylesheet = new DOMStructure(loadXslt("stripparentelement_2.xslt"));
-    //    DOMXSLTTransform stylesheet = new DOMXSLTTransform();
-    //    stylesheet.init(new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripparentelement_2.xslt"))));
+        // DOMStructure stylesheet = new DOMStructure(loadXslt("stripparentelement_2.xslt"));
+        //    DOMXSLTTransform stylesheet = new DOMXSLTTransform();
+        //    stylesheet.init(new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripparentelement_2.xslt"))));
         //   XSLTTransformParameterSpec params = new XSLTTransformParameterSpec(stylesheet);
         transforms.add(fac.newTransform("http://www.w3.org/2001/10/xml-exc-c14n#", (TransformParameterSpec) null));
         /*
@@ -102,8 +100,10 @@ public class ReferenceSignatureTester {
         transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripparentelement_2.xslt")))));
         transforms.add(fac.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null));
         */
-        transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("transforms/stripall.xslt")))));
-        transforms.add(fac.newTransform(Transform.XPATH, new XPathFilterParameterSpec("//intygs-id/extension[text()='ABC123']/../.."))); // 9f02dd2f-f57c-4a73-8190-2fe602cd6e27
+        transforms
+            .add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("transforms/stripall.xslt")))));
+        transforms.add(fac.newTransform(Transform.XPATH,
+            new XPathFilterParameterSpec("//intygs-id/extension[text()='ABC123']/../.."))); // 9f02dd2f-f57c-4a73-8190-2fe602cd6e27
         transforms.add(fac.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null));
 
 
@@ -120,22 +120,22 @@ public class ReferenceSignatureTester {
           </Transform>
          */
         Reference ref = fac.newReference("", fac.newDigestMethod(DigestMethod.SHA256, null),
-                transforms, null, null);
+            transforms, null, null);
 
         SignatureMethod sm = fac.newSignatureMethod("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
-                (SignatureMethodParameterSpec) null);
+            (SignatureMethodParameterSpec) null);
 
         // Create the SignedInfo.
         SignedInfo si = fac.newSignedInfo(fac.newCanonicalizationMethod(CanonicalizationMethod.EXCLUSIVE,
-                (C14NMethodParameterSpec) null),
-                sm,
-                Collections.singletonList(ref));
+            (C14NMethodParameterSpec) null),
+            sm,
+            Collections.singletonList(ref));
 
         KeyStore ks = KeyStore.getInstance("JKS");
         ks.load(new ClassPathResource(FAKE_KEYSTORE_NAME).getInputStream(), FAKE_KEYSTORE_PASSWORD.toCharArray());
 
         KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(FAKE_KEYSTORE_ALIAS,
-                new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
+            new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
         X509Certificate cert = (X509Certificate) keyEntry.getCertificate();
         KeyInfoFactory kif = fac.getKeyInfoFactory();
         List<X509Certificate> x509Content = new ArrayList<>();
@@ -175,7 +175,7 @@ public class ReferenceSignatureTester {
     private void validate(XMLSignatureFactory fac, Document doc) throws Exception {
         Thread.sleep(1000L);
         System.out.println("START VALIDATION\n");
-       // XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
+        // XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
 
         // Find Signature element.
         NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
@@ -227,8 +227,6 @@ public class ReferenceSignatureTester {
     }
 
 
-
-
     public void generateSignatureforResumen(String originalXmlFilePath, KeyStore tokenKeyStore, String pin) throws Exception {
         // Get the XML Document object
         Document doc = null; // getXmlDocument(originalXmlFilePath);
@@ -260,7 +258,7 @@ public class ReferenceSignatureTester {
 
         if (signatureKey_ == null) {
             throw new GeneralSecurityException(
-                    "Found no signature key. Ensure that a valid card is inserted.");
+                "Found no signature key. Ensure that a valid card is inserted.");
         }
 
         XMLSignatureFactory xmlSigFactory = XMLSignatureFactory.getInstance("DOM");
@@ -268,14 +266,14 @@ public class ReferenceSignatureTester {
         SignedInfo signedInfo = null;
         try {
             ref = xmlSigFactory.newReference("", xmlSigFactory.newDigestMethod(DigestMethod.SHA1, null),
-                    Collections.singletonList(xmlSigFactory.newTransform(Transform.ENVELOPED,
-                            (TransformParameterSpec) null)),
-                    null, null);
+                Collections.singletonList(xmlSigFactory.newTransform(Transform.ENVELOPED,
+                    (TransformParameterSpec) null)),
+                null, null);
             signedInfo = xmlSigFactory.newSignedInfo(
-                    xmlSigFactory.newCanonicalizationMethod(CanonicalizationMethod.INCLUSIVE,
-                            (C14NMethodParameterSpec) null),
-                    xmlSigFactory.newSignatureMethod(SignatureMethod.RSA_SHA1, null),
-                    Collections.singletonList(ref));
+                xmlSigFactory.newCanonicalizationMethod(CanonicalizationMethod.INCLUSIVE,
+                    (C14NMethodParameterSpec) null),
+                xmlSigFactory.newSignatureMethod(SignatureMethod.RSA_SHA1, null),
+                Collections.singletonList(ref));
 
         } catch (NoSuchAlgorithmException ex) {
             ex.printStackTrace();

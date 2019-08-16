@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.infra.monitoring.annotation;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import io.prometheus.client.Collector;
 import io.prometheus.client.CollectorRegistry;
 import java.util.Collections;
@@ -30,12 +34,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.infra.monitoring.TestController;
-
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {MonitoringConfiguration.class, TestController.class})
@@ -57,8 +55,8 @@ public class TimeMethodTest {
     public void instrumented_named_method() throws InterruptedException {
 
         final Optional<Collector.MetricFamilySamples> sample = Collections.list(registry.metricFamilySamples()).stream()
-                .filter(s -> TestController.SAMPLE_NAME.equals(s.name))
-                .findFirst();
+            .filter(s -> TestController.SAMPLE_NAME.equals(s.name))
+            .findFirst();
 
         assertTrue(sample.isPresent());
         assertFalse(sample.get().samples.isEmpty());
@@ -69,8 +67,8 @@ public class TimeMethodTest {
     public void instrumented_duplicate_named_method() throws InterruptedException {
 
         final Optional<Collector.MetricFamilySamples> sample = Collections.list(registry.metricFamilySamples()).stream()
-                .filter(s -> s.name.equalsIgnoreCase(TestController.SAMPLE_NAME + "_1"))
-                .findFirst();
+            .filter(s -> s.name.equalsIgnoreCase(TestController.SAMPLE_NAME + "_1"))
+            .findFirst();
 
         assertTrue(sample.isPresent());
         assertFalse(sample.get().samples.isEmpty());
@@ -80,8 +78,8 @@ public class TimeMethodTest {
     @Test
     public void instrumented_unnamed_method() throws InterruptedException {
         final Optional<Collector.MetricFamilySamples> sample = Collections.list(registry.metricFamilySamples()).stream()
-                .filter(s -> s.name.startsWith("api_"))
-                .findFirst();
+            .filter(s -> s.name.startsWith("api_"))
+            .findFirst();
 
         assertTrue(sample.isPresent());
         assertFalse(sample.get().samples.isEmpty());

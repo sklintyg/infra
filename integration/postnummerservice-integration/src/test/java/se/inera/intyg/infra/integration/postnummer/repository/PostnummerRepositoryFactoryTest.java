@@ -25,7 +25,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import se.inera.intyg.infra.integration.postnummer.model.Omrade;
 
 @RunWith(MockitoJUnitRunner.class)

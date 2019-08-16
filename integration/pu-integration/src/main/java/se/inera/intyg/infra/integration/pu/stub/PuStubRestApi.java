@@ -18,12 +18,8 @@
  */
 package se.inera.intyg.infra.integration.pu.stub;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import se.inera.intyg.infra.integration.pu.services.PUService;
-import se.riv.strategicresourcemanagement.persons.person.v3.DeregistrationType;
-import se.riv.strategicresourcemanagement.persons.person.v3.PartialDateType;
-import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -34,8 +30,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import org.springframework.beans.factory.annotation.Autowired;
+import se.inera.intyg.infra.integration.pu.services.PUService;
+import se.riv.strategicresourcemanagement.persons.person.v3.DeregistrationType;
+import se.riv.strategicresourcemanagement.persons.person.v3.PartialDateType;
+import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 
 /**
  * @author eriklupander
@@ -85,7 +84,7 @@ public class PuStubRestApi {
     @Path("/person/{personId}/sekretessmarkerad")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setSekretessmarkerad(@PathParam("personId") String personId,
-            @QueryParam("value") String value) {
+        @QueryParam("value") String value) {
         puService.clearCache();
 
         String xmlValue;
@@ -106,7 +105,7 @@ public class PuStubRestApi {
     @Path("/person/{personId}/avliden")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setAvliden(@PathParam("personId") String personId,
-            @QueryParam("value") String value) {
+        @QueryParam("value") String value) {
         boolean newValue;
         if ("".equals(value) || "true".equalsIgnoreCase(value)) {
             newValue = true;
@@ -126,8 +125,6 @@ public class PuStubRestApi {
 
     /**
      * Use to evict all entries for the PU-cache.
-     *
-     * @return
      */
     @DELETE
     @Path("/cache")

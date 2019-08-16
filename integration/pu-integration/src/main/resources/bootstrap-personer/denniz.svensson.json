@@ -1,1 +1,26 @@
-{"addressInformation":{"residentialAddress":{"city":"Munkfors","postalAddress1":"Ljusnev\u00c3\u00a4gen 23","postalCode":68430}},"name":{"givenName":{"name":"Denniz"},"middleName":{"name":"Anders"},"surname":{"name":"Svensson"}},"personalIdentity":{"extension":"196301022866"},"primaryIdentity":false,"protectedPersonIndicator":false,"testIndicator":false}
+{
+  "addressInformation": {
+    "residentialAddress": {
+      "city": "Munkfors",
+      "postalAddress1": "Ljusnev\u00c3\u00a4gen 23",
+      "postalCode": 68430
+    }
+  },
+  "name": {
+    "givenName": {
+      "name": "Denniz"
+    },
+    "middleName": {
+      "name": "Anders"
+    },
+    "surname": {
+      "name": "Svensson"
+    }
+  },
+  "personalIdentity": {
+    "extension": "196301022866"
+  },
+  "primaryIdentity": false,
+  "protectedPersonIndicator": false,
+  "testIndicator": false
+}

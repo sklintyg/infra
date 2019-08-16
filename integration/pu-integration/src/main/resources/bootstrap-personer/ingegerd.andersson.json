@@ -1,1 +1,26 @@
-{"addressInformation":{"residentialAddress":{"city":"Trollh\u00e4ttan","postalAddress1":"Vadstenav\u00e4gen 12","postalCode":23455}},"name":{"givenName":{"name":"Ingegerd"},"middleName":{"name":"Lisa"},"surname":{"name":"Andersson"}},"personalIdentity":{"extension":"196203233066"},"primaryIdentity":false,"protectedPersonIndicator":false,"testIndicator":false}
+{
+  "addressInformation": {
+    "residentialAddress": {
+      "city": "Trollh\u00e4ttan",
+      "postalAddress1": "Vadstenav\u00e4gen 12",
+      "postalCode": 23455
+    }
+  },
+  "name": {
+    "givenName": {
+      "name": "Ingegerd"
+    },
+    "middleName": {
+      "name": "Lisa"
+    },
+    "surname": {
+      "name": "Andersson"
+    }
+  },
+  "personalIdentity": {
+    "extension": "196203233066"
+  },
+  "primaryIdentity": false,
+  "protectedPersonIndicator": false,
+  "testIndicator": false
+}

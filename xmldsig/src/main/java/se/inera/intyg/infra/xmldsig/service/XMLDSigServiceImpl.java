@@ -18,6 +18,25 @@
  */
 package se.inera.intyg.infra.xmldsig.service;
 
+import java.io.ByteArrayInputStream;
+import java.nio.charset.Charset;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.PostConstruct;
+import javax.xml.crypto.MarshalException;
+import javax.xml.crypto.dsig.CanonicalizationMethod;
+import javax.xml.crypto.dsig.XMLSignature;
+import javax.xml.crypto.dsig.XMLSignatureException;
+import javax.xml.crypto.dsig.XMLSignatureFactory;
+import javax.xml.crypto.dsig.dom.DOMValidateContext;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,26 +50,6 @@ import se.inera.intyg.infra.xmldsig.model.CertificateInfo;
 import se.inera.intyg.infra.xmldsig.model.ValidationResponse;
 import se.inera.intyg.infra.xmldsig.model.ValidationResult;
 import se.inera.intyg.infra.xmldsig.util.X509KeySelector;
-
-import javax.annotation.PostConstruct;
-import javax.xml.crypto.MarshalException;
-import javax.xml.crypto.dsig.CanonicalizationMethod;
-import javax.xml.crypto.dsig.XMLSignature;
-import javax.xml.crypto.dsig.XMLSignatureException;
-import javax.xml.crypto.dsig.XMLSignatureFactory;
-import javax.xml.crypto.dsig.dom.DOMValidateContext;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayInputStream;
-import java.nio.charset.Charset;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Provides Intyg-specific functionality for preparing XMLDSig signatures.
@@ -134,7 +133,7 @@ public class XMLDSigServiceImpl implements XMLDSigService {
         XPath xpath = xpathFactory.newXPath();
         try {
             Node intygsIdNode = (Node) xpath.compile("//*[local-name() = 'intygs-id']/*[local-name() = 'extension']")
-                    .evaluate(node, XPathConstants.NODE);
+                .evaluate(node, XPathConstants.NODE);
             return intygsIdNode.getTextContent();
         } catch (Exception e) {
             LOG.error("Error extracting intygs-id/extension from XML: " + e.getMessage());
@@ -160,21 +159,21 @@ public class XMLDSigServiceImpl implements XMLDSigService {
                 XPath xpath = xpathFactory.newXPath();
                 try {
                     Node intygsIdNode = (Node) xpath.compile("//*[local-name() = 'intygs-id']/*[local-name() = 'extension']")
-                            .evaluate(nl.item(index), XPathConstants.NODE);
+                        .evaluate(nl.item(index), XPathConstants.NODE);
                     String intygsId = intygsIdNode.getTextContent();
 
                     Node certificateNode = (Node) xpath.compile("//*[local-name() = 'X509Certificate']").evaluate(nl.item(index),
-                            XPathConstants.NODE);
+                        XPathConstants.NODE);
                     X509Certificate x509Certificate = convertToX509Cert(certificateNode.getTextContent());
                     if (x509Certificate == null) {
                         continue;
                     }
                     map.put(intygsId, CertificateInfo.CertificateInfoBuilder.aCertificateInfo()
-                            .withSubject(x509Certificate.getSubjectDN().getName())
-                            .withIssuer(x509Certificate.getIssuerDN().getName())
-                            .withAlg(x509Certificate.getSigAlgName())
-                            .withCertificateType(x509Certificate.getType())
-                            .build());
+                        .withSubject(x509Certificate.getSubjectDN().getName())
+                        .withIssuer(x509Certificate.getIssuerDN().getName())
+                        .withAlg(x509Certificate.getSigAlgName())
+                        .withCertificateType(x509Certificate.getType())
+                        .build());
 
                 } catch (Exception e) {
                     throw new IllegalArgumentException("Unable to process X509Certificate from Signature: " + e.getMessage());
@@ -194,8 +193,8 @@ public class XMLDSigServiceImpl implements XMLDSigService {
 
                 // Remove
                 String cleanedString = certificateString
-                        .replace(BEGIN_CERTIFICATE_STRING, "")
-                        .replace(END_CERTIFICATE_STRING, "");
+                    .replace(BEGIN_CERTIFICATE_STRING, "")
+                    .replace(END_CERTIFICATE_STRING, "");
                 CertificateFactory cf = CertificateFactory.getInstance("X509");
                 return (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(Base64.getDecoder().decode(cleanedString)));
             }
@@ -207,7 +206,7 @@ public class XMLDSigServiceImpl implements XMLDSigService {
     }
 
     private ValidationResponse verifySignature(boolean checkReferences, XMLSignatureFactory fac, Node node)
-            throws MarshalException, XMLSignatureException {
+        throws MarshalException, XMLSignatureException {
         // Create a DOMValidateContext and specify a KeySelector
         // and document context.
         DOMValidateContext valContext = new DOMValidateContext(new X509KeySelector(), node);
@@ -218,15 +217,15 @@ public class XMLDSigServiceImpl implements XMLDSigService {
         if (checkReferences) {
             boolean result = sig.validate(valContext);
             return ValidationResponse.ValidationResponseBuilder.aValidationResponse()
-                    .withSignatureValid(result ? ValidationResult.OK : ValidationResult.INVALID)
-                    .withReferencesValid(result ? ValidationResult.OK : ValidationResult.INVALID)
-                    .build();
+                .withSignatureValid(result ? ValidationResult.OK : ValidationResult.INVALID)
+                .withReferencesValid(result ? ValidationResult.OK : ValidationResult.INVALID)
+                .build();
         } else {
             boolean result = sig.getSignatureValue().validate(valContext);
             return ValidationResponse.ValidationResponseBuilder.aValidationResponse()
-                    .withSignatureValid(result ? ValidationResult.OK : ValidationResult.INVALID)
-                    .withReferencesValid(ValidationResult.NOT_CHCEKED)
-                    .build();
+                .withSignatureValid(result ? ValidationResult.OK : ValidationResult.INVALID)
+                .withReferencesValid(ValidationResult.NOT_CHCEKED)
+                .build();
         }
     }
 }

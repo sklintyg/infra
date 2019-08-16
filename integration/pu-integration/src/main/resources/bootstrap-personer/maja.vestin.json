@@ -1,1 +1,26 @@
-{"addressInformation":{"residentialAddress":{"city":"Mullsj\u00f6","postalAddress1":"Vandelv\u00e4gen 11","postalCode":56533}},"name":{"givenName":{"name":"Maja"},"middleName":{"name":"Laura"},"surname":{"name":"Vestin"}},"personalIdentity":{"extension":"196705053723"},"primaryIdentity":false,"protectedPersonIndicator":false,"testIndicator":false}
+{
+  "addressInformation": {
+    "residentialAddress": {
+      "city": "Mullsj\u00f6",
+      "postalAddress1": "Vandelv\u00e4gen 11",
+      "postalCode": 56533
+    }
+  },
+  "name": {
+    "givenName": {
+      "name": "Maja"
+    },
+    "middleName": {
+      "name": "Laura"
+    },
+    "surname": {
+      "name": "Vestin"
+    }
+  },
+  "personalIdentity": {
+    "extension": "196705053723"
+  },
+  "primaryIdentity": false,
+  "protectedPersonIndicator": false,
+  "testIndicator": false
+}

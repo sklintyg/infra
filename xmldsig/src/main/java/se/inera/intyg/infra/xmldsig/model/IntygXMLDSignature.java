@@ -72,6 +72,7 @@ public class IntygXMLDSignature implements IntygSignature {
     }
 
     public static final class IntygXMLDSignatureBuilder {
+
         private SignatureType signatureType;
         private String canonicalizedIntygXml;
         private String signedInfoForSigning;

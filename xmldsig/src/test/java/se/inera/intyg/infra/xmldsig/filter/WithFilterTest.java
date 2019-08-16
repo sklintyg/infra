@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.infra.xmldsig.filter;
 
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_ALIAS;
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_NAME;
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_PASSWORD;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.KeyStore;
@@ -51,19 +55,13 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 import se.inera.intyg.infra.xmldsig.util.X509KeySelector;
-
-import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_ALIAS;
-import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_NAME;
-import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_PASSWORD;
 
 public class WithFilterTest {
 
@@ -99,20 +97,20 @@ public class WithFilterTest {
         transforms.add(fac.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null));
 
         Reference ref = fac.newReference("", fac.newDigestMethod(DigestMethod.SHA256, null),
-                transforms,
-                null, null);
+            transforms,
+            null, null);
 
         // Create the SignedInfo.
         SignedInfo si = fac.newSignedInfo(fac.newCanonicalizationMethod(CanonicalizationMethod.EXCLUSIVE,
-                (C14NMethodParameterSpec) null),
-                fac.newSignatureMethod("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", null),
-                Collections.singletonList(ref));
+            (C14NMethodParameterSpec) null),
+            fac.newSignatureMethod("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", null),
+            Collections.singletonList(ref));
 
         // Load the KeyStore and get the signing key and certificate.
         KeyStore ks = KeyStore.getInstance("JKS");
         ks.load(new ClassPathResource(FAKE_KEYSTORE_NAME).getInputStream(), FAKE_KEYSTORE_PASSWORD.toCharArray());
         KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(FAKE_KEYSTORE_ALIAS,
-                new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
+            new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
         X509Certificate cert = (X509Certificate) keyEntry.getCertificate();
 
         // Create the KeyInfo containing the X509Data.

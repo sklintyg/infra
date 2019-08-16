@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.xmldsig.model;
 
 public class CertificateInfo {
+
     private String subject;
     private String issuer;
     private String alg;
@@ -58,6 +59,7 @@ public class CertificateInfo {
 
 
     public static final class CertificateInfoBuilder {
+
         private String subject;
         private String issuer;
         private String alg;

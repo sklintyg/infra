@@ -1,1 +1,26 @@
-{"addressInformation":{"residentialAddress":{"city":"Sv\u00e4rdsj\u00f6","postalAddress1":"Giraffv\u00e4gen 78","postalCode":79023}},"name":{"givenName":{"name":"Karl"},"middleName":{"name":"Benny"},"surname":{"name":"H\u00e5rd"}},"personalIdentity":{"extension":"199303012398"},"primaryIdentity":false,"protectedPersonIndicator":false,"testIndicator":false}
+{
+  "addressInformation": {
+    "residentialAddress": {
+      "city": "Sv\u00e4rdsj\u00f6",
+      "postalAddress1": "Giraffv\u00e4gen 78",
+      "postalCode": 79023
+    }
+  },
+  "name": {
+    "givenName": {
+      "name": "Karl"
+    },
+    "middleName": {
+      "name": "Benny"
+    },
+    "surname": {
+      "name": "H\u00e5rd"
+    }
+  },
+  "personalIdentity": {
+    "extension": "199303012398"
+  },
+  "primaryIdentity": false,
+  "protectedPersonIndicator": false,
+  "testIndicator": false
+}

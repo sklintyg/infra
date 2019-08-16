@@ -30,10 +30,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
-
 import se.inera.intyg.infra.integration.ia.cache.IaCacheConfiguration;
 import se.inera.intyg.infra.integration.ia.model.Banner;
 
@@ -80,8 +78,6 @@ public class IAStubRestApi {
 
     /**
      * Use to evict all clear all banners.
-     *
-     * @return
      */
     @DELETE
     @Path("/cache")

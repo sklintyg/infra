@@ -19,6 +19,14 @@
 package se.inera.intyg.infra.integration.pu.services;
 
 import com.google.common.annotations.VisibleForTesting;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import org.apache.cxf.interceptor.Fault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,15 +44,6 @@ import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileres
 import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
 import se.riv.strategicresourcemanagement.persons.person.v3.LookupProfileType;
 import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
-
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class PUServiceImpl implements PUService {
 
@@ -81,7 +80,7 @@ public class PUServiceImpl implements PUService {
         if (cachedPersonSvar != null) {
             if (!personId.getPersonnummer().equals(cachedPersonSvar.getPerson().getPersonnummer().getPersonnummer())) {
                 LOG.info("PU-cache returned another personId {} then the argument to getPerson {}. This might be ok.",
-                        cachedPersonSvar.getPerson().getPersonnummer().getPersonnummerHash(), personId.getPersonnummerHash());
+                    cachedPersonSvar.getPerson().getPersonnummer().getPersonnummerHash(), personId.getPersonnummerHash());
             }
             return cachedPersonSvar;
         }
@@ -190,14 +189,13 @@ public class PUServiceImpl implements PUService {
 
     /**
      * Logs an error message and returns an empty hash map.
-     * @param errMsg
-     * @param pnrs
+     *
      * @return an empty hash map
      */
     private Map<Personnummer, PersonSvar> handleServiceException(String errMsg, List<Personnummer> pnrs) {
         final String arg = pnrs.stream()
-                .map(Personnummer::getPersonnummerHash)
-                .collect(Collectors.joining(", "));
+            .map(Personnummer::getPersonnummerHash)
+            .collect(Collectors.joining(", "));
 
         LOG.warn(errMsg, arg);
         return new HashMap<>();
@@ -207,7 +205,7 @@ public class PUServiceImpl implements PUService {
 
         if (puResponseValidator.isFoundAndCorrectStatus(response)) {
             final PersonSvar personSvar = personConverter.toPersonSvar(
-                    personId, response.getRequestedPersonRecord().get(0).getPersonRecord());
+                personId, response.getRequestedPersonRecord().get(0).getPersonRecord());
             storeIfAbsent(personSvar);
             return personSvar;
         }
@@ -217,8 +215,8 @@ public class PUServiceImpl implements PUService {
     }
 
     private Map<Personnummer, PersonSvar> handleMultiplePersonsResponse(List<Personnummer> personIds,
-                                                                        Map<Personnummer, PersonSvar> responseMap,
-                                                                        GetPersonsForProfileResponseType response) {
+        Map<Personnummer, PersonSvar> responseMap,
+        GetPersonsForProfileResponseType response) {
 
         if (response == null || response.getRequestedPersonRecord() == null || response.getRequestedPersonRecord().size() == 0) {
             LOG.warn("Problem fetching PersonSvar from PU-service. Returning cached items and items not in cache as NOT_FOUND.");
@@ -226,7 +224,7 @@ public class PUServiceImpl implements PUService {
             // Iterate over response objects, transform and store in Map.
             for (RequestedPersonRecordType requestedPersonRecordType : response.getRequestedPersonRecord()) {
                 Personnummer pnrFromResponse = Personnummer.createPersonnummer(
-                        requestedPersonRecordType.getRequestedPersonalIdentity().getExtension()).get();
+                    requestedPersonRecordType.getRequestedPersonalIdentity().getExtension()).get();
 
                 if (requestedPersonRecordType.getPersonRecord() != null) {
                     PersonSvar personSvar = personConverter.toPersonSvar(pnrFromResponse, requestedPersonRecordType.getPersonRecord());
@@ -248,7 +246,7 @@ public class PUServiceImpl implements PUService {
                 }
             }
             LOG.warn("One or more personnummer did not yield a response from our PU cache or the PU-service. "
-                    + "They have been added as NOT_FOUND entries.");
+                + "They have been added as NOT_FOUND entries.");
         }
 
         return responseMap;
@@ -257,7 +255,7 @@ public class PUServiceImpl implements PUService {
     private IIType buildIITypeForPersonOrSamordningsnummer(Personnummer personId) {
         IIType personIdType = new IIType();
         personIdType.setRoot(
-                PersonIdUtil.isSamordningsNummer(personId) ? PersonIdUtil.getSamordningsNummerRoot() : PersonIdUtil.getPersonnummerRoot());
+            PersonIdUtil.isSamordningsNummer(personId) ? PersonIdUtil.getSamordningsNummerRoot() : PersonIdUtil.getPersonnummerRoot());
         personIdType.setExtension(personId.getPersonnummer());
         return personIdType;
     }

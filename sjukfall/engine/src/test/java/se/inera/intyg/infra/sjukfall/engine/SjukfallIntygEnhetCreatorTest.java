@@ -22,6 +22,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -31,11 +35,6 @@ import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -103,8 +102,8 @@ public class SjukfallIntygEnhetCreatorTest {
 
         // It can only be zero or one active object
         assertTrue(activeMap.entrySet().stream()
-                .allMatch(e -> e.getValue().stream()
-                        .filter(o -> o.isAktivtIntyg()).count() < 2));
+            .allMatch(e -> e.getValue().stream()
+                .filter(o -> o.isAktivtIntyg()).count() < 2));
 
     }
 

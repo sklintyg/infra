@@ -18,8 +18,9 @@
  */
 package se.inera.intyg.infra.integration.postnummer.repository;
 
-import java.io.*;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
-
 import org.springframework.util.ResourceUtils;
 import se.inera.intyg.infra.integration.postnummer.model.Omrade;
 

@@ -18,17 +18,15 @@
  */
 package se.inera.intyg.infra.integration.hsa.model;
 
-import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
-
 import java.util.ArrayList;
 import java.util.List;
+import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 
 /**
  * Storage for user-related info from GetCredentials HSA response.
  *
- * A number of data fields from HSA that are related to the persons "medarbetaruppdrag" is returned on the
- * {@link se.riv.infrastructure.directory.v1.CredentialInformationType}, which we need to provide to callers of
- * the HSA services.
+ * A number of data fields from HSA that are related to the persons "medarbetaruppdrag" is returned on the {@link
+ * se.riv.infrastructure.directory.v1.CredentialInformationType}, which we need to provide to callers of the HSA services.
  *
  * Created by eriklupander on 2016-05-20.
  */

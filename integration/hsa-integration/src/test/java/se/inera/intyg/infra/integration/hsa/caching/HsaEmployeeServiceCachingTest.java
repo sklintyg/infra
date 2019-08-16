@@ -46,38 +46,39 @@ import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 @ContextConfiguration("classpath:HsaOrganizationServiceCachingTest/test-caching-context.xml")
 public class HsaEmployeeServiceCachingTest {
 
-  private static final String PERSON_HSA_ID = "person-hsa-1";
+    private static final String PERSON_HSA_ID = "person-hsa-1";
 
-  @Autowired
-  private EmployeeService employeeService;
+    @Autowired
+    private EmployeeService employeeService;
 
-  @Test
-  public void testGetEmployeeUsesCaching() throws Exception {
-    GetEmployeeResponderStub stub = mock(GetEmployeeResponderStub.class);
-    when(stub.getEmployeeIncludingProtectedPerson(any(), any(GetEmployeeIncludingProtectedPersonType.class)))
-        .thenReturn(buildEmployeeResponse());
+    @Test
+    public void testGetEmployeeUsesCaching() throws Exception {
+        GetEmployeeResponderStub stub = mock(GetEmployeeResponderStub.class);
+        when(stub.getEmployeeIncludingProtectedPerson(any(), any(GetEmployeeIncludingProtectedPersonType.class)))
+            .thenReturn(buildEmployeeResponse());
 
-    ReflectionTestUtils
-        .setField(((Advised) employeeService).getTargetSource().getTarget(), "getEmployeeIncludingProtectedPersonResponderInterface", stub);
+        ReflectionTestUtils
+            .setField(((Advised) employeeService).getTargetSource().getTarget(), "getEmployeeIncludingProtectedPersonResponderInterface",
+                stub);
 
-    List<PersonInformationType> employees = employeeService.getEmployee(PERSON_HSA_ID, null, null);
-    assertNotNull(employees);
-    assertTrue(employees.size() == 1);
+        List<PersonInformationType> employees = employeeService.getEmployee(PERSON_HSA_ID, null, null);
+        assertNotNull(employees);
+        assertTrue(employees.size() == 1);
 
-    employees = employeeService.getEmployee(PERSON_HSA_ID, null, null);
-    assertNotNull(employees);
-    assertTrue(employees.size() == 1);
+        employees = employeeService.getEmployee(PERSON_HSA_ID, null, null);
+        assertNotNull(employees);
+        assertTrue(employees.size() == 1);
 
-    verify(stub, times(1)).getEmployeeIncludingProtectedPerson(anyString(), any(GetEmployeeIncludingProtectedPersonType.class));
-  }
+        verify(stub, times(1)).getEmployeeIncludingProtectedPerson(anyString(), any(GetEmployeeIncludingProtectedPersonType.class));
+    }
 
-  private GetEmployeeIncludingProtectedPersonResponseType buildEmployeeResponse() {
-    GetEmployeeIncludingProtectedPersonResponseType resp = new GetEmployeeIncludingProtectedPersonResponseType();
-    PersonInformationType personInformationType = new PersonInformationType();
-    personInformationType.setPersonHsaId(PERSON_HSA_ID);
-    resp.getPersonInformation().add(personInformationType);
-    resp.setResultCode(ResultCodeEnum.OK);
-    return resp;
-  }
+    private GetEmployeeIncludingProtectedPersonResponseType buildEmployeeResponse() {
+        GetEmployeeIncludingProtectedPersonResponseType resp = new GetEmployeeIncludingProtectedPersonResponseType();
+        PersonInformationType personInformationType = new PersonInformationType();
+        personInformationType.setPersonHsaId(PERSON_HSA_ID);
+        resp.getPersonInformation().add(personInformationType);
+        resp.setResultCode(ResultCodeEnum.OK);
+        return resp;
+    }
 
 }

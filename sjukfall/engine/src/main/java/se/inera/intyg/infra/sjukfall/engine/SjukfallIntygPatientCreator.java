@@ -18,11 +18,6 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
-import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,6 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 
 /**
  * @author Magnus Ekstrand on 2017-02-10.
@@ -38,11 +37,10 @@ public class SjukfallIntygPatientCreator {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygPatientCreator.class);
 
-
     // - - - API - - -
 
     public Map<Integer, List<SjukfallIntyg>> create(final List<IntygData> intygsData, final int maxIntygsGlapp,
-                                                    final LocalDate aktivtDatum) {
+        final LocalDate aktivtDatum) {
         LOG.debug("Start creating a map of 'sjukfallintyg'...");
 
         // Create the map
@@ -52,11 +50,10 @@ public class SjukfallIntygPatientCreator {
         return map;
     }
 
-
     // - - - Package scope - - -
 
     Map<Integer, List<SjukfallIntyg>> createMap(final List<IntygData> intygsData, final int maxIntygsGlapp,
-                                                final LocalDate aktivtDatum) {
+        final LocalDate aktivtDatum) {
         LOG.debug("  2. Create the map");
 
         // Transform intygsdata to an internal format
@@ -64,7 +61,6 @@ public class SjukfallIntygPatientCreator {
 
         return collectIntyg(sjukfallIntygList, maxIntygsGlapp);
     }
-
 
     // - - - Private scope - - -
 
@@ -102,7 +98,7 @@ public class SjukfallIntygPatientCreator {
 
     // Iterate over intygsdata and collect continuous certificates.
     private void collectIntyg(List<SjukfallIntyg> input, Map<Integer, List<SjukfallIntyg>> output,
-                              Integer key, SjukfallIntyg first, int maxIntygsGlapp) {
+        Integer key, SjukfallIntyg first, int maxIntygsGlapp) {
 
         int tmp = key;
 

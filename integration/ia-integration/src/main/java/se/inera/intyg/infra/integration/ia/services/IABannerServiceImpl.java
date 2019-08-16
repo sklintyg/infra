@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +31,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.web.client.RestTemplate;
-
 import se.inera.intyg.infra.integration.ia.cache.IaCacheConfiguration;
 import se.inera.intyg.infra.integration.ia.model.Application;
 import se.inera.intyg.infra.integration.ia.model.Banner;
 
 public class IABannerServiceImpl implements IABannerService {
+
     private static final Logger LOG = LoggerFactory.getLogger(IABannerServiceImpl.class);
 
     @Autowired
@@ -57,8 +56,8 @@ public class IABannerServiceImpl implements IABannerService {
         LocalDateTime today = LocalDateTime.now();
 
         return banners.stream()
-                .filter(banner -> banner.getDisplayFrom().isBefore(today) && banner.getDisplayTo().isAfter(today))
-                .collect(Collectors.toList());
+            .filter(banner -> banner.getDisplayFrom().isBefore(today) && banner.getDisplayTo().isAfter(today))
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -68,7 +67,7 @@ public class IABannerServiceImpl implements IABannerService {
         LOG.debug("Loading banner from {}", url);
 
         Banner[] banners = restTemplate
-                .getForObject(url, Banner[].class);
+            .getForObject(url, Banner[].class);
 
         store(banners);
 

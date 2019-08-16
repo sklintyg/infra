@@ -19,16 +19,15 @@
 
 package se.inera.intyg.infra.monitoring.logging;
 
-import java.util.Objects;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
 import ch.qos.logback.classic.pattern.ClassicConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import java.util.Objects;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 
 public class UserConverter extends ClassicConverter {
+
     @Override
     public String convert(ILoggingEvent iLoggingEvent) {
         return userInfo();
@@ -41,9 +40,9 @@ public class UserConverter extends ClassicConverter {
         }
 
         return u.getHsaId()
-                + "," + (Objects.nonNull(u.getValdVardenhet()) ? u.getValdVardenhet().getId() : "noUnit")
-                + "," + (Objects.nonNull(u.getOrigin()) ? u.getOrigin() : "noOrigin")
-                + "," + ((u.getRoles().size() == 1) ? u.getRoles().keySet().iterator().next() : "noRole");
+            + "," + (Objects.nonNull(u.getValdVardenhet()) ? u.getValdVardenhet().getId() : "noUnit")
+            + "," + (Objects.nonNull(u.getOrigin()) ? u.getOrigin() : "noOrigin")
+            + "," + ((u.getRoles().size() == 1) ? u.getRoles().keySet().iterator().next() : "noRole");
     }
 
     //

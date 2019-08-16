@@ -1,15 +1,15 @@
 {
-    "sekretessmarkering": "N",
-    "personpost": {
-        "personId": "190101010101",
-        "namn": {
-            "fornamn": "Nollett",
-            "efternamn": "Nollettsson"
-        },
-        "folkbokforingsadress": {
-            "utdelningsadress2": "KUNGSGATAN 1",
-            "postNr": "01010",
-            "postort": "NOLBORG"
-        }
+  "sekretessmarkering": "N",
+  "personpost": {
+    "personId": "190101010101",
+    "namn": {
+      "fornamn": "Nollett",
+      "efternamn": "Nollettsson"
+    },
+    "folkbokforingsadress": {
+      "utdelningsadress2": "KUNGSGATAN 1",
+      "postNr": "01010",
+      "postort": "NOLBORG"
     }
+  }
 }

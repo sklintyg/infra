@@ -18,10 +18,9 @@
  */
 package se.inera.intyg.infra.integration.hsa.stub;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HsaPerson {
@@ -48,7 +47,6 @@ public class HsaPerson {
 
     private FakeProperties fakeProperties;
 
-
     // ~ Constructors
     // ~ =====================================================================================
 
@@ -70,7 +68,6 @@ public class HsaPerson {
         this.efterNamn = efterNamn;
         this.titel = titel;
     }
-
 
     // ~ Getters and setters
     // ~ =====================================================================================

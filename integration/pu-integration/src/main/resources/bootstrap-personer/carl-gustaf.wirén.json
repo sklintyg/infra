@@ -1,1 +1,26 @@
-{"addressInformation":{"residentialAddress":{"city":"Falkenberg","postalAddress1":"Turkosv\u00e4gen 99","postalCode":52294}},"name":{"givenName":{"name":"Carl-Gustaf"},"middleName":{"name":"Albin"},"surname":{"name":"Wir\u00e9n"}},"personalIdentity":{"extension":"198907252392"},"primaryIdentity":false,"protectedPersonIndicator":false,"testIndicator":false}
+{
+  "addressInformation": {
+    "residentialAddress": {
+      "city": "Falkenberg",
+      "postalAddress1": "Turkosv\u00e4gen 99",
+      "postalCode": 52294
+    }
+  },
+  "name": {
+    "givenName": {
+      "name": "Carl-Gustaf"
+    },
+    "middleName": {
+      "name": "Albin"
+    },
+    "surname": {
+      "name": "Wir\u00e9n"
+    }
+  },
+  "personalIdentity": {
+    "extension": "198907252392"
+  },
+  "primaryIdentity": false,
+  "protectedPersonIndicator": false,
+  "testIndicator": false
+}

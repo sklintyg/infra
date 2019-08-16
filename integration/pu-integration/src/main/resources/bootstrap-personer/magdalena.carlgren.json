@@ -1,1 +1,24 @@
-{"personalIdentity":{"extension":"194606109108"},"protectedPersonIndicator":false,"testIndicator":true,"primaryIdentity":false,"name":{"givenName":{"name":"Magdalena"},"middleName":{},"surname":{"name":"Karlgren"}},"addressInformation":{"residentialAddress":{"postalAddress1":"Privatgatan 9","postalCode":12345,"city":"Privatstan"}}}
+{
+  "personalIdentity": {
+    "extension": "194606109108"
+  },
+  "protectedPersonIndicator": false,
+  "testIndicator": true,
+  "primaryIdentity": false,
+  "name": {
+    "givenName": {
+      "name": "Magdalena"
+    },
+    "middleName": {},
+    "surname": {
+      "name": "Karlgren"
+    }
+  },
+  "addressInformation": {
+    "residentialAddress": {
+      "postalAddress1": "Privatgatan 9",
+      "postalCode": 12345,
+      "city": "Privatstan"
+    }
+  }
+}

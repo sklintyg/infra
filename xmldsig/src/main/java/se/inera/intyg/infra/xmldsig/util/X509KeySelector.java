@@ -17,6 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package se.inera.intyg.infra.xmldsig.util;
+
+import java.security.PublicKey;
+import java.security.cert.X509Certificate;
 import javax.xml.crypto.AlgorithmMethod;
 import javax.xml.crypto.KeySelector;
 import javax.xml.crypto.KeySelectorException;
@@ -25,12 +28,9 @@ import javax.xml.crypto.XMLCryptoContext;
 import javax.xml.crypto.XMLStructure;
 import javax.xml.crypto.dsig.keyinfo.KeyInfo;
 import javax.xml.crypto.dsig.keyinfo.X509Data;
-import java.security.PublicKey;
-import java.security.cert.X509Certificate;
 
 /**
- * A <code>KeySelector</code> that returns {@link PublicKey}s of trusted
- * {@link X509Certificate}s.
+ * A <code>KeySelector</code> that returns {@link PublicKey}s of trusted {@link X509Certificate}s.
  *
  * Will only handle X509Certificates passed from a XMLDSig structure.
  *
@@ -40,10 +40,10 @@ public class X509KeySelector extends KeySelector {
 
     @Override
     public KeySelectorResult select(KeyInfo keyInfo,
-                                    KeySelector.Purpose purpose,
-                                    AlgorithmMethod method,
-                                    XMLCryptoContext context)
-            throws KeySelectorException {
+        KeySelector.Purpose purpose,
+        AlgorithmMethod method,
+        XMLCryptoContext context)
+        throws KeySelectorException {
         for (Object o1 : keyInfo.getContent()) {
             XMLStructure info = (XMLStructure) o1;
             if (!(info instanceof X509Data)) {
@@ -70,6 +70,6 @@ public class X509KeySelector extends KeySelector {
 
     private static boolean algEquals(String algURI, String algName) {
         return "RSA".equalsIgnoreCase(algName)
-                && "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256".equalsIgnoreCase(algURI);
+            && "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256".equalsIgnoreCase(algURI);
     }
 }

@@ -54,7 +54,6 @@ public class SjukfallEnhet {
     // ID för aktivt intyg.
     private String aktivIntygsId;
 
-
     // getters and setters
 
     public Vardgivare getVardgivare() {
