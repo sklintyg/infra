@@ -26,9 +26,7 @@ import java.nio.file.Path;
 public interface ScanEventHandler {
 
     void created(Path path);
-
     void modified(Path path);
-
     void deleted(Path path);
 
 }

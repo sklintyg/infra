@@ -1,19 +1,19 @@
 {
-  "@class": "se.inera.intyg.infra.integration.hsa.model.Vardgivare",
-  "id": "TSTNMT2321000156-102Q",
-  "namn": "NMT vg3",
-  "vardenheter": [
+  "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardgivare",
+  "id" : "TSTNMT2321000156-102Q",
+  "namn" : "NMT vg3",
+  "vardenheter" : [
     {
-      "@class": "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
-      "id": "TSTNMT2321000156-1077",
-      "namn": "NMT vg3 ve1",
-      "epost": "enhet3@webcert.invalid.se",
-      "telefonnummer": "0101112131416",
-      "postadress": "NMT gata 3",
-      "postnummer": "12345",
-      "postort": "Testhult",
-      "arbetsplatskod": "1234567890",
-      "vardgivareOrgnr": "5-orgnr-102Q"
+      "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
+      "id" : "TSTNMT2321000156-1077",
+      "namn" : "NMT vg3 ve1",
+      "epost" : "enhet3@webcert.invalid.se",
+      "telefonnummer" : "0101112131416",
+      "postadress" : "NMT gata 3",
+      "postnummer" : "12345",
+      "postort" : "Testhult",
+      "arbetsplatskod" : "1234567890",
+      "vardgivareOrgnr" : "5-orgnr-102Q"
     }
   ]
 }

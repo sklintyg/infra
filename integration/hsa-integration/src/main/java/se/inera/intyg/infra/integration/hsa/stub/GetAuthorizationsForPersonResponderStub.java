@@ -18,9 +18,6 @@
  */
 package se.inera.intyg.infra.integration.hsa.stub;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
@@ -32,6 +29,10 @@ import se.riv.infrastructure.directory.v1.CredentialInformationType;
 import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Created by eriklupander on 2015-12-03.
  */
@@ -42,8 +43,8 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
 
     @Override
     public GetCredentialsForPersonIncludingProtectedPersonResponseType getCredentialsForPersonIncludingProtectedPerson(
-        String logicalAddress,
-        GetCredentialsForPersonIncludingProtectedPersonType parameters) {
+            String logicalAddress,
+            GetCredentialsForPersonIncludingProtectedPersonType parameters) {
         // CHECKSTYLE:OFF LineLength
         GetCredentialsForPersonIncludingProtectedPersonResponseType response = new GetCredentialsForPersonIncludingProtectedPersonResponseType();
         // CHECKSTYLE:ON LineLength
@@ -112,6 +113,9 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
 
     /**
      * If our user has defined systemRole(s) in the stub, add them here to the credential.
+     *
+     * @param cit
+     * @param uppdrag
      */
     private void addSystemRole(CredentialInformationType cit, Medarbetaruppdrag.Uppdrag uppdrag) {
         if (uppdrag.getSystemRoles() != null) {

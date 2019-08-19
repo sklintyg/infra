@@ -20,12 +20,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-  <bean class="se.inera.intyg.infra.integration.hsa.stub.HsaServiceStub"/>
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.HsaServiceStub" />
 
   <!-- Load the new JSON file scanner beans -->
-  <bean class="se.inera.intyg.infra.integration.hsa.stub.scanner.WatchServiceInitializerBean"/>
-  <bean class="se.inera.intyg.infra.integration.hsa.stub.scanner.ScannerBean"/>
-  <bean class="se.inera.intyg.infra.integration.hsa.stub.scanner.WatchEventPersonHandler"/>
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.scanner.WatchServiceInitializerBean" />
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.scanner.ScannerBean" />
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.scanner.WatchEventPersonHandler" />
 
   <bean name="props" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">

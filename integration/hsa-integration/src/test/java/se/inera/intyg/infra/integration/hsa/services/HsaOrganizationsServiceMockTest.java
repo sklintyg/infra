@@ -22,22 +22,24 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
+
 import javax.xml.bind.JAXB;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
+
 import se.inera.intyg.infra.integration.hsa.client.OrganizationUnitService;
-import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.riv.infrastructure.directory.organization.gethealthcareunit.v1.rivtabp21.GetHealthCareUnitResponderInterface;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v1.rivtabp21.GetHealthCareUnitMembersResponderInterface;
 import se.riv.infrastructure.directory.organization.getunit.v1.rivtabp21.GetUnitResponderInterface;

@@ -18,20 +18,21 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class DigestTest {
 
     @Test
     public void digestTest() {
         String data = "Data To Be Signed";
-        String base64Digest = sha256AsBase64(data);
+        String base64Digest  = sha256AsBase64(data);
         assertEquals("PXLVCJ1DFmrG6OQa4RZ6dMd+0Z4=", base64Digest);
     }
 

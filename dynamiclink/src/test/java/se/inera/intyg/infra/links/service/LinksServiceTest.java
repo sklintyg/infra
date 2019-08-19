@@ -21,11 +21,13 @@ package se.inera.intyg.infra.links.service;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 import se.inera.intyg.infra.dynamiclink.service.DynamicLinkService;
 
@@ -39,7 +41,7 @@ public class LinksServiceTest {
 
     @Autowired
     private DynamicLinkService dynamicLinkService;
-
+    
     @Test
     public void testLoadAndGetLink() {
         List<DynamicLink> allAsList = dynamicLinkService.getAllAsList();

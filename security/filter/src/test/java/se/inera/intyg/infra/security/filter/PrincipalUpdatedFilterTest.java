@@ -18,23 +18,12 @@
  */
 package se.inera.intyg.infra.security.filter;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import com.google.common.hash.HashCode;
 import java.io.Serializable;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,15 +35,27 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
+import com.google.common.hash.HashCode;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 /**
- * Tests so the session.setAttribute is invoked only when the underlying authentication principal has changed during the
- * filterChain.invoke.
+ * Tests so the session.setAttribute is invoked only when the underlying authentication principal has changed during
+ * the filterChain.invoke.
  *
  * @author eriklupander
  */
 @RunWith(MockitoJUnitRunner.class)
 public class PrincipalUpdatedFilterTest {
-
     private static final String HSA_ID = "user-1";
 
     private PrincipalUpdatedFilter testee = new PrincipalUpdatedFilter();
@@ -154,7 +155,6 @@ public class PrincipalUpdatedFilterTest {
     }
 
     private static class SomeUser implements Serializable {
-
         String hsaId;
         String mutableThing;
 
@@ -165,18 +165,15 @@ public class PrincipalUpdatedFilterTest {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) {
+            if (this == o)
                 return true;
-            }
-            if (!(o instanceof SomeUser)) {
+            if (!(o instanceof SomeUser))
                 return false;
-            }
 
             SomeUser someUser = (SomeUser) o;
 
-            if (hsaId != null ? !hsaId.equals(someUser.hsaId) : someUser.hsaId != null) {
+            if (hsaId != null ? !hsaId.equals(someUser.hsaId) : someUser.hsaId != null)
                 return false;
-            }
             return mutableThing != null ? mutableThing.equals(someUser.mutableThing) : someUser.mutableThing == null;
         }
 

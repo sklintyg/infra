@@ -20,25 +20,29 @@ package se.inera.intyg.infra.security.filter;
 
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
-import com.google.common.hash.HashCode;
-import com.google.common.hash.HashFunction;
-import com.google.common.hash.Hashing;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.SerializationUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
+
 /**
- * This filter checks if the user Principal has changed (new vald vardenhet, some consent given etc). If true, the wrapped RedisSession is
- * "touched" using session.setAttribute("SPRING_SECURITY_CONTEXT", context) which then will trigger a diff in the
- * springSessionRepositoryFilter forcing an update of the Principal in the redis store.
+ * This filter checks if the user Principal has changed (new vald vardenhet, some consent given etc). If true,
+ * the wrapped RedisSession is "touched" using session.setAttribute("SPRING_SECURITY_CONTEXT", context) which
+ * then will trigger a diff in the springSessionRepositoryFilter forcing an update of the Principal in the redis store.
  *
  * ONLY use this filter if you're using Spring Session with Redis!
  *
@@ -55,13 +59,13 @@ public class PrincipalUpdatedFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
 
         final SecurityContext context = authContext();
 
         final HashCode beforeHash = Objects.nonNull(context)
-            ? hashCode(context.getAuthentication().getPrincipal())
-            : null;
+                ? hashCode(context.getAuthentication().getPrincipal())
+                : null;
 
         // Invoke next filter in chain.
         filterChain.doFilter(request, response);
@@ -72,7 +76,7 @@ public class PrincipalUpdatedFilter extends OncePerRequestFilter {
             // Check if principal hash has changed
             if (!beforeHash.equals(afterHash)) {
                 request.getSession(false)
-                    .setAttribute(SPRING_SECURITY_CONTEXT_KEY, context);
+                        .setAttribute(SPRING_SECURITY_CONTEXT_KEY, context);
             }
         }
     }
@@ -90,12 +94,14 @@ public class PrincipalUpdatedFilter extends OncePerRequestFilter {
     /**
      * Returns a 128 bit hash code of the object if it's a Serializable (which is strongly recommended).
      *
-     * @param object the object.
+     * @param object
+     *            the object.
+     *
      * @return the hash code for the objects state if it's serializable, otherwise is hashCode() used.
      */
     HashCode hashCode(final Object object) {
         return (object instanceof Serializable)
-            ? hf.hashBytes(SerializationUtils.serialize(object))
-            : hf.hashInt(object.hashCode());
+                ? hf.hashBytes(SerializationUtils.serialize(object))
+                : hf.hashInt(object.hashCode());
     }
 }

@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.integration.hsa.stub;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

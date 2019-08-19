@@ -21,6 +21,5 @@ package se.inera.intyg.infra.integration.pu.services.validator;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
 
 public interface PUResponseValidator {
-
     boolean isFoundAndCorrectStatus(GetPersonsForProfileResponseType response);
 }

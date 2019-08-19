@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.infra.integration.postnummer.service;
 
-import java.util.List;
-import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +26,9 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.postnummer.model.Omrade;
 import se.inera.intyg.infra.integration.postnummer.repository.PostnummerRepository;
 import se.inera.intyg.infra.integration.postnummer.repository.PostnummerRepositoryFactory;
+
+import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Service
 public class PostnummerServiceImpl implements PostnummerService {

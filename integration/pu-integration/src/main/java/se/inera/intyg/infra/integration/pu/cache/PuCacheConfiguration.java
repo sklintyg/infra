@@ -23,12 +23,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
 
 /**
- * While the cacheManager.getCache(...) isn't strictly necessary for creating the cache used by {@link
- * se.inera.intyg.infra.integration.pu.services.PUService}, this class provides us with the capability of configuring individual caches
- * based on the current state of the (dynamic) configuration
+ * While the cacheManager.getCache(...) isn't strictly necessary for creating the cache used by
+ * {@link se.inera.intyg.infra.integration.pu.services.PUService}, this class provides us with the capability
+ * of configuring individual caches based on the current state of the (dynamic) configuration
  * <p>
  * Created by eriklupander on 2016-10-20.
  */

@@ -18,14 +18,7 @@
  */
 package se.inera.intyg.infra.integration.hsa.stub.scanner;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.assertEquals;
-
 import com.google.common.io.Files;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -39,6 +32,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.inera.intyg.infra.integration.hsa.stub.HsaServiceStub;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by eriklupander on 2017-04-12.
@@ -97,7 +98,7 @@ public class ScannerBeanTest {
         await().atMost(15, SECONDS).until(() -> personInStubHasLastName(HSA_ID, EFTERNAMN2));
         assertEquals(EFTERNAMN2, hsaServiceStub.getHsaPerson(HSA_ID).getEfterNamn());
     }
-
+    
     @Test
     @Ignore("Unstable")
     public void testDeleteFile() throws IOException, URISyntaxException, InterruptedException {
@@ -108,10 +109,11 @@ public class ScannerBeanTest {
     }
 
 
+
     private void copyToScanFolder(String from, String to) throws IOException, URISyntaxException {
         Files.copy(new File(
-                this.getClass().getResource(from).toURI()),
-            new File(to));
+                        this.getClass().getResource(from).toURI()),
+                new File(to));
     }
 
     private boolean personInStub(String hsaId) {

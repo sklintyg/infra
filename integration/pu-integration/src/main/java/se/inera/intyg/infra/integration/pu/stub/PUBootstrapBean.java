@@ -19,10 +19,6 @@
 package se.inera.intyg.infra.integration.pu.stub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +26,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 
-public class PUBootstrapBean {
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
+public class PUBootstrapBean {
     private static final Logger LOG = LoggerFactory.getLogger(PUBootstrapBean.class);
 
     @Autowired

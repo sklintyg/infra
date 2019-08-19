@@ -18,9 +18,6 @@
  */
 package se.inera.intyg.infra.monitoring.logging;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.spi.FilterReply;
 import org.junit.Test;
@@ -29,6 +26,10 @@ import org.mockito.Mockito;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
+
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {MonitoringConfiguration.class})

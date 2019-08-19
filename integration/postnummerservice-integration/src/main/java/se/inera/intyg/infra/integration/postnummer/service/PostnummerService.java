@@ -18,12 +18,11 @@
  */
 package se.inera.intyg.infra.integration.postnummer.service;
 
-import java.util.List;
 import se.inera.intyg.infra.integration.postnummer.model.Omrade;
 
+import java.util.List;
+
 public interface PostnummerService {
-
     List<Omrade> getOmradeByPostnummer(String postnummer);
-
     List<String> getKommunList();
 }

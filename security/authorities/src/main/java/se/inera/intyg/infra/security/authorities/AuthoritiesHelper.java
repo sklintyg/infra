@@ -18,7 +18,11 @@
  */
 package se.inera.intyg.infra.security.authorities;
 
-import static java.util.Optional.ofNullable;
+import org.springframework.beans.factory.annotation.Autowired;
+import se.inera.intyg.infra.security.authorities.validation.AuthoritiesValidator;
+import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
+import se.inera.intyg.infra.security.common.model.Feature;
+import se.inera.intyg.infra.security.common.model.UserDetails;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -28,11 +32,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.springframework.beans.factory.annotation.Autowired;
-import se.inera.intyg.infra.security.authorities.validation.AuthoritiesValidator;
-import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
-import se.inera.intyg.infra.security.common.model.Feature;
-import se.inera.intyg.infra.security.common.model.UserDetails;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * @author Magnus Ekstrand on 2016-05-13.
@@ -47,12 +48,16 @@ public class AuthoritiesHelper {
     }
 
     /**
-     * Method returns all granted intygstyper for a certain user's privilege. If user doesn't have a privilege, an empty set is returned.
+     * Method returns all granted intygstyper for a certain user's privilege.
+     * If user doesn't have a privilege, an empty set is returned.
      * <p>
-     * Note: The configuration mindset of privileges is that if there are no intygstyper attached to a privilege, the privilege is
-     * implicitly valid for all intygstyper. However, this method will return an explicit list with granted intygstyper in all cases.
+     * Note:
+     * The configuration mindset of privileges is that if there are no
+     * intygstyper attached to a privilege, the privilege is implicitly
+     * valid for all intygstyper. However, this method will return an
+     * explicit list with granted intygstyper in all cases.
      *
-     * @param user the current user
+     * @param user          the current user
      * @param privilegeName the privilege name
      * @return a set of granted intygstyper, an empty set means no granted intygstyper for this privilege
      */
@@ -61,37 +66,37 @@ public class AuthoritiesHelper {
         List<String> knownIntygstyper = authoritiesResolver.getIntygstyper();
 
         return knownIntygstyper.stream()
-            .filter(typ -> authoritiesValidator.given(user, typ).privilege(privilegeName).isVerified())
-            .collect(Collectors.toSet());
+                .filter(typ -> authoritiesValidator.given(user, typ).privilege(privilegeName).isVerified())
+                .collect(Collectors.toSet());
     }
 
     public Set<String> getIntygstyperForFeature(UserDetails user, String... features) {
         return Stream.of(features)
-            .map(f -> user.getFeatures().get(f))
-            .filter(Objects::nonNull)
-            .filter(Feature::getGlobal)
-            .map(Feature::getIntygstyper)
-            .flatMap(List::stream)
-            .distinct()
-            .collect(Collectors.toSet());
+                .map(f -> user.getFeatures().get(f))
+                .filter(Objects::nonNull)
+                .filter(Feature::getGlobal)
+                .map(Feature::getIntygstyper)
+                .flatMap(List::stream)
+                .distinct()
+                .collect(Collectors.toSet());
     }
 
     public boolean isFeatureActive(String feature) {
         return ofNullable(authoritiesResolver.getFeatures(Collections.emptyList()).get(feature))
-            .filter(Feature::getGlobal)
-            .isPresent();
+                .filter(Feature::getGlobal)
+                .isPresent();
     }
 
     public boolean isFeatureActive(String feature, String intygType) {
         return ofNullable(authoritiesResolver.getFeatures(Collections.emptyList()).get(feature))
-            .filter(Feature::getGlobal)
-            .map(Feature::getIntygstyper)
-            .map(list -> list.contains(intygType)).orElse(false);
+                .filter(Feature::getGlobal)
+                .map(Feature::getIntygstyper)
+                .map(list -> list.contains(intygType)).orElse(false);
     }
 
     public Set<String> getIntygstyperAllowedForSekretessmarkering() {
         Optional<Feature> feature = Optional
-            .ofNullable(authoritiesResolver.getFeatures(Collections.emptyList()).get(AuthoritiesConstants.FEATURE_SEKRETESSMARKERING));
+                .ofNullable(authoritiesResolver.getFeatures(Collections.emptyList()).get(AuthoritiesConstants.FEATURE_SEKRETESSMARKERING));
         if (feature.isPresent() && feature.get().getGlobal()) {
             return new HashSet<>(feature.get().getIntygstyper());
         } else {
@@ -101,7 +106,7 @@ public class AuthoritiesHelper {
 
     public List<String> getIntygstyperAllowedForAvliden() {
         Optional<Feature> feature = Optional.ofNullable(authoritiesResolver.getFeatures(Collections.emptyList())
-            .get(AuthoritiesConstants.FEATURE_HANTERA_INTYGSUTKAST_AVLIDEN));
+                .get(AuthoritiesConstants.FEATURE_HANTERA_INTYGSUTKAST_AVLIDEN));
         if (feature.isPresent() && feature.get().getGlobal()) {
             return feature.get().getIntygstyper();
         } else {

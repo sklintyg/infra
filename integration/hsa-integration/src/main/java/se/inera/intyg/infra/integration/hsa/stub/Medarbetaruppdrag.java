@@ -18,10 +18,11 @@
  */
 package se.inera.intyg.infra.integration.hsa.stub;
 
-import static java.util.Arrays.asList;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * @author andreaskaltenbach
@@ -103,7 +104,6 @@ public class Medarbetaruppdrag {
     }
 
     public static class Uppdrag {
-
         private String vardgivare;
         private String enhet;
         private List<String> andamal;

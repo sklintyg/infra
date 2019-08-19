@@ -19,8 +19,9 @@
 package se.inera.intyg.infra.integration.grp.stub;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.time.LocalDateTime;
 import se.funktionstjanster.grp.v1.ProgressStatusType;
+
+import java.time.LocalDateTime;
 
 public class OngoingGrpSignature {
 

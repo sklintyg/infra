@@ -18,16 +18,6 @@
  */
 package se.inera.intyg.infra.security.authorities;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +31,18 @@ import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
 import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.security.common.model.Role;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 @RunWith(MockitoJUnitRunner.class)
 public class AuthoritiesResolverTest {
 
@@ -52,7 +54,7 @@ public class AuthoritiesResolverTest {
 
     @Spy
     private SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationLocation,
-        featuresConfigurationLocation);
+            featuresConfigurationLocation);
 
     @InjectMocks
     private CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();
@@ -124,7 +126,7 @@ public class AuthoritiesResolverTest {
         for (int i = 0; i < befattningsKoder.size(); i++) {
             for (int j = 0; j < gruppforskrivarKoder.size(); j++) {
                 Role role = authoritiesResolver
-                    .lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningsKoder.get(i), gruppforskrivarKoder.get(j));
+                        .lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningsKoder.get(i), gruppforskrivarKoder.get(j));
                 roleMatrix[i][j] = role;
             }
         }

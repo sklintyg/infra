@@ -18,17 +18,18 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineServiceException;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Magnus Ekstrand on 2017-02-10.
@@ -46,8 +47,8 @@ public class SjukfallIntygEnhetResolver {
     // - - -  API  - - -
 
     /**
-     * Method is resolving sjukfall for a health care unit based on the unit's certificate information. A map with patient id as key and a
-     * list of certificates associated with a sjukfall as value, will be returned.
+     * Method is resolving sjukfall for a health care unit based on the unit's certificate information.
+     * A map with patient id as key and a list of certificates associated with a sjukfall as value, will be returned.
      */
     public Map<String, List<SjukfallIntyg>> resolve(List<IntygData> intygsData, IntygParametrar parameters) {
 
@@ -79,7 +80,8 @@ public class SjukfallIntygEnhetResolver {
     // - - -  Package scope  - - -
 
     /**
-     * Method returns a map with intermediate IntygsData objects. Patient's personal-id is used as key.
+     * Method returns a map with intermediate IntygsData objects.
+     * Patient's personal-id is used as key.
      *
      * @param intygsData a list with basic certificate data
      * @param aktivtDatum a date used for decision if a certificate is active or not
@@ -110,14 +112,15 @@ public class SjukfallIntygEnhetResolver {
         return resultMap;
     }
 
-    List<SjukfallIntyg> reduceList(List<SjukfallIntyg> values, int maxIntygsGlapp) {
+    List<SjukfallIntyg> reduceList(List<SjukfallIntyg> values, int maxIntygsGlapp)  {
+
 
         // filter out active "sjukfallIntyg"
         SjukfallIntyg sjukfallIntyg = values.stream().filter(e -> e.isAktivtIntyg()).findFirst().orElse(null);
 
         if (sjukfallIntyg == null) {
             sjukfallIntyg = values.stream().filter(e -> e.isNyligenAvslutat()).findFirst()
-                .orElseThrow(() -> new SjukfallEngineServiceException("Unable to find a 'aktivt eller nyligen avslutat intyg'"));
+                    .orElseThrow(() -> new SjukfallEngineServiceException("Unable to find a 'aktivt eller nyligen avslutat intyg'"));
         }
 
         // get position of the "sjukfallIntyg"
@@ -200,14 +203,14 @@ public class SjukfallIntygEnhetResolver {
         LocalDate smallest;
 
         if (right == null || right.isEmpty()) {
-            return sjukfallIntyg.getStartDatum();
+            return  sjukfallIntyg.getStartDatum();
         } else if (right.size() == 1) {
             smallest = right.get(0).getStartDatum();
         } else {
             smallest = right.stream()
-                .min((o1, o2) -> o1.getStartDatum().compareTo(o2.getStartDatum()))
-                .get()
-                .getStartDatum();
+                    .min((o1, o2) -> o1.getStartDatum().compareTo(o2.getStartDatum()))
+                    .get()
+                    .getStartDatum();
         }
 
         if (smallest.isBefore(sjukfallIntyg.getStartDatum())) {

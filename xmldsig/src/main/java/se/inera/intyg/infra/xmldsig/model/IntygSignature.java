@@ -24,6 +24,8 @@ public interface IntygSignature extends Serializable {
 
     /**
      * Typically the canonicalized intyg XML element or plain JSON.
+     *
+     * @return
      */
     String getCanonicalizedIntyg();
 
@@ -31,11 +33,13 @@ public interface IntygSignature extends Serializable {
      * This should be what goes into any signing function (in NetiD plugin, NetiD Access or GRP).
      *
      * Note that the SignedInfo XML goes undigested into NetiD plugin sign(..), just Base64-encoded.
+     * @return
      */
     String getSigningData();
 
     /**
      * The JSON representation before adding signature. Used for digests etc.
+     * @return
      */
     String getIntygJson();
 }

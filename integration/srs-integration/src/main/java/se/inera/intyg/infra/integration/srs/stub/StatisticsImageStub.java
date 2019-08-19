@@ -18,13 +18,14 @@
  */
 package se.inera.intyg.infra.integration.srs.stub;
 
-import com.google.common.io.ByteStreams;
 import java.io.IOException;
 import java.io.InputStream;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -32,8 +33,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-public class StatisticsImageStub {
+import com.google.common.io.ByteStreams;
 
+public class StatisticsImageStub {
     private static final Logger LOG = LoggerFactory.getLogger(StatisticsImageStub.class);
 
     @GET

@@ -18,12 +18,13 @@
  */
 package se.inera.intyg.infra.integration.nias.stub;
 
+import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.integration.nias.stub.model.OngoingSigning;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.nias.stub.model.OngoingSigning;
 
 @Service
 public class NiasServiceStub {

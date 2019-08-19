@@ -18,6 +18,12 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -26,11 +32,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
-import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
-import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 
 /**
  * @author Magnus Ekstrand on 2017-02-10.
@@ -38,6 +39,7 @@ import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 public class SjukfallIntygEnhetCreator {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygEnhetCreator.class);
+
 
     // - - - API - - -
 
@@ -67,7 +69,7 @@ public class SjukfallIntygEnhetCreator {
 
             map.computeIfAbsent(k, k1 -> new ArrayList<>());
             SjukfallIntyg v = new SjukfallIntyg.SjukfallIntygBuilder(i, parameters.getAktivtDatum(),
-                parameters.getMaxAntalDagarSedanSjukfallAvslut()).build();
+                    parameters.getMaxAntalDagarSedanSjukfallAvslut()).build();
             map.get(k).add(v);
         }
 
@@ -78,14 +80,15 @@ public class SjukfallIntygEnhetCreator {
         LOG.debug("  2. Reduce map - filter out each entry where there is no active certificate.");
 
         return map.entrySet().stream()
-            .filter(e -> e.getValue().stream()
-                .filter(o -> o.isAktivtIntyg() || o.isNyligenAvslutat()).count() > 0)
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .filter(e -> e.getValue().stream()
+                        .filter(o -> o.isAktivtIntyg() || o.isNyligenAvslutat()).count() > 0)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     /**
-     * Method returns a map with sorted values. The sorting is done on SjukfallIntyg objects' slutDatum. Objects are arranged in ascending
-     * order, i.e object with biggest slutDatum will be last.
+     * Method returns a map with sorted values. The sorting is done on
+     * SjukfallIntyg objects' slutDatum. Objects are arranged in ascending order,
+     * i.e object with biggest slutDatum will be last.
      *
      * @param unsortedMap a map with patients current certificates
      * @return a map with patients current certificates sorted in ascending order
@@ -97,20 +100,20 @@ public class SjukfallIntygEnhetCreator {
         Comparator<SjukfallIntyg> dateComparator = (o1, o2) -> o1.getSlutDatum().compareTo(o2.getSlutDatum());
 
         return unsortedMap.entrySet().stream()
-            .collect(Collectors.toMap(Map.Entry::getKey,
-                e -> e.getValue().stream()
-                    .sorted(dateComparator)
-                    .collect(Collectors.toList())));
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        e -> e.getValue().stream()
+                                .sorted(dateComparator)
+                                .collect(Collectors.toList())));
     }
 
     Map<String, List<SjukfallIntyg>> setActive(Map<String, List<SjukfallIntyg>> map) {
         LOG.debug("  4. Set the active certificate - there can be only one active certificate, find it and make it active.");
 
         return map.entrySet().stream()
-            .collect(Collectors.toMap(
-                Map.Entry::getKey,
-                e -> e.setValue(setActive(e.getValue())).stream()
-                    .collect(Collectors.toList())));
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.setValue(setActive(e.getValue())).stream()
+                                .collect(Collectors.toList())));
     }
 
     private List<SjukfallIntyg> setActive(List<SjukfallIntyg> intygsDataList) {

@@ -19,11 +19,12 @@
 package se.inera.intyg.infra.integration.srs.model;
 
 import com.google.common.collect.ImmutableList;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.Prediktionsfraga;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.Svarsalternativ;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.Prediktionsfraga;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.Svarsalternativ;
 
 public final class SrsQuestion {
 
@@ -38,18 +39,18 @@ public final class SrsQuestion {
         this.text = text;
         this.helpText = helpText;
         this.answerOptions = ImmutableList.copyOf(answerOptions.stream()
-            .sorted(Comparator.comparing(AnswerOption::getPriority))
-            .collect(Collectors.toList()));
+                .sorted(Comparator.comparing(AnswerOption::getPriority))
+                .collect(Collectors.toList()));
         this.priority = priority;
     }
 
     public static SrsQuestion convert(Prediktionsfraga source) {
         return new SrsQuestion(
-            source.getFrageidSrs(),
-            source.getFragetext(),
-            source.getSvarsalternativ().stream().map(AnswerOption::convert).collect(Collectors.toList()),
-            source.getHjalptext(),
-            source.getPrioritet().intValueExact());
+                source.getFrageidSrs(),
+                source.getFragetext(),
+                source.getSvarsalternativ().stream().map(AnswerOption::convert).collect(Collectors.toList()),
+                source.getHjalptext(),
+                source.getPrioritet().intValueExact());
     }
 
     public String getQuestionId() {
@@ -73,7 +74,6 @@ public final class SrsQuestion {
     }
 
     public static final class AnswerOption {
-
         private final String text;
         private final String id;
         private final int priority;
@@ -88,7 +88,7 @@ public final class SrsQuestion {
 
         public static AnswerOption convert(Svarsalternativ source) {
             return new AnswerOption(source.getSvarsidSrs(), source.getSvarstext(),
-                source.getPrioritet().intValueExact(), source.isDefault());
+                    source.getPrioritet().intValueExact(), source.isDefault());
         }
 
         public String getText() {

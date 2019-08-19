@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.security.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Collections;
 import java.util.List;
 

@@ -18,29 +18,14 @@
  */
 package se.inera.intyg.infra.integration.srs.stub;
 
-import java.math.BigInteger;
-import java.util.Optional;
 import org.apache.cxf.annotations.SchemaValidation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Atgardsrekommendationer;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Bedomningsunderlag;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Diagnosprediktion;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Diagnosprediktionstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationRequestType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Individ;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Prediktion;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Risksignal;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Utdatafilter;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgard;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardstyp;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Diagnosstatistik;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistik;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.*;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.*;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
+
+import java.math.BigInteger;
+import java.util.Optional;
 
 //CHECKSTYLE:OFF MagicNumber
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.BOTH)
@@ -58,12 +43,12 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
         Bedomningsunderlag underlag = new Bedomningsunderlag();
         Utdatafilter filter = request.getUtdatafilter();
         String personId = request.getIndivider().getIndivid().stream().map(Individ::getPersonId)
-            .findFirst().orElseThrow(IllegalArgumentException::new);
+                .findFirst().orElseThrow(IllegalArgumentException::new);
         Optional<Diagnos> incomingDiagnosis = request.getIndivider().getIndivid().stream()
-            .flatMap(i -> i.getDiagnos().stream()).findFirst();
+                .flatMap(i -> i.getDiagnos().stream()).findFirst();
         Optional<Diagnos> srsDiagnos = request.getIndivider().getIndivid().stream().flatMap(i -> i.getDiagnos().stream())
-            .filter(d -> GetDiagnosisCodesStub.allValidDiagnosis.contains(d.getCode()))
-            .findFirst();
+                .filter(d -> GetDiagnosisCodesStub.allValidDiagnosis.contains(d.getCode()))
+                .findFirst();
         underlag.setPersonId(personId);
 
         Diagnosprediktion diagnosprediktion = new Diagnosprediktion();
@@ -88,29 +73,29 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
         if (filter.isAtgardsrekommendation()) {
             Atgardsrekommendationer rekommendationer = new Atgardsrekommendationer();
             rekommendationer.getRekommendation()
-                .add(createAtgardsrekommendation("Atgardsforslag REK 1",
-                    srsDiagnos.orElseThrow(IllegalArgumentException::new),
-                    Atgardstyp.REK, 1));
+                    .add(createAtgardsrekommendation("Atgardsforslag REK 1",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                            Atgardstyp.REK, 1));
             rekommendationer.getRekommendation()
-                .add(createAtgardsrekommendation("Atgardsforslag REK 2",
-                    srsDiagnos.orElseThrow(IllegalArgumentException::new),
-                    Atgardstyp.REK, 2));
+                    .add(createAtgardsrekommendation("Atgardsforslag REK 2",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                            Atgardstyp.REK, 2));
             rekommendationer.getRekommendation()
-                .add(createAtgardsrekommendation("Atgardsforslag REK 3",
-                    srsDiagnos.orElseThrow(IllegalArgumentException::new),
-                    Atgardstyp.REK, 3));
+                    .add(createAtgardsrekommendation("Atgardsforslag REK 3",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                            Atgardstyp.REK, 3));
             rekommendationer.getRekommendation()
-                .add(createAtgardsrekommendation("Atgardsforslag OBS 1",
-                    srsDiagnos.orElseThrow(IllegalArgumentException::new),
-                    Atgardstyp.OBS, 1));
+                    .add(createAtgardsrekommendation("Atgardsforslag OBS 1",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                            Atgardstyp.OBS, 1));
             rekommendationer.getRekommendation()
-                .add(createAtgardsrekommendation("Atgardsforslag OBS 2",
-                    srsDiagnos.orElseThrow(IllegalArgumentException::new),
-                    Atgardstyp.OBS, 2));
+                    .add(createAtgardsrekommendation("Atgardsforslag OBS 2",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                            Atgardstyp.OBS, 2));
             rekommendationer.getRekommendation()
-                .add(createAtgardsrekommendation("Atgardsforslag OBS 3",
-                    srsDiagnos.orElseThrow(IllegalArgumentException::new),
-                    Atgardstyp.OBS, 3));
+                    .add(createAtgardsrekommendation("Atgardsforslag OBS 3",
+                            srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                            Atgardstyp.OBS, 3));
             underlag.setAtgardsrekommendationer(rekommendationer);
         }
 

@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.security.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -91,11 +92,11 @@ public class Privilege implements Serializable {
     @Override
     public String toString() {
         return "\nPrivilege {"
-            + " name='" + name + '\''
-            + ", desc='" + desc + '\''
-            + ", intygstyper= " + intygstyper
-            + ", requestOrigins= " + requestOrigins
-            + "}";
+                + " name='" + name + '\''
+                + ", desc='" + desc + '\''
+                + ", intygstyper= " + intygstyper
+                + ", requestOrigins= " + requestOrigins
+                + "}";
     }
 
 }

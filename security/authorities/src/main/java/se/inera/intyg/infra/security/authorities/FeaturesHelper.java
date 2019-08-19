@@ -36,8 +36,8 @@ public class FeaturesHelper {
 
     public boolean isFeatureActive(String feature) {
         return ofNullable(featuresResolver.getFeatures().get(feature))
-            .filter(Feature::getGlobal)
-            .isPresent();
+                .filter(Feature::getGlobal)
+                .isPresent();
     }
 
 }

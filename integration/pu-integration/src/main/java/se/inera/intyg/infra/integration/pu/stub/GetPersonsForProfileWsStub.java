@@ -19,9 +19,6 @@
 package se.inera.intyg.infra.integration.pu.stub;
 
 import com.google.common.base.Joiner;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
@@ -29,6 +26,10 @@ import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileres
 import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GetPersonsForProfileWsStub implements GetPersonsForProfileResponderInterface {
 
@@ -39,7 +40,7 @@ public class GetPersonsForProfileWsStub implements GetPersonsForProfileResponder
 
     @Override
     public GetPersonsForProfileResponseType getPersonsForProfile(String logicalAddress,
-        GetPersonsForProfileType parameters) {
+            GetPersonsForProfileType parameters) {
 
         validate(logicalAddress, parameters);
         GetPersonsForProfileResponseType response = new GetPersonsForProfileResponseType();

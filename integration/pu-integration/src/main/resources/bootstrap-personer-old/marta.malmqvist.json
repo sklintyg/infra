@@ -1,15 +1,15 @@
 {
-  "sekretessmarkering": "N",
-  "personpost": {
-    "personId": "196405165942",
-    "namn": {
-      "fornamn": "Märta",
-      "efternamn": "Malmqvist"
-    },
-    "folkbokforingsadress": {
-      "utdelningsadress1": "Privatgatan 5",
-      "postNr": 12345,
-      "postort": "Privatstan"
+    "sekretessmarkering": "N",
+    "personpost": {
+        "personId": "196405165942",
+        "namn": {
+            "fornamn": "Märta",
+            "efternamn": "Malmqvist"
+        },
+        "folkbokforingsadress": {
+            "utdelningsadress1": "Privatgatan 5",
+            "postNr": 12345,
+            "postort": "Privatstan"
+        }
     }
-  }
 }

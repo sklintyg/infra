@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.infra.integration.srs.stub;
 
-import java.util.Optional;
 import org.apache.cxf.annotations.SchemaValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +29,8 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstat
 import se.inera.intyg.infra.integration.srs.stub.repository.ConsentRepository;
 import se.inera.intyg.infra.integration.srs.stub.repository.model.Consent;
 import se.inera.intyg.schemas.contract.Personnummer;
+
+import java.util.Optional;
 
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.BOTH)
 public class GetConsentStub implements GetConsentResponderInterface {
@@ -47,7 +48,7 @@ public class GetConsentStub implements GetConsentResponderInterface {
 
         Optional<Personnummer> personnummer = Personnummer.createPersonnummer(getConsentRequestType.getPersonId());
         Optional<Consent> consent = consentRepository
-            .getConsent(personnummer.get(), getConsentRequestType.getVardenhetId().getExtension());
+                .getConsent(personnummer.get(), getConsentRequestType.getVardenhetId().getExtension());
 
         if (consent.isPresent()) {
             response.setSamtycke(true);

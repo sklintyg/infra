@@ -18,14 +18,16 @@
  */
 package se.inera.intyg.infra.integration.hsa.util;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import se.inera.intyg.infra.integration.hsa.model.AbstractVardenhet;
 import se.riv.infrastructure.directory.v1.AddressType;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
- * Extracted from HsaOrganizationsServiceImpl and generalized so it can be used for both CareUnit and Mottagning levels.
+ * Extracted from HsaOrganizationsServiceImpl and generalized so it can be used for both CareUnit
+ * and Mottagning levels.
  *
  * Created by eriklupander on 2017-09-19.
  */
@@ -45,8 +47,8 @@ public class HsaUnitAddressParser {
 
         if (!lines.isEmpty()) {
             vardenhet.setPostadress(lines.subList(0, address.getAddressLine().size() - 1).stream()
-                .filter(Objects::nonNull)
-                .collect(Collectors.joining(" ")));
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.joining(" ")));
         } else {
             vardenhet.setPostadress("");
         }

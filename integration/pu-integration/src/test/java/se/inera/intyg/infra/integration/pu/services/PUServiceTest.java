@@ -18,27 +18,7 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static se.inera.intyg.infra.integration.pu.model.PersonSvar.Status.NOT_FOUND;
-
 import com.google.common.base.Strings;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPFactory;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.soap.SOAPFaultException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -61,6 +41,27 @@ import se.riv.strategicresourcemanagement.persons.person.v3.NamePartType;
 import se.riv.strategicresourcemanagement.persons.person.v3.NameType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
+
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPFactory;
+import javax.xml.ws.WebServiceException;
+import javax.xml.ws.soap.SOAPFaultException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static se.inera.intyg.infra.integration.pu.model.PersonSvar.Status.NOT_FOUND;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext
@@ -142,7 +143,7 @@ public class PUServiceTest {
     @Test
     public void checkNoneExistingPersons() {
         List<Personnummer> pnrs = Arrays.asList(createPnr("19121212-7169"), createPnr("19971230-2380"),
-            createPnr("19980919-2397"), createPnr("19981029-2392"));
+                createPnr("19980919-2397"), createPnr("19981029-2392"));
 
         // Create mock
         GetPersonsForProfileType parameters = service.buildPersonsForProfileRequest(pnrs);
@@ -173,7 +174,7 @@ public class PUServiceTest {
     @Test
     public void checkSomeExistingPersons() {
         List<Personnummer> pnrs = Arrays.asList(createPnr("19520614-2597"), createPnr("19971230-2380"),
-            createPnr("20121212-1212"), createPnr("19981029-2392"));
+                createPnr("20121212-1212"), createPnr("19981029-2392"));
 
         // Create mock
         GetPersonsForProfileType parameters = service.buildPersonsForProfileRequest(pnrs);
@@ -219,8 +220,7 @@ public class PUServiceTest {
     @Test
     public void checkIsProtectedPopulationRecord() {
         Person person = service.getPerson(createPnr("20051231-2398")).getPerson();
-        assertTrue(person.isSekretessmarkering());
-    }
+        assertTrue(person.isSekretessmarkering());    }
 
     @Test
     public void checkDeadPerson() {
@@ -279,9 +279,9 @@ public class PUServiceTest {
         GetPersonsForProfileResponderInterface mockResidentService = mock(GetPersonsForProfileResponderInterface.class);
 
         when(mockResidentService.getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class)))
-            .thenThrow(new SOAPFaultException(SOAPFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL).createFault()))
-            .thenThrow(new WebServiceException())
-            .thenReturn(response);
+                .thenThrow(new SOAPFaultException(SOAPFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL).createFault()))
+                .thenThrow(new WebServiceException())
+                .thenReturn(response);
         // ReflectionTestUtils.setField(((Advised) service).getTargetSource().getTarget(), "service", mockResidentService);
         service.setService(mockResidentService);
 
@@ -374,25 +374,25 @@ public class PUServiceTest {
         GetPersonsForProfileResponderInterface mockResidentService = mock(GetPersonsForProfileResponderInterface.class);
         GetPersonsForProfileResponseType mockResponse = new GetPersonsForProfileResponseType();
         when(mockResidentService.getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class)))
-            .thenAnswer((invocation) -> {
-                GetPersonsForProfileType request = invocation.getArgument(1);
-                GetPersonsForProfileResponseType response = new GetPersonsForProfileResponseType();
-                int responseCount = Math.min(request.getPersonId().size(), 500);
-                for (int i = 0; i < responseCount; i++) {
-                    IIType personId = request.getPersonId().get(i);
-                    RequestedPersonRecordType requestedPersonRecordType = new RequestedPersonRecordType();
-                    requestedPersonRecordType.setRequestedPersonalIdentity(personId);
-                    PersonRecordType personRecordType = new PersonRecordType();
-                    NameType nameType = new NameType();
-                    NamePartType namePartType = new NamePartType();
-                    namePartType.setName("Testpersonnamn " + personId.getExtension());
-                    nameType.setGivenName(namePartType);
-                    personRecordType.setName(nameType);
-                    requestedPersonRecordType.setPersonRecord(personRecordType);
-                    response.getRequestedPersonRecord().add(requestedPersonRecordType);
-                }
-                return response;
-            });
+                .thenAnswer((invocation) -> {
+                    GetPersonsForProfileType request = invocation.getArgument(1);
+                    GetPersonsForProfileResponseType response = new GetPersonsForProfileResponseType();
+                    int responseCount = Math.min(request.getPersonId().size(), 500);
+                    for (int i = 0; i < responseCount; i++) {
+                        IIType personId = request.getPersonId().get(i);
+                        RequestedPersonRecordType requestedPersonRecordType = new RequestedPersonRecordType();
+                        requestedPersonRecordType.setRequestedPersonalIdentity(personId);
+                        PersonRecordType personRecordType = new PersonRecordType();
+                        NameType nameType = new NameType();
+                        NamePartType namePartType = new NamePartType();
+                        namePartType.setName("Testpersonnamn " + personId.getExtension());
+                        nameType.setGivenName(namePartType);
+                        personRecordType.setName(nameType);
+                        requestedPersonRecordType.setPersonRecord(personRecordType);
+                        response.getRequestedPersonRecord().add(requestedPersonRecordType);
+                    }
+                    return response;
+                });
         return mockResidentService;
     }
 

@@ -19,11 +19,6 @@
 package se.inera.intyg.infra.integration.hsa.stub.scanner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +28,17 @@ import se.inera.intyg.infra.integration.hsa.stub.HsaPerson;
 import se.inera.intyg.infra.integration.hsa.stub.HsaServiceStub;
 import se.inera.intyg.infra.integration.hsa.stub.Medarbetaruppdrag;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by eriklupander on 2017-04-12.
  */
 @Service
-@Profile({"dev", "wc-hsa-stub", "wc-all-stubs"})
+@Profile({ "dev", "wc-hsa-stub", "wc-all-stubs" })
 public class WatchEventPersonHandler implements ScanEventHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(WatchEventPersonHandler.class);
@@ -64,10 +65,10 @@ public class WatchEventPersonHandler implements ScanEventHandler {
             if (existingHsaPerson == null) {
                 addPerson(hsaPerson, medarbetaruppdrag);
                 LOG.info("Created HSA person '{}' with hsaId '{}'", hsaPerson.getForNamn() + " " + hsaPerson.getEfterNamn(),
-                    hsaPerson.getHsaId());
+                        hsaPerson.getHsaId());
             } else {
                 LOG.warn("Could not create HSA person {}, person with hsaId '{}' already exists in HSA stub.",
-                    hsaPerson.getForNamn() + " " + hsaPerson.getEfterNamn(), hsaPerson.getHsaId());
+                        hsaPerson.getForNamn() + " " + hsaPerson.getEfterNamn(), hsaPerson.getHsaId());
             }
 
             scannedFiles.put(path.toUri().toString(), hsaPerson.getHsaId());
@@ -98,7 +99,7 @@ public class WatchEventPersonHandler implements ScanEventHandler {
             } else {
                 LOG.warn("Could not update HSA person {}, person with hsaId '{}' already exists in HSA "
                         + "stub and is marked readOnly.",
-                    hsaPerson.getForNamn() + " " + hsaPerson.getEfterNamn(), hsaPerson.getHsaId());
+                        hsaPerson.getForNamn() + " " + hsaPerson.getEfterNamn(), hsaPerson.getHsaId());
             }
 
             if (!scannedFiles.containsKey(path.toUri().toString())) {
@@ -123,7 +124,7 @@ public class WatchEventPersonHandler implements ScanEventHandler {
                 LOG.info("Successfully deleted HSA person {}", hsaId);
             } else {
                 LOG.warn("Could not delete HSA person with hsaId '{}', doesn't exist in HSA "
-                    + "stub or is marked readOnly.", hsaId);
+                        + "stub or is marked readOnly.", hsaId);
             }
         } else {
             LOG.warn("Path '{}' not stored in scannedFiles, no content was deleted from HSA stub", path.toString());
@@ -143,6 +144,6 @@ public class WatchEventPersonHandler implements ScanEventHandler {
 
     private boolean isMutable(HsaPerson existingHsaPerson) {
         return existingHsaPerson.getFakeProperties() == null
-            || (existingHsaPerson.getFakeProperties() != null && !existingHsaPerson.getFakeProperties().isReadOnly());
+                || (existingHsaPerson.getFakeProperties() != null && !existingHsaPerson.getFakeProperties().isReadOnly());
     }
 }

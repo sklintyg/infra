@@ -18,13 +18,14 @@
  */
 package se.inera.intyg.infra.sjukfall.testdata.builders;
 
+import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
+import se.inera.intyg.infra.sjukfall.dto.Formaga;
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
-import se.inera.intyg.infra.sjukfall.dto.Formaga;
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
 
 
 /**

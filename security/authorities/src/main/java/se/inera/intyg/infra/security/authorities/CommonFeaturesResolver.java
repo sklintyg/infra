@@ -23,10 +23,12 @@ import static se.inera.intyg.infra.security.authorities.AuthoritiesResolverUtil.
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
 import se.inera.intyg.infra.security.common.model.Feature;
 
@@ -43,8 +45,8 @@ public class CommonFeaturesResolver {
 
     public Map<String, Feature> getFeatures() {
         List<Feature> featureList = configurationLoader.getFeaturesConfiguration().getFeatures().stream()
-            .map(Feature::new)
-            .collect(Collectors.toList());
+                .map(Feature::new)
+                .collect(Collectors.toList());
 
         return toMap(featureList, Feature::getName);
     }

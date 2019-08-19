@@ -22,7 +22,6 @@ package se.inera.intyg.infra.security.common.service;
  * Created by eriklupander on 2016-05-18.
  */
 public interface AuthenticationLogger {
-
     void logUserLogin(String userHsaId, String authScheme, String origin);
 
     void logUserLogout(String userHsaId, String authScheme);

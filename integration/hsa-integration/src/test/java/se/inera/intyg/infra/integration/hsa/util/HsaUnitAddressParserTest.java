@@ -18,12 +18,12 @@
  */
 package se.inera.intyg.infra.integration.hsa.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import org.junit.Test;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.riv.infrastructure.directory.v1.AddressType;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Created by eriklupander on 2017-09-19.

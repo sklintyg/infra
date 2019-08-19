@@ -20,6 +20,7 @@
 package se.inera.intyg.infra.integration.ia.stub;
 
 import java.util.List;
+
 import se.inera.intyg.infra.integration.ia.model.Application;
 import se.inera.intyg.infra.integration.ia.model.Banner;
 import se.inera.intyg.infra.integration.ia.services.IABannerServiceImpl;

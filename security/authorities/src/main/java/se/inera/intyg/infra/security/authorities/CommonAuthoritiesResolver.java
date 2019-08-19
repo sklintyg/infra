@@ -18,19 +18,6 @@
  */
 package se.inera.intyg.infra.security.authorities;
 
-import static se.inera.intyg.infra.security.authorities.AuthoritiesResolverUtil.toMap;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +37,20 @@ import se.inera.intyg.infra.security.common.model.Title;
 import se.inera.intyg.infra.security.common.model.TitleCode;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static se.inera.intyg.infra.security.authorities.AuthoritiesResolverUtil.toMap;
+
 /**
  * Created by Magnus Ekstrand on 20/11/15.
  */
@@ -61,17 +62,17 @@ public class CommonAuthoritiesResolver {
     @Autowired
     private SecurityConfigurationLoader configurationLoader;
     private Function<String, RequestOrigin> fnRequestOrigin = (name) -> getRequestOrigins().stream()
-        .filter(isRequestOrigin(name))
-        .findFirst()
-        .orElse(null);
+            .filter(isRequestOrigin(name))
+            .findFirst()
+            .orElse(null);
     private Function<String, Role> fnRole = (name) -> getRoles().stream()
-        .filter(isRole(name))
-        .findFirst()
-        .orElse(null);
+            .filter(isRole(name))
+            .findFirst()
+            .orElse(null);
     private BiFunction<String, String, TitleCode> fnTitleCode = (titleCode, groupPrescriptionCode) -> getTitleCodes().stream()
-        .filter(isTitleCode(titleCode).and(isGroupPrescriptionCode(groupPrescriptionCode)))
-        .findFirst()
-        .orElse(null);
+            .filter(isTitleCode(titleCode).and(isGroupPrescriptionCode(groupPrescriptionCode)))
+            .findFirst()
+            .orElse(null);
 
     public Role resolveRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole, UserCredentials userCredentials) {
         Assert.notNull(user, "Argument 'user' cannot be null");
@@ -149,12 +150,12 @@ public class CommonAuthoritiesResolver {
      */
     public Map<String, Feature> getFeatures(List<String> hsaIds) {
         List<Feature> featureList = configurationLoader.getFeaturesConfiguration().getFeatures().stream()
-            .map(Feature::new)
-            .collect(Collectors.toList());
+                .map(Feature::new)
+                .collect(Collectors.toList());
 
         List<Pilot> pilots = configurationLoader.getFeaturesConfiguration().getPilots().stream()
-            .filter(p -> p.getHsaIds().stream().anyMatch(hsaIds::contains))
-            .collect(Collectors.toList());
+                .filter(p -> p.getHsaIds().stream().anyMatch(hsaIds::contains))
+                .collect(Collectors.toList());
 
         handleActivatedPilots(featureList, pilots);
         handleDeactivatedPilots(featureList, pilots);
@@ -224,7 +225,8 @@ public class CommonAuthoritiesResolver {
     }
 
     /**
-     * Lookup user role by looking into 'legitimerade yrkesgrupper'. Currently there are only two 'yrkesgrupper' to look for:
+     * Lookup user role by looking into 'legitimerade yrkesgrupper'.
+     * Currently there are only two 'yrkesgrupper' to look for:
      * <ul>
      * <li>Läkare</li>
      * <li>Tandläkare</li>
@@ -289,7 +291,7 @@ public class CommonAuthoritiesResolver {
         Role role = fnRole.apply(titleCode.getRole().getName());
         if (role == null) {
             throw new AuthoritiesException(
-                "fnRole.apply(titleCode.fnRole()) returnerade 'null' vilket indikerar felaktig konfiguration av roller");
+                    "fnRole.apply(titleCode.fnRole()) returnerade 'null' vilket indikerar felaktig konfiguration av roller");
         }
 
         return role;
@@ -338,10 +340,10 @@ public class CommonAuthoritiesResolver {
 
     private List<Feature> getFeatures(List<Pilot> pilots, Function<Pilot, List<Feature>> fun) {
         return pilots.stream()
-            .map(fun)
-            .filter(Objects::nonNull)
-            .flatMap(List::stream)
-            .collect(Collectors.toList());
+                .map(fun)
+                .filter(Objects::nonNull)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
     private Optional<Feature> getExisting(List<Feature> featureList, Feature feature) {

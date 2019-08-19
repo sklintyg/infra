@@ -22,14 +22,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static se.inera.intyg.infra.integration.pu.model.PersonSvar.Status.NOT_FOUND;
 
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;

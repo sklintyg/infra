@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.integration.ia.services;
 
 import java.util.List;
+
 import se.inera.intyg.infra.integration.ia.model.Application;
 import se.inera.intyg.infra.integration.ia.model.Banner;
 

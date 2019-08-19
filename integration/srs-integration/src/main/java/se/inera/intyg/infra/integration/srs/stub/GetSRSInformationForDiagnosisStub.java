@@ -18,20 +18,15 @@
  */
 package se.inera.intyg.infra.integration.srs.stub;
 
-import java.math.BigInteger;
-import java.util.Optional;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgard;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardstyp;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Diagnosstatistik;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistik;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.*;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
+
+import java.math.BigInteger;
+import java.util.Optional;
 
 /**
  * Created by marced on 2017-11-06.
@@ -70,17 +65,17 @@ public class GetSRSInformationForDiagnosisStub implements GetSRSInformationForDi
             atgardsrekommendation.setDiagnos(actualDiagnose);
             atgardsrekommendation.setAtgardsrekommendationstatus(Atgardsrekommendationstatus.DIAGNOSKOD_PA_HOGRE_NIVA);
             atgardsrekommendation.getAtgard()
-                .add(createAtgard("Atgardsforslag REK 1 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.REK, 1));
+                    .add(createAtgard("Atgardsforslag REK 1 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.REK, 1));
             atgardsrekommendation.getAtgard()
-                .add(createAtgard("Atgardsforslag REK 2 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.REK, 2));
+                    .add(createAtgard("Atgardsforslag REK 2 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.REK, 2));
             atgardsrekommendation.getAtgard()
-                .add(createAtgard("Atgardsforslag REK 3 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.REK, 3));
+                    .add(createAtgard("Atgardsforslag REK 3 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.REK, 3));
             atgardsrekommendation.getAtgard()
-                .add(createAtgard("Atgardsforslag OBS 1 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.OBS, 1));
+                    .add(createAtgard("Atgardsforslag OBS 1 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.OBS, 1));
             atgardsrekommendation.getAtgard()
-                .add(createAtgard("Atgardsforslag OBS 2 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.OBS, 2));
+                    .add(createAtgard("Atgardsforslag OBS 2 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.OBS, 2));
             atgardsrekommendation.getAtgard()
-                .add(createAtgard("Atgardsforslag OBS 3 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.OBS, 3));
+                    .add(createAtgard("Atgardsforslag OBS 3 för överordnad diagnos " + actualDiagnose.getCode(), Atgardstyp.OBS, 3));
         } else {
             //No match. Note that setting null is quite stupid, but that's what the real SRS service does.
             atgardsrekommendation.setDiagnos(null);

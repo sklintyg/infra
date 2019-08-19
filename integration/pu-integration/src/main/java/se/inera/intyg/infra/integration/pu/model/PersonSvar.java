@@ -21,7 +21,6 @@ package se.inera.intyg.infra.integration.pu.model;
 import java.io.Serializable;
 
 public class PersonSvar implements Serializable {
-
     private static final long serialVersionUID = 2L;
 
     public static PersonSvar found(final Person person) {

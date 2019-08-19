@@ -19,11 +19,6 @@
 package se.inera.intyg.infra.integration.hsa.stub.scanner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +27,17 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.integration.hsa.stub.HsaServiceStub;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by eriklupander on 2017-04-12.
  */
 @Service
-@Profile({"dev", "wc-hsa-stub", "wc-all-stubs"})
+@Profile({ "dev", "wc-hsa-stub", "wc-all-stubs" })
 public class WatchEventVardgivareHandler implements ScanEventHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(WatchEventVardgivareHandler.class);
@@ -62,7 +63,7 @@ public class WatchEventVardgivareHandler implements ScanEventHandler {
                 LOG.info("Created HSA vargivare '{}' with hsaId '{}'", vg.getNamn(), vg.getId());
             } else {
                 LOG.warn("Could not create HSA vardgivare {}, vardgivare with hsaId '{}' already exists in HSA stub.",
-                    vg.getNamn(), vg.getId());
+                        vg.getNamn(), vg.getId());
             }
 
             scannedFiles.put(path.toUri().toString(), vg.getId());

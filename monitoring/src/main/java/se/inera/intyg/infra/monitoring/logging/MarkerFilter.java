@@ -31,14 +31,10 @@ import org.slf4j.MarkerFactory;
 
 public class MarkerFilter extends AbstractMatcherFilter<ILoggingEvent> {
 
-    /**
-     * The Monitoring marker.
-     */
+    /** The Monitoring marker. */
     public static final Marker MONITORING = MarkerFactory.getMarker("Monitoring");
 
-    /**
-     * Validation marker.
-     */
+    /** Validation marker. */
     public static final Marker VALIDATION = MarkerFactory.getMarker("Validation");
 
 
@@ -61,7 +57,7 @@ public class MarkerFilter extends AbstractMatcherFilter<ILoggingEvent> {
 
         final Marker marker = event.getMarker();
         return Objects.nonNull(marker)
-            && this.markersToMatch.stream().anyMatch(m -> m.contains(marker)) ? getOnMatch() : getOnMismatch();
+                && this.markersToMatch.stream().anyMatch(m -> m.contains(marker)) ? getOnMatch() : getOnMismatch();
     }
 
     /**

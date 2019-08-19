@@ -44,6 +44,7 @@ public class SjukfallPatient {
     // De intyg som ingår i sjukfallet
     private List<SjukfallIntyg> sjukfallIntygList;
 
+
     // getters and setters
 
     public Patient getPatient() {

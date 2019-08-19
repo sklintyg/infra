@@ -18,13 +18,9 @@
  */
 package se.inera.intyg.infra.integration.hsa.util;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
+
 import se.riv.infrastructure.directory.v1.PaTitleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
@@ -53,9 +49,9 @@ public class HsaAttributeExtractor {
         for (PersonInformationType userType : hsaPersonInfo) {
             if (userType.getPaTitle() != null) {
                 List<String> hsaTitles = userType.getPaTitle().stream()
-                    .map(PaTitleType::getPaTitleCode)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                        .map(PaTitleType::getPaTitleCode)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
                 if (hsaTitles.size() > 0) {
                     befattningar.addAll(hsaTitles);
                 }

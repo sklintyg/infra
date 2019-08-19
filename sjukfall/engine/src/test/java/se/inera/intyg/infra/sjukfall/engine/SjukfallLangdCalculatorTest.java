@@ -18,16 +18,18 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.Test;
+
 import se.inera.intyg.infra.sjukfall.dto.Formaga;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -46,6 +48,7 @@ public class SjukfallLangdCalculatorTest {
 
     /**
      * Test FALL1 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
+     * @throws Exception
      */
     @Test
     public void testGetEffectiveNumberOfSickDaysFall1() throws Exception {
@@ -60,6 +63,7 @@ public class SjukfallLangdCalculatorTest {
 
     /**
      * Test FALL3 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
+     * @throws Exception
      */
     @Test
     public void testGetEffectiveNumberOfSickDaysFall3() throws Exception {
@@ -75,6 +79,7 @@ public class SjukfallLangdCalculatorTest {
 
     /**
      * Test FALL5 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
+     * @throws Exception
      */
     @Test
     public void testGetEffectiveNumberOfSickDaysFall5() throws Exception {
@@ -89,6 +94,7 @@ public class SjukfallLangdCalculatorTest {
 
     /**
      * Test FALL6 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
+     * @throws Exception
      */
     @Test
     public void testGetEffectiveNumberOfSickDaysFall6() throws Exception {
@@ -103,16 +109,17 @@ public class SjukfallLangdCalculatorTest {
 
     /**
      * Test that intervals that are abut are counted equals as spanning the entire period.
+     * @throws Exception
      */
     @Test
     public void testGetEffectiveNumberOfSickDaysAbutIntervals() throws Exception {
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
-        intygsUnderlag.add(createIntyg(createInterval("2016-02-12", "2016-02-20"), createInterval("2016-02-21", "2016-02-26"),
-            createInterval("2016-02-26", "2016-03-19")));
+        intygsUnderlag.add(createIntyg(createInterval("2016-02-12", "2016-02-20"), createInterval("2016-02-21", "2016-02-26"), createInterval("2016-02-26", "2016-03-19")));
 
         List<SjukfallIntyg> intygsUnderlag2 = new ArrayList<>();
         intygsUnderlag2.add(createIntyg(createInterval("2016-02-12", "2016-03-19")));
+
 
         assertEquals(37, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag));
         assertEquals(37, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag2));

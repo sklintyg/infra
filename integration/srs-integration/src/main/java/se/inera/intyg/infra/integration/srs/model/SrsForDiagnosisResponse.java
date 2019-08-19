@@ -18,14 +18,14 @@
  */
 package se.inera.intyg.infra.integration.srs.model;
 
-import com.google.common.collect.ImmutableList;
 import java.util.List;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Created by marced on 2017-11-06.
  */
 public final class SrsForDiagnosisResponse {
-
     private final String diagnosisCode;
     private final String atgarderStatusCode;
     private final ImmutableList<String> atgarderObs;
@@ -34,8 +34,8 @@ public final class SrsForDiagnosisResponse {
     private final String statistikDiagnosisCode;
 
     public SrsForDiagnosisResponse(List<String> atgarderObs, List<String> atgarderRek,
-        String diagnosisCode, String atgarderStatusCode, String statistikStatusCode,
-        String statistikDiagnosisCode) {
+            String diagnosisCode, String atgarderStatusCode, String statistikStatusCode,
+            String statistikDiagnosisCode) {
         if (atgarderObs == null) {
             this.atgarderObs = null;
         } else {

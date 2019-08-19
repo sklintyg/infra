@@ -18,6 +18,11 @@
  */
 package se.inera.intyg.infra.sjukfall.testdata;
 
+import se.inera.intyg.infra.sjukfall.dto.Formaga;
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.infra.sjukfall.testdata.builders.FormagaT;
+import se.inera.intyg.infra.sjukfall.testdata.builders.IntygDataT;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,10 +31,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import se.inera.intyg.infra.sjukfall.dto.Formaga;
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
-import se.inera.intyg.infra.sjukfall.testdata.builders.FormagaT;
-import se.inera.intyg.infra.sjukfall.testdata.builders.IntygDataT;
 
 
 /**
@@ -74,20 +75,20 @@ public class SjukfallIntygLineMapper {
 
         // CHECKSTYLE:OFF MagicNumber
         return new IntygDataT.IntygDataBuilder()
-            .intygsId(data[0])
-            .diagnoskod(data[5])
-            .biDiagnoser(slm.map(data[6]))
-            .patientId(data[1])
-            .patientNamn(patientNamn(data[2], data[3], data[4]))
-            .lakareId(data[9])
-            .lakareNamn(data[10])
-            .vardenhetId(data[7])
-            .vardenhetNamn(data[8])
-            .formagor(ffm.map(data[11]))
-            .sysselsattning(slm.map(data[12]))
-            .enkeltIntyg(Boolean.valueOf(data[13]))
-            .signeringsTidpunkt(LocalDateTime.parse(data[14]))
-            .build();
+                .intygsId(data[0])
+                .diagnoskod(data[5])
+                .biDiagnoser(slm.map(data[6]))
+                .patientId(data[1])
+                .patientNamn(patientNamn(data[2], data[3], data[4]))
+                .lakareId(data[9])
+                .lakareNamn(data[10])
+                .vardenhetId(data[7])
+                .vardenhetNamn(data[8])
+                .formagor(ffm.map(data[11]))
+                .sysselsattning(slm.map(data[12]))
+                .enkeltIntyg(Boolean.valueOf(data[13]))
+                .signeringsTidpunkt(LocalDateTime.parse(data[14]))
+                .build();
         // CHECKSTYLE:ON MagicNumber
     }
 

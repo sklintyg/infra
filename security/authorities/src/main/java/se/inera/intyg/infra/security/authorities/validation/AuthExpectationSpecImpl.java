@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.security.common.model.Privilege;
@@ -78,14 +79,14 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
 
         if (originConstraints.isPresent() && Arrays.stream(originConstraints.get()).noneMatch(oc -> this.checkHasOrigin(oc.name()))) {
             errors.add(String.format("mandatory origins '%s' did not match users origin value of '%s'.",
-                Arrays.stream(originConstraints.get()).map(UserOriginType::name).collect(Collectors.joining(",")),
-                this.user.getOrigin()));
+                    Arrays.stream(originConstraints.get()).map(UserOriginType::name).collect(Collectors.joining(",")),
+                    this.user.getOrigin()));
         }
 
         if (originNotConstraints.isPresent() && Arrays.stream(originNotConstraints.get()).anyMatch(oc -> this.checkHasOrigin(oc.name()))) {
             errors.add(String.format("forbidden features '%s' matched user orgin value '%s'",
-                Arrays.stream(originNotConstraints.get()).map(UserOriginType::name).collect(Collectors.joining(",")),
-                this.user.getOrigin()));
+                    Arrays.stream(originNotConstraints.get()).map(UserOriginType::name).collect(Collectors.joining(",")),
+                    this.user.getOrigin()));
         }
 
         if (roleConstraints.isPresent() && Arrays.stream(roleConstraints.get()).noneMatch(rc -> this.checkRole(rc))) {
@@ -133,11 +134,11 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
 
     private String formatFeatureError(String[] features, String format) {
         return String.format(format,
-            Arrays.stream(features)
-                .map(s -> intygsTypeContext.isPresent()
-                    ? String.format("%s.%s", s, intygsTypeContext.get())
-                    : s)
-                .collect(Collectors.joining(",")));
+                Arrays.stream(features)
+                        .map(s -> intygsTypeContext.isPresent()
+                                ? String.format("%s.%s", s, intygsTypeContext.get())
+                                : s)
+                        .collect(Collectors.joining(",")));
     }
 
     @Override
@@ -251,7 +252,7 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
         }
 
         if (this.intygsTypeContext.isPresent() && privilegeConfig.getIntygstyper().size() > 0
-            && privilegeConfig.getIntygstyper().stream().noneMatch(t -> t.equals(this.intygsTypeContext.get()))) {
+                && privilegeConfig.getIntygstyper().stream().noneMatch(t -> t.equals(this.intygsTypeContext.get()))) {
             return false;
         }
 
@@ -259,7 +260,7 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
         if (privilegeConfig.getRequestOrigins().size() > 0) {
             // The users origin must match one of them
             Optional<RequestOrigin> matchingOriginConfig = privilegeConfig.getRequestOrigins().stream()
-                .filter(ro -> ro.getName().equals(this.user.getOrigin())).findAny();
+                    .filter(ro -> ro.getName().equals(this.user.getOrigin())).findAny();
             if (!matchingOriginConfig.isPresent()) {
                 return false;
             }
@@ -267,7 +268,7 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
             // If the originConfig has a intygstypeConstraint - one of them must also match any given intygstype
             // context..
             if (this.intygsTypeContext.isPresent() && matchingOriginConfig.get().getIntygstyper().size() > 0
-                && matchingOriginConfig.get().getIntygstyper().stream().noneMatch(t -> t.equals(this.intygsTypeContext.get()))) {
+                    && matchingOriginConfig.get().getIntygstyper().stream().noneMatch(t -> t.equals(this.intygsTypeContext.get()))) {
                 return false;
             }
 

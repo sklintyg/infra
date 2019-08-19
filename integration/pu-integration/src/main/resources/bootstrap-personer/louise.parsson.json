@@ -1,17 +1,1 @@
-{
-  "personalIdentity": {
-    "extension": "195205292260"
-  },
-  "protectedPersonIndicator": false,
-  "testIndicator": true,
-  "primaryIdentity": false,
-  "name": {
-    "givenName": {
-      "name": "Maria Louise"
-    },
-    "middleName": {},
-    "surname": {
-      "name": "Pärsson"
-    }
-  }
-}
+{"personalIdentity":{"extension":"195205292260"},"protectedPersonIndicator":false,"testIndicator":true,"primaryIdentity":false,"name":{"givenName":{"name":"Maria Louise"},"middleName":{},"surname":{"name":"Pärsson"}}}

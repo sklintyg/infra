@@ -19,12 +19,13 @@
 package se.inera.intyg.infra.integration.srs.stub;
 
 import com.google.common.collect.ImmutableList;
-import java.util.List;
-import java.util.stream.Collectors;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.Diagnos;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponseType;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GetDiagnosisCodesStub implements GetDiagnosisCodesResponderInterface {
 

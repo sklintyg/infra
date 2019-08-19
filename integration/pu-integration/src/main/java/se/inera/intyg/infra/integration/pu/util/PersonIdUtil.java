@@ -18,8 +18,9 @@
  */
 package se.inera.intyg.infra.integration.pu.util;
 
-import java.util.Optional;
 import se.inera.intyg.schemas.contract.Personnummer;
+
+import java.util.Optional;
 
 /**
  * Provides utility methods for dealing with Personnummer, without having to introduce a dependency from infra -> common.
@@ -39,7 +40,8 @@ public final class PersonIdUtil {
     /**
      * Controls if a civic registration number is a 'samordningsnummer' or not.
      *
-     * @param personNummer the civic registration number
+     * @param personNummer
+     *            the civic registration number
      * @return true if the civic registration number is a 'samordningsnummer', otherwise false
      */
     public static boolean isSamordningsNummer(Personnummer personNummer) {

@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.security.authorities;
 
+import se.inera.intyg.infra.security.common.model.Role;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,7 +28,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import se.inera.intyg.infra.security.common.model.Role;
 
 /**
  * Created by Magnus Ekstrand on 25/11/15.
@@ -44,8 +45,8 @@ public final class AuthoritiesResolverUtil {
 
     public static <T> Map<String, T> toMap(Collection<T> iterables, Function<T, String> keyFunction) {
         return iterables.stream()
-            .filter(Objects::nonNull)
-            .collect(Collectors.toMap(keyFunction, Function.identity()));
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(keyFunction, Function.identity()));
     }
 
     public static <V> List<V> toList(Map<String, V> map) {
@@ -54,8 +55,8 @@ public final class AuthoritiesResolverUtil {
 
     public static <V> String[] toArray(Map<String, V> map) {
         List<?> list = map.entrySet().stream()
-            .map(Map.Entry::getKey)
-            .collect(Collectors.toList());
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
 
         return list.toArray(new String[list.size()]);
     }

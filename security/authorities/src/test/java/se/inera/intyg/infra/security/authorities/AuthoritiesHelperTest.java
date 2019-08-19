@@ -18,15 +18,6 @@
  */
 package se.inera.intyg.infra.security.authorities;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +29,16 @@ import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfiguration
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.common.model.Privilege;
 import se.inera.intyg.infra.security.common.model.RequestOrigin;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Magnus Ekstrand on 2016-05-13.
@@ -56,8 +57,7 @@ public class AuthoritiesHelperTest {
     private final String authoritiesConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
     private final String featuresConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
 
-    private SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationLocation,
-        featuresConfigurationLocation);
+    private SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationLocation, featuresConfigurationLocation);
     private CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();
 
     @Mock
@@ -129,8 +129,7 @@ public class AuthoritiesHelperTest {
     public void whenPrivilegeHasIntygstyperAndRequestOrigins() throws Exception {
         Set<String> intygstyper = null;
 
-        List<String> intygstyperPrivilege = knownIntygstyper.stream().filter(typ -> typ.equals("fk7263") || typ.equals("ts-bas"))
-            .collect(Collectors.toList());
+        List<String> intygstyperPrivilege = knownIntygstyper.stream().filter(typ -> typ.equals("fk7263") || typ.equals("ts-bas")).collect(Collectors.toList());
 
         Map<String, List<String>> intygstyperOrigins = new HashMap<>();
         intygstyperOrigins.put(NORMAL, knownIntygstyper);

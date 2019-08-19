@@ -18,14 +18,15 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Magnus Ekstrand on 2017-02-10.
@@ -45,11 +46,11 @@ public class SjukfallIntygPatientResolver {
     // api
 
     /**
-     * Method is resolving sjukfall for a health care unit based on the unit's certificate information. A map with patient id as key and a
-     * list of certificates associated with a sjukfall as value, will be returned.
+     * Method is resolving sjukfall for a health care unit based on the unit's certificate information.
+     * A map with patient id as key and a list of certificates associated with a sjukfall as value, will be returned.
      */
     public Map<Integer, List<SjukfallIntyg>> resolve(final List<IntygData> intygsData,
-        final int maxIntygsGlapp, final LocalDate aktivtDatum) {
+                                                     final int maxIntygsGlapp, final LocalDate aktivtDatum) {
 
         LOG.debug("Start resolving certificate information...");
         LOG.debug("  - max days between certificates: {}, active date: {}", maxIntygsGlapp, aktivtDatum);

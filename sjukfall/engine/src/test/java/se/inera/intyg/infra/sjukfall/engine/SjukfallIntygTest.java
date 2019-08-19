@@ -20,9 +20,6 @@ package se.inera.intyg.infra.sjukfall.engine;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.List;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -31,6 +28,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
 
 
 /**
@@ -111,9 +112,9 @@ public class SjukfallIntygTest {
 
     private IntygData getIntygsData(String intygsId) {
         return intygDataList.stream()
-            .filter(e -> e.getIntygId().equalsIgnoreCase(intygsId))
-            .findAny()
-            .get();
+                .filter(e -> e.getIntygId().equalsIgnoreCase(intygsId))
+                .findAny()
+                .get();
     }
 
     private static void assertIntygsData(SjukfallIntyg obj, String startDatum, String slutDatum, boolean aktivtIntyg) {

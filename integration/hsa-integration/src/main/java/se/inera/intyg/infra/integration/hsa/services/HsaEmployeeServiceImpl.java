@@ -19,11 +19,14 @@
 package se.inera.intyg.infra.integration.hsa.services;
 
 import java.util.List;
+
 import javax.xml.ws.WebServiceException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.infra.integration.hsa.client.EmployeeService;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
@@ -51,7 +54,7 @@ public class HsaEmployeeServiceImpl implements HsaEmployeeService {
 
     @Override
     public List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase)
-        throws WebServiceException {
+            throws WebServiceException {
         try {
             return employeeService.getEmployee(personHsaId, personalIdentityNumber, searchBase);
         } catch (HsaServiceCallException e) {

@@ -18,8 +18,9 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.funktionstjanster.grp.v1.ProgressStatusType;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * @author Magnus Ekstrand on 2017-05-18.

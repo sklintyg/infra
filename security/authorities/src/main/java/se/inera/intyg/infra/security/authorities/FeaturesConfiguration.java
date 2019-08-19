@@ -19,10 +19,11 @@
 package se.inera.intyg.infra.security.authorities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Collections;
-import java.util.List;
 import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.security.common.model.Pilot;
+
+import java.util.Collections;
+import java.util.List;
 
 public final class FeaturesConfiguration {
 

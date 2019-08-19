@@ -18,18 +18,19 @@
  */
 package se.inera.intyg.infra.monitoring.logging;
 
-import com.google.common.base.Strings;
 import java.io.Closeable;
 import java.nio.CharBuffer;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 
-public class LogMDCHelper {
+import com.google.common.base.Strings;
 
+public class LogMDCHelper {
     static final String TRACEID = "req.traceId";
     static final String SESSIONINFO = "req.sessionInfo";
     static final int IDLEN = 8;
@@ -109,8 +110,8 @@ public class LogMDCHelper {
     static final String traceId(final int len) {
         final CharBuffer charBuffer = CharBuffer.allocate(len);
         IntStream.generate(() -> ThreadLocalRandom.current().nextInt(BASE62CHARS.length))
-            .limit(len)
-            .forEach(value -> charBuffer.append(BASE62CHARS[value]));
+                .limit(len)
+                .forEach(value -> charBuffer.append(BASE62CHARS[value]));
         return charBuffer.rewind().toString();
     }
 }

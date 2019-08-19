@@ -21,11 +21,11 @@ package se.inera.intyg.infra.integration.pu.services.validator;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
-import java.lang.invoke.MethodHandles;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
+import java.lang.invoke.MethodHandles;
 
 public class TestPUResponseValidator implements PUResponseValidator {
 
@@ -35,9 +35,9 @@ public class TestPUResponseValidator implements PUResponseValidator {
     public boolean isFoundAndCorrectStatus(final GetPersonsForProfileResponseType response) {
         LOG.debug("profile is not set to prod - allows test-indicated persons");
         final boolean found = nonNull(response)
-            && isNotEmpty(response.getRequestedPersonRecord())
-            && nonNull(response.getRequestedPersonRecord().get(0))
-            && nonNull(response.getRequestedPersonRecord().get(0).getPersonRecord());
+                && isNotEmpty(response.getRequestedPersonRecord())
+                && nonNull(response.getRequestedPersonRecord().get(0))
+                && nonNull(response.getRequestedPersonRecord().get(0).getPersonRecord());
 
         if (found) {
             final boolean isTest = BooleanUtils.toBoolean(response.getRequestedPersonRecord().get(0).getPersonRecord().isTestIndicator());

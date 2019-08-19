@@ -18,9 +18,11 @@
  */
 package se.inera.intyg.infra.integration.nias.stub;
 
-import java.time.LocalDateTime;
-import java.util.Iterator;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import se.inera.intyg.infra.integration.nias.stub.model.OngoingSigning;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -30,10 +32,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import se.inera.intyg.infra.integration.nias.stub.model.OngoingSigning;
+import java.time.LocalDateTime;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -86,7 +87,7 @@ public class NiasStubRestApi {
         if (ongoingSigning == null) {
             // Signal that the method has been invoked at an illegal or inappropriate time.
             throw new IllegalStateException("A call to NetiDAccessServerSoap.sign must have been done "
-                + "before doing a status update");
+                    + "before doing a status update");
         } else {
             ongoingSigning.setStatus(status);
             serviceStub.put(orderRef, ongoingSigning);

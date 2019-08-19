@@ -18,13 +18,14 @@
  */
 package se.inera.intyg.infra.dynamiclink.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 import se.inera.intyg.infra.dynamiclink.repository.DynamicLinkRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by eriklupander on 2017-05-03.

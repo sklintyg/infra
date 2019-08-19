@@ -19,12 +19,12 @@
 package se.inera.intyg.infra.integration.srs.model;
 
 import com.google.common.collect.ImmutableList;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 // CHECKSTYLE:OFF ParameterNumber
 public class SrsResponse {
-
     private Integer predictionLevel;
     private String predictionDescription;
     private ImmutableList<SrsRecommendation> atgarderObs;
@@ -48,13 +48,13 @@ public class SrsResponse {
     private Double predictionPrevalence;
 
     public SrsResponse(Integer level, String description, List<SrsRecommendation> atgarderObs, List<SrsRecommendation> atgarderRek,
-        List<SrsRecommendation> atgarderFrl, List<SrsRecommendation> atgarderReh,
-        String predictionDiagnosisCode, String predictionStatusCode, List<SrsQuestionResponse> predictionQuestionsResponses,
-        String predictionPhysiciansOwnOpinionRisk,
-        LocalDateTime predictionTimestamp,
-        String atgarderDiagnosisCode, String atgarderStatusCode,
-        String statistikDiagnosisCode, String statistikStatusCode, Double predictionProbabilityOverLimit,
-        Double predictionPrevalence, List<Integer> statistikNationellStatistikData) {
+                       List<SrsRecommendation> atgarderFrl, List<SrsRecommendation> atgarderReh,
+                       String predictionDiagnosisCode, String predictionStatusCode, List<SrsQuestionResponse> predictionQuestionsResponses,
+                       String predictionPhysiciansOwnOpinionRisk,
+                       LocalDateTime predictionTimestamp,
+                       String atgarderDiagnosisCode, String atgarderStatusCode,
+                       String statistikDiagnosisCode, String statistikStatusCode, Double predictionProbabilityOverLimit,
+                       Double predictionPrevalence, List<Integer> statistikNationellStatistikData) {
         this.predictionLevel = level;
         this.predictionDescription = description;
         if (atgarderObs == null) {

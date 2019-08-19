@@ -18,10 +18,11 @@
  */
 package se.inera.intyg.infra.xmldsig.service;
 
-import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_ALIAS;
-import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_NAME;
-import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_PASSWORD;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -30,14 +31,15 @@ import java.security.Signature;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
-import javax.annotation.PostConstruct;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;
+
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_ALIAS;
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_NAME;
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_PASSWORD;
 
 @Service
 @Profile("!prod")
 public class FakeSignatureServiceImpl {
+
 
 
     private KeyStore ks;
@@ -50,13 +52,14 @@ public class FakeSignatureServiceImpl {
 
     /**
      * Signs the supplied digest using a self-signed cert. Only for fake purposes!!
-     *
-     * @param digest Base64-encoded string to sign.
+
+     * @param digest
+     *            Base64-encoded string to sign.
      */
     public String createSignature(String digest) {
         try {
             KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(FAKE_KEYSTORE_ALIAS,
-                new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
+                    new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
 
             Signature rsa = Signature.getInstance("SHA256withRSA");
             rsa.initSign(keyEntry.getPrivateKey());

@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.security.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +34,7 @@ public class RequestOrigin implements Serializable {
 
     @JsonProperty
     private List<String> intygstyper;
+
 
     // ~ Getter and setter
     // =======================================================================
@@ -57,15 +59,16 @@ public class RequestOrigin implements Serializable {
         }
     }
 
+
     // ~ API
     // =======================================================================
 
     @Override
     public String toString() {
         return "\nRequestOrigin {"
-            + " name='" + name + '\''
-            + ", intygstyper= " + intygstyper
-            + "}";
+                + " name='" + name + '\''
+                + ", intygstyper= " + intygstyper
+                + "}";
     }
 
 }

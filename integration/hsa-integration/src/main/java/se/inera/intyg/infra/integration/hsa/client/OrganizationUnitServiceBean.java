@@ -18,13 +18,15 @@
  */
 package se.inera.intyg.infra.integration.hsa.client;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import com.google.common.annotations.VisibleForTesting;
+
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.riv.infrastructure.directory.organization.gethealthcareunit.v1.rivtabp21.GetHealthCareUnitResponderInterface;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v1.rivtabp21.GetHealthCareUnitMembersResponderInterface;
@@ -41,8 +43,8 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 
 /**
- * Provides a common interface to the {@link GetUnitResponderInterface}, {@link GetHealthCareUnitResponderInterface} and {@link
- * GetHealthCareUnitMembersResponderInterface} HSA services.
+ * Provides a common interface to the {@link GetUnitResponderInterface}, {@link GetHealthCareUnitResponderInterface} and
+ * {@link GetHealthCareUnitMembersResponderInterface} HSA services.
  *
  * Created by eriklupander on 2015-12-03.
  */
@@ -107,16 +109,16 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
         GetHealthCareUnitMembersType parameters = new GetHealthCareUnitMembersType();
         parameters.setHealthCareUnitHsaId(unitHsaId);
         GetHealthCareUnitMembersResponseType response = getHealthCareUnitMembersResponderInterface.getHealthCareUnitMembers(logicalAddress,
-            parameters);
+                parameters);
 
         if (response.getResultCode() == ResultCodeEnum.ERROR) {
             if (response.getHealthCareUnitMembers() == null || response.getHealthCareUnitMembers().getHealthCareUnitHsaId() == null) {
                 LOG.error("Error received when calling GetHealthCareUnitMembers for {}, result text: {}", unitHsaId,
-                    response.getResultText());
+                        response.getResultText());
                 throw new HsaServiceCallException("Could not GetHealthCareUnitMembers for hsaId " + unitHsaId);
             } else {
                 LOG.warn("Error received when calling GetHealthCareUnitMembers for {}, result text: {}", unitHsaId,
-                    response.getResultText());
+                        response.getResultText());
                 LOG.warn("Continuing even though the information was delivered together with and ERROR code.");
             }
         }
@@ -125,7 +127,7 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
 
     @VisibleForTesting
     public void setGetHealthCareUnitMembersResponderInterface(
-        GetHealthCareUnitMembersResponderInterface getHealthCareUnitMembersResponderInterface) {
+            GetHealthCareUnitMembersResponderInterface getHealthCareUnitMembersResponderInterface) {
         this.getHealthCareUnitMembersResponderInterface = getHealthCareUnitMembersResponderInterface;
     }
 }

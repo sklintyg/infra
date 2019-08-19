@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.infra.integration.srs.stub.repository.model;
 
-import java.util.Objects;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-public final class Individ {
+import java.util.Objects;
 
+public final class Individ {
     private final Personnummer personnummer;
     private final String caregiverId;
 
@@ -43,7 +43,7 @@ public final class Individ {
     public boolean equals(Object o) {
         if (o instanceof Individ) {
             return Objects.equals(this.personnummer, ((Individ) o).getPersonnummer())
-                && Objects.equals(this.caregiverId, ((Individ) o).getCaregiverId());
+                    && Objects.equals(this.caregiverId, ((Individ) o).getCaregiverId());
         }
         return false;
     }

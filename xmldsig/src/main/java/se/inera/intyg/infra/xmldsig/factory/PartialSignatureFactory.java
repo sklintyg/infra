@@ -18,14 +18,6 @@
  */
 package se.inera.intyg.infra.xmldsig.factory;
 
-import java.io.IOException;
-import java.util.Base64;
-import javax.xml.bind.JAXBElement;
-import javax.xml.crypto.dsig.CanonicalizationMethod;
-import javax.xml.crypto.dsig.DigestMethod;
-import javax.xml.crypto.dsig.Transform;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.springframework.core.io.ClassPathResource;
 import org.w3._2000._09.xmldsig_.CanonicalizationMethodType;
 import org.w3._2000._09.xmldsig_.DigestMethodType;
@@ -44,6 +36,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import javax.xml.bind.JAXBElement;
+import javax.xml.crypto.dsig.CanonicalizationMethod;
+import javax.xml.crypto.dsig.DigestMethod;
+import javax.xml.crypto.dsig.Transform;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.util.Base64;
+
 public final class PartialSignatureFactory {
 
     private static final String SIGNATURE_ALGORITHM = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
@@ -54,7 +55,7 @@ public final class PartialSignatureFactory {
     private static final String XSLT_STRIP_NAMESPACE = "transforms/stripnamespace.xslt";
     private static final String FILTER_SUBTRACT = "subtract";
     private static final String XPATH_SUBTRACT_METADATA_EXPRESSION = "//*[local-name() = 'skickatTidpunkt']|"
-        + "//*[local-name() = 'relation']|//*[local-name() = 'status']|//*[local-name() = 'underskrift']";
+            + "//*[local-name() = 'relation']|//*[local-name() = 'status']|//*[local-name() = 'underskrift']";
 
     private PartialSignatureFactory() {
 
@@ -63,7 +64,8 @@ public final class PartialSignatureFactory {
     /**
      * Builds a partially populated {@link SignatureType}.
      *
-     * Contains appropriate algorithms and elements for subsequent population of digest, signature value and keyinfo.
+     * Contains appropriate algorithms and elements for subsequent population of digest, signature value and
+     * keyinfo.
      */
     public static SignatureType buildSignature(String intygsId, byte[] digestBytes) {
         SignatureType signature = new SignatureType();
@@ -111,7 +113,7 @@ public final class PartialSignatureFactory {
         // The order here IS significant!! Otherwise, validation will not produce the expected digest.
         TransformsType transforms = new TransformsType();
         transforms.getTransform().add(envelopedTransform); // Having envelopedTransform makes sure the <Signature> element is removed when
-        // digesting.
+                                                           // digesting.
         transforms.getTransform().add(intygCanonicalizationTransform);
         transforms.getTransform().add(xpathFilterTransform);
         transforms.getTransform().add(xpathRemoveUnwantedTransform);
@@ -133,8 +135,10 @@ public final class PartialSignatureFactory {
     /**
      * Builds a {@link KeyInfoType} element with the supplied certificate added into a X509Data->X509Certificate element.
      *
-     * @param certificate Base64-encoded string of a x509 certificate.
-     * @return A KeyInfoType object.
+     * @param certificate
+     *            Base64-encoded string of a x509 certificate.
+     * @return
+     *         A KeyInfoType object.
      */
     public static KeyInfoType buildKeyInfo(String certificate) {
         KeyInfoType keyInfo = new KeyInfoType();

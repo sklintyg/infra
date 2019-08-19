@@ -19,13 +19,13 @@
   -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:jaxws="http://cxf.apache.org/jaxws"
-    xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:jaxws="http://cxf.apache.org/jaxws"
+  xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
   http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
   http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd"
-    profile="dev,wc-all-stubs,wc-pu-stub">
+  profile="dev,wc-all-stubs,wc-pu-stub">
 
   <jaxws:endpoint address="/stubs/strategicresourcemanagement/persons/person/GetPersonsForProfile/3/rivtabp21" implementor="se.inera.intyg.infra.integration.pu.stub.GetPersonsForProfileWsStub"/>
 

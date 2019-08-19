@@ -39,9 +39,9 @@ public class Omrade {
         }
         Omrade other = (Omrade) o;
         return postnummer.equals(other.postnummer)
-            && postort.equals(other.postort)
-            && kommun.equals(other.kommun)
-            && lan.equals(other.lan);
+                && postort.equals(other.postort)
+                && kommun.equals(other.kommun)
+                && lan.equals(other.lan);
     }
 
     @Override

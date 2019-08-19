@@ -31,7 +31,6 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.BOTH)
 public class SetConsentStub implements SetConsentResponderInterface {
-
     private static final Logger LOG = LoggerFactory.getLogger(SetConsentStub.class);
 
     @Autowired
@@ -43,8 +42,8 @@ public class SetConsentStub implements SetConsentResponderInterface {
 
         Personnummer personnummer = Personnummer.createPersonnummer(setConsentRequestType.getPersonId()).get();
         consentRepository
-            .setConsent(personnummer, setConsentRequestType.getVardenhetId().getExtension(),
-                setConsentRequestType.isSamtycke());
+                .setConsent(personnummer, setConsentRequestType.getVardenhetId().getExtension(),
+                        setConsentRequestType.isSamtycke());
         SetConsentResponseType response = new SetConsentResponseType();
         response.setResultCode(ResultCodeEnum.OK);
         return response;

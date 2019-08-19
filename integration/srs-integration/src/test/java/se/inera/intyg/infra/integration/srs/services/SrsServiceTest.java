@@ -18,16 +18,6 @@
  */
 package se.inera.intyg.infra.integration.srs.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-
-import java.util.Arrays;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,6 +47,17 @@ import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:SrsServiceTest/test-context.xml")
 public class SrsServiceTest {
@@ -84,7 +85,7 @@ public class SrsServiceTest {
     @Test
     public void testNoneWithSRSDiagnosis() throws Exception {
         SrsResponse response = service.getSrs(createUser(), "intygId", createPnr(PNR_VALID), "M18", utdatafilter,
-            Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNull(response.getStatistikNationellStatistik());
         assertNull(response.getAtgarderObs());
         assertNull(response.getAtgarderRek());
@@ -96,7 +97,7 @@ public class SrsServiceTest {
     @Test
     public void testNoneWithUnknownDiagnosis() throws Exception {
         SrsResponse response = service.getSrs(createUser(), "intygId", createPnr(PNR_VALID), "X99", utdatafilter,
-            Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNull(response.getStatistikNationellStatistik());
         assertNull(response.getAtgarderObs());
         assertNull(response.getAtgarderRek());
@@ -109,7 +110,7 @@ public class SrsServiceTest {
     public void testSrsPrediktion() throws Exception {
         utdatafilter.setPrediktion(true);
         SrsResponse response = service.getSrs(createUser(), "intygId", createPnr(PNR_VALID), "M18", utdatafilter,
-            Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNotNull(response);
         assertEquals(new Integer(1), response.getPredictionLevel());
         assertEquals("test", response.getPredictionDescription());
@@ -121,7 +122,7 @@ public class SrsServiceTest {
     public void testSrsStatistik() throws Exception {
         utdatafilter.setStatistik(true);
         SrsResponse response = service.getSrs(createUser(), "intygId", createPnr(PNR_VALID), "M18", utdatafilter,
-            Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNotNull(response.getStatistikNationellStatistik());
         assertNull(response.getAtgarderRek());
         assertNull(response.getAtgarderObs());
@@ -134,7 +135,7 @@ public class SrsServiceTest {
         utdatafilter.setPrediktion(true);
         utdatafilter.setAtgardsrekommendation(true);
         SrsResponse response = service.getSrs(createUser(), "intygId", createPnr(PNR_VALID), "M18", utdatafilter,
-            Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNotNull(response);
         assertEquals(new Integer(1), response.getPredictionLevel());
         assertEquals("test", response.getPredictionDescription());
@@ -149,7 +150,7 @@ public class SrsServiceTest {
         utdatafilter.setPrediktion(true);
         utdatafilter.setStatistik(true);
         SrsResponse response = service.getSrs(createUser(), "intygId", createPnr(PNR_VALID), "M18", utdatafilter,
-            Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNotNull(response);
         assertEquals(new Integer(1), response.getPredictionLevel());
         assertEquals("test", response.getPredictionDescription());

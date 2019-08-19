@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.infra.integration.srs.stub;
 
-import java.math.BigInteger;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.cxf.annotations.SchemaValidation;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
@@ -27,9 +25,11 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.G
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.Prediktionsfraga;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.Svarsalternativ;
 
+import java.math.BigInteger;
+import java.util.concurrent.atomic.AtomicInteger;
+
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.BOTH)
 public class GetPredictionQuestionsStub implements GetPredictionQuestionsResponderInterface {
-
     private static final double MAX_PRIORITY = 10;
 
     @Override

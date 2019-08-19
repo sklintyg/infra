@@ -18,10 +18,11 @@
  */
 package se.inera.intyg.infra.security.common.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by mango on 19/11/15.
@@ -71,10 +72,10 @@ public class Role implements Serializable {
     @Override
     public String toString() {
         return "\nRole {"
-            + " name='" + name + '\''
-            + ", desc='" + desc + '\''
-            + ", privileges= " + privileges
-            + "}";
+                + " name='" + name + '\''
+                + ", desc='" + desc + '\''
+                + ", privileges= " + privileges
+                + "}";
     }
 
 }

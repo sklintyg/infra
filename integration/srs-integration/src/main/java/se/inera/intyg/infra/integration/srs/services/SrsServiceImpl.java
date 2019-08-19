@@ -19,14 +19,6 @@
 package se.inera.intyg.infra.integration.srs.services;
 
 import com.google.common.base.Strings;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentRequestType;
@@ -39,15 +31,7 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDia
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Bedomningsunderlag;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Diagnosprediktionstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationRequestType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Individ;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Individfaktorer;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Prediktionsfaktorer;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.*;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponseType;
@@ -57,27 +41,17 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.setconsent.v1.SetConsentRes
 import se.inera.intyg.clinicalprocess.healthcond.srs.setownopinion.v1.SetOwnOpinionRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setownopinion.v1.SetOwnOpinionResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.setownopinion.v1.SetOwnOpinionResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgard;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardstyp;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Diagnosstatistik;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.EgenBedomningRiskType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.*;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
-import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
-import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
-import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
-import se.inera.intyg.infra.integration.srs.model.SrsRecommendation;
-import se.inera.intyg.infra.integration.srs.model.SrsResponse;
+import se.inera.intyg.infra.integration.srs.model.*;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.CVType;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.*;
+
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SrsServiceImpl implements SrsService {
 
@@ -104,13 +78,13 @@ public class SrsServiceImpl implements SrsService {
 
     @Override
     public SrsResponse getSrs(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
-        List<SrsQuestionResponse> questions) throws InvalidPersonNummerException {
+            List<SrsQuestionResponse> questions) throws InvalidPersonNummerException {
 
         if (questions == null || questions.isEmpty()) {
             throw new IllegalArgumentException("Answers are required to construct a valid request.");
         }
         GetSRSInformationResponseType response = getSRSInformation.getSRSInformation(
-            createRequest(user, intygId, personnummer, diagnosisCode, filter, questions));
+                createRequest(user, intygId, personnummer, diagnosisCode, filter, questions));
 
         if (response.getResultCode() != ResultCodeEnum.OK) {
             throw new IllegalArgumentException("Bad data from SRS");
@@ -139,24 +113,24 @@ public class SrsServiceImpl implements SrsService {
         LocalDateTime prediktionBerakningstidpunkt = null;
 
         if (underlag == null || underlag.getPrediktion() == null || underlag.getPrediktion().getDiagnosprediktion().isEmpty()
-            || underlag.getPrediktion().getDiagnosprediktion().get(0)
-            .getDiagnosprediktionstatus() == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
+                || underlag.getPrediktion().getDiagnosprediktion().get(0)
+                .getDiagnosprediktionstatus() == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
             prediktionStatusCode = Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS.value();
         } else if (filter.isPrediktion()) {
-            level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori();
-            description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
-            prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
-            predictionDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
-                .map(CVType::getCode)
-                .orElse(null);
-            predictionProbabilityOverLimit = underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde();
-            predictionPrevalence = underlag.getPrediktion().getDiagnosprediktion().get(0).getPrevalens();
+                level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori();
+                description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
+                prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
+                predictionDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
+                        .map(CVType::getCode)
+                        .orElse(null);
+                predictionProbabilityOverLimit = underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde();
+                predictionPrevalence = underlag.getPrediktion().getDiagnosprediktion().get(0).getPrevalens();
         } else if (underlag.getPrediktion().getDiagnosprediktion().get(0) != null) {
             // Always add prevalence if we have it regardless if the user requested prediction on a personal level
             predictionPrevalence = underlag.getPrediktion().getDiagnosprediktion().get(0).getPrevalens();
             predictionDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
-                .map(CVType::getCode)
-                .orElse(null);
+                    .map(CVType::getCode)
+                    .orElse(null);
             // Also check if we have a historic prediction
             if (underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde() != null) {
                 level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori();
@@ -169,9 +143,9 @@ public class SrsServiceImpl implements SrsService {
 
                 if (underlag.getPrediktion().getDiagnosprediktion().get(0).getPrediktionsfaktorer() != null) {
                     prediktionsFragorSvar = underlag.getPrediktion().getDiagnosprediktion().get(0)
-                        .getPrediktionsfaktorer().getFragasvar().stream()
-                        .map((fs) -> SrsQuestionResponse.create(fs.getFrageidSrs(), fs.getSvarsidSrs()))
-                        .collect(Collectors.toList());
+                            .getPrediktionsfaktorer().getFragasvar().stream()
+                            .map((fs) -> SrsQuestionResponse.create(fs.getFrageidSrs(), fs.getSvarsidSrs()))
+                            .collect(Collectors.toList());
                 }
                 if (underlag.getPrediktion().getDiagnosprediktion().get(0).getLakarbedomningRisk() != null) {
                     prediktionLakarbedomningRisk = underlag.getPrediktion().getDiagnosprediktion().get(0).getLakarbedomningRisk().value();
@@ -182,72 +156,72 @@ public class SrsServiceImpl implements SrsService {
 
         if (filter.isAtgardsrekommendation()) {
             atgarderDiagnosisCode = underlag.getAtgardsrekommendationer().getRekommendation().stream()
-                .map(Atgardsrekommendation::getDiagnos)
-                .filter(Objects::nonNull)
-                .map(CVType::getCode)
-                .findAny().orElse(null);
+                    .map(Atgardsrekommendation::getDiagnos)
+                    .filter(Objects::nonNull)
+                    .map(CVType::getCode)
+                    .findAny().orElse(null);
             Map<Atgardstyp, List<Atgard>> tmp = underlag
-                .getAtgardsrekommendationer().getRekommendation().stream()
-                .flatMap(a -> a.getAtgard().stream())
-                .collect(Collectors.groupingBy(Atgard::getAtgardstyp));
+                    .getAtgardsrekommendationer().getRekommendation().stream()
+                    .flatMap(a -> a.getAtgard().stream())
+                    .collect(Collectors.groupingBy(Atgard::getAtgardstyp));
             if (tmp.containsKey(Atgardstyp.OBS)) {
                 atgarderObs = tmp.get(Atgardstyp.OBS).stream()
-                    .sorted(Comparator.comparing(Atgard::getPrioritet))
-                    .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsrubrik(), atgard.getAtgardsforslag()))
-                    .collect(Collectors.toList());
+                        .sorted(Comparator.comparing(Atgard::getPrioritet))
+                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsrubrik(), atgard.getAtgardsforslag()))
+                        .collect(Collectors.toList());
             } else {
                 atgarderObs = Collections.emptyList();
             }
 
             if (tmp.containsKey(Atgardstyp.REK)) {
                 atgarderRek = tmp.get(Atgardstyp.REK).stream()
-                    .sorted(Comparator.comparing(Atgard::getPrioritet))
-                    .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsrubrik(), atgard.getAtgardsforslag()))
-                    .collect(Collectors.toList());
+                        .sorted(Comparator.comparing(Atgard::getPrioritet))
+                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsrubrik(), atgard.getAtgardsforslag()))
+                        .collect(Collectors.toList());
             } else {
                 atgarderRek = Collections.emptyList();
             }
 
             if (tmp.containsKey(Atgardstyp.FRL)) {
                 atgarderFrl = tmp.get(Atgardstyp.FRL).stream()
-                    .sorted(Comparator.comparing(Atgard::getPrioritet))
-                    .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsrubrik(), atgard.getAtgardsforslag()))
-                    .collect(Collectors.toList());
+                        .sorted(Comparator.comparing(Atgard::getPrioritet))
+                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsrubrik(), atgard.getAtgardsforslag()))
+                        .collect(Collectors.toList());
             } else {
                 atgarderFrl = Collections.emptyList();
             }
 
             if (tmp.containsKey(Atgardstyp.REH)) {
                 atgarderReh = tmp.get(Atgardstyp.REH).stream()
-                    .sorted(Comparator.comparing(Atgard::getPrioritet))
-                    .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsrubrik(), atgard.getAtgardsforslag()))
-                    .collect(Collectors.toList());
+                        .sorted(Comparator.comparing(Atgard::getPrioritet))
+                        .map((atgard) -> SrsRecommendation.create(atgard.getAtgardsrubrik(), atgard.getAtgardsforslag()))
+                        .collect(Collectors.toList());
             } else {
                 atgarderReh = Collections.emptyList();
             }
 
             // They are all for the same diagnosis and all have the same code.
             atgarderStatusCode = underlag.getAtgardsrekommendationer().getRekommendation().stream()
-                .map(Atgardsrekommendation::getAtgardsrekommendationstatus)
-                .map(Atgardsrekommendationstatus::toString)
-                .findAny()
-                .orElse(null);
+                    .map(Atgardsrekommendation::getAtgardsrekommendationstatus)
+                    .map(Atgardsrekommendationstatus::toString)
+                    .findAny()
+                    .orElse(null);
         }
 
         if (filter.isStatistik() && underlag.getStatistik() != null
-            && !CollectionUtils.isEmpty(underlag.getStatistik().getDiagnosstatistik())) {
+                && !CollectionUtils.isEmpty(underlag.getStatistik().getDiagnosstatistik())) {
             statistikDiagnosisCode = Optional.ofNullable(underlag.getStatistik().getDiagnosstatistik().get(0).getDiagnos())
-                .map(CVType::getCode)
-                .orElse(null);
+                    .map(CVType::getCode)
+                    .orElse(null);
             statistikStatusCode = underlag.getStatistik().getDiagnosstatistik().get(0).getStatistikstatus().toString();
             statistikNationellStatistik =
-                underlag.getStatistik().getDiagnosstatistik().get(0).getData().stream()
-                    .map((d) -> d.getIndividerAckumulerat().intValue()).collect(Collectors.toList());
+                    underlag.getStatistik().getDiagnosstatistik().get(0).getData().stream()
+                            .map((d) -> d.getIndividerAckumulerat().intValue()).collect(Collectors.toList());
         }
         return new SrsResponse(level, description, atgarderObs, atgarderRek, atgarderFrl, atgarderReh, predictionDiagnosisCode,
-            prediktionStatusCode, prediktionsFragorSvar, prediktionLakarbedomningRisk, prediktionBerakningstidpunkt,
-            atgarderDiagnosisCode, atgarderStatusCode, statistikDiagnosisCode,
-            statistikStatusCode, predictionProbabilityOverLimit, predictionPrevalence, statistikNationellStatistik);
+                prediktionStatusCode, prediktionsFragorSvar, prediktionLakarbedomningRisk, prediktionBerakningstidpunkt,
+                atgarderDiagnosisCode, atgarderStatusCode, statistikDiagnosisCode,
+                statistikStatusCode, predictionProbabilityOverLimit, predictionPrevalence, statistikNationellStatistik);
     }
 
     @Override
@@ -256,9 +230,9 @@ public class SrsServiceImpl implements SrsService {
         request.setDiagnos(createDiagnos(diagnos));
         GetPredictionQuestionsResponseType response = getPrediction.getPredictionQuestions(request);
         return response.getPrediktionsfraga().stream()
-            .map(SrsQuestion::convert)
-            .sorted(Comparator.comparing(SrsQuestion::getPriority))
-            .collect(Collectors.toList());
+                .map(SrsQuestion::convert)
+                .sorted(Comparator.comparing(SrsQuestion::getPriority))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -275,10 +249,10 @@ public class SrsServiceImpl implements SrsService {
 
     @Override
     public ResultCodeEnum setOwnOpinion(String careGiverHsaId, String careUnitHsaId, String certificateId, String diagnosisCode,
-        EgenBedomningRiskType ownOpinion) {
+                                        EgenBedomningRiskType ownOpinion) {
         SetOwnOpinionResponseType resp =
-            setOwnOpinion.setOwnOpinion(createSetOwnOpinionRequest(careGiverHsaId, careUnitHsaId,
-                certificateId, diagnosisCode, ownOpinion));
+                setOwnOpinion.setOwnOpinion(createSetOwnOpinionRequest(careGiverHsaId, careUnitHsaId,
+                        certificateId, diagnosisCode, ownOpinion));
         return resp.getResultCode();
     }
 
@@ -286,8 +260,8 @@ public class SrsServiceImpl implements SrsService {
     public List<String> getAllDiagnosisCodes() {
         GetDiagnosisCodesResponseType response = getDiagnosisCodes.getDiagnosisCodes(new GetDiagnosisCodesRequestType());
         return response.getDiagnos().stream()
-            .map(CVType::getCode)
-            .collect(Collectors.toList());
+                .map(CVType::getCode)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -323,28 +297,28 @@ public class SrsServiceImpl implements SrsService {
 
         // Ugh. maybe we should create common xsd types for these common subtypes...
         final Atgardsrekommendation atgardsrekommendation = response
-            .getAtgardsrekommendation();
+                .getAtgardsrekommendation();
 
         // filter out all OBS types sorted by priority
         final List<String> atgarderObs = atgardsrekommendation.getAtgard().stream().sorted(Comparator
-            .comparing(Atgard::getPrioritet))
-            .filter(a -> a.getAtgardstyp()
-                .equals(Atgardstyp.OBS))
-            .map(Atgard::getAtgardsforslag)
-            .collect(Collectors.toList());
+                .comparing(Atgard::getPrioritet))
+                .filter(a -> a.getAtgardstyp()
+                        .equals(Atgardstyp.OBS))
+                .map(Atgard::getAtgardsforslag)
+                .collect(Collectors.toList());
 
         // filter out all REK types sorted by priority
         final List<String> atgarderRek = atgardsrekommendation.getAtgard().stream().sorted(Comparator
-            .comparing(Atgard::getPrioritet))
-            .filter(a -> a.getAtgardstyp()
-                .equals(Atgardstyp.REK))
-            .map(Atgard::getAtgardsforslag)
-            .collect(Collectors.toList());
+                .comparing(Atgard::getPrioritet))
+                .filter(a -> a.getAtgardstyp()
+                        .equals(Atgardstyp.REK))
+                .map(Atgard::getAtgardsforslag)
+                .collect(Collectors.toList());
 
         atgarderStatusCode = atgardsrekommendation.getAtgardsrekommendationstatus().name();
 
         if (response.getStatistik() != null
-            && !CollectionUtils.isEmpty(response.getStatistik().getDiagnosstatistik())) {
+                && !CollectionUtils.isEmpty(response.getStatistik().getDiagnosstatistik())) {
             final Diagnosstatistik diagnosstatistik = response.getStatistik().getDiagnosstatistik().get(0);
             statistikStatusCode = diagnosstatistik.getStatistikstatus().name();
             statistikDiagnosCode = diagnosstatistik.getDiagnos() != null ? diagnosstatistik.getDiagnos().getCode() : null;
@@ -354,17 +328,17 @@ public class SrsServiceImpl implements SrsService {
         }
 
         return new SrsForDiagnosisResponse(atgarderObs, atgarderRek,
-            resultDiagnosCode, atgarderStatusCode, statistikStatusCode, statistikDiagnosCode);
+                resultDiagnosCode, atgarderStatusCode, statistikStatusCode, statistikDiagnosCode);
     }
 
     private boolean hasAtgardsrekommendationWithDiagnosisCode(GetSRSInformationForDiagnosisResponseType response) {
         return response.getAtgardsrekommendation().getAtgardsrekommendationstatus() != Atgardsrekommendationstatus.INFORMATION_SAKNAS
-            && response.getAtgardsrekommendation().getDiagnos() != null;
+                && response.getAtgardsrekommendation().getDiagnos() != null;
     }
 
     private GetSRSInformationRequestType createRequest(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode,
-        Utdatafilter filter, List<SrsQuestionResponse> questions)
-        throws InvalidPersonNummerException {
+            Utdatafilter filter, List<SrsQuestionResponse> questions)
+            throws InvalidPersonNummerException {
 
         GetSRSInformationRequestType request = new GetSRSInformationRequestType();
         request.setVersion("2.0");
@@ -420,7 +394,7 @@ public class SrsServiceImpl implements SrsService {
     }
 
     private SetOwnOpinionRequestType createSetOwnOpinionRequest(String careGiverHsaId, String careUnitHsaId,
-        String certificateId, String diagnosis, EgenBedomningRiskType opinion) {
+                                                                String certificateId, String diagnosis, EgenBedomningRiskType opinion) {
         SetOwnOpinionRequestType request = new SetOwnOpinionRequestType();
         request.setVardgivareId(createHsaId(careGiverHsaId));
         request.setVardenhetId(createHsaId(careUnitHsaId));
@@ -434,7 +408,7 @@ public class SrsServiceImpl implements SrsService {
     }
 
     private SetConsentRequestType createSetConsentRequest(String careUnitHsaId, Personnummer personId, boolean samtycke)
-        throws InvalidPersonNummerException {
+            throws InvalidPersonNummerException {
         SetConsentRequestType request = new SetConsentRequestType();
         HsaId hsaId = createHsaId(careUnitHsaId);
         request.setVardenhetId(hsaId);
@@ -444,7 +418,7 @@ public class SrsServiceImpl implements SrsService {
     }
 
     private GetConsentRequestType createGetConsentRequest(String careUnitHsaId, Personnummer personnummer)
-        throws InvalidPersonNummerException {
+            throws InvalidPersonNummerException {
         GetConsentRequestType request = new GetConsentRequestType();
         HsaId hsaId = new HsaId();
         hsaId.setExtension(careUnitHsaId);

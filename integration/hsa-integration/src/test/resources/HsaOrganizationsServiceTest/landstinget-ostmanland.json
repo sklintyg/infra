@@ -1,12 +1,12 @@
 {
-  "@class": "se.inera.intyg.infra.integration.hsa.model.Vardgivare",
-  "id": "ostmanland",
-  "namn": "Landstinget Östmanland",
-  "vardenheter": [
-    {
-      "@class": "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
-      "id": "vardcentrum-1",
-      "namn": "Vårdcentrum 1"
-    }
-  ]
+    "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardgivare",
+    "id" : "ostmanland",
+    "namn" : "Landstinget Östmanland",
+    "vardenheter" : [
+        {
+            "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
+            "id" : "vardcentrum-1",
+            "namn" : "Vårdcentrum 1"
+        }
+    ]
 }

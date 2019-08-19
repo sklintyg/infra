@@ -19,7 +19,8 @@
 package se.inera.intyg.infra.logmessages;
 
 /**
- * Kan vara kemlabbsvar, journaltext, remiss, översikt, samtycke, patientrelation, sätta spärr, rapport, Översikt sjukskrivning osv.
+ * Kan vara kemlabbsvar, journaltext, remiss, översikt, samtycke, patientrelation, sätta spärr, rapport,
+ * Översikt sjukskrivning osv.
  *
  * Created by eriklupander on 2016-03-02.
  */

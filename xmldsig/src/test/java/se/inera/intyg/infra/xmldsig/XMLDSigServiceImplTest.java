@@ -18,13 +18,6 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +26,14 @@ import org.springframework.core.io.Resource;
 import se.inera.intyg.infra.xmldsig.model.CertificateInfo;
 import se.inera.intyg.infra.xmldsig.model.ValidationResponse;
 import se.inera.intyg.infra.xmldsig.service.XMLDSigServiceImpl;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.Map;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class XMLDSigServiceImplTest {
 

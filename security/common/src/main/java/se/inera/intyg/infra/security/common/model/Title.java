@@ -61,10 +61,10 @@ public class Title {
     @Override
     public String toString() {
         return "\nTitle {"
-            + " title='" + title + '\''
-            + ", desc='" + desc + '\''
-            + ", role=" + role
-            + "}";
+                + " title='" + title + '\''
+                + ", desc='" + desc + '\''
+                + ", role=" + role
+                + "}";
     }
 
 }

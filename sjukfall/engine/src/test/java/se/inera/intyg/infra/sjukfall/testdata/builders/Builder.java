@@ -22,6 +22,5 @@ package se.inera.intyg.infra.sjukfall.testdata.builders;
  * Created by Magnus Ekstrand on 2016-02-10.
  */
 public interface Builder<T> {
-
     T build();
 }

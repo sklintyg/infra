@@ -19,7 +19,6 @@
 package se.inera.intyg.infra.xmldsig.model;
 
 public class ValidationResponse {
-
     private ValidationResult signatureValid = ValidationResult.NOT_CHCEKED;
     private ValidationResult referencesValid = ValidationResult.NOT_CHCEKED;
 
@@ -41,11 +40,10 @@ public class ValidationResponse {
 
     public boolean isValid() {
         return this.signatureValid == ValidationResult.OK
-            && (this.referencesValid == ValidationResult.OK || this.referencesValid == ValidationResult.NOT_CHCEKED);
+                && (this.referencesValid == ValidationResult.OK || this.referencesValid == ValidationResult.NOT_CHCEKED);
     }
 
     public static final class ValidationResponseBuilder {
-
         private ValidationResult signatureValid = ValidationResult.NOT_CHCEKED;
         private ValidationResult referencesValid = ValidationResult.NOT_CHCEKED;
 

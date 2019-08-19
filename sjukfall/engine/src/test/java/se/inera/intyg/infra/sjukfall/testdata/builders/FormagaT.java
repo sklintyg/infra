@@ -18,8 +18,9 @@
  */
 package se.inera.intyg.infra.sjukfall.testdata.builders;
 
-import java.time.LocalDate;
 import se.inera.intyg.infra.sjukfall.dto.Formaga;
+
+import java.time.LocalDate;
 
 /**
  * Created by Magnus Ekstrand on 2016-02-10.

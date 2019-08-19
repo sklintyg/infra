@@ -34,8 +34,8 @@ public class SetOwnOpinionStub implements SetOwnOpinionResponderInterface {
     @Override
     public SetOwnOpinionResponseType setOwnOpinion(SetOwnOpinionRequestType setOwnOpinionRequestType) {
         LOG.info("Stub received SetOwnOpinion-request for vardgivare: {}, intyg-id: {}, opinion: {}.",
-            setOwnOpinionRequestType.getVardgivareId(), setOwnOpinionRequestType.getIntygId(),
-            setOwnOpinionRequestType.getEgenBedomningRisk());
+                setOwnOpinionRequestType.getVardgivareId(), setOwnOpinionRequestType.getIntygId(),
+                setOwnOpinionRequestType.getEgenBedomningRisk());
 
         SetOwnOpinionResponseType response = new SetOwnOpinionResponseType();
         response.setResultCode(ResultCodeEnum.OK);

@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.integration.hsa.stub;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import se.inera.intyg.infra.integration.hsa.model.AbstractVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;

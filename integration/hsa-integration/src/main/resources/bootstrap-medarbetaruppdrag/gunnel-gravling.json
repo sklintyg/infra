@@ -12,9 +12,7 @@
     }
   ],
   "fakeProperties": {
-    "allowedInApplications": [
-      "IB"
-    ],
+    "allowedInApplications": ["IB"],
     "readOnly": true,
     "logins": [
       {

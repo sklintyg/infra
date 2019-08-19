@@ -20,8 +20,9 @@ package se.inera.intyg.infra.sjukfall.engine;
 
 import static org.junit.Assert.assertEquals;
 
-import java.time.LocalDate;
 import org.junit.Test;
+
+import java.time.LocalDate;
 
 
 /**

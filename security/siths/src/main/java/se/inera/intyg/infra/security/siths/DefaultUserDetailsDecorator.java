@@ -20,9 +20,11 @@ package se.inera.intyg.infra.security.siths;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.integration.hsa.util.HsaAttributeExtractor;
@@ -32,7 +34,8 @@ import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**
- * Provides a number of default implementations for decorating a IntygUser principal with various information extracted from HSA models.
+ * Provides a number of default implementations for decorating a IntygUser principal with various information extracted
+ * from HSA models.
  *
  * Created by eriklupander on 2016-05-17.
  */
@@ -73,8 +76,8 @@ public class DefaultUserDetailsDecorator {
     public void decorateIntygUserWithSystemRoles(IntygUser intygUser, UserCredentials userCredentials) {
         if (userCredentials != null && userCredentials.getHsaSystemRole() != null) {
             intygUser.setSystemRoles(userCredentials.getHsaSystemRole().stream()
-                .map(DefaultUserDetailsDecorator::hsaSystemRoleAsString)
-                .collect(Collectors.toList()));
+                    .map(DefaultUserDetailsDecorator::hsaSystemRoleAsString)
+                    .collect(Collectors.toList()));
         }
     }
 
