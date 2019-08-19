@@ -47,10 +47,14 @@ public class AuthoritiesHelper {
     }
 
     /**
-     * Method returns all granted intygstyper for a certain user's privilege. If user doesn't have a privilege, an empty set is returned.
+     * Method returns all granted intygstyper for a certain user's privilege.
+     * If user doesn't have a privilege, an empty set is returned.
      * <p>
-     * Note: The configuration mindset of privileges is that if there are no intygstyper attached to a privilege, the privilege is
-     * implicitly valid for all intygstyper. However, this method will return an explicit list with granted intygstyper in all cases.
+     * Note:
+     * The configuration mindset of privileges is that if there are no
+     * intygstyper attached to a privilege, the privilege is implicitly
+     * valid for all intygstyper. However, this method will return an
+     * explicit list with granted intygstyper in all cases.
      *
      * @param user the current user
      * @param privilegeName the privilege name

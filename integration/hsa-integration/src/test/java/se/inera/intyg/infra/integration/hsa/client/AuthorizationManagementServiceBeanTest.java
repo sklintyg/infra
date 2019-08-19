@@ -39,7 +39,8 @@ import se.riv.infrastructure.directory.v1.CredentialInformationType;
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 
 /**
- * This test is a bit superfluent since the tested method has no branching or error handling whatsoever.
+ * This test is a bit superfluent since the tested method has no branching or error handling
+ * whatsoever.
  *
  * Created by eriklupander on 2016-03-11.
  */

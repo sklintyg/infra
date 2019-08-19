@@ -41,8 +41,8 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 
 /**
- * Provides a common interface to the {@link GetUnitResponderInterface}, {@link GetHealthCareUnitResponderInterface} and {@link
- * GetHealthCareUnitMembersResponderInterface} HSA services.
+ * Provides a common interface to the {@link GetUnitResponderInterface}, {@link GetHealthCareUnitResponderInterface} and
+ * {@link GetHealthCareUnitMembersResponderInterface} HSA services.
  *
  * Created by eriklupander on 2015-12-03.
  */

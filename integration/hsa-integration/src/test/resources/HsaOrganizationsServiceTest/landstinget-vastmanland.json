@@ -1,55 +1,55 @@
 {
-  "@class": "se.inera.intyg.infra.integration.hsa.model.Vardgivare",
-  "id": "vastmanland",
-  "namn": "Landstinget Västmanland",
-  "vardenheter": [
-    {
-      "@class": "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
-      "id": "centrum-vast",
-      "namn": "Vårdcentrum i Väst",
-      "epost": "nagon@nagonstans.invalid",
-      "vardgivareOrgnr": "2-orgnr-vastmanland",
-      "mottagningar": [
+    "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardgivare",
+    "id" : "vastmanland",
+    "namn" : "Landstinget Västmanland",
+    "vardenheter" : [
         {
-          "@class": "se.inera.intyg.infra.integration.hsa.model.Mottagning",
-          "id": "dialys",
-          "namn": "Dialys",
-          "vardgivareOrgnr": "2-orgnr-vastmanland",
-          "arbetsplatskod": "arbetsplatskod_centrum-vast-dialys"
+            "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
+            "id" : "centrum-vast",
+            "namn" : "Vårdcentrum i Väst",
+            "epost" : "nagon@nagonstans.invalid",
+            "vardgivareOrgnr" : "2-orgnr-vastmanland",
+            "mottagningar" : [
+                {
+                    "@class" : "se.inera.intyg.infra.integration.hsa.model.Mottagning",
+                    "id" : "dialys",
+                    "namn" : "Dialys",
+                    "vardgivareOrgnr" : "2-orgnr-vastmanland",
+                    "arbetsplatskod" : "arbetsplatskod_centrum-vast-dialys"
+                },
+                {
+                    "@class" : "se.inera.intyg.infra.integration.hsa.model.Mottagning",
+                    "id" : "akuten",
+                    "namn" : "Akuten",
+                    "vardgivareOrgnr" : "2-orgnr-vastmanland",
+                    "arbetsplatskod" : "arbetsplatskod_centrum-vast-akuten"
+                }
+            ]
         },
         {
-          "@class": "se.inera.intyg.infra.integration.hsa.model.Mottagning",
-          "id": "akuten",
-          "namn": "Akuten",
-          "vardgivareOrgnr": "2-orgnr-vastmanland",
-          "arbetsplatskod": "arbetsplatskod_centrum-vast-akuten"
-        }
-      ]
-    },
-    {
-      "@class": "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
-      "id": "centrum-ost",
-      "namn": "Vårdcentrum i Öst",
-      "epost": "nagon@nagonstans.invalid",
-      "arbetsplatskod": "arbetsplatskod_centrum-ost",
-      "vardgivareOrgnr": "5-orgnr-vastmanland",
-      "mottagningar": [
+            "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
+            "id" : "centrum-ost",
+            "namn" : "Vårdcentrum i Öst",
+            "epost" : "nagon@nagonstans.invalid",
+            "arbetsplatskod" : "arbetsplatskod_centrum-ost",
+            "vardgivareOrgnr" : "5-orgnr-vastmanland",
+            "mottagningar" : [
+                {
+                    "@class" : "se.inera.intyg.infra.integration.hsa.model.Mottagning",
+                    "id" : "nagel",
+                    "namn" : "Nagelmottagningen",
+                    "vardgivareOrgnr" : "5-orgnr-vastmanland",
+                    "epost" : "nagon@nagonstans.invalid",
+                    "arbetsplatskod" : "arbetsplatskod_centrum-ost-nagel"
+                }
+            ]
+        },
         {
-          "@class": "se.inera.intyg.infra.integration.hsa.model.Mottagning",
-          "id": "nagel",
-          "namn": "Nagelmottagningen",
-          "vardgivareOrgnr": "5-orgnr-vastmanland",
-          "epost": "nagon@nagonstans.invalid",
-          "arbetsplatskod": "arbetsplatskod_centrum-ost-nagel"
+            "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
+            "id" : "centrum-norr",
+            "namn" : "Vårdcentrum i Norr",
+            "vardgivareOrgnr" : "5-orgnr-vastmanland",
+            "arbetsplatskod" : "arbetsplatskod_centrum-norr"
         }
-      ]
-    },
-    {
-      "@class": "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
-      "id": "centrum-norr",
-      "namn": "Vårdcentrum i Norr",
-      "vardgivareOrgnr": "5-orgnr-vastmanland",
-      "arbetsplatskod": "arbetsplatskod_centrum-norr"
-    }
-  ]
+    ]
 }

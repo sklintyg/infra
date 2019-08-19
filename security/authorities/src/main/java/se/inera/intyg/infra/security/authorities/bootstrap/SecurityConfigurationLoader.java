@@ -32,11 +32,12 @@ import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.authorities.FeaturesConfiguration;
 
 /**
- * The security configuration is read from two seperate YAML files which are injected into the constructor upon creating an object of this
- * class.
+ * The security configuration is read from two seperate YAML files which are
+ * injected into the constructor upon creating an object of this class.
  * <p>
- * The YAML files are parsed and the resulting configuration can be fetched by calling the {@link
- * SecurityConfigurationLoader#getAuthoritiesConfiguration()} and {@link SecurityConfigurationLoader#getFeaturesConfiguration()} method.
+ * The YAML files are parsed and the resulting configuration can be fetched
+ * by calling the {@link SecurityConfigurationLoader#getAuthoritiesConfiguration()}
+ * and {@link SecurityConfigurationLoader#getFeaturesConfiguration()} method.
  */
 @Component("AuthoritiesConfigurationLoader")
 public class SecurityConfigurationLoader implements InitializingBean {
@@ -67,12 +68,15 @@ public class SecurityConfigurationLoader implements InitializingBean {
     }
 
     /**
-     * Invoked by a BeanFactory after it has set all bean properties supplied (and satisfied BeanFactoryAware and ApplicationContextAware).
+     * Invoked by a BeanFactory after it has set all bean properties supplied
+     * (and satisfied BeanFactoryAware and ApplicationContextAware).
      * <p>
-     * This method allows the bean instance to perform initialization only possible when all bean properties have been set and to throw an
+     * This method allows the bean instance to perform initialization only
+     * possible when all bean properties have been set and to throw an
      * exception in the event of misconfiguration.
      *
-     * @throws Exception in the event of misconfiguration (such as failure to set an essential property) or if initialization fails.
+     * @throws Exception in the event of misconfiguration (such
+     * as failure to set an essential property) or if initialization fails.
      */
     @Override
     public void afterPropertiesSet() throws AuthoritiesException {

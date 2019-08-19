@@ -36,8 +36,8 @@ import se.inera.intyg.infra.loggtjanststub.json.LogStoreObjectMapper;
 import se.riv.informationsecurity.auditing.log.v2.LogType;
 
 /**
- * Storage for the PU-stub based on {@link DefaultRedisMap}, providing redis-based replication for multiple application instances having
- * access to the same redis instance.
+ * Storage for the PU-stub based on {@link DefaultRedisMap}, providing redis-based replication for multiple
+ * application instances having access to the same redis instance.
  *
  * @author eriklupander
  */

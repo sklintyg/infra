@@ -37,7 +37,8 @@ import se.riv.infrastructure.directory.v1.PersonInformationType;
 /**
  * Provides person related services using TJK over NTjP.
  *
- * infrastructure:directory:employee and infrastructure:directory:authorizationmanagement
+ * infrastructure:directory:employee and
+ * infrastructure:directory:authorizationmanagement
  *
  * @author eriklupander
  */

@@ -22,7 +22,8 @@ import java.util.Optional;
 import se.inera.intyg.infra.security.common.model.UserDetails;
 
 /**
- * Utility class that makes it easy to express and enforce authority constraint rules in backend code. Example usage could be:
+ * Utility class that makes it easy to express and enforce authority constraint rules in backend code.
+ * Example usage could be:
  *
  * <pre>
  * authoritiesValidator.given(user, &quot;fk7263&quot;).

@@ -84,8 +84,9 @@ public class SjukfallIntygEnhetCreator {
     }
 
     /**
-     * Method returns a map with sorted values. The sorting is done on SjukfallIntyg objects' slutDatum. Objects are arranged in ascending
-     * order, i.e object with biggest slutDatum will be last.
+     * Method returns a map with sorted values. The sorting is done on
+     * SjukfallIntyg objects' slutDatum. Objects are arranged in ascending order,
+     * i.e object with biggest slutDatum will be last.
      *
      * @param unsortedMap a map with patients current certificates
      * @return a map with patients current certificates sorted in ascending order

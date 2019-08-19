@@ -23,8 +23,9 @@ import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**
- * Note: Avoid using this class directly from external applications.
- * Use {@link se.inera.intyg.infra.integration.hsa.services.HsaEmployeeService} instead.
+ * Note: Avoid using this class directly from external applications. Use
+ * {@link se.inera.intyg.infra.integration.hsa.services.HsaEmployeeService}
+ * instead.
  *
  * Created by eriklupander on 2015-12-03.
  */

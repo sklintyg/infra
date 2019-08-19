@@ -1,16 +1,16 @@
 <GetUnitResponse
     xmlns="urn:riv:infrastructure:directory:organization:GetUnitResponder:1"
-    xmlns:ns2="urn:riv:infrastructure:directory:1">
-  <unit>
-    <unitHsaId>TSTNMT2321000156-1039</unitHsaId>
-    <unitName>EnhetWCTand</unitName>
-    <postalAddress>
-      <ns2:addressLine>Nordic MedTest</ns2:addressLine>
-      <ns2:addressLine>Bryggaregatan 11</ns2:addressLine>
-      <ns2:addressLine>65340 Karlstad</ns2:addressLine>
-    </postalAddress>
-    <publicName>EnhetWCTand</publicName>
-    <telephoneNumber>054121314</telephoneNumber>
-  </unit>
-  <resultCode>OK</resultCode>
+    xmlns:ns2="urn:riv:infrastructure:directory:1" xmlns:ns3="urn:riv:itintegration:registry:1">
+    <unit>
+        <unitHsaId>TSTNMT2321000156-1039</unitHsaId>
+        <unitName>EnhetWCTand</unitName>
+        <postalAddress>
+            <ns2:addressLine>Nordic MedTest</ns2:addressLine>
+            <ns2:addressLine>Bryggaregatan 11</ns2:addressLine>
+            <ns2:addressLine>65340 Karlstad</ns2:addressLine>
+        </postalAddress>
+        <publicName>EnhetWCTand</publicName>
+        <telephoneNumber>054121314</telephoneNumber>
+    </unit>
+    <resultCode>OK</resultCode>
 </GetUnitResponse>

@@ -26,8 +26,8 @@ import se.inera.intyg.infra.sjukfall.dto.Formaga;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 
 /**
- * Calulates the effective length of all arbetsformaga intervals contained in the SortableIntygsData's, making sure to merge overlapping
- * intervals first.
+ * Calulates the effective length of all arbetsformaga intervals contained in the SortableIntygsData's, making sure to
+ * merge overlapping intervals first.
  *
  * Created by marced on 19/02/16.
  */

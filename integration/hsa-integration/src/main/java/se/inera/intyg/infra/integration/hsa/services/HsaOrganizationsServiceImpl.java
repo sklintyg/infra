@@ -55,7 +55,8 @@ import se.riv.infrastructure.directory.v1.CredentialInformationType;
 /**
  * Provides HSA organization services through TJK over NTjP.
  *
- * infrastructure:directory:organization and infrastructure:directory:authorizationmanagement
+ * infrastructure:directory:organization and
+ * infrastructure:directory:authorizationmanagement
  *
  * @author andreaskaltenbach, eriklupander
  */

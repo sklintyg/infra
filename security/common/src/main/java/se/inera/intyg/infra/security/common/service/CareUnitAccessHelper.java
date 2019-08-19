@@ -39,8 +39,9 @@ public final class CareUnitAccessHelper {
     }
 
     /**
-     * Since the WebCertUser#getValdVardenhet may either return a {@link se.inera.intyg.infra.integration.hsa.model.Vardenhet} or a {@link
-     * se.inera.intyg.infra.integration.hsa.model.Mottagning}, this method can be used to determine if:
+     * Since the WebCertUser#getValdVardenhet may either return a
+     * {@link se.inera.intyg.infra.integration.hsa.model.Vardenhet} or a
+     * {@link se.inera.intyg.infra.integration.hsa.model.Mottagning}, this method can be used to determine if:
      *
      * <ul>
      * <li>If the selectedVardenhet is a Vardenhet: The supplied enhetsId is for the Vardenhet or one of its

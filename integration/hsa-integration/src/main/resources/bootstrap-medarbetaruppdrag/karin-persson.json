@@ -28,9 +28,7 @@
     }
   ],
   "fakeProperties": {
-    "allowedInApplications": [
-      "IB"
-    ],
+    "allowedInApplications": ["IB"],
     "displayOrder": 510,
     "env": "demo",
     "readOnly": true,

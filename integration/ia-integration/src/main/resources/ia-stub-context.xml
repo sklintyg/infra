@@ -19,11 +19,11 @@
   -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
   http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd"
-    profile="dev,ia-stub">
+  profile="dev,ia-stub">
 
   <bean id="iaStubRestApi" class="se.inera.intyg.infra.integration.ia.stub.IAStubRestApi"/>
 

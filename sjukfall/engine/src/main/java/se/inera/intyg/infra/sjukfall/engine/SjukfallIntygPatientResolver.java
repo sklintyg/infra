@@ -45,8 +45,8 @@ public class SjukfallIntygPatientResolver {
     // api
 
     /**
-     * Method is resolving sjukfall for a health care unit based on the unit's certificate information. A map with patient id as key and a
-     * list of certificates associated with a sjukfall as value, will be returned.
+     * Method is resolving sjukfall for a health care unit based on the unit's certificate information.
+     * A map with patient id as key and a list of certificates associated with a sjukfall as value, will be returned.
      */
     public Map<Integer, List<SjukfallIntyg>> resolve(final List<IntygData> intygsData,
         final int maxIntygsGlapp, final LocalDate aktivtDatum) {

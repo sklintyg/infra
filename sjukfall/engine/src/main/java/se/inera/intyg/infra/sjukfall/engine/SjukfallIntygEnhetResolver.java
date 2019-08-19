@@ -46,8 +46,8 @@ public class SjukfallIntygEnhetResolver {
     // - - -  API  - - -
 
     /**
-     * Method is resolving sjukfall for a health care unit based on the unit's certificate information. A map with patient id as key and a
-     * list of certificates associated with a sjukfall as value, will be returned.
+     * Method is resolving sjukfall for a health care unit based on the unit's certificate information.
+     * A map with patient id as key and a list of certificates associated with a sjukfall as value, will be returned.
      */
     public Map<String, List<SjukfallIntyg>> resolve(List<IntygData> intygsData, IntygParametrar parameters) {
 
@@ -79,7 +79,8 @@ public class SjukfallIntygEnhetResolver {
     // - - -  Package scope  - - -
 
     /**
-     * Method returns a map with intermediate IntygsData objects. Patient's personal-id is used as key.
+     * Method returns a map with intermediate IntygsData objects.
+     * Patient's personal-id is used as key.
      *
      * @param intygsData a list with basic certificate data
      * @param aktivtDatum a date used for decision if a certificate is active or not

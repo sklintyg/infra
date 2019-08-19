@@ -39,8 +39,8 @@ import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 
 /**
- * Storage for the PU-stub based on {@link org.springframework.data.redis.support.collections.RedisMap providing disk-based replication for
- * multiple application instances having access to the same file system.
+ * Storage for the PU-stub based on {@link org.springframework.data.redis.support.collections.RedisMap
+ * providing disk-based replication for multiple application instances having access to the same file system.
  *
  * @author eriklupander
  */
@@ -72,7 +72,8 @@ public class StubResidentStore {
     }
 
     /**
-     * Adds a new resident to the store. If a resident with the same personnummer already exists in the map, the existing one is updated.
+     * Adds a new resident to the store. If a resident with the same personnummer already exists in the
+     * map, the existing one is updated.
      */
     public void addResident(PersonRecordType residentType) {
         String pnr = residentType.getPersonalIdentity().getExtension();

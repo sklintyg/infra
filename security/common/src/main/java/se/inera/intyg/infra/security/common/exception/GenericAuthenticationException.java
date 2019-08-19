@@ -26,7 +26,8 @@ import org.springframework.security.core.AuthenticationException;
 public class GenericAuthenticationException extends AuthenticationException {
 
     /**
-     * Constructs an {@code GenericAuthenticationException} with the specified message and root cause.
+     * Constructs an {@code GenericAuthenticationException} with the specified message and root
+     * cause.
      *
      * @param msg the detail message
      * @param t the root cause
@@ -36,7 +37,8 @@ public class GenericAuthenticationException extends AuthenticationException {
     }
 
     /**
-     * Constructs an {@code GenericAuthenticationException} with the specified message and no root cause.
+     * Constructs an {@code GenericAuthenticationException} with the specified message and no
+     * root cause.
      *
      * @param msg the detail message
      */

@@ -36,9 +36,9 @@ import org.springframework.util.SerializationUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
- * This filter checks if the user Principal has changed (new vald vardenhet, some consent given etc). If true, the wrapped RedisSession is
- * "touched" using session.setAttribute("SPRING_SECURITY_CONTEXT", context) which then will trigger a diff in the
- * springSessionRepositoryFilter forcing an update of the Principal in the redis store.
+ * This filter checks if the user Principal has changed (new vald vardenhet, some consent given etc). If true,
+ * the wrapped RedisSession is "touched" using session.setAttribute("SPRING_SECURITY_CONTEXT", context) which
+ * then will trigger a diff in the springSessionRepositoryFilter forcing an update of the Principal in the redis store.
  *
  * ONLY use this filter if you're using Spring Session with Redis!
  *

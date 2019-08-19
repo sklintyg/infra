@@ -44,8 +44,8 @@ import se.inera.intyg.infra.integration.nias.stub.util.Keys;
 import se.inera.intyg.infra.integration.nias.stub.util.StubSignUtil;
 
 /**
- * NetiD Access Server stub. Will actually perform real signing of the supplied digest using private key and includes the public key in the
- * response.
+ * NetiD Access Server stub. Will actually perform real signing of the supplied digest using
+ * private key and includes the public key in the response.
  */
 public class NetiDAccessServerSoapStub implements NetiDAccessServerSoap {
 

@@ -25,7 +25,8 @@ import se.inera.intyg.infra.integration.hsa.model.AbstractVardenhet;
 import se.riv.infrastructure.directory.v1.AddressType;
 
 /**
- * Extracted from HsaOrganizationsServiceImpl and generalized so it can be used for both CareUnit and Mottagning levels.
+ * Extracted from HsaOrganizationsServiceImpl and generalized so it can be used for both CareUnit
+ * and Mottagning levels.
  *
  * Created by eriklupander on 2017-09-19.
  */

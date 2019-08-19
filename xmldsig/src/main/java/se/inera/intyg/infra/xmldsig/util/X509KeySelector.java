@@ -30,7 +30,8 @@ import javax.xml.crypto.dsig.keyinfo.KeyInfo;
 import javax.xml.crypto.dsig.keyinfo.X509Data;
 
 /**
- * A <code>KeySelector</code> that returns {@link PublicKey}s of trusted {@link X509Certificate}s.
+ * A <code>KeySelector</code> that returns {@link PublicKey}s of trusted
+ * {@link X509Certificate}s.
  *
  * Will only handle X509Certificates passed from a XMLDSig structure.
  *

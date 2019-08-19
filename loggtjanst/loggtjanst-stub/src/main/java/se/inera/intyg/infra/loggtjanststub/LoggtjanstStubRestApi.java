@@ -70,7 +70,8 @@ public class LoggtjanstStubRestApi {
      * Makes the stub fake one of the specified error types. See {@link ErrorState}
      *
      * @param errorType Allowed values are NONE, ERROR, VALIDATION
-     * @return 200 OK if state change was successful. 500 Server Error if the errorType string couldn't be parsed into an {@link ErrorState}
+     * @return 200 OK if state change was successful. 500 Server Error if the errorType string couldn't be parsed into
+     * an {@link ErrorState}
      */
     @GET
     @Path("/error/{errorType}")

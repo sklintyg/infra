@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Class for all log messages. Each project sending PDL log messsages should implement their own domain-specific factories for producing
- * PdlLogMessage instances having the relevant properties.
+ * Class for all log messages. Each project sending PDL log messsages should implement their own domain-specific
+ * factories for producing PdlLogMessage instances having the relevant properties.
  *
  * @author eriklupander
  */
@@ -73,10 +73,10 @@ public class PdlLogMessage implements Serializable {
      * Constructor for a log message.
      *
      * @param activityType Något av dessa värden ska anges: Läsa, Skriva, Signera, Utskrift, Vidimera, Radera och Nödöppning
-     * @param purpose kan vara något av dessa värden: Vård och behandling, Kvalitetssäkring, Annan dokumentation enligt lag, Statistik,
-     * Administration och Kvalitetsregister.
-     * @param pdlResourceList Kan vara kemlabbsvar, journaltext, remiss, översikt, samtycke, patientrelation, sätta spärr, rapport, Översikt
-     * sjukskrivning osv.
+     * @param purpose kan vara något av dessa värden: Vård och behandling, Kvalitetssäkring, Annan dokumentation enligt lag,
+     * Statistik, Administration och Kvalitetsregister.
+     * @param pdlResourceList Kan vara kemlabbsvar, journaltext, remiss, översikt, samtycke, patientrelation, sätta spärr, rapport,
+     * Översikt sjukskrivning osv.
      */
     public PdlLogMessage(ActivityType activityType, ActivityPurpose purpose, List<PdlResource> pdlResourceList) {
         this.logId = UUID.randomUUID().toString();

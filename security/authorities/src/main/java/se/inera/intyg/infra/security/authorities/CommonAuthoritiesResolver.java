@@ -224,7 +224,8 @@ public class CommonAuthoritiesResolver {
     }
 
     /**
-     * Lookup user role by looking into 'legitimerade yrkesgrupper'. Currently there are only two 'yrkesgrupper' to look for:
+     * Lookup user role by looking into 'legitimerade yrkesgrupper'.
+     * Currently there are only two 'yrkesgrupper' to look for:
      * <ul>
      * <li>Läkare</li>
      * <li>Tandläkare</li>

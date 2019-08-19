@@ -47,8 +47,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 /**
- * Tests so the session.setAttribute is invoked only when the underlying authentication principal has changed during the
- * filterChain.invoke.
+ * Tests so the session.setAttribute is invoked only when the underlying authentication principal has changed during
+ * the filterChain.invoke.
  *
  * @author eriklupander
  */

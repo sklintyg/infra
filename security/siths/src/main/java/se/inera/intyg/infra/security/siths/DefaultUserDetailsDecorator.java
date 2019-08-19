@@ -32,7 +32,8 @@ import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**
- * Provides a number of default implementations for decorating a IntygUser principal with various information extracted from HSA models.
+ * Provides a number of default implementations for decorating a IntygUser principal with various information extracted
+ * from HSA models.
  *
  * Created by eriklupander on 2016-05-17.
  */

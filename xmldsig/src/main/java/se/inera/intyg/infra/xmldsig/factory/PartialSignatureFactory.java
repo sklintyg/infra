@@ -63,7 +63,8 @@ public final class PartialSignatureFactory {
     /**
      * Builds a partially populated {@link SignatureType}.
      *
-     * Contains appropriate algorithms and elements for subsequent population of digest, signature value and keyinfo.
+     * Contains appropriate algorithms and elements for subsequent population of digest, signature value and
+     * keyinfo.
      */
     public static SignatureType buildSignature(String intygsId, byte[] digestBytes) {
         SignatureType signature = new SignatureType();

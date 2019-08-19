@@ -1,12 +1,12 @@
 {
-  "@class": "se.inera.intyg.infra.integration.hsa.model.Vardgivare",
-  "id": "kings-landing",
-  "namn": "King's Landing",
-  "vardenheter": [
-    {
-      "@class": "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
-      "id": "red-keep",
-      "namn": "Vårdcentrum Red Keep"
-    }
-  ]
+    "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardgivare",
+    "id" : "kings-landing",
+    "namn" : "King's Landing",
+    "vardenheter" : [
+        {
+            "@class" : "se.inera.intyg.infra.integration.hsa.model.Vardenhet",
+            "id" : "red-keep",
+            "namn" : "Vårdcentrum Red Keep"
+        }
+    ]
 }

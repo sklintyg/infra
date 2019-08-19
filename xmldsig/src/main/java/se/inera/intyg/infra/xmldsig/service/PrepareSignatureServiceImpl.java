@@ -79,10 +79,11 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
     /**
      * Prepares an XMLDSig signature, a canonicalized SignedInfo and the canonicalized XML that the digest is based on.
      *
-     * Given the supplied XML, the XML is canonicalized and a SHA-256 digest is created and Base64-encoded into the DigestValue field.
+     * Given the supplied XML, the XML is canonicalized and a SHA-256 digest is created and Base64-encoded into the
+     * DigestValue field.
      *
-     * Also, relevant algorithms for digest, signature and canonicalization method are specified on the body of the returned {@link
-     * SignatureType}.
+     * Also, relevant algorithms for digest, signature and canonicalization method are specified on the body of the
+     * returned {@link SignatureType}.
      *
      * @param intygXml XML document to be canonicalized and digested.
      * @param intygsId The ID of the intyg is required for the XPath expression selecting the content to be digested.
@@ -180,8 +181,8 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
     }
 
     /**
-     * Takes the SignedInfoType from the signatureType element, marshals it, runs exclusive canonicalization and returns the resulting
-     * SignedInfo XML as string.
+     * Takes the SignedInfoType from the signatureType element, marshals it, runs exclusive canonicalization and returns
+     * the resulting SignedInfo XML as string.
      *
      * The SignedInfo element serves as input to the sign function in XMLDSig.
      *

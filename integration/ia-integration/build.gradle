@@ -1,17 +1,17 @@
 dependencies {
-    compile project(':common-redis-cache-core')
+  compile project(':common-redis-cache-core')
 
-    compile "org.springframework.data:spring-data-redis:${springDataRedisVersion}"
-    compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
+  compile "org.springframework.data:spring-data-redis:${springDataRedisVersion}"
+  compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
 
-    compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
-    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
-    compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jacksonVersion}"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
+  compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+  compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+  compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jacksonVersion}"
+  compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
 
-    runtime "org.springframework:spring-context-support:${springVersion}"
+  runtime "org.springframework:spring-context-support:${springVersion}"
 
-    testCompile "org.springframework:spring-test:${springVersion}"
-    testCompile "org.hamcrest:hamcrest-all:${hamcrestVersion}"
-    testCompile "it.ozimov:embedded-redis:${embeddedRedisVersion}"
+  testCompile "org.springframework:spring-test:${springVersion}"
+  testCompile "org.hamcrest:hamcrest-all:${hamcrestVersion}"
+  testCompile "it.ozimov:embedded-redis:${embeddedRedisVersion}"
 }

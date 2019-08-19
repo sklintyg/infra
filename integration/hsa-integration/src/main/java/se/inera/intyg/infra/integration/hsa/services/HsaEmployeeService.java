@@ -28,8 +28,8 @@ import se.riv.infrastructure.directory.v1.PersonInformationType;
 public interface HsaEmployeeService {
 
     /**
-     * Returnerar information, som kontaktinformation samt legitimerad yrkesgrupp och specialitet, för sökt person. Exakt ett av fälten
-     * personHsaId och personalIdentityNumber ska anges.
+     * Returnerar information, som kontaktinformation samt legitimerad yrkesgrupp och specialitet, för sökt person.
+     * Exakt ett av fälten personHsaId och personalIdentityNumber ska anges.
      *
      * @param personHsaId Sökt persons HSA-id.
      * @param personalIdentityNumber Sökt persons Person-id (personnummer eller samordningsnummer).
@@ -38,8 +38,8 @@ public interface HsaEmployeeService {
     List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber) throws WebServiceException;
 
     /**
-     * Returnerar information, som kontaktinformation samt legitimerad yrkesgrupp och specialitet, för sökt person. Exakt ett av fälten
-     * personHsaId och personalIdentityNumber ska anges.
+     * Returnerar information, som kontaktinformation samt legitimerad yrkesgrupp och specialitet, för sökt person.
+     * Exakt ett av fälten personHsaId och personalIdentityNumber ska anges.
      *
      * @param personHsaId Sökt persons HSA-id.
      * @param personalIdentityNumber Sökt persons Person-id (personnummer eller samordningsnummer).

@@ -20,27 +20,27 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:http="http://cxf.apache.org/transports/http/configuration"
-    xsi:schemaLocation="
+  xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd
        ">
 
   <beans profile="ia-stub">
-    <bean class="se.inera.intyg.infra.integration.ia.stub.IABannerServiceStub"/>
+    <bean class="se.inera.intyg.infra.integration.ia.stub.IABannerServiceStub" />
   </beans>
 
   <beans profile="!ia-stub">
-    <bean class="se.inera.intyg.infra.integration.ia.services.IABannerServiceImpl"/>
+    <bean class="se.inera.intyg.infra.integration.ia.services.IABannerServiceImpl" />
   </beans>
 
   <beans profile="qa,prod">
-    <bean class="se.inera.intyg.infra.integration.ia.cache.IaCacheConfiguration"/>
+    <bean class="se.inera.intyg.infra.integration.ia.cache.IaCacheConfiguration" />
   </beans>
 
   <beans profile="!prod">
     <beans profile="!qa">
       <beans profile="caching-enabled">
-        <bean class="se.inera.intyg.infra.integration.ia.cache.IaCacheConfiguration"/>
+        <bean class="se.inera.intyg.infra.integration.ia.cache.IaCacheConfiguration" />
       </beans>
     </beans>
   </beans>
