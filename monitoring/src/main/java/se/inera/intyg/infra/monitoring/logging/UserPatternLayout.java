@@ -26,6 +26,7 @@ import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
  * user and session information.
  */
 public class UserPatternLayout extends PatternLayoutEncoder {
+
     static {
         PatternLayout.defaultConverterMap.put("user", UserConverter.class.getName());
     }

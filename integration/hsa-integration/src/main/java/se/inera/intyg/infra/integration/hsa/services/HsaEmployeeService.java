@@ -19,9 +19,7 @@
 package se.inera.intyg.infra.integration.hsa.services;
 
 import java.util.List;
-
 import javax.xml.ws.WebServiceException;
-
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**
@@ -33,14 +31,9 @@ public interface HsaEmployeeService {
      * Returnerar information, som kontaktinformation samt legitimerad yrkesgrupp och specialitet, för sökt person.
      * Exakt ett av fälten personHsaId och personalIdentityNumber ska anges.
      *
-     * @param personHsaId
-     *            Sökt persons HSA-id.
-     * @param personalIdentityNumber
-     *            Sökt persons Person-id (personnummer eller samordningsnummer).
-     *
+     * @param personHsaId Sökt persons HSA-id.
+     * @param personalIdentityNumber Sökt persons Person-id (personnummer eller samordningsnummer).
      * @return Information om sökt person.
-     *
-     * @throws WebServiceException
      */
     List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber) throws WebServiceException;
 
@@ -48,18 +41,12 @@ public interface HsaEmployeeService {
      * Returnerar information, som kontaktinformation samt legitimerad yrkesgrupp och specialitet, för sökt person.
      * Exakt ett av fälten personHsaId och personalIdentityNumber ska anges.
      *
-     * @param personHsaId
-     *            Sökt persons HSA-id.
-     * @param personalIdentityNumber
-     *            Sökt persons Person-id (personnummer eller samordningsnummer).
-     * @param searchBase
-     *            Sökbas. Om ingen sökbas anges används c=SE som sökbas.
-     *
+     * @param personHsaId Sökt persons HSA-id.
+     * @param personalIdentityNumber Sökt persons Person-id (personnummer eller samordningsnummer).
+     * @param searchBase Sökbas. Om ingen sökbas anges används c=SE som sökbas.
      * @return Information om sökt person.
-     *
-     * @throws WebServiceException
      */
     List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase)
-            throws WebServiceException;
+        throws WebServiceException;
 
 }

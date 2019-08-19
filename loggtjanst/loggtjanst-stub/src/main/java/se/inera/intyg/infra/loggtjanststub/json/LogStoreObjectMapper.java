@@ -27,7 +27,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,6 +46,7 @@ public class LogStoreObjectMapper extends ObjectMapper {
     }
 
     private static final class Module extends SimpleModule {
+
         private Module() {
             // LocalDate
             addSerializer(LocalDate.class, LocalDateSerializer.INSTANCE);

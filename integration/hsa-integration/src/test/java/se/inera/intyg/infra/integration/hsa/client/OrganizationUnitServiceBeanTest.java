@@ -18,6 +18,14 @@
  */
 package se.inera.intyg.infra.integration.hsa.client;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.AdditionalMatchers.or;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -37,14 +45,6 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitR
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.AdditionalMatchers.or;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by eriklupander on 2016-03-11.
@@ -70,8 +70,8 @@ public class OrganizationUnitServiceBeanTest {
     @Test
     public void testGetUnit() throws HsaServiceCallException {
         when(getUnitResponderInterface.getUnit(
-                or(isNull(), anyString()),
-                any(GetUnitType.class))
+            or(isNull(), anyString()),
+            any(GetUnitType.class))
         ).thenReturn(buildGetUnitResponse());
 
         UnitType response = testee.getUnit(UNIT_HSA_ID);
@@ -82,8 +82,8 @@ public class OrganizationUnitServiceBeanTest {
     @Test
     public void testGetHealthCareUnit() throws HsaServiceCallException {
         when(getHealthCareUnitResponderInterface.getHealthCareUnit(
-                or( isNull(), anyString()),
-                any(GetHealthCareUnitType.class))
+            or(isNull(), anyString()),
+            any(GetHealthCareUnitType.class))
         ).thenReturn(buildHealthCareGetUnitResponse());
 
         HealthCareUnitType response = testee.getHealthCareUnit(UNIT_HSA_ID);
@@ -94,8 +94,8 @@ public class OrganizationUnitServiceBeanTest {
     @Test
     public void testHealthCareUnitMembers() throws HsaServiceCallException {
         when(getHealthCareUnitMembersResponderInterface.getHealthCareUnitMembers(
-                or(isNull(), anyString()),
-                any(GetHealthCareUnitMembersType.class))
+            or(isNull(), anyString()),
+            any(GetHealthCareUnitMembersType.class))
         ).thenReturn(buildHealthCareUnitMembersResponse());
 
         HealthCareUnitMembersType response = testee.getHealthCareUnitMembers(UNIT_HSA_ID);

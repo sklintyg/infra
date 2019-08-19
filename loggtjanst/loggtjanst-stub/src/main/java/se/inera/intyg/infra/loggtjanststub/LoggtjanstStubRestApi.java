@@ -18,9 +18,7 @@
  */
 package se.inera.intyg.infra.loggtjanststub;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import se.riv.informationsecurity.auditing.log.v2.LogType;
-
+import java.util.Collection;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,7 +26,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
+import org.springframework.beans.factory.annotation.Autowired;
+import se.riv.informationsecurity.auditing.log.v2.LogType;
 
 /**
  * @author eriklup
@@ -70,11 +69,9 @@ public class LoggtjanstStubRestApi {
     /**
      * Makes the stub fake one of the specified error types. See {@link ErrorState}
      *
-     * @param errorType
-     *            Allowed values are NONE, ERROR, VALIDATION
-     * @return
-     *         200 OK if state change was successful. 500 Server Error if the errorType string couldn't be parsed into
-     *         an {@link ErrorState}
+     * @param errorType Allowed values are NONE, ERROR, VALIDATION
+     * @return 200 OK if state change was successful. 500 Server Error if the errorType string couldn't be parsed into
+     * an {@link ErrorState}
      */
     @GET
     @Path("/error/{errorType}")
@@ -85,17 +82,15 @@ public class LoggtjanstStubRestApi {
             return Response.ok().entity("OK").build();
         } catch (IllegalArgumentException e) {
             return Response.serverError().entity("Unknown ErrorState: " + errorType + ". Allowed values are NONE, ERROR, VALIDATION")
-                    .build();
+                .build();
         }
     }
 
     /**
      * Introduces a fake latency in the stub.
      *
-     * @param latencyMillis
-     *            Latency, in milliseconds.
-     * @return
-     *         200 OK
+     * @param latencyMillis Latency, in milliseconds.
+     * @return 200 OK
      */
     @GET
     @Path("/latency/{latencyMillis}")

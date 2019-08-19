@@ -22,9 +22,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collections;
-
 import org.junit.Test;
-
 import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;

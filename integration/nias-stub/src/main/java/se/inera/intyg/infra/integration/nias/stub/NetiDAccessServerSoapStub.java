@@ -23,14 +23,6 @@ import com.secmaker.netid.nias.v1.NetiDAccessServerSoap;
 import com.secmaker.netid.nias.v1.ResultCollect;
 import com.secmaker.netid.nias.v1.ResultRegister;
 import com.secmaker.netid.nias.v1.UserInfoType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import se.inera.intyg.infra.integration.nias.stub.model.OngoingSigning;
-import se.inera.intyg.infra.integration.nias.stub.util.Keys;
-import se.inera.intyg.infra.integration.nias.stub.util.StubSignUtil;
-
-import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -43,6 +35,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.UUID;
+import javax.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import se.inera.intyg.infra.integration.nias.stub.model.OngoingSigning;
+import se.inera.intyg.infra.integration.nias.stub.util.Keys;
+import se.inera.intyg.infra.integration.nias.stub.util.StubSignUtil;
 
 /**
  * NetiD Access Server stub. Will actually perform real signing of the supplied digest using
@@ -71,7 +70,7 @@ public class NetiDAccessServerSoapStub implements NetiDAccessServerSoap {
     public String sign(String personalNumber, String userVisibleData, String userNonVisibleData, String endUserInfo) {
         String orderRef = UUID.randomUUID().toString();
         OngoingSigning ongoingSigning = new OngoingSigning(orderRef, personalNumber, userVisibleData, userNonVisibleData, endUserInfo,
-                NiasSignatureStatus.OUTSTANDING_TRANSACTION);
+            NiasSignatureStatus.OUTSTANDING_TRANSACTION);
         niasServiceStub.put(orderRef, ongoingSigning);
 
         // Seems as the "real" NIAS showroom server just returns a plain string instead of a <SignResponse/>
@@ -113,7 +112,7 @@ public class NetiDAccessServerSoapStub implements NetiDAccessServerSoap {
             // Since it's complete, remove
             niasServiceStub.remove(orderRef);
         } else if (ongoingSigning.getStatus() == NiasSignatureStatus.USER_SIGN
-                || ongoingSigning.getStatus() == NiasSignatureStatus.OUTSTANDING_TRANSACTION) {
+            || ongoingSigning.getStatus() == NiasSignatureStatus.OUTSTANDING_TRANSACTION) {
             resultCollect.setProgressStatus(ongoingSigning.getStatus().name());
         } else {
             // Error state, remove signing and return state

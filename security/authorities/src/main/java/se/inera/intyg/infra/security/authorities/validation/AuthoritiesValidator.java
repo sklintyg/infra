@@ -18,9 +18,8 @@
  */
 package se.inera.intyg.infra.security.authorities.validation;
 
-import se.inera.intyg.infra.security.common.model.UserDetails;
-
 import java.util.Optional;
+import se.inera.intyg.infra.security.common.model.UserDetails;
 
 /**
  * Utility class that makes it easy to express and enforce authority constraint rules in backend code.
@@ -40,10 +39,6 @@ public final class AuthoritiesValidator {
 
     /**
      * Create an expectation context with both user and intyp.
-     *
-     * @param user
-     * @param intygstyp
-     * @return
      */
     public AuthExpectationSpecification given(UserDetails user, String intygstyp) {
         return new AuthExpectationSpecImpl(user, Optional.of(intygstyp));
@@ -51,9 +46,6 @@ public final class AuthoritiesValidator {
 
     /**
      * Create a expectation context with just a user and no intygstyp, i.e intygstyp doesnt' matter in validations.
-     *
-     * @param user
-     * @return
      */
     public AuthExpectationSpecification given(UserDetails user) {
         return new AuthExpectationSpecImpl(user, Optional.empty());

@@ -24,12 +24,13 @@ import org.springframework.security.core.AuthenticationException;
  * Created by Magnus Ekstrand on 2016-04-07.
  */
 public class GenericAuthenticationException extends AuthenticationException {
+
     /**
      * Constructs an {@code GenericAuthenticationException} with the specified message and root
      * cause.
      *
      * @param msg the detail message
-     * @param t   the root cause
+     * @param t the root cause
      */
     public GenericAuthenticationException(String msg, Throwable t) {
         super(msg, t);

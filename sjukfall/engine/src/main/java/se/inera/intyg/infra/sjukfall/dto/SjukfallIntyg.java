@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import se.inera.intyg.infra.sjukfall.engine.SjukfallLangdCalculator;
 import se.inera.intyg.infra.sjukfall.util.SysselsattningMapper;
 
@@ -156,8 +155,8 @@ public class SjukfallIntyg extends IntygData {
             this.sysselsattning = getSysselsattning(intygData.getSysselsattning());
             this.aktivtIntyg = isAktivtIntyg(intygData, aktivtDatum);
             this.nyligenAvslutat = !aktivtIntyg
-                    && slutDatum.isBefore(aktivtDatum)
-                    && slutDatum.plusDays(maxAntalDagarSedanSjukfallAvslut + 1).isAfter(aktivtDatum);
+                && slutDatum.isBefore(aktivtDatum)
+                && slutDatum.plusDays(maxAntalDagarSedanSjukfallAvslut + 1).isAfter(aktivtDatum);
         }
 
         public SjukfallIntyg build() {
@@ -170,9 +169,9 @@ public class SjukfallIntyg extends IntygData {
 
         private List<Integer> getGrader(List<Formaga> formagor) {
             return formagor.stream()
-                    .sorted(Comparator.comparing(Formaga::getStartdatum))
-                    .map(Formaga::getNedsattning)
-                    .collect(Collectors.toList());
+                .sorted(Comparator.comparing(Formaga::getStartdatum))
+                .map(Formaga::getNedsattning)
+                .collect(Collectors.toList());
         }
 
         private List<String> getSysselsattning(List<String> sysselsattning) {
@@ -184,7 +183,7 @@ public class SjukfallIntyg extends IntygData {
 
         private boolean hasAktivFormaga(List<Formaga> formagor, LocalDate aktivtDatum) {
             return formagor.stream()
-                    .anyMatch(f -> isAktivFormaga(aktivtDatum, f));
+                .anyMatch(f -> isAktivFormaga(aktivtDatum, f));
         }
 
         private boolean isAktivFormaga(LocalDate aktivtDatum, Formaga f) {
@@ -209,7 +208,7 @@ public class SjukfallIntyg extends IntygData {
     @Override
     public String toString() {
         return "SjukfallIntyg [startDatum=" + startDatum + ", slutDatum=" + slutDatum + ", dagar=" + dagar + ", grader="
-                + grader + ", aktivtIntyg=" + aktivtIntyg + ", nyligenAvslutat=" + nyligenAvslutat + "]";
+            + grader + ", aktivtIntyg=" + aktivtIntyg + ", nyligenAvslutat=" + nyligenAvslutat + "]";
     }
 
 }

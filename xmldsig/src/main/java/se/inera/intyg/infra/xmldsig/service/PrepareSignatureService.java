@@ -22,6 +22,7 @@ import org.w3._2000._09.xmldsig_.SignatureType;
 import se.inera.intyg.infra.xmldsig.model.IntygXMLDSignature;
 
 public interface PrepareSignatureService {
+
     IntygXMLDSignature prepareSignature(String intygXml, String intygsId);
 
     String encodeSignatureIntoSignedXml(SignatureType signatureType, String xml);

@@ -19,6 +19,10 @@
 package se.inera.intyg.infra.monitoring.logging;
 
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
 import java.io.ByteArrayOutputStream;
@@ -47,14 +51,10 @@ import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.common.model.Role;
 
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {MonitoringConfiguration.class})
 public class LogbackTest {
+
     static Logger LOG = LoggerFactory.getLogger(LogbackTest.class);
 
     @Autowired
@@ -126,8 +126,8 @@ public class LogbackTest {
         }
     }
 
-   @Test
-   public void logImplicitTraceIdTest() {
+    @Test
+    public void logImplicitTraceIdTest() {
         logMDCHelper.run(() -> {
             String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Marker test"));
 
@@ -137,7 +137,7 @@ public class LogbackTest {
             assertTrue(m.find());
             assertEquals(LogMDCHelper.IDLEN, m.group(1).length());
         });
-   }
+    }
 
     @Test
     public void logMarkerTest() {
@@ -154,7 +154,6 @@ public class LogbackTest {
         when(intygUser.getOrigin()).thenReturn("origin");
         when(intygUser.getRoles()).thenReturn(Collections.singletonMap("role", Mockito.mock(Role.class)));
 
-
         SelectableVardenhet ve = Mockito.mock(SelectableVardenhet.class);
         when(ve.getId()).thenReturn("sevId");
         when(intygUser.getValdVardenhet()).thenReturn(ve);
@@ -163,9 +162,9 @@ public class LogbackTest {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        HttpServletRequest  mockedRequest = Mockito.mock(HttpServletRequest.class);
+        HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
         Cookie sessionCookie = new Cookie("SESSION", "sessionCookieValue");
-        when(mockedRequest.getCookies()).thenReturn(new Cookie[] { new Cookie("test", "test"), sessionCookie });
+        when(mockedRequest.getCookies()).thenReturn(new Cookie[]{new Cookie("test", "test"), sessionCookie});
 
         Closeable c = logMDCServletFilter.open(mockedRequest);
         String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Auth Test"));

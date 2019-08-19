@@ -19,7 +19,6 @@
 package se.inera.intyg.infra.integration.hsa.client;
 
 import java.util.List;
-
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.riv.infrastructure.directory.v1.CredentialInformationType;
 
@@ -35,5 +34,5 @@ import se.riv.infrastructure.directory.v1.CredentialInformationType;
 public interface AuthorizationManagementService {
 
     List<CredentialInformationType> getAuthorizationsForPerson(String personHsaId,
-            String personalIdentityNumber, String searchBase) throws HsaServiceCallException;
+        String personalIdentityNumber, String searchBase) throws HsaServiceCallException;
 }

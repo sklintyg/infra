@@ -18,6 +18,9 @@
  */
 package se.inera.intyg.infra.security.siths;
 
+import static org.junit.Assert.assertEquals;
+
+import javax.xml.transform.stream.StreamSource;
 import org.apache.cxf.staxutils.StaxUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,10 +31,6 @@ import org.opensaml.xml.io.Unmarshaller;
 import org.opensaml.xml.io.UnmarshallerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
-
-import javax.xml.transform.stream.StreamSource;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author erikl
@@ -48,7 +47,7 @@ public class BaseSakerhetstjanstAssertionTest {
         Unmarshaller unmarshaller = unmarshallerFactory.getUnmarshaller(Assertion.DEFAULT_ELEMENT_NAME);
 
         Document doc = StaxUtils.read(new StreamSource(new ClassPathResource(
-                "UppdragslosIdpTest/assertion-1.xml").getInputStream()));
+            "UppdragslosIdpTest/assertion-1.xml").getInputStream()));
         assertionWithEnhet = (Assertion) unmarshaller.unmarshall(doc.getDocumentElement());
 
     }

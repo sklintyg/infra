@@ -18,9 +18,13 @@
  */
 package se.inera.intyg.infra.integration.postnummer.service;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNull;
+
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +35,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import se.inera.intyg.infra.integration.postnummer.model.Omrade;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = PostnummerServiceTest.TestConfiguration.class)
@@ -46,9 +44,10 @@ public class PostnummerServiceTest {
     @Configuration
     @ComponentScan("se.inera.intyg.infra.integration.postnummer")
     @PropertySource(
-            value={"classpath:/test.properties"},
-            ignoreResourceNotFound = false)
+        value = {"classpath:/test.properties"},
+        ignoreResourceNotFound = false)
     public static class TestConfiguration {
+
         @Bean
         public static PropertySourcesPlaceholderConfigurer propertiesResolver() {
             return new PropertySourcesPlaceholderConfigurer();
@@ -64,7 +63,7 @@ public class PostnummerServiceTest {
         List<Omrade> omrade13061 = Arrays.asList(new Omrade("13061", "HÅRSFJÄRDEN", "HANINGE", "STOCKHOLM"));
         List<Omrade> omrade13100 = Arrays.asList(new Omrade("13100", "NACKA", "NACKA", "STOCKHOLM"));
         List<Omrade> omrade13155 = Arrays.asList(new Omrade("13155", "NACKA", "STOCKHOLM", "STOCKHOLM"),
-                new Omrade("13155", "NACKA", "NACKA", "STOCKHOLM"));
+            new Omrade("13155", "NACKA", "NACKA", "STOCKHOLM"));
 
         assertNull(postnummerService.getOmradeByPostnummer(null));
         assertNull(postnummerService.getOmradeByPostnummer(""));

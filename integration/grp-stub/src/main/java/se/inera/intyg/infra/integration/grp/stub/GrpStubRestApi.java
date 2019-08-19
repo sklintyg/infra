@@ -18,12 +18,9 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import se.funktionstjanster.grp.v1.FaultStatusType;
-import se.funktionstjanster.grp.v1.GrpFault;
-
+import java.time.LocalDateTime;
+import java.util.Iterator;
+import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -32,9 +29,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.LocalDateTime;
-import java.util.Iterator;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import se.funktionstjanster.grp.v1.FaultStatusType;
+import se.funktionstjanster.grp.v1.GrpFault;
 
 /**
  * @author Magnus Ekstrand on 2017-05-16.
@@ -89,7 +88,7 @@ public class GrpStubRestApi {
         if (serviceStub.getStatus(status.getOrderRef()) == null) {
             // Signal that the method has been invoked at an illegal or inappropriate time.
             throw new IllegalStateException("A cal to GrpServicePortType.authenticate must have been done "
-                    + "before doing a status update");
+                + "before doing a status update");
         } else {
             try {
                 serviceStub.updateStatus(status);

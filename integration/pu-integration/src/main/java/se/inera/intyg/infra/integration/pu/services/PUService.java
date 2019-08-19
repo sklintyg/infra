@@ -19,11 +19,10 @@
 package se.inera.intyg.infra.integration.pu.services;
 
 import com.google.common.annotations.VisibleForTesting;
-import se.inera.intyg.infra.integration.pu.model.PersonSvar;
-import se.inera.intyg.schemas.contract.Personnummer;
-
 import java.util.List;
 import java.util.Map;
+import se.inera.intyg.infra.integration.pu.model.PersonSvar;
+import se.inera.intyg.schemas.contract.Personnummer;
 
 public interface PUService {
 
@@ -38,7 +37,6 @@ public interface PUService {
      * status ERROR.
      *
      * @param personId a Personnummer
-     *
      * @return a PersonSvar object with a non-null Person object
      * and status FOUND, otherwise a null Person object and status
      * NOT_FOUND or ERROR.
@@ -57,7 +55,6 @@ public interface PUService {
      * return an empty map.
      *
      * @param personIds a list of Personnummer
-     *
      * @return a map with PersonSvar if call to PU-service was successful,
      * otherwise an empty map.
      */

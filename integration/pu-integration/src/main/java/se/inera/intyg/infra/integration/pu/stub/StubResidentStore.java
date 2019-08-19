@@ -20,6 +20,14 @@ package se.inera.intyg.infra.integration.pu.stub;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +37,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.support.collections.DefaultRedisMap;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Storage for the PU-stub based on {@link org.springframework.data.redis.support.collections.RedisMap
@@ -75,8 +74,6 @@ public class StubResidentStore {
     /**
      * Adds a new resident to the store. If a resident with the same personnummer already exists in the
      * map, the existing one is updated.
-     *
-     * @param residentType
      */
     public void addResident(PersonRecordType residentType) {
         String pnr = residentType.getPersonalIdentity().getExtension();

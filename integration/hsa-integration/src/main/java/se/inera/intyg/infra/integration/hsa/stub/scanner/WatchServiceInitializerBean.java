@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.integration.hsa.stub.scanner;
 
+import java.io.File;
+import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +28,6 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import java.io.File;
 
 /**
  * Created by eriklupander on 2017-04-12.
@@ -54,7 +53,7 @@ public class WatchServiceInitializerBean {
     public void init() {
         if (identitiesFolder.trim().length() == 0) {
             LOG.warn("HSA stub was active, but no identitiesFolder was specified. "
-                    + "See property 'hsa.stub.additional.identities.folder'");
+                + "See property 'hsa.stub.additional.identities.folder'");
             return;
         }
         File personDir = new File(identitiesFolder + File.separator + PERSON_FOLDER);

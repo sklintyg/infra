@@ -19,15 +19,15 @@
 package se.inera.intyg.infra.integration.hsa.client;
 
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.*;
+import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponderInterface;
+import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponseType;
+import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonType;
 import se.riv.infrastructure.directory.v1.CredentialInformationType;
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 
@@ -49,13 +49,13 @@ public class AuthorizationManagementServiceBean implements AuthorizationManageme
 
     @Override
     public List<CredentialInformationType> getAuthorizationsForPerson(String personHsaId, String personalIdentityNumber,
-            String searchBase) throws HsaServiceCallException {
+        String searchBase) throws HsaServiceCallException {
         GetCredentialsForPersonIncludingProtectedPersonType parameters = new GetCredentialsForPersonIncludingProtectedPersonType();
         parameters.setPersonalIdentityNumber(personalIdentityNumber);
         parameters.setPersonHsaId(personHsaId);
         parameters.setSearchBase(searchBase);
         GetCredentialsForPersonIncludingProtectedPersonResponseType response = getCredentialsForPersonIncludingProtectedPersonResponderInterface
-                .getCredentialsForPersonIncludingProtectedPerson(logicalAddress, parameters);
+            .getCredentialsForPersonIncludingProtectedPerson(logicalAddress, parameters);
 
         if (response.getResultCode() == ResultCodeEnum.ERROR) {
             // Absolute minimum required response

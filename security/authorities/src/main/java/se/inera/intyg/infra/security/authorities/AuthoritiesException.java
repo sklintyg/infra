@@ -31,7 +31,7 @@ public class AuthoritiesException extends AuthenticationException {
      * Constructs an {@code AuthenticationException} with the specified message and root cause.
      *
      * @param msg the detail message
-     * @param t   the root cause
+     * @param t the root cause
      */
     public AuthoritiesException(String msg, Throwable t) {
         super(msg, t);

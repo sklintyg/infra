@@ -18,11 +18,10 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
+import java.util.List;
 import se.funktionstjanster.grp.v1.AuthenticateRequestType;
 import se.funktionstjanster.grp.v1.EndUserInfoType;
 import se.funktionstjanster.grp.v1.RequirementAlternativesType;
-
-import java.util.List;
 
 /**
  * @author Magnus Ekstrand on 2017-05-17.
@@ -71,7 +70,7 @@ public class AuthenticateRequestTypeBuilder {
         return this;
     }
 
-    public AuthenticateRequestType build(){
+    public AuthenticateRequestType build() {
         AuthenticateRequestType art = new AuthenticateRequestType();
         art.setPolicy(this.policy);
         art.setProvider(this.provider);

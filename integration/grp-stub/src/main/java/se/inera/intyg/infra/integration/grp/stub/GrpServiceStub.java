@@ -18,12 +18,7 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
-import se.funktionstjanster.grp.v1.FaultStatusType;
-import se.funktionstjanster.grp.v1.GrpFault;
-import se.funktionstjanster.grp.v1.GrpFaultType;
-import se.funktionstjanster.grp.v1.ProgressStatusType;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -31,8 +26,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+import se.funktionstjanster.grp.v1.FaultStatusType;
+import se.funktionstjanster.grp.v1.GrpFault;
+import se.funktionstjanster.grp.v1.GrpFaultType;
+import se.funktionstjanster.grp.v1.ProgressStatusType;
 
 /**
  * @author Magnus Ekstrand on 2017-05-16.

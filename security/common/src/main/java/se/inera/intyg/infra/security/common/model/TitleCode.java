@@ -61,9 +61,9 @@ public class TitleCode {
     @Override
     public String toString() {
         return "\nTitleCode {"
-                + " titleCode='" + titleCode + '\''
-                + ", groupPrescriptionCode='" + groupPrescriptionCode + '\''
-                + ", role=" + role
-                + "}";
+            + " titleCode='" + titleCode + '\''
+            + ", groupPrescriptionCode='" + groupPrescriptionCode + '\''
+            + ", role=" + role
+            + "}";
     }
 }

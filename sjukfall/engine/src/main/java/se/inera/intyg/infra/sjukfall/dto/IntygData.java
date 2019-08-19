@@ -47,7 +47,6 @@ public class IntygData {
 
     private boolean enkeltIntyg;
 
-
     // getter and setters
 
     public String getIntygId() {

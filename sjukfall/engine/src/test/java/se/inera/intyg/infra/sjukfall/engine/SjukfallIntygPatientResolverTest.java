@@ -20,6 +20,11 @@ package se.inera.intyg.infra.sjukfall.engine;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -31,12 +36,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Magnus Ekstrand on 2017-08-31.

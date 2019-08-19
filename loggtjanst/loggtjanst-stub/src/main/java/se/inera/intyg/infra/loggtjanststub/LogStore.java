@@ -18,14 +18,13 @@
  */
 package se.inera.intyg.infra.loggtjanststub;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.support.collections.DefaultRedisMap;
 import org.springframework.stereotype.Repository;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import se.inera.intyg.infra.loggtjanststub.json.LogStoreObjectMapper;
 import se.riv.informationsecurity.auditing.log.v2.LogType;
 
@@ -106,9 +102,9 @@ public class LogStore {
             logEntries.clear();
 
             logTypes.stream()
-                    .sorted((lt1, lt2) -> lt2.getActivity().getStartDate().compareTo(lt1.getActivity().getStartDate()))
-                    .limit(MAX_SIZE)
-                    .forEach(lt -> logEntries.put(lt.getLogId(), toJson(lt)));
+                .sorted((lt1, lt2) -> lt2.getActivity().getStartDate().compareTo(lt1.getActivity().getStartDate()))
+                .limit(MAX_SIZE)
+                .forEach(lt -> logEntries.put(lt.getLogId(), toJson(lt)));
         }
     }
 

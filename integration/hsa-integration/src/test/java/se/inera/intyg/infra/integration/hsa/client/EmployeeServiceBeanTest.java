@@ -18,6 +18,16 @@
  */
 package se.inera.intyg.infra.integration.hsa.client;
 
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.AdditionalMatchers.or;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import javax.xml.ws.soap.SOAPFaultException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -29,17 +39,6 @@ import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedper
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
-
-import javax.xml.ws.soap.SOAPFaultException;
-import java.util.List;
-
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.AdditionalMatchers.or;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by eriklupander on 2016-03-11.
@@ -59,8 +58,8 @@ public class EmployeeServiceBeanTest {
     @Test
     public void testOk() throws HsaServiceCallException {
         when(getEmployeeService.getEmployeeIncludingProtectedPerson(
-                or(isNull(), anyString()),
-                any(GetEmployeeIncludingProtectedPersonType.class))
+            or(isNull(), anyString()),
+            any(GetEmployeeIncludingProtectedPersonType.class))
         ).thenReturn(buildResponse(ResultCodeEnum.OK));
 
         List<PersonInformationType> response = testee.getEmployee(HSA_ID, null, null);
@@ -80,8 +79,8 @@ public class EmployeeServiceBeanTest {
     @Test(expected = HsaServiceCallException.class)
     public void testWebServiceExceptionIsThrownForNoOkResponse() throws HsaServiceCallException {
         when(getEmployeeService.getEmployeeIncludingProtectedPerson(
-                or(isNull(), anyString()),
-                any(GetEmployeeIncludingProtectedPersonType.class))
+            or(isNull(), anyString()),
+            any(GetEmployeeIncludingProtectedPersonType.class))
         ).thenReturn(buildResponse(ResultCodeEnum.ERROR));
 
         testee.getEmployee(HSA_ID, null, null);
@@ -91,8 +90,8 @@ public class EmployeeServiceBeanTest {
     public void testWebServiceExceptionIsThrownForSoapFault() throws HsaServiceCallException {
         SOAPFaultException ex = mock(SOAPFaultException.class);
         when(getEmployeeService.getEmployeeIncludingProtectedPerson(
-                or(isNull(), anyString()),
-                any(GetEmployeeIncludingProtectedPersonType.class))
+            or(isNull(), anyString()),
+            any(GetEmployeeIncludingProtectedPersonType.class))
         ).thenThrow(ex);
 
         testee.getEmployee(HSA_ID, null, null);

@@ -18,16 +18,13 @@
  */
 package se.inera.intyg.infra.integration.hsa.services;
 
+import java.util.List;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsa.model.UserAuthorizationInfo;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 
-import java.util.List;
-
 /**
- *
- *
  * @author eriklupander
  */
 public interface HsaOrganizationsService {
@@ -36,26 +33,23 @@ public interface HsaOrganizationsService {
      * Returns a list of Vardgivare and authorized enheter where the HoS person is authorized to work at.
      *
      * @return list of vårdgivare containing authorized enheter and mottagningar. If user is not authorized at all,
-     *         an empty list will be returned
+     * an empty list will be returned
      */
     UserAuthorizationInfo getAuthorizedEnheterForHosPerson(String hosPersonHsaId);
 
     /**
      * Returns the hsaId of the parent care giver of the specified care unit.
      *
-     * @param vardenhetHsaId
-     *      HsaId of the vårdenhet.
-     * @return
-     *      HsaId of the parent vårdgivare. If no vårdgivare could be found, null is returned.
+     * @param vardenhetHsaId HsaId of the vårdenhet.
+     * @return HsaId of the parent vårdgivare. If no vårdgivare could be found, null is returned.
      */
     String getVardgivareOfVardenhet(String vardenhetHsaId);
 
     /**
      * Returns a fully recursively populated Vardenhet for the specified hsaId.
-     * @param vardenhetHsaId
-     *      HsaId of the vårdenhet.
-     * @return
-     *      The Vardenhet.
+     *
+     * @param vardenhetHsaId HsaId of the vårdenhet.
+     * @return The Vardenhet.
      */
     Vardenhet getVardenhet(String vardenhetHsaId);
 
@@ -67,10 +61,8 @@ public interface HsaOrganizationsService {
     /**
      * Returns a list of hsaId's for all (any) sub units (mottagningar) on the specified care unit.
      *
-     * @param vardEnhetHsaId
-     *      HsaId of the vårdenhet.
-     * @return
-     *      A list of hsaId's for mottagningar.
+     * @param vardEnhetHsaId HsaId of the vårdenhet.
+     * @return A list of hsaId's for mottagningar.
      */
     List<String> getHsaIdForAktivaUnderenheter(String vardEnhetHsaId);
 

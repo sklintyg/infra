@@ -20,11 +20,9 @@ package se.inera.intyg.infra.security.siths;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.integration.hsa.util.HsaAttributeExtractor;
@@ -76,8 +74,8 @@ public class DefaultUserDetailsDecorator {
     public void decorateIntygUserWithSystemRoles(IntygUser intygUser, UserCredentials userCredentials) {
         if (userCredentials != null && userCredentials.getHsaSystemRole() != null) {
             intygUser.setSystemRoles(userCredentials.getHsaSystemRole().stream()
-                    .map(DefaultUserDetailsDecorator::hsaSystemRoleAsString)
-                    .collect(Collectors.toList()));
+                .map(DefaultUserDetailsDecorator::hsaSystemRoleAsString)
+                .collect(Collectors.toList()));
         }
     }
 

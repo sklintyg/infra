@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.infra.integration.pu.model;
 
+import java.io.Serializable;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-import java.io.Serializable;
-
 public class Person implements Serializable {
+
     private static final long serialVersionUID = 1L;
     private final Personnummer personnummer;
     private final boolean sekretessmarkering;
@@ -36,7 +36,7 @@ public class Person implements Serializable {
 
     // CHECKSTYLE:OFF ParameterNumber
     public Person(Personnummer personnummer, boolean sekretessmarkering, boolean avliden, String fornamn, String mellannamn,
-            String efternamn, String postadress, String postnummer, String postort) {
+        String efternamn, String postadress, String postnummer, String postort) {
         this.personnummer = personnummer;
         this.sekretessmarkering = sekretessmarkering;
         this.avliden = avliden;

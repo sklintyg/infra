@@ -18,11 +18,10 @@
  */
 package se.inera.intyg.infra.xmldsig.service;
 
+import java.util.Map;
 import org.w3._2000._09.xmldsig_.KeyInfoType;
 import se.inera.intyg.infra.xmldsig.model.CertificateInfo;
 import se.inera.intyg.infra.xmldsig.model.ValidationResponse;
-
-import java.util.Map;
 
 public interface XMLDSigService {
 

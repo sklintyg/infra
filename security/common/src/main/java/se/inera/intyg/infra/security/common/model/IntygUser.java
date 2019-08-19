@@ -18,17 +18,16 @@
  */
 package se.inera.intyg.infra.security.common.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
@@ -365,10 +364,9 @@ public class IntygUser implements UserDetails {
      * Utility method to get the name "medarbetaruppdrag" that the user has on the currently selected vårdenhet.
      *
      * @return The name of the medarbetaruppdrag. (Derived from infrastructure:directory:authorizationmanagement
-     *         CommissionType#commissionName)
-     * @throws IllegalStateException
-     *             if no vardenhet is selected or if the map that maps enhetsId to commissionName hasn't been
-     *             initialized.
+     * CommissionType#commissionName)
+     * @throws IllegalStateException if no vardenhet is selected or if the map that maps enhetsId to commissionName hasn't been
+     * initialized.
      */
     @JsonIgnore
     public String getSelectedMedarbetarUppdragNamn() {
@@ -407,7 +405,7 @@ public class IntygUser implements UserDetails {
      */
     public boolean isLakare() {
         return roles.containsKey(AuthoritiesConstants.ROLE_LAKARE) || roles.containsKey(AuthoritiesConstants.ROLE_PRIVATLAKARE)
-                || roles.containsKey(AuthoritiesConstants.ROLE_TANDLAKARE);
+            || roles.containsKey(AuthoritiesConstants.ROLE_TANDLAKARE);
     }
 
     public boolean isPrivatLakare() {
@@ -425,55 +423,76 @@ public class IntygUser implements UserDetails {
     // CHECKSTYLE:OFF NeedBraces
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
+        }
         if (!(o instanceof IntygUser)) {
             return false;
         }
 
         IntygUser intygUser = (IntygUser) o;
 
-        if (privatLakareAvtalGodkand != intygUser.privatLakareAvtalGodkand)
+        if (privatLakareAvtalGodkand != intygUser.privatLakareAvtalGodkand) {
             return false;
-        if (isSekretessMarkerad != intygUser.isSekretessMarkerad)
+        }
+        if (isSekretessMarkerad != intygUser.isSekretessMarkerad) {
             return false;
-        if (personId != null ? !personId.equals(intygUser.personId) : intygUser.personId != null)
+        }
+        if (personId != null ? !personId.equals(intygUser.personId) : intygUser.personId != null) {
             return false;
-        if (!hsaId.equals(intygUser.hsaId))
+        }
+        if (!hsaId.equals(intygUser.hsaId)) {
             return false;
-        if (namn != null ? !namn.equals(intygUser.namn) : intygUser.namn != null)
+        }
+        if (namn != null ? !namn.equals(intygUser.namn) : intygUser.namn != null) {
             return false;
-        if (titel != null ? !titel.equals(intygUser.titel) : intygUser.titel != null)
+        }
+        if (titel != null ? !titel.equals(intygUser.titel) : intygUser.titel != null) {
             return false;
-        if (forskrivarkod != null ? !forskrivarkod.equals(intygUser.forskrivarkod) : intygUser.forskrivarkod != null)
+        }
+        if (forskrivarkod != null ? !forskrivarkod.equals(intygUser.forskrivarkod) : intygUser.forskrivarkod != null) {
             return false;
-        if (!authenticationScheme.equals(intygUser.authenticationScheme))
+        }
+        if (!authenticationScheme.equals(intygUser.authenticationScheme)) {
             return false;
-        if (vardgivare != null ? !vardgivare.equals(intygUser.vardgivare) : intygUser.vardgivare != null)
+        }
+        if (vardgivare != null ? !vardgivare.equals(intygUser.vardgivare) : intygUser.vardgivare != null) {
             return false;
-        if (miuNamnPerEnhetsId != null ? !miuNamnPerEnhetsId.equals(intygUser.miuNamnPerEnhetsId) : intygUser.miuNamnPerEnhetsId != null)
+        }
+        if (miuNamnPerEnhetsId != null ? !miuNamnPerEnhetsId.equals(intygUser.miuNamnPerEnhetsId) : intygUser.miuNamnPerEnhetsId != null) {
             return false;
-        if (befattningar != null ? !befattningar.equals(intygUser.befattningar) : intygUser.befattningar != null)
+        }
+        if (befattningar != null ? !befattningar.equals(intygUser.befattningar) : intygUser.befattningar != null) {
             return false;
-        if (specialiseringar != null ? !specialiseringar.equals(intygUser.specialiseringar) : intygUser.specialiseringar != null)
+        }
+        if (specialiseringar != null ? !specialiseringar.equals(intygUser.specialiseringar) : intygUser.specialiseringar != null) {
             return false;
+        }
         if (legitimeradeYrkesgrupper != null ? !legitimeradeYrkesgrupper.equals(intygUser.legitimeradeYrkesgrupper)
-                : intygUser.legitimeradeYrkesgrupper != null)
+            : intygUser.legitimeradeYrkesgrupper != null) {
             return false;
-        if (systemRoles != null ? !systemRoles.equals(intygUser.systemRoles) : intygUser.systemRoles != null)
+        }
+        if (systemRoles != null ? !systemRoles.equals(intygUser.systemRoles) : intygUser.systemRoles != null) {
             return false;
-        if (valdVardenhet != null ? !valdVardenhet.equals(intygUser.valdVardenhet) : intygUser.valdVardenhet != null)
+        }
+        if (valdVardenhet != null ? !valdVardenhet.equals(intygUser.valdVardenhet) : intygUser.valdVardenhet != null) {
             return false;
-        if (valdVardgivare != null ? !valdVardgivare.equals(intygUser.valdVardgivare) : intygUser.valdVardgivare != null)
+        }
+        if (valdVardgivare != null ? !valdVardgivare.equals(intygUser.valdVardgivare) : intygUser.valdVardgivare != null) {
             return false;
-        if (authenticationMethod != intygUser.authenticationMethod)
+        }
+        if (authenticationMethod != intygUser.authenticationMethod) {
             return false;
-        if (features != null ? !features.equals(intygUser.features) : intygUser.features != null)
+        }
+        if (features != null ? !features.equals(intygUser.features) : intygUser.features != null) {
             return false;
-        if (roles != null ? !roles.equals(intygUser.roles) : intygUser.roles != null)
+        }
+        if (roles != null ? !roles.equals(intygUser.roles) : intygUser.roles != null) {
             return false;
-        if (authorities != null ? !authorities.equals(intygUser.authorities) : intygUser.authorities != null)
+        }
+        if (authorities != null ? !authorities.equals(intygUser.authorities) : intygUser.authorities != null) {
             return false;
+        }
         return (origin != null ? !origin.equals(intygUser.origin) : intygUser.origin != null);
     }
 

@@ -19,7 +19,6 @@
 package se.inera.intyg.infra.rediscache.core.util;
 
 import com.google.common.base.Splitter;
-
 import java.util.List;
 
 public final class ConnectionStringUtil {
@@ -29,8 +28,8 @@ public final class ConnectionStringUtil {
 
     public static List<String> parsePropertyString(String redisConnectionProperty) {
         return Splitter.on(';')
-                .trimResults()
-                .omitEmptyStrings()
-                .splitToList(redisConnectionProperty);
+            .trimResults()
+            .omitEmptyStrings()
+            .splitToList(redisConnectionProperty);
     }
 }

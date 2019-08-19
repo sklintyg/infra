@@ -18,8 +18,16 @@
  */
 package se.inera.intyg.infra.monitoring.annotation;
 
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
+
 import com.google.common.base.Strings;
 import io.prometheus.client.Summary;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Supplier;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -29,19 +37,11 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.function.Supplier;
-
-import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
-
 @Aspect("pertarget(se.inera.intyg.infra.monitoring.annotation.MethodTimer.timeable())")
 @Scope("prototype")
 @ControllerAdvice
 public class MethodTimer {
+
     private static final ReadWriteLock LOCK = new ReentrantReadWriteLock();
     private static final HashMap<String, Summary> SUMMARIES = new HashMap<>();
     private static final HashSet<String> NAME_SET = new HashSet<>();
@@ -75,8 +75,8 @@ public class MethodTimer {
             final Class targetClass = pjp.getTarget().getClass();
             final MethodSignature signature = (MethodSignature) pjp.getSignature();
             return findAnnotation(
-                    targetClass.getDeclaredMethod(signature.getName(), signature.getParameterTypes()),
-                    PrometheusTimeMethod.class);
+                targetClass.getDeclaredMethod(signature.getName(), signature.getParameterTypes()),
+                PrometheusTimeMethod.class);
         } catch (NoSuchMethodException e) {
             throw new IllegalStateException("Annotation could not be found for pjp \"" + pjp.toShortString() + "\"", e);
         }

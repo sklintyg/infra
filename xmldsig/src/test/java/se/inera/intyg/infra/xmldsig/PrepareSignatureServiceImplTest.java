@@ -18,6 +18,18 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_ALIAS;
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_NAME;
+import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_PASSWORD;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.security.KeyStore;
+import java.security.Signature;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
+import java.util.Base64;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,19 +42,6 @@ import org.w3._2000._09.xmldsig_.SignatureValueType;
 import se.inera.intyg.infra.xmldsig.model.IntygXMLDSignature;
 import se.inera.intyg.infra.xmldsig.service.PrepareSignatureServiceImpl;
 import se.inera.intyg.infra.xmldsig.service.XMLDSigServiceImpl;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.security.KeyStore;
-import java.security.Signature;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.X509Certificate;
-import java.util.Base64;
-
-import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_ALIAS;
-import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_NAME;
-import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_PASSWORD;
 
 public class PrepareSignatureServiceImplTest {
 
@@ -66,7 +65,6 @@ public class PrepareSignatureServiceImplTest {
         SignatureValueType svt = new SignatureValueType();
         svt.setValue(signature);
         intygXMLDSignature.getSignatureType().setSignatureValue(svt);
-
 
         // Stuff KeyInfo
         String pubStr = null;
@@ -104,7 +102,7 @@ public class PrepareSignatureServiceImplTest {
             ks.load(new ClassPathResource(FAKE_KEYSTORE_NAME).getInputStream(), FAKE_KEYSTORE_PASSWORD.toCharArray());
 
             KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(FAKE_KEYSTORE_ALIAS,
-                    new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
+                new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
             this.publicKey = (X509Certificate) ks.getCertificate(FAKE_KEYSTORE_ALIAS);
             Signature rsa = Signature.getInstance("SHA256withRSA");
             rsa.initSign(keyEntry.getPrivateKey());

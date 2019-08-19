@@ -18,10 +18,9 @@
  */
 package se.inera.intyg.infra.integration.hsa.model;
 
-import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
-
 import java.util.ArrayList;
 import java.util.List;
+import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 
 /**
  * Storage for user-related info from GetCredentials HSA response.

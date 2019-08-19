@@ -19,7 +19,6 @@
 package se.inera.intyg.infra.security.authorities.bootstrap;
 
 import java.io.IOException;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ResourceUtils;
 import org.yaml.snakeyaml.Yaml;
-
 import se.inera.intyg.infra.security.authorities.AuthoritiesConfiguration;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.authorities.FeaturesConfiguration;
@@ -78,18 +76,16 @@ public class SecurityConfigurationLoader implements InitializingBean {
      * exception in the event of misconfiguration.
      *
      * @throws Exception in the event of misconfiguration (such
-     *                   as failure to set an essential property) or if initialization fails.
+     * as failure to set an essential property) or if initialization fails.
      */
     @Override
     public void afterPropertiesSet() throws AuthoritiesException {
-      authoritiesConfiguration = loadConfiguration(authoritiesConfigurationFile, AuthoritiesConfiguration.class);
-      featuresConfiguration = loadConfiguration(featuresConfigurationFile, FeaturesConfiguration.class);
+        authoritiesConfiguration = loadConfiguration(authoritiesConfigurationFile, AuthoritiesConfiguration.class);
+        featuresConfiguration = loadConfiguration(featuresConfigurationFile, FeaturesConfiguration.class);
     }
 
     /**
      * Gets the loaded authorities configuration.
-     *
-     * @return
      */
     public AuthoritiesConfiguration getAuthoritiesConfiguration() {
         return this.authoritiesConfiguration;
@@ -97,8 +93,6 @@ public class SecurityConfigurationLoader implements InitializingBean {
 
     /**
      * Gets the loaded features configuration.
-     *
-     * @return
      */
     public FeaturesConfiguration getFeaturesConfiguration() {
         return this.featuresConfiguration;

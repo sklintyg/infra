@@ -18,27 +18,27 @@
  */
 package se.inera.intyg.infra.security.filter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import javax.servlet.FilterChain;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
 /**
  * Created by marced on 10/03/16.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SessionTimeoutFilterTest {
+
     private static final String TEST_URI = "/test";
     private static final int FIVE_SECONDS_AGO = 5000;
     private static final int ONE_SECOND = 1;
@@ -95,7 +95,7 @@ public class SessionTimeoutFilterTest {
         when(request.getSession(false)).thenReturn(session);
         when(request.getRequestURI()).thenReturn(reportedRequestURI);
         when(session.getAttribute(eq(SessionTimeoutFilter.LAST_ACCESS_TIME_ATTRIBUTE_NAME)))
-                .thenReturn(new Long(System.currentTimeMillis() - FIVE_SECONDS_AGO));
+            .thenReturn(new Long(System.currentTimeMillis() - FIVE_SECONDS_AGO));
         when(session.getMaxInactiveInterval()).thenReturn(sessionLengthInSeconds);
 
     }

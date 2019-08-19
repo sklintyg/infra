@@ -18,7 +18,20 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 import com.google.common.base.Joiner;
+import java.nio.charset.Charset;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.interfaces.RSAPrivateKey;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.UUID;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.funktionstjanster.grp.v1.AuthenticateRequestType;
 import se.funktionstjanster.grp.v1.CollectRequestType;
@@ -33,20 +46,6 @@ import se.funktionstjanster.grp.v1.SignRequestType;
 import se.funktionstjanster.grp.v1.SignatureFileRequestType;
 import se.inera.intyg.infra.integration.grp.stub.util.Keys;
 import se.inera.intyg.infra.integration.grp.stub.util.StubSignUtil;
-
-import javax.annotation.PostConstruct;
-import java.nio.charset.Charset;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.Signature;
-import java.security.SignatureException;
-import java.security.interfaces.RSAPrivateKey;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
-
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * @author Magnus Ekstrand on 2017-05-16.
@@ -105,8 +104,6 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
             throw new GrpFault(("Marked as failed due to" + faultType + "thru stub api"), faultType);
         }
         response.setTransactionId(transactionId);
-
-
 
         String orderRef = serviceStub.getOrderRef(response.getTransactionId());
         response.setProgressStatus(serviceStub.getStatus(orderRef).getStatus());

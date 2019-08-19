@@ -19,13 +19,6 @@
 package se.inera.intyg.infra.integration.hsa.stub.scanner;
 
 import com.sun.nio.file.SensitivityWatchEventModifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
@@ -35,12 +28,18 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by eriklupander on 2017-04-12.
  */
 @Service
-@Profile({ "dev", "wc-hsa-stub", "wc-all-stubs" })
+@Profile({"dev", "wc-hsa-stub", "wc-all-stubs"})
 public class ScannerBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(ScannerBean.class);
@@ -61,9 +60,9 @@ public class ScannerBean {
         ScanEventHandler handler = resolveHandler(scanTarget);
 
         try (Stream<Path> stream = Files.walk(path)) {
-             stream.filter(Files::isRegularFile)
-                    .filter(p -> p.toString().endsWith(SUFFIX_JSON))
-                    .forEach(handler::created);
+            stream.filter(Files::isRegularFile)
+                .filter(p -> p.toString().endsWith(SUFFIX_JSON))
+                .forEach(handler::created);
         } catch (IOException e) {
             LOG.error("Initial scan of " + path.toString() + " failed: " + e.getMessage());
         }
@@ -77,19 +76,19 @@ public class ScannerBean {
         boolean isFolder = Files.isDirectory(path);
         if (!isFolder) {
             throw new IllegalArgumentException("Path: " + path
-                    + " is not a folder");
+                + " is not a folder");
         }
 
         FileSystem fs = path.getFileSystem();
 
         try (WatchService service = fs.newWatchService()) {
             path.register(service,
-                    new WatchEvent.Kind[] {
-                            StandardWatchEventKinds.ENTRY_CREATE,
-                            StandardWatchEventKinds.ENTRY_MODIFY,
-                            StandardWatchEventKinds.ENTRY_DELETE
-                    },
-                    SensitivityWatchEventModifier.HIGH);
+                new WatchEvent.Kind[]{
+                    StandardWatchEventKinds.ENTRY_CREATE,
+                    StandardWatchEventKinds.ENTRY_MODIFY,
+                    StandardWatchEventKinds.ENTRY_DELETE
+                },
+                SensitivityWatchEventModifier.HIGH);
 
             pollForEvents(path, service, scanTarget);
 

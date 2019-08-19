@@ -21,10 +21,10 @@ package se.inera.intyg.infra.integration.hsa.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.Test;
-
 import se.riv.infrastructure.directory.v1.PaTitleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
@@ -75,7 +75,8 @@ public class HsaAttributeExtractorTest {
         hsaPersonInfo.add(pt);
 
         // Test
-        final List<String> befattningar = testee.extractBefattningar(hsaPersonInfo); //userDetailsService.extractBefattningar(hsaPersonInfo);
+        final List<String> befattningar = testee
+            .extractBefattningar(hsaPersonInfo); //userDetailsService.extractBefattningar(hsaPersonInfo);
 
         // Verify
         assertEquals(2, befattningar.size());

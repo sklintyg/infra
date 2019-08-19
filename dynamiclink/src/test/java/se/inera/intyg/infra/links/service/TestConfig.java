@@ -30,10 +30,10 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 @Configuration
 @ComponentScan("se.inera.intyg.infra.dynamiclink")
 @PropertySource(
-        value={"classpath:/test.properties"},
-        ignoreResourceNotFound = false)
+    value = {"classpath:/test.properties"},
+    ignoreResourceNotFound = false)
 public class TestConfig {
-    
+
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertiesResolver() {
         return new PropertySourcesPlaceholderConfigurer();

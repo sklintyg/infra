@@ -31,6 +31,7 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType
  * Created by eriklupander on 2015-12-03.
  */
 public interface OrganizationUnitService {
+
     UnitType getUnit(String unitHsaId) throws HsaServiceCallException;
 
     HealthCareUnitType getHealthCareUnit(String hsaId) throws HsaServiceCallException;

@@ -18,6 +18,14 @@
  */
 package se.inera.intyg.infra.integration.hsa.client;
 
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.AdditionalMatchers.or;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -29,16 +37,6 @@ import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentials
 import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonType;
 import se.riv.infrastructure.directory.v1.CredentialInformationType;
 import se.riv.infrastructure.directory.v1.ResultCodeEnum;
-
-import java.util.List;
-
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.AdditionalMatchers.or;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.when;
 
 /**
  * This test is a bit superfluent since the tested method has no branching or error handling
@@ -60,8 +58,8 @@ public class AuthorizationManagementServiceBeanTest {
     @Test
     public void testOk() throws HsaServiceCallException {
         when(credzService.getCredentialsForPersonIncludingProtectedPerson(
-                or(isNull(), anyString()),
-                any(GetCredentialsForPersonIncludingProtectedPersonType.class))
+            or(isNull(), anyString()),
+            any(GetCredentialsForPersonIncludingProtectedPersonType.class))
         ).thenReturn(buildResponse());
 
         List<CredentialInformationType> authorizationsForPerson = testee.getAuthorizationsForPerson(HSA_ID, null, null);
