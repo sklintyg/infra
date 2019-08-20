@@ -149,35 +149,42 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
     @Override
     public String encodeSignatureIntoSignedXml(SignatureType signatureType, String xml) {
         // Append the SignatureElement as last element of the xml.
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware(true);
-
         try {
-            Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(xml, Charset.forName("UTF-8")));
+            Document doc = stringToDocument(xml);
             DOMResult res = new DOMResult();
 
             JAXBContext context = JAXBContext.newInstance(SignatureType.class, XPathType.class);
             JAXBElement<SignatureType> signature = new ObjectFactory().createSignature(signatureType);
             context.createMarshaller().marshal(signature, res);
+
             Node sigNode = res.getNode();
             Node importedNode = doc.importNode(sigNode.getFirstChild(), true);
-
             doc.getDocumentElement().getFirstChild().appendChild(importedNode);
 
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer t = tf.newTransformer();
-            DOMSource source = new DOMSource(doc);
-            StringWriter sw = new StringWriter();
-            StreamResult result = new StreamResult(sw);
+            return documentToString(doc);
 
-            t.transform(source, result);
-
-            return sw.toString();
-
-            // return xmlWithSignature.getBytes(Charset.forName(UTF_8));
         } catch (SAXException | IOException | ParserConfigurationException | JAXBException | TransformerException e) {
             throw new RuntimeException(e.getCause());
         }
+
+    }
+
+    private Document stringToDocument(String xml) throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+
+        return dbf.newDocumentBuilder().parse(IOUtils.toInputStream(xml, Charset.forName("UTF-8")));
+    }
+
+    private String documentToString(Document document) throws TransformerException {
+        StringWriter sw = new StringWriter();
+
+        TransformerFactory
+            .newInstance()
+            .newTransformer()
+            .transform(new DOMSource(document), new StreamResult(sw));
+
+        return sw.toString();
     }
 
     /**
@@ -207,7 +214,6 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
     }
 
     private String tranformIntoIntygXml(String xml) {
-
         try (ByteArrayOutputStream out1 = new ByteArrayOutputStream()) {
 
             // Use XSLT to remove unwanted elements and the parent element.
@@ -242,4 +248,5 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
             throw new IllegalArgumentException(e.getMessage());
         }
     }
+
 }
