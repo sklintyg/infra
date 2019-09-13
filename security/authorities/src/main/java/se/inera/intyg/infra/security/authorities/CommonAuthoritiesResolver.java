@@ -46,6 +46,7 @@ import se.inera.intyg.infra.security.common.model.Pilot;
 import se.inera.intyg.infra.security.common.model.Privilege;
 import se.inera.intyg.infra.security.common.model.RequestOrigin;
 import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.infra.security.common.model.RoleResolveResult;
 import se.inera.intyg.infra.security.common.model.Title;
 import se.inera.intyg.infra.security.common.model.TitleCode;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
@@ -73,7 +74,8 @@ public class CommonAuthoritiesResolver {
         .findFirst()
         .orElse(null);
 
-    public Role resolveRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole, UserCredentials userCredentials) {
+    public RoleResolveResult resolveRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole,
+        UserCredentials userCredentials) {
         Assert.notNull(user, "Argument 'user' cannot be null");
 
         return lookupUserRole(user, personInfo, defaultRole, userCredentials);
@@ -176,35 +178,36 @@ public class CommonAuthoritiesResolver {
      *
      * @return the resolved role
      */
-    Role lookupUserRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole, UserCredentials userCredentials) {
-        Role role;
+    RoleResolveResult lookupUserRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole,
+        UserCredentials userCredentials) {
+        RoleResolveResult roleResolveResult;
         List<String> legitimeradeYrkesgrupper = new HsaAttributeExtractor().extractLegitimeradeYrkesgrupper(personInfo);
 
         // 1. Bestäm användarens roll utefter legitimerade yrkesgrupper som hämtas från HSA.
 
-        role = lookupUserRoleByLegitimeradeYrkesgrupper(legitimeradeYrkesgrupper);
-        if (role != null) {
-            return role;
+        roleResolveResult = lookupUserRoleByLegitimeradeYrkesgrupper(legitimeradeYrkesgrupper);
+        if (roleResolveResult != null) {
+            return roleResolveResult;
         }
 
-        // 2. Bestäm användarens roll utefter befattningskod som kommer från SAML.
-        role = lookupUserRoleByBefattningskod(user.getBefattningar());
-        if (role != null) {
-            return role;
+        // 2. Bestäm användarens roll utefter enbart befattningskod som kommer från SAML.
+        roleResolveResult = lookupUserRoleByBefattningskod(user.getBefattningar());
+        if (roleResolveResult != null) {
+            return roleResolveResult;
         }
 
         // 3. Bestäm användarens roll utefter kombinationen befattningskod och gruppförskrivarkod
         List<String> allaForskrivarKoder = buildAllaForskrivarKoderList(user, userCredentials);
         List<String> allaBefattningar = buildAllaBefattningarList(user, userCredentials);
 
-        role = lookupUserRoleByBefattningskodAndGruppforskrivarkod(allaBefattningar, allaForskrivarKoder);
-        if (role != null) {
-            return role;
+        roleResolveResult = lookupUserRoleByBefattningskodAndGruppforskrivarkod(allaBefattningar, allaForskrivarKoder);
+        if (roleResolveResult != null) {
+            return roleResolveResult;
         }
 
         // 4. Användaren skall få fallback-rollen, t.ex. en vårdadministratör eller rehabkoordinator inom landstinget.
-        role = fnRole.apply(defaultRole);
-        return role;
+        Role role = fnRole.apply(defaultRole);
+        return new RoleResolveResult(role, defaultRole);
     }
 
     private List<String> buildAllaForskrivarKoderList(IntygUser user, UserCredentials userCredentials) {
@@ -234,23 +237,23 @@ public class CommonAuthoritiesResolver {
      * @param legitimeradeYrkesgrupper string array with 'legitimerade yrkesgrupper'
      * @return a user role if valid 'yrkesgrupper', otherwise null
      */
-    Role lookupUserRoleByLegitimeradeYrkesgrupper(List<String> legitimeradeYrkesgrupper) {
+    RoleResolveResult lookupUserRoleByLegitimeradeYrkesgrupper(List<String> legitimeradeYrkesgrupper) {
         if (legitimeradeYrkesgrupper == null || legitimeradeYrkesgrupper.size() == 0) {
             return null;
         }
 
         if (legitimeradeYrkesgrupper.contains(AuthoritiesConstants.TITLE_LAKARE)) {
-            return fnRole.apply(AuthoritiesConstants.ROLE_LAKARE);
+            return new RoleResolveResult(fnRole.apply(AuthoritiesConstants.ROLE_LAKARE), AuthoritiesConstants.TITLE_LAKARE);
         }
 
         if (legitimeradeYrkesgrupper.contains(AuthoritiesConstants.TITLE_TANDLAKARE)) {
-            return fnRole.apply(AuthoritiesConstants.ROLE_TANDLAKARE);
+            return new RoleResolveResult(fnRole.apply(AuthoritiesConstants.ROLE_TANDLAKARE), AuthoritiesConstants.TITLE_TANDLAKARE);
         }
 
         return null;
     }
 
-    Role lookupUserRoleByBefattningskod(List<String> befattningsKoder) {
+    RoleResolveResult lookupUserRoleByBefattningskod(List<String> befattningsKoder) {
         LOG.debug("  * befattningskod");
 
         if (befattningsKoder == null || befattningsKoder.size() == 0) {
@@ -258,18 +261,26 @@ public class CommonAuthoritiesResolver {
         }
 
         if (befattningsKoder.contains(AuthoritiesConstants.TITLECODE_AT_LAKARE)) {
-            return fnRole.apply(AuthoritiesConstants.ROLE_LAKARE);
+            //Look up roleTypeName from titleCode
+            final String roleTypeName = getTitleCodes()
+                .stream()
+                .filter(tc -> tc.getTitleCode().equals(AuthoritiesConstants.TITLECODE_AT_LAKARE))
+                .findAny().map(TitleCode::getRoleTypeName)
+                .orElse(AuthoritiesConstants.TITLE_LAKARE);
+            return new RoleResolveResult(fnRole.apply(AuthoritiesConstants.ROLE_LAKARE), roleTypeName);
         }
 
         return null;
     }
 
-    Role lookupUserRoleByBefattningskodAndGruppforskrivarkod(List<String> befattningsKoder, List<String> gruppforskrivarKoder) {
+    RoleResolveResult lookupUserRoleByBefattningskodAndGruppforskrivarkod(List<String> befattningsKoder,
+        List<String> gruppforskrivarKoder) {
         for (String befattningskod : befattningsKoder) {
             for (String gruppforskrivarKod : gruppforskrivarKoder) {
-                Role role = lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningskod, gruppforskrivarKod);
-                if (role != null) {
-                    return role;
+                RoleResolveResult roleResolveResult = lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningskod,
+                    gruppforskrivarKod);
+                if (roleResolveResult != null) {
+                    return roleResolveResult;
                 }
             }
         }
@@ -277,7 +288,7 @@ public class CommonAuthoritiesResolver {
         return null;
     }
 
-    Role lookupUserRoleByBefattningskodAndGruppforskrivarkod(String befattningsKod, String gruppforskrivarKod) {
+    RoleResolveResult lookupUserRoleByBefattningskodAndGruppforskrivarkod(String befattningsKod, String gruppforskrivarKod) {
         if (befattningsKod == null || gruppforskrivarKod == null) {
             return null;
         }
@@ -293,7 +304,7 @@ public class CommonAuthoritiesResolver {
                 "fnRole.apply(titleCode.fnRole()) returnerade 'null' vilket indikerar felaktig konfiguration av roller");
         }
 
-        return role;
+        return new RoleResolveResult(role, titleCode.getRoleTypeName());
     }
 
     private Predicate<RequestOrigin> isRequestOrigin(String name) {

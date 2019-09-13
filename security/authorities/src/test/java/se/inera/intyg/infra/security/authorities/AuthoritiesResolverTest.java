@@ -40,6 +40,7 @@ import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfiguration
 import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
 import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.infra.security.common.model.RoleResolveResult;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuthoritiesResolverTest {
@@ -67,9 +68,9 @@ public class AuthoritiesResolverTest {
         // given
         List<String> titles = Collections.singletonList("Läkare");
         // when
-        Role role = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles);
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles);
         // then
-        assertTrue(role.getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
+        assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
     }
 
     @Test
@@ -77,9 +78,9 @@ public class AuthoritiesResolverTest {
         // given
         List<String> titles = Arrays.asList("Läkare", "Barnmorska", "Sjuksköterska");
         // when
-        Role role = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles);
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles);
         // then
-        assertTrue(role.getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
+        assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
     }
 
     @Test
@@ -87,9 +88,9 @@ public class AuthoritiesResolverTest {
         // given
         List<String> titles = Arrays.asList("Barnmorska", "Sjuksköterska");
         // when
-        Role userRole = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles);
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles);
         // then
-        assertNull(userRole);
+        assertNull(roleResolveResult );
     }
 
     @Test
@@ -97,9 +98,10 @@ public class AuthoritiesResolverTest {
         // given
         List<String> befattningsKoder = Collections.singletonList("204010");
         // when
-        Role role = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
+        RoleResolveResult roleResolveResult  = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
         // then
-        assertTrue(role.getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
+        assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
+        assertTrue(roleResolveResult.getRoleTypeName().equalsIgnoreCase("Läkare-204010"));
     }
 
     @Test
@@ -107,9 +109,9 @@ public class AuthoritiesResolverTest {
         // given
         List<String> befattningsKoder = Arrays.asList("203090", "204090", "", null);
         // when
-        Role role = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
         // then
-        assertNull(role);
+        assertNull(roleResolveResult);
     }
 
     @Test
@@ -123,9 +125,9 @@ public class AuthoritiesResolverTest {
         // when
         for (int i = 0; i < befattningsKoder.size(); i++) {
             for (int j = 0; j < gruppforskrivarKoder.size(); j++) {
-                Role role = authoritiesResolver
+                RoleResolveResult roleResult = authoritiesResolver
                     .lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningsKoder.get(i), gruppforskrivarKoder.get(j));
-                roleMatrix[i][j] = role;
+                roleMatrix[i][j] = roleResult != null ? roleResult.getRole() : null;
             }
         }
 
@@ -158,10 +160,10 @@ public class AuthoritiesResolverTest {
     @Test
     public void lookupUserRoleByTitleCodeAndGroupPrescriptionCodeNoMatchReturnsNull() {
         // Act
-        Role role = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(new ArrayList<>(), new ArrayList<>());
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(new ArrayList<>(), new ArrayList<>());
 
         // Assert
-        assertNull(role);
+        assertNull(roleResolveResult);
 
     }
 
@@ -172,10 +174,11 @@ public class AuthoritiesResolverTest {
         List<String> gruppforskrivarKoder = Arrays.asList("9300005", "9100009");
 
         // Act
-        Role role = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningsKoder, gruppforskrivarKoder);
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningsKoder, gruppforskrivarKoder);
 
         // Assert
-        assertEquals(AuthoritiesConstants.ROLE_LAKARE, role.getName());
+        assertEquals(AuthoritiesConstants.ROLE_LAKARE, roleResolveResult.getRole().getName());
+        assertEquals("Läkare-203090-9300005", roleResolveResult.getRoleTypeName());
 
     }
 

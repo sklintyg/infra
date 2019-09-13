@@ -16,20 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.security.common.service;
+package se.inera.intyg.infra.security.common.model;
 
-/**
- * Created by eriklupander on 2016-05-18.
- */
-public interface AuthenticationLogger {
+public class RoleResolveResult {
 
-    void logUserLogin(String userHsaId, String role, String roleTypeName, String authScheme, String origin);
+    /**
+     * The resolved role.
+     */
+    private Role role;
 
-    void logUserLogout(String userHsaId, String authScheme);
+    /**
+     * The role's type name, e.g which type of Läkare does it represent.
+     */
+    private String roleTypeName;
 
-    void logUserSessionExpired(String userHsaId, String authScheme);
+    public RoleResolveResult(Role role, String roleTypeName) {
+        this.role = role;
+        this.roleTypeName = roleTypeName;
+    }
 
-    void logMissingMedarbetarUppdrag(String userHsaId);
+    public Role getRole() {
+        return role;
+    }
 
-    void logMissingMedarbetarUppdrag(String userHsaId, String enhetsId);
+    public String getRoleTypeName() {
+        return roleTypeName;
+    }
 }

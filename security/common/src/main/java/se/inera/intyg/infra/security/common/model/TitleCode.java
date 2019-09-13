@@ -31,6 +31,8 @@ public class TitleCode {
     private String groupPrescriptionCode;
     @JsonProperty
     private Role role;
+    @JsonProperty
+    private String roleTypeName;
 
 
     public String getTitleCode() {
@@ -58,12 +60,21 @@ public class TitleCode {
     }
 
 
+    public String getRoleTypeName() {
+        return roleTypeName;
+    }
+
+    public void setRoleTypeName(String roleTypeName) {
+        this.roleTypeName = roleTypeName;
+    }
+
     @Override
     public String toString() {
         return "\nTitleCode {"
             + " titleCode='" + titleCode + '\''
             + ", groupPrescriptionCode='" + groupPrescriptionCode + '\''
             + ", role=" + role
+            + ", roleTypeName=" + roleTypeName
             + "}";
     }
 }
