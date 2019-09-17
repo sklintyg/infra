@@ -56,6 +56,7 @@ public final class AuthoritiesConstants {
     public static final String PRIVILEGE_SKAPA_NYFRAGA = "SKAPA_NY_FRAGA";
     public static final String PRIVILEGE_LASA_FRAGA = "LASA_FRAGA";
     public static final String PRIVILEGE_BESVARA_FRAGA = "BESVARA_FRAGA";
+    public static final String PRIVILEGE_COPY_FROM_CANDIDATE = "KOPIERA_FRAN_KANDIDAT";
 
     public static final String FEATURE_JS_LOGGNING = "JS_LOGGING";
     public static final String FEATURE_HANTERA_INTYGSUTKAST = "HANTERA_INTYGSUTKAST";
