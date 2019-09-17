@@ -43,7 +43,7 @@ import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.infra.security.common.exception.GenericAuthenticationException;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.common.model.Privilege;
-import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.infra.security.common.model.RoleResolveResult;
 import se.inera.intyg.infra.security.common.model.UserOrigin;
 import se.inera.intyg.infra.security.common.service.AuthenticationLogger;
 import se.inera.intyg.infra.security.exception.HsaServiceException;
@@ -330,12 +330,14 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
 
     protected void decorateIntygUserWithRoleAndAuthorities(IntygUser intygUser, List<PersonInformationType> personInfo,
         UserCredentials userCredentials) {
-        Role role = commonAuthoritiesResolver.resolveRole(intygUser, personInfo, getDefaultRole(), userCredentials);
-        LOG.debug("User role is set to {}", role);
+        RoleResolveResult roleResolveResult = commonAuthoritiesResolver
+            .resolveRole(intygUser, personInfo, getDefaultRole(), userCredentials);
+        LOG.debug("User role is set to {}", roleResolveResult.getRole());
 
         // Set role and privileges
-        intygUser.setRoles(toMap(role));
-        intygUser.setAuthorities(toMap(role.getPrivileges(), Privilege::getName));
+        intygUser.setRoles(toMap(roleResolveResult.getRole()));
+        intygUser.setRoleTypeName(roleResolveResult.getRoleTypeName());
+        intygUser.setAuthorities(toMap(roleResolveResult.getRole().getPrivileges(), Privilege::getName));
     }
 
     private void assertEmployee(String employeeHsaId, List<PersonInformationType> personInfo) {

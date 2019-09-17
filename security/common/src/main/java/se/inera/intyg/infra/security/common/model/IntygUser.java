@@ -19,7 +19,7 @@
 package se.inera.intyg.infra.security.common.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -34,9 +34,8 @@ import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 
 public class IntygUser implements UserDetails {
 
-    private static final long serialVersionUID = -2624303818412468774L;
     public static final int THIRTYONE = 31;
-
+    private static final long serialVersionUID = -2624303818412468774L;
     protected boolean privatLakareAvtalGodkand;
 
     protected String personId;
@@ -64,6 +63,7 @@ public class IntygUser implements UserDetails {
     protected Map<String, Role> roles = new HashMap<>();
     protected Map<String, Privilege> authorities = new HashMap<>();
     protected String origin;
+    protected String roleTypeName;
 
     /**
      * The sole constructor.
@@ -111,7 +111,7 @@ public class IntygUser implements UserDetails {
         try {
             ObjectMapper om = new ObjectMapper();
             om.registerModule(new JavaTimeModule());
-            om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            om.setSerializationInclusion(Include.NON_NULL);
             return om.writeValueAsString(this);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -150,6 +150,15 @@ public class IntygUser implements UserDetails {
     @Override
     public void setOrigin(String origin) {
         this.origin = origin;
+    }
+
+    @JsonIgnore
+    public String getRoleTypeName() {
+        return roleTypeName;
+    }
+
+    public void setRoleTypeName(String roleTypeName) {
+        this.roleTypeName = roleTypeName;
     }
 
     /**
@@ -493,6 +502,9 @@ public class IntygUser implements UserDetails {
         if (authorities != null ? !authorities.equals(intygUser.authorities) : intygUser.authorities != null) {
             return false;
         }
+        if (roleTypeName != null ? !roleTypeName.equals(intygUser.roleTypeName) : intygUser.roleTypeName != null) {
+            return false;
+        }
         return (origin != null ? !origin.equals(intygUser.origin) : intygUser.origin != null);
     }
 
@@ -519,6 +531,7 @@ public class IntygUser implements UserDetails {
         result = THIRTYONE * result + (roles != null ? roles.hashCode() : 0);
         result = THIRTYONE * result + (authorities != null ? authorities.hashCode() : 0);
         result = THIRTYONE * result + (origin != null ? origin.hashCode() : 0);
+        result = THIRTYONE * result + (roleTypeName != null ? roleTypeName.hashCode() : 0);
         return result;
     }
     // CHECKSTYLE:ON NeedBraces
