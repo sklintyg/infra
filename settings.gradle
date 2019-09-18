@@ -25,6 +25,7 @@ include ':sjukfall-engine'
 include ':dynamiclink'
 include ':xmldsig'
 include ':monitoring'
+include ':intyginfo'
 
 
 project(':common-redis-cache-core').projectDir = "$rootDir/redis-cache/core" as File
@@ -45,4 +46,5 @@ project(':security-siths').projectDir = "$rootDir/security/siths" as File
 project(':sjukfall-engine').projectDir = "$rootDir/sjukfall/engine" as File
 project(':xmldsig').projectDir = "$rootDir/xmldsig" as File
 project(':monitoring').projectDir = "$rootDir/monitoring" as File
+project(':intyginfo').projectDir = "$rootDir/intyginfo" as File
 
