@@ -154,6 +154,10 @@ public class LogbackTest {
         when(intygUser.getOrigin()).thenReturn("origin");
         when(intygUser.getRoles()).thenReturn(Collections.singletonMap("role", Mockito.mock(Role.class)));
 
+        SelectableVardenhet vg = Mockito.mock(SelectableVardenhet.class);
+        when(vg.getId()).thenReturn("vgId");
+        when(intygUser.getValdVardgivare()).thenReturn(vg);
+
         SelectableVardenhet ve = Mockito.mock(SelectableVardenhet.class);
         when(ve.getId()).thenReturn("sevId");
         when(intygUser.getValdVardenhet()).thenReturn(ve);
@@ -168,7 +172,7 @@ public class LogbackTest {
 
         Closeable c = logMDCServletFilter.open(mockedRequest);
         String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Auth Test"));
-        assertTrue(out.contains("hsaId,sevId,origin,role]"));
+        assertTrue(out.contains("hsaId,sevId,origin,role,vgId]"));
         assertTrue(out.contains(sessionCookie.getValue()));
         c.close();
     }

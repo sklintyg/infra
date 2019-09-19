@@ -42,7 +42,8 @@ public class UserConverter extends ClassicConverter {
         return u.getHsaId()
             + "," + (Objects.nonNull(u.getValdVardenhet()) ? u.getValdVardenhet().getId() : "noUnit")
             + "," + (Objects.nonNull(u.getOrigin()) ? u.getOrigin() : "noOrigin")
-            + "," + ((u.getRoles().size() == 1) ? u.getRoles().keySet().iterator().next() : "noRole");
+            + "," + ((u.getRoles().size() == 1) ? u.getRoles().keySet().iterator().next() : "noRole")
+            + "," + (Objects.nonNull(u.getValdVardgivare()) ? u.getValdVardgivare().getId() : "noVg");
     }
 
     //
