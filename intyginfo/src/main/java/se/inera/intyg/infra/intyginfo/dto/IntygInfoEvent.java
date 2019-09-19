@@ -99,10 +99,10 @@ public class IntygInfoEvent {
             return false;
         }
         IntygInfoEvent that = (IntygInfoEvent) o;
-        return source == that.source &&
-            Objects.equals(date, that.date) &&
-            type == that.type &&
-            Objects.equals(data, that.data);
+        return source == that.source
+            && Objects.equals(date, that.date)
+            && type == that.type
+            && Objects.equals(data, that.data);
     }
 
     @Override
@@ -112,11 +112,11 @@ public class IntygInfoEvent {
 
     @Override
     public String toString() {
-        return "IntygInfoEvent{" +
-            "source=" + source +
-            ", date=" + date +
-            ", type=" + type +
-            ", data=" + data +
-            '}';
+        return "IntygInfoEvent{"
+            + "source=" + source
+            + ", date=" + date
+            + ", type=" + type
+            + ", data=" + data
+            + '}';
     }
 }
