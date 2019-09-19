@@ -22,6 +22,7 @@ package se.inera.intyg.infra.intyginfo.dto;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class IntygInfoEvent {
 
@@ -87,5 +88,35 @@ public class IntygInfoEvent {
 
     public enum Source {
         WEBCERT, INTYGSTJANSTEN
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof IntygInfoEvent)) {
+            return false;
+        }
+        IntygInfoEvent that = (IntygInfoEvent) o;
+        return source == that.source &&
+            Objects.equals(date, that.date) &&
+            type == that.type &&
+            Objects.equals(data, that.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(source, date, type, data);
+    }
+
+    @Override
+    public String toString() {
+        return "IntygInfoEvent{" +
+            "source=" + source +
+            ", date=" + date +
+            ", type=" + type +
+            ", data=" + data +
+            '}';
     }
 }
