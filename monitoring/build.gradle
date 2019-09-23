@@ -10,6 +10,7 @@ dependencies {
     compile "io.prometheus:simpleclient_servlet:${prometheusClientVersion}"
     compile "org.aspectj:aspectjweaver:${aspectjWeaverVersion}"
     compile "com.google.guava:guava:${guavaVersion}"
+    compile "com.github.ua-parser:uap-java:${uapVersion}"
 
     compileOnly project(':security-common')
     compileOnly "org.springframework:spring-webmvc:${springVersion}"

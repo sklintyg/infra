@@ -43,6 +43,7 @@ ext {
     servletApiTestVersion = "3.1.0"
 
     embeddedRedisVersion = "0.7.2"
+    uapVersion = "1.4.3"
 }
 
 allprojects {
