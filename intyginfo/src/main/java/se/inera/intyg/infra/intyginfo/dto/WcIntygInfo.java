@@ -25,14 +25,14 @@ public class WcIntygInfo extends IntygInfo {
 
     private LocalDateTime draftCreated;
 
-    private int komletteingar;
-    private int komletteingarAnswered;
+    private int kompletteringar;
+    private int kompletteringarAnswered;
 
-    private int adminQuestionsSent;
-    private int adminQuestionsSentAnswered;
+    private int administrativaFragorSent;
+    private int administrativaFragorSentAnswered;
 
-    private int adminQuestionsReceived;
-    private int adminQuestionsReceivedAnswered;
+    private int administrativaFragorReceived;
+    private int administrativaFragorReceivedAnswered;
 
     public LocalDateTime getDraftCreated() {
         return draftCreated;
@@ -42,51 +42,51 @@ public class WcIntygInfo extends IntygInfo {
         this.draftCreated = draftCreated;
     }
 
-    public int getKomletteingar() {
-        return komletteingar;
+    public int getKompletteringar() {
+        return kompletteringar;
     }
 
-    public void setKomletteingar(int komletteingar) {
-        this.komletteingar = komletteingar;
+    public void setKompletteringar(int kompletteringar) {
+        this.kompletteringar = kompletteringar;
     }
 
-    public int getKomletteingarAnswered() {
-        return komletteingarAnswered;
+    public int getKompletteringarAnswered() {
+        return kompletteringarAnswered;
     }
 
-    public void setKomletteingarAnswered(int komletteingarAnswered) {
-        this.komletteingarAnswered = komletteingarAnswered;
+    public void setKompletteringarAnswered(int kompletteringarAnswered) {
+        this.kompletteringarAnswered = kompletteringarAnswered;
     }
 
-    public int getAdminQuestionsSent() {
-        return adminQuestionsSent;
+    public int getAdministrativaFragorSent() {
+        return administrativaFragorSent;
     }
 
-    public void setAdminQuestionsSent(int adminQuestionsSent) {
-        this.adminQuestionsSent = adminQuestionsSent;
+    public void setAdministrativaFragorSent(int administrativaFragorSent) {
+        this.administrativaFragorSent = administrativaFragorSent;
     }
 
-    public int getAdminQuestionsSentAnswered() {
-        return adminQuestionsSentAnswered;
+    public int getAdministrativaFragorSentAnswered() {
+        return administrativaFragorSentAnswered;
     }
 
-    public void setAdminQuestionsSentAnswered(int adminQuestionsSentAnswered) {
-        this.adminQuestionsSentAnswered = adminQuestionsSentAnswered;
+    public void setAdministrativaFragorSentAnswered(int administrativaFragorSentAnswered) {
+        this.administrativaFragorSentAnswered = administrativaFragorSentAnswered;
     }
 
-    public int getAdminQuestionsReceived() {
-        return adminQuestionsReceived;
+    public int getAdministrativaFragorReceived() {
+        return administrativaFragorReceived;
     }
 
-    public void setAdminQuestionsReceived(int adminQuestionsReceived) {
-        this.adminQuestionsReceived = adminQuestionsReceived;
+    public void setAdministrativaFragorReceived(int administrativaFragorReceived) {
+        this.administrativaFragorReceived = administrativaFragorReceived;
     }
 
-    public int getAdminQuestionsReceivedAnswered() {
-        return adminQuestionsReceivedAnswered;
+    public int getAdministrativaFragorReceivedAnswered() {
+        return administrativaFragorReceivedAnswered;
     }
 
-    public void setAdminQuestionsReceivedAnswered(int adminQuestionsReceivedAnswered) {
-        this.adminQuestionsReceivedAnswered = adminQuestionsReceivedAnswered;
+    public void setAdministrativaFragorReceivedAnswered(int administrativaFragorReceivedAnswered) {
+        this.administrativaFragorReceivedAnswered = administrativaFragorReceivedAnswered;
     }
 }
