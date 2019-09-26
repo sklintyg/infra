@@ -21,7 +21,6 @@ package se.inera.intyg.infra.intyginfo.dto;
 
 public enum IntygInfoEventType {
     IS001, // Intygsutkastet skapades
-    IS002, // Utkastet raderades av
     IS003, // Intygsutkast låstes
     IS004, // Intyget signerades
     IS005, // Intygstjänsten tog emot intyget
@@ -45,6 +44,7 @@ public enum IntygInfoEventType {
     IS023, // Administrativ fråga besvarad av vården
     IS024, // Administrativ fråga besvarades av intygsmottagaren
     IS025, // Administrativ fråga från vården markerades som hanterad av vården
+    IS026, // Utkastet kopierades av
 
     IS101, // Notifiering SKAPAT skickades till journalsystem
     IS102, // Notifiering ANDRAT skickades till journalsystem
