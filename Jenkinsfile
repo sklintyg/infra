@@ -1,7 +1,7 @@
 #!groovy
 
 def buildVersion = "3.11.0.${BUILD_NUMBER}"
-def buildRoot = JOB_BASE_NAME.replaceAll(/\\/.*/, "") // Keep everything up to the first dash
+def buildRoot = "dintyg"
 
 stage('checkout') {
     node {
@@ -29,10 +29,10 @@ stage('tag and upload') {
 
 stage('propagate') {
     build job: "${buildRoot}/intygstjanst-test", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
-    build job: "${buildRoot}/rehabstod-test", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
-    build job: "${buildRoot}/logsender-test", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
-    build job: "${buildRoot}/statistik-test", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
-    build job: "${buildRoot}/privatlakarportal-test", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
+    //build job: "${buildRoot}/rehabstod-test", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
+    //build job: "${buildRoot}/logsender-test", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
+    //build job: "${buildRoot}/statistik-test", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
+    //build job: "${buildRoot}/privatlakarportal-test", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
 }
 
 stage('notify') {
