@@ -28,7 +28,11 @@ stage('tag and upload') {
 
 stage('propagate') {
     [ "intygstjanst" ].each {
-    	build job: "dintyg/${it}-test-pipeline", wait: false, parameters: [[$class: 'StringParameterValue', name: 'GIT_BRANCH', value: GIT_BRANCH]]
+        try {
+            build job: "dintyg-${it}-test-pipeline", parameters: [string(name: 'GIT_BRANCH', value: GIT_BRANCH)]
+        } catch (e) {
+            println "Trigger build error (ignored): ${e.message}"
+        }
     }
 }
 
