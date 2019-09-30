@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.ia.model;
+package se.inera.intyg.infra.driftbannerdto;
 
 public enum Application {
-    WEBCERT, REHABSTOD, INTYGSSTATISTIK
+    WEBCERT, REHABSTOD, INTYGSSTATISTIK, MINA_INTYG
 }
