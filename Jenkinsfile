@@ -27,7 +27,7 @@ stage('tag and upload') {
 }
 
 stage('propagate') {
-    [ "intygstjanst" ].each {
+    [ "intygstjanst", "rehabstod", "statistik", "intygsadmin", "logsender", "privatlakarportal" ].each {
         try {
             build job: "dintyg-${it}-test-pipeline", parameters: [string(name: 'GIT_BRANCH', value: GIT_BRANCH)]
         } catch (e) {
