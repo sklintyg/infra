@@ -30,6 +30,7 @@ ext {
     logbackVersion = "1.2.3"
     saxonVersion = "9.8.0-10" //"9.6.0-4"
     servletApiVersion = "2.5"
+    shedlockSpringVersion = "0.18.2"
     slf4jVersion = "1.7.21"
     springSecuritySaml2CoreVersion = "1.0.3.RELEASE"
     springSecurityVersion = "4.2.5.RELEASE"

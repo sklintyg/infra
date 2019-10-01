@@ -53,9 +53,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.infra.integration.ia.model.Application;
-import se.inera.intyg.infra.integration.ia.model.Banner;
-import se.inera.intyg.infra.integration.ia.model.BannerPriority;
+import se.inera.intyg.infra.driftbannerdto.Application;
+import se.inera.intyg.infra.driftbannerdto.Banner;
+import se.inera.intyg.infra.driftbannerdto.BannerPriority;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext

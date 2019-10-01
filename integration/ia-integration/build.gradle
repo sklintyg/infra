@@ -1,5 +1,7 @@
 dependencies {
   compile project(':common-redis-cache-core')
+  compile project(':driftbanner-dto')
+  compile project(':monitoring')
 
   compile "org.springframework.data:spring-data-redis:${springDataRedisVersion}"
   compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
@@ -8,6 +10,9 @@ dependencies {
   compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
   compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jacksonVersion}"
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
+
+  compile "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
+  compile "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
 
   runtime "org.springframework:spring-context-support:${springVersion}"
 

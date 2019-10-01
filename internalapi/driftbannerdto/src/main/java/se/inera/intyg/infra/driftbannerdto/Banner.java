@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.ia.model;
+package se.inera.intyg.infra.driftbannerdto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -64,35 +64,59 @@ public class Banner implements Serializable {
         this.priority = priority;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public Application getApplication() {
         return application;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
     }
 
     public String getMessage() {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public LocalDateTime getDisplayFrom() {
         return displayFrom;
+    }
+
+    public void setDisplayFrom(LocalDateTime displayFrom) {
+        this.displayFrom = displayFrom;
     }
 
     public LocalDateTime getDisplayTo() {
         return displayTo;
     }
 
+    public void setDisplayTo(LocalDateTime displayTo) {
+        this.displayTo = displayTo;
+    }
+
     public BannerPriority getPriority() {
         return priority;
+    }
+
+    public void setPriority(BannerPriority priority) {
+        this.priority = priority;
     }
 }

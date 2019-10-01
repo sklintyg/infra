@@ -31,9 +31,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.web.client.RestTemplate;
+import se.inera.intyg.infra.driftbannerdto.Application;
+import se.inera.intyg.infra.driftbannerdto.Banner;
 import se.inera.intyg.infra.integration.ia.cache.IaCacheConfiguration;
-import se.inera.intyg.infra.integration.ia.model.Application;
-import se.inera.intyg.infra.integration.ia.model.Banner;
 
 public class IABannerServiceImpl implements IABannerService {
 
