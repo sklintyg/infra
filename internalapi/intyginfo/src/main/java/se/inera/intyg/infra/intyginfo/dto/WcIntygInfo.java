@@ -23,6 +23,8 @@ import java.time.LocalDateTime;
 
 public class WcIntygInfo extends IntygInfo {
 
+    private boolean createdInWC;
+
     private LocalDateTime draftCreated;
 
     private int kompletteringar;
@@ -33,6 +35,14 @@ public class WcIntygInfo extends IntygInfo {
 
     private int administrativaFragorReceived;
     private int administrativaFragorReceivedAnswered;
+
+    public boolean isCreatedInWC() {
+        return createdInWC;
+    }
+
+    public void setCreatedInWC(boolean createdInWC) {
+        this.createdInWC = createdInWC;
+    }
 
     public LocalDateTime getDraftCreated() {
         return draftCreated;
