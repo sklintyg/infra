@@ -1,0 +1,24 @@
+#!groovy
+
+node {
+    def buildVersion = "3.11.0.${BUILD_NUMBER}-nightly"
+    def versionFlags = "-DbuildVersion=${buildVersion}"
+
+    stage('checkout') {
+        git url: "https://github.com/sklintyg/infra.git", branch: GIT_BRANCH
+        util.run { checkout scm }
+    }
+
+    stage('owasp') {
+        try {
+            shgradle "--refresh-dependencies clean dependencyCheckAggregate ${versionFlags}"
+        } finally {
+            publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'build/reports', \
+                reportFiles: 'dependency-check-report.html', reportName: 'OWASP dependency-check'
+        }
+    }
+
+    stage('sonarqube') {
+        shgradle "sonarqube ${versionFlags}"
+    }
+}
