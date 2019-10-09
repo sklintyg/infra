@@ -10,7 +10,7 @@ node {
 
     stage('build') {
         try {
-            shgradle "--refresh-dependencies clean build testReport -PcodeQuality -PcodeCoverage -DgruntColors=false -DbuildVersion=${buildVersion}"
+            shgradle "--refresh-dependencies clean build testReport -PcodeQuality -DgruntColors=false -DbuildVersion=${buildVersion}"
         } finally {
             publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'build/reports/allTests', \
                 reportFiles: 'index.html', reportName: 'JUnit results'

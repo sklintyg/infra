@@ -19,6 +19,11 @@ node {
     }
 
     stage('sonarqube') {
-        shgradle "sonarqube ${versionFlags}"
+        try {
+            shgradle "build -P codeQuality jacocoTestReport sonarqube ${versionFlags}"
+        } finally {
+            publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'web/build/reports/jacoco/test/html', \
+            reportFiles: 'index.html', reportName: 'Code coverage'
+        }
     }
 }
