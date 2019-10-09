@@ -55,7 +55,7 @@ public class ScannerBean {
     @Autowired
     private WatchEventVardgivareHandler vardgivareHandler;
 
-    void bootstrapScan(Path path, ScanTarget scanTarget) {
+    public void bootstrapScan(Path path, ScanTarget scanTarget) {
         LOG.info("Performing startup scan of HSA identity folder '{}'", path.toString());
         ScanEventHandler handler = resolveHandler(scanTarget);
 
