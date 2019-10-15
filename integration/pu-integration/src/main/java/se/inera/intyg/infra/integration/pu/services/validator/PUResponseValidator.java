@@ -18,9 +18,9 @@
  */
 package se.inera.intyg.infra.integration.pu.services.validator;
 
-import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
+import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
 
 public interface PUResponseValidator {
 
-    boolean isFoundAndCorrectStatus(GetPersonsForProfileResponseType response);
+    boolean isFoundAndCorrectStatus(RequestedPersonRecordType requestedPersonRecordType);
 }
