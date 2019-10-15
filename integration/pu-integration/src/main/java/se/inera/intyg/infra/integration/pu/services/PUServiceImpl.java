@@ -21,7 +21,6 @@ package se.inera.intyg.infra.integration.pu.services;
 import static java.util.Objects.nonNull;
 
 import com.google.common.annotations.VisibleForTesting;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -212,7 +211,7 @@ public class PUServiceImpl implements PUService {
             return personSvar;
         }
 
-        LOG.warn(MessageFormat.format("No valid PersonRecord response for '{0}' found", personId.getPersonnummerHash()));
+        LOG.warn("No valid PersonRecord response for {} found", personId.getPersonnummerHash());
         return PersonSvar.notFound();
     }
 
@@ -238,7 +237,8 @@ public class PUServiceImpl implements PUService {
                     responseMap.put(pnrFromResponse, personSvar);
                     storeIfAbsent(personSvar);
                 } else {
-                    LOG.warn("Got PU response for pnr {} but record contained no PersonRecord.", pnrFromResponse.getPersonnummerHash());
+                    LOG.warn("Got PU response for pnr {} but record contained no valid PersonRecord.",
+                        pnrFromResponse.getPersonnummerHash());
                 }
             }
         }
