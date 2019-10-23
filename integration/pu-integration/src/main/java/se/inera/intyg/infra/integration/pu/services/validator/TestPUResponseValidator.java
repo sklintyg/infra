@@ -19,28 +19,25 @@
 package se.inera.intyg.infra.integration.pu.services.validator;
 
 import static java.util.Objects.nonNull;
-import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 import java.lang.invoke.MethodHandles;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
+import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
 
 public class TestPUResponseValidator implements PUResponseValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Override
-    public boolean isFoundAndCorrectStatus(final GetPersonsForProfileResponseType response) {
+    public boolean isFoundAndCorrectStatus(RequestedPersonRecordType requestedPersonRecordType) {
         LOG.debug("profile is not set to prod - allows test-indicated persons");
-        final boolean found = nonNull(response)
-            && isNotEmpty(response.getRequestedPersonRecord())
-            && nonNull(response.getRequestedPersonRecord().get(0))
-            && nonNull(response.getRequestedPersonRecord().get(0).getPersonRecord());
+
+        final boolean found = nonNull(requestedPersonRecordType) && nonNull(requestedPersonRecordType.getPersonRecord());
 
         if (found) {
-            final boolean isTest = BooleanUtils.toBoolean(response.getRequestedPersonRecord().get(0).getPersonRecord().isTestIndicator());
+            final boolean isTest = BooleanUtils.toBoolean(requestedPersonRecordType.getPersonRecord().isTestIndicator());
 
             if (isTest) {
                 LOG.debug("Fetched person IS a test-indicated person");

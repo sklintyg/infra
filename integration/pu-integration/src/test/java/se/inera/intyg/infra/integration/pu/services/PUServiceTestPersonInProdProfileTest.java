@@ -18,10 +18,14 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
+import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static se.inera.intyg.infra.integration.pu.model.PersonSvar.Status.FOUND;
 import static se.inera.intyg.infra.integration.pu.model.PersonSvar.Status.NOT_FOUND;
 
+import java.util.Arrays;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,11 +44,22 @@ import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3
 @ActiveProfiles({"prod"})
 public class PUServiceTestPersonInProdProfileTest {
 
+    //bootstrap-personer/nollattan.testsson.json (with testIndicator true)
+    final Personnummer PERSON_WITH_TESTINDICATOR = createPnr("19080809-9808");
+
+    //bootstrap-personer/anita.norden.json (with testIndicator false)
+    final Personnummer PERSON_WITHOUT_TESTINDICATOR = createPnr("19900511-2389");
+
+
     @Autowired
     private PUServiceImpl service;
 
     @Autowired
     private GetPersonsForProfileResponderInterface residentService;
+
+    private static Personnummer createPnr(String pnr) {
+        return Personnummer.createPersonnummer(pnr).get();
+    }
 
     @Before
     public void setup() {
@@ -52,14 +67,44 @@ public class PUServiceTestPersonInProdProfileTest {
     }
 
     @Test
-    public void checkTestPersonWithProdProfileShouldReturnNotFound() {
-        final PersonSvar testPersonSvar = service.getPerson(createPnr("19080809-9808"));
+    public void checkTestPersonWithProdProfileShouldReturnNotFoundForExistingTestPerson() {
+
+        final PersonSvar testPersonSvar = service.getPerson(PERSON_WITH_TESTINDICATOR);
         assertEquals(NOT_FOUND, testPersonSvar.getStatus());
         assertNull(testPersonSvar.getPerson());
     }
 
-    private Personnummer createPnr(String pnr) {
-        return Personnummer.createPersonnummer(pnr).get();
+    @Test
+    public void checkTestPersonWithProdProfileShouldReturnFoundForExistingNonTestPerson() {
+        final PersonSvar testPersonSvar = service.getPerson(PERSON_WITHOUT_TESTINDICATOR);
+        assertEquals(FOUND, testPersonSvar.getStatus());
+        assertNotNull(testPersonSvar.getPerson());
+    }
+
+    @Test
+    public void checkTestPersons() {
+
+        final Personnummer nonexistingperson = createPnr("19000000-0000");
+        final Map<Personnummer, PersonSvar> persons = service
+            .getPersons(Arrays.asList(PERSON_WITH_TESTINDICATOR, PERSON_WITHOUT_TESTINDICATOR, nonexistingperson));
+        assertEquals(3, persons.size());
+        assertEquals(NOT_FOUND, persons.get(PERSON_WITH_TESTINDICATOR).getStatus());
+        assertEquals(FOUND, persons.get(PERSON_WITHOUT_TESTINDICATOR).getStatus());
+        assertEquals(NOT_FOUND, persons.get(nonexistingperson).getStatus());
+    }
+
+    @Test
+    public void checkTestPersonsWithWarmCache() {
+
+        final Personnummer nonexistingperson = createPnr("19000000-0000");
+        service.getPersons(Arrays.asList(PERSON_WITH_TESTINDICATOR, PERSON_WITHOUT_TESTINDICATOR, nonexistingperson));
+
+        final Map<Personnummer, PersonSvar> persons = service
+            .getPersons(Arrays.asList(PERSON_WITH_TESTINDICATOR, PERSON_WITHOUT_TESTINDICATOR, nonexistingperson));
+        assertEquals(3, persons.size());
+        assertEquals(NOT_FOUND, persons.get(PERSON_WITH_TESTINDICATOR).getStatus());
+        assertEquals(FOUND, persons.get(PERSON_WITHOUT_TESTINDICATOR).getStatus());
+        assertEquals(NOT_FOUND, persons.get(nonexistingperson).getStatus());
     }
 
 }

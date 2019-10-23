@@ -18,8 +18,9 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
+import static java.util.Objects.nonNull;
+
 import com.google.common.annotations.VisibleForTesting;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -203,15 +204,19 @@ public class PUServiceImpl implements PUService {
 
     private PersonSvar handleSinglePersonResponse(final Personnummer personId, final GetPersonsForProfileResponseType response) {
 
-        if (puResponseValidator.isFoundAndCorrectStatus(response)) {
+        if (hasOneResponseRecord(response) && puResponseValidator.isFoundAndCorrectStatus(response.getRequestedPersonRecord().get(0))) {
             final PersonSvar personSvar = personConverter.toPersonSvar(
                 personId, response.getRequestedPersonRecord().get(0).getPersonRecord());
             storeIfAbsent(personSvar);
             return personSvar;
         }
 
-        LOG.warn(MessageFormat.format("No person '{0}' found", personId.getPersonnummerHash()));
+        LOG.warn("No valid PersonRecord response for {} found", personId.getPersonnummerHash());
         return PersonSvar.notFound();
+    }
+
+    private boolean hasOneResponseRecord(GetPersonsForProfileResponseType response) {
+        return nonNull(response) && nonNull(response.getRequestedPersonRecord()) && response.getRequestedPersonRecord().size() == 1;
     }
 
     private Map<Personnummer, PersonSvar> handleMultiplePersonsResponse(List<Personnummer> personIds,
@@ -226,12 +231,14 @@ public class PUServiceImpl implements PUService {
                 Personnummer pnrFromResponse = Personnummer.createPersonnummer(
                     requestedPersonRecordType.getRequestedPersonalIdentity().getExtension()).get();
 
-                if (requestedPersonRecordType.getPersonRecord() != null) {
+                if (nonNull(requestedPersonRecordType.getPersonRecord()) && puResponseValidator
+                    .isFoundAndCorrectStatus(requestedPersonRecordType)) {
                     PersonSvar personSvar = personConverter.toPersonSvar(pnrFromResponse, requestedPersonRecordType.getPersonRecord());
                     responseMap.put(pnrFromResponse, personSvar);
                     storeIfAbsent(personSvar);
                 } else {
-                    LOG.warn("Got PU response for pnr {} but record contained no PersonRecord.", pnrFromResponse.getPersonnummerHash());
+                    LOG.warn("Got PU response for pnr {} but record contained no valid PersonRecord.",
+                        pnrFromResponse.getPersonnummerHash());
                 }
             }
         }
