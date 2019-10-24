@@ -30,6 +30,10 @@ public class ProdPUResponseValidator implements PUResponseValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    public ProdPUResponseValidator() {
+        LOG.info("**** ProdPUResponseValidator activated - PU PersonRecords with testIndicator set will be treated as NOT_FOUND ****");
+    }
+
     @Override
     public boolean isFoundAndCorrectStatus(RequestedPersonRecordType requestedPersonRecordType) {
         LOG.debug("profile is set to prod - does not allow test-indicated persons");

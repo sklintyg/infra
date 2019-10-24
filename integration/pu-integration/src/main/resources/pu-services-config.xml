@@ -33,12 +33,14 @@
 
   <bean id="puService" class="se.inera.intyg.infra.integration.pu.services.PUServiceImpl" />
 
-  <beans profile="prod">
+  <beans profile="prod,stopTestPersons">
     <bean id="puValidatorProd" class="se.inera.intyg.infra.integration.pu.services.validator.ProdPUResponseValidator" />
   </beans>
 
   <beans profile="!prod">
+    <beans profile="!stopTestPersons">
       <bean id="puValidatorTest" class="se.inera.intyg.infra.integration.pu.services.validator.TestPUResponseValidator" />
+    </beans>
   </beans>
 
   <beans profile="!dev">

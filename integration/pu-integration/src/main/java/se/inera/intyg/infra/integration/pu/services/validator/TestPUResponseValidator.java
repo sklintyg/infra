@@ -30,6 +30,10 @@ public class TestPUResponseValidator implements PUResponseValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    public TestPUResponseValidator() {
+        LOG.info("**** TestPUResponseValidator activated - PU PersonRecords with testIndicator set will be treated as FOUND ****");
+    }
+
     @Override
     public boolean isFoundAndCorrectStatus(RequestedPersonRecordType requestedPersonRecordType) {
         LOG.debug("profile is not set to prod - allows test-indicated persons");
