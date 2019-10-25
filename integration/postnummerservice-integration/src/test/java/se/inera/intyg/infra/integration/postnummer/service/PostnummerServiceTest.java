@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.infra.integration.postnummer.service;
 
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,6 +26,8 @@ import static org.junit.Assert.assertNull;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,8 +79,8 @@ public class PostnummerServiceTest {
 
     @Test
     public void testGetKommunList() {
-        List<String> verify = Arrays.asList("HANINGE", "NACKA", "STOCKHOLM", "VÄSTERVIK", "LINKÖPING");
+        String[] verify = {"HANINGE", "NACKA", "STOCKHOLM", "VÄSTERVIK", "LINKÖPING"};
 
-        assertThat(postnummerService.getKommunList(), is(verify));
+        assertThat(postnummerService.getKommunList(), hasItems(verify));
     }
 }
