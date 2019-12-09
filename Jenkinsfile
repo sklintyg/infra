@@ -2,6 +2,7 @@
 
 node {
     def buildVersion = "3.12.0.${BUILD_NUMBER}"
+    def release = RELEASE;
 
     stage('checkout') {
         git url: "https://github.com/sklintyg/infra.git", branch: GIT_BRANCH
@@ -22,11 +23,15 @@ node {
     }
 
     stage('propagate') {
-        [ "intygstjanst", "rehabstod", "statistik", "intygsadmin", "logsender", "privatlakarportal" ].each {
-            try {
-                build job: "dintyg-${it}-test-pipeline", parameters: [string(name: 'GIT_BRANCH', value: GIT_BRANCH)]
-            } catch (e) {
-                println "Trigger build error (ignored): ${e.message}"
+        if (release) {
+            println "Releases will not trigger downstream builds"
+        } else {
+            [ "intygstjanst", "rehabstod", "statistik", "intygsadmin", "logsender", "privatlakarportal" ].each {
+                try {
+                    build job: "dintyg-${it}-test-pipeline", parameters: [string(name: 'GIT_BRANCH', value: GIT_BRANCH)]
+                } catch (e) {
+                    println "Trigger build error (ignored): ${e.message}"
+                }
             }
         }
     }
