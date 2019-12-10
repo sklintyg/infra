@@ -23,7 +23,7 @@ node {
     }
 
     stage('propagate') {
-        if (release) {
+        if (release == 'true') {
             println "Releases will not trigger downstream builds"
         } else {
             [ "intygstjanst", "rehabstod", "statistik", "intygsadmin", "logsender", "privatlakarportal" ].each {
