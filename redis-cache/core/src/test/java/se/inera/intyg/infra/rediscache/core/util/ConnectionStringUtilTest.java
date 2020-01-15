@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Inera AB (http://www.inera.se)
+ * Copyright (C) 2020 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,6 +21,7 @@ package se.inera.intyg.infra.rediscache.core.util;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
+
 import org.junit.Test;
 
 public class ConnectionStringUtilTest {

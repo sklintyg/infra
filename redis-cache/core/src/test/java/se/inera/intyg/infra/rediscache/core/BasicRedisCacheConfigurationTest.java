@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Inera AB (http://www.inera.se)
+ * Copyright (C) 2020 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,6 +21,7 @@ package se.inera.intyg.infra.rediscache.core;
 import static org.junit.Assert.assertEquals;
 
 import java.util.stream.IntStream;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +31,7 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import redis.embedded.RedisServer;
 
 /**
