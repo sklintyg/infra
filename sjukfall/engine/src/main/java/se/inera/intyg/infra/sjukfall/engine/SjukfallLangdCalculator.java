@@ -18,11 +18,17 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
+import java.time.LocalDate;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import se.inera.intyg.infra.sjukfall.dto.Formaga;
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 
 /**
@@ -33,20 +39,130 @@ import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
  */
 public final class SjukfallLangdCalculator {
 
+    private static final int GAP_BETWEEN_INTYG = 5;
+
     private SjukfallLangdCalculator() {
     }
 
     public static int getEffectiveNumberOfSickDaysByIntyg(List<SjukfallIntyg> intygsUnderlag) {
-        // Sanity check
+        return getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag, null);
+    }
+
+    public static int getEffectiveNumberOfSickDaysByIntyg(List<SjukfallIntyg> intygsUnderlag, LocalDate aktivtDatum) {
         if (intygsUnderlag == null || intygsUnderlag.isEmpty()) {
             return 0;
         }
 
-        List<Formaga> li = intygsUnderlag.stream().map(sid -> sid.getFormagor()).flatMap(l -> l.stream()).collect(Collectors.toList());
-        return getEffectiveNumberOfSickDaysByFormaga(li);
+        final SjukfallIntyg activeSickLeaveCertificate = getActiveSickLeaveCertificate(intygsUnderlag, aktivtDatum);
+        if (aktivtDatum != null && activeSickLeaveCertificate == null) {
+            return 0;
+        }
+
+        final List<SjukfallIntyg> sickLeaveCertificateListToCalculate =
+            getSickLeaveCertificatesToCalculate(intygsUnderlag, activeSickLeaveCertificate);
+
+        final List<LocalDateInterval> formagorIntervalList = sickLeaveCertificateListToCalculate.stream()
+            .map(SjukfallLangdCalculator::getIntervalsOfFormagor)
+            .collect(Collectors.toList())
+            .stream()
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
+
+        final List<LocalDateInterval> mergedFormagorIntervals = mergeIntervals(formagorIntervalList);
+
+        return calculateSumOfIntervals(mergedFormagorIntervals);
+    }
+
+    /**
+     * This method filters out any {@link SjukfallIntyg} that shouldn't be part of the calculation and returns only a list of those that
+     * should. The filter makes sure that any sick leave certificate is either directly or indirectly linked to the active sick leave.
+     * @param sickLeaveCertificateList  List of {@link SjukfallIntyg} to filter.
+     * @param activeSickLeaveCertificate    The active {@link SjukfallIntyg}.
+     * @return  List of {@link SjukfallIntyg} to use in sick leave length calculation.
+     */
+    private static List<SjukfallIntyg> getSickLeaveCertificatesToCalculate(List<SjukfallIntyg> sickLeaveCertificateList,
+        SjukfallIntyg activeSickLeaveCertificate) {
+        final ArrayList<SjukfallIntyg> sickLeaveCertificatesToConsider = new ArrayList<>();
+
+        sickLeaveCertificateList.sort(Comparator.comparing(SjukfallIntyg::getStartDatum));
+
+        SjukfallIntyg previousSickLeaveCertificate = null;
+        boolean consideredActiveSickLeaveCertificate = false;
+        for (SjukfallIntyg sjukfallIntyg: sickLeaveCertificateList) {
+            if (isSickLeaveCertificateLinkedToPrevious(sjukfallIntyg, previousSickLeaveCertificate)) {
+                sickLeaveCertificatesToConsider.add(sjukfallIntyg);
+            } else if (consideredActiveSickLeaveCertificate) {
+                // The gap in days between certificates are too big and shouldn't be considered to be part of the same sjukfall.
+                // Because we already considered the active sick leave certificate, any certificates with later start date are
+                // ignored.
+                return sickLeaveCertificatesToConsider;
+            } else {
+                // The gap in days between certificates are too big and shouldn't be considered to be part of the same sjukfall
+                // As we still haven't considered the active sick leave certificate yet, we have to clear the already collected
+                // sickleaves and start over.
+                sickLeaveCertificatesToConsider.clear();
+                sickLeaveCertificatesToConsider.add(sjukfallIntyg);
+            }
+
+            // Sick leave certificates can overlap in periods, so we have to consider if the current has a later end date than the previous.
+            if (previousSickLeaveCertificate == null || sjukfallIntyg.getSlutDatum().isAfter(previousSickLeaveCertificate.getSlutDatum())) {
+                previousSickLeaveCertificate = sjukfallIntyg;
+            }
+
+            // Keep track if we have considered the active sick leave certificate.
+            if (!consideredActiveSickLeaveCertificate) {
+                consideredActiveSickLeaveCertificate = sjukfallIntyg.equals(activeSickLeaveCertificate);
+            }
+        }
+
+        return sickLeaveCertificatesToConsider;
+    }
+
+    private static boolean isSickLeaveCertificateLinkedToPrevious(SjukfallIntyg sickLeaveCertificate,
+        SjukfallIntyg previousSickLeaveCertificate) {
+        return isFirstSickLeaveCertificate(previousSickLeaveCertificate) || previousSickLeaveCertificate.getSlutDatum()
+            .plusDays(GAP_BETWEEN_INTYG).isAfter(sickLeaveCertificate.getStartDatum());
+    }
+
+    private static boolean isFirstSickLeaveCertificate(SjukfallIntyg sickLeaveCertificate) {
+        return sickLeaveCertificate == null;
+    }
+
+    /**
+     * Get active {@link SjukfallIntyg} based on activeDate. If multiple {@link SjukfallIntyg} are active at the same time, then
+     * the one with the latest sign date is returned. If no {@link SjukfallIntyg} is considered active, then null is returned.
+     * @param sickLeaveCertificateList    List of {@link SjukfallIntyg} to get the active from.
+     * @param activeDate    Date to use when considering which intyg is active.
+     * @return  Active {@link SjukfallIntyg} or null if none is considered active.
+     */
+    private static SjukfallIntyg getActiveSickLeaveCertificate(List<SjukfallIntyg> sickLeaveCertificateList, LocalDate activeDate) {
+        final List<SjukfallIntyg> activeSickLeaveCertificateInDecendingSignOrder = sickLeaveCertificateList.stream()
+            .filter(sjukfallIntyg -> isActive(sjukfallIntyg, activeDate))
+            .sorted(Comparator.comparing(IntygData::getSigneringsTidpunkt, Comparator.reverseOrder()))
+            .collect(Collectors.toList());
+        return activeSickLeaveCertificateInDecendingSignOrder.isEmpty() ? null : activeSickLeaveCertificateInDecendingSignOrder.get(0);
+    }
+
+    private static int calculateSumOfIntervals(List<LocalDateInterval> intervals) {
+        return (int) intervals.stream().mapToLong(LocalDateInterval::getDurationInDays).sum();
+    }
+
+    private static boolean isActive(SjukfallIntyg sickLeaveCertificate, LocalDate activeDate) {
+        return activeDate != null
+            && !(activeDate.isAfter(sickLeaveCertificate.getSlutDatum()) || activeDate.isBefore(sickLeaveCertificate.getStartDatum()));
+    }
+
+    private static List<LocalDateInterval> getIntervalsOfFormagor(SjukfallIntyg sjukfallIntyg) {
+        final List<LocalDateInterval> allIntervals = sjukfallIntyg.getFormagor().stream()
+            .map(formaga -> new LocalDateInterval(formaga.getStartdatum(), formaga.getSlutdatum())).collect(Collectors.toList());
+        return mergeIntervals(allIntervals);
     }
 
     public static int getEffectiveNumberOfSickDaysByFormaga(List<Formaga> formagaList) {
+        return getEffectiveNumberOfSickDaysByFormaga(formagaList, null);
+    }
+
+    public static int getEffectiveNumberOfSickDaysByFormaga(List<Formaga> formagaList, LocalDate aktivtDatum) {
         // Sanity check
         if (formagaList == null || formagaList.isEmpty()) {
             return 0;
@@ -60,7 +176,7 @@ public final class SjukfallLangdCalculator {
         List<LocalDateInterval> mergedIntervals = mergeIntervals(allIntervals);
 
         // calculate sum of total length of remaining intervals
-        return (int) mergedIntervals.stream().mapToLong(i -> i.getDurationInDays()).sum();
+        return (int) mergedIntervals.stream().mapToLong(LocalDateInterval::getDurationInDays).sum();
     }
 
     static List<LocalDateInterval> mergeIntervals(List<LocalDateInterval> allIntervals) {
@@ -69,7 +185,7 @@ public final class SjukfallLangdCalculator {
             return allIntervals;
         }
         // 1. Sort them from lowest starting time to highest starting time
-        allIntervals.sort((i1, i2) -> i1.getStartDate().compareTo(i2.getStartDate()));
+        allIntervals.sort(Comparator.comparing(LocalDateInterval::getStartDate));
         Deque<LocalDateInterval> stack = new ArrayDeque<>();
 
         stack.push(allIntervals.get(0));

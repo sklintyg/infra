@@ -25,10 +25,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.infra.sjukfall.dto.Formaga;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
@@ -92,8 +94,6 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
 
         Map<Integer, List<SjukfallIntyg>> resolvedIntygsData =
             resolverPatient.resolve(intygData, maxIntygsGlapp, aktivtDatum);
-
-        // Reverse order since we need the information in descending order
 
         // Assemble SjukfallPatient objects
         List<SjukfallPatient> result = assembleSjukfallPatientList(resolvedIntygsData, aktivtDatum);
