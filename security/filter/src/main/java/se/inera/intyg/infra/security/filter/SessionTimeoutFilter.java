@@ -19,6 +19,10 @@
 package se.inera.intyg.infra.security.filter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +45,21 @@ public class SessionTimeoutFilter extends OncePerRequestFilter {
 
     private static final long MILLISECONDS_PER_SECONDS = 1000;
 
-    private String getSessionStatusUri;
+    private String skipRenewSessionUrls;
+    private List<String> skipRenewSessionUrlsList;
+
+    @Override
+    protected void initFilterBean() throws ServletException {
+        super.initFilterBean();
+        if (skipRenewSessionUrls == null) {
+            LOG.warn("No skipRenewSessionUrls are configured!");
+            skipRenewSessionUrlsList = new ArrayList<>();
+        } else {
+            skipRenewSessionUrlsList = Arrays.asList(skipRenewSessionUrls.split(","));
+            LOG.info("Configured skipRenewSessionUrls as:" + skipRenewSessionUrlsList.stream().map(Object::toString)
+                .collect(Collectors.joining(", ")));
+        }
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -57,7 +75,9 @@ public class SessionTimeoutFilter extends OncePerRequestFilter {
         HttpSession session = request.getSession(false);
 
         // Is it a request that should'nt prolong the expiration?
-        boolean isSessionStatusRequest = request.getRequestURI().contains(getSessionStatusUri);
+        String url = request.getRequestURI();
+        boolean skipSessionUpdate = skipRenewSessionUrlsList.stream().filter(s -> url.contains(s)).count() > 0;
+
         if (session != null) {
             Long lastAccess = (Long) session.getAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME);
 
@@ -67,7 +87,7 @@ public class SessionTimeoutFilter extends OncePerRequestFilter {
             if (msUntilExpire <= 0) {
                 LOG.info("Session expired " + msUntilExpire + " ms ago. Invalidating it now!");
                 session.invalidate();
-            } else if (!isSessionStatusRequest || lastAccess == null) {
+            } else if (!skipSessionUpdate || lastAccess == null) {
                 // Update lastaccessed for ALL requests except status requests
                 session.setAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME, System.currentTimeMillis());
                 updateTimeLeft(request, session);
@@ -85,12 +105,12 @@ public class SessionTimeoutFilter extends OncePerRequestFilter {
         return msUntilExpire;
     }
 
-    public String getGetSessionStatusUri() {
-        return getSessionStatusUri;
+    public String getSkipRenewSessionUrls() {
+        return this.skipRenewSessionUrls;
     }
 
-    public void setGetSessionStatusUri(String getSessionStatusUri) {
-        this.getSessionStatusUri = getSessionStatusUri;
+    public void setSkipRenewSessionUrls(String skipRenewSessionUrls) {
+        this.skipRenewSessionUrls = skipRenewSessionUrls;
     }
 
 }

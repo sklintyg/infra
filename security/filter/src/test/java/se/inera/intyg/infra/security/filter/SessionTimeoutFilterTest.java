@@ -28,6 +28,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -39,10 +40,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class SessionTimeoutFilterTest {
 
-    private static final String TEST_URI = "/test";
+    private static final String SKIP_RENEW_URL = "/test";
+    private static final String OTHER_URL = "/any.html";
     private static final int FIVE_SECONDS_AGO = 5000;
     private static final int ONE_SECOND = 1;
     private static final int HALF_AN_HOUR = 1800;
+
+    private SessionTimeoutFilter filter;
 
     @Mock
     HttpServletRequest request;
@@ -56,12 +60,17 @@ public class SessionTimeoutFilterTest {
     @Mock
     HttpSession session;
 
+    @Before
+    public void setupFilter() throws Exception {
+        filter = new SessionTimeoutFilter();
+        filter.setSkipRenewSessionUrls(SKIP_RENEW_URL);
+        filter.initFilterBean();
+    }
+
     @Test
-    public void testDoFilterInternalWillInvalidateAnExpiredSession() throws Exception {
+    public void testDoFilterInvalidSession() throws Exception {
         // Arrange
-        setupMocks(ONE_SECOND, TEST_URI);
-        SessionTimeoutFilter filter = new SessionTimeoutFilter();
-        filter.setGetSessionStatusUri(TEST_URI);
+        setupMocks(ONE_SECOND, OTHER_URL);
 
         // Act
         filter.doFilterInternal(request, response, filterChain);
@@ -74,11 +83,24 @@ public class SessionTimeoutFilterTest {
     }
 
     @Test
-    public void testDoFilterInternalWillNotInvalidateValidSession() throws Exception {
+    public void testDoFilterInvalidSessionWithSkipUrl() throws Exception {
         // Arrange
-        SessionTimeoutFilter filter = new SessionTimeoutFilter();
-        filter.setGetSessionStatusUri(TEST_URI);
-        setupMocks(HALF_AN_HOUR, "anotherurl");
+        setupMocks(ONE_SECOND, SKIP_RENEW_URL);
+
+        // Act
+        filter.doFilterInternal(request, response, filterChain);
+
+        // Assert
+        verify(filterChain).doFilter(request, response);
+        verify(session).invalidate();
+        verify(session, never()).setAttribute(any(), any());
+
+    }
+
+    @Test
+    public void testDoFilterValidSession() throws Exception {
+        // Arrange
+        setupMocks(HALF_AN_HOUR, OTHER_URL);
 
         // Act
         filter.doFilterInternal(request, response, filterChain);
@@ -87,6 +109,21 @@ public class SessionTimeoutFilterTest {
         verify(filterChain).doFilter(request, response);
         verify(session, never()).invalidate();
         verify(session).setAttribute(eq(SessionTimeoutFilter.LAST_ACCESS_TIME_ATTRIBUTE_NAME), any());
+
+    }
+
+    @Test
+    public void testDoFilterValidSessionWithSkipUrl() throws Exception {
+        // Arrange
+        setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL);
+
+        // Act
+        filter.doFilterInternal(request, response, filterChain);
+
+        // Assert
+        verify(filterChain).doFilter(request, response);
+        verify(session, never()).invalidate();
+        verify(session, never()).setAttribute(any(), any());
 
     }
 
