@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.integration.pu.model;
 
 import java.io.Serializable;
+
 import se.inera.intyg.schemas.contract.Personnummer;
 
 public class Person implements Serializable {
@@ -33,6 +34,7 @@ public class Person implements Serializable {
     private final String postadress;
     private final String postnummer;
     private final String postort;
+    private final boolean testIndicator;
 
     // CHECKSTYLE:OFF ParameterNumber
     public Person(Personnummer personnummer, boolean sekretessmarkering, boolean avliden, String fornamn, String mellannamn,
@@ -46,6 +48,22 @@ public class Person implements Serializable {
         this.postadress = postadress;
         this.postnummer = postnummer;
         this.postort = postort;
+        this.testIndicator = false;
+    }
+
+    // For backward compatibility a new constructor is added with the testIndicator argument.
+    public Person(Personnummer personnummer, boolean sekretessmarkering, boolean avliden, String fornamn, String mellannamn,
+        String efternamn, String postadress, String postnummer, String postort, boolean testIndicator) {
+        this.personnummer = personnummer;
+        this.sekretessmarkering = sekretessmarkering;
+        this.avliden = avliden;
+        this.fornamn = fornamn;
+        this.mellannamn = mellannamn;
+        this.efternamn = efternamn;
+        this.postadress = postadress;
+        this.postnummer = postnummer;
+        this.postort = postort;
+        this.testIndicator = testIndicator;
     }
     // CHECKSTYLE:ON ParameterNumber
 
@@ -83,5 +101,9 @@ public class Person implements Serializable {
 
     public String getPostort() {
         return postort;
+    }
+
+    public boolean isTestIndicator() {
+        return testIndicator;
     }
 }

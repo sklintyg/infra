@@ -83,10 +83,16 @@ public final class AuthoritiesConstants {
     public static final String FEATURE_NOTIFICATION_DISCARD_FELB = "NOTIFICATION_DISCARD_FELB";
     public static final String FEATURE_OAUTH_AUTHENTICATION = "OAUTH_AUTHENTICATION";
     public static final String FEATURE_ENABLE_CREATE_DRAFT_PREFILL = "CREATE_DRAFT_PREFILL";
+
     /**
      * Feature to toggle if messages that are outdated should be sent or not to the integrated EHR-system.
      */
     public static final String FEATURE_ENABLE_FILTER_OUTDATED_MESSAGES = "FILTER_OUTDATED_MESSAGES";
+
+    /**
+     * Feature to toggle if patients with testIndicator flag is allowed to be used or not.
+     */
+    public static final String FEATURE_ALLOW_TEST_INDICATED_PERSON = "TILLAT_VALIDERINGSPERSON";
 
     private AuthoritiesConstants() {
     }
