@@ -18,6 +18,9 @@
  */
 package se.inera.intyg.infra.integration.pu.util;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import se.inera.intyg.infra.integration.pu.model.Person;
@@ -29,6 +32,17 @@ import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 import se.riv.strategicresourcemanagement.persons.person.v3.ResidentialAddressType;
 
 public class PersonConverter {
+
+    private List<String> testIndicatedPersonsToReclassify;
+
+    public PersonConverter() {
+        testIndicatedPersonsToReclassify = Collections.emptyList();
+    }
+
+    public PersonConverter(String testindicatedSsnToReclassifyAsReal) {
+        testIndicatedPersonsToReclassify = testindicatedSsnToReclassifyAsReal != null
+            ? Arrays.asList(testindicatedSsnToReclassifyAsReal.split("\\s*,\\s*")) : Collections.emptyList();
+    }
 
     public PersonSvar toPersonSvar(Personnummer personId, PersonRecordType personRecord) {
         if (personRecord == null) {
@@ -58,13 +72,24 @@ public class PersonConverter {
         String lastName = namn.getSurname() != null ? namn.getSurname().getName() : null;
         Person person = new Person(personId,
             isSekretessmarkering(personRecord),
-            isDead, firstName, middleName, lastName, adressRader, postnr, postort, personRecord.isTestIndicator());
+            isDead, firstName, middleName, lastName, adressRader, postnr, postort, isTestIndicated(personRecord, personId));
         return PersonSvar.found(person);
     }
 
     private boolean isSekretessmarkering(PersonRecordType personRecord) {
         return personRecord.isProtectedPersonIndicator()
             || (personRecord.isProtectedPopulationRecord() != null && personRecord.isProtectedPopulationRecord());
+    }
+
+    /**
+     * Method evaluate if the person should be considered testIndicated. The attribute is received in the {@link PersonRecordType}
+     * but due to testing needs it can be overridden if the social security number is part of list to reclassy.
+     * @param personRecord  Person Record to evaluate
+     * @param personnummer  For convencience the social security number so it doesn't have to be created within this method.
+     * @return  True or false if the person should be considered testIndicated or not.
+     */
+    private boolean isTestIndicated(PersonRecordType personRecord, Personnummer personnummer) {
+        return personRecord.isTestIndicator() && !testIndicatedPersonsToReclassify.contains(personnummer.getPersonnummer());
     }
 
     private Optional<String> buildAdress(ResidentialAddressType adress) {
