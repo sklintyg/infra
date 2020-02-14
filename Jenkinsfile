@@ -4,7 +4,7 @@ node {
     def buildVersion = "3.13.0.${BUILD_NUMBER}"
 
     stage('checkout') {
-        git url: ${GIT_URL}, branch: ${GIT_BRANCH}
+        git url: GIT_URL, branch: GIT_BRANCH
         util.run { checkout scm }
     }
 

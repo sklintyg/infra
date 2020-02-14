@@ -5,7 +5,7 @@ node {
     def versionFlags = "-DbuildVersion=${buildVersion}"
 
     stage('checkout') {
-        git url: ${GIT_URL}, branch: ${GIT_BRANCH}
+        git url: GIT_URL, branch: GIT_BRANCH
         util.run { checkout scm }
     }
 
