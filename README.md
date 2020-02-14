@@ -6,6 +6,7 @@ Projektet byggs med hjälp av Gradle enligt följande:
 ```
 $ git clone https://github.com/sklintyg/infra.git
 
+
 $ cd infra
 $ ./gradlew build install
 ```
