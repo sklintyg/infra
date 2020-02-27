@@ -69,8 +69,8 @@ public class PUServiceImpl implements PUService {
 
     private PersonConverter personConverter;
 
-    public PUServiceImpl(@Value("${putjanst.testindicated.reclassify.ssn:}") String testindicatedSsnToReclassifyAsReal) {
-        personConverter = new PersonConverter(testindicatedSsnToReclassifyAsReal);
+    public PUServiceImpl(@Value("${putjanst.testindicated.reclassify.active.except.ssn:}") String testIndicatedReClassifyActiveExceptSsn) {
+        personConverter = new PersonConverter(testIndicatedReClassifyActiveExceptSsn);
     }
 
     /**

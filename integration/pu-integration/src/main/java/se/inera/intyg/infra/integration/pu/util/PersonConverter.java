@@ -33,15 +33,18 @@ import se.riv.strategicresourcemanagement.persons.person.v3.ResidentialAddressTy
 
 public class PersonConverter {
 
-    private List<String> testIndicatedPersonsToReclassify;
+    private List<String> reClassifyTestIndicatedExceptSsnList;
 
     public PersonConverter() {
-        testIndicatedPersonsToReclassify = Collections.emptyList();
+        reClassifyTestIndicatedExceptSsnList = Collections.emptyList();
     }
 
-    public PersonConverter(String testindicatedSsnToReclassifyAsReal) {
-        testIndicatedPersonsToReclassify = testindicatedSsnToReclassifyAsReal != null
-            ? Arrays.asList(testindicatedSsnToReclassifyAsReal.split("\\s*,\\s*")) : Collections.emptyList();
+    public PersonConverter(String testIndicatedReClassifyActiveExceptSsn) {
+        if (testIndicatedReClassifyActiveExceptSsn != null && testIndicatedReClassifyActiveExceptSsn.trim().length() > 0) {
+            reClassifyTestIndicatedExceptSsnList = Arrays.asList(testIndicatedReClassifyActiveExceptSsn.split("\\s*,\\s*"));
+        } else {
+            reClassifyTestIndicatedExceptSsnList = Collections.emptyList();
+        }
     }
 
     public PersonSvar toPersonSvar(Personnummer personId, PersonRecordType personRecord) {
@@ -82,14 +85,27 @@ public class PersonConverter {
     }
 
     /**
-     * Method evaluate if the person should be considered testIndicated. The attribute is received in the {@link PersonRecordType}
-     * but due to testing needs it can be overridden if the social security number is part of list to reclassy.
+     * Method evaluate if the person should be considered testIndicated or not. The attribute is received in the {@link PersonRecordType}
+     * but due to testing needs it can be overridden/reclassify.
      * @param personRecord  Person Record to evaluate
      * @param personnummer  For convencience the social security number so it doesn't have to be created within this method.
      * @return  True or false if the person should be considered testIndicated or not.
      */
     private boolean isTestIndicated(PersonRecordType personRecord, Personnummer personnummer) {
-        return personRecord.isTestIndicator() && !testIndicatedPersonsToReclassify.contains(personnummer.getPersonnummer());
+        if (reClassifyTestIndicatedPerson(personRecord, personnummer)) {
+            return false;
+        }
+        return personRecord.isTestIndicator();
+    }
+
+    /**
+     * Reclassify testindicator persons if the person is testIndicator, a list of testIndicator persons is provided not to reclassify and
+     * the ssn is not within the provided list. If the list is empty, there should be no reclassifications, because the normal
+     * behaviour is not to reclassify anything. This is purely for testpurposes.
+     */
+    private boolean reClassifyTestIndicatedPerson(PersonRecordType personRecord, Personnummer personnummer) {
+        return personRecord.isTestIndicator() && reClassifyTestIndicatedExceptSsnList.size() > 0
+            && !reClassifyTestIndicatedExceptSsnList.contains(personnummer.getPersonnummer());
     }
 
     private Optional<String> buildAdress(ResidentialAddressType adress) {
