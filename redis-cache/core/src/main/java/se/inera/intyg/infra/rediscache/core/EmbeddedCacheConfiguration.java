@@ -22,12 +22,18 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.env.Environment;
+import org.springframework.data.redis.connection.RedisConfiguration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import redis.embedded.RedisServer;
 
@@ -38,6 +44,9 @@ import redis.embedded.RedisServer;
 @Configuration
 @EnableCaching
 public class EmbeddedCacheConfiguration extends BasicCacheConfiguration {
+
+    @Resource
+    private Environment environment;
 
     private static final Logger LOG = LoggerFactory.getLogger(EmbeddedCacheConfiguration.class);
 
@@ -86,7 +95,18 @@ public class EmbeddedCacheConfiguration extends BasicCacheConfiguration {
     @Override
     JedisConnectionFactory jedisConnectionFactory() {
         JedisConnectionFactory factory = super.jedisConnectionFactory();
+        Objects.requireNonNull(factory.getStandaloneConfiguration()).setPort(redisServer.ports().get(0));
+        return factory;
+    }
+
+    /*
+    @Bean
+    @DependsOn("redisServer")
+    @Override
+    JedisConnectionFactory jedisConnectionFactory() {
+        JedisConnectionFactory factory = super.jedisConnectionFactory();
         factory.setPort(redisServer.ports().get(0));
         return factory;
     }
+     */
 }

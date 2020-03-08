@@ -18,6 +18,22 @@
  */
 
 dependencies {
+    compile "org.slf4j:slf4j-api"
+    compile "org.springframework:spring-web"
+    compile "org.springframework.security:spring-security-web"
+
+    //compile "javax.servlet:servlet-api:${servletApiVersion}"
+    compile "javax.servlet:javax.servlet-api"
+
+    compile "com.google.guava:guava:${guavaVersion}"
+
+    //testCompile "org.hamcrest:hamcrest"
+    //testCompile "org.hamcrest:hamcrest-all:${hamcrestVersion}"
+    testCompile "org.mockito:mockito-core"
+}
+
+/*
+dependencies {
     compile "org.slf4j:slf4j-api:${slf4jVersion}"
     compile "org.springframework:spring-web:${springVersion}"
     compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
@@ -28,3 +44,4 @@ dependencies {
     testCompile "org.hamcrest:hamcrest-all:${hamcrestVersion}"
     testCompile "org.mockito:mockito-core:${mockitoVersion}"
 }
+ */

@@ -1,3 +1,24 @@
+
+dependencies {
+
+  compile project(':common-redis-cache-core')
+
+  compile "org.springframework.data:spring-data-redis"
+  compile "se.riv.strategicresourcemanagement.persons.person:strategicresourcemanagement-persons-person-schemas:${rivtaGetPersonsPersonSchemasVersion}"
+
+  compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
+  compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+  compile "org.apache.commons:commons-lang3"
+  compile "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
+  runtime "org.springframework:spring-context-support"
+
+  testCompile "org.springframework:spring-test"
+  //testCompile "org.hamcrest:hamcrest"
+  //testCompile "org.hamcrest:hamcrest-all:${hamcrestVersion}"
+  testCompile "it.ozimov:embedded-redis:${embeddedRedisVersion}"
+}
+
+/*
 dependencies {
 
   compile project(':common-redis-cache-core')
@@ -15,3 +36,4 @@ dependencies {
   testCompile "org.hamcrest:hamcrest-all:${hamcrestVersion}"
   testCompile "it.ozimov:embedded-redis:${embeddedRedisVersion}"
 }
+*/

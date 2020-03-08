@@ -16,12 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package se.inera.intyg.infra.rediscache.core;
 
+import com.esotericsoftware.kryo.serializers.FieldSerializer.CachedFieldFactory;
 import com.google.common.collect.ImmutableMap;
+import java.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
+
 
 public class RedisCacheOptionsSetter {
 
@@ -41,8 +46,40 @@ public class RedisCacheOptionsSetter {
         } catch (NumberFormatException e) {
             expiryValue = defaultEntryExpiry;
         }
-        redisCacheManager.setExpires(ImmutableMap.of(cacheName, expiryValue));
+        //RedisCacheConfiguration tt = redisCacheManager.getCacheConfigurations();
+        //redisCacheManager.getCacheConfigurations().get(cacheName).entryTtl(Duration.ofSeconds(defaultEntryExpiry));
+        //redisCacheManager.getCacheConfigurations().
+        //    .(ImmutableMap.of(cacheName, expiryValue));
+        //redisCacheManager.setExpires(ImmutableMap.of(cacheName, expiryValue));
         // First access of cache triggers building it, see implementation of RedisCacheManager for details.
         return redisCacheManager.getCache(cacheName);
     }
 }
+
+/*
+public class RedisCacheOptionsSetter {
+
+    private int defaultEntryExpiry;
+
+    @Autowired
+    private RedisCacheManager redisCacheManager;
+
+    public RedisCacheOptionsSetter(long defaultEntryExpiry) {
+        super();
+
+        this.defaultEntryExpiry = (int) defaultEntryExpiry;
+    }
+
+    public Cache createCache(String cacheName, String expiryTimeInSeconds) {
+        int expiryValue;
+        try {
+            expiryValue = Integer.parseInt(expiryTimeInSeconds);
+        } catch (NumberFormatException e) {
+            expiryValue = defaultEntryExpiry;
+        }
+        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig();
+        redisCacheConfiguration.entryTtl(Duration.ofSeconds(expiryValue));
+        return redisCacheManager.getCache(cacheName);
+    }
+}
+*/

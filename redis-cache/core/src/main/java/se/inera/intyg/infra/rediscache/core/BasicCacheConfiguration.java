@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.rediscache.core;
 
 import com.google.common.base.Strings;
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.Resource;
@@ -29,10 +30,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisClientConfiguration.JedisClientConfigurationBuilder;
+import org.springframework.data.redis.connection.jedis.JedisClientConfiguration.JedisPoolingClientConfigurationBuilder;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.util.StringUtils;
 import se.inera.intyg.infra.rediscache.core.util.ConnectionStringUtil;
@@ -51,7 +58,7 @@ public class BasicCacheConfiguration {
     @Value("${redis.password}")
     String redisPassword;
     @Value("${redis.cache.default_entry_expiry_time_in_seconds}")
-    int defaultEntryExpiry;
+    long defaultEntryExpiry;
     @Value("${redis.sentinel.master.name}")
     String redisSentinelMasterName;
 
@@ -66,6 +73,65 @@ public class BasicCacheConfiguration {
     /**
      * Due to complexity reasons, we do a programmatic profile check here to pick the appropriate JedisConnectionFactory.
      */
+    @Bean
+    JedisConnectionFactory jedisConnectionFactory() {
+        String[] activeProfiles = environment.getActiveProfiles();
+        if (Stream.of(activeProfiles).noneMatch("redis-sentinel"::equalsIgnoreCase)) {
+            return standAloneConnectionFactory();
+        } else {
+            return sentinelConnectionFactory();
+        }
+    }
+
+    @Bean
+    @DependsOn("cacheManager")
+    public RedisCacheOptionsSetter redisCacheOptionsSetter() {
+        return new RedisCacheOptionsSetter(defaultEntryExpiry);
+    }
+
+    @Bean
+    public RedisCacheManager cacheManager() {
+        return  RedisCacheManager.builder(jedisConnectionFactory())
+            .cacheDefaults(
+                RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(defaultEntryExpiry))
+            ).build();
+    }
+
+    private JedisConnectionFactory standAloneConnectionFactory() {
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName(redisHost);
+        redisStandaloneConfiguration.setPort(Integer.parseInt(redisPort));
+        if (StringUtils.hasLength(redisPassword)) {
+            redisStandaloneConfiguration.setPassword(redisPassword);
+        }
+        JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration = JedisClientConfiguration.builder();
+        jedisClientConfiguration.usePooling();
+        return new JedisConnectionFactory(redisStandaloneConfiguration, jedisClientConfiguration.build());
+    }
+
+    private JedisConnectionFactory sentinelConnectionFactory() {
+        RedisSentinelConfiguration sentinelConfig = new RedisSentinelConfiguration()
+            .master(redisSentinelMasterName);
+
+        if (Strings.isNullOrEmpty(redisHost) || Strings.isNullOrEmpty(redisPort)) {
+            throw new IllegalStateException("Cannot bootstrap RedisSentinelConfiguration, redis.host or redis.port is null or empty");
+        }
+        List<String> hosts = ConnectionStringUtil.parsePropertyString(redisHost);
+        List<String> ports = ConnectionStringUtil.parsePropertyString(redisPort);
+
+        if (hosts.size() == 0 || ports.size() == 0 || hosts.size() != ports.size()) {
+            throw new IllegalStateException(
+                "Cannot bootstrap RedisSentinelConfiguration, number of redis.host and/or redis.port was zero or not equal.");
+        }
+
+        for (int a = 0; a < hosts.size(); a++) {
+            sentinelConfig = sentinelConfig.sentinel(hosts.get(a), Integer.parseInt(ports.get(a)));
+        }
+
+        return new JedisConnectionFactory(sentinelConfig);
+    }
+
+/*
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         String[] activeProfiles = environment.getActiveProfiles();
@@ -93,11 +159,7 @@ public class BasicCacheConfiguration {
         return redisCacheManager;
     }
 
-    @Bean
-    @DependsOn("cacheManager")
-    RedisCacheOptionsSetter redisCacheOptionsSetter() {
-        return new RedisCacheOptionsSetter(defaultEntryExpiry);
-    }
+
 
     private JedisConnectionFactory plainConnectionFactory() {
         JedisConnectionFactory factory = new JedisConnectionFactory();
@@ -110,25 +172,9 @@ public class BasicCacheConfiguration {
         return factory;
     }
 
-    private JedisConnectionFactory sentinelConnectionFactory() {
-        RedisSentinelConfiguration sentinelConfig = new RedisSentinelConfiguration()
-            .master(redisSentinelMasterName);
-
-        if (Strings.isNullOrEmpty(redisHost) || Strings.isNullOrEmpty(redisPort)) {
-            throw new IllegalStateException("Cannot bootstrap RedisSentinelConfiguration, redis.host or redis.port is null or empty");
-        }
-        List<String> hosts = ConnectionStringUtil.parsePropertyString(redisHost);
-        List<String> ports = ConnectionStringUtil.parsePropertyString(redisPort);
-
-        if (hosts.size() == 0 || ports.size() == 0 || hosts.size() != ports.size()) {
-            throw new IllegalStateException(
-                "Cannot bootstrap RedisSentinelConfiguration, number of redis.host and/or redis.port was zero or not equal.");
-        }
-
-        for (int a = 0; a < hosts.size(); a++) {
-            sentinelConfig = sentinelConfig.sentinel(hosts.get(a), Integer.parseInt(ports.get(a)));
-        }
-
-        return new JedisConnectionFactory(sentinelConfig);
-    }
+*/
 }
+
+
+
+
