@@ -19,3 +19,4 @@ Intyg Infra is free software: you can redistribute it and/or modify it under the
 Intyg Infra is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU LESSER GENERAL PUBLIC LICENSE for more details.
 
 Se även [LICENSE.md](https://github.com/sklintyg/infra/blob/master/LICENSE.md).
+.
