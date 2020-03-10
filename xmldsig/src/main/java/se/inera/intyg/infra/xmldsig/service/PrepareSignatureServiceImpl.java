@@ -22,7 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -153,7 +153,7 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
         dbf.setNamespaceAware(true);
 
         try {
-            Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(xml, Charset.forName("UTF-8")));
+            Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(xml, StandardCharsets.UTF_8));
             DOMResult res = new DOMResult();
 
             JAXBContext context = JAXBContext.newInstance(SignatureType.class, XPathType.class);
@@ -212,9 +212,9 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
 
             // Use XSLT to remove unwanted elements and the parent element.
             // Note that the "stripall.xslt" performs BOTH local() on all nodes AND filters unwanted stuff out.
-            XsltUtil.transform(IOUtils.toInputStream(xml), out1, "transforms/stripall.xslt");
+            XsltUtil.transform(IOUtils.toInputStream(xml, StandardCharsets.UTF_8), out1, "transforms/stripall.xslt");
 
-            return new String(out1.toByteArray(), Charset.forName(UTF_8));
+            return new String(out1.toByteArray(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             LOG.error(e.getMessage());
             throw new IntygXMLDSigException(e.getMessage());
@@ -224,8 +224,8 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
     private String canonicalizeXml(String intygXml) {
         try {
             Canonicalizer canonicalizer = Canonicalizer.getInstance(CanonicalizationMethod.EXCLUSIVE);
-            byte[] canonicalizedXmlAsBytes = canonicalizer.canonicalize(intygXml.getBytes(UTF_8));
-            return new String(canonicalizedXmlAsBytes, UTF_8);
+            byte[] canonicalizedXmlAsBytes = canonicalizer.canonicalize(intygXml.getBytes(StandardCharsets.UTF_8));
+            return new String(canonicalizedXmlAsBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
             LOG.error(e.getClass().getName() + " caught canonicalizing intyg XML, message: " + e.getMessage());
             throw new IllegalArgumentException(e.getCause());
@@ -235,9 +235,9 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
     private byte[] generateDigest(String stringToDigest) {
         try {
             MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
-            byte[] sha256 = digest.digest(stringToDigest.getBytes(UTF_8));
+            byte[] sha256 = digest.digest(stringToDigest.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encode(sha256);
-        } catch (IOException | NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             LOG.error("{} caught during digest and base64-encoding, message: {}", e.getClass().getSimpleName(), e.getMessage());
             throw new IllegalArgumentException(e.getMessage());
         }

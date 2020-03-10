@@ -1,9 +1,3 @@
 dependencies {
   compile "com.fasterxml.jackson.core:jackson-annotations"
 }
-
-/*
-dependencies {
-  compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
-}
- */

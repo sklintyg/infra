@@ -1,10 +1,9 @@
-
 dependencies {
     compile "org.springframework.data:spring-data-redis"
     compile "redis.clients:jedis"
     compile "org.springframework:spring-core"
-    compile "com.esotericsoftware:kryo:4.0.2"
-    compile "com.google.guava:guava"
+    compile "com.esotericsoftware:kryo:${kryoVersion}"
+    compile "com.google.guava:guava:${guavaVersion}"
     compile "it.ozimov:embedded-redis:${embeddedRedisVersion}"
     compile 'javax.annotation:javax.annotation-api'
     compile "com.sun.xml.ws:jaxws-ri:${jaxwsriVersion}"
@@ -15,17 +14,3 @@ dependencies {
 
     testCompile "org.springframework:spring-test"
 }
-/*
-compile "org.springframework.data:spring-data-redis:${springDataRedisVersion}"
-    compile "redis.clients:jedis:2.9.0"
-    compile "org.springframework:spring-core:${springVersion}"
-    compile "com.esotericsoftware:kryo:4.0.1"
-    compile "com.google.guava:guava:${guavaVersion}"
-    compile "it.ozimov:embedded-redis:${embeddedRedisVersion}"
-
-    runtime "org.springframework:spring-context-support:${springVersion}"
-
-    testRuntime "ch.qos.logback:logback-classic:${logbackVersion}"
-
-    testCompile "org.springframework:spring-test:${springVersion}"
- */

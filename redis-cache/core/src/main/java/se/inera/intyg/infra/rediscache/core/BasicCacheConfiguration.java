@@ -32,21 +32,14 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisClientConfiguration.JedisClientConfigurationBuilder;
-import org.springframework.data.redis.connection.jedis.JedisClientConfiguration.JedisPoolingClientConfigurationBuilder;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.util.StringUtils;
 import se.inera.intyg.infra.rediscache.core.util.ConnectionStringUtil;
 
-/**
- * Initialization and activation of Redis cache for a single Redis host.
- */
 @Configuration
 @EnableCaching
 public class BasicCacheConfiguration {
@@ -86,15 +79,15 @@ public class BasicCacheConfiguration {
     @Bean
     @DependsOn("cacheManager")
     public RedisCacheOptionsSetter redisCacheOptionsSetter() {
-        return new RedisCacheOptionsSetter(defaultEntryExpiry);
+        return new RedisCacheOptionsSetter();
     }
 
     @Bean
     public RedisCacheManager cacheManager() {
-        return  RedisCacheManager.builder(jedisConnectionFactory())
-            .cacheDefaults(
-                RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(defaultEntryExpiry))
-            ).build();
+        return new CacheFactory(
+            RedisCacheWriter.nonLockingRedisCacheWriter(jedisConnectionFactory()),
+            RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(defaultEntryExpiry))
+        );
     }
 
     private JedisConnectionFactory standAloneConnectionFactory() {
@@ -104,9 +97,8 @@ public class BasicCacheConfiguration {
         if (StringUtils.hasLength(redisPassword)) {
             redisStandaloneConfiguration.setPassword(redisPassword);
         }
-        JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration = JedisClientConfiguration.builder();
-        jedisClientConfiguration.usePooling();
-        return new JedisConnectionFactory(redisStandaloneConfiguration, jedisClientConfiguration.build());
+        return new JedisConnectionFactory(redisStandaloneConfiguration,
+            JedisClientConfiguration.builder().usePooling().build());
     }
 
     private JedisConnectionFactory sentinelConnectionFactory() {
@@ -130,51 +122,4 @@ public class BasicCacheConfiguration {
 
         return new JedisConnectionFactory(sentinelConfig);
     }
-
-/*
-    @Bean
-    JedisConnectionFactory jedisConnectionFactory() {
-        String[] activeProfiles = environment.getActiveProfiles();
-        if (Stream.of(activeProfiles).noneMatch("redis-sentinel"::equalsIgnoreCase)) {
-            return plainConnectionFactory();
-        } else {
-            return sentinelConnectionFactory();
-        }
-    }
-
-    @Bean(name = "rediscache")
-    RedisTemplate<Object, Object> redisTemplate() {
-        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(jedisConnectionFactory());
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        return redisTemplate;
-    }
-
-    @Bean
-    RedisCacheManager cacheManager() {
-        RedisCacheManager redisCacheManager = new RedisCacheManager(redisTemplate());
-        redisCacheManager.setUsePrefix(true);
-        redisCacheManager.setDefaultExpiration(defaultEntryExpiry);
-
-        return redisCacheManager;
-    }
-
-
-
-    private JedisConnectionFactory plainConnectionFactory() {
-        JedisConnectionFactory factory = new JedisConnectionFactory();
-        factory.setHostName(redisHost);
-        factory.setPort(Integer.parseInt(redisPort));
-        if (StringUtils.hasLength(redisPassword)) {
-            factory.setPassword(redisPassword);
-        }
-        factory.setUsePool(true);
-        return factory;
-    }
-
-*/
 }
-
-
-
-

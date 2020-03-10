@@ -20,96 +20,21 @@ ext {
 
     schemasContractVersion = "2.1.8"
 
-    //springDataRedisVersion = "1.8.12.RELEASE"
-    //commonsIoVersion = "2.4"
+    aspectjWeaverVersion = "1.8.9"
     commonsIoVersion = "2.6"
-    //commonsLangVersion = "3.8.1"
-    //commonsCollectionsVersion = "4.2"
     commonsCollectionsVersion = "4.4"
     cxfVersion = "3.2.4"
-    //guavaVersion = "14.0.1"
+    embeddedRedisVersion = "0.7.2"
     guavaVersion = "28.2-jre"
-    hamcrestVersion = "1.3"
-    //igniteSpringVersion = "1.8.0"
-    //jacksonDataformatVersion = "2.9.7"
-    //jacksonVersion = "2.9.7"
-    //logbackVersion = "1.2.3"
-    //saxonVersion = "9.8.0-10" //"9.6.0-4"
-    saxonVersion = "9.9.1-6" //"9.6.0-4"
-    //servletApiVersion = "2.5"
-    //shedlockSpringVersion = "0.18.2"
-    shedlockSpringVersion = "4.5.0"
-    //slf4jVersion = "1.7.21"
-    springSecuritySaml2CoreVersion = "1.0.3.RELEASE"
-    //springSecurityVersion = "4.2.5.RELEASE"
-    //springVersion = "4.3.17.RELEASE"
-    //xmlSecVersion = "2.1.1"
-    xmlSecVersion = "2.1.4"
-    //prometheusClientVersion = "0.4.0"
+    jaxwsriVersion = "2.3.2"
+    kryoVersion = "4.0.2"
     prometheusClientVersion = "0.8.1"
-    aspectjWeaverVersion = "1.8.9"
-
-    //awaitilityVersion = "2.0.0"
-    //mockitoVersion = "2.16.0"
-    //servletApiTestVersion = "3.1.0"
-
-    embeddedRedisVersion = "0.7.2"
-    uapVersion = "1.4.3"
-
-
-    jaxwsriVersion = "2.3.2"
-}
-
-/*
-ext {
-    funktionstjansterGrpSchemasVersion = "1.0.6"
-
-    rivtaDirectoryOrganizationSchemasVersion = "1.1.RC5.6"
-    rivtaStoreLogSchemasVersion = "2.0.1"
-    rivtaHsaAuthorizationmanagementSchemasVersion = "1.0.RC4.6"
-    rivtaHsaEmployeeSchemasVersion = "1.0.RC4.6"
-    rivtaGetPersonsPersonSchemasVersion = "3.1.1"
-
-    intygClinicalprocessSchemasVersion = "1.0.22"
-
-    srsSchemasVersion = "0.0.13"
-
-    schemasContractVersion = "2.1.8"
-
-    springDataRedisVersion = "1.8.12.RELEASE"
-    commonsIoVersion = "2.4"
-    commonsLangVersion = "3.8.1"
-    commonsCollectionsVersion = "4.2"
-    cxfVersion = "3.2.4"
-    guavaVersion = "14.0.1"
-    hamcrestVersion = "1.3"
-    igniteSpringVersion = "1.8.0"
-    jacksonDataformatVersion = "2.9.7"
-    jacksonVersion = "2.9.7"
-    logbackVersion = "1.2.3"
-    saxonVersion = "9.8.0-10" //"9.6.0-4"
-    servletApiVersion = "2.5"
-    shedlockSpringVersion = "0.18.2"
-    slf4jVersion = "1.7.21"
+    saxonVersion = "9.9.1-6"
+    shedlockSpringVersion = "4.5.0"
     springSecuritySaml2CoreVersion = "1.0.3.RELEASE"
-    springSecurityVersion = "4.2.5.RELEASE"
-    springVersion = "4.3.17.RELEASE"
-    xmlSecVersion = "2.1.1"
-    prometheusClientVersion = "0.4.0"
-    aspectjWeaverVersion = "1.8.9"
-
-    awaitilityVersion = "2.0.0"
-    mockitoVersion = "2.16.0"
-    servletApiTestVersion = "3.1.0"
-
-    embeddedRedisVersion = "0.7.2"
     uapVersion = "1.4.3"
-
-
-    jaxwsriVersion = "2.3.2"
+    xmlSecVersion = "2.1.4"
 }
- */
-
 
 allprojects {
     apply plugin: 'se.inera.intyg.plugin.common'
@@ -145,8 +70,6 @@ allprojects {
 
     compileJava.options.encoding = 'UTF-8'
 
-    //sourceCompatibility = 1.8
-    //targetCompatibility = 1.8
     sourceCompatibility = 11
     targetCompatibility = 11
 

@@ -7,20 +7,5 @@ dependencies {
     compile "org.springframework:spring-context"
     compile "org.slf4j:slf4j-api"
 
-    //compileOnly "javax.servlet:servlet-api"
     compileOnly "javax.servlet:javax.servlet-api"
 }
-
-/*
-dependencies {
-    compile project(':hsa-integration')
-
-    compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
-    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonDataformatVersion}"
-
-    compile "org.springframework:spring-context:${springVersion}"
-    compile "org.slf4j:slf4j-api:${slf4jVersion}"
-
-    compileOnly "javax.servlet:servlet-api:${servletApiVersion}"
-}
- */
