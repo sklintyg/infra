@@ -14,7 +14,7 @@ ext {
     rivtaHsaEmployeeSchemasVersion = "1.0.RC4.6"
     rivtaGetPersonsPersonSchemasVersion = "3.1.1"
 
-    intygClinicalprocessSchemasVersion = "1.0.22"
+    intygClinicalprocessSchemasVersion = "1.0.23"
 
     srsSchemasVersion = "0.0.13"
 

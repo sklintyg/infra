@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.integration.pu.util;
 
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -25,6 +27,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.strategicresourcemanagement.persons.person.v3.AddressInformationType;
@@ -37,6 +40,9 @@ import se.riv.strategicresourcemanagement.persons.person.v3.ResidentialAddressTy
 public class PersonConverterTest {
 
     private static final Personnummer PERSONNUMMER = Personnummer.createPersonnummer("19121212-1212").get();
+    private static final Personnummer LILLTOLVAN_PERSONNUMMER = Personnummer.createPersonnummer("20121212-1212").get();
+
+    private static final String PUTJANST_TESTINDICATED_RECLASSIFY_ACTIVE_EXCEPT_SSN = "193008077723,191212121212";
 
     private static final String FULLSTANDIG_ADRESS = "Storgatan 1, PL 1234";
     private static final String ADRESS1 = "Storgatan 1";
@@ -45,6 +51,7 @@ public class PersonConverterTest {
     private static final Integer POSTNUMMER = 12345;
 
     private static PersonConverter personConverter;
+
 
     @BeforeClass
     public static void init() {
@@ -94,6 +101,50 @@ public class PersonConverterTest {
         assertNull(output.getPerson().getPostnummer());
     }
 
+    @Test
+    public void verifyTestIndicatedWhenNotReclassified() {
+        personConverter = new PersonConverter(PUTJANST_TESTINDICATED_RECLASSIFY_ACTIVE_EXCEPT_SSN);
+
+        PersonRecordType input = buildIncomingPuResult(0);
+
+        PersonSvar output = personConverter.toPersonSvar(PERSONNUMMER, input);
+
+        assertTrue(output.getPerson().isTestIndicator());
+    }
+
+    @Test
+    public void verifyTestIndicatedWhenReclassified() {
+        personConverter = new PersonConverter(PUTJANST_TESTINDICATED_RECLASSIFY_ACTIVE_EXCEPT_SSN);
+
+        PersonRecordType input = buildIncomingPuResult(0);
+
+        PersonSvar output = personConverter.toPersonSvar(LILLTOLVAN_PERSONNUMMER, input);
+
+        assertFalse(output.getPerson().isTestIndicator());
+    }
+
+    @Test
+    public void verifyTestIndicatedWhenNoReclassificationEmpty() {
+        personConverter = new PersonConverter("");
+
+        PersonRecordType input = buildIncomingPuResult(0);
+
+        PersonSvar output = personConverter.toPersonSvar(LILLTOLVAN_PERSONNUMMER, input);
+
+        assertTrue(output.getPerson().isTestIndicator());
+    }
+
+    @Test
+    public void verifyTestIndicatedWhenNoReclassificationNull() {
+        personConverter = new PersonConverter(null);
+
+        PersonRecordType input = buildIncomingPuResult(0);
+
+        PersonSvar output = personConverter.toPersonSvar(LILLTOLVAN_PERSONNUMMER, input);
+
+        assertTrue(output.getPerson().isTestIndicator());
+    }
+
     private PersonRecordType buildIncomingPuResult(Integer postalCode) {
         PersonRecordType res = new PersonRecordType();
         // Namn
@@ -105,6 +156,8 @@ public class PersonConverterTest {
         surName.setName("Tolvansson");
         nameType.setSurname(surName);
         res.setName(nameType);
+        res.setTestIndicator(true);
+
         // Adress
         AddressInformationType addressInformationType = new AddressInformationType();
         res.setAddressInformation(addressInformationType);

@@ -20,7 +20,6 @@ package se.inera.intyg.infra.integration.pu.services;
 
 import static java.util.Objects.nonNull;
 
-import com.google.common.annotations.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,12 +27,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import org.apache.cxf.interceptor.Fault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
+
+import com.google.common.annotations.VisibleForTesting;
+
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.integration.pu.services.validator.PUResponseValidator;
 import se.inera.intyg.infra.integration.pu.util.PersonConverter;
@@ -64,7 +67,11 @@ public class PUServiceImpl implements PUService {
     @Value("${putjanst.logicaladdress}")
     private String logicaladdress;
 
-    private PersonConverter personConverter = new PersonConverter();
+    private PersonConverter personConverter;
+
+    public PUServiceImpl(@Value("${putjanst.testindicated.reclassify.active.except.ssn:}") String testIndicatedReClassifyActiveExceptSsn) {
+        personConverter = new PersonConverter(testIndicatedReClassifyActiveExceptSsn);
+    }
 
     /**
      * @see PUService#getPerson(Personnummer personId)

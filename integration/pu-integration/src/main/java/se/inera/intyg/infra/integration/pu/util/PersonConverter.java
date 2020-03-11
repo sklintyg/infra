@@ -18,7 +18,11 @@
  */
 package se.inera.intyg.infra.integration.pu.util;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+
 import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.schemas.contract.Personnummer;
@@ -28,6 +32,20 @@ import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 import se.riv.strategicresourcemanagement.persons.person.v3.ResidentialAddressType;
 
 public class PersonConverter {
+
+    private List<String> reClassifyTestIndicatedExceptSsnList;
+
+    public PersonConverter() {
+        reClassifyTestIndicatedExceptSsnList = Collections.emptyList();
+    }
+
+    public PersonConverter(String testIndicatedReClassifyActiveExceptSsn) {
+        if (testIndicatedReClassifyActiveExceptSsn != null && testIndicatedReClassifyActiveExceptSsn.trim().length() > 0) {
+            reClassifyTestIndicatedExceptSsnList = Arrays.asList(testIndicatedReClassifyActiveExceptSsn.split("\\s*,\\s*"));
+        } else {
+            reClassifyTestIndicatedExceptSsnList = Collections.emptyList();
+        }
+    }
 
     public PersonSvar toPersonSvar(Personnummer personId, PersonRecordType personRecord) {
         if (personRecord == null) {
@@ -57,13 +75,37 @@ public class PersonConverter {
         String lastName = namn.getSurname() != null ? namn.getSurname().getName() : null;
         Person person = new Person(personId,
             isSekretessmarkering(personRecord),
-            isDead, firstName, middleName, lastName, adressRader, postnr, postort);
+            isDead, firstName, middleName, lastName, adressRader, postnr, postort, isTestIndicated(personRecord, personId));
         return PersonSvar.found(person);
     }
 
     private boolean isSekretessmarkering(PersonRecordType personRecord) {
         return personRecord.isProtectedPersonIndicator()
             || (personRecord.isProtectedPopulationRecord() != null && personRecord.isProtectedPopulationRecord());
+    }
+
+    /**
+     * Method evaluate if the person should be considered testIndicated or not. The attribute is received in the {@link PersonRecordType}
+     * but due to testing needs it can be overridden/reclassify.
+     * @param personRecord  Person Record to evaluate
+     * @param personnummer  For convencience the social security number so it doesn't have to be created within this method.
+     * @return  True or false if the person should be considered testIndicated or not.
+     */
+    private boolean isTestIndicated(PersonRecordType personRecord, Personnummer personnummer) {
+        if (reClassifyTestIndicatedPerson(personRecord, personnummer)) {
+            return false;
+        }
+        return personRecord.isTestIndicator();
+    }
+
+    /**
+     * Reclassify testindicator persons if the person is testIndicator, a list of testIndicator persons is provided not to reclassify and
+     * the ssn is not within the provided list. If the list is empty, there should be no reclassifications, because the normal
+     * behaviour is not to reclassify anything. This is purely for testpurposes.
+     */
+    private boolean reClassifyTestIndicatedPerson(PersonRecordType personRecord, Personnummer personnummer) {
+        return personRecord.isTestIndicator() && reClassifyTestIndicatedExceptSsnList.size() > 0
+            && !reClassifyTestIndicatedExceptSsnList.contains(personnummer.getPersonnummer());
     }
 
     private Optional<String> buildAdress(ResidentialAddressType adress) {

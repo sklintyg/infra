@@ -20,6 +20,7 @@ package se.inera.intyg.infra.integration.pu.stub;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -30,7 +31,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import se.inera.intyg.infra.integration.pu.services.PUService;
 import se.riv.strategicresourcemanagement.persons.person.v3.DeregistrationType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PartialDateType;
@@ -99,6 +102,28 @@ public class PuStubRestApi {
         residentType.setProtectedPersonIndicator(Boolean.valueOf(value));
         residentStore.addResident(residentType);
         return Response.ok().entity("Value was set to \"" + value + "\", from old value \"" + value + "\"").build();
+    }
+
+    @GET
+    @Path("/person/{personId}/testindicator")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response setTestIndicator(@PathParam("personId") String personId,
+        @QueryParam("value") String value) {
+        puService.clearCache();
+
+        String xmlValue;
+        if (!("false".equals(value) || "true".equalsIgnoreCase(value))) {
+            return Response.status(BAD_REQUEST).entity("Patient indicator has to be set [true] or not set [false]").build();
+        }
+
+        PersonRecordType residentType = residentStore.getResident(personId);
+        if (residentType == null) {
+            return Response.status(BAD_REQUEST).entity("No identity found for supplied personId").build();
+        }
+        final boolean oldValue = residentType.isTestIndicator();
+        residentType.setTestIndicator(Boolean.valueOf(value));
+        residentStore.addResident(residentType);
+        return Response.ok().entity("Test indicator was set to \"" + value + "\", from old value \"" + oldValue + "\"").build();
     }
 
     @GET
