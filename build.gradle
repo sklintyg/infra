@@ -34,6 +34,8 @@ ext {
     springSecuritySaml2CoreVersion = "1.0.3.RELEASE"
     uapVersion = "1.4.3"
     xmlSecVersion = "2.1.4"
+
+    springbootMavenBomVersion = "2.2.5.RELEASE"
 }
 
 allprojects {
@@ -55,7 +57,7 @@ allprojects {
 
     dependencyManagement {
         imports {
-            mavenBom 'org.springframework.boot:spring-boot-dependencies:2.2.5.RELEASE'
+            mavenBom "org.springframework.boot:spring-boot-dependencies:${springbootMavenBomVersion}"
         }
     }
 
