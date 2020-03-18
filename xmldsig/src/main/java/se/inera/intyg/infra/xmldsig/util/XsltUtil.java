@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package se.inera.intyg.infra.xmldsig.util;
 
 import java.io.FileNotFoundException;
@@ -45,6 +46,7 @@ public final class XsltUtil {
     private static final Logger LOG = LoggerFactory.getLogger(XsltUtil.class);
 
     public static void transform(InputStream inXml, OutputStream outXml, String xsltFile) {
+        // CHECKSTYLE:OFF EmptyCatchBlock
         try {
             ClassPathResource cpr = new ClassPathResource(xsltFile);
 
@@ -80,5 +82,6 @@ public final class XsltUtil {
             LOG.error("XSLT transformer exception: {}", e.getMessage());
             LOG.error("Details: line: {} col: {} publicId: {} systemId: {}", line, col, publicId, systemId);
         }
+        // CHECKSTYLE:ON EmptyCatchBlock
     }
 }

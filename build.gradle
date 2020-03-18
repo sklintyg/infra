@@ -1,5 +1,5 @@
 plugins {
-    id "se.inera.intyg.plugin.common" version "2.0.11" apply false
+    id "se.inera.intyg.plugin.common" version "3.1.0" apply false
     id "io.spring.dependency-management" version "1.0.9.RELEASE"
     id 'idea'
 }
@@ -36,6 +36,7 @@ ext {
     xmlSecVersion = "2.1.4"
 
     springbootMavenBomVersion = "2.2.5.RELEASE"
+
 }
 
 allprojects {
