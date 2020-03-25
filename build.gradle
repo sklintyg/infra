@@ -31,7 +31,7 @@ ext {
     prometheusClientVersion = "0.8.1"
     saxonVersion = "9.9.1-6"
     shedlockSpringVersion = "4.5.0"
-    springSecuritySaml2CoreVersion = "1.0.3.RELEASE"
+    springSecuritySaml2CoreVersion = "1.0.3.RELEASE" //Higher versions require opensaml 2.6.6 (not available 2020-03-23)
     uapVersion = "1.4.3"
     xmlSecVersion = "2.1.4"
 
