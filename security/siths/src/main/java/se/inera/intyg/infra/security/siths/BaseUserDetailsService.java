@@ -49,7 +49,7 @@ import se.inera.intyg.infra.security.common.service.AuthenticationLogger;
 import se.inera.intyg.infra.security.exception.HsaServiceException;
 import se.inera.intyg.infra.security.exception.MissingHsaEmployeeInformation;
 import se.inera.intyg.infra.security.exception.MissingMedarbetaruppdragException;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
+import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
 /**
  * Base class for providing authorization based on minimal SAML-tickets containing only the employeeHsaId and

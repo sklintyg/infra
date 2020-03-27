@@ -24,17 +24,13 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponderInterface;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponseType;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonType;
-import se.riv.infrastructure.directory.v1.CommissionType;
-import se.riv.infrastructure.directory.v1.CredentialInformationType;
-import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+import se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedperson.v2.rivtabp21.GetCredentialsForPersonIncludingProtectedPersonResponderInterface;
+import se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedpersonresponder.v2.GetCredentialsForPersonIncludingProtectedPersonResponseType;
+import se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedpersonresponder.v2.GetCredentialsForPersonIncludingProtectedPersonType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.CommissionType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.HsaSystemRoleType;
 
-/**
- * Created by eriklupander on 2015-12-03.
- */
 public class GetAuthorizationsForPersonResponderStub implements GetCredentialsForPersonIncludingProtectedPersonResponderInterface {
 
     @Autowired
@@ -47,7 +43,6 @@ public class GetAuthorizationsForPersonResponderStub implements GetCredentialsFo
         // CHECKSTYLE:OFF LineLength
         GetCredentialsForPersonIncludingProtectedPersonResponseType response = new GetCredentialsForPersonIncludingProtectedPersonResponseType();
         // CHECKSTYLE:ON LineLength
-        response.setResultCode(ResultCodeEnum.OK);
 
         if (serviceStub.getMedarbetaruppdrag().size() > 0) {
             for (Medarbetaruppdrag miu : serviceStub.getMedarbetaruppdrag()) {

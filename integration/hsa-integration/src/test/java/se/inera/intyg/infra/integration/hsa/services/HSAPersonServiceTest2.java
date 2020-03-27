@@ -33,8 +33,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.client.AuthorizationManagementService;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsa.stub.Medarbetaruppdrag;
-import se.riv.infrastructure.directory.v1.CommissionType;
-import se.riv.infrastructure.directory.v1.CredentialInformationType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.CommissionType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HSAPersonServiceTest2 {
@@ -56,7 +56,7 @@ public class HSAPersonServiceTest2 {
 
         List<CredentialInformationType> miuResponse = new ArrayList<>();
 
-        when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null, null)).thenReturn(miuResponse);
+        when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null)).thenReturn(miuResponse);
 
         List<CommissionType> res = hsaPersonService.checkIfPersonHasMIUsOnUnit(HSA_PERSON_ID, HSA_UNIT_ID);
 
@@ -79,7 +79,7 @@ public class HSAPersonServiceTest2 {
         cit.getCommission().add(miu1);
         miuResponse.add(cit);
 
-        when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null, null)).thenReturn(miuResponse);
+        when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null)).thenReturn(miuResponse);
 
         List<CommissionType> res = hsaPersonService.checkIfPersonHasMIUsOnUnit(HSA_PERSON_ID, HSA_UNIT_ID);
 
@@ -101,7 +101,7 @@ public class HSAPersonServiceTest2 {
         cit.getCommission().add(miu1);
 
         miuResponse.add(cit);
-        when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null, null)).thenReturn(miuResponse);
+        when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null)).thenReturn(miuResponse);
 
         List<CommissionType> res = hsaPersonService.checkIfPersonHasMIUsOnUnit(HSA_PERSON_ID, HSA_UNIT_ID);
 
@@ -138,7 +138,7 @@ public class HSAPersonServiceTest2 {
         cit.getCommission().add(miu3);
 
         miuResponse.add(cit);
-        when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null, null)).thenReturn(miuResponse);
+        when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null)).thenReturn(miuResponse);
 
         List<CommissionType> res = hsaPersonService.checkIfPersonHasMIUsOnUnit(HSA_PERSON_ID, HSA_UNIT_ID);
 
@@ -174,7 +174,7 @@ public class HSAPersonServiceTest2 {
         cit.getCommission().add(miu3);
 
         miuResponse.add(cit);
-        when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null, null)).thenReturn(miuResponse);
+        when(authorizationManagementService.getAuthorizationsForPerson(HSA_PERSON_ID, null)).thenReturn(miuResponse);
 
         List<CommissionType> res = hsaPersonService.checkIfPersonHasMIUsOnUnit(HSA_PERSON_ID, HSA_UNIT_ID);
 

@@ -45,12 +45,12 @@ import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.integration.hsa.stub.Medarbetaruppdrag;
 import se.inera.intyg.infra.integration.hsa.util.HsaUnitAddressParser;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMemberType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.HealthCareUnitType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
-import se.riv.infrastructure.directory.v1.CommissionType;
-import se.riv.infrastructure.directory.v1.CredentialInformationType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.CommissionType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMemberType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMembersType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
 
 /**
  * Provides HSA organization services through TJK over NTjP.
@@ -155,7 +155,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
         try {
             List<CredentialInformationType> credentialInformationList = authorizationManagementService
-                .getAuthorizationsForPerson(hosPersonHsaId, null, null);
+                .getAuthorizationsForPerson(hosPersonHsaId, null);
 
             for (CredentialInformationType credentialInformation : credentialInformationList) {
                 List<CommissionType> commissions = credentialInformation.getCommission()

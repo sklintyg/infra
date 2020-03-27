@@ -35,24 +35,37 @@
   <context:component-scan base-package="se.inera.intyg.infra.integration.hsa"/>
 
   <jaxws:client id="getCredentialsForPersonIncludingProtectedPersonResponderInterface"
-      serviceClass="se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponderInterface"
-      address="${infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedpersonresponderinterface.endpoint.url}"/>
-
-  <jaxws:client id="getUnitResponderInterface"
-      serviceClass="se.riv.infrastructure.directory.organization.getunit.v1.rivtabp21.GetUnitResponderInterface"
-      address="${infrastructure.directory.organization.getunit.endpoint.url}"/>
-
-  <jaxws:client id="getHealthCareUnitResponderInterface"
-      serviceClass="se.riv.infrastructure.directory.organization.gethealthcareunit.v1.rivtabp21.GetHealthCareUnitResponderInterface"
-      address="${infrastructure.directory.organization.gethealthcareunit.endpoint.url}"/>
-
-  <jaxws:client id="getHealthCareUnitMembersResponderInterface"
-      serviceClass="se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v1.rivtabp21.GetHealthCareUnitMembersResponderInterface"
-      address="${infrastructure.directory.organization.gethealthcareunitmembers.endpoint.url}"/>
+      serviceClass="se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedperson.v2.rivtabp21.GetCredentialsForPersonIncludingProtectedPersonResponderInterface"
+      address="${infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedperson.endpoint.url}"/>
+  <jaxws:client id="getHospCredentialsForPersonResponderInterface"
+      serviceClass="se.riv.infrastructure.directory.authorizationmanagement.gethospcredentialsforperson.v1.rivtabp21.GetHospCredentialsForPersonResponderInterface"
+      address="${infrastructure.directory.authorizationmanagement.gethospcredentialsforperson.endpoint.url}"/>
+  <jaxws:client id="getHospLastUpdateResponderInterface"
+      serviceClass="se.riv.infrastructure.directory.authorizationmanagement.gethosplastupdate.v1.rivtabp21.GetHospLastUpdateResponderInterface"
+      address="${infrastructure.directory.authorizationmanagement.gethosplastupdate.endpoint.url}"/>
+  <jaxws:client id="handleHospCertificationPersonResponderInterface"
+      serviceClass="se.riv.infrastructure.directory.authorizationmanagement.handlehospcertificationperson.v1.rivtabp21.HandleHospCertificationPersonResponderInterface"
+      address="${infrastructure.directory.authorizationmanagement.handlehospcertificationperson.endpoint.url}"/>
 
   <jaxws:client id="getEmployeeIncludingProtectedPersonResponderInterface"
-      serviceClass="se.riv.infrastructure.directory.employee.getemployeeincludingprotectedperson.v1.rivtabp21.GetEmployeeIncludingProtectedPersonResponderInterface"
+      serviceClass="se.riv.infrastructure.directory.employee.getemployeeincludingprotectedperson.v2.rivtabp21.GetEmployeeIncludingProtectedPersonResponderInterface"
       address="${infrastructure.directory.employee.getemployee.endpoint.url}"/>
+
+  <jaxws:client id="getHealthCareProviderResponderInterface"
+      serviceClass="se.riv.infrastructure.directory.organization.gethealthcareprovider.v1.rivtabp21.GetHealthCareProviderResponderInterface"
+      address="${infrastructure.directory.organization.gethealthcareprovider.endpoint.url}"/>
+  <jaxws:client id="getHealthCareUnitResponderInterface"
+      serviceClass="se.riv.infrastructure.directory.organization.gethealthcareunit.v2.rivtabp21.GetHealthCareUnitResponderInterface"
+      address="${infrastructure.directory.organization.gethealthcareunit.endpoint.url}"/>
+  <jaxws:client id="getHealthCareUnitMembersResponderInterface"
+      serviceClass="se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v2.rivtabp21.GetHealthCareUnitMembersResponderInterface"
+      address="${infrastructure.directory.organization.gethealthcareunitmembers.endpoint.url}"/>
+  <jaxws:client id="getUnitResponderInterface"
+      serviceClass="se.riv.infrastructure.directory.organization.getunit.v2.rivtabp21.GetUnitResponderInterface"
+      address="${infrastructure.directory.organization.getunit.endpoint.url}"/>
+
+
+
 
   <beans profile="!dev">
     <http:conduit

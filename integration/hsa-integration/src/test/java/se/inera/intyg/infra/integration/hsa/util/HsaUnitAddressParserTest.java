@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
-import se.riv.infrastructure.directory.v1.AddressType;
+import se.riv.infrastructure.directory.organization.v2.AddressType;
 
 /**
  * Created by eriklupander on 2017-09-19.

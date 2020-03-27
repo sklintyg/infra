@@ -38,11 +38,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.client.OrganizationUnitService;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
-import se.riv.infrastructure.directory.organization.gethealthcareunit.v1.rivtabp21.GetHealthCareUnitResponderInterface;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v1.rivtabp21.GetHealthCareUnitMembersResponderInterface;
-import se.riv.infrastructure.directory.organization.getunit.v1.rivtabp21.GetUnitResponderInterface;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitResponseType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitResponseType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
 
 /**
  * @author andreaskaltenbach
@@ -55,14 +52,14 @@ public class HsaOrganizationsServiceMockTest {
 
     private static final String TEST_DIR = "HsaOrganizationsServiceMockTest/";
 
-    @Mock
+/*    @Mock
     private GetUnitResponderInterface getUnitResponderInterface;
 
     @Mock
     private GetHealthCareUnitResponderInterface getHealthCareUnitResponderInterface;
 
     @Mock
-    private GetHealthCareUnitMembersResponderInterface getHealthCareUnitMembersResponderInterface;
+    private GetHealthCareUnitMembersResponderInterface getHealthCareUnitMembersResponderInterface;*/
 
     @Mock
     private OrganizationUnitService organizationUnitService;

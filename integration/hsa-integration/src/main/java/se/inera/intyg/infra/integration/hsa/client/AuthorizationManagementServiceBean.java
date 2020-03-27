@@ -19,17 +19,17 @@
 package se.inera.intyg.infra.integration.hsa.client;
 
 import java.util.List;
+import javax.xml.ws.soap.SOAPFaultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponderInterface;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponseType;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonType;
-import se.riv.infrastructure.directory.v1.CredentialInformationType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+import se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedperson.v2.rivtabp21.GetCredentialsForPersonIncludingProtectedPersonResponderInterface;
+import se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedpersonresponder.v2.GetCredentialsForPersonIncludingProtectedPersonResponseType;
+import se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedpersonresponder.v2.GetCredentialsForPersonIncludingProtectedPersonType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
 
 /**
  * Created by eriklupander on 2015-12-04.
@@ -48,26 +48,24 @@ public class AuthorizationManagementServiceBean implements AuthorizationManageme
     private String logicalAddress;
 
     @Override
-    public List<CredentialInformationType> getAuthorizationsForPerson(String personHsaId, String personalIdentityNumber,
-        String searchBase) throws HsaServiceCallException {
+    public List<CredentialInformationType> getAuthorizationsForPerson(String personHsaId, String searchBase)
+        throws HsaServiceCallException {
         GetCredentialsForPersonIncludingProtectedPersonType parameters = new GetCredentialsForPersonIncludingProtectedPersonType();
-        parameters.setPersonalIdentityNumber(personalIdentityNumber);
         parameters.setPersonHsaId(personHsaId);
         parameters.setSearchBase(searchBase);
-        GetCredentialsForPersonIncludingProtectedPersonResponseType response = getCredentialsForPersonIncludingProtectedPersonResponderInterface
-            .getCredentialsForPersonIncludingProtectedPerson(logicalAddress, parameters);
+        try {
+            GetCredentialsForPersonIncludingProtectedPersonResponseType response = getCredentialsForPersonIncludingProtectedPersonResponderInterface
+                .getCredentialsForPersonIncludingProtectedPerson(logicalAddress, parameters);
 
-        if (response.getResultCode() == ResultCodeEnum.ERROR) {
-            // Absolute minimum required response
-            String errorText = "GetCredentialsForPersonIncludingProtectedPerson returned ERROR with result text '{}'";
             if (response.getCredentialInformation() == null || response.getCredentialInformation().isEmpty()) {
-                LOG.error(errorText, response.getResultText());
-                throw new HsaServiceCallException("Could not call GetCredentialsForPersonIncludingProtectedPerson");
-            } else {
-                LOG.warn(errorText, response.getResultText());
-                LOG.warn("Continuing anyway because information was delivered with the ERROR code.");
+                throw new HsaServiceCallException(
+                    "Empty response returned from HSA GetCredentialsForPersonIncludingProtectedPerson; personHsaId = '" + parameters
+                        .getPersonHsaId()
+                        + "'");
             }
+            return response.getCredentialInformation();
+        } catch (SOAPFaultException soapFaultException) {
+            throw new HsaServiceCallException(soapFaultException);
         }
-        return response.getCredentialInformation();
     }
 }

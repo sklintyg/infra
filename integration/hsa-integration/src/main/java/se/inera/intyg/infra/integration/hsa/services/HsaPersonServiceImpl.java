@@ -30,17 +30,15 @@ import se.inera.intyg.infra.integration.hsa.client.AuthorizationManagementServic
 import se.inera.intyg.infra.integration.hsa.client.EmployeeService;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsa.stub.Medarbetaruppdrag;
-import se.riv.infrastructure.directory.v1.CommissionType;
-import se.riv.infrastructure.directory.v1.CredentialInformationType;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.CommissionType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
+import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
 /**
  * Provides person related services using TJK over NTjP.
  *
  * infrastructure:directory:employee and
  * infrastructure:directory:authorizationmanagement
- *
- * @author eriklupander
  */
 @Service
 public class HsaPersonServiceImpl implements HsaPersonService {
@@ -64,7 +62,7 @@ public class HsaPersonServiceImpl implements HsaPersonService {
         LOG.debug("Getting info from HSA for person '{}'", personHsaId);
 
         try {
-            return employeeService.getEmployee(personHsaId, null, null);
+            return employeeService.getEmployee(personHsaId, null);
         } catch (HsaServiceCallException e) {
             LOG.error(e.getMessage());
             throw new WebServiceException(e.getMessage());
@@ -76,7 +74,7 @@ public class HsaPersonServiceImpl implements HsaPersonService {
 
         LOG.debug("Checking if person with HSA id '{}' has MIUs on unit '{}'", hosPersonHsaId, unitHsaId);
 
-        List<CredentialInformationType> response = authorizationManagementService.getAuthorizationsForPerson(hosPersonHsaId, null, null);
+        List<CredentialInformationType> response = authorizationManagementService.getAuthorizationsForPerson(hosPersonHsaId, null);
         List<CommissionType> commissions = response.stream()
             .flatMap(ci -> ci.getCommission().stream())
             .collect(Collectors.toList());

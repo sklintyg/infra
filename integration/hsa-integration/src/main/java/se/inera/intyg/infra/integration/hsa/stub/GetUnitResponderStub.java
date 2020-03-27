@@ -23,16 +23,13 @@ import se.inera.intyg.infra.integration.hsa.model.AbstractVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-import se.riv.infrastructure.directory.organization.getunit.v1.rivtabp21.GetUnitResponderInterface;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitResponseType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
-import se.riv.infrastructure.directory.v1.AddressType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+import se.riv.infrastructure.directory.organization.getunit.v2.rivtabp21.GetUnitResponderInterface;
+import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitResponseType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
+import se.riv.infrastructure.directory.organization.v2.AddressType;
 
-/**
- * Created by eriklupander on 2015-12-03.
- */
+
 public class GetUnitResponderStub implements GetUnitResponderInterface {
 
     @Autowired
@@ -68,7 +65,6 @@ public class GetUnitResponderStub implements GetUnitResponderInterface {
                 response.setUnit(unit);
             }
         }
-        response.setResultCode(ResultCodeEnum.OK);
         return response;
     }
 

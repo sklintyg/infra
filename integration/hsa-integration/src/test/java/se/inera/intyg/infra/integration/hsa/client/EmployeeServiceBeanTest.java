@@ -34,11 +34,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
-import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedperson.v1.rivtabp21.GetEmployeeIncludingProtectedPersonResponderInterface;
-import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonResponseType;
-import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonType;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedperson.v2.rivtabp21.GetEmployeeIncludingProtectedPersonResponderInterface;
+import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v2.GetEmployeeIncludingProtectedPersonResponseType;
+import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v2.GetEmployeeIncludingProtectedPersonType;
+import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
 /**
  * Created by eriklupander on 2016-03-11.
@@ -47,7 +46,6 @@ import se.riv.infrastructure.directory.v1.ResultCodeEnum;
 public class EmployeeServiceBeanTest {
 
     private static final String HSA_ID = "hsa-1";
-    private static final String PNR = "19121212-1212";
 
     @Mock
     GetEmployeeIncludingProtectedPersonResponderInterface getEmployeeService;
@@ -60,20 +58,15 @@ public class EmployeeServiceBeanTest {
         when(getEmployeeService.getEmployeeIncludingProtectedPerson(
             or(isNull(), anyString()),
             any(GetEmployeeIncludingProtectedPersonType.class))
-        ).thenReturn(buildResponse(ResultCodeEnum.OK));
+        ).thenReturn(buildResponse(true));
 
-        List<PersonInformationType> response = testee.getEmployee(HSA_ID, null, null);
+        List<PersonInformationType> response = testee.getEmployee(HSA_ID, null);
         assertNotNull(response);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testBothPnrAndHsaIdSupplied() throws HsaServiceCallException {
-        testee.getEmployee(HSA_ID, PNR, null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNoPnrOrHsaIdSupplied() throws HsaServiceCallException {
-        testee.getEmployee(null, null, null);
+    public void testNoHsaIdSupplied() throws HsaServiceCallException {
+        testee.getEmployee(null, null);
     }
 
     @Test(expected = HsaServiceCallException.class)
@@ -81,9 +74,9 @@ public class EmployeeServiceBeanTest {
         when(getEmployeeService.getEmployeeIncludingProtectedPerson(
             or(isNull(), anyString()),
             any(GetEmployeeIncludingProtectedPersonType.class))
-        ).thenReturn(buildResponse(ResultCodeEnum.ERROR));
+        ).thenReturn(buildResponse(false));
 
-        testee.getEmployee(HSA_ID, null, null);
+        testee.getEmployee(HSA_ID, null);
     }
 
     @Test(expected = HsaServiceCallException.class)
@@ -94,12 +87,14 @@ public class EmployeeServiceBeanTest {
             any(GetEmployeeIncludingProtectedPersonType.class))
         ).thenThrow(ex);
 
-        testee.getEmployee(HSA_ID, null, null);
+        testee.getEmployee(HSA_ID, null);
     }
 
-    private GetEmployeeIncludingProtectedPersonResponseType buildResponse(ResultCodeEnum resultCode) {
+    private GetEmployeeIncludingProtectedPersonResponseType buildResponse(boolean hasData) {
         GetEmployeeIncludingProtectedPersonResponseType resp = new GetEmployeeIncludingProtectedPersonResponseType();
-        resp.setResultCode(resultCode);
+        if (hasData) {
+            resp.getPersonInformation().add(new PersonInformationType());
+        }
         return resp;
     }
 }

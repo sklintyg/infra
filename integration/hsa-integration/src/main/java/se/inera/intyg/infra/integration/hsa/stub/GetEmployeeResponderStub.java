@@ -21,18 +21,14 @@ package se.inera.intyg.infra.integration.hsa.stub;
 //CHECKSTYLE:OFF LineLength
 
 import org.springframework.beans.factory.annotation.Autowired;
-import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedperson.v1.rivtabp21.GetEmployeeIncludingProtectedPersonResponderInterface;
-import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonResponseType;
-import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonType;
-import se.riv.infrastructure.directory.v1.PaTitleType;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedperson.v2.rivtabp21.GetEmployeeIncludingProtectedPersonResponderInterface;
+import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v2.GetEmployeeIncludingProtectedPersonResponseType;
+import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v2.GetEmployeeIncludingProtectedPersonType;
+import se.riv.infrastructure.directory.employee.v2.PaTitleType;
+import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
 //CHECKSTYLE:ON LineLength
 
-/**
- * Created by eriklupander on 2015-12-03.
- */
 public class GetEmployeeResponderStub implements GetEmployeeIncludingProtectedPersonResponderInterface {
 
     @Autowired
@@ -45,8 +41,6 @@ public class GetEmployeeResponderStub implements GetEmployeeIncludingProtectedPe
         String personHsaId = getEmployeeIncludingProtectedPersonType.getPersonHsaId();
         HsaPerson hsaPerson = hsaServiceStub.getHsaPerson(personHsaId);
         if (hsaPerson == null) {
-            response.setResultText("Null HsaPerson returned by HsaServiceStub.");
-            response.setResultCode(ResultCodeEnum.ERROR);
             return response;
         }
 
@@ -74,7 +68,6 @@ public class GetEmployeeResponderStub implements GetEmployeeIncludingProtectedPe
         }
 
         response.getPersonInformation().add(person);
-        response.setResultCode(ResultCodeEnum.OK);
         return response;
     }
 }

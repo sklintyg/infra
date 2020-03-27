@@ -30,11 +30,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
-import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedperson.v1.rivtabp21.GetEmployeeIncludingProtectedPersonResponderInterface;
-import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonResponseType;
-import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonType;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedperson.v2.rivtabp21.GetEmployeeIncludingProtectedPersonResponderInterface;
+import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v2.GetEmployeeIncludingProtectedPersonResponseType;
+import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v2.GetEmployeeIncludingProtectedPersonType;
+import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
 //CHECKSTYLE:ON LineLength
 
@@ -53,61 +52,44 @@ public class EmployeeServiceBean implements EmployeeService {
     private String logicalAddress;
 
     @Override
-    @Cacheable(cacheResolver = "hsaCacheResolver", key = "#personHsaId + #personalIdentityNumber + #searchBase", unless = "#result == null")
-    public List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase)
+    @Cacheable(cacheResolver = "hsaCacheResolver", key = "#personHsaId + #searchBase", unless = "#result == null")
+    public List<PersonInformationType> getEmployee(String personHsaId, String searchBase)
         throws HsaServiceCallException {
 
         LOG.debug("Getting info from HSA for person '{}'", personHsaId);
 
-        // Exakt ett av fälten personHsaId och personalIdentityNumber ska anges.
-        if (StringUtils.isEmpty(personHsaId) && StringUtils.isEmpty(personalIdentityNumber)) {
+        if (StringUtils.isEmpty(personHsaId)) {
             throw new IllegalArgumentException(
-                "Inget av argumenten personHsaId och personalIdentityNumber är satt. Ett av dem måste ha ett värde.");
+                "personHsaId must be specified");
         }
 
-        if (!StringUtils.isEmpty(personHsaId) && !StringUtils.isEmpty(personalIdentityNumber)) {
-            throw new IllegalArgumentException("Endast ett av argumenten personHsaId och personalIdentityNumber får vara satt.");
-        }
-
-        GetEmployeeIncludingProtectedPersonType employeeType = createEmployeeType(personHsaId, personalIdentityNumber, searchBase);
+        GetEmployeeIncludingProtectedPersonType employeeType = createEmployeeType(personHsaId, searchBase);
         return getEmployee(logicalAddress, employeeType);
     }
 
     private List<PersonInformationType> getEmployee(String logicalAddress, GetEmployeeIncludingProtectedPersonType employeeType)
         throws HsaServiceCallException {
 
-        GetEmployeeIncludingProtectedPersonResponseType response;
-
         try {
-            response = getEmployeeIncludingProtectedPersonResponderInterface.getEmployeeIncludingProtectedPerson(logicalAddress,
-                employeeType);
+            GetEmployeeIncludingProtectedPersonResponseType response = getEmployeeIncludingProtectedPersonResponderInterface
+                .getEmployeeIncludingProtectedPerson(logicalAddress,
+                    employeeType);
 
-            // check whether call was successful or not
-            if (response.getResultCode() == ResultCodeEnum.ERROR) {
-                if (response.getPersonInformation() == null || response.getPersonInformation().isEmpty()) {
-                    LOG.error("Failed getting employee information from HSA; personHsaId = '{}'. Result text: {}",
-                        employeeType.getPersonHsaId(),
-                        response.getResultText());
-                    throw new HsaServiceCallException(response.getResultText());
-                } else {
-                    LOG.warn("Failed getting employee information from HSA; personHsaId = '{}'. Result text: {}",
-                        employeeType.getPersonHsaId(),
-                        response.getResultText());
-                    LOG.warn("Continuing anyway because information was delivered with the ERROR code.");
-                }
+            if (response.getPersonInformation() == null || response.getPersonInformation().isEmpty()) {
+                throw new HsaServiceCallException(
+                    "Empty response returned from HSA GetEmployeeIncludingProtectedPerson; personHsaId = '" + employeeType.getPersonHsaId()
+                        + "'");
             }
-        } catch (SOAPFaultException e) {
-            throw new HsaServiceCallException(e);
+            return response.getPersonInformation();
+        } catch (SOAPFaultException soapFaultException) {
+            throw new HsaServiceCallException(soapFaultException);
         }
 
-        return response.getPersonInformation();
     }
 
-    private GetEmployeeIncludingProtectedPersonType createEmployeeType(String personHsaId, String personalIdentityNumber,
-        String searchBase) {
+    private GetEmployeeIncludingProtectedPersonType createEmployeeType(String personHsaId, String searchBase) {
         GetEmployeeIncludingProtectedPersonType employeeType = new GetEmployeeIncludingProtectedPersonType();
         employeeType.setPersonHsaId(personHsaId);
-        employeeType.setPersonalIdentityNumber(personalIdentityNumber);
         employeeType.setSearchBase(searchBase);
 
         return employeeType;

@@ -35,10 +35,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.infra.integration.hsa.client.OrganizationUnitService;
 import se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitMembersResponderStub;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersResponseType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.GetHealthCareUnitMembersResponseType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.GetHealthCareUnitMembersType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMembersType;
 
 /**
  * Created by eriklupander on 2016-10-19.
@@ -76,7 +75,6 @@ public class HsaOrganizationServiceCachingTest {
         HealthCareUnitMembersType healthCareUnitMembers = new HealthCareUnitMembersType();
         healthCareUnitMembers.setHealthCareUnitHsaId(UNIT_HSA_ID);
         resp.setHealthCareUnitMembers(healthCareUnitMembers);
-        resp.setResultCode(ResultCodeEnum.OK);
         return resp;
     }
 

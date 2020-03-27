@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<xs:schema xmlns:tns="urn:riv:infrastructure:directory:authorizationmanagement:2.3" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:riv:infrastructure:directory:authorizationmanagement:2.3" elementFormDefault="qualified" attributeFormDefault="unqualified"
+	version="2.3">
+
+	<xs:complexType name="HealthCareProfessionalLicenceType">
+		<xs:sequence>
+			<xs:element name="healthCareProfessionalLicenceCode" type="xs:string" />
+			<xs:element name="healthCareProfessionalLicenceName" type="xs:string" />
+			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="RestrictionType">
+		<xs:sequence>
+			<xs:element name="healthCareProfessionalLicenceCode" type="xs:string" />
+			<xs:element name="restrictionCode" type="xs:string" />
+			<xs:element name="restrictionName" type="xs:string" />
+			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	
+</xs:schema>

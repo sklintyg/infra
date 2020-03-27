@@ -20,7 +20,7 @@ package se.inera.intyg.infra.integration.hsa.client;
 
 import java.util.List;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
+import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
 /**
  * Note: Avoid using this class directly from external applications. Use
@@ -31,6 +31,6 @@ import se.riv.infrastructure.directory.v1.PersonInformationType;
  */
 public interface EmployeeService {
 
-    List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase)
+    List<PersonInformationType> getEmployee(String personHsaId, String searchBase)
         throws HsaServiceCallException;
 }

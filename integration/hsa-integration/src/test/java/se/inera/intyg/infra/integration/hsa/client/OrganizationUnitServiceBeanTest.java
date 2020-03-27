@@ -32,19 +32,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
-import se.riv.infrastructure.directory.organization.gethealthcareunit.v1.rivtabp21.GetHealthCareUnitResponderInterface;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v1.rivtabp21.GetHealthCareUnitMembersResponderInterface;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersResponseType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.GetHealthCareUnitResponseType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.GetHealthCareUnitType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.HealthCareUnitType;
-import se.riv.infrastructure.directory.organization.getunit.v1.rivtabp21.GetUnitResponderInterface;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitResponseType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+import se.riv.infrastructure.directory.organization.gethealthcareunit.v2.rivtabp21.GetHealthCareUnitResponderInterface;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v2.rivtabp21.GetHealthCareUnitMembersResponderInterface;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.GetHealthCareUnitMembersResponseType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.GetHealthCareUnitMembersType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMembersType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.GetHealthCareUnitResponseType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.GetHealthCareUnitType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
+import se.riv.infrastructure.directory.organization.getunit.v2.rivtabp21.GetUnitResponderInterface;
+import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitResponseType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
 
 /**
  * Created by eriklupander on 2016-03-11.
@@ -108,7 +107,6 @@ public class OrganizationUnitServiceBeanTest {
         HealthCareUnitMembersType healthCareUnitMembers = new HealthCareUnitMembersType();
         healthCareUnitMembers.setHealthCareUnitHsaId(TEST);
         resp.setHealthCareUnitMembers(healthCareUnitMembers);
-        resp.setResultCode(ResultCodeEnum.OK);
         return resp;
     }
 
@@ -117,7 +115,6 @@ public class OrganizationUnitServiceBeanTest {
         HealthCareUnitType healthCareUnit = new HealthCareUnitType();
         healthCareUnit.setHealthCareUnitHsaId(TEST);
         resp.setHealthCareUnit(healthCareUnit);
-        resp.setResultCode(ResultCodeEnum.OK);
         return resp;
     }
 
@@ -126,7 +123,6 @@ public class OrganizationUnitServiceBeanTest {
         UnitType unit = new UnitType();
         unit.setUnitHsaId(TEST);
         resp.setUnit(unit);
-        resp.setResultCode(ResultCodeEnum.OK);
         return resp;
     }
 }

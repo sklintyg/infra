@@ -28,8 +28,8 @@ import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.integration.hsa.util.HsaAttributeExtractor;
 import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
 import se.inera.intyg.infra.security.common.model.IntygUser;
-import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.HsaSystemRoleType;
+import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
 /**
  * Provides a number of default implementations for decorating a IntygUser principal with various information extracted

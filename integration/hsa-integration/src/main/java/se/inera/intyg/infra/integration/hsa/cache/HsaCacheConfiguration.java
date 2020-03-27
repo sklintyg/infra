@@ -31,10 +31,10 @@ import org.springframework.cache.interceptor.CacheResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.HealthCareUnitType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
+import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMembersType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
 
 /**
  * While the cacheManager.getCache(...) isn't strictly necessary for creating the cache used by {@link

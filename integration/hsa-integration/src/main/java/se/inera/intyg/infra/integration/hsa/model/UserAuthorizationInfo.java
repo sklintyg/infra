@@ -34,7 +34,7 @@ public class UserAuthorizationInfo {
     /**
      * Maps a careUnitId to the name of the actual commission the user has on that care unit. Used for PDL-logging.
      *
-     * See {@link se.riv.infrastructure.directory.v1.CommissionType#commissionName}
+     * See {@link se.riv.infrastructure.directory.authorizationmanagement.v2.CommissionType#getCommissionName()}
      */
     private Map<String, String> commissionNamePerCareUnit;
 

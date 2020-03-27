@@ -32,11 +32,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponderInterface;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonResponseType;
-import se.riv.infrastructure.directory.authorizationmanagement.v1.GetCredentialsForPersonIncludingProtectedPersonType;
-import se.riv.infrastructure.directory.v1.CredentialInformationType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+import se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedperson.v2.rivtabp21.GetCredentialsForPersonIncludingProtectedPersonResponderInterface;
+import se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedpersonresponder.v2.GetCredentialsForPersonIncludingProtectedPersonResponseType;
+import se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedpersonresponder.v2.GetCredentialsForPersonIncludingProtectedPersonType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
 
 /**
  * This test is a bit superfluent since the tested method has no branching or error handling
@@ -60,15 +59,27 @@ public class AuthorizationManagementServiceBeanTest {
         when(credzService.getCredentialsForPersonIncludingProtectedPerson(
             or(isNull(), anyString()),
             any(GetCredentialsForPersonIncludingProtectedPersonType.class))
-        ).thenReturn(buildResponse());
+        ).thenReturn(buildResponse(true));
 
-        List<CredentialInformationType> authorizationsForPerson = testee.getAuthorizationsForPerson(HSA_ID, null, null);
+        List<CredentialInformationType> authorizationsForPerson = testee.getAuthorizationsForPerson(HSA_ID, null);
         assertNotNull(authorizationsForPerson);
     }
 
-    private GetCredentialsForPersonIncludingProtectedPersonResponseType buildResponse() {
+    @Test(expected = HsaServiceCallException.class)
+    public void testEmptyResponseException() throws HsaServiceCallException {
+        when(credzService.getCredentialsForPersonIncludingProtectedPerson(
+            or(isNull(), anyString()),
+            any(GetCredentialsForPersonIncludingProtectedPersonType.class))
+        ).thenReturn(buildResponse(false));
+
+        testee.getAuthorizationsForPerson(HSA_ID, null);
+    }
+
+    private GetCredentialsForPersonIncludingProtectedPersonResponseType buildResponse(boolean hasData) {
         GetCredentialsForPersonIncludingProtectedPersonResponseType resp = new GetCredentialsForPersonIncludingProtectedPersonResponseType();
-        resp.setResultCode(ResultCodeEnum.OK);
+        if (hasData) {
+            resp.getCredentialInformation().add(new CredentialInformationType());
+        }
         return resp;
     }
 }

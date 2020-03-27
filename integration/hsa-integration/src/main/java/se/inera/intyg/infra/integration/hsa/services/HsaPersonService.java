@@ -20,8 +20,8 @@ package se.inera.intyg.infra.integration.hsa.services;
 
 import java.util.List;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
-import se.riv.infrastructure.directory.v1.CommissionType;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.CommissionType;
+import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
 public interface HsaPersonService {
 

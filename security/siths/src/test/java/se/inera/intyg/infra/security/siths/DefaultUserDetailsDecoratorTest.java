@@ -29,7 +29,7 @@ import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.security.common.model.AuthConstants;
 import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
 import se.inera.intyg.infra.security.common.model.IntygUser;
-import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.HsaSystemRoleType;
 
 /**
  * Created by eriklupander on 2016-05-19.

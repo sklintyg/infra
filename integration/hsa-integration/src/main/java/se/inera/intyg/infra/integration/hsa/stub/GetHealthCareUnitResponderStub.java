@@ -21,15 +21,11 @@ package se.inera.intyg.infra.integration.hsa.stub;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
-import se.riv.infrastructure.directory.organization.gethealthcareunit.v1.rivtabp21.GetHealthCareUnitResponderInterface;
-import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.GetHealthCareUnitResponseType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.GetHealthCareUnitType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.HealthCareUnitType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+import se.riv.infrastructure.directory.organization.gethealthcareunit.v2.rivtabp21.GetHealthCareUnitResponderInterface;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.GetHealthCareUnitResponseType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.GetHealthCareUnitType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
 
-/**
- * Created by eriklupander on 2015-12-08.
- */
 public class GetHealthCareUnitResponderStub implements GetHealthCareUnitResponderInterface {
 
     @Autowired
@@ -55,7 +51,6 @@ public class GetHealthCareUnitResponderStub implements GetHealthCareUnitResponde
             member.setUnitIsHealthCareUnit(false);
 
             responseType.setHealthCareUnit(member);
-            responseType.setResultCode(ResultCodeEnum.OK);
             return responseType;
         }
 
@@ -69,13 +64,9 @@ public class GetHealthCareUnitResponderStub implements GetHealthCareUnitResponde
             unit.setHealthCareProviderHsaId(vardenhet.getVardgivareHsaId());
             unit.setHealthCareProviderOrgNo(vardenhet.getVardgivareOrgnr());
             responseType.setHealthCareUnit(unit);
-            responseType.setResultCode(ResultCodeEnum.OK);
             return responseType;
         }
 
-        responseType
-            .setResultText("HsaServiceStub returned NULL Mottagning for hsaId: '" + parameters.getHealthCareUnitMemberHsaId() + "'");
-        responseType.setResultCode(ResultCodeEnum.ERROR);
         return responseType;
     }
 }

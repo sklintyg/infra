@@ -27,11 +27,17 @@
   http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
   <beans profile="dev,wc-all-stubs,wc-hsa-stub">
-    <jaxws:endpoint address="/stubs/infrastructure/directory/authorizationmanagement/GetCredentialsForPersonIncludingProtectedPerson/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetAuthorizationsForPersonResponderStub"/>
-    <jaxws:endpoint address="/stubs/infrastructure/directory/employee/GetEmployeeIncludingProtectedPerson/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetEmployeeResponderStub"/>
-    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetHealthCareUnit/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitResponderStub"/>
-    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetHealthCareUnitMembers/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitMembersResponderStub"/>
-    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetUnit/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetUnitResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/authorizationmanagement/GetCredentialsForPersonIncludingProtectedPerson/2/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetAuthorizationsForPersonResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/authorizationmanagement/GetHospCredentialsForPerson/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetHospCredentialsForPersonResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/authorizationmanagement/GetHospLastUpdate/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetHospLastUpdateResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/authorizationmanagement/HandleHospCertificationPerson/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.HandleHospCertificationPersonResponderStub"/>
+
+    <jaxws:endpoint address="/stubs/infrastructure/directory/employee/GetEmployeeIncludingProtectedPerson/2/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetEmployeeResponderStub"/>
+
+    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetHealthCareProvider/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareProviderResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetHealthCareUnit/2/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetHealthCareUnitMembers/2/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitMembersResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetUnit/2/rivtabp21" implementor="se.inera.intyg.infra.integration.hsa.stub.GetUnitResponderStub"/>
   </beans>
 
   <beans profile="dev,testability-api">

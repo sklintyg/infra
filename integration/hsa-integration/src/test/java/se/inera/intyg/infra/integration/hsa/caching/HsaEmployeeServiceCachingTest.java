@@ -37,10 +37,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.infra.integration.hsa.client.EmployeeService;
 import se.inera.intyg.infra.integration.hsa.stub.GetEmployeeResponderStub;
-import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonResponseType;
-import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v1.GetEmployeeIncludingProtectedPersonType;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v2.GetEmployeeIncludingProtectedPersonResponseType;
+import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v2.GetEmployeeIncludingProtectedPersonType;
+import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:HsaOrganizationServiceCachingTest/test-caching-context.xml")
@@ -61,11 +60,11 @@ public class HsaEmployeeServiceCachingTest {
             .setField(((Advised) employeeService).getTargetSource().getTarget(), "getEmployeeIncludingProtectedPersonResponderInterface",
                 stub);
 
-        List<PersonInformationType> employees = employeeService.getEmployee(PERSON_HSA_ID, null, null);
+        List<PersonInformationType> employees = employeeService.getEmployee(PERSON_HSA_ID, null);
         assertNotNull(employees);
         assertTrue(employees.size() == 1);
 
-        employees = employeeService.getEmployee(PERSON_HSA_ID, null, null);
+        employees = employeeService.getEmployee(PERSON_HSA_ID, null);
         assertNotNull(employees);
         assertTrue(employees.size() == 1);
 
@@ -77,7 +76,6 @@ public class HsaEmployeeServiceCachingTest {
         PersonInformationType personInformationType = new PersonInformationType();
         personInformationType.setPersonHsaId(PERSON_HSA_ID);
         resp.getPersonInformation().add(personInformationType);
-        resp.setResultCode(ResultCodeEnum.OK);
         return resp;
     }
 

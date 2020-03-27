@@ -22,13 +22,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import se.inera.intyg.infra.integration.hsa.model.AbstractVardenhet;
-import se.riv.infrastructure.directory.v1.AddressType;
+import se.riv.infrastructure.directory.organization.v2.AddressType;
 
 /**
  * Extracted from HsaOrganizationsServiceImpl and generalized so it can be used for both CareUnit
  * and Mottagning levels.
- *
- * Created by eriklupander on 2017-09-19.
  */
 public class HsaUnitAddressParser {
 

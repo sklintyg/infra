@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
-import se.riv.infrastructure.directory.v1.PaTitleType;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
+import se.riv.infrastructure.directory.employee.v2.PaTitleType;
+import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
 /**
  * Created by eriklupander on 2016-05-19.

@@ -35,7 +35,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.client.AuthorizationManagementService;
 import se.inera.intyg.infra.integration.hsa.client.EmployeeService;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
+import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HsaPersonServiceTest {
@@ -55,10 +55,10 @@ public class HsaPersonServiceTest {
     @Before
     public void setupExpectations() throws HsaServiceCallException {
 
-        when(employeeService.getEmployee(VALID_HSA_ID, null, null)).thenReturn(buildResponse());
+        when(employeeService.getEmployee(VALID_HSA_ID, null)).thenReturn(buildResponse());
 
         ArrayList<PersonInformationType> emptyResponse = new ArrayList<PersonInformationType>();
-        when(employeeService.getEmployee(INVALID_HSA_ID, null, null)).thenReturn(emptyResponse);
+        when(employeeService.getEmployee(INVALID_HSA_ID, null)).thenReturn(emptyResponse);
     }
 
     @Test

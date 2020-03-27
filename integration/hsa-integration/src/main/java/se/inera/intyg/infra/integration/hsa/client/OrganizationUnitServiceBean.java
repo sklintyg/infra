@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.integration.hsa.client;
 
 import com.google.common.annotations.VisibleForTesting;
+import javax.xml.ws.soap.SOAPFaultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +27,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
-import se.riv.infrastructure.directory.organization.gethealthcareunit.v1.rivtabp21.GetHealthCareUnitResponderInterface;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v1.rivtabp21.GetHealthCareUnitMembersResponderInterface;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersResponseType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.GetHealthCareUnitResponseType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.GetHealthCareUnitType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v1.HealthCareUnitType;
-import se.riv.infrastructure.directory.organization.getunit.v1.rivtabp21.GetUnitResponderInterface;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitResponseType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.GetUnitType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+import se.riv.infrastructure.directory.organization.gethealthcareunit.v2.rivtabp21.GetHealthCareUnitResponderInterface;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v2.rivtabp21.GetHealthCareUnitMembersResponderInterface;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.GetHealthCareUnitMembersResponseType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.GetHealthCareUnitMembersType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMembersType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.GetHealthCareUnitResponseType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.GetHealthCareUnitType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
+import se.riv.infrastructure.directory.organization.getunit.v2.rivtabp21.GetUnitResponderInterface;
+import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitResponseType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
 
 /**
  * Provides a common interface to the {@link GetUnitResponderInterface}, {@link GetHealthCareUnitResponderInterface} and
@@ -68,18 +68,18 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
     public UnitType getUnit(String unitHsaId) throws HsaServiceCallException {
         GetUnitType parameters = new GetUnitType();
         parameters.setUnitHsaId(unitHsaId);
-        GetUnitResponseType unitResponse = getUnitResponderInterface.getUnit(logicalAddress, parameters);
 
-        if (unitResponse.getResultCode() == ResultCodeEnum.ERROR) {
+        try {
+            GetUnitResponseType unitResponse = getUnitResponderInterface.getUnit(logicalAddress, parameters);
+
             if (unitResponse.getUnit() == null || unitResponse.getUnit().getUnitHsaId() == null) {
-                LOG.error("Error received when calling GetUnit for {}, result text: {}", unitHsaId, unitResponse.getResultText());
                 throw new HsaServiceCallException("Could not GetUnit for hsaId " + unitHsaId);
-            } else {
-                LOG.warn("Error received when calling GetUnit for {}, result text: {}", unitHsaId, unitResponse.getResultText());
-                LOG.warn("Continuing anyway because information was delivered with the ERROR code.");
             }
+            return unitResponse.getUnit();
+
+        } catch (SOAPFaultException soapFaultException) {
+            throw new HsaServiceCallException(soapFaultException);
         }
-        return unitResponse.getUnit();
     }
 
     @Override
@@ -87,18 +87,18 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
     public HealthCareUnitType getHealthCareUnit(String hsaId) throws HsaServiceCallException {
         GetHealthCareUnitType parameters = new GetHealthCareUnitType();
         parameters.setHealthCareUnitMemberHsaId(hsaId);
-        GetHealthCareUnitResponseType response = getHealthCareUnitResponderInterface.getHealthCareUnit(logicalAddress, parameters);
 
-        if (response.getResultCode() == ResultCodeEnum.ERROR) {
+        try {
+            GetHealthCareUnitResponseType response = getHealthCareUnitResponderInterface.getHealthCareUnit(logicalAddress, parameters);
+
             if (response.getHealthCareUnit() == null || response.getHealthCareUnit().getHealthCareUnitHsaId() == null) {
-                LOG.error("Error received when calling GetHealthCareUnit for {}, result text: {}", hsaId, response.getResultText());
                 throw new HsaServiceCallException("Could not GetHealthCareUnit for hsaId " + hsaId);
-            } else {
-                LOG.warn("Error received when calling GetHealthCareUnit for {}, result text: {}", hsaId, response.getResultText());
-                LOG.warn("Continuing anyway because information was delivered with the ERROR code.");
             }
+
+            return response.getHealthCareUnit();
+        } catch (SOAPFaultException soapFaultException) {
+            throw new HsaServiceCallException(soapFaultException);
         }
-        return response.getHealthCareUnit();
     }
 
     @Override
@@ -106,21 +106,19 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
     public HealthCareUnitMembersType getHealthCareUnitMembers(String unitHsaId) throws HsaServiceCallException {
         GetHealthCareUnitMembersType parameters = new GetHealthCareUnitMembersType();
         parameters.setHealthCareUnitHsaId(unitHsaId);
-        GetHealthCareUnitMembersResponseType response = getHealthCareUnitMembersResponderInterface.getHealthCareUnitMembers(logicalAddress,
-            parameters);
 
-        if (response.getResultCode() == ResultCodeEnum.ERROR) {
+        try {
+            GetHealthCareUnitMembersResponseType response = getHealthCareUnitMembersResponderInterface
+                .getHealthCareUnitMembers(logicalAddress,
+                    parameters);
+
             if (response.getHealthCareUnitMembers() == null || response.getHealthCareUnitMembers().getHealthCareUnitHsaId() == null) {
-                LOG.error("Error received when calling GetHealthCareUnitMembers for {}, result text: {}", unitHsaId,
-                    response.getResultText());
                 throw new HsaServiceCallException("Could not GetHealthCareUnitMembers for hsaId " + unitHsaId);
-            } else {
-                LOG.warn("Error received when calling GetHealthCareUnitMembers for {}, result text: {}", unitHsaId,
-                    response.getResultText());
-                LOG.warn("Continuing even though the information was delivered together with and ERROR code.");
             }
+            return response.getHealthCareUnitMembers();
+        } catch (SOAPFaultException soapFaultException) {
+            throw new HsaServiceCallException(soapFaultException);
         }
-        return response.getHealthCareUnitMembers();
     }
 
     @VisibleForTesting

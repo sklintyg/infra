@@ -25,13 +25,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-import se.riv.infrastructure.directory.v1.PaTitleType;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
+import se.riv.infrastructure.directory.employee.v2.PaTitleType;
+import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
 /**
  * Helper class for extracting certain HoSP attributes.
- *
- * Created by eriklupander on 2016-05-19.
  */
 public class HsaAttributeExtractor {
 

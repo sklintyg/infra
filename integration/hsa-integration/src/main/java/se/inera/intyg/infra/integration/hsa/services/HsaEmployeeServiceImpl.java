@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.client.EmployeeService;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
+import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
 /**
  * Created by Magnus Ekstrand on 28/05/15.
@@ -40,9 +40,9 @@ public class HsaEmployeeServiceImpl implements HsaEmployeeService {
     private EmployeeService employeeService;
 
     @Override
-    public List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber) throws WebServiceException {
+    public List<PersonInformationType> getEmployee(String personHsaId) throws WebServiceException {
         try {
-            return employeeService.getEmployee(personHsaId, personalIdentityNumber, null);
+            return employeeService.getEmployee(personHsaId, null);
         } catch (HsaServiceCallException e) {
             LOG.error(e.getMessage());
             throw new WebServiceException(e.getMessage());
@@ -50,10 +50,10 @@ public class HsaEmployeeServiceImpl implements HsaEmployeeService {
     }
 
     @Override
-    public List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase)
+    public List<PersonInformationType> getEmployee(String personHsaId, String searchBase)
         throws WebServiceException {
         try {
-            return employeeService.getEmployee(personHsaId, personalIdentityNumber, searchBase);
+            return employeeService.getEmployee(personHsaId, searchBase);
         } catch (HsaServiceCallException e) {
             LOG.error(e.getMessage());
             throw new WebServiceException(e.getMessage());

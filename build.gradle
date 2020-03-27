@@ -1,14 +1,12 @@
 plugins {
     id "se.inera.intyg.plugin.common" version "2.0.11" apply false
+    id "no.nils.wsdl2java" version "0.12" apply false
 }
 
 ext {
     funktionstjansterGrpSchemasVersion = "1.0.6"
 
-    rivtaDirectoryOrganizationSchemasVersion = "1.1.RC5.6"
     rivtaStoreLogSchemasVersion = "2.0.1"
-    rivtaHsaAuthorizationmanagementSchemasVersion = "1.0.RC4.6"
-    rivtaHsaEmployeeSchemasVersion = "1.0.RC4.6"
     rivtaGetPersonsPersonSchemasVersion = "3.1.1"
 
     intygClinicalprocessSchemasVersion = "1.0.23"
@@ -16,11 +14,13 @@ ext {
     srsSchemasVersion = "0.0.13"
 
     schemasContractVersion = "2.1.8"
+    schemasSupportVersion = "2.1.5"
 
     springDataRedisVersion = "1.8.12.RELEASE"
     commonsIoVersion = "2.4"
     commonsLangVersion = "3.8.1"
     commonsCollectionsVersion = "4.2"
+    jaxb2Version = "1.11.1"
     cxfVersion = "3.2.4"
     guavaVersion = "14.0.1"
     hamcrestVersion = "1.3"

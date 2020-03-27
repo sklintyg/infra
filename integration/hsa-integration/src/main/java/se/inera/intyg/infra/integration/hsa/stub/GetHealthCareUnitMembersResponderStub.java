@@ -22,17 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v1.rivtabp21.GetHealthCareUnitMembersResponderInterface;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersResponseType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.GetHealthCareUnitMembersType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMemberType;
-import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v1.HealthCareUnitMembersType;
-import se.riv.infrastructure.directory.v1.AddressType;
-import se.riv.infrastructure.directory.v1.ResultCodeEnum;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v2.rivtabp21.GetHealthCareUnitMembersResponderInterface;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.GetHealthCareUnitMembersResponseType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.GetHealthCareUnitMembersType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMemberType;
+import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMembersType;
+import se.riv.infrastructure.directory.organization.v2.AddressType;
 
-/**
- * Created by eriklupander on 2015-12-04.
- */
+
 public class GetHealthCareUnitMembersResponderStub implements GetHealthCareUnitMembersResponderInterface {
 
     @Autowired
@@ -42,8 +39,6 @@ public class GetHealthCareUnitMembersResponderStub implements GetHealthCareUnitM
     public GetHealthCareUnitMembersResponseType getHealthCareUnitMembers(String logicalAddress, GetHealthCareUnitMembersType parameters) {
         GetHealthCareUnitMembersResponseType response = new GetHealthCareUnitMembersResponseType();
         if (parameters.getHealthCareUnitHsaId().endsWith("-finns-ej")) {
-            response.setResultText("Returning ERROR for -finns-ej hsaId");
-            response.setResultCode(ResultCodeEnum.ERROR);
             return response;
         }
 
@@ -52,7 +47,6 @@ public class GetHealthCareUnitMembersResponderStub implements GetHealthCareUnitM
         updateUnit(membersType, parameters.getHealthCareUnitHsaId());
 
         response.setHealthCareUnitMembers(membersType);
-        response.setResultCode(ResultCodeEnum.OK);
         return response;
     }
 
@@ -62,6 +56,7 @@ public class GetHealthCareUnitMembersResponderStub implements GetHealthCareUnitM
             for (Vardenhet enhet : vardgivare.getVardenheter()) {
                 if (enhet.getId().equals(unitHsaId)) {
                     membersType.getHealthCareUnitPrescriptionCode().add(enhet.getArbetsplatskod());
+                    membersType.setHealthCareUnitHsaId(unitHsaId);
 
                     for (Mottagning mottagning : enhet.getMottagningar()) {
                         if (mottagning.getId().endsWith("-finns-ej")) {
