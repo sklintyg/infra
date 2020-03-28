@@ -26,7 +26,7 @@ dependencies {
 
     compile "com.google.guava:guava:${guavaVersion}"
 
-    //testCompile "org.hamcrest:hamcrest"
-    //testCompile "org.hamcrest:hamcrest-all:${hamcrestVersion}"
+    testCompile "org.hamcrest:hamcrest"
+    testCompile "org.hamcrest:hamcrest-library"
     testCompile "org.mockito:mockito-core"
 }

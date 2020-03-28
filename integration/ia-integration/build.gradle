@@ -17,7 +17,8 @@ dependencies {
   runtime "org.springframework:spring-context-support"
 
   testCompile "org.springframework:spring-test"
-  //testCompile "org.hamcrest:hamcrest"
-  //testCompile "org.hamcrest:hamcrest-all:${hamcrestVersion}"
+  testCompile "org.hamcrest:hamcrest"
+  testCompile "org.hamcrest:hamcrest-library"
+
   testCompile "it.ozimov:embedded-redis:${embeddedRedisVersion}"
 }
