@@ -26,11 +26,15 @@
   <context:component-scan base-package="se.inera.intyg.infra.integration.hsa.services"/>
 
 
-  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetAuthorizationsForPersonResponderStub" />
-  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetEmployeeResponderStub" />
-  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitResponderStub" />
-  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetUnitResponderStub" />
-  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitMembersResponderStub" />
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetAuthorizationsForPersonResponderStub"/>
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetHospCredentialsForPersonResponderStub"/>
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetHospLastUpdateResponderStub"/>
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.HandleHospCertificationPersonResponderStub"/>
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetEmployeeResponderStub"/>
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareProviderResponderStub"/>
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitResponderStub"/>
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetUnitResponderStub"/>
+  <bean class="se.inera.intyg.infra.integration.hsa.stub.GetHealthCareUnitMembersResponderStub"/>
 
   <bean class="se.inera.intyg.infra.integration.hsa.stub.HsaServiceStub" />
 

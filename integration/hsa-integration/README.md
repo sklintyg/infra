@@ -59,28 +59,35 @@ All JSON files within classpath:/bootstrap-medarbetaruppdrag and classpath:/boot
 The HSA-integration requires the following properties being set:
 
 #### URLs and NTjP access
-- infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedpersonresponderinterface.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/authorizationmanagement/GetCredentialsForPersonIncludingProtectedPerson/1/rivtabp21
-- infrastructure.directory.organization.getunit.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/organization/GetUnit/1/rivtabp21
-- infrastructure.directory.organization.gethealthcareunit.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/organization/GetHealthCareUnit/1/rivtabp21
-- infrastructure.directory.organization.gethealthcareunitmembers.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/organization/GetHealthCareUnitMembers/1/rivtabp21
-- infrastructure.directory.employee.getemployee.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/employee/GetEmployeeIncludingProtectedPerson/1/rivtabp21
-- infrastructure.directory.logicalAddress=SE165565594230-1000
+- `infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedperson.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/authorizationmanagement/GetCredentialsForPersonIncludingProtectedPerson/2/rivtabp21`
+- EJ TAKAD `infrastructure.directory.authorizationmanagement.gethospcredentialsforperson.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/authorizationmanagement/GetHospCredentialsForPerson/1/rivtabp21`
+- EJ TAKAD `infrastructure.directory.authorizationmanagement.gethosplastupdate.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/authorizationmanagement/GetHospLastUpdate/1/rivtabp21`
+- EJ TAKAD `infrastructure.directory.authorizationmanagement.handlehospcertificationperson.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/authorizationmanagement/HandleHospCertificationPerson/1/rivtabp21`
 
-- ntjp.ws.certificate.file=${config.dir}/certifikat/[our cert]
-- ntjp.ws.certificate.type=JKS
-- ntjp.ws.truststore.file=${config.dir}/certifikat/[the truststore]
-- ntjp.ws.truststore.type=JKS
+- `infrastructure.directory.employee.getemployee.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/employee/GetEmployeeIncludingProtectedPerson/2/rivtabp21`
+
+- EJ TAKAD `infrastructure.directory.organization.gethealthcareprovider.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/organization/GetHealthCareProvider/1/rivtabp21`
+- `infrastructure.directory.organization.gethealthcareunit.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/organization/GetHealthCareUnit/2/rivtabp21`
+- `infrastructure.directory.organization.gethealthcareunitmembers.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/organization/GetHealthCareUnitMembers/2/rivtabp21`
+- `infrastructure.directory.organization.getunit.endpoint.url=[ntjp hostname]/vp/infrastructure/directory/organization/GetUnit/2/rivtabp21`
+
+- `infrastructure.directory.logicalAddress=SE165565594230-1000`
+
+- `ntjp.ws.certificate.file=${config.dir}/certifikat/[our cert]`
+- `ntjp.ws.certificate.type=PKCS12`
+- `ntjp.ws.truststore.file=${config.dir}/certifikat/[the truststore]`
+- `ntjp.ws.truststore.type=JKS`
 
 #### Credentials
-- ntjp.ws.certificate.password=[some password]
-- ntjp.ws.key.manager.password=[some password]
-- ntjp.ws.truststore.password=[some password]
+- `ntjp.ws.certificate.password=[some password]`
+- `ntjp.ws.key.manager.password=[some password]`
+- `ntjp.ws.truststore.password=[some password]`
 
 # Dynamisk laddning av medarbetaruppdrag och vårdgivare
 Från och med Webcert 5.3 och Rehabstöd 1.4 (develop) kan man dynamiskt skapa upp fejkinloggningsidentiteter genom att kopiera in JSON-dokument i utvalda mappar på målmiljön. Se nedan.
 Se till att följande property finns i t.ex. rehabstod.properties:
 
-    hsa.stub.additional.identities.folder=${rehabstod.resources.folder}/hsadata
+`hsa.stub.additional.identities.folder=${rehabstod.resources.folder}/hsadata`
 
 Den utpekade katalogen (t.ex. /opt/inera/rehabstod-resources/hsadata kommer få två tomma kataloger i sig efter uppstart: _/person_ och _/vardgivare_
 

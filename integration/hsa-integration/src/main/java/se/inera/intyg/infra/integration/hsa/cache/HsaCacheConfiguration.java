@@ -65,10 +65,10 @@ public class HsaCacheConfiguration {
     @Value("${" + HSA_HEALHCAREUNITMEMBERS_CACHE_EXPIRY + "}")
     private String hsaHeathCareUnitMembersCacheExpirySeconds;
 
-    @Value("${" + HSA_EMPLOYEE_CACHE_EXPIRY + ":60}")
+    @Value("${" + HSA_EMPLOYEE_CACHE_EXPIRY + "}")
     private String hsaEmployeeCacheExpirySeconds;
 
-    @Value("${app.name:noname}")
+    @Value("${app.name}")
     private String appName;
 
 

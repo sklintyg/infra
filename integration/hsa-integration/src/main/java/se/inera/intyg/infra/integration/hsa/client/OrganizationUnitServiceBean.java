@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.integration.hsa.client;
 
 import com.google.common.annotations.VisibleForTesting;
+import java.util.List;
 import javax.xml.ws.soap.SOAPFaultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
+import se.riv.infrastructure.directory.organization.gethealthcareprovider.v1.rivtabp21.GetHealthCareProviderResponderInterface;
+import se.riv.infrastructure.directory.organization.gethealthcareproviderresponder.v1.GetHealthCareProviderResponseType;
+import se.riv.infrastructure.directory.organization.gethealthcareproviderresponder.v1.GetHealthCareProviderType;
+import se.riv.infrastructure.directory.organization.gethealthcareproviderresponder.v1.HealthCareProviderType;
 import se.riv.infrastructure.directory.organization.gethealthcareunit.v2.rivtabp21.GetHealthCareUnitResponderInterface;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v2.rivtabp21.GetHealthCareUnitMembersResponderInterface;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.GetHealthCareUnitMembersResponseType;
@@ -59,6 +64,9 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
 
     @Autowired
     private GetHealthCareUnitMembersResponderInterface getHealthCareUnitMembersResponderInterface;
+
+    @Autowired
+    private GetHealthCareProviderResponderInterface getHealthCareProviderResponderInterface;
 
     @Value("${infrastructure.directory.logicalAddress}")
     private String logicalAddress;
@@ -116,6 +124,26 @@ public class OrganizationUnitServiceBean implements OrganizationUnitService {
                 throw new HsaServiceCallException("Could not GetHealthCareUnitMembers for hsaId " + unitHsaId);
             }
             return response.getHealthCareUnitMembers();
+        } catch (SOAPFaultException soapFaultException) {
+            throw new HsaServiceCallException(soapFaultException);
+        }
+    }
+
+    @Override
+    public List<HealthCareProviderType> getHealthCareProvider(String healthCareProviderHsaId)
+        throws HsaServiceCallException {
+        GetHealthCareProviderType parameters = new GetHealthCareProviderType();
+        parameters.setHealthCareProviderHsaId(healthCareProviderHsaId);
+
+        try {
+            GetHealthCareProviderResponseType response = getHealthCareProviderResponderInterface
+                .getHealthCareProvider(logicalAddress,
+                    parameters);
+
+            if (response.getHealthCareProvider().isEmpty()) {
+                throw new HsaServiceCallException("Could not GetHealthCareProvider for hsaId " + healthCareProviderHsaId);
+            }
+            return response.getHealthCareProvider();
         } catch (SOAPFaultException soapFaultException) {
             throw new HsaServiceCallException(soapFaultException);
         }

@@ -20,6 +20,10 @@ package se.inera.intyg.infra.integration.hsa.client;
 
 import java.util.List;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
+import se.riv.infrastructure.directory.authorizationmanagement.gethospcredentialsforpersonresponder.v1.GetHospCredentialsForPersonResponseType;
+import se.riv.infrastructure.directory.authorizationmanagement.gethosplastupdateresponder.v1.GetHospLastUpdateResponseType;
+import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertificationpersonresponder.v1.HandleHospCertificationPersonResponseType;
+import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertificationpersonresponder.v1.OperationEnum;
 import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
 
 /**
@@ -34,4 +38,13 @@ import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInfo
 public interface AuthorizationManagementService {
 
     List<CredentialInformationType> getAuthorizationsForPerson(String personHsaId, String searchBase) throws HsaServiceCallException;
+
+    GetHospCredentialsForPersonResponseType getHospCredentialsForPerson(String personHsaId) throws HsaServiceCallException;
+
+    GetHospLastUpdateResponseType getHospLastUpdate() throws HsaServiceCallException;
+
+    HandleHospCertificationPersonResponseType handleHospCertificationPerson(String personId, OperationEnum operation,
+        String certificationId,
+        String reason) throws HsaServiceCallException;
+
 }

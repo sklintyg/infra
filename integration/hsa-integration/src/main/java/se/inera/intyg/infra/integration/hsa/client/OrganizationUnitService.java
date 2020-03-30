@@ -18,7 +18,9 @@
  */
 package se.inera.intyg.infra.integration.hsa.client;
 
+import java.util.List;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
+import se.riv.infrastructure.directory.organization.gethealthcareproviderresponder.v1.HealthCareProviderType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMembersType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
@@ -37,4 +39,8 @@ public interface OrganizationUnitService {
     HealthCareUnitType getHealthCareUnit(String hsaId) throws HsaServiceCallException;
 
     HealthCareUnitMembersType getHealthCareUnitMembers(String unitHsaId) throws HsaServiceCallException;
+
+    List<HealthCareProviderType> getHealthCareProvider(String healthCareProviderHsaId)
+        throws HsaServiceCallException;
+
 }

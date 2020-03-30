@@ -37,9 +37,7 @@ public class HsaAttributeExtractor {
         Set<String> specSet = new TreeSet<>();
 
         for (PersonInformationType userType : hsaUserTypes) {
-            if (userType.getSpecialityName() != null) {
-                specSet.addAll(userType.getSpecialityName());
-            }
+            specSet.addAll(userType.getSpecialityName());
         }
 
         return new ArrayList<>(specSet);
@@ -49,14 +47,12 @@ public class HsaAttributeExtractor {
         Set<String> befattningar = new TreeSet<>();
 
         for (PersonInformationType userType : hsaPersonInfo) {
-            if (userType.getPaTitle() != null) {
-                List<String> hsaTitles = userType.getPaTitle().stream()
-                    .map(PaTitleType::getPaTitleCode)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-                if (hsaTitles.size() > 0) {
-                    befattningar.addAll(hsaTitles);
-                }
+            List<String> hsaTitles = userType.getPaTitle().stream()
+                .map(PaTitleType::getPaTitleCode)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+            if (hsaTitles.size() > 0) {
+                befattningar.addAll(hsaTitles);
             }
         }
         return new ArrayList<>(befattningar);
@@ -66,9 +62,7 @@ public class HsaAttributeExtractor {
         Set<String> lygSet = new TreeSet<>();
 
         for (PersonInformationType userType : hsaUserTypes) {
-            if (userType.getHealthCareProfessionalLicence() != null) {
-                lygSet.addAll(userType.getHealthCareProfessionalLicence());
-            }
+            lygSet.addAll(userType.getHealthCareProfessionalLicence());
         }
         return new ArrayList<>(lygSet);
     }

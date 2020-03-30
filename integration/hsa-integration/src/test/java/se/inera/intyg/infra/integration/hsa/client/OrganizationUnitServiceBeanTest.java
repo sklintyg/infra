@@ -26,12 +26,17 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
+import se.riv.infrastructure.directory.organization.gethealthcareprovider.v1.rivtabp21.GetHealthCareProviderResponderInterface;
+import se.riv.infrastructure.directory.organization.gethealthcareproviderresponder.v1.GetHealthCareProviderResponseType;
+import se.riv.infrastructure.directory.organization.gethealthcareproviderresponder.v1.GetHealthCareProviderType;
+import se.riv.infrastructure.directory.organization.gethealthcareproviderresponder.v1.HealthCareProviderType;
 import se.riv.infrastructure.directory.organization.gethealthcareunit.v2.rivtabp21.GetHealthCareUnitResponderInterface;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v2.rivtabp21.GetHealthCareUnitMembersResponderInterface;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.GetHealthCareUnitMembersResponseType;
@@ -62,6 +67,9 @@ public class OrganizationUnitServiceBeanTest {
 
     @Mock
     private GetHealthCareUnitMembersResponderInterface getHealthCareUnitMembersResponderInterface;
+
+    @Mock
+    private GetHealthCareProviderResponderInterface getHealthCareProviderResponderInterface;
 
     @InjectMocks
     private OrganizationUnitServiceBean testee;
@@ -100,6 +108,26 @@ public class OrganizationUnitServiceBeanTest {
         HealthCareUnitMembersType response = testee.getHealthCareUnitMembers(UNIT_HSA_ID);
         assertNotNull(response);
         assertEquals(TEST, response.getHealthCareUnitHsaId());
+    }
+
+    @Test
+    public void getHealthCareProvider() throws HsaServiceCallException {
+        when(getHealthCareProviderResponderInterface.getHealthCareProvider(
+            or(isNull(), anyString()),
+            any(GetHealthCareProviderType.class))
+        ).thenReturn(buildHealthCareProviderResponse());
+
+        List<HealthCareProviderType> response = testee.getHealthCareProvider(UNIT_HSA_ID);
+        assertNotNull(response);
+        assertEquals(TEST, response.get(0).getHealthCareProviderHsaId());
+    }
+
+    private GetHealthCareProviderResponseType buildHealthCareProviderResponse() {
+        GetHealthCareProviderResponseType resp = new GetHealthCareProviderResponseType();
+        HealthCareProviderType healthCareProviderType = new HealthCareProviderType();
+        healthCareProviderType.setHealthCareProviderHsaId(TEST);
+        resp.getHealthCareProvider().add(healthCareProviderType);
+        return resp;
     }
 
     private GetHealthCareUnitMembersResponseType buildHealthCareUnitMembersResponse() {

@@ -75,7 +75,7 @@ public class EmployeeServiceBean implements EmployeeService {
                 .getEmployeeIncludingProtectedPerson(logicalAddress,
                     employeeType);
 
-            if (response.getPersonInformation() == null || response.getPersonInformation().isEmpty()) {
+            if (response.getPersonInformation().isEmpty()) {
                 throw new HsaServiceCallException(
                     "Empty response returned from HSA GetEmployeeIncludingProtectedPerson; personHsaId = '" + employeeType.getPersonHsaId()
                         + "'");

@@ -29,6 +29,13 @@ import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedperson.v2.rivtabp21.GetCredentialsForPersonIncludingProtectedPersonResponderInterface;
 import se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedpersonresponder.v2.GetCredentialsForPersonIncludingProtectedPersonResponseType;
 import se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedpersonresponder.v2.GetCredentialsForPersonIncludingProtectedPersonType;
+import se.riv.infrastructure.directory.authorizationmanagement.gethospcredentialsforperson.v1.rivtabp21.GetHospCredentialsForPersonResponderInterface;
+import se.riv.infrastructure.directory.authorizationmanagement.gethospcredentialsforpersonresponder.v1.GetHospCredentialsForPersonResponseType;
+import se.riv.infrastructure.directory.authorizationmanagement.gethosplastupdate.v1.rivtabp21.GetHospLastUpdateResponderInterface;
+import se.riv.infrastructure.directory.authorizationmanagement.gethosplastupdateresponder.v1.GetHospLastUpdateResponseType;
+import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertificationperson.v1.rivtabp21.HandleHospCertificationPersonResponderInterface;
+import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertificationpersonresponder.v1.HandleHospCertificationPersonResponseType;
+import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertificationpersonresponder.v1.OperationEnum;
 import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
 
 /**
@@ -44,6 +51,15 @@ public class AuthorizationManagementServiceBean implements AuthorizationManageme
     @Autowired
     private GetCredentialsForPersonIncludingProtectedPersonResponderInterface getCredentialsForPersonIncludingProtectedPersonResponderInterface;
 
+    @Autowired
+    private GetHospCredentialsForPersonResponderInterface getHospCredentialsForPersonResponderInterface;
+
+    @Autowired
+    private GetHospLastUpdateResponderInterface getHospLastUpdateResponderInterface;
+
+    @Autowired
+    private HandleHospCertificationPersonResponderInterface handleHospCertificationPersonResponderInterface;
+
     @Value("${infrastructure.directory.logicalAddress}")
     private String logicalAddress;
 
@@ -57,7 +73,7 @@ public class AuthorizationManagementServiceBean implements AuthorizationManageme
             GetCredentialsForPersonIncludingProtectedPersonResponseType response = getCredentialsForPersonIncludingProtectedPersonResponderInterface
                 .getCredentialsForPersonIncludingProtectedPerson(logicalAddress, parameters);
 
-            if (response.getCredentialInformation() == null || response.getCredentialInformation().isEmpty()) {
+            if (response.getCredentialInformation().isEmpty()) {
                 throw new HsaServiceCallException(
                     "Empty response returned from HSA GetCredentialsForPersonIncludingProtectedPerson; personHsaId = '" + parameters
                         .getPersonHsaId()
@@ -67,5 +83,21 @@ public class AuthorizationManagementServiceBean implements AuthorizationManageme
         } catch (SOAPFaultException soapFaultException) {
             throw new HsaServiceCallException(soapFaultException);
         }
+    }
+
+    @Override
+    public GetHospCredentialsForPersonResponseType getHospCredentialsForPerson(String personHsaId) throws HsaServiceCallException {
+        return null;
+    }
+
+    @Override
+    public GetHospLastUpdateResponseType getHospLastUpdate() throws HsaServiceCallException {
+        return null;
+    }
+
+    @Override
+    public HandleHospCertificationPersonResponseType handleHospCertificationPerson(String personId, OperationEnum operation,
+        String certificationId, String reason) throws HsaServiceCallException {
+        return null;
     }
 }

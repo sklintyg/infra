@@ -1,5 +1,3 @@
-import java.nio.charset.StandardCharsets
-
 apply plugin: 'no.nils.wsdl2java'
 
 dependencies {
@@ -30,6 +28,12 @@ dependencies {
   testCompile "it.ozimov:embedded-redis:${embeddedRedisVersion}"
 }
 
+if (project.hasProperty("codeQuality")) {
+  license {
+    // Passed on package and not files directory
+    exclude "**/riv/**/*.java"
+  }
+}
 wsdl2java {
   wsdlDir = file("src/main/resources/schemas")
 
@@ -39,7 +43,7 @@ wsdl2java {
           "urn:riv:itintegration:registry:1=se.riv.itintegration.registry.v1"
   ]
 
-  def commonEmployeeOptions = commonOptions+ [
+  def commonEmployeeOptions = commonOptions + [
           "-p",
           "urn:riv:infrastructure:directory:employee:2=se.riv.infrastructure.directory.employee.v2",
           "-p",
@@ -112,46 +116,47 @@ wsdl2java {
 
   wsdlsToGenerate = [
           commonEmployeeOptions + [
-            "-wsdlLocation",
-            "classpath:schemas/employee_2_2/interactions/GetEmployeeIncludingProtectedPersonInteraction/GetEmployeeIncludingProtectedPersonInteraction_2.2_RIVTABP21.wsdl",
-            "$projectDir/src/main/resources/schemas/employee_2_2/interactions/GetEmployeeIncludingProtectedPersonInteraction/GetEmployeeIncludingProtectedPersonInteraction_2.2_RIVTABP21.wsdl"],
+                  "-wsdlLocation",
+                  "classpath:schemas/employee_2/interactions/GetEmployeeIncludingProtectedPersonInteraction/GetEmployeeIncludingProtectedPersonInteraction_2.2_RIVTABP21.wsdl",
+                  "$projectDir/src/main/resources/schemas/employee_2/interactions/GetEmployeeIncludingProtectedPersonInteraction/GetEmployeeIncludingProtectedPersonInteraction_2.2_RIVTABP21.wsdl"],
           commonAuthorizationOptions + [
-            "-wsdlLocation",
-            "classpath:schemas/authorizationmanagement_2_3/interactions/GetCredentialsForPersonIncludingProtectedPersonInteraction/GetCredentialsForPersonIncludingProtectedPersonInteraction_2.2_RIVTABP21.wsdl",
-            "$projectDir/src/main/resources/schemas/authorizationmanagement_2_3/interactions/GetCredentialsForPersonIncludingProtectedPersonInteraction/GetCredentialsForPersonIncludingProtectedPersonInteraction_2.2_RIVTABP21.wsdl"],
+                  "-wsdlLocation",
+                  "classpath:schemas/authorizationmanagement_2/interactions/GetCredentialsForPersonIncludingProtectedPersonInteraction/GetCredentialsForPersonIncludingProtectedPersonInteraction_2.2_RIVTABP21.wsdl",
+                  "$projectDir/src/main/resources/schemas/authorizationmanagement_2/interactions/GetCredentialsForPersonIncludingProtectedPersonInteraction/GetCredentialsForPersonIncludingProtectedPersonInteraction_2.2_RIVTABP21.wsdl"],
           commonAuthorizationOptions + [
-            "-wsdlLocation",
-            "classpath:schemas/authorizationmanagement_2_3/interactions/GetHospCredentialsForPersonInteraction/GetHospCredentialsForPersonInteraction/GetHospCredentialsForPersonInteraction_1.0_RIVTABP21.wsdl",
-            "$projectDir/src/main/resources/schemas/authorizationmanagement_2_3/interactions/GetHospCredentialsForPersonInteraction/GetHospCredentialsForPersonInteraction_1.0_RIVTABP21.wsdl"],
+                  "-wsdlLocation",
+                  "classpath:schemas/authorizationmanagement_2/interactions/GetHospCredentialsForPersonInteraction/GetHospCredentialsForPersonInteraction/GetHospCredentialsForPersonInteraction_1.0_RIVTABP21.wsdl",
+                  "$projectDir/src/main/resources/schemas/authorizationmanagement_2/interactions/GetHospCredentialsForPersonInteraction/GetHospCredentialsForPersonInteraction_1.0_RIVTABP21.wsdl"],
           commonAuthorizationOptions + [
-            "-wsdlLocation",
-            "classpath:schemas/authorizationmanagement_2_3/interactions/GetHospLastUpdateInteraction/GetHospLastUpdateInteraction_1.0_RIVTABP21.wsdl",
-            "$projectDir/src/main/resources/schemas/authorizationmanagement_2_3/interactions/GetHospLastUpdateInteraction/GetHospLastUpdateInteraction_1.0_RIVTABP21.wsdl"],
+                  "-wsdlLocation",
+                  "classpath:schemas/authorizationmanagement_2/interactions/GetHospLastUpdateInteraction/GetHospLastUpdateInteraction_1.0_RIVTABP21.wsdl",
+                  "$projectDir/src/main/resources/schemas/authorizationmanagement_2/interactions/GetHospLastUpdateInteraction/GetHospLastUpdateInteraction_1.0_RIVTABP21.wsdl"],
           commonAuthorizationOptions + [
-            "-wsdlLocation",
-            "classpath:schemas/authorizationmanagement_2_3/interactions/HandleHospCertificationPersonInteraction/HandleHospCertificationPersonInteraction_1.0_RIVTABP21.wsdl",
-            "$projectDir/src/main/resources/schemas/authorizationmanagement_2_3/interactions/HandleHospCertificationPersonInteraction/HandleHospCertificationPersonInteraction_1.0_RIVTABP21.wsdl"],
+                  "-wsdlLocation",
+                  "classpath:schemas/authorizationmanagement_2/interactions/HandleHospCertificationPersonInteraction/HandleHospCertificationPersonInteraction_1.0_RIVTABP21.wsdl",
+                  "$projectDir/src/main/resources/schemas/authorizationmanagement_2/interactions/HandleHospCertificationPersonInteraction/HandleHospCertificationPersonInteraction_1.0_RIVTABP21.wsdl"],
           commonOrganizationOptions + [
-            "-wsdlLocation",
-            "classpath:schemas/organization_2_4/interactions/GetHealthCareProviderInteraction/GetHealthCareProviderInteraction_1.0_RIVTABP21.wsdl",
-            "$projectDir/src/main/resources/schemas/organization_2_4/interactions/GetHealthCareProviderInteraction/GetHealthCareProviderInteraction_1.0_RIVTABP21.wsdl"],
+                  "-wsdlLocation",
+                  "classpath:schemas/organization_2/interactions/GetHealthCareProviderInteraction/GetHealthCareProviderInteraction_1.0_RIVTABP21.wsdl",
+                  "$projectDir/src/main/resources/schemas/organization_2/interactions/GetHealthCareProviderInteraction/GetHealthCareProviderInteraction_1.0_RIVTABP21.wsdl"],
           commonOrganizationOptions + [
-            "-wsdlLocation",
-            "classpath:schemas/organization_2_4/interactions/GetHealthCareUnitInteraction/GetHealthCareUnitInteraction_2.0_RIVTABP21.wsdl",
-            "$projectDir/src/main/resources/schemas/organization_2_4/interactions/GetHealthCareUnitInteraction/GetHealthCareUnitInteraction_2.0_RIVTABP21.wsdl"],
+                  "-wsdlLocation",
+                  "classpath:schemas/organization_2/interactions/GetHealthCareUnitInteraction/GetHealthCareUnitInteraction_2.0_RIVTABP21.wsdl",
+                  "$projectDir/src/main/resources/schemas/organization_2/interactions/GetHealthCareUnitInteraction/GetHealthCareUnitInteraction_2.0_RIVTABP21.wsdl"],
           commonOrganizationOptions + [
-            "-wsdlLocation",
-            "classpath:schemas/organization_2_4/interactions/GetHealthCareUnitMembersInteraction/GetHealthCareUnitMembersInteraction_2.0_RIVTABP21.wsdl",
-            "$projectDir/src/main/resources/schemas/organization_2_4/interactions/GetHealthCareUnitMembersInteraction/GetHealthCareUnitMembersInteraction_2.0_RIVTABP21.wsdl"],
+                  "-wsdlLocation",
+                  "classpath:schemas/organization_2/interactions/GetHealthCareUnitMembersInteraction/GetHealthCareUnitMembersInteraction_2.0_RIVTABP21.wsdl",
+                  "$projectDir/src/main/resources/schemas/organization_2/interactions/GetHealthCareUnitMembersInteraction/GetHealthCareUnitMembersInteraction_2.0_RIVTABP21.wsdl"],
           commonOrganizationOptions + [
-            "-wsdlLocation",
-            "classpath:schemas/organization_2_4/interactions/GetUnitInteraction/GetUnitInteraction_2.4_RIVTABP21.wsdl",
-            "$projectDir/src/main/resources/schemas/organization_2_4/interactions/GetUnitInteraction/GetUnitInteraction_2.4_RIVTABP21.wsdl"],
+                  "-wsdlLocation",
+                  "classpath:schemas/organization_2/interactions/GetUnitInteraction/GetUnitInteraction_2.4_RIVTABP21.wsdl",
+                  "$projectDir/src/main/resources/schemas/organization_2/interactions/GetUnitInteraction/GetUnitInteraction_2.4_RIVTABP21.wsdl"],
   ]
 
-  //generatedWsdlDir = file("build/generatedSource/java")
-//  stabilizeAndMergeObjectFactory = true
+  // generatedWsdlDir = file("build/generatedSource/java")
   encoding = "UTF-8"
   locale = Locale.ENGLISH
-  cxfVersion = "${cxfVersion}"
+  // Bug in plugin. Uses the samw version for the plugin as for CXF.
+  // TODO: see if we can use the code in the Master branch of this plugin.
+  // cxfVersion = "${this.cxfVersion}"
 }

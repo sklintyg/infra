@@ -288,8 +288,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
             Mottagning mottagning = new Mottagning(member.getHealthCareUnitMemberHsaId(), member.getHealthCareUnitMemberName(),
                 member.getHealthCareUnitMemberStartDate(), member.getHealthCareUnitMemberEndDate());
-            if (member.getHealthCareUnitMemberpostalAddress() != null
-                && member.getHealthCareUnitMemberpostalAddress().getAddressLine() != null) {
+            if (member.getHealthCareUnitMemberpostalAddress() != null) {
                 hsaUnitAddressParser.updateWithAddress(mottagning, member.getHealthCareUnitMemberpostalAddress(),
                     member.getHealthCareUnitMemberpostalCode());
 
@@ -316,7 +315,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
     private void updateWithEmailAndPhone(AbstractVardenhet vardenhet, UnitType response) {
         vardenhet.setEpost(response.getMail());
-        if (response.getTelephoneNumber() != null && !response.getTelephoneNumber().isEmpty()) {
+        if (!response.getTelephoneNumber().isEmpty()) {
             vardenhet.setTelefonnummer(response.getTelephoneNumber().get(0));
         }
     }
