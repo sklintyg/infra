@@ -28,6 +28,7 @@ include ':monitoring'
 include ':intyginfo'
 include ':integreradeenheter'
 include ':driftbanner-dto'
+include ':testdata'
 
 
 project(':common-redis-cache-core').projectDir = "$rootDir/redis-cache/core" as File
@@ -51,4 +52,4 @@ project(':monitoring').projectDir = "$rootDir/monitoring" as File
 project(':intyginfo').projectDir = "$rootDir/internalapi/intyginfo" as File
 project(':integreradeenheter').projectDir = "$rootDir/internalapi/integreradeenheter" as File
 project(':driftbanner-dto').projectDir = "$rootDir/internalapi/driftbannerdto" as File
-
+project(':testdata').projectDir = "$rootDir/testdata" as File
