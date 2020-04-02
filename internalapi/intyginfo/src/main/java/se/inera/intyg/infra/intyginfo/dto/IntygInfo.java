@@ -44,6 +44,8 @@ public abstract class IntygInfo {
     private String careGiverName;
     private String careGiverHsaId;
 
+    private boolean testCertificate;
+
 
     public String getIntygId() {
         return intygId;
@@ -147,5 +149,13 @@ public abstract class IntygInfo {
 
     public void setCareGiverHsaId(String careGiverHsaId) {
         this.careGiverHsaId = careGiverHsaId;
+    }
+
+    public boolean isTestCertificate() {
+        return testCertificate;
+    }
+
+    public void setTestCertificate(boolean isTestCertificate) {
+        this.testCertificate = isTestCertificate;
     }
 }

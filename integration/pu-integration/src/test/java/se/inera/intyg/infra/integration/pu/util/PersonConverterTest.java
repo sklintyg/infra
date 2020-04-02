@@ -42,7 +42,7 @@ public class PersonConverterTest {
     private static final Personnummer PERSONNUMMER = Personnummer.createPersonnummer("19121212-1212").get();
     private static final Personnummer LILLTOLVAN_PERSONNUMMER = Personnummer.createPersonnummer("20121212-1212").get();
 
-    private static final String PUTJANST_TESTINDICATED_RECLASSIFY_SSN = "193008077723,201212121212";
+    private static final String PUTJANST_TESTINDICATED_RECLASSIFY_ACTIVE_EXCEPT_SSN = "193008077723,191212121212";
 
     private static final String FULLSTANDIG_ADRESS = "Storgatan 1, PL 1234";
     private static final String ADRESS1 = "Storgatan 1";
@@ -103,6 +103,8 @@ public class PersonConverterTest {
 
     @Test
     public void verifyTestIndicatedWhenNotReclassified() {
+        personConverter = new PersonConverter(PUTJANST_TESTINDICATED_RECLASSIFY_ACTIVE_EXCEPT_SSN);
+
         PersonRecordType input = buildIncomingPuResult(0);
 
         PersonSvar output = personConverter.toPersonSvar(PERSONNUMMER, input);
@@ -112,13 +114,35 @@ public class PersonConverterTest {
 
     @Test
     public void verifyTestIndicatedWhenReclassified() {
-        personConverter = new PersonConverter(PUTJANST_TESTINDICATED_RECLASSIFY_SSN);
+        personConverter = new PersonConverter(PUTJANST_TESTINDICATED_RECLASSIFY_ACTIVE_EXCEPT_SSN);
 
         PersonRecordType input = buildIncomingPuResult(0);
 
         PersonSvar output = personConverter.toPersonSvar(LILLTOLVAN_PERSONNUMMER, input);
 
         assertFalse(output.getPerson().isTestIndicator());
+    }
+
+    @Test
+    public void verifyTestIndicatedWhenNoReclassificationEmpty() {
+        personConverter = new PersonConverter("");
+
+        PersonRecordType input = buildIncomingPuResult(0);
+
+        PersonSvar output = personConverter.toPersonSvar(LILLTOLVAN_PERSONNUMMER, input);
+
+        assertTrue(output.getPerson().isTestIndicator());
+    }
+
+    @Test
+    public void verifyTestIndicatedWhenNoReclassificationNull() {
+        personConverter = new PersonConverter(null);
+
+        PersonRecordType input = buildIncomingPuResult(0);
+
+        PersonSvar output = personConverter.toPersonSvar(LILLTOLVAN_PERSONNUMMER, input);
+
+        assertTrue(output.getPerson().isTestIndicator());
     }
 
     private PersonRecordType buildIncomingPuResult(Integer postalCode) {
