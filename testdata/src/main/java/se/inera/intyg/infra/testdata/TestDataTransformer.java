@@ -71,7 +71,7 @@ public final class TestDataTransformer {
     }
 
     private static boolean isRelativeDate(String value) {
-        return value.startsWith("{") && value.endsWith("}"); //TODO safe?
+        return value.startsWith("{") && value.endsWith("}");
     }
 
     public static String parseRelativeDate(String date) {
@@ -82,18 +82,18 @@ public final class TestDataTransformer {
         AddSubState asState = AddSubState.Add;
         int quantifier = 1;
 
-        String number = "";
+        StringBuilder number = new StringBuilder();
         for (int i = 0; i < date.length(); i++) {
             char c = date.charAt(i);
 
             if (Character.isDigit(c)) {
-                number += c;
+                number.append(c);
                 if ((i + 1) < date.length() && Character.isDigit(date.charAt(i + 1))) {
                     continue;
                 }
 
-                quantifier = Integer.parseInt(number);
-                number = "";
+                quantifier = Integer.parseInt(number.toString());
+                number = new StringBuilder();
                 continue;
             }
 
