@@ -3,6 +3,4 @@ dependencies {
     compile "ch.qos.logback:logback-classic"
     compile "org.springframework:spring-context"
     compile "com.fasterxml.jackson.core:jackson-databind"
-
-    compile "com.sun.xml.ws:jaxws-ri:${jaxwsriVersion}"
 }

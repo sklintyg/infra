@@ -5,5 +5,4 @@ dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind"
     compile "org.apache.commons:commons-lang3"
 
-    compile "com.sun.xml.ws:jaxws-ri:${jaxwsriVersion}"
 }

@@ -63,6 +63,13 @@ allprojects {
     }
 
     dependencies {
+        compile "javax.annotation:javax.annotation-api"
+        compile "jakarta.xml.bind:jakarta.xml.bind-api"
+        compile "jakarta.xml.ws:jakarta.xml.ws-api"
+
+        testCompile "org.glassfish.jaxb:jaxb-runtime"
+        testCompile "com.sun.xml.messaging.saaj:saaj-impl"
+
         testCompile "junit:junit:4.+"
         testCompile "org.springframework:spring-test"
         testCompile "org.mockito:mockito-core"

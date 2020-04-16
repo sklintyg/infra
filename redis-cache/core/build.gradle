@@ -6,7 +6,6 @@ dependencies {
     compile "com.google.guava:guava:${guavaVersion}"
     compile "it.ozimov:embedded-redis:${embeddedRedisVersion}"
     compile 'javax.annotation:javax.annotation-api'
-    compile "com.sun.xml.ws:jaxws-ri:${jaxwsriVersion}"
 
     runtime "org.springframework:spring-context-support"
 

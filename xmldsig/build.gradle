@@ -3,7 +3,6 @@ dependencies {
 
     compile "ch.qos.logback:logback-classic"
     compile "com.fasterxml.jackson.core:jackson-databind"
-    compile "com.sun.xml.ws:jaxws-ri:${jaxwsriVersion}"
     compile "commons-io:commons-io:${commonsIoVersion}"
     compile "net.sf.saxon:Saxon-HE:${saxonVersion}"
     compile "org.apache.santuario:xmlsec:${xmlSecVersion}"
