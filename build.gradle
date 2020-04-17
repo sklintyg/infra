@@ -26,7 +26,7 @@ ext {
     cxfVersion = "3.2.4"
     embeddedRedisVersion = "0.7.2"
     guavaVersion = "28.2-jre"
-    jaxwsriVersion = "2.3.2"
+    jakartaJwsApiVersion = "2.1.0"
     kryoVersion = "4.0.2"
     prometheusClientVersion = "0.8.1"
     saxonVersion = "9.9.1-6"
@@ -66,7 +66,7 @@ allprojects {
         compile "javax.annotation:javax.annotation-api"
         compile "jakarta.xml.bind:jakarta.xml.bind-api"
         compile "jakarta.xml.ws:jakarta.xml.ws-api"
-
+        compile "jakarta.jws:jakarta.jws-api:${jakartaJwsApiVersion}"
         testCompile "org.glassfish.jaxb:jaxb-runtime"
         testCompile "com.sun.xml.messaging.saaj:saaj-impl"
 
