@@ -19,7 +19,10 @@
 package se.inera.intyg.infra.integration.grp.stub;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -64,9 +67,6 @@ public class GrpServicePortTypeStubTest {
 
     @InjectMocks
     private GrpServicePortType testee = new GrpServicePortTypeStub();
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void nullRequestTypeThrowsException() throws GrpFault {
@@ -118,17 +118,15 @@ public class GrpServicePortTypeStubTest {
     }
 
     @Test
-    public void signRequest() throws GrpFault {
-        thrown.expect(GrpFault.class);
-        thrown.expectMessage("Not implemented");
-        testee.sign(null);
+    public void signRequest() {
+        Exception exception = assertThrows(GrpFault.class, () -> testee.sign(null));
+        assertEquals("Not implemented", exception.getMessage());
     }
 
     @Test
-    public void signatureFileRequest() throws GrpFault {
-        thrown.expect(GrpFault.class);
-        thrown.expectMessage("Not implemented");
-        testee.fileSign(null);
+    public void signatureFileRequest() {
+        Exception exception = assertThrows(GrpFault.class, () -> testee.fileSign(null));
+        assertEquals("Not implemented", exception.getMessage());
     }
 
     private void assertAuthenticateResponse(OrderResponseType ort) {
@@ -147,22 +145,20 @@ public class GrpServicePortTypeStubTest {
         assertTrue(crt.getTransactionId().length() > 0);
 
         assertNotNull(crt.getProgressStatus());
-        assertTrue(crt.getProgressStatus() == ProgressStatusType.STARTED);
+        assertSame(crt.getProgressStatus(), ProgressStatusType.STARTED);
     }
 
     private GrpSignatureStatus buildCollectResponseType(String orderRef) {
         return new GrpSignatureStatus(orderRef, ProgressStatusType.STARTED);
     }
 
-    private void testAuthenticateRequestInvalidArgument(AuthenticateRequestType art, String expectedMessage) throws GrpFault {
-        thrown.expect(GrpFault.class);
-        thrown.expectMessage(expectedMessage);
-        testee.authenticate(art);
+    private void testAuthenticateRequestInvalidArgument(AuthenticateRequestType art, String expectedMessage) {
+        Exception exception = assertThrows(GrpFault.class, () -> testee.authenticate(art));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
-    private void testCollectRequestInvalidArgument(CollectRequestType crt, String expectedMessage) throws GrpFault {
-        thrown.expect(GrpFault.class);
-        thrown.expectMessage(expectedMessage);
-        testee.collect(crt);
+    private void testCollectRequestInvalidArgument(CollectRequestType crt, String expectedMessage) {
+        Exception exception = assertThrows(GrpFault.class, () -> testee.collect(crt));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 }

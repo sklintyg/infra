@@ -24,7 +24,7 @@ import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEY
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.security.Signature;
 import java.security.cert.CertificateEncodingException;
@@ -58,10 +58,10 @@ public class PrepareSignatureServiceImplTest {
     @Test
     public void testBuildPreparedSignature() throws IOException {
         InputStream xmlResource = getXmlResource("classpath:/unsigned/unsigned-lisjp-i18n.xml");
-        String xml = IOUtils.toString(xmlResource);
+        String xml = IOUtils.toString(xmlResource, StandardCharsets.UTF_8);
         IntygXMLDSignature intygXMLDSignature = testee.prepareSignature(xml, "9f02dd2f-f57c-4a73-8190-2fe602cd6e27");
 
-        byte[] signature = createSignature(intygXMLDSignature.getSigningData().getBytes(Charset.forName("UTF-8")));
+        byte[] signature = createSignature(intygXMLDSignature.getSigningData().getBytes(StandardCharsets.UTF_8));
         SignatureValueType svt = new SignatureValueType();
         svt.setValue(signature);
         intygXMLDSignature.getSignatureType().setSignatureValue(svt);

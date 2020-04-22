@@ -19,7 +19,7 @@
 package se.inera.intyg.infra.integration.ia.jobs;
 
 import java.util.List;
-import net.javacrumbs.shedlock.core.SchedulerLock;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +33,8 @@ public abstract class BannerJob {
 
     private static final Logger LOG = LoggerFactory.getLogger(BannerJob.class);
     private static final String JOB_NAME = "BannerJob.run";
-    private static final int LOCK_AT_MOST = 10 * 60 * 1000;
-    private static final int LOCK_AT_LEAST = 30 * 1000;
+    private static final String LOCK_AT_MOST = "PT10M"; // 10 * 60 * 1000
+    private static final String LOCK_AT_LEAST = "PT30S"; // 30 * 1000;
 
     @Autowired
     private IABannerService iaBannerService;

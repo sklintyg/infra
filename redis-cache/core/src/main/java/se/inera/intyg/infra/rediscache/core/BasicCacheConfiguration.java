@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.rediscache.core;
 
 import com.google.common.base.Strings;
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.Resource;
@@ -29,17 +30,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.util.StringUtils;
 import se.inera.intyg.infra.rediscache.core.util.ConnectionStringUtil;
 
-/**
- * Initialization and activation of Redis cache for a single Redis host.
- */
 @Configuration
 @EnableCaching
 public class BasicCacheConfiguration {
@@ -51,7 +53,7 @@ public class BasicCacheConfiguration {
     @Value("${redis.password}")
     String redisPassword;
     @Value("${redis.cache.default_entry_expiry_time_in_seconds}")
-    int defaultEntryExpiry;
+    long defaultEntryExpiry;
     @Value("${redis.sentinel.master.name}")
     String redisSentinelMasterName;
 
@@ -70,10 +72,16 @@ public class BasicCacheConfiguration {
     JedisConnectionFactory jedisConnectionFactory() {
         String[] activeProfiles = environment.getActiveProfiles();
         if (Stream.of(activeProfiles).noneMatch("redis-sentinel"::equalsIgnoreCase)) {
-            return plainConnectionFactory();
+            return standAloneConnectionFactory();
         } else {
             return sentinelConnectionFactory();
         }
+    }
+
+    @Bean
+    @DependsOn("cacheManager")
+    public RedisCacheOptionsSetter redisCacheOptionsSetter() {
+        return new RedisCacheOptionsSetter();
     }
 
     @Bean(name = "rediscache")
@@ -85,29 +93,22 @@ public class BasicCacheConfiguration {
     }
 
     @Bean
-    RedisCacheManager cacheManager() {
-        RedisCacheManager redisCacheManager = new RedisCacheManager(redisTemplate());
-        redisCacheManager.setUsePrefix(true);
-        redisCacheManager.setDefaultExpiration(defaultEntryExpiry);
-
-        return redisCacheManager;
+    public RedisCacheManager cacheManager() {
+        return new CacheFactory(
+            RedisCacheWriter.nonLockingRedisCacheWriter(jedisConnectionFactory()),
+            RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(defaultEntryExpiry))
+        );
     }
 
-    @Bean
-    @DependsOn("cacheManager")
-    RedisCacheOptionsSetter redisCacheOptionsSetter() {
-        return new RedisCacheOptionsSetter(defaultEntryExpiry);
-    }
-
-    private JedisConnectionFactory plainConnectionFactory() {
-        JedisConnectionFactory factory = new JedisConnectionFactory();
-        factory.setHostName(redisHost);
-        factory.setPort(Integer.parseInt(redisPort));
+    private JedisConnectionFactory standAloneConnectionFactory() {
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName(redisHost);
+        redisStandaloneConfiguration.setPort(Integer.parseInt(redisPort));
         if (StringUtils.hasLength(redisPassword)) {
-            factory.setPassword(redisPassword);
+            redisStandaloneConfiguration.setPassword(redisPassword);
         }
-        factory.setUsePool(true);
-        return factory;
+        return new JedisConnectionFactory(redisStandaloneConfiguration,
+            JedisClientConfiguration.builder().usePooling().build());
     }
 
     private JedisConnectionFactory sentinelConnectionFactory() {

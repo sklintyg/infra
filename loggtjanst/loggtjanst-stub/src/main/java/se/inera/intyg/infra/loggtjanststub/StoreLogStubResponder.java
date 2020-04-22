@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package se.inera.intyg.infra.loggtjanststub;
 
 import java.util.List;
@@ -52,12 +53,12 @@ public class StoreLogStubResponder implements StoreLogResponderInterface {
         if (stubState != null) {
 
             if (stubState.getArtificialLatency() > 0L) {
-                //CHECKSTYLE:OFF EmptyBlock
+                //CHECKSTYLE:OFF EmptyCatchBlock
                 try {
                     Thread.sleep(stubState.getArtificialLatency());
                 } catch (InterruptedException e) {
                 }
-                //CHECKSTYLE:ON EmptyBlock
+                //CHECKSTYLE:ON EmptyCatchBlock
             }
 
             if (!stubState.isActive()) {

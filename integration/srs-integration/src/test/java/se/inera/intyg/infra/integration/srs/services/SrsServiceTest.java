@@ -111,7 +111,7 @@ public class SrsServiceTest {
         SrsResponse response = service.getSrs(createUser(), "intygId", createPnr(PNR_VALID), "M18", utdatafilter,
             Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNotNull(response);
-        assertEquals(new Integer(1), response.getPredictionLevel());
+        assertEquals(Integer.valueOf(1), response.getPredictionLevel());
         assertEquals("test", response.getPredictionDescription());
         assertNull(response.getAtgarderRek());
         assertNull(response.getAtgarderObs());
@@ -136,7 +136,7 @@ public class SrsServiceTest {
         SrsResponse response = service.getSrs(createUser(), "intygId", createPnr(PNR_VALID), "M18", utdatafilter,
             Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNotNull(response);
-        assertEquals(new Integer(1), response.getPredictionLevel());
+        assertEquals(Integer.valueOf(1), response.getPredictionLevel());
         assertEquals("test", response.getPredictionDescription());
         assertNotNull(response.getAtgarderRek().get(0));
         assertNotNull(response.getAtgarderRek().get(1));
@@ -151,7 +151,7 @@ public class SrsServiceTest {
         SrsResponse response = service.getSrs(createUser(), "intygId", createPnr(PNR_VALID), "M18", utdatafilter,
             Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
         assertNotNull(response);
-        assertEquals(new Integer(1), response.getPredictionLevel());
+        assertEquals(Integer.valueOf(1), response.getPredictionLevel());
         assertEquals("test", response.getPredictionDescription());
 
         assertEquals(3, response.getAtgarderRek().size());

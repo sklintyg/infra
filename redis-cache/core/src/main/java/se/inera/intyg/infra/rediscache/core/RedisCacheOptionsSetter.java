@@ -16,33 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package se.inera.intyg.infra.rediscache.core;
 
-import com.google.common.collect.ImmutableMap;
+import java.time.Duration;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
-import org.springframework.data.redis.cache.RedisCacheManager;
+
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
 
 public class RedisCacheOptionsSetter {
 
-    private long defaultEntryExpiry;
-
     @Autowired
-    private RedisCacheManager redisCacheManager;
-
-    public RedisCacheOptionsSetter(long defaultEntryExpiry) {
-        this.defaultEntryExpiry = defaultEntryExpiry;
-    }
+    private CacheFactory redisCacheFactory;
 
     public Cache createCache(String cacheName, String expiryTimeInSeconds) {
-        long expiryValue;
         try {
-            expiryValue = Long.parseLong(expiryTimeInSeconds);
+            return redisCacheFactory.createCache(cacheName,
+                RedisCacheConfiguration.defaultCacheConfig()
+                    .entryTtl(Duration.ofSeconds(Long.parseLong(expiryTimeInSeconds))));
         } catch (NumberFormatException e) {
-            expiryValue = defaultEntryExpiry;
+            return redisCacheFactory.createCache(cacheName);
         }
-        redisCacheManager.setExpires(ImmutableMap.of(cacheName, expiryValue));
-        // First access of cache triggers building it, see implementation of RedisCacheManager for details.
-        return redisCacheManager.getCache(cacheName);
     }
 }
