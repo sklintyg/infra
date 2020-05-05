@@ -55,7 +55,7 @@ public class EmbeddedCacheConfiguration extends BasicCacheConfiguration {
     public RedisServer redisServer() {
         final AtomicInteger port = new AtomicInteger(Integer.parseInt(redisPort));
 
-        redisServer = Stream.generate(() -> port.getAndIncrement())
+        redisServer = Stream.generate(port::getAndIncrement)
             .limit(NUMBER_OF_PORTS_TO_TRY)
             .map(this::startServer)
             .filter(Objects::nonNull)
@@ -86,7 +86,7 @@ public class EmbeddedCacheConfiguration extends BasicCacheConfiguration {
     @Override
     JedisConnectionFactory jedisConnectionFactory() {
         JedisConnectionFactory factory = super.jedisConnectionFactory();
-        factory.setPort(redisServer.ports().get(0));
+        Objects.requireNonNull(factory.getStandaloneConfiguration()).setPort(redisServer.ports().get(0));
         return factory;
     }
 }

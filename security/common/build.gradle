@@ -1,11 +1,13 @@
 dependencies {
     compile project(':hsa-integration')
 
-    compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
-    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonDataformatVersion}"
+    compile "com.fasterxml.jackson.core:jackson-annotations"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
 
-    compile "org.springframework:spring-context:${springVersion}"
-    compile "org.slf4j:slf4j-api:${slf4jVersion}"
 
-    compileOnly "javax.servlet:servlet-api:${servletApiVersion}"
+    compile "org.springframework:spring-context"
+    compile "org.springframework.session:spring-session-core"
+    compile "org.slf4j:slf4j-api"
+
+    compileOnly "javax.servlet:javax.servlet-api"
 }

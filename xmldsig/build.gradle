@@ -1,11 +1,11 @@
 dependencies {
     compile "se.inera.intyg.clinicalprocess.healthcond.certificate:intyg-clinicalprocess-healthcond-certificate-schemas:${intygClinicalprocessSchemasVersion}"
 
-    compile "org.slf4j:slf4j-api:${slf4jVersion}"
-    compile "ch.qos.logback:logback-classic:${logbackVersion}"
-    compile "org.springframework:spring-context:${springVersion}"
-    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    compile "ch.qos.logback:logback-classic"
+    compile "com.fasterxml.jackson.core:jackson-databind"
     compile "commons-io:commons-io:${commonsIoVersion}"
-    compile "org.apache.santuario:xmlsec:${xmlSecVersion}"
     compile "net.sf.saxon:Saxon-HE:${saxonVersion}"
+    compile "org.apache.santuario:xmlsec:${xmlSecVersion}"
+    compile "org.slf4j:slf4j-api"
+    compile "org.springframework:spring-context"
 }

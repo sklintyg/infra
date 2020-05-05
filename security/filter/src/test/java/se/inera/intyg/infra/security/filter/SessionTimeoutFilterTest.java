@@ -132,7 +132,7 @@ public class SessionTimeoutFilterTest {
         when(request.getSession(false)).thenReturn(session);
         when(request.getRequestURI()).thenReturn(reportedRequestURI);
         when(session.getAttribute(eq(SessionTimeoutFilter.LAST_ACCESS_TIME_ATTRIBUTE_NAME)))
-            .thenReturn(new Long(System.currentTimeMillis() - FIVE_SECONDS_AGO));
+            .thenReturn(System.currentTimeMillis() - FIVE_SECONDS_AGO);
         when(session.getMaxInactiveInterval()).thenReturn(sessionLengthInSeconds);
 
     }

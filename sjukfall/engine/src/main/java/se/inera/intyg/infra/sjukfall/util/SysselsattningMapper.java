@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package se.inera.intyg.infra.sjukfall.util;
 
 import java.util.Collections;
@@ -46,8 +47,8 @@ public class SysselsattningMapper extends Mapper {
             entry("FORALDRALEDIG", "Föräldraledighet för vård av barn"),
             entry("FORALDRALEDIGHET", "Föräldraledighet för vård av barn"),
             entry("NUVARANDE_ARBETE", "Nuvarande arbete"),
-            entry("STUDIER", "Studier")).
-            collect(entriesToMap()));
+            entry("STUDIER", "Studier"))
+            .collect(entriesToMap()));
     }
 
 }

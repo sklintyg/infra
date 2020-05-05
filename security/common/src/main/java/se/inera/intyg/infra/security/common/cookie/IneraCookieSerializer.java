@@ -17,27 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.rediscache.core;
+package se.inera.intyg.infra.security.common.cookie;
 
-import java.time.Duration;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.session.web.http.DefaultCookieSerializer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.Cache;
+public class IneraCookieSerializer extends DefaultCookieSerializer {
 
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
+    public IneraCookieSerializer() {
+        super();
+    }
 
-public class RedisCacheOptionsSetter {
+    @Override
+    public void writeCookieValue(CookieValue cookieValue) {
 
-    @Autowired
-    private CacheFactory redisCacheFactory;
+        HttpServletRequest request = cookieValue.getRequest();
 
-    public Cache createCache(String cacheName, String expiryTimeInSeconds) {
-        try {
-            return redisCacheFactory.createCache(cacheName,
-                RedisCacheConfiguration.defaultCacheConfig()
-                    .entryTtl(Duration.ofSeconds(Long.parseLong(expiryTimeInSeconds))));
-        } catch (NumberFormatException e) {
-            return redisCacheFactory.createCache(cacheName);
+        if (request.isSecure()) {
+            setSameSite("none");
         }
+
+        super.writeCookieValue(cookieValue);
     }
 }

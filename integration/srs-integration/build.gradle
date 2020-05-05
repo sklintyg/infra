@@ -7,8 +7,9 @@ dependencies {
   compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
   compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
 
-  runtime "org.springframework:spring-context-support:${springVersion}"
+  runtime "org.springframework:spring-context-support"
 
-  testCompile "org.springframework:spring-test:${springVersion}"
-  testCompile "org.hamcrest:hamcrest-all:${hamcrestVersion}"
+  testCompile "org.springframework:spring-test"
+  testCompile "org.hamcrest:hamcrest"
+  testCompile "org.hamcrest:hamcrest-library"
 }
