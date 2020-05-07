@@ -70,9 +70,9 @@ public class PersonConverter {
         DeregistrationType avregistrering = personRecord.getDeregistration();
         boolean isDead = avregistrering != null && "AV".equals(avregistrering.getDeregistrationReasonCode());
 
-        String firstName = namn.getGivenName() != null ? namn.getGivenName().getName() : null;
-        String middleName = namn.getMiddleName() != null ? namn.getMiddleName().getName() : null;
-        String lastName = namn.getSurname() != null ? namn.getSurname().getName() : null;
+        String firstName = namn != null && namn.getGivenName() != null ? namn.getGivenName().getName() : null;
+        String middleName = namn != null && namn.getMiddleName() != null ? namn.getMiddleName().getName() : null;
+        String lastName = namn != null && namn.getSurname() != null ? namn.getSurname().getName() : null;
         Person person = new Person(personId,
             isSekretessmarkering(personRecord),
             isDead, firstName, middleName, lastName, adressRader, postnr, postort, isTestIndicated(personRecord, personId));
