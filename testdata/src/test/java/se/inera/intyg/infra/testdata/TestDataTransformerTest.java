@@ -20,6 +20,7 @@ package se.inera.intyg.infra.testdata;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,7 +35,7 @@ public class TestDataTransformerTest {
 
     @Test
     @Ignore
-    public void transformIntyg() throws IOException {
+    public void transformIntygJSONModel() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
         String jsonString = "{\n"
@@ -74,7 +75,54 @@ public class TestDataTransformerTest {
 
         String json = result.toString();
 
-        assertTrue(false);
+        fail();
+    }
+
+    @Test
+    //@Ignore
+    public void transformIntygXMLModel() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        String jsonString = "{\n"
+            + "  \"certificate\":{\n"
+            + "      \"id\": \"2020ddb9-e387-40dd-bfdd-ac2746e473dd\",\n"
+            + "      \"type\": \"ts-diabetes\",\n"
+            + "      \"typeVersion\": \"3.0\",\n"
+            + "      \"signingDoctorName\": \"Arnold Johansson\",\n"
+            + "      \"careUnitId\": \"TSTNMT2321000156-1077\",\n"
+            + "      \"careUnitName\": \"NMT vg3 ve1\",\n"
+            + "      \"careGiverId\": \"TSTNMT2321000156-102Q\",\n"
+            + "      \"civicRegistrationNumber\": \"191212121212\",\n"
+            + "      \"signedDate\": \"{-6h}\",\n"
+            + "      \"additionalInfo\": \"AM, A1, A2, A, B, BE, Traktor, C1, C1E, C, CE, D1, D1E, D, DE, Taxi\",\n"
+            + "      \"deletedByCareGiver\": false,\n"
+            + "      \"wireTapped\": false,\n"
+            + "      \"certificateStates\": [\n"
+            + "          {\n"
+            + "              \"target\": \"TRANSP\",\n"
+            + "              \"state\": \"SENT\",\n"
+            + "              \"timestamp\": \"{-5h}\"\n"
+            + "          },\n"
+            + "          {\n"
+            + "              \"target\": \"HSVARD\",\n"
+            + "              \"state\": \"RECEIVED\",\n"
+            + "              \"timestamp\": \"{-4h}\"\n"
+            + "          }\n"
+            + "      ],\n"
+            + "      \"testCertificate\": false,\n"
+            + "      \"deleted\": false,\n"
+            + "      \"revoked\": false,\n"
+            + "      \"originalCertificate\": \"<?xml version=\\\"1.0\\\"?>    <ns2:RegisterCertificate xmlns=\\\"urn:riv:clinicalprocess:healthcond:certificate:3\\\" xmlns:ns2=\\\"urn:riv:clinicalprocess:healthcond:certificate:RegisterCertificateResponder:3\\\" xmlns:ns3=\\\"urn:riv:clinicalprocess:healthcond:certificate:types:3\\\">        <version>3.0</version>        <signeringstidpunkt>{-6h}</signeringstidpunkt>        <skickatTidpunkt>{-5h}</skickatTidpunkt>        <patient>          <person-id>            <ns3:root>1.2.752.129.2.1.3.1</ns3:root>            <ns3:extension>191212121212</ns3:extension>          </person-id>          <fornamn>Tolvan</fornamn>          <efternamn>Tolvansson</efternamn>          <postadress>Svensson, Storgatan 1, PL 1234</postadress>          <postnummer>12345</postnummer>          <postort>Sm&#xE5;m&#xE5;la</postort>        </patient>     </ns2:RegisterCertificate>\"\n"
+            + "     }"
+            + "  }";
+
+        JsonNode data = mapper.readTree(jsonString);
+
+        JsonNode result = TestDataTransformer.transformIntyg(data);
+
+        String json = result.toString();
+
+        fail();
     }
 
     @Test

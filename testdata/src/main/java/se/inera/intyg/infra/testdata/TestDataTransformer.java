@@ -27,6 +27,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class TestDataTransformer {
 
@@ -67,8 +69,25 @@ public final class TestDataTransformer {
                     parentObject.put(nodeName, value);
                 }
             }
+            else if (containsRelativeDate(value)) {
+                Pattern pat = Pattern.compile("\\{(.*?)}");
+                Matcher m = pat.matcher(value);
+                StringBuffer sb = new StringBuffer();
+                while (m.find()){
+                    String s = parseRelativeDate(m.group(1));
+                    m.appendReplacement(sb, s);
+                }
+                m.appendTail(sb);
+                value = sb.toString();
+                if (parent.isObject()) {
+                    ObjectNode parentObject = (ObjectNode) parent;
+                    parentObject.put(nodeName, value);
+                }
+            }
         }
     }
+
+    private static boolean containsRelativeDate(String value) { return value.contains("{") && value.contains("}"); }
 
     private static boolean isRelativeDate(String value) {
         return value.startsWith("{") && value.endsWith("}");
