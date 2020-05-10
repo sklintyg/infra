@@ -81,7 +81,7 @@ public class LoggtjanstStubRestApi {
         } catch (IllegalArgumentException e) {
             return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Unknown ErrorState: \" + errorType + \". Allowed values are NONE, ERROR, VALIDATION");
+                .body("Unknown ErrorState: " + errorType + ". Allowed values are NONE, ERROR, VALIDATION");
         }
     }
 
