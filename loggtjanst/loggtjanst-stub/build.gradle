@@ -9,6 +9,9 @@ dependencies {
   compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
+  compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+
   compile "org.springframework:spring-context"
   compile "org.springframework:spring-web"
+  compile "org.springframework:spring-webmvc"
 }
