@@ -46,6 +46,7 @@ public class SrsResponse {
     private String statistikStatusCode;
     private Double predictionProbabilityOverLimit;
     private Double predictionPrevalence;
+    private List<SrsCertificate> extensionChain;
 
     public SrsResponse(Integer level, String description, List<SrsRecommendation> atgarderObs, List<SrsRecommendation> atgarderRek,
         List<SrsRecommendation> atgarderFrl, List<SrsRecommendation> atgarderReh,
@@ -188,6 +189,15 @@ public class SrsResponse {
 
     public Double getPredictionPrevalence() {
         return predictionPrevalence;
+    }
+
+    public List<SrsCertificate> getExtensionChain() {
+        return this.extensionChain;
+    }
+
+    // Not a setter since we set a copy of the list
+    public void replaceExtensionChain(List<SrsCertificate> chain) {
+        this.extensionChain = ImmutableList.copyOf(chain);
     }
 
     public void setPredictionDiagnosisDescription(String predictionDiagnosisDescription) {

@@ -39,15 +39,15 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDia
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Bedomningsunderlag;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Diagnosprediktionstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationRequestType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.GetSRSInformationResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Individ;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Individfaktorer;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Prediktionsfaktorer;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Bedomningsunderlag;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Diagnosprediktionstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.GetSRSInformationRequestType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.GetSRSInformationResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.GetSRSInformationResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Individ;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Individfaktorer;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Prediktionsfaktorer;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Utdatafilter;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformationfordiagnosis.v1.GetSRSInformationForDiagnosisResponseType;
@@ -79,7 +79,7 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
-public class SrsServiceImpl implements SrsService {
+public class SrsInfraServiceImpl implements SrsInfraService {
 
     private static final int POSTNUMMER_LENGTH = 5;
 

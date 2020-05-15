@@ -41,7 +41,7 @@ import org.springframework.util.CollectionUtils;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Utdatafilter;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
@@ -59,13 +59,13 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:SrsServiceTest/test-context.xml")
-public class SrsServiceTest {
+public class SrsInfraServiceTest {
 
     private static final String PNR_VALID = "191212121212";
     private static final String PNR_INVALID = "1912121212";
 
     @Autowired
-    private SrsService service;
+    private SrsInfraService service;
 
     @Autowired
     private ConsentRepository consentRepository;

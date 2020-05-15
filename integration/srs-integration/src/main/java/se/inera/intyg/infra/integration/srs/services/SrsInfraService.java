@@ -20,8 +20,8 @@ package se.inera.intyg.infra.integration.srs.services;
 
 import java.util.List;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Diagnosprediktionstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v2.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Diagnosprediktionstatus;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Utdatafilter;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.EgenBedomningRiskType;
 import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
@@ -32,7 +32,7 @@ import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
-public interface SrsService {
+public interface SrsInfraService {
 
     /**
      * Perform a getSrsInformation for a given Personnummer and diagnosis.
