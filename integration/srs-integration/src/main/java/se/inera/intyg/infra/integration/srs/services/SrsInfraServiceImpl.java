@@ -19,7 +19,8 @@
 package se.inera.intyg.infra.integration.srs.services;
 
 import com.google.common.base.Strings;
-import java.time.LocalDateTime;
+import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -40,6 +41,7 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.G
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Bedomningsunderlag;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Diagnosintyg;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Diagnosprediktionstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.GetSRSInformationRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.GetSRSInformationResponderInterface;
@@ -65,7 +67,9 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Diagnosstatistik;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.EgenBedomningRiskType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.infra.integration.srs.model.SrsCertificate;
 import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
+import se.inera.intyg.infra.integration.srs.model.SrsPrediction;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
 import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsRecommendation;
@@ -103,14 +107,14 @@ public class SrsInfraServiceImpl implements SrsInfraService {
     private SetOwnOpinionResponderInterface setOwnOpinion;
 
     @Override
-    public SrsResponse getSrs(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
-        List<SrsQuestionResponse> questions) throws InvalidPersonNummerException {
+    public SrsResponse getSrs(IntygUser user, Personnummer personnummer, List<SrsCertificate> certDiags, Utdatafilter filter,
+                              List<SrsQuestionResponse> questions) throws InvalidPersonNummerException {
 
         if (questions == null || questions.isEmpty()) {
             throw new IllegalArgumentException("Answers are required to construct a valid request.");
         }
         GetSRSInformationResponseType response = getSRSInformation.getSRSInformation(
-            createRequest(user, intygId, personnummer, diagnosisCode, filter, questions));
+            createRequest(user, personnummer, certDiags, filter, questions));
 
         if (response.getResultCode() != ResultCodeEnum.OK) {
             throw new IllegalArgumentException("Bad data from SRS");
@@ -119,12 +123,8 @@ public class SrsInfraServiceImpl implements SrsInfraService {
         // Schema mandates that this is of 1..*
         Bedomningsunderlag underlag = response.getBedomningsunderlag().get(0);
 
-        Integer level = null;
-        String description = null;
-        String prediktionStatusCode = null;
         String statistikStatusCode = null;
         List<Integer> statistikNationellStatistik = null;
-        String predictionDiagnosisCode = null;
         String atgarderDiagnosisCode = null;
         String statistikDiagnosisCode = null;
         List<SrsRecommendation> atgarderObs = null;
@@ -132,52 +132,46 @@ public class SrsInfraServiceImpl implements SrsInfraService {
         List<SrsRecommendation> atgarderFrl = null;
         List<SrsRecommendation> atgarderReh = null;
         String atgarderStatusCode = null;
-        Double predictionProbabilityOverLimit = null;
-        Double predictionPrevalence = null;
-        String prediktionLakarbedomningRisk = null;
-        List<SrsQuestionResponse> prediktionsFragorSvar = null;
-        LocalDateTime prediktionBerakningstidpunkt = null;
-
-        if (underlag == null || underlag.getPrediktion() == null || underlag.getPrediktion().getDiagnosprediktion().isEmpty()
-            || underlag.getPrediktion().getDiagnosprediktion().get(0)
-            .getDiagnosprediktionstatus() == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
-            prediktionStatusCode = Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS.value();
-        } else if (filter.isPrediktion()) {
-            level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori();
-            description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
-            prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
-            predictionDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
-                .map(CVType::getCode)
-                .orElse(null);
-            predictionProbabilityOverLimit = underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde();
-            predictionPrevalence = underlag.getPrediktion().getDiagnosprediktion().get(0).getPrevalens();
-        } else if (underlag.getPrediktion().getDiagnosprediktion().get(0) != null) {
-            // Always add prevalence if we have it regardless if the user requested prediction on a personal level
-            predictionPrevalence = underlag.getPrediktion().getDiagnosprediktion().get(0).getPrevalens();
-            predictionDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
-                .map(CVType::getCode)
-                .orElse(null);
-            // Also check if we have a historic prediction
-            if (underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde() != null) {
-                level = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getRiskkategori();
-                description = underlag.getPrediktion().getDiagnosprediktion().get(0).getRisksignal().getBeskrivning();
-                prediktionStatusCode = underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnosprediktionstatus().value();
-//                predictionDiagnosisCode = Optional.ofNullable(underlag.getPrediktion().getDiagnosprediktion().get(0).getDiagnos())
-//                        .map(CVType::getCode)
-//                        .orElse(null);
-                predictionProbabilityOverLimit = underlag.getPrediktion().getDiagnosprediktion().get(0).getSannolikhetOvergransvarde();
-
-                if (underlag.getPrediktion().getDiagnosprediktion().get(0).getPrediktionsfaktorer() != null) {
-                    prediktionsFragorSvar = underlag.getPrediktion().getDiagnosprediktion().get(0)
-                        .getPrediktionsfaktorer().getFragasvar().stream()
-                        .map((fs) -> SrsQuestionResponse.create(fs.getFrageidSrs(), fs.getSvarsidSrs()))
-                        .collect(Collectors.toList());
+        List<SrsPrediction> predictions = new ArrayList<>();
+        if (underlag == null || underlag.getPrediktion() == null || underlag.getPrediktion().getDiagnosprediktion().isEmpty()) {
+            SrsPrediction srsPrediction = new SrsPrediction();
+            srsPrediction.setStatusCode(Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS.value());
+            predictions.add(srsPrediction);
+        } else {
+            underlag.getPrediktion().getDiagnosprediktion().forEach(dp -> {
+                SrsPrediction srsPrediction = new SrsPrediction();
+                if (dp == null) {
+                    srsPrediction = null;
+                }  else if (dp.getDiagnosprediktionstatus() == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
+                    srsPrediction.setStatusCode(Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS.value());
+                } else {
+                    // Always add prevalence if we have it regardless if the user requested prediction on a personal level
+                    srsPrediction.setPrevalence(dp.getPrevalens());
+                    srsPrediction.setCertificateId(dp.getIntygId().getExtension());
+                    srsPrediction.setDiagnosisCode(Optional.ofNullable(dp.getDiagnos())
+                            .map(CVType::getCode)
+                            .orElse(null));
+                    // Also check if we have a prediction
+                    if (dp.getSannolikhetOvergransvarde() != null) {
+                        srsPrediction.setLevel(dp.getRisksignal().getRiskkategori());
+                        srsPrediction.setDescription(dp.getRisksignal().getBeskrivning());
+                        srsPrediction.setStatusCode(dp.getDiagnosprediktionstatus().value());
+                        srsPrediction.setProbabilityOverLimit(dp.getSannolikhetOvergransvarde());
+                        srsPrediction.setTimestamp(dp.getBerakningstidpunkt());
+                        if (dp.getPrediktionsfaktorer() != null) {
+                            srsPrediction.setQuestionsResponses(
+                                    ImmutableList.copyOf(dp.getPrediktionsfaktorer().getFragasvar().stream()
+                                            .map((fs) -> SrsQuestionResponse.create(fs.getFrageidSrs(), fs.getSvarsidSrs()))
+                                            .collect(Collectors.toList()))
+                            );
+                        }
+                        if (dp.getLakarbedomningRisk() != null) {
+                            srsPrediction.setPhysiciansOwnOpinionRisk(dp.getLakarbedomningRisk().value());
+                        }
+                    }
                 }
-                if (underlag.getPrediktion().getDiagnosprediktion().get(0).getLakarbedomningRisk() != null) {
-                    prediktionLakarbedomningRisk = underlag.getPrediktion().getDiagnosprediktion().get(0).getLakarbedomningRisk().value();
-                }
-                prediktionBerakningstidpunkt = underlag.getPrediktion().getDiagnosprediktion().get(0).getBerakningstidpunkt();
-            }
+                predictions.add(srsPrediction);
+            });
         }
 
         if (filter.isAtgardsrekommendation()) {
@@ -244,10 +238,9 @@ public class SrsInfraServiceImpl implements SrsInfraService {
                 underlag.getStatistik().getDiagnosstatistik().get(0).getData().stream()
                     .map((d) -> d.getIndividerAckumulerat().intValue()).collect(Collectors.toList());
         }
-        return new SrsResponse(level, description, atgarderObs, atgarderRek, atgarderFrl, atgarderReh, predictionDiagnosisCode,
-            prediktionStatusCode, prediktionsFragorSvar, prediktionLakarbedomningRisk, prediktionBerakningstidpunkt,
-            atgarderDiagnosisCode, atgarderStatusCode, statistikDiagnosisCode,
-            statistikStatusCode, predictionProbabilityOverLimit, predictionPrevalence, statistikNationellStatistik);
+        return new SrsResponse(atgarderObs, atgarderRek, atgarderFrl, atgarderReh, predictions,
+                atgarderDiagnosisCode, atgarderStatusCode, statistikDiagnosisCode, statistikStatusCode,
+                statistikNationellStatistik);
     }
 
     @Override
@@ -362,7 +355,7 @@ public class SrsInfraServiceImpl implements SrsInfraService {
             && response.getAtgardsrekommendation().getDiagnos() != null;
     }
 
-    private GetSRSInformationRequestType createRequest(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode,
+    private GetSRSInformationRequestType createRequest(IntygUser user, Personnummer personnummer, List<SrsCertificate> certDiags,
         Utdatafilter filter, List<SrsQuestionResponse> questions)
         throws InvalidPersonNummerException {
 
@@ -379,12 +372,9 @@ public class SrsInfraServiceImpl implements SrsInfraService {
 
         Individfaktorer individer = new Individfaktorer();
         Individ individ = new Individ();
-        individ.getDiagnos().add(createDiagnos(diagnosisCode));
+        certDiags.forEach(cd -> individ.getDiagnosintyg().add(
+                        createDiagnosintyg(cd.getMainDiagnosisCode(), cd.getCertificateId(), user.getValdVardenhet().getId())));
         individ.setPersonId(personnummer.getPersonnummer());
-        IntygId intyg = new IntygId();
-        intyg.setExtension(intygId);
-        intyg.setRoot(user.getValdVardenhet().getId());
-        individ.setIntygId(intyg);
         individer.getIndivid().add(individ);
 
         request.setUtdatafilter(filter);
@@ -459,5 +449,16 @@ public class SrsInfraServiceImpl implements SrsInfraService {
         diagnos.setCode(diagnosisCode);
         diagnos.setCodeSystem(DIAGNOS_CODE_SYSTEM);
         return diagnos;
+    }
+
+    private Diagnosintyg createDiagnosintyg(String diagnosisCode, String certificateId, String careUnitId) {
+        IntygId intygId = new IntygId();
+        intygId.setExtension(certificateId);
+        intygId.setRoot(careUnitId);
+
+        Diagnosintyg diagnosintyg = new Diagnosintyg();
+        diagnosintyg.setDiagnos(createDiagnos(diagnosisCode));
+        diagnosintyg.setIntygId(intygId);
+        return diagnosintyg;
     }
 }

@@ -19,24 +19,18 @@
 package se.inera.intyg.infra.integration.srs.model;
 
 import com.google.common.collect.ImmutableList;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 // CHECKSTYLE:OFF ParameterNumber
 public class SrsResponse {
 
-    private Integer predictionLevel;
-    private String predictionDescription;
     private ImmutableList<SrsRecommendation> atgarderObs;
     private ImmutableList<SrsRecommendation> atgarderRek;
     private ImmutableList<SrsRecommendation> atgarderFrl;
     private ImmutableList<SrsRecommendation> atgarderReh;
-    private String predictionDiagnosisCode;
-    private String predictionDiagnosisDescription;
-    private String predictionStatusCode;
-    private ImmutableList<SrsQuestionResponse> predictionQuestionsResponses;
-    private String predictionPhysiciansOwnOpinionRisk;
-    private LocalDateTime predictionTimestamp;
+    private ImmutableList<SrsPrediction> predictions;
     private String atgarderDiagnosisCode;
     private String atgarderDiagnosisDescription;
     private String atgarderStatusCode;
@@ -44,20 +38,14 @@ public class SrsResponse {
     private String statistikDiagnosisCode;
     private String statistikDiagnosisDescription;
     private String statistikStatusCode;
-    private Double predictionProbabilityOverLimit;
-    private Double predictionPrevalence;
-    private List<SrsCertificate> extensionChain;
+    private List<SrsCertificate> extensionChain; // TODO: replace with startingPoint/active view etc enum
 
-    public SrsResponse(Integer level, String description, List<SrsRecommendation> atgarderObs, List<SrsRecommendation> atgarderRek,
+    public SrsResponse(List<SrsRecommendation> atgarderObs, List<SrsRecommendation> atgarderRek,
         List<SrsRecommendation> atgarderFrl, List<SrsRecommendation> atgarderReh,
-        String predictionDiagnosisCode, String predictionStatusCode, List<SrsQuestionResponse> predictionQuestionsResponses,
-        String predictionPhysiciansOwnOpinionRisk,
-        LocalDateTime predictionTimestamp,
+        List<SrsPrediction> predictions,
         String atgarderDiagnosisCode, String atgarderStatusCode,
-        String statistikDiagnosisCode, String statistikStatusCode, Double predictionProbabilityOverLimit,
-        Double predictionPrevalence, List<Integer> statistikNationellStatistikData) {
-        this.predictionLevel = level;
-        this.predictionDescription = description;
+        String statistikDiagnosisCode, String statistikStatusCode, List<Integer> statistikNationellStatistikData) {
+
         if (atgarderObs == null) {
             this.atgarderObs = null;
         } else {
@@ -85,34 +73,17 @@ public class SrsResponse {
             this.statistikNationellStatistik = ImmutableList.copyOf(statistikNationellStatistikData);
         }
 
-        if (predictionQuestionsResponses == null) {
-            this.predictionQuestionsResponses = null;
+        if (predictions == null) {
+            this.predictions = null;
         } else {
-            this.predictionQuestionsResponses = ImmutableList.copyOf(predictionQuestionsResponses);
+            this.predictions = ImmutableList.copyOf(predictions);
         }
-
-        this.predictionPhysiciansOwnOpinionRisk = predictionPhysiciansOwnOpinionRisk;
-        this.predictionTimestamp = predictionTimestamp;
-
-        this.predictionDiagnosisCode = predictionDiagnosisCode;
-        this.predictionStatusCode = predictionStatusCode;
 
         this.atgarderDiagnosisCode = atgarderDiagnosisCode;
         this.atgarderStatusCode = atgarderStatusCode;
 
         this.statistikDiagnosisCode = statistikDiagnosisCode;
         this.statistikStatusCode = statistikStatusCode;
-
-        this.predictionProbabilityOverLimit = predictionProbabilityOverLimit;
-        this.predictionPrevalence = predictionPrevalence;
-    }
-
-    public Integer getPredictionLevel() {
-        return predictionLevel;
-    }
-
-    public String getPredictionDescription() {
-        return predictionDescription;
     }
 
     public ImmutableList<SrsRecommendation> getAtgarderObs() {
@@ -131,24 +102,12 @@ public class SrsResponse {
         return atgarderReh;
     }
 
-    public String getPredictionStatusCode() {
-        return predictionStatusCode;
-    }
-
     public String getAtgarderStatusCode() {
         return atgarderStatusCode;
     }
 
     public String getStatistikStatusCode() {
         return statistikStatusCode;
-    }
-
-    public String getPredictionDiagnosisCode() {
-        return predictionDiagnosisCode;
-    }
-
-    public String getPredictionDiagnosisDescription() {
-        return predictionDiagnosisDescription;
     }
 
     public String getAtgarderDiagnosisCode() {
@@ -171,24 +130,12 @@ public class SrsResponse {
         return statistikNationellStatistik;
     }
 
-    public Double getPredictionProbabilityOverLimit() {
-        return predictionProbabilityOverLimit;
+    public ImmutableList<SrsPrediction> getPredictions() {
+        return predictions;
     }
 
-    public String getPredictionPhysiciansOwnOpinionRisk() {
-        return predictionPhysiciansOwnOpinionRisk;
-    }
-
-    public LocalDateTime getPredictionTimestamp() {
-        return predictionTimestamp;
-    }
-
-    public ImmutableList<SrsQuestionResponse> getPredictionQuestionsResponses() {
-        return predictionQuestionsResponses;
-    }
-
-    public Double getPredictionPrevalence() {
-        return predictionPrevalence;
+    public void setPredictions(ImmutableList<SrsPrediction> predictions) {
+        this.predictions = predictions;
     }
 
     public List<SrsCertificate> getExtensionChain() {
@@ -198,10 +145,6 @@ public class SrsResponse {
     // Not a setter since we set a copy of the list
     public void replaceExtensionChain(List<SrsCertificate> chain) {
         this.extensionChain = ImmutableList.copyOf(chain);
-    }
-
-    public void setPredictionDiagnosisDescription(String predictionDiagnosisDescription) {
-        this.predictionDiagnosisDescription = predictionDiagnosisDescription;
     }
 
     public void setAtgarderDiagnosisDescription(String atgarderDiagnosisDescription) {

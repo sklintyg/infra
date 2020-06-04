@@ -21,17 +21,7 @@ package se.inera.intyg.infra.integration.srs.stub;
 import java.math.BigInteger;
 import java.util.Optional;
 import org.apache.cxf.annotations.SchemaValidation;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Atgardsrekommendationer;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Bedomningsunderlag;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Diagnosprediktion;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Diagnosprediktionstatus;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.GetSRSInformationRequestType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.GetSRSInformationResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.GetSRSInformationResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Individ;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Prediktion;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Risksignal;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Utdatafilter;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.*;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgard;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendation;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
@@ -40,6 +30,7 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Diagnosstatistik;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistik;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.Diagnos;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
 //CHECKSTYLE:OFF MagicNumber
@@ -59,15 +50,16 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
         Utdatafilter filter = request.getUtdatafilter();
         String personId = request.getIndivider().getIndivid().stream().map(Individ::getPersonId)
             .findFirst().orElseThrow(IllegalArgumentException::new);
-        Optional<Diagnos> incomingDiagnosis = request.getIndivider().getIndivid().stream()
-            .flatMap(i -> i.getDiagnos().stream()).findFirst();
-        Optional<Diagnos> srsDiagnos = request.getIndivider().getIndivid().stream().flatMap(i -> i.getDiagnos().stream())
-            .filter(d -> GetDiagnosisCodesStub.allValidDiagnosis.contains(d.getCode()))
+        Optional<Diagnosintyg> incomingDiagnosis = request.getIndivider().getIndivid().stream()
+            .flatMap(i -> i.getDiagnosintyg().stream()).findFirst();
+        Optional<Diagnosintyg> srsDiagnos = request.getIndivider().getIndivid().stream().flatMap(i -> i.getDiagnosintyg().stream())
+            .filter(d -> GetDiagnosisCodesStub.allValidDiagnosis.contains(d.getDiagnos().getCode()))
             .findFirst();
         underlag.setPersonId(personId);
 
         Diagnosprediktion diagnosprediktion = new Diagnosprediktion();
-        diagnosprediktion.setInkommandediagnos(incomingDiagnosis.orElseThrow(IllegalArgumentException::new));
+        diagnosprediktion.setIntygId(request.getIndivider().getIndivid().get(0).getDiagnosintyg().get(0).getIntygId());
+        diagnosprediktion.setInkommandediagnos(incomingDiagnosis.orElseThrow(IllegalArgumentException::new).getDiagnos());
         if (srsDiagnos.isPresent()) {
             diagnosprediktion.setPrevalens(0.35);
         }
@@ -89,34 +81,34 @@ public class GetSrsInformationStub implements GetSRSInformationResponderInterfac
             Atgardsrekommendationer rekommendationer = new Atgardsrekommendationer();
             rekommendationer.getRekommendation()
                 .add(createAtgardsrekommendation("Atgardsforslag REK 1",
-                    srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                    srsDiagnos.orElseThrow(IllegalArgumentException::new).getDiagnos(),
                     Atgardstyp.REK, 1));
             rekommendationer.getRekommendation()
                 .add(createAtgardsrekommendation("Atgardsforslag REK 2",
-                    srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                    srsDiagnos.orElseThrow(IllegalArgumentException::new).getDiagnos(),
                     Atgardstyp.REK, 2));
             rekommendationer.getRekommendation()
                 .add(createAtgardsrekommendation("Atgardsforslag REK 3",
-                    srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                    srsDiagnos.orElseThrow(IllegalArgumentException::new).getDiagnos(),
                     Atgardstyp.REK, 3));
             rekommendationer.getRekommendation()
                 .add(createAtgardsrekommendation("Atgardsforslag OBS 1",
-                    srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                    srsDiagnos.orElseThrow(IllegalArgumentException::new).getDiagnos(),
                     Atgardstyp.OBS, 1));
             rekommendationer.getRekommendation()
                 .add(createAtgardsrekommendation("Atgardsforslag OBS 2",
-                    srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                    srsDiagnos.orElseThrow(IllegalArgumentException::new).getDiagnos(),
                     Atgardstyp.OBS, 2));
             rekommendationer.getRekommendation()
                 .add(createAtgardsrekommendation("Atgardsforslag OBS 3",
-                    srsDiagnos.orElseThrow(IllegalArgumentException::new),
+                    srsDiagnos.orElseThrow(IllegalArgumentException::new).getDiagnos(),
                     Atgardstyp.OBS, 3));
             underlag.setAtgardsrekommendationer(rekommendationer);
         }
 
         if (filter.isStatistik()) {
             Statistik statistik = new Statistik();
-            statistik.getDiagnosstatistik().add(createDiagnosStatistik(srsDiagnos.orElseThrow(IllegalArgumentException::new)));
+            statistik.getDiagnosstatistik().add(createDiagnosStatistik(srsDiagnos.orElseThrow(IllegalArgumentException::new).getDiagnos()));
             underlag.setStatistik(statistik);
         }
 
