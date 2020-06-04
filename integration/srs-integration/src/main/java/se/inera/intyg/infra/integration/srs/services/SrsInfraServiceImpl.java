@@ -108,13 +108,16 @@ public class SrsInfraServiceImpl implements SrsInfraService {
 
     @Override
     public SrsResponse getSrs(IntygUser user, Personnummer personnummer, List<SrsCertificate> certDiags, Utdatafilter filter,
-                              List<SrsQuestionResponse> questions) throws InvalidPersonNummerException {
+                              List<SrsQuestionResponse> questions, Integer daysIntoSickLeave) throws InvalidPersonNummerException {
 
         if (questions == null || questions.isEmpty()) {
             throw new IllegalArgumentException("Answers are required to construct a valid request.");
         }
+        if (daysIntoSickLeave == null) {
+            daysIntoSickLeave = 15;
+        }
         GetSRSInformationResponseType response = getSRSInformation.getSRSInformation(
-            createRequest(user, personnummer, certDiags, filter, questions));
+            createRequest(user, personnummer, certDiags, filter, questions, daysIntoSickLeave));
 
         if (response.getResultCode() != ResultCodeEnum.OK) {
             throw new IllegalArgumentException("Bad data from SRS");
@@ -356,7 +359,7 @@ public class SrsInfraServiceImpl implements SrsInfraService {
     }
 
     private GetSRSInformationRequestType createRequest(IntygUser user, Personnummer personnummer, List<SrsCertificate> certDiags,
-        Utdatafilter filter, List<SrsQuestionResponse> questions)
+        Utdatafilter filter, List<SrsQuestionResponse> questions, Integer daysIntoSickLeave)
         throws InvalidPersonNummerException {
 
         GetSRSInformationRequestType request = new GetSRSInformationRequestType();
@@ -366,6 +369,7 @@ public class SrsInfraServiceImpl implements SrsInfraService {
         request.setAnvandareId(createHsaId(user.getHsaId()));
 
         Prediktionsfaktorer faktorer = new Prediktionsfaktorer();
+        faktorer.setSjukskrivningsdag(daysIntoSickLeave);
         faktorer.setPostnummer(getPostnummer(user));
         faktorer.getFragasvar().addAll(questions.stream().map(SrsQuestionResponse::convert).collect(Collectors.toList()));
         request.setPrediktionsfaktorer(faktorer);

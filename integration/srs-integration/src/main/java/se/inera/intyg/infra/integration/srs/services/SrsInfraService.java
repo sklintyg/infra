@@ -50,10 +50,11 @@ public interface SrsInfraService {
      *
      * @param filter Utdatafilter with desired response filters.
      * @param answers Answers from the user.
+     * @param daysIntoSickLeave Number of days into the sick leave, used as input for the prediction. If null is given, it defaults to 15.
      * @return {@link SrsResponse} with {@link Diagnosprediktionstatus} OK or PREDIKTIONSMODELL_SAKNAS
      */
     SrsResponse getSrs(IntygUser user, Personnummer personnummer, List<SrsCertificate> certDiags, Utdatafilter filter,
-                       List<SrsQuestionResponse> answers) throws InvalidPersonNummerException;
+                       List<SrsQuestionResponse> answers, Integer daysIntoSickLeave) throws InvalidPersonNummerException;
 
     /**
      * Retreives the questions to be displayed in the GUI.

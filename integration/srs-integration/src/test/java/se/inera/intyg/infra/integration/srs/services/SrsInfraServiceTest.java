@@ -18,6 +18,16 @@
  */
 package se.inera.intyg.infra.integration.srs.services;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
+import java.util.Arrays;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,26 +41,22 @@ import org.springframework.util.CollectionUtils;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.GetPredictionQuestionsResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Diagnosprediktionstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Utdatafilter;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-import se.inera.intyg.infra.integration.srs.model.*;
+import se.inera.intyg.infra.integration.srs.model.SrsCertificate;
+import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
+import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
+import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
+import se.inera.intyg.infra.integration.srs.model.SrsResponse;
 import se.inera.intyg.infra.integration.srs.stub.GetPredictionQuestionsStub;
 import se.inera.intyg.infra.integration.srs.stub.repository.ConsentRepository;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:SrsServiceTest/test-context.xml")
@@ -80,7 +86,7 @@ public class SrsInfraServiceTest {
     public void testNoneWithSRSDiagnosis() throws Exception {
         SrsResponse response = service.getSrs(createUser(), createPnr(PNR_VALID),
                 Arrays.asList(new SrsCertificate("intygId","M18",null)), utdatafilter,
-                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")), null);
         assertNull(response.getStatistikNationellStatistik());
         assertNull(response.getAtgarderObs());
         assertNull(response.getAtgarderRek());
@@ -95,7 +101,7 @@ public class SrsInfraServiceTest {
     public void testNoneWithUnknownDiagnosis() throws Exception {
         SrsResponse response = service.getSrs(createUser(), createPnr(PNR_VALID),
                 Arrays.asList(new SrsCertificate("intygId","X99",null)), utdatafilter,
-                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")), 15);
         assertNull(response.getStatistikNationellStatistik());
         assertNull(response.getAtgarderObs());
         assertNull(response.getAtgarderRek());
@@ -111,7 +117,7 @@ public class SrsInfraServiceTest {
         utdatafilter.setPrediktion(true);
         SrsResponse response = service.getSrs(createUser(),  createPnr(PNR_VALID),
                 Arrays.asList(new SrsCertificate("intygId","M18",null)), utdatafilter,
-                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")), 15);
         assertNotNull(response);
         assertNotNull(response.getPredictions());
         assertEquals(1, response.getPredictions().size());
@@ -126,7 +132,7 @@ public class SrsInfraServiceTest {
         utdatafilter.setStatistik(true);
         SrsResponse response = service.getSrs(createUser(), createPnr(PNR_VALID),
                 Arrays.asList(new SrsCertificate("intygId","M18",null)), utdatafilter,
-                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")), 15);
         assertNotNull(response.getStatistikNationellStatistik());
         assertNull(response.getAtgarderRek());
         assertNull(response.getAtgarderObs());
@@ -142,7 +148,7 @@ public class SrsInfraServiceTest {
         utdatafilter.setAtgardsrekommendation(true);
         SrsResponse response = service.getSrs(createUser(), createPnr(PNR_VALID),
                 Arrays.asList(new SrsCertificate("intygId","M18",null)), utdatafilter,
-                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")),15);
         assertNotNull(response);
         assertNotNull(response.getPredictions());
         assertEquals(1, response.getPredictions().size());
@@ -160,7 +166,7 @@ public class SrsInfraServiceTest {
         utdatafilter.setStatistik(true);
         SrsResponse response = service.getSrs(createUser(), createPnr(PNR_VALID),
                 Arrays.asList(new SrsCertificate("intygId","M18",null)), utdatafilter,
-                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")));
+                Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")), 15);
         assertNotNull(response);
         assertNotNull(response.getPredictions());
         assertEquals(1, response.getPredictions().size());
