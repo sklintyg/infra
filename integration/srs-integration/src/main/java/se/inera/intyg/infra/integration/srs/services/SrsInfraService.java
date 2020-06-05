@@ -23,10 +23,7 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstat
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Diagnosprediktionstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Utdatafilter;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.EgenBedomningRiskType;
-import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
-import se.inera.intyg.infra.integration.srs.model.SrsQuestion;
-import se.inera.intyg.infra.integration.srs.model.SrsQuestionResponse;
-import se.inera.intyg.infra.integration.srs.model.SrsResponse;
+import se.inera.intyg.infra.integration.srs.model.*;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
@@ -38,15 +35,26 @@ public interface SrsInfraService {
      * Perform a getSrsInformation for a given Personnummer and diagnosis.
      *
      * @param user user which made the request
-     * @param intygId id of the intyg used for SRS.
      * @param personnummer {@link Personnummer} for the patient concerned.
-     * @param diagnosisCode string representation of the diagnosis code.
+     * @param certDiags List of certificateId and diagnosis code combinations (the signedDate attribute is not used/can be null).
+     *                  The first represents the current certificate and the current main diagnosis.
+     *                  If prediktion=true in utdatafilter this first entry is the one that will be used for calculating a new prediction.
+     *                  If prediktion=false in utdatafilter we will try to find an earlier prediction on this first certificate and
+     *                  diagnosis instead.
+     *                  The second entry is a cert with relation FRLNG from the first and the diagnosis to find earlier predictions for,
+     *                  if such certificate-diagnosis combination exists,
+     *                  The third entry is a cert with relation FRLNG from the second and the diagnosis to find earlier predictions for,
+     *                  if such certificate-diagnosis combination exists
+     *
+     *                  I.e. The first certificate entry is an extension of the second which is an extension of the third.
+     *
      * @param filter Utdatafilter with desired response filters.
      * @param answers Answers from the user.
+     * @param daysIntoSickLeave Number of days into the sick leave, used as input for the prediction. If null is given, it defaults to 15.
      * @return {@link SrsResponse} with {@link Diagnosprediktionstatus} OK or PREDIKTIONSMODELL_SAKNAS
      */
-    SrsResponse getSrs(IntygUser user, String intygId, Personnummer personnummer, String diagnosisCode, Utdatafilter filter,
-        List<SrsQuestionResponse> answers) throws InvalidPersonNummerException;
+    SrsResponse getSrs(IntygUser user, Personnummer personnummer, List<SrsCertificate> certDiags, Utdatafilter filter,
+                       List<SrsQuestionResponse> answers, Integer daysIntoSickLeave) throws InvalidPersonNummerException;
 
     /**
      * Retreives the questions to be displayed in the GUI.
