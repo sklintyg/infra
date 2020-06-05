@@ -64,7 +64,7 @@ public class SrsPrediction {
         this.description = predictionDescription;
         this.probabilityOverLimit = predictionProbabilityOverLimit;
         this.prevalence = predictionPrevalence;
-        this.questionsResponses = predictionQuestionsResponses != null ? ImmutableList.copyOf(predictionQuestionsResponses):null;
+        this.questionsResponses = predictionQuestionsResponses != null ? ImmutableList.copyOf(predictionQuestionsResponses) : null;
         this.physiciansOwnOpinionRisk = predictionPhysiciansOwnOpinionRisk;
         this.timestamp = predictionTimestamp;
     }
