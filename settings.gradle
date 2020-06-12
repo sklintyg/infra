@@ -30,6 +30,7 @@ include ':intyginfo'
 include ':integreradeenheter'
 include ':driftbanner-dto'
 include ':testcertificate'
+include ':message'
 
 project(':common-redis-cache-core').projectDir = "$rootDir/redis-cache/core" as File
 project(':dynamiclink').projectDir = "$rootDir/dynamiclink" as File
@@ -53,4 +54,5 @@ project(':intyginfo').projectDir = "$rootDir/internalapi/intyginfo" as File
 project(':integreradeenheter').projectDir = "$rootDir/internalapi/integreradeenheter" as File
 project(':driftbanner-dto').projectDir = "$rootDir/internalapi/driftbannerdto" as File
 project(':testcertificate').projectDir = "$rootDir/internalapi/testcertificate" as File
+project(':message').projectDir = "$rootDir/internalapi/message" as File
 
