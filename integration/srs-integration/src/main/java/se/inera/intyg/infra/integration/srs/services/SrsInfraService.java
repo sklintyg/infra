@@ -60,9 +60,10 @@ public interface SrsInfraService {
      * Retreives the questions to be displayed in the GUI.
      *
      * @param diagnos the diagnosCode.
+     * @param modelVersion Prediction model version
      * @return a sorted list of questions to be displayed
      */
-    List<SrsQuestion> getQuestions(String diagnos);
+    List<SrsQuestion> getQuestions(String diagnos, String modelVersion);
 
     Samtyckesstatus getConsent(String careUnitHsaId, Personnummer personId) throws InvalidPersonNummerException;
 
@@ -82,10 +83,10 @@ public interface SrsInfraService {
 
     /**
      * Fetches all the diagnosis codes which are supported by SRS.
-     *
+     * @param modelVersion Prediction model version
      * @return a list containing all the supported diagnosis codes. All sub-diagnosis are also supported.
      */
-    List<String> getAllDiagnosisCodes();
+    List<String> getAllDiagnosisCodes(String modelVersion);
 
     /**
      * Fetches all non-predictive parts of SRS info based on the supplied diagnose code.

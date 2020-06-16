@@ -194,7 +194,8 @@ public class SrsInfraServiceTest {
         ReflectionTestUtils.setField(service, "getPrediction", spy);
 
         final String diagnosisCode = "diagnosisCode";
-        List<SrsQuestion> response = service.getQuestions(diagnosisCode);
+        final String modelVersion = "2.2";
+        List<SrsQuestion> response = service.getQuestions(diagnosisCode, modelVersion);
         assertFalse(CollectionUtils.isEmpty(response));
 
         ArgumentCaptor<GetPredictionQuestionsRequestType> captor = ArgumentCaptor.forClass(GetPredictionQuestionsRequestType.class);
@@ -227,7 +228,7 @@ public class SrsInfraServiceTest {
 
     @Test
     public void testGetDiagnosisCodes() {
-        List<String> response = service.getAllDiagnosisCodes();
+        List<String> response = service.getAllDiagnosisCodes(null);
         assertNotNull(response);
         assertEquals(3, response.size());
         assertTrue(response.contains("M18"));

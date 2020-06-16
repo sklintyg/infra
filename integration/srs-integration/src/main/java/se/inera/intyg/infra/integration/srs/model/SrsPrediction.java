@@ -35,6 +35,8 @@ public class SrsPrediction {
     private Double prevalence;
     private ImmutableList<SrsQuestionResponse> questionsResponses;
     private String physiciansOwnOpinionRisk;
+    private Integer daysIntoSickLeave;
+    private String modelVersion;
     /**
      * When this prediction was calculated
      */
@@ -54,7 +56,9 @@ public class SrsPrediction {
             Double predictionPrevalence,
             List<SrsQuestionResponse> predictionQuestionsResponses,
             String predictionPhysiciansOwnOpinionRisk,
-            LocalDateTime predictionTimestamp
+            LocalDateTime predictionTimestamp,
+            Integer daysIntoSickLeave,
+            String modelVersion
     ) {
         this.certificateId = certificateId;
         this.diagnosisCode = predictionDiagnosisCode;
@@ -67,6 +71,24 @@ public class SrsPrediction {
         this.questionsResponses = predictionQuestionsResponses != null ? ImmutableList.copyOf(predictionQuestionsResponses) : null;
         this.physiciansOwnOpinionRisk = predictionPhysiciansOwnOpinionRisk;
         this.timestamp = predictionTimestamp;
+        this.daysIntoSickLeave = daysIntoSickLeave;
+        this.modelVersion = modelVersion;
+    }
+
+    public String getModelVersion() {
+        return modelVersion;
+    }
+
+    public void setModelVersion(String modelVersion) {
+        this.modelVersion = modelVersion;
+    }
+
+    public Integer getDaysIntoSickLeave() {
+        return daysIntoSickLeave;
+    }
+
+    public void setDaysIntoSickLeave(Integer daysIntoSickLeave) {
+        this.daysIntoSickLeave = daysIntoSickLeave;
     }
 
     public String getCertificateId() {

@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.GetConsentRequestType;
@@ -156,6 +157,8 @@ public class SrsInfraServiceImpl implements SrsInfraService {
                             .orElse(null));
                     // Also check if we have a prediction
                     if (dp.getSannolikhetOvergransvarde() != null) {
+                        srsPrediction.setDaysIntoSickLeave(dp.getSjukskrivningsdag());
+                        srsPrediction.setModelVersion(dp.getPrediktionsmodellversion());
                         srsPrediction.setLevel(dp.getRisksignal().getRiskkategori());
                         srsPrediction.setDescription(dp.getRisksignal().getBeskrivning());
                         srsPrediction.setStatusCode(dp.getDiagnosprediktionstatus().value());
@@ -247,9 +250,12 @@ public class SrsInfraServiceImpl implements SrsInfraService {
     }
 
     @Override
-    public List<SrsQuestion> getQuestions(String diagnos) {
+    public List<SrsQuestion> getQuestions(String diagnos, String modelVersion) {
         GetPredictionQuestionsRequestType request = new GetPredictionQuestionsRequestType();
         request.setDiagnos(createDiagnos(diagnos));
+        if (StringUtils.isNotBlank(modelVersion)) {
+            request.setPrediktionsmodellversion(modelVersion);
+        }
         GetPredictionQuestionsResponseType response = getPrediction.getPredictionQuestions(request);
         return response.getPrediktionsfraga().stream()
             .map(SrsQuestion::convert)
@@ -279,8 +285,12 @@ public class SrsInfraServiceImpl implements SrsInfraService {
     }
 
     @Override
-    public List<String> getAllDiagnosisCodes() {
-        GetDiagnosisCodesResponseType response = getDiagnosisCodes.getDiagnosisCodes(new GetDiagnosisCodesRequestType());
+    public List<String> getAllDiagnosisCodes(String modelVersion) {
+        GetDiagnosisCodesRequestType request = new GetDiagnosisCodesRequestType();
+        if (StringUtils.isNotBlank(modelVersion)) {
+            request.setPrediktionsmodellversion(modelVersion);
+        }
+        GetDiagnosisCodesResponseType response = getDiagnosisCodes.getDiagnosisCodes(request);
         return response.getDiagnos().stream()
             .map(CVType::getCode)
             .collect(Collectors.toList());
