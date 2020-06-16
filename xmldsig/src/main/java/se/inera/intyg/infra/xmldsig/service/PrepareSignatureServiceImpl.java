@@ -76,20 +76,8 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
         org.apache.xml.security.Init.init();
     }
 
-    /**
-     * Prepares an XMLDSig signature, a canonicalized SignedInfo and the canonicalized XML that the digest is based on.
-     *
-     * Given the supplied XML, the XML is canonicalized and a SHA-256 digest is created and Base64-encoded into the
-     * DigestValue field.
-     *
-     * Also, relevant algorithms for digest, signature and canonicalization method are specified on the body of the
-     * returned {@link SignatureType}.
-     *
-     * @param intygXml XML document to be canonicalized and digested.
-     * @param intygsId The ID of the intyg is required for the XPath expression selecting the content to be digested.
-     */
     @Override
-    public IntygXMLDSignature prepareSignature(String intygXml, String intygsId) {
+    public IntygXMLDSignature prepareSignature(String intygXml, String intygsId, String signatureAlgorithm) {
 
         // 1. Transform into our base canonical form without namespaces and dynamic attributes.
         String xml = tranformIntoIntygXml(intygXml);
@@ -104,7 +92,7 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
         byte[] digestBytes = generateDigest(xml);
 
         // 5. Produce unfinished SignatureType
-        SignatureType signatureType = PartialSignatureFactory.buildSignature(intygsId, digestBytes);
+        SignatureType signatureType = PartialSignatureFactory.buildSignature(intygsId, digestBytes, signatureAlgorithm);
 
         // 6. Build the actual canonicalized <SignedInfo> to pass as payload to a sign function.
         String signedInfoForSigning = buildSignedInfoForSigning(signatureType);
@@ -116,6 +104,11 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
             .withSignedInfoForSigning(signedInfoForSigning)
             .withSignatureType(signatureType)
             .build();
+    }
+
+    @Override
+    public byte[] transformAndGenerateDigest(String intygXml) {
+        return generateDigest(tranformIntoIntygXml(intygXml));
     }
 
     private String applyXPath(String intygsId, String xml) {
@@ -143,9 +136,6 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
         return sw.toString();
     }
 
-    /**
-     * Writes the <SignatureValue> element into the Signature.
-     */
     @Override
     public String encodeSignatureIntoSignedXml(SignatureType signatureType, String xml) {
         // Append the SignatureElement as last element of the xml.
