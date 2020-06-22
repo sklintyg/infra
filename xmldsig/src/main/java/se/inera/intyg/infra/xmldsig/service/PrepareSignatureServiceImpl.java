@@ -61,6 +61,7 @@ import org.xml.sax.SAXException;
 import se.inera.intyg.infra.xmldsig.exception.IntygXMLDSigException;
 import se.inera.intyg.infra.xmldsig.factory.PartialSignatureFactory;
 import se.inera.intyg.infra.xmldsig.model.IntygXMLDSignature;
+import se.inera.intyg.infra.xmldsig.model.TransformAndDigestResponse;
 import se.inera.intyg.infra.xmldsig.util.XsltUtil;
 
 @Service
@@ -79,6 +80,28 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
     @Override
     public IntygXMLDSignature prepareSignature(String intygXml, String intygsId, String signatureAlgorithm) {
 
+        // 1- 4
+        TransformAndDigestResponse transformAndDigestResponse = transformAndGenerateDigest(intygXml, intygsId);
+
+        // 5. Produce unfinished SignatureType
+        SignatureType signatureType = PartialSignatureFactory
+            .buildSignature(intygsId, transformAndDigestResponse.getDigest(), signatureAlgorithm);
+
+        // 6. Build the actual canonicalized <SignedInfo> to pass as payload to a sign function.
+        String signedInfoForSigning = buildSignedInfoForSigning(signatureType);
+
+        // 7. Populate and return
+        return IntygXMLDSignature.IntygXMLDSignatureBuilder.anIntygXMLDSignature()
+            .withIntygJson("set later...")
+            .withCanonicalizedIntygXml(transformAndDigestResponse.getTransformedXml())
+            .withSignedInfoForSigning(signedInfoForSigning)
+            .withSignatureType(signatureType)
+            .build();
+    }
+
+    @Override
+    public TransformAndDigestResponse transformAndGenerateDigest(String intygXml, String intygsId) {
+
         // 1. Transform into our base canonical form without namespaces and dynamic attributes.
         String xml = tranformIntoIntygXml(intygXml);
 
@@ -89,26 +112,8 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
         xml = canonicalizeXml(xml);
 
         // 4. Produce digest of the <intyg>...</intyg> in canonical form.
-        byte[] digestBytes = generateDigest(xml);
+        return new TransformAndDigestResponse(xml, generateDigest(xml));
 
-        // 5. Produce unfinished SignatureType
-        SignatureType signatureType = PartialSignatureFactory.buildSignature(intygsId, digestBytes, signatureAlgorithm);
-
-        // 6. Build the actual canonicalized <SignedInfo> to pass as payload to a sign function.
-        String signedInfoForSigning = buildSignedInfoForSigning(signatureType);
-
-        // 7. Populate and return
-        return IntygXMLDSignature.IntygXMLDSignatureBuilder.anIntygXMLDSignature()
-            .withIntygJson("set later...")
-            .withCanonicalizedIntygXml(xml)
-            .withSignedInfoForSigning(signedInfoForSigning)
-            .withSignatureType(signatureType)
-            .build();
-    }
-
-    @Override
-    public byte[] transformAndGenerateDigest(String intygXml) {
-        return generateDigest(tranformIntoIntygXml(intygXml));
     }
 
     private String applyXPath(String intygsId, String xml) {

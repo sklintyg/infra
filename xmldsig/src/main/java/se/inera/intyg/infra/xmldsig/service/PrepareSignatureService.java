@@ -20,6 +20,7 @@ package se.inera.intyg.infra.xmldsig.service;
 
 import org.w3._2000._09.xmldsig_.SignatureType;
 import se.inera.intyg.infra.xmldsig.model.IntygXMLDSignature;
+import se.inera.intyg.infra.xmldsig.model.TransformAndDigestResponse;
 
 public interface PrepareSignatureService {
 
@@ -52,7 +53,8 @@ public interface PrepareSignatureService {
      * Performs intygs specific transform and calculates digest on the transformed data.
      *
      * @param intygXml Untransformed data
-     * @return the Digest of the transformed intyg. Base64 encoded.
+     * @param intygsId IntygsId
+     * @return the Digest of the transformed intyg as Base64 encoded, and the transformed intygsXml
      */
-    byte[] transformAndGenerateDigest(String intygXml);
+    TransformAndDigestResponse transformAndGenerateDigest(String intygXml, String intygsId);
 }
