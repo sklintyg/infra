@@ -55,30 +55,6 @@ Lägg till följande i enhetstest:
 10. Se delflöde 2 efter att frontend tagit emot COMPLETE vid sin poll.
 forts...
 
-##### Delflöde 3b: NetiD access
-1. Frontend anropar _/signeranias/{id}_ och visar samtidigt sin signerings-modal.
-2. Backend hämtar SignatureTicket från REDIS
-3. Backend startar NIAS-processen:
-3.1 Utför /sign över NIAS-API för att initiera signeringen.
-  - Base64-digest av <SignedInfo> skickas som digest.
-3.2 Utför Collect-poll var tredje sekund. (detta sker i egen tråd!)
-4. Collect-poll svarar med COMPLETE:
-  - SignatureTicket hämtas från REDIS
-  - RAW-signatur infogas i <SignedInfo>
-  - X509Certificate skrivs till <KeyInfo>
-5. Följande skrivs till Signatur-tabellen:
-  - Den kanoniska <intyg>-XML som digesten bygger på.
-  - Digest-värdet för <intyg>-XML
-  - SignatureType serialiserad till sträng.
-6. Till Utkast-eniteten infogas <Signature> i XML-format till fältet "signature" som Base64-kodad sträng.
-7. SignatureTicket skrivs med status COMPLETE till REDIS*
-8. Se delflöde 2 efter att frontend tagit emot COMPLETE vid sin poll.
-
-Alternativt har fel uppstått:
-4. Collect-poll svarar med FAIL av något slag.*
-5. SignatureTicket skrivs med status ERROR till REDIS.*
-6. Se delflöde 2 efter att frontend tagit emot ERROR.
-
 ##### Delflöde 3c: BankID/Mobilt BankID
 1. Frontend anropar _/signeragrp/{id}_ och visar samtidigt sin signerings-modal.
 2. Backend hämtar SignatureTicket från REDIS
