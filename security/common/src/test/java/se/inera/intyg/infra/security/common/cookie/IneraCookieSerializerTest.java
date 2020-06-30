@@ -45,8 +45,6 @@ public class IneraCookieSerializerTest {
     private HttpServletRequest req = mock(HttpServletRequest.class);
     private HttpServletResponse resp = mock(HttpServletResponse.class);
 
-    private IneraCookieSerializer testee = new IneraCookieSerializer();
-
     public IneraCookieSerializerTest(String userAgent, boolean isSameSiteNone) {
         this.userAgent = userAgent;
         this.isSameSiteNone = isSameSiteNone;
@@ -93,7 +91,9 @@ public class IneraCookieSerializerTest {
     }
 
     @Test
-    public void writeCookieValue_samesite() {
+    public void writeCookieValue_samesite_exclusion() {
+
+        IneraCookieSerializer testee = new IneraCookieSerializer(true);
 
         CookieSerializer.CookieValue cookieValue = new CookieSerializer.CookieValue(req, resp, "");
         when(req.isSecure()).thenReturn(true);
@@ -105,5 +105,39 @@ public class IneraCookieSerializerTest {
         verify(resp).addHeader(anyString(), stringCaptor.capture());
 
         assertEquals("Erroneous samesite attribut for: " + userAgent, isSameSiteNone, stringCaptor.getValue().contains("SameSite=none"));
+    }
+
+    @Test
+    public void writeCookieValue_samesite_no_exclusion() {
+
+        IneraCookieSerializer testee = new IneraCookieSerializer();
+
+        CookieSerializer.CookieValue cookieValue = new CookieSerializer.CookieValue(req, resp, "");
+        when(req.isSecure()).thenReturn(true);
+        when(req.getHeader(HttpHeaders.USER_AGENT)).thenReturn(userAgent);
+
+        testee.writeCookieValue(cookieValue);
+
+        ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
+        verify(resp).addHeader(anyString(), stringCaptor.capture());
+
+        assertEquals("Erroneous samesite attribut for: " + userAgent, true, stringCaptor.getValue().contains("SameSite=none"));
+    }
+
+    @Test
+    public void writeCookieValue_samesite_no_isSecure() {
+
+        IneraCookieSerializer testee = new IneraCookieSerializer();
+
+        CookieSerializer.CookieValue cookieValue = new CookieSerializer.CookieValue(req, resp, "");
+        when(req.isSecure()).thenReturn(false);
+        when(req.getHeader(HttpHeaders.USER_AGENT)).thenReturn(userAgent);
+
+        testee.writeCookieValue(cookieValue);
+
+        ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
+        verify(resp).addHeader(anyString(), stringCaptor.capture());
+
+        assertEquals("Erroneous samesite attribut for: " + userAgent, false, stringCaptor.getValue().contains("SameSite=none"));
     }
 }

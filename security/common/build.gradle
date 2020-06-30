@@ -10,5 +10,6 @@ dependencies {
     compile "org.slf4j:slf4j-api"
 
     compileOnly "javax.servlet:javax.servlet-api"
-    testCompileOnly "javax.servlet:javax.servlet-api"
+
+    testCompile "javax.servlet:javax.servlet-api"
 }

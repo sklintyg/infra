@@ -28,10 +28,16 @@ import java.util.regex.Pattern;
 
 public class IneraCookieSerializer extends DefaultCookieSerializer {
 
+    private boolean useSameSiteNoneExclusion;
     private Pattern ucBrowserPattern = Pattern.compile("UCBrowser/(\\d+)\\.(\\d+)\\.(\\d+)\\.");
 
     public IneraCookieSerializer() {
+        this(false);
+    }
+
+    public IneraCookieSerializer(boolean useSameSiteNoneExclusion) {
         super();
+        this.useSameSiteNoneExclusion = useSameSiteNoneExclusion;
     }
 
     @Override
@@ -39,7 +45,7 @@ public class IneraCookieSerializer extends DefaultCookieSerializer {
 
         HttpServletRequest request = cookieValue.getRequest();
 
-        if (shouldntGetSameSiteNone(request.getHeader(HttpHeaders.USER_AGENT))) {
+        if (useSameSiteNoneExclusion && shouldntGetSameSiteNone(request.getHeader(HttpHeaders.USER_AGENT))) {
             setSameSite(null);
         } else if (request.isSecure()) {
             setSameSite("none");
