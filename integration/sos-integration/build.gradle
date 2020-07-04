@@ -1,0 +1,14 @@
+dependencies {
+
+    compile "org.springframework.security:spring-security-web"
+    compile "com.fasterxml.jackson.core:jackson-annotations"
+    compile "com.fasterxml.jackson.core:jackson-core"
+    compile "com.fasterxml.jackson.core:jackson-databind"
+    compile "org.apache.httpcomponents:httpclient"
+
+    compileOnly("org.projectlombok:lombok")
+
+    annotationProcessor("org.projectlombok:lombok")
+
+    testCompile "org.springframework:spring-test"
+}

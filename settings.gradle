@@ -14,6 +14,7 @@ include ':nias-stub'
 include ':hsa-integration'
 include ':ia-integration'
 include ':pu-integration'
+include ':sos-integration'
 include ':srs-integration'
 include ':postnummerservice-integration'
 include ':log-messages'
@@ -31,6 +32,7 @@ include ':integreradeenheter'
 include ':driftbanner-dto'
 include ':testcertificate'
 include ':message'
+include ':sos-kodserver'
 
 project(':common-redis-cache-core').projectDir = "$rootDir/redis-cache/core" as File
 project(':dynamiclink').projectDir = "$rootDir/dynamiclink" as File
@@ -39,6 +41,7 @@ project(':nias-stub').projectDir = "$rootDir/integration/nias-stub" as File
 project(':hsa-integration').projectDir = "$rootDir/integration/hsa-integration" as File
 project(':ia-integration').projectDir = "$rootDir/integration/ia-integration" as File
 project(':pu-integration').projectDir = "$rootDir/integration/pu-integration" as File
+project(':sos-integration').projectDir = "$rootDir/integration/sos-integration" as File
 project(':srs-integration').projectDir = "$rootDir/integration/srs-integration" as File
 project(':postnummerservice-integration').projectDir = "$rootDir/integration/postnummerservice-integration" as File
 project(':log-messages').projectDir = "$rootDir/loggtjanst/log-messages" as File
@@ -55,4 +58,4 @@ project(':integreradeenheter').projectDir = "$rootDir/internalapi/integreradeenh
 project(':driftbanner-dto').projectDir = "$rootDir/internalapi/driftbannerdto" as File
 project(':testcertificate').projectDir = "$rootDir/internalapi/testcertificate" as File
 project(':message').projectDir = "$rootDir/internalapi/message" as File
-
+project(':sos-kodserver').projectDir = "$rootDir/internalapi/sos-kodserver" as File
