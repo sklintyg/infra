@@ -67,6 +67,13 @@ allprojects {
         compile "jakarta.xml.bind:jakarta.xml.bind-api"
         compile "jakarta.xml.ws:jakarta.xml.ws-api"
         compile "jakarta.jws:jakarta.jws-api:${jakartaJwsApiVersion}"
+
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+
+        testCompileOnly 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
+
         testCompile "org.glassfish.jaxb:jaxb-runtime"
         testCompile "com.sun.xml.messaging.saaj:saaj-impl"
 
