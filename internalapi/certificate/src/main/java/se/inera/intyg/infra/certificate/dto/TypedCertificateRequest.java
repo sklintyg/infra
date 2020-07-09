@@ -1,6 +1,6 @@
 package se.inera.intyg.infra.certificate.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.Data;
 
@@ -8,8 +8,8 @@ import lombok.Data;
 public class TypedCertificateRequest {
 
     private List<String> unitIds;
-    private String civicRegistrationNumber;
+    private String personId;
     private List<String> certificateTypes;
-    private LocalDateTime fromDate;
-    private LocalDateTime toDate;
+    private LocalDate fromDate;
+    private LocalDate toDate;
 }
