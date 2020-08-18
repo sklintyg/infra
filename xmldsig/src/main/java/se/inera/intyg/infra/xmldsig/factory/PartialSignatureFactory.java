@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
 
 public final class PartialSignatureFactory {
 
-    private static final String SIGNATURE_ALGORITHM = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
+    public static final String DEFAULT_SIGNATURE_ALGORITHM = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
     private static final String TRANSFORM_ALGORITHM = "http://www.w3.org/2000/09/xmldsig#enveloped-signature";
     private static final String FILTER_INTERSECT = "intersect";
     private static final String XPATH_PART1 = "//extension[text()='";
@@ -65,8 +65,12 @@ public final class PartialSignatureFactory {
      *
      * Contains appropriate algorithms and elements for subsequent population of digest, signature value and
      * keyinfo.
+     *
+     * @param intygsId used in reference transform
+     * @param signatureAlgorithm specifies the signature algorithm to be used
+     * @return A SignatureType with the SignedInfo that should be signed
      */
-    public static SignatureType buildSignature(String intygsId, byte[] digestBytes) {
+    public static SignatureType buildSignature(String intygsId, byte[] digestBytes, String signatureAlgorithm) {
         SignatureType signature = new SignatureType();
         SignedInfoType signedInfo = new SignedInfoType();
 
@@ -75,7 +79,8 @@ public final class PartialSignatureFactory {
         signedInfo.setCanonicalizationMethod(canonType);
 
         SignatureMethodType signatureMethod = new SignatureMethodType();
-        signatureMethod.setAlgorithm(SIGNATURE_ALGORITHM);
+        signatureMethod.setAlgorithm(signatureAlgorithm);
+
         signedInfo.setSignatureMethod(signatureMethod);
 
         ReferenceType referenceType = new ReferenceType();

@@ -76,7 +76,7 @@ allprojects {
     }
 
     group = 'se.inera.intyg.infra'
-    version = System.properties['buildVersion'] ?: '3.13.1-SNAPSHOT'
+    version = System.properties['buildVersion'] ?: '3.13.2-SNAPSHOT'
 
     compileJava.options.encoding = 'UTF-8'
 
