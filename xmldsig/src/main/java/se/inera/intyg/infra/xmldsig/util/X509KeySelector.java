@@ -70,7 +70,16 @@ public class X509KeySelector extends KeySelector {
     }
 
     private static boolean algEquals(String algURI, String algName) {
-        return "RSA".equalsIgnoreCase(algName)
-            && "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256".equalsIgnoreCase(algURI);
+        var lastSignMethodPart = algURI.substring(algURI.lastIndexOf("#") + 1);
+
+        if ("EC".equalsIgnoreCase(algName) && lastSignMethodPart.startsWith("ecdsa")) {
+            return true;
+        } else if ("RSA".equalsIgnoreCase(algName) && lastSignMethodPart.startsWith("rsa")) {
+            return true;
+        } else if ("DSA".equalsIgnoreCase(algName) && lastSignMethodPart.startsWith("dsa")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

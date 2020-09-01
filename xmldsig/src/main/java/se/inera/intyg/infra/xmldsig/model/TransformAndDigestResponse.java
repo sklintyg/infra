@@ -16,26 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.integration.nias.stub.util;
 
-import java.security.cert.X509Certificate;
-import java.security.interfaces.RSAPrivateKey;
+package se.inera.intyg.infra.xmldsig.model;
 
-public class Keys {
+public class TransformAndDigestResponse {
 
-    private RSAPrivateKey privateKey;
-    private X509Certificate x509Certificate;
+    private String transformedXml;
+    private byte[] digest;
 
-    public Keys(RSAPrivateKey privateKey, X509Certificate x509Certificate) {
-        this.privateKey = privateKey;
-        this.x509Certificate = x509Certificate;
+    public TransformAndDigestResponse(String transformedXml, byte[] digest) {
+        this.transformedXml = transformedXml;
+        this.digest = digest;
     }
 
-    public RSAPrivateKey getPrivateKey() {
-        return privateKey;
+    public String getTransformedXml() {
+        return transformedXml;
     }
 
-    public X509Certificate getX509Certificate() {
-        return x509Certificate;
+    public byte[] getDigest() {
+        return digest;
     }
 }

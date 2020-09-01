@@ -39,6 +39,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.w3._2000._09.xmldsig_.KeyInfoType;
 import org.w3._2000._09.xmldsig_.SignatureValueType;
+import se.inera.intyg.infra.xmldsig.factory.PartialSignatureFactory;
 import se.inera.intyg.infra.xmldsig.model.IntygXMLDSignature;
 import se.inera.intyg.infra.xmldsig.service.PrepareSignatureServiceImpl;
 import se.inera.intyg.infra.xmldsig.service.XMLDSigServiceImpl;
@@ -59,7 +60,8 @@ public class PrepareSignatureServiceImplTest {
     public void testBuildPreparedSignature() throws IOException {
         InputStream xmlResource = getXmlResource("classpath:/unsigned/unsigned-lisjp-i18n.xml");
         String xml = IOUtils.toString(xmlResource, StandardCharsets.UTF_8);
-        IntygXMLDSignature intygXMLDSignature = testee.prepareSignature(xml, "9f02dd2f-f57c-4a73-8190-2fe602cd6e27");
+        IntygXMLDSignature intygXMLDSignature = testee.prepareSignature(xml, "9f02dd2f-f57c-4a73-8190-2fe602cd6e27",
+            PartialSignatureFactory.DEFAULT_SIGNATURE_ALGORITHM);
 
         byte[] signature = createSignature(intygXMLDSignature.getSigningData().getBytes(StandardCharsets.UTF_8));
         SignatureValueType svt = new SignatureValueType();
