@@ -1,14 +1,14 @@
 {
-  "hsaId": "TSTNMT2321000156-1079",
+  "hsaId": "TSTNMT2321000156-1079B",
   "forNamn": "Arnold",
-  "efterNamn": "Johansson",
-  "legitimeradeYrkesgrupper": [
-    "Läkare"
-  ],
+  "efterNamn": "Johansson B",
   "uppdrag": [
     {
       "vardgivare": "TSTNMT2321000156-102Q",
       "enhet": "TSTNMT2321000156-1077",
+      "systemRoles": [
+        "INTYG;Rehab-TSTNMT2321000156-1077"
+      ],
       "andamal": [
         "Vård och behandling"
       ]
@@ -16,13 +16,13 @@
   ],
   "fakeProperties": {
     "allowedInApplications": ["WC","RS", "IB"],
-    "displayOrder": 1,
+    "displayOrder": 2,
     "env": "demo",
     "readOnly": true,
     "logins": [
       {
         "forvaldEnhet": "TSTNMT2321000156-1077",
-        "beskrivning": "Arnold Johansson (Läkare | Har intyg och ärenden)"
+        "beskrivning": "Arnold Johansson B (Vårdadmin/Rehabkoordinator)"
       }
     ]
   }
