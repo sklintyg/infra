@@ -6,14 +6,15 @@
     {
       "vardgivare": "TSTNMT2321000156-102Q",
       "enhet": "TSTNMT2321000156-1077",
-      "systemRoles": [
-        "INTYG;Rehab-TSTNMT2321000156-1077"
+      "systemRoles": ["INTYG;Rehab-TSTNMT2321000156-1077"],
+      "andamal": [
+        "Vård och behandling"
       ]
     }
   ],
   "fakeProperties": {
     "allowedInApplications": ["WC","RS"],
-    "displayOrder": 15,
+    "displayOrder": 2,
     "readOnly": true,
     "logins": [
       {
