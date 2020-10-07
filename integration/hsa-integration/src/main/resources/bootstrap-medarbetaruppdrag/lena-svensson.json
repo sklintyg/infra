@@ -14,6 +14,16 @@
       ]
     },
     {
+      "vardgivare": "TSTNMT2321000156-102Q",
+      "enhet": "TSTNMT2321000156-1076",
+      "andamal": [
+        "Vård och behandling"
+      ],
+      "systemRoles": [
+        "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1076"
+      ]
+    },
+    {
       "vardgivare": "TSTNMT2321000156-105M",
       "enhet": "TSTNMT2321000156-105N",
       "systemRoles": [
