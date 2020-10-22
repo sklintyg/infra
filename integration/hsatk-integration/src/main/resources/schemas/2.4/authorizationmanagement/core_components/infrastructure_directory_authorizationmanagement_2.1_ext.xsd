@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<xs:schema xmlns:tns="urn:riv:infrastructure:directory:authorizationmanagement:2.1" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:riv:infrastructure:directory:authorizationmanagement:2.1" elementFormDefault="qualified" attributeFormDefault="unqualified"
+	version="2.1">
+
+	<xs:element name="fromDate" type="xs:string" />
+	<xs:element name="toDate" type="xs:string" />
+	<xs:element name="healthCareProfessionalLicenceCode" type="xs:string" />
+	<xs:element name="healthCareProfessionalLicenceSpeciality" type="tns:HCPSpecialityCodesType" />
+	<xs:element name="occupationalCode" type="xs:string" />
+	<xs:element name="personalIdentity" type="tns:IIType" />
+	<xs:element name="healthcareProfessionalLicenseIdentityNumber" type="xs:string" />
+
+	<xs:complexType name="IIType">
+		<xs:sequence>
+			<xs:element name="root" type="xs:string" />
+			<xs:element name="extension" type="xs:string" />
+			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="HCPSpecialityCodesType">
+		<xs:sequence>
+			<xs:element name="healthCareProfessionalLicenceCode" type="xs:string" />
+			<xs:element name="specialityCode" type="xs:string"></xs:element>
+			<xs:element name="specialityName" type="xs:string"></xs:element>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

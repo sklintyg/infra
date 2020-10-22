@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements. See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership. Sveriges Kommuner och Landsting licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License. You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied. See the License for the
+ specific language governing permissions and limitations
+ under the License.
+ -->		
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:tns='urn:riv:infrastructure:directory:organization:GetUnitResponder:2' xmlns:m1='urn:riv:infrastructure:directory:organization:GetUnitResponder:2.2' xmlns:m2='urn:riv:infrastructure:directory:organization:GetUnitResponder:2.3' xmlns:m3='urn:riv:infrastructure:directory:organization:GetUnitResponder:2.4' xmlns:core='urn:riv:infrastructure:directory:organization:2' targetNamespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:2' elementFormDefault='qualified' attributeFormDefault='unqualified' version='2.4'>
+  <xs:import schemaLocation='../../core_components/infrastructure_directory_organization_2.1.xsd' namespace='urn:riv:infrastructure:directory:organization:2' />
+  <xs:import namespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:2.2'	schemaLocation="GetUnitResponder_2.2_ext.xsd" />
+  <xs:import namespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:2.3'	schemaLocation="GetUnitResponder_2.3_ext.xsd" />
+  <xs:import namespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:2.4'	schemaLocation="GetUnitResponder_2.4_ext.xsd" />
+  <xs:element name='GetUnit' type='tns:GetUnitType' />
+  <xs:element name='GetUnitResponse' type='tns:GetUnitResponseType' />
+  
+  <xs:complexType name='GetUnitType'>
+    <xs:sequence>
+      <xs:element name="unitHsaId" type="xs:string"/>
+      <xs:element name="searchBase" type="core:DNType" minOccurs="0"/>
+	  <xs:element name="includeFeignedObject" type="xs:boolean" minOccurs="0" />
+	  <xs:element ref="m3:profile" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name='GetUnitResponseType'>
+    <xs:sequence>
+      <xs:element name="unit" type="tns:unitType" minOccurs="0" />
+      <xs:any namespace='##other' processContents='lax' minOccurs='0' maxOccurs='unbounded' />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name='unitType'>
+    <xs:sequence>
+      <xs:element name="alternateName" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="alternateText" type="xs:string" minOccurs="0"/>
+      <xs:element name="businessClassification" type="tns:BusinessClassificationType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="businessType" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="careType" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="countyName" type="xs:string" minOccurs="0"/>
+      <xs:element name="countyCode" type="xs:string" minOccurs="0"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="directoryContact" type="xs:string" minOccurs="0"/>
+      <xs:element name="displayOption" type="xs:string" minOccurs="0"/>
+      <xs:element name="dropInHour" type="core:TimeSpanType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="mail" type="xs:string" minOccurs="0"/>
+      <xs:element name="facsimileTelephoneNumber" type="core:TelephoneNumberType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="geographicalCoordinatesRt90" type="tns:GeoCoordRt90Type" minOccurs="0"/>
+      <xs:element name="geographicalCoordinatesSWEREF99" type="tns:GeoCoordSWEREF99Type" minOccurs="0"/>
+      <xs:element name="healthCareArea" type="xs:string" minOccurs="0"/>
+      <xs:element name="destinationIndicator" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="unitHsaId" type="xs:string"/>
+      <xs:element name="jpegPhoto" type="xs:string" minOccurs="0"/>
+      <xs:element name="jpegLogotype" type="xs:string" minOccurs="0"/>
+      <xs:element name="labeledUri" type="xs:string" minOccurs="0"/>
+      <xs:element name="location" type="xs:string" minOccurs="0"/>
+      <xs:element name="webPage1177" type="xs:string" minOccurs="0"/>
+      <xs:element name="management" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="municipalityName" type="xs:string" minOccurs="0"/>
+      <xs:element name="municipalityCode" type="xs:string" minOccurs="0"/>
+      <xs:element name="unitName" type="xs:string"/>
+      <xs:element name="patientInformation" type="xs:string" minOccurs="0"/>
+      <xs:element name="postalAddress" type="core:AddressType" minOccurs="0"/>
+      <xs:element name="postalCode" type="xs:string" minOccurs="0"/>
+      <xs:element name="priceInformation" type="xs:string" minOccurs="0"/>
+      <xs:element name="publicName" type="xs:string"/>
+      <xs:element name="relatedUnitHsaId" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="route" type="xs:string" minOccurs="0"/>
+	  <xs:element name="smsTelephoneNumber" type="core:TelephoneNumberType" minOccurs="0" />
+      <xs:element name="street" type="xs:string" minOccurs="0"/>
+      <xs:element name="surgeryHour" type="core:TimeSpanType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="switchboardNumber" type="core:TelephoneNumberType" minOccurs="0"/>
+      <xs:element name="telephoneHour" type="core:TimeSpanType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="telephoneNumber" type="core:TelephoneNumberType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="textTelephoneNumber" type="core:TelephoneNumberType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="unitExtraInformation" type="xs:string" minOccurs="0"/>
+      <xs:element name="unitFunction" type="tns:UnitFunctionType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="unitTemporaryInformation" type="core:DateSpanType" minOccurs="0"/>
+      <xs:element name="visitingHour" type="core:TimeSpanType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="visitingRuleAge" type="core:AgeSpanType" minOccurs="0"/>
+      <xs:element name="referralRules" type="xs:string" minOccurs="0"/>
+      <xs:element name="visitingRules" type="xs:string" minOccurs="0"/>
+      <xs:element name="unitStartDate" type="xs:dateTime" minOccurs="0" />
+      <xs:element name="unitEndDate" type="xs:dateTime" minOccurs="0" />
+	  <xs:element name="feignedUnit" type="xs:boolean" minOccurs="0" />
+	  <xs:element ref="m1:financingOrganization" minOccurs="0" maxOccurs="unbounded" />
+	  <xs:element ref="m2:indoorRouteDescription" minOccurs="0" />
+	  <xs:element ref="m2:geographicalCoordinatesSWEREF99Latitude" minOccurs="0" />
+	  <xs:element ref="m2:geographicalCoordinatesSWEREF99Longitude" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+
+  
+  <xs:complexType name='UnitFunctionType'>
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" />
+      <xs:element name="telephoneHour" type="core:TimeSpanType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="telephoneNumber" type="core:TelephoneNumberType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name='BusinessClassificationType'>
+    <xs:sequence>
+      <xs:element name="businessClassificationName" type="xs:string" minOccurs="0" />
+      <xs:element name="businessClassificationCode" type="xs:string" minOccurs="0" />
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name='GeoCoordRt90Type'>
+    <xs:sequence>
+      <xs:element name="xCoordinate" type="xs:string" />
+      <xs:element name="yCoordinate" type="xs:string" />
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name='GeoCoordSWEREF99Type'>
+    <xs:sequence>
+      <xs:element name="nCoordinate" type="xs:string" />
+      <xs:element name="eCoordinate" type="xs:string" />
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+</xs:schema>
