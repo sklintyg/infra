@@ -17,14 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package se.inera.intyg.infra.certificate.dto;
-import lombok.Data;
+
 import java.time.LocalDateTime;
+import lombok.Data;
 
 @Data
 public class CertificateListRequest {
+
     private String civicRegistrationNumber;
     private String hsaId;
-    private String unitId;
+    private String[] unitIds;
     private LocalDateTime fromDate;
     private LocalDateTime toDate;
     private int startFrom;
