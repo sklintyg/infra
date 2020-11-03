@@ -38,7 +38,7 @@ public class LogbackConfiguratorContextListener implements ServletContextListene
     private static final Logger LOG = LoggerFactory.getLogger(LogbackConfiguratorContextListener.class);
 
     private static final String CLASSPATH = "classpath:";
-    private static final String DEFAULTURI = CLASSPATH + "logback.xml";
+    private static final String DEFAULTURI = CLASSPATH + "logback-ocp.xml";
 
     /**
      * initialize logback with external configuration file.
@@ -82,11 +82,8 @@ public class LogbackConfiguratorContextListener implements ServletContextListene
         final JoranConfigurator jc = new JoranConfigurator();
         jc.setContext(ctx);
         ctx.reset();
-        final InputStream in = config.getInputStream();
-        try {
+        try (InputStream in = config.getInputStream()) {
             jc.doConfigure(in);
-        } finally {
-            in.close();
         }
         StatusPrinter.printIfErrorsOccured(ctx);
         ctx.start();
