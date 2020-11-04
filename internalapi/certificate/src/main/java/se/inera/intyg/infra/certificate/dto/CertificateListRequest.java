@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.certificate.dto;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import lombok.Data;
 
 @Data
@@ -33,4 +34,5 @@ public class CertificateListRequest {
     private int pageSize;
     private String orderBy;
     private boolean orderAscending;
+    private Set<String> types;
 }
