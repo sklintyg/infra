@@ -94,6 +94,11 @@ public final class AuthoritiesConstants {
      */
     public static final String FEATURE_ALLOW_TEST_INDICATED_PERSON = "TILLAT_VALIDERINGSPERSON";
 
+    /**
+     * Feature to toggle if the signed certificate list view should be used or not.
+     */
+    public static final String FEATURE_ENABLE_SIGNED_CERTIFICATES_LIST = "SIGNED_CERTIFICATES_LIST";
+
     private AuthoritiesConstants() {
     }
 }
