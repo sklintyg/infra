@@ -21,7 +21,7 @@
   <property name="LEVEL" value="%highlight(%-5level)" />
   <property name="SESSION" value="%X{req.sessionInfo:--}"/>
   <property name="TRACE" value="%X{req.traceId:--}"/>
-  <property name="LOGGER" value="--- %logger{10}" />
+  <property name="LOGGER" value="%logger{10}" />
   <property name="LINE" value="%msg%n"/>
 
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -32,7 +32,7 @@
     <onMismatch>ACCEPT</onMismatch>
   </filter>
   <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-    <pattern>${TIMESTAMP} ${LEVEL} [console,${SESSION},${TRACE}] ${LOGGER} : ${LINE}</pattern>
+    <pattern>${TIMESTAMP} ${LEVEL} [console,${SESSION},${TRACE}] --- ${LOGGER} : ${LINE}</pattern>
   </encoder>
   </appender>
 
@@ -44,7 +44,7 @@
     <onMismatch>DENY</onMismatch>
   </filter>
   <encoder class="se.inera.intyg.infra.monitoring.logging.UserPatternLayout">
-    <pattern>${TIMESTAMP} ${LEVEL} [monitoring,${SESSION},${TRACE},%user] %boldGreen(${LOGGER}) : ${LINE}</pattern>
+    <pattern>${TIMESTAMP} ${LEVEL} [monitoring,${SESSION},${TRACE},%user] --- %boldGreen(${LOGGER}) : ${LINE}</pattern>
   </encoder>
   </appender>
 
@@ -56,7 +56,7 @@
     <onMismatch>DENY</onMismatch>
   </filter>
   <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-    <pattern>${TIMESTAMP} ${LEVEL} [validation,${SESSION},${TRACE}] %boldCyan(${LOGGER}) : ${LINE}</pattern>
+    <pattern>${TIMESTAMP} ${LEVEL} [validation,${SESSION},${TRACE}] --- %boldCyan(${LOGGER}) : ${LINE}</pattern>
   </encoder>
   </appender>
 
@@ -68,7 +68,7 @@
       <onMismatch>ACCEPT</onMismatch>
     </filter>
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <pattern>${TIMESTAMP} ${LEVEL} [process,${SESSION},${TRACE}] %boldBlue(${LOGGER}) : ${LINE}</pattern>
+      <pattern>${TIMESTAMP} ${LEVEL} [process,${SESSION},${TRACE}] --- %boldBlue(${LOGGER}) : ${LINE}</pattern>
     </encoder>
   </appender>
 
@@ -80,7 +80,7 @@
       <onMismatch>ACCEPT</onMismatch>
     </filter>
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <pattern>${TIMESTAMP} ${LEVEL} [access,${SESSION},${TRACE}] %boldMagenta(${LOGGER}) : ${LINE}</pattern>
+      <pattern>${TIMESTAMP} ${LEVEL} [access,${SESSION},${TRACE}] --- %boldMagenta(${LOGGER}) : ${LINE}</pattern>
     </encoder>
   </appender>
 
@@ -92,7 +92,7 @@
       <onMismatch>ACCEPT</onMismatch>
     </filter>
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-      <pattern>${TIMESTAMP} ${LEVEL} [frontend,${SESSION},${TRACE}] %boldYellow(${LOGGER}) : ${LINE}</pattern>
+      <pattern>${TIMESTAMP} ${LEVEL} [frontend,${SESSION},${TRACE}] --- %boldYellow(${LOGGER}) : ${LINE}</pattern>
     </encoder>
   </appender>
 
