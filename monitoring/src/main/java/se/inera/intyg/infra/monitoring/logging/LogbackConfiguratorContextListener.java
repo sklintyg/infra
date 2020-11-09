@@ -82,8 +82,11 @@ public class LogbackConfiguratorContextListener implements ServletContextListene
         final JoranConfigurator jc = new JoranConfigurator();
         jc.setContext(ctx);
         ctx.reset();
-        try (InputStream in = config.getInputStream()) {
+        final InputStream in = config.getInputStream();
+        try {
             jc.doConfigure(in);
+        } finally {
+            in.close();
         }
         StatusPrinter.printIfErrorsOccured(ctx);
         ctx.start();
