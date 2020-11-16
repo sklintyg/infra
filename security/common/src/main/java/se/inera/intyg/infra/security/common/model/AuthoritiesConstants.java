@@ -99,6 +99,11 @@ public final class AuthoritiesConstants {
      */
     public static final String FEATURE_ENABLE_SIGNED_CERTIFICATES_LIST = "SIGNED_CERTIFICATES_LIST";
 
+    /**
+     * Feature for toggling webcert functionality for handling messages.
+     */
+    public static final String FEATURE_USE_WEBCERT_MESSAGING = "WEBCERT_MESSAGE_HANDLING";
+
     private AuthoritiesConstants() {
     }
 }
