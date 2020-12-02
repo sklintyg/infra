@@ -34,12 +34,7 @@
   <cache:annotation-driven cache-manager="cacheManager"/>
 
   <beans profile="caching-enabled,prod">
-    <beans profile="!dev">
-      <bean class="se.inera.intyg.infra.rediscache.core.BasicCacheConfiguration" />
-    </beans>
-    <beans profile="dev">
-      <bean class="se.inera.intyg.infra.rediscache.core.EmbeddedCacheConfiguration" />
-    </beans>
+    <bean class="se.inera.intyg.infra.rediscache.core.BasicCacheConfiguration" />
   </beans>
   <beans profile="!caching-enabled">
     <beans profile="!prod">

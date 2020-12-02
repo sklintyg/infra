@@ -101,7 +101,7 @@ public class IABannerServiceTest {
         List<Banner> banners = new ArrayList<>();
 
         mockServer.expect(ExpectedCount.once(),
-            requestTo(new URI("http://localhost:8681/actuator/banner/WEBCERT")))
+            requestTo(new URI("http://localhost:8170/actuator/banner/WEBCERT")))
             .andExpect(method(HttpMethod.GET))
             .andRespond(withStatus(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -124,7 +124,7 @@ public class IABannerServiceTest {
         banners.add(banner);
 
         mockServer.expect(ExpectedCount.once(),
-            requestTo(new URI("http://localhost:8681/actuator/banner/WEBCERT")))
+            requestTo(new URI("http://localhost:8170/actuator/banner/WEBCERT")))
             .andExpect(method(HttpMethod.GET))
             .andRespond(withStatus(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
