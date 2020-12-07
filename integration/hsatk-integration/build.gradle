@@ -9,7 +9,15 @@ dependencies {
 
     //testCompile "junit:junit:4.+"
 
+    compile "org.springframework.security:spring-security-web"
+
+    compile "org.apache.commons:commons-lang3"
+    compile "ch.qos.logback:logback-classic"
+
     compile "se.inera.intyg.schemas:schemas-support:${schemasSupportVersion}"
+    compile "com.fasterxml.jackson.core:jackson-databind"
+    compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
     wsdl2java "se.inera.intyg.schemas:schemas-support:${schemasSupportVersion}"
     wsdl2java "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:${jaxb2Version}"
@@ -102,18 +110,18 @@ wsdl2java {
 
                         commonOrganizationOptions + [
                                          "-p",
-                                         "urn:riv:infrastructure:directory:organization:GetHealthCareUnit:2:rivtabp21=se.riv.infrastructure.directory.organization.gethealhcareunit.v2.rivtabp21",
+                                         "urn:riv:infrastructure:directory:organization:GetHealthCareUnit:2:rivtabp21=se.riv.infrastructure.directory.organization.gethealthcareunit.v2.rivtabp21",
                                          "-p",
-                                         "urn:riv:infrastructure:directory:organization:GetHealthCareUnitResponder:2=se.riv.infrastructure.directory.organization.gethealhcareunitresponder.v2",
+                                         "urn:riv:infrastructure:directory:organization:GetHealthCareUnitResponder:2=se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2",
                                          "-wsdlLocation",
                                          "classpath:interactions/GetHealthCareUnitInteraction/GetHealthCareUnitInteraction_2.0_RIVTABP21.wsdl",
                                          "$wsdlDir/2.4/organization/interactions/GetHealthCareUnitInteraction/GetHealthCareUnitInteraction_2.0_RIVTABP21.wsdl"],
 
                         commonOrganizationOptions + [
                                          "-p",
-                                         "urn:riv:infrastructure:directory:organization:GetHealthCareUnitMembers:2:rivtabp21=se.riv.infrastructure.directory.organization.gethealhcareunitmembers.v2.rivtabp21",
+                                         "urn:riv:infrastructure:directory:organization:GetHealthCareUnitMembers:2:rivtabp21=se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v2.rivtabp21",
                                          "-p",
-                                         "urn:riv:infrastructure:directory:organization:GetHealthCareUnitMembersResponder:2=se.riv.infrastructure.directory.organization.gethealhcareunitmembersresponder.v2",
+                                         "urn:riv:infrastructure:directory:organization:GetHealthCareUnitMembersResponder:2=se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2",
                                          "-wsdlLocation",
                                          "classpath:interactions/GetHealthCareUnitMembersInteraction/GetHealthCareUnitMembersInteraction_2.0_RIVTABP21.wsdl",
                                          "$wsdlDir/2.4/organization/interactions/GetHealthCareUnitMembersInteraction/GetHealthCareUnitMembersInteraction_2.0_RIVTABP21.wsdl"],
@@ -135,9 +143,9 @@ wsdl2java {
 
                         commonOrganizationOptions + [
                                          "-p",
-                                         "urn:riv:infrastructure:directory:organization:GetHealthCareProvider:1:rivtabp21=se.riv.infrastructure.directory.organization.gethealhcareprovider.v1.rivtabp21",
+                                         "urn:riv:infrastructure:directory:organization:GetHealthCareProvider:1:rivtabp21=se.riv.infrastructure.directory.organization.gethealthcareprovider.v1.rivtabp21",
                                          "-p",
-                                         "urn:riv:infrastructure:directory:organization:GetHealthCareProviderResponder:1=se.riv.infrastructure.directory.organization.gethealhcareproviderresponder.v1",
+                                         "urn:riv:infrastructure:directory:organization:GetHealthCareProviderResponder:1=se.riv.infrastructure.directory.organization.gethealthcareproviderresponder.v1",
                                          "-wsdlLocation",
                                          "classpath:interactions/GetHealthCareProviderInteraction/GetHealthCareProviderInteraction_1.0_RIVTABP21.wsdl",
                                          "$wsdlDir/2.4/organization/interactions/GetHealthCareProviderInteraction/GetHealthCareProviderInteraction_1.0_RIVTABP21.wsdl"]

@@ -1,0 +1,14 @@
+{
+    "id" : "fvg3",
+    "name" : "Fitnessetestvårdgivare3",
+    "careUnits": [
+        {
+            "id" : "enhet3",
+            "name" : "Enhet enhet3"
+        },
+        {
+            "id" : "enhet4",
+            "name" : "Enhet enhet4"
+        }
+    ]
+}

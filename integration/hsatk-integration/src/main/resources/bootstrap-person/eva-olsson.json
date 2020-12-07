@@ -1,0 +1,32 @@
+{
+  "hsaId": "TSTNMT2321000156-10CN",
+  "personalIdentityNumber": "199103222395",
+  "givenName": "Eva",
+  "middleAndSurname": "Olsson",
+  "healthCareProfessionalLicence": [
+    "Läkare"
+  ],
+  "systemRoles": [
+    "INTYG;FMU-SAMORDNARE-TSTNMT2321000156-102Q"
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["WC","IB"],
+    "displayOrder": 490,
+    "env": "demo",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-1077",
+        "beskrivning": "Eva Olsson (Läkare | EFOS-kort)"
+      }
+    ]
+  }
+}

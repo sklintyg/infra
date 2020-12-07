@@ -1,0 +1,28 @@
+{
+  "hsaId": "SE4815162344-1B02",
+  "givenName": "Journa",
+  "middleAndSurname": "La System",
+  "healthCareProfessionalLicence": [
+    "Läkare"
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "SE4815162344-1A03"
+    },
+    {
+      "healthCareUnitHsaId": "SE4815162344-1A02"
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["WC"],
+    "displayOrder": 160,
+    "env": "dev",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "SE4815162344-1A03",
+        "beskrivning": "Journa La System (Läkare, djupintegration | WebCert-Integration Enhet 2)"
+      }
+    ]
+  }
+}

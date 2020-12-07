@@ -1,0 +1,17 @@
+{
+  "hsaId": "pelle-uppdragslos",
+  "givenName": "Pelle",
+  "middleAndSurname": "Uppdragslös",
+  "commissionList": [
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["RS"],
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "",
+        "beskrivning": "Pelle Uppdragslös (Saknar medarbetaruppdrag)"
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "hsaId": "TSTNMT2321000156-100L",
+  "givenName": "Åsa",
+  "middleAndSurname": "Svensson",
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-1003",
+      "commissionPurpose": [
+        "Vård och behandling",
+        "Admin"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["WC"],
+    "displayOrder": 280,
+    "env": "demo",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-1003",
+        "beskrivning": "Åsa Svensson (NMT variabel testperson)"
+      }
+    ]
+  }
+}

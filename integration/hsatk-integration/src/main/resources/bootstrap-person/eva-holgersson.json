@@ -1,0 +1,51 @@
+{
+  "hsaId": "eva",
+  "givenName": "Eva",
+  "middleAndSurname": "Holgersson",
+  "healthCareProfessionalLicence": [
+    "Läkare"
+  ],
+  "systemRoles": [],
+  "specialities": [
+    {
+      "specialityCode": "100",
+      "specialityName": "Kirurgi"
+    },
+    {
+      "specialityCode": "200",
+      "specialityName": "Oftalmologi"
+    }
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "centrum-vast",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    },
+    {
+      "healthCareUnitHsaId": "linkoping",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    },
+    {
+      "healthCareUnitHsaId": "enhet-finns-ej",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": [],
+    "displayOrder": 140,
+    "env": "dev",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "centrum-vast",
+        "beskrivning": "Eva Holgersson (Läkare | Centrum Väst, Linköping, 'Enhet-finns-ej')"
+      }
+    ]
+  }
+}

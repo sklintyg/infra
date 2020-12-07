@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright (C) 2016 Inera AB (http://www.inera.se)
+  ~
+  ~ This file is part of sklintyg (https://github.com/sklintyg).
+  ~
+  ~ sklintyg is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ sklintyg is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+  xmlns:jaxws="http://cxf.apache.org/jaxws"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+  http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
+
+  <beans profile="dev,wc-all-stubs,wc-hsa-stub">
+    <jaxws:endpoint address="/stubs/infrastructure/directory/authorizationmanagement/GetCredentialsForPersonIncludingProtectedPerson/2/rivtabp21" implementor="se.inera.intyg.infra.integration.hsatk.stub.GetAuthorizationsForPersonResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/authorizationmanagement/GetHospCredentialsForPerson/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsatk.stub.GetHospCredentialsForPersonResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/authorizationmanagement/GetHospLastUpdate/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsatk.stub.GetHospLastUpdateResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/authorizationmanagement/HandleHospCertificationPerson/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsatk.stub.HandleHospCertificationPersonResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/employee/GetEmployeeIncludingProtectedPerson/2/rivtabp21" implementor="se.inera.intyg.infra.integration.hsatk.stub.GetEmployeeResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetHealthCareProvider/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsatk.stub.GetHealthCareProviderResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetHealthCareUnit/2/rivtabp21" implementor="se.inera.intyg.infra.integration.hsatk.stub.GetHealthCareUnitResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetHealthCareUnitMembers/2/rivtabp21" implementor="se.inera.intyg.infra.integration.hsatk.stub.GetHealthCareUnitMembersResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetUnit/2/rivtabp21" implementor="se.inera.intyg.infra.integration.hsatk.stub.GetUnitResponderStub"/>
+  </beans>
+
+  <!--<beans profile="dev,testability-api">
+    <jaxrs:server address="/api/hsa-api">
+      <jaxrs:serviceBeans>
+        <ref bean="hsaStubRestApi"/>
+      </jaxrs:serviceBeans>
+      <jaxrs:providers>
+        <ref bean="jacksonJsonProvider"/>
+      </jaxrs:providers>
+      <jaxrs:extensionMappings>
+        <entry key="json" value="application/json"/>
+      </jaxrs:extensionMappings>
+    </jaxrs:server>
+
+  </beans>-->
+
+</beans>

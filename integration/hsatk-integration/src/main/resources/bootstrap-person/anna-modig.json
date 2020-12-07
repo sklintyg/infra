@@ -1,0 +1,87 @@
+{
+  "hsaId": "HSA-AM",
+  "givenName": "Anna",
+  "middleAndSurname": "Modig",
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "vg1-enhet-1",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-2",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-3",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-4",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-5",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-6",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-7",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-8",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-9",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-10",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-11",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-12",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-13",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-14",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-15",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-16",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-17",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-18",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-19",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-20",
+      "commissionPurpose": ["STATISTIK"]
+    }
+  ]
+}

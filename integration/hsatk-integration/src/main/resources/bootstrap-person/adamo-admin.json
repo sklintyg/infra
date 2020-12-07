@@ -1,0 +1,35 @@
+{
+  "hsaId": "adamo",
+  "givenName": "Adamo",
+  "middleAndSurname": "Admin",
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "centrum-vast",
+      "commissionPurpose": [
+        "Admin"
+      ]
+    },
+    {
+      "healthCareUnitHsaId": "centrum-ost",
+      "commissionPurpose": [
+        "Admin"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["WC"],
+    "displayOrder": 190,
+    "env": "dev",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "centrum-vast",
+        "beskrivning": "Adamo Admin (Vårdadmin | Centrum Väst)"
+      },
+      {
+        "forvaldEnhet": "centrum-ost",
+        "beskrivning": "Adamo Admin (Vårdadmin | Centrum Öst)"
+      }
+    ]
+  }
+}

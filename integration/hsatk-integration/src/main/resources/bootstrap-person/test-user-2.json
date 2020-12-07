@@ -1,0 +1,9 @@
+{
+  "hsaId": "test2",
+  "commissionList": [
+	{
+		"healthCareUnitHsaId": "SE2321000131-E000000004004",
+		"commissionPurpose": ["STATISTIK"]
+	}
+  ]
+}

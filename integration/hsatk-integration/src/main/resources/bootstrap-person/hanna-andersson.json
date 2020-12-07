@@ -1,0 +1,16 @@
+{
+  "hsaId": "TST5565594230-106C",
+  "givenName": "Hanna",
+  "middleAndSurname": "Andersson",
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "IFV1239877878-103F"
+    },
+    {
+      "healthCareUnitHsaId": "IFV1239877878-103H"
+    },
+    {
+      "healthCareUnitHsaId": "IFV1239877878-103D"
+    }
+  ]
+}

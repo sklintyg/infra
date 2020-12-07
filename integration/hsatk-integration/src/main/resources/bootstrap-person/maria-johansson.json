@@ -1,0 +1,10 @@
+{
+  "hsaId": "TSTNMT2321000156-1028",
+  "givenName": "Maria",
+  "middleAndSurname": "Johansson",
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-1003"
+    }
+  ]
+}

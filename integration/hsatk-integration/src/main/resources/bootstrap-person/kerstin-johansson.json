@@ -1,0 +1,34 @@
+{
+  "hsaId": "TSTNMT2321000156-105W",
+  "givenName": "Kerstin",
+  "middleAndSurname": "Johansson",
+  "systemRoles": [
+    "INTYG;Rehab-TSTNMT2321000156-105P",
+    "INTYG;Rehab-TSTNMT2321000156-105Q"
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-105P",
+      "commissionPurpose": ["STATISTIK"]
+    },
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-105Q"
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": [
+      "RS"
+    ],
+    "readOnly": true,
+    "extraContextProperties": {
+      "pdlConsentGiven": "true"
+    },
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-105P",
+        "beskrivning": "Kerstin Johansson (Vårdadmin 2 | Rehabstöd)"
+      }
+    ]
+
+  }
+}

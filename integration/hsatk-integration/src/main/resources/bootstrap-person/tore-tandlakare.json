@@ -1,0 +1,26 @@
+{
+  "hsaId": "tore-tandlakare",
+  "givenName": "Tore",
+  "middleAndSurname": "Tandläkare",
+  "healthCareProfessionalLicence": [
+    "Tandläkare"
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "tandenheten-1"
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["WC"],
+    "displayOrder": 270,
+    "env": "demo",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "tandenheten-1",
+        "beskrivning": "Tore Tandläkare (Tandläkare)"
+      }
+    ]
+  }
+}
+
