@@ -1,5 +1,24 @@
+/*
+ * Copyright (C) 2020 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.infra.integration.hsatk.client;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +32,7 @@ import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedper
 import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 import se.riv.infrastructure.directory.employee.v2.ProfileEnum;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,6 +51,18 @@ public class EmployeeClient {
     public List<PersonInformationType> getEmployee(String personalIdentityNumber, String personHsaId, ProfileEnum profile)
             throws HsaServiceCallException {
 
+        LOG.debug("Getting info from HSA for person '{}'", personHsaId);
+
+        // Exakt ett av fälten personHsaId och personalIdentityNumber ska anges.
+        if (StringUtils.isEmpty(personHsaId) && StringUtils.isEmpty(personalIdentityNumber)) {
+            throw new IllegalArgumentException(
+                    "Inget av argumenten personHsaId och personalIdentityNumber är satt. Ett av dem måste ha ett värde.");
+        }
+
+        if (!StringUtils.isEmpty(personHsaId) && !StringUtils.isEmpty(personalIdentityNumber)) {
+            throw new IllegalArgumentException("Endast ett av argumenten personHsaId och personalIdentityNumber får vara satt.");
+        }
+
         GetEmployeeIncludingProtectedPersonType parameters = new GetEmployeeIncludingProtectedPersonType();
 
         parameters.setIncludeFeignedObject(includeFeignedObject);
@@ -44,10 +76,16 @@ public class EmployeeClient {
                     .getEmployeeIncludingProtectedPerson(logicalAddress, parameters);
         } catch (SoapFaultException e) {
             LOG.error("GetEmployee call returned with error: {}", e.getLocalizedMessage());
+            throw new HsaServiceCallException(e);
         }
         if (response == null || response.getPersonInformation() == null || response.getPersonInformation().isEmpty()) {
-            System.out.println("Response null or empty");
-            throw new HsaServiceCallException("Could not GetEmployee for personHsaId " + personHsaId);
+            if (personalIdentityNumber.isEmpty()) {
+                LOG.warn("Response null or empty for personalIdentityNumber: {}", personalIdentityNumber);
+            }
+            if (personHsaId.isEmpty()) {
+                LOG.warn("Response null or empty for personHsaId: {}", personHsaId);
+            }
+            return new ArrayList<>();
         }
 
         return response.getPersonInformation();

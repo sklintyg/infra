@@ -34,11 +34,12 @@ import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import se.inera.intyg.infra.integration.hsa.model.UserAuthorizationInfo;
-import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
-import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
-import se.inera.intyg.infra.integration.hsa.services.HsaPersonService;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.UserAuthorizationInfo;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
+import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.infra.security.common.exception.GenericAuthenticationException;
 import se.inera.intyg.infra.security.common.model.IntygUser;
@@ -49,7 +50,6 @@ import se.inera.intyg.infra.security.common.service.AuthenticationLogger;
 import se.inera.intyg.infra.security.exception.HsaServiceException;
 import se.inera.intyg.infra.security.exception.MissingHsaEmployeeInformation;
 import se.inera.intyg.infra.security.exception.MissingMedarbetaruppdragException;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**
  * Base class for providing authorization based on minimal SAML-tickets containing only the employeeHsaId and
@@ -131,7 +131,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
     private IntygUser buildUserPrincipal(String employeeHsaId, String authenticationScheme) {
         LOG.debug("Creating user object...");
 
-        List<PersonInformationType> personInfo = getPersonInfo(employeeHsaId);
+        List<PersonInformation> personInfo = getPersonInfo(employeeHsaId);
         UserAuthorizationInfo userAuthorizationInfo = getAuthorizedVardgivare(employeeHsaId);
 
         try {
@@ -182,10 +182,10 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
      * <p>
      * Override to provide your own implementation for fetching PersonInfo.
      */
-    protected List<PersonInformationType> getPersonInfo(String employeeHsaId) {
+    protected List<PersonInformation> getPersonInfo(String employeeHsaId) {
         LOG.debug("Retrieving user information from HSA...");
 
-        List<PersonInformationType> hsaPersonInfo;
+        List<PersonInformation> hsaPersonInfo;
         try {
             hsaPersonInfo = hsaPersonService.getHsaPersonInfo(employeeHsaId);
             if (hsaPersonInfo == null || hsaPersonInfo.isEmpty()) {
@@ -222,7 +222,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
      * @return A base IntygUser Principal.
      */
     protected IntygUser createIntygUser(String employeeHsaId, String authenticationScheme, UserAuthorizationInfo userAuthorizationInfo,
-        List<PersonInformationType> personInfo) {
+        List<PersonInformation> personInfo) {
         LOG.debug("Decorate/populate user object with additional information");
 
         IntygUser intygUser = new IntygUser(employeeHsaId);
@@ -241,7 +241,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
      */
     protected abstract String getDefaultRole();
 
-    protected void decorateIntygUserWithAdditionalInfo(IntygUser intygUser, List<PersonInformationType> hsaPersonInfo) {
+    protected void decorateIntygUserWithAdditionalInfo(IntygUser intygUser, List<PersonInformation> hsaPersonInfo) {
         defaultUserDetailsDecorator.decorateIntygUserWithAdditionalInfo(intygUser, hsaPersonInfo);
     }
 
@@ -305,12 +305,12 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
     // ~ Private scope
     // =====================================================================================
     private void decorateIntygUserWithBasicInfo(IntygUser intygUser, UserAuthorizationInfo userAuthorizationInfo,
-        List<PersonInformationType> personInfo, String authenticationScheme) {
+        List<PersonInformation> personInfo, String authenticationScheme) {
         intygUser.setNamn(compileName(personInfo.get(0).getGivenName(), personInfo.get(0).getMiddleAndSurName()));
         intygUser.setVardgivare(userAuthorizationInfo.getVardgivare());
         //INTYG-4208: If any item has protectedPerson set, consider the user sekretessMarkerad.
         intygUser.setSekretessMarkerad(
-            personInfo.stream().filter(pi -> pi.isProtectedPerson() != null && pi.isProtectedPerson()).findAny().isPresent());
+            personInfo.stream().filter(pi -> pi.getProtectedPerson() != null && pi.getProtectedPerson()).findAny().isPresent());
 
         // Förskrivarkod is sensitive information, not allowed to store real value so make sure we overwrite this later
         // after role resolution.
@@ -328,7 +328,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         intygUser.setMiuNamnPerEnhetsId(userAuthorizationInfo.getCommissionNamePerCareUnit());
     }
 
-    protected void decorateIntygUserWithRoleAndAuthorities(IntygUser intygUser, List<PersonInformationType> personInfo,
+    protected void decorateIntygUserWithRoleAndAuthorities(IntygUser intygUser, List<PersonInformation> personInfo,
         UserCredentials userCredentials) {
         RoleResolveResult roleResolveResult = commonAuthoritiesResolver
             .resolveRole(intygUser, personInfo, getDefaultRole(), userCredentials);
@@ -340,7 +340,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         intygUser.setAuthorities(toMap(roleResolveResult.getRole().getPrivileges(), Privilege::getName));
     }
 
-    private void assertEmployee(String employeeHsaId, List<PersonInformationType> personInfo) {
+    private void assertEmployee(String employeeHsaId, List<PersonInformation> personInfo) {
         if (personInfo == null || personInfo.isEmpty()) {
             LOG.error("Cannot authorize user with employeeHsaId '{}', no records found for Employee in HoSP.", employeeHsaId);
             throw new MissingHsaEmployeeInformation(employeeHsaId);

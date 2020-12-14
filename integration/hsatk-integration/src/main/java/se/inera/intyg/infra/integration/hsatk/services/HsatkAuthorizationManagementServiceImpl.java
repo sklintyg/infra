@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2020 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.infra.integration.hsatk.services;
 
 import org.slf4j.Logger;
@@ -5,11 +23,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.client.AuthorizationManagementClient;
-import se.inera.intyg.infra.integration.hsatk.model.*;
+import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
+import se.inera.intyg.infra.integration.hsatk.model.HospCredentialsForPerson;
+import se.inera.intyg.infra.integration.hsatk.model.Result;
+import se.inera.intyg.infra.integration.hsatk.util.HsaTypeConverter;
 import se.riv.infrastructure.directory.authorizationmanagement.gethospcredentialsforpersonresponder.v1.GetHospCredentialsForPersonResponseType;
 import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertificationpersonresponder.v1.HandleHospCertificationPersonResponseType;
 import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertificationpersonresponder.v1.OperationEnum;
-import se.riv.infrastructure.directory.authorizationmanagement.v2.*;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
 
 import javax.xml.ws.WebServiceException;
 import java.time.LocalDateTime;
@@ -21,6 +42,8 @@ import java.util.stream.Collectors;
 public class HsatkAuthorizationManagementServiceImpl implements HsatkAuthorizationManagementService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HsatkAuthorizationManagementServiceImpl.class);
+
+    HsaTypeConverter hsaTypeConverter = new HsaTypeConverter();
 
     @Autowired
     AuthorizationManagementClient authorizationManagementClient;
@@ -39,7 +62,7 @@ public class HsatkAuthorizationManagementServiceImpl implements HsatkAuthorizati
             throw new WebServiceException(e.getMessage());
         }
 
-        return credentialInformationTypeList.stream().map(this::toCredentialInformation).collect(Collectors.toList());
+        return credentialInformationTypeList.stream().map(hsaTypeConverter::toCredentialInformation).collect(Collectors.toList());
     }
 
     @Override
@@ -62,17 +85,26 @@ public class HsatkAuthorizationManagementServiceImpl implements HsatkAuthorizati
             }
             hospCredentialsForPerson.setHealthCareProfessionalLicence(
                     responseType.getHealthCareProfessionalLicence()
-                            .stream().map(this::toHealthCareProfessionalLicence).collect(Collectors.toList()));
+                            .stream()
+                            .map(hsaTypeConverter::toHealthCareProfessionalLicence)
+                            .collect(Collectors.toList()));
             hospCredentialsForPerson.setRestrictions(responseType.getRestrictions()
-                    .stream().map(this::toRestriction).collect(Collectors.toList()));
+                    .stream()
+                    .map(hsaTypeConverter::toRestriction)
+                    .collect(Collectors.toList()));
             hospCredentialsForPerson.setHealthCareProfessionalLicenceSpeciality(
                     responseType.getHealthCareProfessionalLicenceSpeciality()
-                            .stream().map(this::toHCPSpecialityCode).collect(Collectors.toList()));
+                            .stream()
+                            .map(hsaTypeConverter::toHCPSpecialityCode)
+                            .collect(Collectors.toList()));
 
-            hospCredentialsForPerson.setHealthcareProfessionalLicenseIdentityNumber(responseType.
-                    getHealthcareProfessionalLicenseIdentityNumber());
+            hospCredentialsForPerson.setHealthcareProfessionalLicenseIdentityNumber(responseType
+                    .getHealthcareProfessionalLicenseIdentityNumber());
             hospCredentialsForPerson.setNursePrescriptionRight(
-                    responseType.getNursePrescriptionRight().stream().map(this::toNursePrescriptionRight).collect(Collectors.toList()));
+                    responseType.getNursePrescriptionRight()
+                            .stream()
+                            .map(hsaTypeConverter::toNursePrescriptionRight)
+                            .collect(Collectors.toList()));
         }
 
         return hospCredentialsForPerson;
@@ -110,108 +142,6 @@ public class HsatkAuthorizationManagementServiceImpl implements HsatkAuthorizati
         }
 
         return result;
-    }
-
-    private HealthCareProfessionalLicence toHealthCareProfessionalLicence(HealthCareProfessionalLicenceType
-                                                                                             healthCareProfessionalLicenceType) {
-            HealthCareProfessionalLicence healthCareProfessionalLicence = new HealthCareProfessionalLicence();
-            healthCareProfessionalLicence
-                    .setHealthCareProfessionalLicenceCode(healthCareProfessionalLicenceType.getHealthCareProfessionalLicenceCode());
-            healthCareProfessionalLicence
-                    .setHealthCareProfessionalLicenceName(healthCareProfessionalLicenceType.getHealthCareProfessionalLicenceName());
-
-        return healthCareProfessionalLicence;
-    }
-
-    public CredentialInformation toCredentialInformation(CredentialInformationType credentialInformationType) {
-        CredentialInformation credentialInformation = new CredentialInformation();
-
-        credentialInformation.setCommission(credentialInformationType.getCommission()
-                .stream().map(this::toCommission).collect(Collectors.toList()));
-        credentialInformation.setFeignedPerson(credentialInformationType.isFeignedPerson());
-        credentialInformation.setGivenName(credentialInformationType.getGivenName());
-        credentialInformation.setGroupPrescriptionCode(credentialInformationType.getGroupPrescriptionCode());
-        credentialInformation.setHealthCareProfessionalLicence(credentialInformationType.getHealthCareProfessionalLicence());
-        credentialInformation.setHealthCareProfessionalLicenceCode(credentialInformationType.getHealthCareProfessionalLicenceCode());
-        if (credentialInformationType.getHealthCareProfessionalLicenceSpeciality() != null) {
-            credentialInformation.setHealthCareProfessionalLicenceSpeciality(
-                    credentialInformationType.getHealthCareProfessionalLicenceSpeciality()
-                            .stream().map(this::toHCPSpecialityCode).collect(Collectors.toList()));
-        }
-        credentialInformation.setHealthcareProfessionalLicenseIdentityNumber(
-                credentialInformationType.getHealthcareProfessionalLicenseIdentityNumber());
-        if (credentialInformationType.getHsaSystemRole() != null) {
-            credentialInformation.setHsaSystemRole(credentialInformationType.getHsaSystemRole()
-                    .stream().map(this::toHsaSystemRole).collect(Collectors.toList()));
-        }
-        credentialInformation.setMiddleAndSurName(credentialInformationType.getMiddleAndSurName());
-        if (credentialInformationType.getNursePrescriptionRight() != null) {
-            credentialInformation.setNursePrescriptionRight(
-                    credentialInformationType.getNursePrescriptionRight()
-                            .stream().map(this::toNursePrescriptionRight).collect(Collectors.toList()));
-        }
-        credentialInformation.setOccupationalCode(credentialInformationType.getOccupationalCode());
-        credentialInformation.setPaTitleCode(credentialInformationType.getPaTitleCode());
-        if (credentialInformation.getPersonalIdentity() != null) {
-            credentialInformation.setPersonalIdentity(credentialInformationType.getPersonalIdentity().getExtension());
-        }
-        credentialInformation.setPersonalPrescriptionCode(credentialInformationType.getPersonalPrescriptionCode());
-        credentialInformation.setPersonHsaId(credentialInformationType.getPersonHsaId());
-        credentialInformation.setProtectedPerson(credentialInformationType.isProtectedPerson());
-
-        return credentialInformation;
-    }
-
-    private Commission toCommission(CommissionType commissionType) {
-        Commission commission = new Commission();
-
-        commission.setCommissionPurpose(commissionType.getCommissionPurpose());
-        commission.setHealthCareProviderHsaId(commissionType.getHealthCareProviderHsaId());
-        commission.setHealthCareProviderName(commissionType.getHealthCareProviderName());
-        commission.setHealthCareUnitHsaId(commissionType.getHealthCareUnitHsaId());
-        commission.setHealthCareUnitName(commissionType.getHealthCareUnitName());
-        commission.setHealthCareUnitStartDate(commissionType.getHealthCareUnitStartDate());
-        commission.setHealthCareUnitEndDate(commissionType.getHealthCareUnitEndDate());
-
-        return commission;
-    }
-
-    private HCPSpecialityCodes toHCPSpecialityCode(HCPSpecialityCodesType hcpSpecialityCodesType) {
-        HCPSpecialityCodes hcpSpecialityCodes = new HCPSpecialityCodes();
-
-        hcpSpecialityCodes.setSpecialityName(hcpSpecialityCodesType.getSpecialityName());
-        hcpSpecialityCodes.setSpecialityCode(hcpSpecialityCodesType.getSpecialityCode());
-        hcpSpecialityCodes.setHealthCareProfessionalLicenceCode(hcpSpecialityCodesType.getHealthCareProfessionalLicenceCode());
-
-        return hcpSpecialityCodes;
-    }
-
-    private HsaSystemRole toHsaSystemRole(HsaSystemRoleType hsaSystemRoleType) {
-        HsaSystemRole hsaSystemRole = new HsaSystemRole();
-
-        hsaSystemRole.setRole(hsaSystemRoleType.getRole());
-        hsaSystemRole.setSystemId(hsaSystemRoleType.getSystemId());
-
-        return hsaSystemRole;
-    }
-
-    public NursePrescriptionRight toNursePrescriptionRight(NursePrescriptionRightType nursePrescriptionRightType) {
-        NursePrescriptionRight nursePrescriptionRight = new NursePrescriptionRight();
-
-        nursePrescriptionRight.setPrescriptionRight(nursePrescriptionRightType.isPrescriptionRight());
-        nursePrescriptionRight.setHealthCareProfessionalLicence(nursePrescriptionRightType.getHealthCareProfessionalLicence());
-
-        return nursePrescriptionRight;
-    }
-
-    public HospCredentialsForPerson.Restriction toRestriction(RestrictionType restrictionType) {
-        HospCredentialsForPerson.Restriction restriction = new HospCredentialsForPerson.Restriction();
-
-        restriction.setHealthCareProfessionalLicenceCode(restrictionType.getHealthCareProfessionalLicenceCode());
-        restriction.setRestrictionCode(restrictionType.getRestrictionCode());
-        restriction.setRestrictionName(restrictionType.getRestrictionName());
-
-        return restriction;
     }
 
 }

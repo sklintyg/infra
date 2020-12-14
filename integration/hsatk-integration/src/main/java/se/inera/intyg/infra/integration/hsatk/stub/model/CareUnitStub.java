@@ -26,6 +26,7 @@ import java.util.List;
 /**
  * @author andreaskaltenbach
  */
+
 @Data
 public class CareUnitStub extends AbstractCareUnitStub {
 

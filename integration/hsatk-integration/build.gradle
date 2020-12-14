@@ -13,11 +13,14 @@ dependencies {
 
     compile "org.apache.commons:commons-lang3"
     compile "ch.qos.logback:logback-classic"
+    compile "com.google.guava:guava:${guavaVersion}"
 
     compile "se.inera.intyg.schemas:schemas-support:${schemasSupportVersion}"
     compile "com.fasterxml.jackson.core:jackson-databind"
     compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+
+    compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
 
     wsdl2java "se.inera.intyg.schemas:schemas-support:${schemasSupportVersion}"
     wsdl2java "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:${jaxb2Version}"

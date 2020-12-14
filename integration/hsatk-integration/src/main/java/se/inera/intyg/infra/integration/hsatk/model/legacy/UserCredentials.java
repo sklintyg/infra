@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.infra.integration.hsatk.model.legacy;
 
+import se.inera.intyg.infra.integration.hsatk.model.HsaSystemRole;
 import se.riv.infrastructure.directory.authorizationmanagement.v2.HsaSystemRoleType;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class UserCredentials {
 
     private String personalPrescriptionCode;
     private List<String> groupPrescriptionCode;
-    private List<HsaSystemRoleType> hsaSystemRole;
+    private List<HsaSystemRole> hsaSystemRole;
     private List<String> paTitleCode;
 
     public String getPersonalPrescriptionCode() {
@@ -54,7 +55,7 @@ public class UserCredentials {
         return groupPrescriptionCode;
     }
 
-    public List<HsaSystemRoleType> getHsaSystemRole() {
+    public List<HsaSystemRole> getHsaSystemRole() {
         if (hsaSystemRole == null) {
             hsaSystemRole = new ArrayList<>();
         }

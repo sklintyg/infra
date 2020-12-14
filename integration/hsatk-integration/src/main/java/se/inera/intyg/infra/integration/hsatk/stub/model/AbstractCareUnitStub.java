@@ -18,11 +18,15 @@
  */
 package se.inera.intyg.infra.integration.hsatk.stub.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 public abstract class AbstractCareUnitStub implements Serializable {
 
     private String id;

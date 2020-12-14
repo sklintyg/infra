@@ -36,7 +36,7 @@ public class Vardgivare implements SelectableVardenhet, Comparable<Vardgivare>, 
     private String id;
     private String namn;
 
-    private List<Vardenhet> vardenheter;
+    private List<Vardenhet> vardenheter = new ArrayList<>();
 
     public Vardgivare() {
         // Needed for deserialization
@@ -105,5 +105,15 @@ public class Vardgivare implements SelectableVardenhet, Comparable<Vardgivare>, 
     @Override
     public String toString() {
         return new StringBuilder(getNamn()).append(":").append(getId()).toString();
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public String getNamn() {
+        return namn;
     }
 }

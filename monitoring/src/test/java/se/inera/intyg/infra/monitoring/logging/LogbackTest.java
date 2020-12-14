@@ -46,7 +46,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.common.model.Role;

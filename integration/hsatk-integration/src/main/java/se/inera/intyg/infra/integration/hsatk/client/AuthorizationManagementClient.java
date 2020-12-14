@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2020 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.infra.integration.hsatk.client;
 
 import org.slf4j.Logger;
@@ -47,7 +65,9 @@ public class AuthorizationManagementClient {
 
     private static boolean includeFeignedObject = false;
 
-    public List<CredentialInformationType> getCredentialInformationForPerson(String personalIdentityNumber, String personHsaId, String profile)
+    public List<CredentialInformationType> getCredentialInformationForPerson(String personalIdentityNumber,
+                                                                             String personHsaId,
+                                                                             String profile)
             throws HsaServiceCallException {
 
         GetCredentialsForPersonIncludingProtectedPersonType parameters = new GetCredentialsForPersonIncludingProtectedPersonType();
@@ -58,10 +78,10 @@ public class AuthorizationManagementClient {
 
         GetCredentialsForPersonIncludingProtectedPersonResponseType response =
                 getCredentialsForPersonIncludingProtectedPersonResponderInterface
-                .getCredentialsForPersonIncludingProtectedPerson(logicalAddress, parameters);
+                        .getCredentialsForPersonIncludingProtectedPerson(logicalAddress, parameters);
         if (response == null || response.getCredentialInformation() == null || response.getCredentialInformation().isEmpty()) {
-            System.out.println("Response is null or empty");
-            throw new HsaServiceCallException("Could not GetCredentialInformation for personHsaId " + personHsaId);
+            LOG.error("getCredentialsForPersonIncludingProtectedPerson response is null or empty");
+            throw new HsaServiceCallException("No CredentialInformation found for personHsaId " + personHsaId);
         }
 
         return response.getCredentialInformation();
@@ -77,8 +97,8 @@ public class AuthorizationManagementClient {
                 .getHospCredentialsForPerson(logicalAddress, parameters);
 
         if (response == null) {
-            System.out.println("Response is null");
-            throw new HsaServiceCallException("Could not GetHospCredentialsForPerson for personalIdentityNumber " + personalIdentityNumber);
+            LOG.error("getHospCredentialsForPerson response is null");
+            throw new HsaServiceCallException("No GetHospCredentialsForPerson found for personalIdentityNumber " + personalIdentityNumber);
         }
 
         return response;

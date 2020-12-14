@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  */
 public class HsaUnitAddressParser {
 
-    public void updateWithAddress(AbstractVardenhet vardenhet, AddressType address, String postalCode) {
+    public void updateWithAddress(AbstractVardenhet vardenhet, List<String> address, String postalCode) {
         if (address == null) {
             return;
         }
@@ -43,10 +43,10 @@ public class HsaUnitAddressParser {
             vardenhet.setPostnummer(postalCode);
         }
 
-        List<String> lines = address.getAddressLine();
+        List<String> lines = address;
 
         if (!lines.isEmpty()) {
-            vardenhet.setPostadress(lines.subList(0, address.getAddressLine().size() - 1).stream()
+            vardenhet.setPostadress(lines.subList(0, address.size() - 1).stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(" ")));
         } else {

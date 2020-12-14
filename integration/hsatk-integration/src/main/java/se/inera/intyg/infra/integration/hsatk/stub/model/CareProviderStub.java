@@ -42,6 +42,7 @@ public class CareProviderStub implements Serializable {
         this.name = name;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -58,10 +59,12 @@ public class CareProviderStub implements Serializable {
         }
     }
 
+    @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
 
+    @Override
     public String toString() {
         return new StringBuilder(getName()).append(":").append(getId()).toString();
     }

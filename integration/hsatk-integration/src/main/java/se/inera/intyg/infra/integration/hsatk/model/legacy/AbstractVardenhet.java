@@ -93,4 +93,14 @@ public abstract class AbstractVardenhet implements SelectableVardenhet, Comparab
     public int hashCode() {
         return id.hashCode();
     }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public String getNamn() {
+        return namn;
+    }
 }

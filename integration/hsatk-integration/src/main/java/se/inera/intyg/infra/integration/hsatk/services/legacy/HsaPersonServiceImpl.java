@@ -25,13 +25,16 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.client.AuthorizationManagementClient;
 import se.inera.intyg.infra.integration.hsatk.client.EmployeeClient;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
+import se.inera.intyg.infra.integration.hsatk.model.Commission;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CredentialInformation;
+import se.inera.intyg.infra.integration.hsatk.util.HsaTypeConverter;
 import se.riv.infrastructure.directory.authorizationmanagement.v2.CommissionType;
 import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
-import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
 import javax.xml.ws.WebServiceException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,18 +57,23 @@ public class HsaPersonServiceImpl implements HsaPersonService {
     @Autowired
     private AuthorizationManagementClient authorizationManagementClient;
 
+    HsaTypeConverter hsaTypeConverter = new HsaTypeConverter();
+
     /*
      * (non-Javadoc)
      *
      * @see HsaPersonService#getHsaPersonInfo(java.lang.String)
      */
     @Override
-    public List<PersonInformationType> getHsaPersonInfo(final String personHsaId) {
+    public List<PersonInformation> getHsaPersonInfo(final String personHsaId) {
 
         LOG.debug("Getting info from HSA for person '{}'", personHsaId);
 
         try {
-            return employeeClient.getEmployee(null, personHsaId, null);
+            return employeeClient.getEmployee(null, personHsaId, null)
+                    .stream()
+                    .map(hsaTypeConverter::toPersonInformation)
+                    .collect(Collectors.toList());
         } catch (HsaServiceCallException e) {
             LOG.error(e.getMessage());
             throw new WebServiceException(e.getMessage());
@@ -73,7 +81,7 @@ public class HsaPersonServiceImpl implements HsaPersonService {
     }
 
     @Override
-    public List<CommissionType> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, String unitHsaId) throws HsaServiceCallException {
+    public List<Commission> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, String unitHsaId) throws HsaServiceCallException {
 
         LOG.debug("Checking if person with HSA id '{}' has MIUs on unit '{}'", hosPersonHsaId, unitHsaId);
 
@@ -83,11 +91,13 @@ public class HsaPersonServiceImpl implements HsaPersonService {
                 .flatMap(ci -> ci.getCommission().stream())
                 .collect(Collectors.toList());
 
-        List<CommissionType> filteredMuisOnUnit = commissions.stream()
+        List<Commission> filteredMuisOnUnit = commissions.stream()
                 .filter(ct -> ct.getHealthCareUnitHsaId() != null && ct.getHealthCareUnitHsaId().equals(unitHsaId))
-                .filter(ct -> ct.getHealthCareUnitEndDate() == null || ct.getHealthCareUnitEndDate().isAfter(LocalDateTime.now()))
+                .filter(ct -> ct.getHealthCareUnitEndDate() == null
+                        || ct.getHealthCareUnitEndDate().isAfter(LocalDateTime.now(ZoneId.systemDefault())))
                 .filter(ct -> ct.getCommissionPurpose() != null
                         && CredentialInformation.VARD_OCH_BEHANDLING.equalsIgnoreCase(ct.getCommissionPurpose()))
+                .map(hsaTypeConverter::toCommission)
                 .collect(Collectors.toList());
 
         LOG.debug("Person has {} MIUs on unit '{}'", filteredMuisOnUnit.size(), hosPersonHsaId);

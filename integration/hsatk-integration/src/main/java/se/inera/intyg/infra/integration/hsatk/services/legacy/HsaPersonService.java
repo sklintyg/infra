@@ -19,14 +19,14 @@
 package se.inera.intyg.infra.integration.hsatk.services.legacy;
 
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
-import se.riv.infrastructure.directory.authorizationmanagement.v2.CommissionType;
-import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
+import se.inera.intyg.infra.integration.hsatk.model.Commission;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 
 import java.util.List;
 
 public interface HsaPersonService {
 
-    List<PersonInformationType> getHsaPersonInfo(String personHsaId);
+    List<PersonInformation> getHsaPersonInfo(String personHsaId);
 
-    List<CommissionType> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, String unitHsaId) throws HsaServiceCallException;
+    List<Commission> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, String unitHsaId) throws HsaServiceCallException;
 }

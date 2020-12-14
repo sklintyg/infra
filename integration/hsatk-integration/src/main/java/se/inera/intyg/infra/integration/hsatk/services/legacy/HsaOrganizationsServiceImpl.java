@@ -28,6 +28,7 @@ import se.inera.intyg.infra.integration.hsatk.client.OrganizationClient;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.*;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CredentialInformation;
+import se.inera.intyg.infra.integration.hsatk.util.HsaTypeConverter;
 import se.inera.intyg.infra.integration.hsatk.util.HsaUnitAddressParser;
 import se.riv.infrastructure.directory.authorizationmanagement.v2.CommissionType;
 import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
@@ -38,6 +39,7 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType
 
 import javax.xml.ws.WebServiceException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -61,6 +63,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
     @Autowired
     private OrganizationClient organizationClient;
+
+    private final HsaTypeConverter hsaTypeConverter = new HsaTypeConverter();
 
     private final HsaUnitAddressParser hsaUnitAddressParser = new HsaUnitAddressParser();
 
@@ -96,7 +100,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         });
 
         updateWithEmailAndPhone(vardenhet, unit);
-        hsaUnitAddressParser.updateWithAddress(vardenhet, unit.getPostalAddress(), unit.getPostalCode());
+        hsaUnitAddressParser.updateWithAddress(vardenhet, unit.getPostalAddress().getAddressLine(), unit.getPostalCode());
 
         return vardenhet;
     }
@@ -120,7 +124,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
     public List<String> getHsaIdForAktivaUnderenheter(String vardEnhetHsaId) {
         try {
             HealthCareUnitMembersType response = organizationClient.getHealthCareUnitMembers(vardEnhetHsaId);
-            final LocalDateTime now = LocalDateTime.now();
+            final LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
             return response.getHealthCareUnitMember()
                     .stream()
                     .filter(member -> (member.getHealthCareUnitMemberStartDate() == null
@@ -180,7 +184,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
                 userCredentials.getGroupPrescriptionCode().addAll(credentialInformation.getGroupPrescriptionCode());
                 userCredentials.getPaTitleCode().addAll(credentialInformation.getPaTitleCode());
                 userCredentials.setPersonalPrescriptionCode(credentialInformation.getPersonalPrescriptionCode());
-                userCredentials.getHsaSystemRole().addAll(credentialInformation.getHsaSystemRole());
+                userCredentials.getHsaSystemRole().addAll(credentialInformation
+                        .getHsaSystemRole().stream().map(hsaTypeConverter::toHsaSystemRole).collect(Collectors.toList()));
             }
 
             vardgivareList.sort(Comparator.nullsLast(Comparator.comparing(Vardgivare::getNamn)));
@@ -211,7 +216,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         try {
             UnitType unit = getUnit(vardenhet.getId());
             updateWithEmailAndPhone(vardenhet, unit);
-            hsaUnitAddressParser.updateWithAddress(vardenhet, unit.getPostalAddress(), unit.getPostalCode());
+            hsaUnitAddressParser.updateWithAddress(vardenhet, unit.getPostalAddress().getAddressLine(), unit.getPostalCode());
         } catch (HsaServiceCallException e) {
             LOG.error(e.getMessage());
             return null;
@@ -244,7 +249,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
     }
 
     private boolean isActive(LocalDateTime fromDate, LocalDateTime toDate) {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
 
         if (fromDate != null && now.isBefore(fromDate)) {
             return false;
@@ -279,7 +284,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
                     member.getHealthCareUnitMemberStartDate(), member.getHealthCareUnitMemberEndDate());
             if (member.getHealthCareUnitMemberpostalAddress() != null
                     && member.getHealthCareUnitMemberpostalAddress().getAddressLine() != null) {
-                hsaUnitAddressParser.updateWithAddress(mottagning, member.getHealthCareUnitMemberpostalAddress(),
+                hsaUnitAddressParser.updateWithAddress(mottagning, member.getHealthCareUnitMemberpostalAddress().getAddressLine(),
                         member.getHealthCareUnitMemberpostalCode());
 
             }
