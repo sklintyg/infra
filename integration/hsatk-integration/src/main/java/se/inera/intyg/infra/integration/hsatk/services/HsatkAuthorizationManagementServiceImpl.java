@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.xml.ws.WebServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +36,6 @@ import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertifi
 import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertificationpersonresponder.v1.OperationEnum;
 import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
 
-import javax.xml.ws.WebServiceException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class HsatkAuthorizationManagementServiceImpl implements HsatkAuthorizationManagementService {
 
@@ -50,13 +48,13 @@ public class HsatkAuthorizationManagementServiceImpl implements HsatkAuthorizati
 
     @Override
     public List<CredentialInformation> getCredentialInformationForPerson(String personalIdentityNumber,
-                                                                         String personHsaId, String profile) {
+        String personHsaId, String profile) {
 
-        List<CredentialInformationType> credentialInformationTypeList = new ArrayList<>();
+        List<CredentialInformationType> credentialInformationTypeList;
 
         try {
             credentialInformationTypeList = authorizationManagementClient.getCredentialInformationForPerson(
-                    personalIdentityNumber, personHsaId, profile);
+                personalIdentityNumber, personHsaId, profile);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new WebServiceException(e.getMessage());
@@ -77,35 +75,33 @@ public class HsatkAuthorizationManagementServiceImpl implements HsatkAuthorizati
             throw new WebServiceException(e.getMessage());
         }
 
-        if (responseType != null) {
-            hospCredentialsForPerson.setEducationCode(responseType.getEducationCode());
-            hospCredentialsForPerson.setPersonalPrescriptionCode(responseType.getPersonalPrescriptionCode());
-            if (responseType.getPersonalIdentityNumber() != null) {
-                hospCredentialsForPerson.setPersonalIdentityNumber(responseType.getPersonalIdentityNumber().getExtension());
-            }
-            hospCredentialsForPerson.setHealthCareProfessionalLicence(
-                    responseType.getHealthCareProfessionalLicence()
-                            .stream()
-                            .map(hsaTypeConverter::toHealthCareProfessionalLicence)
-                            .collect(Collectors.toList()));
-            hospCredentialsForPerson.setRestrictions(responseType.getRestrictions()
-                    .stream()
-                    .map(hsaTypeConverter::toRestriction)
-                    .collect(Collectors.toList()));
-            hospCredentialsForPerson.setHealthCareProfessionalLicenceSpeciality(
-                    responseType.getHealthCareProfessionalLicenceSpeciality()
-                            .stream()
-                            .map(hsaTypeConverter::toHCPSpecialityCode)
-                            .collect(Collectors.toList()));
-
-            hospCredentialsForPerson.setHealthcareProfessionalLicenseIdentityNumber(responseType
-                    .getHealthcareProfessionalLicenseIdentityNumber());
-            hospCredentialsForPerson.setNursePrescriptionRight(
-                    responseType.getNursePrescriptionRight()
-                            .stream()
-                            .map(hsaTypeConverter::toNursePrescriptionRight)
-                            .collect(Collectors.toList()));
+        hospCredentialsForPerson.setEducationCode(responseType.getEducationCode());
+        hospCredentialsForPerson.setPersonalPrescriptionCode(responseType.getPersonalPrescriptionCode());
+        if (responseType.getPersonalIdentityNumber() != null) {
+            hospCredentialsForPerson.setPersonalIdentityNumber(responseType.getPersonalIdentityNumber().getExtension());
         }
+        hospCredentialsForPerson.setHealthCareProfessionalLicence(
+            responseType.getHealthCareProfessionalLicence()
+                .stream()
+                .map(hsaTypeConverter::toHealthCareProfessionalLicence)
+                .collect(Collectors.toList()));
+        hospCredentialsForPerson.setRestrictions(responseType.getRestrictions()
+            .stream()
+            .map(hsaTypeConverter::toRestriction)
+            .collect(Collectors.toList()));
+        hospCredentialsForPerson.setHealthCareProfessionalLicenceSpeciality(
+            responseType.getHealthCareProfessionalLicenceSpeciality()
+                .stream()
+                .map(hsaTypeConverter::toHCPSpecialityCode)
+                .collect(Collectors.toList()));
+
+        hospCredentialsForPerson.setHealthcareProfessionalLicenseIdentityNumber(responseType
+            .getHealthcareProfessionalLicenseIdentityNumber());
+        hospCredentialsForPerson.setNursePrescriptionRight(
+            responseType.getNursePrescriptionRight()
+                .stream()
+                .map(hsaTypeConverter::toNursePrescriptionRight)
+                .collect(Collectors.toList()));
 
         return hospCredentialsForPerson;
     }
@@ -125,13 +121,13 @@ public class HsatkAuthorizationManagementServiceImpl implements HsatkAuthorizati
 
     @Override
     public Result handleHospCertificationPersonResponseType(String certificationId, String operation,
-                                                            String personalIdentityNumber, String reason) {
-        HandleHospCertificationPersonResponseType responseType = new HandleHospCertificationPersonResponseType();
+        String personalIdentityNumber, String reason) {
+        HandleHospCertificationPersonResponseType responseType;
         Result result = new Result();
 
         try {
             responseType = authorizationManagementClient.handleHospCertificationPerson(
-                    certificationId, OperationEnum.fromValue(operation), personalIdentityNumber, reason);
+                certificationId, OperationEnum.fromValue(operation), personalIdentityNumber, reason);
 
             result.setResultText(responseType.getResultText());
             result.setResultCode(responseType.getResultCode().value());

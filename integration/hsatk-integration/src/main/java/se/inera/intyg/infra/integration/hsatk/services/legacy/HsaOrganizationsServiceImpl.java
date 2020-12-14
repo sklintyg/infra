@@ -18,6 +18,17 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services.legacy;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.xml.ws.WebServiceException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +37,13 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.client.AuthorizationManagementClient;
 import se.inera.intyg.infra.integration.hsatk.client.OrganizationClient;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.*;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.AbstractVardenhet;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.AgandeForm;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.UserAuthorizationInfo;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.util.HsaTypeConverter;
 import se.inera.intyg.infra.integration.hsatk.util.HsaUnitAddressParser;
@@ -36,12 +53,6 @@ import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresp
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMembersType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
-
-import javax.xml.ws.WebServiceException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Provides HSA organization services through TJK over NTjP.
@@ -126,14 +137,14 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
             HealthCareUnitMembersType response = organizationClient.getHealthCareUnitMembers(vardEnhetHsaId);
             final LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
             return response.getHealthCareUnitMember()
-                    .stream()
-                    .filter(member -> (member.getHealthCareUnitMemberStartDate() == null
-                            || member.getHealthCareUnitMemberStartDate().compareTo(now) <= 0)
-                            && (member.getHealthCareUnitMemberEndDate() == null
-                            || member.getHealthCareUnitMemberEndDate().compareTo(now) >= 0))
-                    .map(HealthCareUnitMemberType::getHealthCareUnitMemberHsaId)
-                    .distinct()
-                    .collect(Collectors.toList());
+                .stream()
+                .filter(member -> (member.getHealthCareUnitMemberStartDate() == null
+                    || member.getHealthCareUnitMemberStartDate().compareTo(now) <= 0)
+                    && (member.getHealthCareUnitMemberEndDate() == null
+                    || member.getHealthCareUnitMemberEndDate().compareTo(now) >= 0))
+                .map(HealthCareUnitMemberType::getHealthCareUnitMemberHsaId)
+                .distinct()
+                .collect(Collectors.toList());
         } catch (HsaServiceCallException e) {
             LOG.error(e.getMessage());
             throw new WebServiceException(e.getMessage());
@@ -148,44 +159,44 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
         try {
             List<CredentialInformationType> credentialInformationList = authorizationManagementClient
-                    .getCredentialInformationForPerson(null, hosPersonHsaId, null);
+                .getCredentialInformationForPerson(null, hosPersonHsaId, null);
 
             for (CredentialInformationType credentialInformation : credentialInformationList) {
                 List<CommissionType> commissions = credentialInformation.getCommission()
-                        .stream()
-                        .filter(commissionType -> CredentialInformation.VARD_OCH_BEHANDLING
-                                .equalsIgnoreCase(commissionType.getCommissionPurpose()))
-                        .collect(Collectors.toList());
+                    .stream()
+                    .filter(commissionType -> CredentialInformation.VARD_OCH_BEHANDLING
+                        .equalsIgnoreCase(commissionType.getCommissionPurpose()))
+                    .collect(Collectors.toList());
 
                 LOG.debug("User '{}' has a total of {} medarbetaruppdrag", hosPersonHsaId, commissions.size());
 
                 vardgivareList.addAll(commissions.stream()
-                        .filter(ct -> isActive(ct.getHealthCareProviderStartDate(), ct.getHealthCareProviderEndDate()))
-                        .map(ct -> new Vardgivare(ct.getHealthCareProviderHsaId(), ct.getHealthCareProviderName()))
-                        .distinct()
-                        .map(vg -> {
-                            vg.setVardenheter(commissions.stream()
-                                    .filter(ct -> ct.getHealthCareProviderHsaId().equals(vg.getId())
-                                            && isActive(ct.getHealthCareUnitStartDate(), ct.getHealthCareUnitEndDate()))
-                                    .map(ct -> createVardenhet(ct))
-                                    .filter(Objects::nonNull)
-                                    .distinct()
-                                    .sorted(Comparator.comparing(Vardenhet::getNamn))
-                                    .collect(Collectors.toList()));
+                    .filter(ct -> isActive(ct.getHealthCareProviderStartDate(), ct.getHealthCareProviderEndDate()))
+                    .map(ct -> new Vardgivare(ct.getHealthCareProviderHsaId(), ct.getHealthCareProviderName()))
+                    .distinct()
+                    .map(vg -> {
+                        vg.setVardenheter(commissions.stream()
+                            .filter(ct -> ct.getHealthCareProviderHsaId().equals(vg.getId())
+                                && isActive(ct.getHealthCareUnitStartDate(), ct.getHealthCareUnitEndDate()))
+                            .map(ct -> createVardenhet(ct))
+                            .filter(Objects::nonNull)
+                            .distinct()
+                            .sorted(Comparator.comparing(Vardenhet::getNamn))
+                            .collect(Collectors.toList()));
 
-                            commissions.stream().distinct()
-                                    .forEach(ct -> commissionNamePerCareUnit.put(ct.getHealthCareUnitHsaId(), ct.getCommissionName()));
-                            return vg;
-                        })
-                        .filter(vg -> !vg.getVardenheter().isEmpty())
-                        .collect(Collectors.toList()));
+                        commissions.stream().distinct()
+                            .forEach(ct -> commissionNamePerCareUnit.put(ct.getHealthCareUnitHsaId(), ct.getCommissionName()));
+                        return vg;
+                    })
+                    .filter(vg -> !vg.getVardenheter().isEmpty())
+                    .collect(Collectors.toList()));
 
                 // Add relevant credentialInfo to the userCredz
                 userCredentials.getGroupPrescriptionCode().addAll(credentialInformation.getGroupPrescriptionCode());
                 userCredentials.getPaTitleCode().addAll(credentialInformation.getPaTitleCode());
                 userCredentials.setPersonalPrescriptionCode(credentialInformation.getPersonalPrescriptionCode());
                 userCredentials.getHsaSystemRole().addAll(credentialInformation
-                        .getHsaSystemRole().stream().map(hsaTypeConverter::toHsaSystemRole).collect(Collectors.toList()));
+                    .getHsaSystemRole().stream().map(hsaTypeConverter::toHsaSystemRole).collect(Collectors.toList()));
             }
 
             vardgivareList.sort(Comparator.nullsLast(Comparator.comparing(Vardgivare::getNamn)));
@@ -232,10 +243,10 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
     private void setArbetsplatskod(Vardenhet vardenhet, final HealthCareUnitMembersType healthCareUnitMembers) {
         vardenhet.setArbetsplatskod(
-                healthCareUnitMembers.getHealthCareUnitPrescriptionCode().size() > 0
-                        && healthCareUnitMembers.getHealthCareUnitPrescriptionCode().get(0) != null
-                        ? healthCareUnitMembers.getHealthCareUnitPrescriptionCode().get(0)
-                        : DEFAULT_ARBETSPLATSKOD);
+            healthCareUnitMembers.getHealthCareUnitPrescriptionCode().size() > 0
+                && healthCareUnitMembers.getHealthCareUnitPrescriptionCode().get(0) != null
+                ? healthCareUnitMembers.getHealthCareUnitPrescriptionCode().get(0)
+                : DEFAULT_ARBETSPLATSKOD);
     }
 
     private Optional<HealthCareUnitMembersType> getHealthCareUnitMembers(final Vardenhet vardenhet) {
@@ -281,11 +292,10 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
             }
 
             Mottagning mottagning = new Mottagning(member.getHealthCareUnitMemberHsaId(), member.getHealthCareUnitMemberName(),
-                    member.getHealthCareUnitMemberStartDate(), member.getHealthCareUnitMemberEndDate());
-            if (member.getHealthCareUnitMemberpostalAddress() != null
-                    && member.getHealthCareUnitMemberpostalAddress().getAddressLine() != null) {
+                member.getHealthCareUnitMemberStartDate(), member.getHealthCareUnitMemberEndDate());
+            if (member.getHealthCareUnitMemberpostalAddress() != null) {
                 hsaUnitAddressParser.updateWithAddress(mottagning, member.getHealthCareUnitMemberpostalAddress().getAddressLine(),
-                        member.getHealthCareUnitMemberpostalCode());
+                    member.getHealthCareUnitMemberpostalCode());
 
             }
 
@@ -293,8 +303,8 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
             mottagning.setTelefonnummer(member.getHealthCareUnitMemberTelephoneNumber().stream().collect(Collectors.joining(", ")));
             mottagning.setArbetsplatskod(member.getHealthCareUnitMemberPrescriptionCode().size() > 0
-                    ? member.getHealthCareUnitMemberPrescriptionCode().get(0)
-                    : DEFAULT_ARBETSPLATSKOD);
+                ? member.getHealthCareUnitMemberPrescriptionCode().get(0)
+                : DEFAULT_ARBETSPLATSKOD);
             mottagning.setAgandeForm(agandeForm);
 
             vardenhet.getMottagningar().add(mottagning);
@@ -310,7 +320,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
     private void updateWithEmailAndPhone(AbstractVardenhet vardenhet, UnitType response) {
         vardenhet.setEpost(response.getMail());
-        if (response.getTelephoneNumber() != null && !response.getTelephoneNumber().isEmpty()) {
+        if (!response.getTelephoneNumber().isEmpty()) {
             vardenhet.setTelefonnummer(response.getTelephoneNumber().get(0));
         }
     }

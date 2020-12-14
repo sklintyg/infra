@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.infra.integration.hsatk.client;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,8 +41,6 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitT
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.ProfileEnum;
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
 
-import java.util.List;
-
 @Service
 public class OrganizationClient {
 
@@ -63,8 +62,8 @@ public class OrganizationClient {
     private static boolean includeFeignedObject = false;
 
     public List<HealthCareProviderType> getHealthCareProvider(
-            String healthCareProviderHsaId, String healthCareProviderOrgNo)
-            throws HsaServiceCallException {
+        String healthCareProviderHsaId, String healthCareProviderOrgNo)
+        throws HsaServiceCallException {
 
         GetHealthCareProviderType parameters = new GetHealthCareProviderType();
 
@@ -73,9 +72,9 @@ public class OrganizationClient {
         parameters.setIncludeFeignedObject(includeFeignedObject);
 
         GetHealthCareProviderResponseType response =
-                getHealthCareProviderResponderInterface.getHealthCareProvider(logicalAddress, parameters);
+            getHealthCareProviderResponderInterface.getHealthCareProvider(logicalAddress, parameters);
 
-        if (response == null || response.getHealthCareProvider() == null || response.getHealthCareProvider().isEmpty()) {
+        if (response == null || response.getHealthCareProvider().isEmpty()) {
             System.out.println("Response is null or empty");
             throw new HsaServiceCallException("Could not GetHealthCareProvider for hsaId " + healthCareProviderHsaId);
         }
@@ -84,7 +83,7 @@ public class OrganizationClient {
     }
 
     public HealthCareUnitType getHealthCareUnit(String healthCareUnitMemberHsaId)
-            throws HsaServiceCallException {
+        throws HsaServiceCallException {
 
         GetHealthCareUnitType parameters = new GetHealthCareUnitType();
 
@@ -102,14 +101,14 @@ public class OrganizationClient {
     }
 
     public HealthCareUnitMembersType getHealthCareUnitMembers(String healtCareUnitHsaId)
-            throws HsaServiceCallException {
+        throws HsaServiceCallException {
         GetHealthCareUnitMembersType parameters = new GetHealthCareUnitMembersType();
 
         parameters.setHealthCareUnitHsaId(healtCareUnitHsaId);
         parameters.setIncludeFeignedObject(includeFeignedObject);
 
         GetHealthCareUnitMembersResponseType response = getHealthCareUnitMembersResponderInterface
-                .getHealthCareUnitMembers(logicalAddress, parameters);
+            .getHealthCareUnitMembers(logicalAddress, parameters);
 
         if (response == null || response.getHealthCareUnitMembers() == null) {
             System.out.println("Response is null");
@@ -120,7 +119,7 @@ public class OrganizationClient {
     }
 
     public UnitType getUnit(String unitHsaId, ProfileEnum profile)
-            throws HsaServiceCallException {
+        throws HsaServiceCallException {
 
         GetUnitType parameters = new GetUnitType();
 

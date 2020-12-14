@@ -2,6 +2,11 @@ plugins {
     id "no.nils.wsdl2java" version "0.12" apply true
 }
 
+if (project.hasProperty("codeQuality")) {
+    license {
+        exclude "**/se/riv/**/*.java"
+    }
+}
 
 dependencies {
     def jaxb2Version = "1.11.1"

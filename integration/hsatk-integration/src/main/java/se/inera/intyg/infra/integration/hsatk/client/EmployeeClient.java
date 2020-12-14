@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.integration.hsatk.client;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +33,6 @@ import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedper
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v2.GetEmployeeIncludingProtectedPersonType;
 import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 import se.riv.infrastructure.directory.employee.v2.ProfileEnum;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class EmployeeClient {
@@ -49,14 +48,14 @@ public class EmployeeClient {
     private static boolean includeFeignedObject = false;
 
     public List<PersonInformationType> getEmployee(String personalIdentityNumber, String personHsaId, ProfileEnum profile)
-            throws HsaServiceCallException {
+        throws HsaServiceCallException {
 
         LOG.debug("Getting info from HSA for person '{}'", personHsaId);
 
         // Exakt ett av fälten personHsaId och personalIdentityNumber ska anges.
         if (StringUtils.isEmpty(personHsaId) && StringUtils.isEmpty(personalIdentityNumber)) {
             throw new IllegalArgumentException(
-                    "Inget av argumenten personHsaId och personalIdentityNumber är satt. Ett av dem måste ha ett värde.");
+                "Inget av argumenten personHsaId och personalIdentityNumber är satt. Ett av dem måste ha ett värde.");
         }
 
         if (!StringUtils.isEmpty(personHsaId) && !StringUtils.isEmpty(personalIdentityNumber)) {
@@ -69,16 +68,16 @@ public class EmployeeClient {
         parameters.setPersonalIdentityNumber(personalIdentityNumber);
         parameters.setPersonHsaId(personHsaId);
         parameters.setProfile(profile);
-        GetEmployeeIncludingProtectedPersonResponseType response = new GetEmployeeIncludingProtectedPersonResponseType();
+        GetEmployeeIncludingProtectedPersonResponseType response;
 
         try {
             response = getEmployeeIncludingProtectedPersonResponderInterface
-                    .getEmployeeIncludingProtectedPerson(logicalAddress, parameters);
+                .getEmployeeIncludingProtectedPerson(logicalAddress, parameters);
         } catch (SoapFaultException e) {
             LOG.error("GetEmployee call returned with error: {}", e.getLocalizedMessage());
             throw new HsaServiceCallException(e);
         }
-        if (response == null || response.getPersonInformation() == null || response.getPersonInformation().isEmpty()) {
+        if (response == null || response.getPersonInformation().isEmpty()) {
             if (personalIdentityNumber.isEmpty()) {
                 LOG.warn("Response null or empty for personalIdentityNumber: {}", personalIdentityNumber);
             }

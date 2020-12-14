@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.integration.hsatk.client;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +41,6 @@ import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertifi
 import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertificationpersonresponder.v1.OperationEnum;
 import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Service
 public class AuthorizationManagementClient {
 
@@ -49,7 +48,7 @@ public class AuthorizationManagementClient {
 
     @Autowired
     private GetCredentialsForPersonIncludingProtectedPersonResponderInterface
-            getCredentialsForPersonIncludingProtectedPersonResponderInterface;
+        getCredentialsForPersonIncludingProtectedPersonResponderInterface;
 
     @Autowired
     private GetHospCredentialsForPersonResponderInterface getHospCredentialsForPersonResponderInterface;
@@ -66,9 +65,9 @@ public class AuthorizationManagementClient {
     private static boolean includeFeignedObject = false;
 
     public List<CredentialInformationType> getCredentialInformationForPerson(String personalIdentityNumber,
-                                                                             String personHsaId,
-                                                                             String profile)
-            throws HsaServiceCallException {
+        String personHsaId,
+        String profile)
+        throws HsaServiceCallException {
 
         GetCredentialsForPersonIncludingProtectedPersonType parameters = new GetCredentialsForPersonIncludingProtectedPersonType();
         parameters.setIncludeFeignedObject(includeFeignedObject);
@@ -77,9 +76,9 @@ public class AuthorizationManagementClient {
         parameters.setProfile(profile);
 
         GetCredentialsForPersonIncludingProtectedPersonResponseType response =
-                getCredentialsForPersonIncludingProtectedPersonResponderInterface
-                        .getCredentialsForPersonIncludingProtectedPerson(logicalAddress, parameters);
-        if (response == null || response.getCredentialInformation() == null || response.getCredentialInformation().isEmpty()) {
+            getCredentialsForPersonIncludingProtectedPersonResponderInterface
+                .getCredentialsForPersonIncludingProtectedPerson(logicalAddress, parameters);
+        if (response == null || response.getCredentialInformation().isEmpty()) {
             LOG.error("getCredentialsForPersonIncludingProtectedPerson response is null or empty");
             throw new HsaServiceCallException("No CredentialInformation found for personHsaId " + personHsaId);
         }
@@ -88,13 +87,13 @@ public class AuthorizationManagementClient {
     }
 
     public GetHospCredentialsForPersonResponseType getHospCredentialsForPerson(String personalIdentityNumber)
-            throws HsaServiceCallException {
+        throws HsaServiceCallException {
         GetHospCredentialsForPersonType parameters = new GetHospCredentialsForPersonType();
 
         parameters.setPersonalIdentityNumber(personalIdentityNumber);
 
         GetHospCredentialsForPersonResponseType response = getHospCredentialsForPersonResponderInterface
-                .getHospCredentialsForPerson(logicalAddress, parameters);
+            .getHospCredentialsForPerson(logicalAddress, parameters);
 
         if (response == null) {
             LOG.error("getHospCredentialsForPerson response is null");
@@ -113,7 +112,7 @@ public class AuthorizationManagementClient {
     }
 
     public HandleHospCertificationPersonResponseType handleHospCertificationPerson(
-            String certificationId, OperationEnum operation, String personalIdentityNumber, String reason) {
+        String certificationId, OperationEnum operation, String personalIdentityNumber, String reason) {
 
         HandleHospCertificationPersonType parameters = new HandleHospCertificationPersonType();
         parameters.setCertificationId(certificationId);
@@ -122,7 +121,7 @@ public class AuthorizationManagementClient {
         parameters.setReason(reason);
 
         HandleHospCertificationPersonResponseType response = handleHospCertificationPersonResponderInterface
-                .handleHospCertificationPerson(logicalAddress, parameters);
+            .handleHospCertificationPerson(logicalAddress, parameters);
 
         return response;
     }

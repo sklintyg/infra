@@ -18,8 +18,27 @@
  */
 package se.inera.intyg.infra.integration.hsatk.util;
 
-import se.inera.intyg.infra.integration.hsatk.model.*;
-import se.riv.infrastructure.directory.authorizationmanagement.v2.*;
+import java.util.stream.Collectors;
+import se.inera.intyg.infra.integration.hsatk.model.Commission;
+import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
+import se.inera.intyg.infra.integration.hsatk.model.HCPSpecialityCodes;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareProfessionalLicence;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareProvider;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMember;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
+import se.inera.intyg.infra.integration.hsatk.model.HospCredentialsForPerson;
+import se.inera.intyg.infra.integration.hsatk.model.HsaSystemRole;
+import se.inera.intyg.infra.integration.hsatk.model.NursePrescriptionRight;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.infra.integration.hsatk.model.Unit;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.CommissionType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.HCPSpecialityCodesType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.HealthCareProfessionalLicenceType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.HsaSystemRoleType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.NursePrescriptionRightType;
+import se.riv.infrastructure.directory.authorizationmanagement.v2.RestrictionType;
 import se.riv.infrastructure.directory.employee.v2.HealthCareProfessionalLicenceSpecialityType;
 import se.riv.infrastructure.directory.employee.v2.PaTitleType;
 import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
@@ -32,17 +51,15 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v2.GeoCoord
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.GeoCoordSWEREF99Type;
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
 
-import java.util.stream.Collectors;
-
 public class HsaTypeConverter {
 
     public HealthCareProfessionalLicence toHealthCareProfessionalLicence(HealthCareProfessionalLicenceType
-                                                                                 healthCareProfessionalLicenceType) {
+        healthCareProfessionalLicenceType) {
         HealthCareProfessionalLicence healthCareProfessionalLicence = new HealthCareProfessionalLicence();
         healthCareProfessionalLicence
-                .setHealthCareProfessionalLicenceCode(healthCareProfessionalLicenceType.getHealthCareProfessionalLicenceCode());
+            .setHealthCareProfessionalLicenceCode(healthCareProfessionalLicenceType.getHealthCareProfessionalLicenceCode());
         healthCareProfessionalLicence
-                .setHealthCareProfessionalLicenceName(healthCareProfessionalLicenceType.getHealthCareProfessionalLicenceName());
+            .setHealthCareProfessionalLicenceName(healthCareProfessionalLicenceType.getHealthCareProfessionalLicenceName());
 
         return healthCareProfessionalLicence;
     }
@@ -51,28 +68,28 @@ public class HsaTypeConverter {
         CredentialInformation credentialInformation = new CredentialInformation();
 
         credentialInformation.setCommission(credentialInformationType.getCommission()
-                .stream().map(this::toCommission).collect(Collectors.toList()));
+            .stream().map(this::toCommission).collect(Collectors.toList()));
         credentialInformation.setFeignedPerson(credentialInformationType.isFeignedPerson());
         credentialInformation.setGivenName(credentialInformationType.getGivenName());
         credentialInformation.setGroupPrescriptionCode(credentialInformationType.getGroupPrescriptionCode());
         credentialInformation.setHealthCareProfessionalLicence(credentialInformationType.getHealthCareProfessionalLicence());
         credentialInformation.setHealthCareProfessionalLicenceCode(credentialInformationType.getHealthCareProfessionalLicenceCode());
-        if (credentialInformationType.getHealthCareProfessionalLicenceSpeciality() != null) {
+        if (!credentialInformationType.getHealthCareProfessionalLicenceSpeciality().isEmpty()) {
             credentialInformation.setHealthCareProfessionalLicenceSpeciality(
-                    credentialInformationType.getHealthCareProfessionalLicenceSpeciality()
-                            .stream().map(this::toHCPSpecialityCode).collect(Collectors.toList()));
+                credentialInformationType.getHealthCareProfessionalLicenceSpeciality()
+                    .stream().map(this::toHCPSpecialityCode).collect(Collectors.toList()));
         }
         credentialInformation.setHealthcareProfessionalLicenseIdentityNumber(
-                credentialInformationType.getHealthcareProfessionalLicenseIdentityNumber());
-        if (credentialInformationType.getHsaSystemRole() != null) {
+            credentialInformationType.getHealthcareProfessionalLicenseIdentityNumber());
+        if (!credentialInformationType.getHsaSystemRole().isEmpty()) {
             credentialInformation.setHsaSystemRole(credentialInformationType.getHsaSystemRole()
-                    .stream().map(this::toHsaSystemRole).collect(Collectors.toList()));
+                .stream().map(this::toHsaSystemRole).collect(Collectors.toList()));
         }
         credentialInformation.setMiddleAndSurName(credentialInformationType.getMiddleAndSurName());
-        if (credentialInformationType.getNursePrescriptionRight() != null) {
+        if (!credentialInformationType.getNursePrescriptionRight().isEmpty()) {
             credentialInformation.setNursePrescriptionRight(
-                    credentialInformationType.getNursePrescriptionRight()
-                            .stream().map(this::toNursePrescriptionRight).collect(Collectors.toList()));
+                credentialInformationType.getNursePrescriptionRight()
+                    .stream().map(this::toNursePrescriptionRight).collect(Collectors.toList()));
         }
         credentialInformation.setOccupationalCode(credentialInformationType.getOccupationalCode());
         credentialInformation.setPaTitleCode(credentialInformationType.getPaTitleCode());
@@ -146,7 +163,7 @@ public class HsaTypeConverter {
         personInformation.setGivenName(personInformationType.getGivenName());
         personInformation.setHealthCareProfessionalLicence(personInformationType.getHealthCareProfessionalLicence());
         personInformation.setHealthCareProfessionalLicenceSpeciality(personInformationType.getHealthCareProfessionalLicenceSpeciality()
-                .stream().map(this::toHCPSpecialityCodes).collect(Collectors.toList()));
+            .stream().map(this::toHCPSpecialityCodes).collect(Collectors.toList()));
         personInformation.setMiddleAndSurName(personInformationType.getMiddleAndSurName());
         personInformation.setPaTitle(personInformationType.getPaTitle().stream().map(this::toPaTitleType).collect(Collectors.toList()));
         personInformation.setPersonEndDate(personInformationType.getPersonEndDate());
@@ -160,12 +177,12 @@ public class HsaTypeConverter {
     }
 
     public HCPSpecialityCodes toHCPSpecialityCodes(
-            HealthCareProfessionalLicenceSpecialityType healthCareProfessionalLicenceSpecialityType) {
+        HealthCareProfessionalLicenceSpecialityType healthCareProfessionalLicenceSpecialityType) {
 
         HCPSpecialityCodes hcpSpecialityCodes = new HCPSpecialityCodes();
 
         hcpSpecialityCodes.setHealthCareProfessionalLicenceCode(
-                healthCareProfessionalLicenceSpecialityType.getHealthCareProfessionalLicence());
+            healthCareProfessionalLicenceSpecialityType.getHealthCareProfessionalLicence());
         hcpSpecialityCodes.setSpecialityCode(healthCareProfessionalLicenceSpecialityType.getSpecialityCode());
         hcpSpecialityCodes.setSpecialityName(healthCareProfessionalLicenceSpecialityType.getSpecialityName());
 
@@ -182,7 +199,7 @@ public class HsaTypeConverter {
     }
 
     public HealthCareProvider toHealthCareProvider(
-            se.riv.infrastructure.directory.organization.gethealthcareproviderresponder.v1.HealthCareProviderType healthCareProviderType) {
+        se.riv.infrastructure.directory.organization.gethealthcareproviderresponder.v1.HealthCareProviderType healthCareProviderType) {
         HealthCareProvider healthCareProvider = new HealthCareProvider();
 
         healthCareProvider.setArchivedHealthCareProvider(healthCareProviderType.isArchivedHealthCareProvider());
@@ -192,7 +209,6 @@ public class HsaTypeConverter {
         healthCareProvider.setHealthCareProviderName(healthCareProviderType.getHealthCareProviderName());
         healthCareProvider.setHealthCareProviderOrgNo(healthCareProviderType.getHealthCareProviderOrgNo());
         healthCareProvider.setHealthCareProviderStartDate(healthCareProviderType.getHealthCareProviderStartDate());
-
 
         return healthCareProvider;
     }
@@ -232,9 +248,9 @@ public class HsaTypeConverter {
 
         healthCareUnitMembers.setArchivedHealthCareUnit(healthCareUnitMembersType.isArchivedHealthCareUnit());
         healthCareUnitMembers.setFeignedHealthCareUnit(healthCareUnitMembersType.isFeignedHealthCareUnit());
-        if (healthCareUnitMembersType.getHealthCareUnitMember() != null) {
+        if (!healthCareUnitMembersType.getHealthCareUnitMember().isEmpty()) {
             healthCareUnitMembers.setHealthCareUnitMember(healthCareUnitMembersType.getHealthCareUnitMember()
-                    .stream().map(this::toHealthCareUnitMember).collect(Collectors.toList()));
+                .stream().map(this::toHealthCareUnitMember).collect(Collectors.toList()));
         }
         healthCareUnitMembers.setHealthCareUnitHsaId(healthCareUnitMembersType.getHealthCareUnitHsaId());
         healthCareUnitMembers.setHealthCareUnitEndDate(healthCareUnitMembersType.getHealthCareUnitEndDate());
@@ -249,7 +265,6 @@ public class HsaTypeConverter {
         healthCareUnitMembers.setPostalCode(healthCareUnitMembersType.getPostalCode());
         healthCareUnitMembers.setTelephoneNumber(healthCareUnitMembersType.getTelephoneNumber());
 
-
         return healthCareUnitMembers;
     }
 
@@ -263,7 +278,7 @@ public class HsaTypeConverter {
         healthCareUnitMember.setHealthCareUnitMemberName(healthCareUnitMemberType.getHealthCareUnitMemberName());
         if (healthCareUnitMemberType.getHealthCareUnitMemberpostalAddress() != null) {
             healthCareUnitMember.setHealthCareUnitMemberpostalAddress(healthCareUnitMemberType
-                    .getHealthCareUnitMemberpostalAddress().getAddressLine());
+                .getHealthCareUnitMemberpostalAddress().getAddressLine());
         }
         healthCareUnitMember.setHealthCareUnitMemberpostalCode(healthCareUnitMemberType.getHealthCareUnitMemberpostalCode());
         healthCareUnitMember.setHealthCareUnitMemberPrescriptionCode(healthCareUnitMemberType.getHealthCareUnitMemberPrescriptionCode());
@@ -291,9 +306,9 @@ public class HsaTypeConverter {
     public Unit toUnit(UnitType unitType) {
         Unit unit = new Unit();
 
-        if (unitType.getBusinessClassification() != null) {
+        if (!unitType.getBusinessClassification().isEmpty()) {
             unit.setBusinessClassification(unitType.getBusinessClassification()
-                    .stream().map(this::toBusinessClassification).collect(Collectors.toList()));
+                .stream().map(this::toBusinessClassification).collect(Collectors.toList()));
         }
         unit.setBusinessType(unitType.getBusinessType());
         unit.setCareType(unitType.getCareType());
