@@ -78,10 +78,10 @@ public class EmployeeClient {
             throw new HsaServiceCallException(e);
         }
         if (response == null || response.getPersonInformation().isEmpty()) {
-            if (personalIdentityNumber.isEmpty()) {
+            if (StringUtils.isEmpty(personalIdentityNumber)) {
                 LOG.warn("Response null or empty for personalIdentityNumber: {}", personalIdentityNumber);
             }
-            if (personHsaId.isEmpty()) {
+            if (StringUtils.isEmpty(personHsaId)) {
                 LOG.warn("Response null or empty for personHsaId: {}", personHsaId);
             }
             return new ArrayList<>();

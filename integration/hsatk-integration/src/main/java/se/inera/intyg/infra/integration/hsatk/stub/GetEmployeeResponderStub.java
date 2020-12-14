@@ -28,8 +28,6 @@ import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedper
 import se.riv.infrastructure.directory.employee.v2.PaTitleType;
 import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
-import java.util.List;
-
 //CHECKSTYLE:ON LineLength
 
 /**
@@ -45,6 +43,9 @@ public class GetEmployeeResponderStub implements GetEmployeeIncludingProtectedPe
         GetEmployeeIncludingProtectedPersonType getEmployeeIncludingProtectedPersonType) {
         GetEmployeeIncludingProtectedPersonResponseType response = new GetEmployeeIncludingProtectedPersonResponseType();
         String personHsaId = getEmployeeIncludingProtectedPersonType.getPersonHsaId();
+        if (personHsaId == null) {
+            personHsaId = getEmployeeIncludingProtectedPersonType.getPersonalIdentityNumber();
+        }
         HsaPerson hsaPerson = hsaServiceStub.getHsaPerson(personHsaId);
         if (hsaPerson == null) {
             return response;

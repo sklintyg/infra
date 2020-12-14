@@ -37,7 +37,7 @@ public class GetHealthCareProviderResponderStub implements GetHealthCareProvider
         getHealthCareProviderResponseType.getHealthCareProvider()
                 .add(toHealthCareProviderType(hsaServiceStub.getCareProvider(parameters.getHealthCareProviderHsaId())));
 
-        return null;
+        return getHealthCareProviderResponseType;
     }
 
     private HealthCareProviderType toHealthCareProviderType(CareProviderStub careProviderStub) {
