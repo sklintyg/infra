@@ -18,11 +18,10 @@
  */
 package se.inera.intyg.infra.integration.hsatk.model.legacy;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
 
 /**
  * @author andreaskaltenbach
@@ -37,7 +36,7 @@ public class Vardenhet extends AbstractVardenhet {
 
     private String vardgivareHsaId;
 
-    private List<Mottagning> mottagningar;
+    private List<Mottagning> mottagningar = new ArrayList<>();
 
     public Vardenhet() {
         // Needed for deserialization
