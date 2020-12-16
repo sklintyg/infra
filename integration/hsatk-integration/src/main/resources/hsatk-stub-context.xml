@@ -38,7 +38,7 @@
     <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetUnit/2/rivtabp21" implementor="se.inera.intyg.infra.integration.hsatk.stub.GetUnitResponderStub"/>
   </beans>
 
-  <!--<beans profile="dev,testability-api">
+  <beans profile="dev,testability-api">
     <jaxrs:server address="/api/hsa-api">
       <jaxrs:serviceBeans>
         <ref bean="hsaStubRestApi"/>
@@ -51,6 +51,9 @@
       </jaxrs:extensionMappings>
     </jaxrs:server>
 
-  </beans>-->
+    <bean id="hsaStubRestApi" class="se.inera.intyg.infra.integration.hsatk.stub.HsaStubRestApi"/>
+
+
+  </beans>
 
 </beans>

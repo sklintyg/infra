@@ -18,18 +18,12 @@
  */
 package se.inera.intyg.infra.integration.hsatk.stub;
 
+import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.integration.hsatk.stub.model.*;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsatk.stub.model.CareProviderStub;
-import se.inera.intyg.infra.integration.hsatk.stub.model.CareUnitStub;
-import se.inera.intyg.infra.integration.hsatk.stub.model.CredentialInformation;
-import se.inera.intyg.infra.integration.hsatk.stub.model.HsaPerson;
-import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnit;
+import java.util.*;
 
 @Service
 public class HsaServiceStub {
@@ -51,6 +45,10 @@ public class HsaServiceStub {
 
     public void deleteCredentialInformation(String hsaId) {
         credentialInformationMap.remove(hsaId);
+    }
+
+    public Collection<CredentialInformation> getCredentialInformation() {
+        return credentialInformationMap.values();
     }
 
     public CredentialInformation getCredentialInformation(String hsaId) {
@@ -78,6 +76,10 @@ public class HsaServiceStub {
 
     public void deleteHsaPerson(String id) {
         hsaPersonMap.remove(id);
+    }
+
+    public Collection<HsaPerson> getHsaPerson() {
+        return hsaPersonMap.values();
     }
 
     public HsaPerson getHsaPerson(String id) {
@@ -120,6 +122,10 @@ public class HsaServiceStub {
             careUnitMap.remove(careUnitStub.getId());
         }
         careProviderMap.remove(hsaId);
+    }
+
+    public Collection<CareProviderStub> getCareProvider() {
+        return careProviderMap.values();
     }
 
     public CareProviderStub getCareProvider(String hsaId) {
