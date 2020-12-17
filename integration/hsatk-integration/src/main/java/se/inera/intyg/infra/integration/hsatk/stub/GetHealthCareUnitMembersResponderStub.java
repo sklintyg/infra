@@ -56,25 +56,27 @@ public class GetHealthCareUnitMembersResponderStub implements GetHealthCareUnitM
     private void updateUnit(HealthCareUnitMembersType membersType, String unitHsaId) {
 
         CareUnitStub careUnitStub = hsaServiceStub.getCareUnit(unitHsaId);
-        if (careUnitStub.getId().equals(unitHsaId)) {
+        if (careUnitStub != null && careUnitStub.getId().equals(unitHsaId)) {
             membersType.getHealthCareUnitPrescriptionCode().add(careUnitStub.getPrescriptionCode());
 
-            for (SubUnit subUnit : careUnitStub.getSubUnits()) {
-                if (subUnit.getId().endsWith("-finns-ej")) {
-                    continue;
-                }
-                HealthCareUnitMemberType member = new HealthCareUnitMemberType();
-                member.setHealthCareUnitMemberHsaId(subUnit.getId());
-                member.setHealthCareUnitMemberName(subUnit.getName());
-                member.setHealthCareUnitMemberStartDate(subUnit.getStart());
-                member.setHealthCareUnitMemberEndDate(subUnit.getEnd());
-                AddressType addressType = new AddressType();
-                addressType.getAddressLine().add(subUnit.getPostalAddress());
+            if (careUnitStub.getSubUnits() != null) {
+                for (SubUnit subUnit : careUnitStub.getSubUnits()) {
+                    if (subUnit.getId().endsWith("-finns-ej")) {
+                        continue;
+                    }
+                    HealthCareUnitMemberType member = new HealthCareUnitMemberType();
+                    member.setHealthCareUnitMemberHsaId(subUnit.getId());
+                    member.setHealthCareUnitMemberName(subUnit.getName());
+                    member.setHealthCareUnitMemberStartDate(subUnit.getStart());
+                    member.setHealthCareUnitMemberEndDate(subUnit.getEnd());
+                    AddressType addressType = new AddressType();
+                    addressType.getAddressLine().add(subUnit.getPostalAddress());
 
-                member.setHealthCareUnitMemberpostalAddress(addressType);
-                member.setHealthCareUnitMemberpostalCode(subUnit.getPostalCode());
-                member.getHealthCareUnitMemberPrescriptionCode().add(subUnit.getPrescriptionCode());
-                membersType.getHealthCareUnitMember().add(member);
+                    member.setHealthCareUnitMemberpostalAddress(addressType);
+                    member.setHealthCareUnitMemberpostalCode(subUnit.getPostalCode());
+                    member.getHealthCareUnitMemberPrescriptionCode().add(subUnit.getPrescriptionCode());
+                    membersType.getHealthCareUnitMember().add(member);
+                }
             }
         }
     }

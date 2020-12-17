@@ -14,6 +14,9 @@ dependencies {
 
     //testCompile "junit:junit:4.+"
 
+    compile project(':common-redis-cache-core')
+
+
     compile "org.springframework.security:spring-security-web"
 
     compile "org.apache.commons:commons-lang3"

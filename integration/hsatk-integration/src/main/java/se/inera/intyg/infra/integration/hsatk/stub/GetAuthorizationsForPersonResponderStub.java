@@ -90,10 +90,16 @@ public class GetAuthorizationsForPersonResponderStub
                     if (commission.getHealthCareUnitHsaId().endsWith("-finns-ej")) {
                         continue;
                     }
-                    LOG.info("CareUnitID: {}", commission.getHealthCareUnitHsaId());
                     CareUnitStub careUnit = hsaServiceStub.getCareUnit(commission.getHealthCareUnitHsaId());
-                    LOG.info("CareProviderID: {}", careUnit.getCareProviderHsaId());
+                    if (careUnit == null) {
+                        continue;
+                    }
                     CareProviderStub careProvider = hsaServiceStub.getCareProvider(careUnit.getCareProviderHsaId());
+
+                    if (careProvider == null) {
+                        continue;
+                    }
+
                     // NYTT, lägg på systemRoles från stubbens data ifall sådan finns tillgänglig.
 
                     if (commission.getCommissionPurpose() != null || !commission.getCommissionPurpose().isEmpty()) {

@@ -20,9 +20,9 @@ package se.inera.intyg.infra.integration.hsatk.stub;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.integration.hsatk.stub.model.AbstractCareUnitStub;
-import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnit;
-import se.inera.intyg.infra.integration.hsatk.stub.model.CareUnitStub;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CareProviderStub;
+import se.inera.intyg.infra.integration.hsatk.stub.model.CareUnitStub;
+import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnit;
 import se.riv.infrastructure.directory.organization.getunit.v2.rivtabp21.GetUnitResponderInterface;
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitResponseType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitType;
@@ -63,6 +63,9 @@ public class GetUnitResponderStub implements GetUnitResponderInterface {
             } else {
                 // Finally, test if it is a Mottagning.
                 SubUnit subUnit = hsaServiceStub.getSubUnit(parameters.getUnitHsaId());
+                if (subUnit == null) {
+                    return null;
+                }
                 UnitType unit = abstractVardenhetToUnitType(subUnit);
                 response.setUnit(unit);
             }
