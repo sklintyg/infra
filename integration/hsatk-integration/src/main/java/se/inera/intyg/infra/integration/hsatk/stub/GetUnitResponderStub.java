@@ -39,10 +39,6 @@ public class GetUnitResponderStub implements GetUnitResponderInterface {
 
     @Override
     public GetUnitResponseType getUnit(String logicalAddress, GetUnitType parameters) {
-        if (parameters.getUnitHsaId().endsWith("-finns-ej")) {
-            return null;
-        }
-
         GetUnitResponseType response = new GetUnitResponseType();
 
         // First, check if it is a Vardgivare

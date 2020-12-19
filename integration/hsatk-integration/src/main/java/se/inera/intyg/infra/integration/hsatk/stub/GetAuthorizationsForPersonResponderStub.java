@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.integration.hsatk.stub;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +34,6 @@ import se.riv.infrastructure.directory.authorizationmanagement.v2.CommissionType
 import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
 import se.riv.infrastructure.directory.authorizationmanagement.v2.HsaSystemRoleType;
 import se.riv.infrastructure.directory.employee.v2.PaTitleType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GetAuthorizationsForPersonResponderStub
         implements GetCredentialsForPersonIncludingProtectedPersonResponderInterface {
@@ -87,9 +86,6 @@ public class GetAuthorizationsForPersonResponderStub
 
             if (credentialInformation.getCommissionList() != null) {
                 for (CredentialInformation.Commission commission : credentialInformation.getCommissionList()) {
-                    if (commission.getHealthCareUnitHsaId().endsWith("-finns-ej")) {
-                        continue;
-                    }
                     CareUnitStub careUnit = hsaServiceStub.getCareUnit(commission.getHealthCareUnitHsaId());
                     if (careUnit == null) {
                         continue;

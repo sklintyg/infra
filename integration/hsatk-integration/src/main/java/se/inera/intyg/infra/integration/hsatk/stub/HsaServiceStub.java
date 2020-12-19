@@ -18,12 +18,19 @@
  */
 package se.inera.intyg.infra.integration.hsatk.stub;
 
-import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsatk.stub.model.*;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.integration.hsatk.stub.model.CareProviderStub;
+import se.inera.intyg.infra.integration.hsatk.stub.model.CareUnitStub;
+import se.inera.intyg.infra.integration.hsatk.stub.model.CredentialInformation;
+import se.inera.intyg.infra.integration.hsatk.stub.model.HsaPerson;
+import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnit;
 
 @Service
 public class HsaServiceStub {
@@ -52,7 +59,7 @@ public class HsaServiceStub {
     }
 
     public CredentialInformation getCredentialInformation(String hsaId) {
-        if (hsaId == null) {
+        if (isNullOrShouldNotExistInHsa(hsaId)) {
             return null;
         } else if (credentialInformationMap.containsKey(hsaId)) {
             return credentialInformationMap.get(hsaId);
@@ -83,7 +90,7 @@ public class HsaServiceStub {
     }
 
     public HsaPerson getHsaPerson(String id) {
-        if (id == null) {
+        if (isNullOrShouldNotExistInHsa(id)) {
             return null;
         } else if (hsaPersonMap.containsKey(id)) {
             return hsaPersonMap.get(id);
@@ -129,7 +136,7 @@ public class HsaServiceStub {
     }
 
     public CareProviderStub getCareProvider(String hsaId) {
-        if (hsaId == null) {
+        if (isNullOrShouldNotExistInHsa(hsaId)) {
             return null;
         } else if (careProviderMap.containsKey(hsaId)) {
             return careProviderMap.get(hsaId);
@@ -143,7 +150,7 @@ public class HsaServiceStub {
     }
 
     public CareUnitStub getCareUnit(String hsaId) {
-        if (hsaId == null) {
+        if (isNullOrShouldNotExistInHsa(hsaId)) {
             return null;
         } else if (careUnitMap.containsKey(hsaId)) {
             return careUnitMap.get(hsaId);
@@ -157,7 +164,7 @@ public class HsaServiceStub {
     }
 
     public SubUnit getSubUnit(String hsaId) {
-        if (hsaId == null) {
+        if (isNullOrShouldNotExistInHsa(hsaId)) {
             return null;
         } else if (subUnitMap.containsKey(hsaId)) {
             return subUnitMap.get(hsaId);
@@ -168,6 +175,10 @@ public class HsaServiceStub {
         } else {
             return null;
         }
+    }
+
+    public static boolean isNullOrShouldNotExistInHsa(String hsaId) {
+        return hsaId == null || hsaId.startsWith("EJHSA") || "UTANENHETSID".equals(hsaId) || hsaId.endsWith("-finns-ej");
     }
 
     public void markAsReadOnly(String hsaId) {
