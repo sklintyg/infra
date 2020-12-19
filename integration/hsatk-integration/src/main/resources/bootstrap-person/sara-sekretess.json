@@ -2,7 +2,7 @@
   "hsaId": "TSTNMT2321000156-1099",
   "givenName": "Sara",
   "middleAndSurname": "Sekretess",
-  "sekretessMarkerad": true,
+  "protectedPerson": true,
   "healthCareProfessionalLicence": [
     "Läkare"
   ],
