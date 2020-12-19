@@ -19,10 +19,9 @@
 package se.inera.intyg.infra.integration.hsatk.stub.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
@@ -57,6 +56,10 @@ public class HsaPerson {
     private List<Restrictions> restrictions;
 
     private FakeProperties fakeProperties;
+
+    private String gender;
+
+    private String age;
 
     // ~ Constructors
     // ~ =====================================================================================

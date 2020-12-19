@@ -57,6 +57,8 @@ public class GetEmployeeResponderStub implements GetEmployeeIncludingProtectedPe
         person.setGivenName(hsaPerson.getGivenName());
         person.setMiddleAndSurName(hsaPerson.getMiddleAndSurname());
         person.setProtectedPerson(hsaPerson.isProtectedPerson());
+        person.setAge(hsaPerson.getAge());
+        person.setGender(hsaPerson.getGender());
 
         for (String healthCareProfessionalLicence : hsaPerson.getHealthCareProfessionalLicence()) {
             person.getHealthCareProfessionalLicence().add(healthCareProfessionalLicence);
@@ -68,12 +70,12 @@ public class GetEmployeeResponderStub implements GetEmployeeIncludingProtectedPe
         }
 
         if (hsaPerson.getPaTitle() != null) {
-            PaTitleType paTitleType = new PaTitleType();
             for (HsaPerson.PaTitle paTitle : hsaPerson.getPaTitle()) {
+                PaTitleType paTitleType = new PaTitleType();
                 paTitleType.setPaTitleCode(paTitle.getTitleCode());
                 paTitleType.setPaTitleName(paTitle.getTitleName());
+                person.getPaTitle().add(paTitleType);
             }
-            person.getPaTitle().add(paTitleType);
         }
 
         response.getPersonInformation().add(person);
