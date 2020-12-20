@@ -12,7 +12,6 @@
             "restrictionCode":"restrictionCode2"
         }
     ],
-    "titleCodes":["LK"],
     "specialities":[
         {
             "specialityName":"Klinisk fysiologi",
@@ -23,5 +22,10 @@
             "specialityCode":"74"
         }
     ],
-    "hsaTitles":["Läkare"]
+    "healthCareProfessionalLicenceType": [
+        {
+            "healthCareProfessionalLicenceCode": "LK",
+            "healthCareProfessionalLicenceName": "Läkare"
+        }
+    ]
 }

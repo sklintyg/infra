@@ -12,7 +12,6 @@
             "restrictionCode":"restrictionCode2"
         }
     ],
-    "titleCodes":["LK"],
     "specialities":[
         {
             "specialityName":"specialityName1",
@@ -23,5 +22,10 @@
             "specialityCode":"specialityCode2"
         }
     ],
-    "hsaTitles":["Läkare"]
+    "healthCareProfessionalLicenceType": [
+        {
+            "healthCareProfessionalLicenceCode": "LK",
+            "healthCareProfessionalLicenceName": "Läkare"
+        }
+    ]
 }

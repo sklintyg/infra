@@ -4,6 +4,10 @@
 "educationCodes":[],
 "restrictions":[],
 "specialities":[],
-"titleCodes":["LK"],
-"hsaTitles":["Läkare"]
+  "healthCareProfessionalLicenceType": [
+    {
+      "healthCareProfessionalLicenceCode": "LK",
+      "healthCareProfessionalLicenceName": "Läkare"
+    }
+  ]
 }

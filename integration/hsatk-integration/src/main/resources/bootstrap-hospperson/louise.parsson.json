@@ -4,6 +4,10 @@
 "educationCodes":[],
 "restrictions":[],
 "specialities":[],
-"titleCodes":["DT"],
-"hsaTitles":["Dietist"]
+  "healthCareProfessionalLicenceType": [
+    {
+      "healthCareProfessionalLicenceCode": "DT",
+      "healthCareProfessionalLicenceName": "Dietist"
+    }
+  ]
 }

@@ -19,9 +19,10 @@
 package se.inera.intyg.infra.integration.hsatk.stub.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
@@ -61,6 +62,8 @@ public class HsaPerson {
 
     private String age;
 
+    private List<HealthCareProfessionalLicenceType> healthCareProfessionalLicenceType = new ArrayList<>();
+
     // ~ Constructors
     // ~ =====================================================================================
 
@@ -99,5 +102,11 @@ public class HsaPerson {
     public static class Speciality {
         private String specialityName;
         private String specialityCode;
+    }
+
+    @Data
+    public static class HealthCareProfessionalLicenceType {
+        private String healthCareProfessionalLicenceCode;
+        private String healthCareProfessionalLicenceName;
     }
 }
