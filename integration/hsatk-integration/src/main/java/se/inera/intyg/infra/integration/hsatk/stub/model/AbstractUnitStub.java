@@ -18,18 +18,38 @@
  */
 package se.inera.intyg.infra.integration.hsatk.stub.model;
 
-import lombok.Data;
+import java.io.Serializable;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDateTime;
+@NoArgsConstructor
+@Getter
+@Setter
+public abstract class AbstractUnitStub implements Serializable {
 
-/**
- * @author andreaskaltenbach
- */
-@Data
-public class SubUnit extends AbstractCareUnitStub {
+    private String id;
 
-    private LocalDateTime start;
-    private LocalDateTime end;
-    private String parentHsaId;
+    private String name;
+
+    private String mail;
+
+    private String postalAddress;
+
+    private String postalCode;
+
+    private String postalTown;
+
+    private String telephoneNumber;
+
+    private String prescriptionCode;
+
+    private String healthCareProviderOrgno;
+
+    private String careProviderHsaId;
+
+    private String countyCode;
+
+    private String municipalityCode;
 
 }

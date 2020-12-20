@@ -20,7 +20,7 @@ package se.inera.intyg.infra.integration.hsatk.stub;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CareUnitStub;
-import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnit;
+import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnitStub;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v2.rivtabp21.GetHealthCareUnitMembersResponderInterface;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.GetHealthCareUnitMembersResponseType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.GetHealthCareUnitMembersType;
@@ -60,7 +60,7 @@ public class GetHealthCareUnitMembersResponderStub implements GetHealthCareUnitM
             membersType.getHealthCareUnitPrescriptionCode().add(careUnitStub.getPrescriptionCode());
 
             if (careUnitStub.getSubUnits() != null) {
-                for (SubUnit subUnit : careUnitStub.getSubUnits()) {
+                for (SubUnitStub subUnit : careUnitStub.getSubUnits()) {
                     if (subUnit.getId().endsWith("-finns-ej")) {
                         continue;
                     }

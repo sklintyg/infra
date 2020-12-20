@@ -32,8 +32,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CareProviderStub;
+import se.inera.intyg.infra.integration.hsatk.stub.model.CareUnitStub;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.stub.model.HsaPerson;
+import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnitStub;
 
 /**
  * @author johannesc
@@ -127,4 +129,19 @@ public class HsaStubRestApi {
         return hsaServiceStub.getHsaPerson().stream().distinct().collect(Collectors.toList());
     }
 
+    @POST
+    @Path("/careunit")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addUnit(CareUnitStub unit) {
+        hsaServiceStub.addCareUnit(unit);
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/subunit")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addUnit(SubUnitStub unit) {
+        hsaServiceStub.addSubUnit(unit);
+        return Response.ok().build();
+    }
 }

@@ -18,25 +18,21 @@
  */
 package se.inera.intyg.infra.integration.hsatk.stub.model;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-/**
- * @author andreaskaltenbach
- */
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class CareUnitStub extends AbstractCareUnitStub {
+public class CareUnitStub extends AbstractUnitStub {
 
     private static final long serialVersionUID = 460424685142490104L;
 
     private LocalDateTime start;
     private LocalDateTime end;
 
-    private String careProviderHsaId;
-
-    private List<SubUnit> subUnits;
+    private List<SubUnitStub> subUnits;
 
 }

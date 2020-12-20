@@ -19,10 +19,10 @@
 package se.inera.intyg.infra.integration.hsatk.stub;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import se.inera.intyg.infra.integration.hsatk.stub.model.AbstractCareUnitStub;
+import se.inera.intyg.infra.integration.hsatk.stub.model.AbstractUnitStub;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CareProviderStub;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CareUnitStub;
-import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnit;
+import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnitStub;
 import se.riv.infrastructure.directory.organization.getunit.v2.rivtabp21.GetUnitResponderInterface;
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitResponseType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitType;
@@ -58,7 +58,7 @@ public class GetUnitResponderStub implements GetUnitResponderInterface {
                 response.setUnit(unit);
             } else {
                 // Finally, test if it is a Mottagning.
-                SubUnit subUnit = hsaServiceStub.getSubUnit(parameters.getUnitHsaId());
+                SubUnitStub subUnit = hsaServiceStub.getSubUnit(parameters.getUnitHsaId());
                 if (subUnit == null) {
                     return null;
                 }
@@ -69,7 +69,7 @@ public class GetUnitResponderStub implements GetUnitResponderInterface {
         return response;
     }
 
-    private UnitType abstractVardenhetToUnitType(AbstractCareUnitStub careUnit) {
+    private UnitType abstractVardenhetToUnitType(AbstractUnitStub careUnit) {
         UnitType unit = new UnitType();
         unit.setUnitName(careUnit.getName());
         unit.setUnitHsaId(careUnit.getId());
@@ -81,6 +81,10 @@ public class GetUnitResponderStub implements GetUnitResponderInterface {
         addressType.getAddressLine().add(careUnit.getPostalAddress());
         addressType.getAddressLine().add(careUnit.getPostalTown());
         unit.setPostalAddress(addressType);
+
+        unit.setCountyCode(careUnit.getCountyCode());
+        unit.setMunicipalityCode(careUnit.getMunicipalityCode());
+
         return unit;
     }
 }

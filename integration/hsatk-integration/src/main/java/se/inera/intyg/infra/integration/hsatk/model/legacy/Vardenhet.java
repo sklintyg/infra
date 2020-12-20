@@ -22,10 +22,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-/**
- * @author andreaskaltenbach
- */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class Vardenhet extends AbstractVardenhet {
 

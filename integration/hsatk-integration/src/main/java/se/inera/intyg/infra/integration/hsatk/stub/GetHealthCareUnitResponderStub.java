@@ -20,7 +20,7 @@ package se.inera.intyg.infra.integration.hsatk.stub;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CareUnitStub;
-import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnit;
+import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnitStub;
 import se.riv.infrastructure.directory.organization.gethealthcareunit.v2.rivtabp21.GetHealthCareUnitResponderInterface;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.GetHealthCareUnitResponseType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.GetHealthCareUnitType;
@@ -39,7 +39,7 @@ public class GetHealthCareUnitResponderStub implements GetHealthCareUnitResponde
         GetHealthCareUnitResponseType responseType = new GetHealthCareUnitResponseType();
 
         // This is not correct. The getHealthCareUnit query may return both mottagningar and vardenheter.
-        SubUnit subUnit = hsaServiceStub.getSubUnit(parameters.getHealthCareUnitMemberHsaId());
+        SubUnitStub subUnit = hsaServiceStub.getSubUnit(parameters.getHealthCareUnitMemberHsaId());
         if (subUnit != null) {
             HealthCareUnitType member = new HealthCareUnitType();
 

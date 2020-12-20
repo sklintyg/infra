@@ -30,7 +30,7 @@ import se.inera.intyg.infra.integration.hsatk.stub.model.CareProviderStub;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CareUnitStub;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.stub.model.HsaPerson;
-import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnit;
+import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnitStub;
 
 @Service
 public class HsaServiceStub {
@@ -42,7 +42,7 @@ public class HsaServiceStub {
     private Map<String, CredentialInformation> credentialInformationMap = new HashMap<>();
     private Map<String, CareProviderStub> careProviderMap = new HashMap<>();
     private Map<String, CareUnitStub> careUnitMap = new HashMap<>();
-    private Map<String, SubUnit> subUnitMap = new HashMap<>();
+    private Map<String, SubUnitStub> subUnitMap = new HashMap<>();
 
     private LocalDateTime lastHospUpdate = LocalDateTime.now(ZoneId.systemDefault());
 
@@ -111,7 +111,7 @@ public class HsaServiceStub {
                     careUnitStub.setCareProviderHsaId(careProviderStub.getId());
                     careUnitMap.put(careUnitStub.getId(), careUnitStub);
                     if (careUnitStub.getSubUnits() != null && careUnitStub.getSubUnits().size() > 0) {
-                        for (SubUnit subUnit : careUnitStub.getSubUnits()) {
+                        for (SubUnitStub subUnit : careUnitStub.getSubUnits()) {
                             subUnit.setParentHsaId(careUnitStub.getId());
                             subUnitMap.put(subUnit.getId(), subUnit);
                         }
@@ -121,9 +121,21 @@ public class HsaServiceStub {
         }
     }
 
+    public void addCareUnit(CareUnitStub careUnitStub) {
+        if (careUnitStub != null && careUnitStub.getId() != null) {
+            careUnitMap.put(careUnitStub.getId(), careUnitStub);
+        }
+    }
+
+    public void addSubUnit(SubUnitStub subUnitStub) {
+        if (subUnitStub != null && subUnitStub.getId() != null) {
+            subUnitMap.put(subUnitStub.getId(), subUnitStub);
+        }
+    }
+
     public void deleteCareProvider(String hsaId) {
         for (CareUnitStub careUnitStub : careProviderMap.get(hsaId).getCareUnits()) {
-            for (SubUnit subUnit : careUnitStub.getSubUnits()) {
+            for (SubUnitStub subUnit : careUnitStub.getSubUnits()) {
                 subUnitMap.remove(subUnit.getId());
             }
             careUnitMap.remove(careUnitStub.getId());
@@ -163,7 +175,7 @@ public class HsaServiceStub {
         }
     }
 
-    public SubUnit getSubUnit(String hsaId) {
+    public SubUnitStub getSubUnit(String hsaId) {
         if (isNullOrShouldNotExistInHsa(hsaId)) {
             return null;
         } else if (subUnitMap.containsKey(hsaId)) {
