@@ -112,6 +112,10 @@ public class HsaStubRestApi {
         if (hsaPerson != null) {
             hsaPerson.setGivenName(person.getGivenName());
             hsaPerson.setMiddleAndSurname(person.getMiddleAndSurname());
+            hsaPerson.setGender(person.getGender());
+            hsaPerson.setAge(person.getAge());
+            hsaPerson.setPaTitle(person.getPaTitle());
+            hsaPerson.setProtectedPerson(person.isProtectedPerson());
         }
         return Response.ok().build();
     }
