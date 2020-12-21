@@ -60,7 +60,7 @@ public class GetUnitResponderStub implements GetUnitResponderInterface {
                 // Finally, test if it is a Mottagning.
                 SubUnitStub subUnit = hsaServiceStub.getSubUnit(parameters.getUnitHsaId());
                 if (subUnit == null) {
-                    return null;
+                    return response;
                 }
                 UnitType unit = abstractVardenhetToUnitType(subUnit);
                 response.setUnit(unit);
