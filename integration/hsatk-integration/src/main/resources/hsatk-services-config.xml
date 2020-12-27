@@ -98,18 +98,4 @@
       </http:tlsClientParameters>
     </http:conduit>
   </beans>
-
-
-  <!--<beans profile="qa,prod">
-    <bean class="se.inera.intyg.infra.integration.hsatk.cache.HsaCacheConfiguration" />
-  </beans>
-
-  <beans profile="!prod">
-    <beans profile="!qa">
-      <beans profile="caching-enabled">
-        <bean class="se.inera.intyg.infra.integration.hsatk.cache.HsaCacheConfiguration" />
-      </beans>
-    </beans>
-  </beans>-->
-
 </beans>

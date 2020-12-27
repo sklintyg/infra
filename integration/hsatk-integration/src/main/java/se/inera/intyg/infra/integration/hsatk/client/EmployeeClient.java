@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.remoting.soap.SoapFaultException;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
@@ -47,6 +48,8 @@ public class EmployeeClient {
 
     private static boolean includeFeignedObject = false;
 
+    @Cacheable(cacheResolver = "hsaCacheResolver",
+        key = "#personalIdentityNumber + #personHsaId + (#profile != null ? #profile.name() : '')", unless = "#result == null")
     public List<PersonInformationType> getEmployee(String personalIdentityNumber, String personHsaId, ProfileEnum profile)
         throws HsaServiceCallException {
 

@@ -21,6 +21,7 @@ package se.inera.intyg.infra.integration.hsatk.client;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.riv.infrastructure.directory.organization.gethealthcareprovider.v1.rivtabp21.GetHealthCareProviderResponderInterface;
@@ -61,6 +62,7 @@ public class OrganizationClient {
 
     private static boolean includeFeignedObject = false;
 
+    @Cacheable(cacheResolver = "hsaCacheResolver", key = "#healthCareProviderHsaId + #healthCareProviderHsaId", unless = "#result == null")
     public List<HealthCareProviderType> getHealthCareProvider(
         String healthCareProviderHsaId, String healthCareProviderOrgNo)
         throws HsaServiceCallException {
@@ -82,29 +84,31 @@ public class OrganizationClient {
         return response.getHealthCareProvider();
     }
 
-    public HealthCareUnitType getHealthCareUnit(String healthCareUnitMemberHsaId)
+    @Cacheable(cacheResolver = "hsaCacheResolver", key = "#healthCareUnitHsaId", unless = "#result == null")
+    public HealthCareUnitType getHealthCareUnit(String healthCareUnitHsaId)
         throws HsaServiceCallException {
 
         GetHealthCareUnitType parameters = new GetHealthCareUnitType();
 
-        parameters.setHealthCareUnitMemberHsaId(healthCareUnitMemberHsaId);
+        parameters.setHealthCareUnitMemberHsaId(healthCareUnitHsaId);
         parameters.setIncludeFeignedObject(includeFeignedObject);
 
         GetHealthCareUnitResponseType response = getHealthCareUnitResponderInterface.getHealthCareUnit(logicalAddress, parameters);
 
         if (response.getHealthCareUnit() == null) {
             System.out.println("Response is null");
-            throw new HsaServiceCallException("Could not GetHealthCareUnit for healthCareUnitMemberHsaId " + healthCareUnitMemberHsaId);
+            throw new HsaServiceCallException("Could not GetHealthCareUnit for healthCareUnitHsaId " + healthCareUnitHsaId);
         }
 
         return response.getHealthCareUnit();
     }
 
-    public HealthCareUnitMembersType getHealthCareUnitMembers(String healtCareUnitHsaId)
+    @Cacheable(cacheResolver = "hsaCacheResolver", key = "#healthCareUnitMemberHsaId", unless = "#result == null")
+    public HealthCareUnitMembersType getHealthCareUnitMembers(String healthCareUnitMemberHsaId)
         throws HsaServiceCallException {
         GetHealthCareUnitMembersType parameters = new GetHealthCareUnitMembersType();
 
-        parameters.setHealthCareUnitHsaId(healtCareUnitHsaId);
+        parameters.setHealthCareUnitHsaId(healthCareUnitMemberHsaId);
         parameters.setIncludeFeignedObject(includeFeignedObject);
 
         GetHealthCareUnitMembersResponseType response = getHealthCareUnitMembersResponderInterface
@@ -112,12 +116,14 @@ public class OrganizationClient {
 
         if (response == null || response.getHealthCareUnitMembers() == null) {
             System.out.println("Response is null");
-            throw new HsaServiceCallException("Could not GetHealthCareUnitMembers for healtCareUnitHsaId " + healtCareUnitHsaId);
+            throw new HsaServiceCallException(
+                "Could not GetHealthCareUnitMembers for healthCareUnitMemberHsaId " + healthCareUnitMemberHsaId);
         }
 
         return response.getHealthCareUnitMembers();
     }
 
+    @Cacheable(cacheResolver = "hsaCacheResolver", key = "#unitHsaId + (#profile != null ? #profile.name() : '')", unless = "#result == null")
     public UnitType getUnit(String unitHsaId, ProfileEnum profile)
         throws HsaServiceCallException {
 
