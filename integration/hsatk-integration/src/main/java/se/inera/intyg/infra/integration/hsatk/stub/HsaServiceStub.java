@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CareProviderStub;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CareUnitStub;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CredentialInformation;
@@ -168,23 +169,27 @@ public class HsaServiceStub {
 
     private static <T> void add(String id, T value, Map<String, T> map) {
         if (id != null && value != null && map != null) {
-            map.put(id.toUpperCase(), value);
+            map.put(formatId(id), value);
         }
     }
 
     private static <T> void remove(String id, Map<String, T> map) {
         if (id != null && map != null) {
-            map.remove(id.toUpperCase());
+            map.remove(formatId(id));
         }
     }
 
     private static <T> T get(String id, Map<String, T> map) {
         if (id != null && map != null) {
-            var idUppercase = id.toUpperCase();
-            return isNullOrShouldNotExistInHsa(idUppercase) ? null : map.get(idUppercase);
+            var formatId = formatId(id);
+            return isNullOrShouldNotExistInHsa(formatId) ? null : map.get(formatId);
         }
         return null;
 
+    }
+
+    private static String formatId(String id) {
+        return StringUtils.trimAllWhitespace(id.toUpperCase());
     }
 
     private static boolean isNullOrShouldNotExistInHsa(String hsaId) {
