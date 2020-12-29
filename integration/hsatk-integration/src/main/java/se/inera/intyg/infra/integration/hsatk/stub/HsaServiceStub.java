@@ -47,11 +47,11 @@ public class HsaServiceStub {
     private LocalDateTime lastHospUpdate = LocalDateTime.now(ZoneId.systemDefault());
 
     public void addCredentialInformation(CredentialInformation credentialInformation) {
-        credentialInformationMap.put(credentialInformation.getHsaId(), credentialInformation);
+        add(credentialInformation.getHsaId(), credentialInformation, credentialInformationMap);
     }
 
     public void deleteCredentialInformation(String hsaId) {
-        credentialInformationMap.remove(hsaId);
+        remove(hsaId, credentialInformationMap);
     }
 
     public Collection<CredentialInformation> getCredentialInformation() {
@@ -59,30 +59,16 @@ public class HsaServiceStub {
     }
 
     public CredentialInformation getCredentialInformation(String hsaId) {
-        if (isNullOrShouldNotExistInHsa(hsaId)) {
-            return null;
-        } else if (credentialInformationMap.containsKey(hsaId)) {
-            return credentialInformationMap.get(hsaId);
-        } else if (credentialInformationMap.containsKey(hsaId.toUpperCase())) {
-            return credentialInformationMap.get(hsaId.toUpperCase());
-        } else if (credentialInformationMap.containsKey(hsaId.toLowerCase())) {
-            return credentialInformationMap.get(hsaId.toLowerCase());
-        } else {
-            return null;
-        }
+        return get(hsaId, credentialInformationMap);
     }
 
     public void addHsaPerson(HsaPerson hsaPerson) {
-        if (hsaPerson.getHsaId() != null) {
-            hsaPersonMap.put(hsaPerson.getHsaId(), hsaPerson);
-        }
-        if (hsaPerson.getPersonalIdentityNumber() != null) {
-            hsaPersonMap.put(hsaPerson.getPersonalIdentityNumber(), hsaPerson);
-        }
+        add(hsaPerson.getHsaId(), hsaPerson, hsaPersonMap);
+        add(hsaPerson.getPersonalIdentityNumber(), hsaPerson, hsaPersonMap);
     }
 
     public void deleteHsaPerson(String id) {
-        hsaPersonMap.remove(id);
+        remove(id, hsaPersonMap);
     }
 
     public Collection<HsaPerson> getHsaPerson() {
@@ -90,30 +76,22 @@ public class HsaServiceStub {
     }
 
     public HsaPerson getHsaPerson(String id) {
-        if (isNullOrShouldNotExistInHsa(id)) {
-            return null;
-        } else if (hsaPersonMap.containsKey(id)) {
-            return hsaPersonMap.get(id);
-        } else if (hsaPersonMap.containsKey(id.toUpperCase())) {
-            return hsaPersonMap.get(id.toUpperCase());
-        } else if (hsaPersonMap.containsKey(id.toLowerCase())) {
-            return hsaPersonMap.get(id.toLowerCase());
-        } else {
-            return null;
-        }
+        return get(id, hsaPersonMap);
     }
 
     public void addCareProvider(CareProviderStub careProviderStub) {
-        if (careProviderStub != null && careProviderStub.getId() != null) {
-            careProviderMap.put(careProviderStub.getId(), careProviderStub);
-            if (careProviderStub.getCareUnits() != null && careProviderStub.getCareUnits().size() > 0) {
+        if (careProviderStub != null) {
+            add(careProviderStub.getId(), careProviderStub, careProviderMap);
+
+            if (careProviderStub.getCareUnits() != null && !careProviderStub.getCareUnits().isEmpty()) {
                 for (CareUnitStub careUnitStub : careProviderStub.getCareUnits()) {
                     careUnitStub.setCareProviderHsaId(careProviderStub.getId());
-                    careUnitMap.put(careUnitStub.getId(), careUnitStub);
-                    if (careUnitStub.getSubUnits() != null && careUnitStub.getSubUnits().size() > 0) {
+                    add(careUnitStub.getId(), careUnitStub, careUnitMap);
+
+                    if (careUnitStub.getSubUnits() != null && !careUnitStub.getSubUnits().isEmpty()) {
                         for (SubUnitStub subUnit : careUnitStub.getSubUnits()) {
                             subUnit.setParentHsaId(careUnitStub.getId());
-                            subUnitMap.put(subUnit.getId(), subUnit);
+                            add(subUnit.getId(), subUnit, subUnitMap);
                         }
                     }
                 }
@@ -122,25 +100,33 @@ public class HsaServiceStub {
     }
 
     public void addCareUnit(CareUnitStub careUnitStub) {
-        if (careUnitStub != null && careUnitStub.getId() != null) {
-            careUnitMap.put(careUnitStub.getId(), careUnitStub);
-        }
+        add(careUnitStub.getId(), careUnitStub, careUnitMap);
     }
 
     public void addSubUnit(SubUnitStub subUnitStub) {
-        if (subUnitStub != null && subUnitStub.getId() != null) {
-            subUnitMap.put(subUnitStub.getId(), subUnitStub);
-        }
+        add(subUnitStub.getId(), subUnitStub, subUnitMap);
     }
 
     public void deleteCareProvider(String hsaId) {
-        for (CareUnitStub careUnitStub : careProviderMap.get(hsaId).getCareUnits()) {
-            for (SubUnitStub subUnit : careUnitStub.getSubUnits()) {
-                subUnitMap.remove(subUnit.getId());
+        var careProvider = get(hsaId, careProviderMap);
+
+        if (careProvider != null) {
+            var careUnits = careProvider.getCareUnits();
+
+            if (careUnits != null) {
+                for (CareUnitStub careUnitStub : careUnits) {
+                    var subUnits = careUnitStub.getSubUnits();
+
+                    if (subUnits != null) {
+                        for (SubUnitStub subUnit : subUnits) {
+                            remove(subUnit.getId(), subUnitMap);
+                        }
+                    }
+                    remove(careUnitStub.getId(), careUnitMap);
+                }
             }
-            careUnitMap.remove(careUnitStub.getId());
+            remove(hsaId, careProviderMap);
         }
-        careProviderMap.remove(hsaId);
     }
 
     public Collection<CareProviderStub> getCareProvider() {
@@ -148,57 +134,28 @@ public class HsaServiceStub {
     }
 
     public CareProviderStub getCareProvider(String hsaId) {
-        if (isNullOrShouldNotExistInHsa(hsaId)) {
-            return null;
-        } else if (careProviderMap.containsKey(hsaId)) {
-            return careProviderMap.get(hsaId);
-        } else if (careProviderMap.containsKey(hsaId.toUpperCase())) {
-            return careProviderMap.get(hsaId.toUpperCase());
-        } else if (careProviderMap.containsKey(hsaId.toLowerCase())) {
-            return careProviderMap.get(hsaId.toLowerCase());
-        } else {
-            return null;
-        }
+        return get(hsaId, careProviderMap);
+
     }
 
     public CareUnitStub getCareUnit(String hsaId) {
-        if (isNullOrShouldNotExistInHsa(hsaId)) {
-            return null;
-        } else if (careUnitMap.containsKey(hsaId)) {
-            return careUnitMap.get(hsaId);
-        } else if (careUnitMap.containsKey(hsaId.toUpperCase())) {
-            return careUnitMap.get(hsaId.toUpperCase());
-        } else if (careUnitMap.containsKey(hsaId.toLowerCase())) {
-            return careUnitMap.get(hsaId.toLowerCase());
-        } else {
-            return null;
-        }
+        return get(hsaId, careUnitMap);
+
     }
 
     public SubUnitStub getSubUnit(String hsaId) {
-        if (isNullOrShouldNotExistInHsa(hsaId)) {
-            return null;
-        } else if (subUnitMap.containsKey(hsaId)) {
-            return subUnitMap.get(hsaId);
-        } else if (subUnitMap.containsKey(hsaId.toUpperCase())) {
-            return subUnitMap.get(hsaId.toUpperCase());
-        } else if (subUnitMap.containsKey(hsaId.toLowerCase())) {
-            return subUnitMap.get(hsaId.toLowerCase());
-        } else {
-            return null;
-        }
-    }
+        return get(hsaId, subUnitMap);
 
-    public static boolean isNullOrShouldNotExistInHsa(String hsaId) {
-        return hsaId == null || hsaId.startsWith("EJHSA") || "UTANENHETSID".equals(hsaId) || hsaId.endsWith("-finns-ej");
     }
 
     public void markAsReadOnly(String hsaId) {
-        readOnlyCareProvider.add(hsaId);
+        if (hsaId != null) {
+            readOnlyCareProvider.add(hsaId.toUpperCase());
+        }
     }
 
     public boolean isCareProviderReadOnly(String hsaId) {
-        return readOnlyCareProvider.contains(hsaId);
+        return hsaId != null && readOnlyCareProvider.contains(hsaId.toUpperCase());
     }
 
     public LocalDateTime getHospLastUpdate() {
@@ -207,6 +164,31 @@ public class HsaServiceStub {
 
     public void resetHospLastUpdate() {
         lastHospUpdate = LocalDateTime.now(ZoneId.systemDefault());
+    }
+
+    private static <T> void add(String id, T value, Map<String, T> map) {
+        if (id != null && value != null && map != null) {
+            map.put(id.toUpperCase(), value);
+        }
+    }
+
+    private static <T> void remove(String id, Map<String, T> map) {
+        if (id != null && map != null) {
+            map.remove(id.toUpperCase());
+        }
+    }
+
+    private static <T> T get(String id, Map<String, T> map) {
+        if (id != null && map != null) {
+            var idUppercase = id.toUpperCase();
+            return isNullOrShouldNotExistInHsa(idUppercase) ? null : map.get(idUppercase);
+        }
+        return null;
+
+    }
+
+    private static boolean isNullOrShouldNotExistInHsa(String hsaId) {
+        return hsaId == null || hsaId.startsWith("EJHSA") || "UTANENHETSID".equals(hsaId) || hsaId.endsWith("-FINNS-EJ");
     }
 
 }
