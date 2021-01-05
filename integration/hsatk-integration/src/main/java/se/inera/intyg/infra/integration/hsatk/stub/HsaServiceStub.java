@@ -104,8 +104,16 @@ public class HsaServiceStub {
         add(careUnitStub.getId(), careUnitStub, careUnitMap);
     }
 
+    public void deleteCareUnit(String id) {
+        remove(id, careUnitMap);
+    }
+
     public void addSubUnit(SubUnitStub subUnitStub) {
         add(subUnitStub.getId(), subUnitStub, subUnitMap);
+    }
+
+    public void deleteSubUnit(String id) {
+        remove(id, subUnitMap);
     }
 
     public void deleteCareProvider(String hsaId) {
