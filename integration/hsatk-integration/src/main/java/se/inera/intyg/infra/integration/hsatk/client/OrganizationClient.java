@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Inera AB (http://www.inera.se)
+ * Copyright (C) 2021 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -123,7 +123,9 @@ public class OrganizationClient {
         return response.getHealthCareUnitMembers();
     }
 
-    @Cacheable(cacheResolver = "hsaCacheResolver", key = "#unitHsaId + (#profile != null ? #profile.name() : '')", unless = "#result == null")
+    @Cacheable(cacheResolver = "hsaCacheResolver",
+        key = "#unitHsaId + (#profile != null ? #profile.name() : '')",
+        unless = "#result == null")
     public UnitType getUnit(String unitHsaId, ProfileEnum profile)
         throws HsaServiceCallException {
 
