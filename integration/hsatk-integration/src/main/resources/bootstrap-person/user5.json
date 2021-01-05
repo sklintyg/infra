@@ -12,6 +12,10 @@
 	{
 		"healthCareUnitHsaId": "enhet3",
 		"commissionPurpose": ["STATISTIK"]
+	},
+	{
+		"healthCareUnitHsaId": "enhet4",
+		"commissionPurpose": ["STATISTIK"]
 	}
   ]
 }
