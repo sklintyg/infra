@@ -33,6 +33,8 @@ public final class Pilot implements Serializable {
     @JsonProperty
     private List<String> hsaIds;
     @JsonProperty
+    private List<String> careProviderIds;
+    @JsonProperty
     private List<Feature> activated;
     @JsonProperty
     private List<Feature> deactivated;
@@ -62,6 +64,18 @@ public final class Pilot implements Serializable {
             this.hsaIds = ImmutableList.of();
         } else {
             this.hsaIds = ImmutableList.copyOf(hsaIds);
+        }
+    }
+
+    public List<String> getCareProviderIds() {
+        return careProviderIds;
+    }
+
+    public void setCareProviderIds(List<String> careProviderIds) {
+        if (careProviderIds == null) {
+            this.careProviderIds = ImmutableList.of();
+        } else {
+            this.careProviderIds = ImmutableList.copyOf(careProviderIds);
         }
     }
 

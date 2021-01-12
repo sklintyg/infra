@@ -267,6 +267,21 @@ pilots:
     desc: Blockerar djupintegrerade vårdgivares användare från att använda vissa funktioner i fristående.
     hsaIds:
       - TSTNMT2321000156-1077
+    careProviderIds:
+      - TSTNMT2321000156-102Q
+    activated:
+      - &pf110
+        name: *kf280
+        desc: Visar ett varningsmeddelande om att inloggning skett i fristående men användaren ska logga in via sitt journalsystem.
+        global: true
+      - &pf120
+        name: *kf290
+        desc: Blockerar möjligheten att skapa nya utkast i fristående Webcert.
+        global: true
+  - name: BLOCKERA_FRISTAENDE_NO_HSA_IDS
+    desc: Blockerar djupintegrerade vårdgivares användare från att använda vissa funktioner i fristående.
+    careProviderIds:
+      - TSTNMT2321000156-102Q
     activated:
       - &pf110
         name: *kf280

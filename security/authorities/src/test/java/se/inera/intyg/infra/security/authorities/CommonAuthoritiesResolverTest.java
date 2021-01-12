@@ -1,7 +1,6 @@
 package se.inera.intyg.infra.security.authorities;
 
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.assertEquals;
 
 import java.util.Collections;
 import org.junit.BeforeClass;
@@ -31,14 +30,30 @@ public class CommonAuthoritiesResolverTest {
     @Test
     public void testFeaturesDisabled() {
         final var availableFeatures = commonAuthoritiesResolver.getFeatures(Collections.emptyList());
-        assertFalse(availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_WARNING_ORIGIN_NORMAL).getGlobal());
-        assertFalse(availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL).getGlobal());
+        assertEquals(Boolean.FALSE, availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_WARNING_ORIGIN_NORMAL).getGlobal());
+        assertEquals(Boolean.FALSE, availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL).getGlobal());
     }
 
     @Test
-    public void testFeaturesEnabled() {
+    public void testFeaturesEnabledForUnitId() {
         final var availableFeatures = commonAuthoritiesResolver.getFeatures(Collections.singletonList("TSTNMT2321000156-1077"));
-        assertTrue(availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_WARNING_ORIGIN_NORMAL).getGlobal());
-        assertTrue(availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL).getGlobal());
+        assertEquals(Boolean.TRUE, availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_WARNING_ORIGIN_NORMAL).getGlobal());
+        assertEquals(Boolean.TRUE, availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL).getGlobal());
+    }
+
+    @Test
+    public void testFeaturesEnabledForCareProviderId() {
+        final var availableFeatures = commonAuthoritiesResolver
+            .getFeatures(Collections.singletonList("TSTNMT2321000156-1079"), Collections.singletonList("TSTNMT2321000156-102Q"));
+        assertEquals(Boolean.TRUE, availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_WARNING_ORIGIN_NORMAL).getGlobal());
+        assertEquals(Boolean.TRUE, availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL).getGlobal());
+    }
+
+    @Test
+    public void testFeaturesEnabledForUnitIdAndCareProviderId() {
+        final var availableFeatures = commonAuthoritiesResolver
+            .getFeatures(Collections.singletonList("TSTNMT2321000156-1077"), Collections.singletonList("TSTNMT2321000156-102Q"));
+        assertEquals(Boolean.TRUE, availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_WARNING_ORIGIN_NORMAL).getGlobal());
+        assertEquals(Boolean.TRUE, availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL).getGlobal());
     }
 }
