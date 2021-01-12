@@ -21,7 +21,6 @@ package se.inera.intyg.infra.security.authorities;
 import static se.inera.intyg.infra.security.authorities.AuthoritiesResolverUtil.toMap;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -151,31 +150,17 @@ public class CommonAuthoritiesResolver {
      * @return the map of all the features
      */
     public Map<String, Feature> getFeatures(List<String> hsaIds) {
-        return getFeatures(hsaIds, Collections.emptyList());
-    }
-
-    /**
-     * Gets all the features active for the user with active hsaIds.
-     *
-     * @param hsaIds the active hsaIds (vardenhet and vardgivare)
-     * @param careProviderIds the active hsaIds (vardenhet and vardgivare)
-     */
-    public Map<String, Feature> getFeatures(List<String> hsaIds, List<String> careProviderIds) {
         List<Feature> featureList = configurationLoader.getFeaturesConfiguration().getFeatures().stream()
             .map(Feature::new)
             .collect(Collectors.toList());
 
         List<Pilot> pilots = configurationLoader.getFeaturesConfiguration().getPilots().stream()
-            .filter(p -> anyMatches(p.getHsaIds(), hsaIds) || anyMatches(p.getCareProviderIds(), careProviderIds))
+            .filter(p -> p.getHsaIds().stream().anyMatch(hsaIds::contains))
             .collect(Collectors.toList());
 
         handleActivatedPilots(featureList, pilots);
         handleDeactivatedPilots(featureList, pilots);
         return toMap(featureList, Feature::getName);
-    }
-
-    private boolean anyMatches(List<String> idsLeft, List<String> idsRight) {
-        return idsLeft != null && idsLeft.stream().anyMatch(idsRight::contains);
     }
 
     public SecurityConfigurationLoader getConfigurationLoader() {
