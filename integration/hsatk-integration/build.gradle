@@ -30,6 +30,9 @@ dependencies {
 
     compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
 
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
     wsdl2java "se.inera.intyg.schemas:schemas-support:${schemasSupportVersion}"
     wsdl2java "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:${jaxb2Version}"
     wsdl2java "org.jvnet.jaxb2_commons:jaxb2-basics:${jaxb2Version}"

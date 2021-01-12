@@ -1,0 +1,16 @@
+{
+    "id" : "landsting-inkonsistent",
+    "name" : "Landstinget inkonsistent",
+    "careUnits" : [
+        {
+            "id" : "enhet1",
+            "name" : "Enhet1",
+            "subUnits" : [
+                {
+                    "id" : "mottagning-finns-ej",
+                    "name" : "Finns ej"
+                }
+           ]
+        }
+    ]
+}

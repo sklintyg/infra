@@ -1,0 +1,69 @@
+{
+    "id" : "upp-och-ner",
+    "name" : "Landstinget Upp och ner",
+    "careUnits" : [
+        {
+            "id" : "finito",
+            "name" : "Finito",
+            "start" : "2000-01-01T00:00:00.000",
+            "end" : "2001-12-31T00:00:00.000"
+        },
+        {
+            "id" : "here-and-now",
+            "name" : "Here and now",
+            "start" : "2010-01-01T00:00:00.000",
+            "end" : "2500-12-31T00:00:00.000"
+        },
+        {
+            "id" : "futuro",
+            "name" : "Futuro",
+            "start" : "2525-01-01T00:00:00.000",
+            "end" : "2525-12-31T00:00:00.000"
+        },
+        {
+            "id" : "still-open",
+            "name" : "Still open",
+            "start" : "2000-01-01T00:00:00.000"
+        },
+        {
+            "id" : "will-shutdown",
+            "name" : "Will shutdown",
+            "end" : "2500-01-01T00:00:00.000"
+        } ,
+        {
+            "id" : "with-subs",
+            "name" : "With subs",
+            "subUnits" : [
+                {
+                    "id" : "mottagning-finito",
+                    "name" : "Finito",
+                    "start" : "2000-01-01T00:00:00.000",
+                    "end" : "2001-12-31T00:00:00.000"
+                },
+                {
+                    "id" : "mottagning-here-and-now",
+                    "name" : "Here and now",
+                    "start" : "2010-01-01T00:00:00.000",
+                    "end" : "2500-12-31T00:00:00.000"
+                },
+                {
+                    "id" : "mottagning-futuro",
+                    "name" : "Futuro",
+                    "start" : "2525-01-01T00:00:00.000",
+                    "end" : "2525-12-31T00:00:00.000"
+                },
+                {
+                    "id" : "mottagning-still-open",
+                    "name" : "Still open",
+                    "start" : "2000-01-01T00:00:00.000"
+                },
+                {
+                    "id" : "mottagning-will-shutdown",
+                    "name" : "Will shutdown",
+                    "end" : "2500-01-01T00:00:00.000"
+                }
+            ]
+        }
+
+    ]
+}

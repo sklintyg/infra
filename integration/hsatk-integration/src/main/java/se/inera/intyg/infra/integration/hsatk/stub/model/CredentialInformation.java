@@ -21,6 +21,7 @@ package se.inera.intyg.infra.integration.hsatk.stub.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -37,7 +38,7 @@ public class CredentialInformation {
 
     private String hsaId;
     private String givenName;
-    private List<Commission> commissionList;
+    private List<Commission> commissionList = new ArrayList<>();
 
     public CredentialInformation() {
         // Needed for deserialization
@@ -51,6 +52,7 @@ public class CredentialInformation {
     @Data
     public static class Commission {
 
+        private String healthCareProviderHsaId;
         private String healthCareUnitHsaId;
         private List<String> commissionPurpose;
 

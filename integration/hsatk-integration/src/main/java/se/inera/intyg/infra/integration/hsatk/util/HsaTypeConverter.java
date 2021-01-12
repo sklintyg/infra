@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.infra.integration.hsatk.util;
 
-import java.util.stream.Collectors;
 import se.inera.intyg.infra.integration.hsatk.model.Commission;
 import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.model.HCPSpecialityCodes;
@@ -51,15 +50,17 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v2.GeoCoord
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.GeoCoordSWEREF99Type;
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
 
+import java.util.stream.Collectors;
+
 public class HsaTypeConverter {
 
     public HealthCareProfessionalLicence toHealthCareProfessionalLicence(HealthCareProfessionalLicenceType
-        healthCareProfessionalLicenceType) {
+                                                                                 healthCareProfessionalLicenceType) {
         HealthCareProfessionalLicence healthCareProfessionalLicence = new HealthCareProfessionalLicence();
         healthCareProfessionalLicence
-            .setHealthCareProfessionalLicenceCode(healthCareProfessionalLicenceType.getHealthCareProfessionalLicenceCode());
+                .setHealthCareProfessionalLicenceCode(healthCareProfessionalLicenceType.getHealthCareProfessionalLicenceCode());
         healthCareProfessionalLicence
-            .setHealthCareProfessionalLicenceName(healthCareProfessionalLicenceType.getHealthCareProfessionalLicenceName());
+                .setHealthCareProfessionalLicenceName(healthCareProfessionalLicenceType.getHealthCareProfessionalLicenceName());
 
         return healthCareProfessionalLicence;
     }
@@ -76,8 +77,8 @@ public class HsaTypeConverter {
         credentialInformation.setHealthCareProfessionalLicenceCode(credentialInformationType.getHealthCareProfessionalLicenceCode());
         if (!credentialInformationType.getHealthCareProfessionalLicenceSpeciality().isEmpty()) {
             credentialInformation.setHealthCareProfessionalLicenceSpeciality(
-                credentialInformationType.getHealthCareProfessionalLicenceSpeciality()
-                    .stream().map(this::toHCPSpecialityCode).collect(Collectors.toList()));
+                    credentialInformationType.getHealthCareProfessionalLicenceSpeciality()
+                            .stream().map(this::toHCPSpecialityCodes).collect(Collectors.toList()));
         }
         credentialInformation.setHealthcareProfessionalLicenseIdentityNumber(
             credentialInformationType.getHealthcareProfessionalLicenseIdentityNumber());
@@ -117,7 +118,7 @@ public class HsaTypeConverter {
         return commission;
     }
 
-    public HCPSpecialityCodes toHCPSpecialityCode(HCPSpecialityCodesType hcpSpecialityCodesType) {
+    public HCPSpecialityCodes toHCPSpecialityCodes(HCPSpecialityCodesType hcpSpecialityCodesType) {
         HCPSpecialityCodes hcpSpecialityCodes = new HCPSpecialityCodes();
 
         hcpSpecialityCodes.setSpecialityName(hcpSpecialityCodesType.getSpecialityName());
@@ -250,11 +251,13 @@ public class HsaTypeConverter {
         healthCareUnitMembers.setFeignedHealthCareUnit(healthCareUnitMembersType.isFeignedHealthCareUnit());
         if (!healthCareUnitMembersType.getHealthCareUnitMember().isEmpty()) {
             healthCareUnitMembers.setHealthCareUnitMember(healthCareUnitMembersType.getHealthCareUnitMember()
-                .stream().map(this::toHealthCareUnitMember).collect(Collectors.toList()));
+                    .stream().map(this::toHealthCareUnitMember).collect(Collectors.toList()));
         }
         healthCareUnitMembers.setHealthCareUnitHsaId(healthCareUnitMembersType.getHealthCareUnitHsaId());
         healthCareUnitMembers.setHealthCareUnitEndDate(healthCareUnitMembersType.getHealthCareUnitEndDate());
-        healthCareUnitMembers.setHealthCareProvider(toHealthCareProvider(healthCareUnitMembersType.getHealthCareProvider()));
+        if (healthCareUnitMembers.getHealthCareProvider() != null) {
+            healthCareUnitMembers.setHealthCareProvider(toHealthCareProvider(healthCareUnitMembersType.getHealthCareProvider()));
+        }
         healthCareUnitMembers.setHealthCareUnitName(healthCareUnitMembersType.getHealthCareUnitName());
         healthCareUnitMembers.setHealthCareUnitPrescriptionCode(healthCareUnitMembersType.getHealthCareUnitPrescriptionCode());
         healthCareUnitMembers.setHealthCareUnitPublicName(healthCareUnitMembersType.getHealthCareUnitPublicName());

@@ -51,6 +51,16 @@ public class HsaServiceStub {
         add(credentialInformation.getHsaId(), credentialInformation, credentialInformationMap);
     }
 
+    public void updateCredentialInformation(CredentialInformation credentialInformation) {
+        CredentialInformation information = get(credentialInformation.getHsaId(), credentialInformationMap);
+        if (information != null) {
+            information.getCommissionList().addAll(credentialInformation.getCommissionList());
+        } else {
+            addCredentialInformation(credentialInformation);
+        }
+
+    }
+
     public void deleteCredentialInformation(String hsaId) {
         remove(hsaId, credentialInformationMap);
     }

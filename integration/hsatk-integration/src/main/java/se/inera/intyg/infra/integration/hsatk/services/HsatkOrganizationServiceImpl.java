@@ -18,9 +18,6 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +32,10 @@ import se.inera.intyg.infra.integration.hsatk.model.Unit;
 import se.inera.intyg.infra.integration.hsatk.util.HsaTypeConverter;
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.ProfileEnum;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class HsatkOrganizationServiceImpl implements HsatkOrganizationService {
@@ -54,10 +55,9 @@ public class HsatkOrganizationServiceImpl implements HsatkOrganizationService {
             healthCareProviderList = organizationClient.getHealthCareProvider(healthCareProviderHsaId, healthCareProviderOrgNo)
                     .stream().map(hsaTypeConverter::toHealthCareProvider).collect(Collectors.toList());
         } catch (HsaServiceCallException e) {
-            LOG.error("", e);
-        } catch (Exception e) {
-            LOG.error("Unexpected error occured: ", e);
+            LOG.error("Failed to get HealthCareProvider from HSA: {}", e);
         }
+
         return healthCareProviderList;
     }
 
@@ -68,10 +68,9 @@ public class HsatkOrganizationServiceImpl implements HsatkOrganizationService {
         try {
             healthCareUnit = hsaTypeConverter.toHealthCareUnit(organizationClient.getHealthCareUnit(healthCareUnitMemberHsaId));
         } catch (HsaServiceCallException e) {
-            LOG.error("", e);
-        } catch (Exception e) {
-            LOG.error("", e);
+            LOG.error("Failed to get HealthCareUnit from HSA: {}", e);
         }
+
         return healthCareUnit;
     }
 
@@ -82,10 +81,9 @@ public class HsatkOrganizationServiceImpl implements HsatkOrganizationService {
             healthCareUnitMembers = hsaTypeConverter.toHealthCareUnitMembers(
                     organizationClient.getHealthCareUnitMembers(healtCareUnitHsaId));
         } catch (HsaServiceCallException e) {
-            LOG.error("", e);
-        } catch (Exception e) {
-            LOG.error("Unexpected error occurred while getting HealthCareUnitMembers : {}", e.getLocalizedMessage());
+            LOG.error("Failed to get HealthCareUnitMembers from HSA: {}", e);
         }
+
         return healthCareUnitMembers;
     }
 
@@ -106,9 +104,8 @@ public class HsatkOrganizationServiceImpl implements HsatkOrganizationService {
         } catch (HsaServiceCallException e) {
             LOG.error("Failed to get Unit from HSA: {}", e.getLocalizedMessage());
 
-        } catch (Exception e) {
-            LOG.error("Unexpected error occurred during getUnit method: {}", e.getLocalizedMessage());
         }
+
         return unit;
     }
 

@@ -18,15 +18,11 @@
  */
 package se.inera.intyg.infra.integration.hsatk.client;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.remoting.soap.SoapFaultException;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedperson.v2.rivtabp21.GetEmployeeIncludingProtectedPersonResponderInterface;
@@ -34,6 +30,10 @@ import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedper
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v2.GetEmployeeIncludingProtectedPersonType;
 import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 import se.riv.infrastructure.directory.employee.v2.ProfileEnum;
+
+import javax.xml.ws.soap.SOAPFaultException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class EmployeeClient {
@@ -48,8 +48,6 @@ public class EmployeeClient {
 
     private static boolean includeFeignedObject = false;
 
-    @Cacheable(cacheResolver = "hsaCacheResolver",
-        key = "#personalIdentityNumber + #personHsaId + (#profile != null ? #profile.name() : '')", unless = "#result == null")
     public List<PersonInformationType> getEmployee(String personalIdentityNumber, String personHsaId, ProfileEnum profile)
         throws HsaServiceCallException {
 
@@ -75,8 +73,8 @@ public class EmployeeClient {
 
         try {
             response = getEmployeeIncludingProtectedPersonResponderInterface
-                .getEmployeeIncludingProtectedPerson(logicalAddress, parameters);
-        } catch (SoapFaultException e) {
+                    .getEmployeeIncludingProtectedPerson(logicalAddress, parameters);
+        } catch (SOAPFaultException e) {
             LOG.error("GetEmployee call returned with error: {}", e.getLocalizedMessage());
             throw new HsaServiceCallException(e);
         }

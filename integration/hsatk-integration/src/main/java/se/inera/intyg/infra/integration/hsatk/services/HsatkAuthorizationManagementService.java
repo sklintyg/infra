@@ -30,7 +30,7 @@ public interface HsatkAuthorizationManagementService {
     List<CredentialInformation> getCredentialInformationForPerson(
             String personalIdentityNumber, String personHsaId, String profile);
 
-    HospCredentialsForPerson getGetHospCredentialsForPersonResponseType(String personalIdentityNumber);
+    HospCredentialsForPerson getHospCredentialsForPersonResponseType(String personalIdentityNumber);
 
     LocalDateTime getHospLastUpdate();
 
