@@ -18,17 +18,6 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services.legacy;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.xml.ws.WebServiceException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,14 +43,18 @@ import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresp
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
 
-/**
- * Provides HSA organization services through TJK over NTjP.
- * <p>
- * infrastructure:directory:organization and
- * infrastructure:directory:authorizationmanagement
- *
- * @author andreaskaltenbach, eriklupander
- */
+import javax.xml.ws.WebServiceException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 

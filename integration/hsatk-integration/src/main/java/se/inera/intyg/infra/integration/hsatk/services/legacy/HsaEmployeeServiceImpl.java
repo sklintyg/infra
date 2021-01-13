@@ -29,9 +29,6 @@ import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 import javax.xml.ws.WebServiceException;
 import java.util.List;
 
-/**
- * Created by Magnus Ekstrand on 28/05/15.
- */
 @Service
 public class HsaEmployeeServiceImpl implements HsaEmployeeService {
 

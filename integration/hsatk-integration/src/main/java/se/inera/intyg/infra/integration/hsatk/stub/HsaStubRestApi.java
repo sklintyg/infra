@@ -18,8 +18,13 @@
  */
 package se.inera.intyg.infra.integration.hsatk.stub;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import se.inera.intyg.infra.integration.hsatk.stub.model.CareProviderStub;
+import se.inera.intyg.infra.integration.hsatk.stub.model.CareUnitStub;
+import se.inera.intyg.infra.integration.hsatk.stub.model.CredentialInformation;
+import se.inera.intyg.infra.integration.hsatk.stub.model.HsaPerson;
+import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnitStub;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -30,16 +35,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import se.inera.intyg.infra.integration.hsatk.stub.model.CareProviderStub;
-import se.inera.intyg.infra.integration.hsatk.stub.model.CareUnitStub;
-import se.inera.intyg.infra.integration.hsatk.stub.model.CredentialInformation;
-import se.inera.intyg.infra.integration.hsatk.stub.model.HsaPerson;
-import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnitStub;
+import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * @author johannesc
- */
 public class HsaStubRestApi {
 
     @Autowired

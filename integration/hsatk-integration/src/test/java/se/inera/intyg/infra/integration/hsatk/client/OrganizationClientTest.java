@@ -45,9 +45,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by eriklupander on 2016-03-11.
- */
 @RunWith(MockitoJUnitRunner.class)
 public class OrganizationClientTest {
 

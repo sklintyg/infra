@@ -43,8 +43,6 @@ import java.util.stream.Collectors;
  * <p>
  * infrastructure:directory:employee and
  * infrastructure:directory:authorizationmanagement
- *
- * @author eriklupander
  */
 @Service
 public class HsaPersonServiceImpl implements HsaPersonService {

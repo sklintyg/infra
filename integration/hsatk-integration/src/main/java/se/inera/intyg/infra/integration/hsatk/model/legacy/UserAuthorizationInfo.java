@@ -26,8 +26,6 @@ import java.util.Map;
 
 /**
  * Composite class encapsulating response data from GetAuthorizationsForPerson.
- *
- * Created by eriklupander on 2016-05-20.
  */
 @AllArgsConstructor
 @Getter

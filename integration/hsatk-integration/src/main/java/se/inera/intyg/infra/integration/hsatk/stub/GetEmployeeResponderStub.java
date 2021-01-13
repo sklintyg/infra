@@ -30,9 +30,6 @@ import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 
 //CHECKSTYLE:ON LineLength
 
-/**
- * Created by eriklupander on 2015-12-03.
- */
 public class GetEmployeeResponderStub implements GetEmployeeIncludingProtectedPersonResponderInterface {
 
     @Autowired

@@ -26,9 +26,6 @@ import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.GetHealthCareUnitType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
 
-/**
- * Created by eriklupander on 2015-12-08.
- */
 public class GetHealthCareUnitResponderStub implements GetHealthCareUnitResponderInterface {
 
     @Autowired

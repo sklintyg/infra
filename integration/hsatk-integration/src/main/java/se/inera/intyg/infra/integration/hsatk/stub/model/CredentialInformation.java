@@ -26,9 +26,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-/**
- * @author andreaskaltenbach
- */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class CredentialInformation {

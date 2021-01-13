@@ -25,9 +25,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author andreaskaltenbach
- */
 @Data
 public class Vardgivare implements SelectableVardenhet, Comparable<Vardgivare>, Serializable {
 

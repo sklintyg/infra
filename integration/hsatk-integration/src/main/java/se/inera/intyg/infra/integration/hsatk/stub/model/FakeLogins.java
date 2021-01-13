@@ -21,9 +21,6 @@ package se.inera.intyg.infra.integration.hsatk.stub.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
-/**
- * @author Magnus Ekstrand on 2017-04-12.
- */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class FakeLogins {

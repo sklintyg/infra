@@ -19,7 +19,6 @@
 package se.inera.intyg.infra.integration.hsatk.model.legacy;
 
 import se.inera.intyg.infra.integration.hsatk.model.HsaSystemRole;
-import se.riv.infrastructure.directory.authorizationmanagement.v2.HsaSystemRoleType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,6 @@ import java.util.List;
  * {@link se.riv.infrastructure.directory.v1.CredentialInformationType}, which we need to provide to callers of
  * the HSA services.
  *
- * Created by eriklupander on 2016-05-20.
  */
 public class UserCredentials {
 

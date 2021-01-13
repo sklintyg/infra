@@ -26,9 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Magnus Ekstrand on 2017-04-12.
- */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class FakeProperties {

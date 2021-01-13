@@ -23,9 +23,6 @@ import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 import javax.xml.ws.WebServiceException;
 import java.util.List;
 
-/**
- * Created by Magnus Ekstrand on 27/05/15.
- */
 public interface HsaEmployeeService {
 
     /**

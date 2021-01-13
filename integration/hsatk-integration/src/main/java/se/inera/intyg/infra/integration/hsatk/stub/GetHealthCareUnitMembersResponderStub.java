@@ -28,9 +28,6 @@ import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresp
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMembersType;
 import se.riv.infrastructure.directory.organization.v2.AddressType;
 
-/**
- * Created by eriklupander on 2015-12-04.
- */
 public class GetHealthCareUnitMembersResponderStub implements GetHealthCareUnitMembersResponderInterface {
 
     @Autowired

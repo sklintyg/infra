@@ -29,9 +29,6 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitT
 import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
 import se.riv.infrastructure.directory.organization.v2.AddressType;
 
-/**
- * Created by eriklupander on 2015-12-03.
- */
 public class GetUnitResponderStub implements GetUnitResponderInterface {
 
     @Autowired

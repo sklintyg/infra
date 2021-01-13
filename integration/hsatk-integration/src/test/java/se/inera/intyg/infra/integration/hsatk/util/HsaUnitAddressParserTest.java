@@ -25,9 +25,6 @@ import se.riv.infrastructure.directory.organization.v2.AddressType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-/**
- * Created by eriklupander on 2017-09-19.
- */
 public class HsaUnitAddressParserTest {
 
     private static final String MOTTAGNING_ID = "mottagning-1";

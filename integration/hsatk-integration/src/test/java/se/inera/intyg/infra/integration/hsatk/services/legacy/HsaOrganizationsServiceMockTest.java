@@ -45,10 +45,6 @@ import java.net.URL;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * @author andreaskaltenbach
- */
-
 @RunWith(MockitoJUnitRunner.class)
 public class HsaOrganizationsServiceMockTest {
 

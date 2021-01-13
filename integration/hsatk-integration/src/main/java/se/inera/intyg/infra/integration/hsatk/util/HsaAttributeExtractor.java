@@ -20,13 +20,16 @@ package se.inera.intyg.infra.integration.hsatk.util;
 
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
  * Helper class for extracting certain HoSP attributes.
- *
- * Created by eriklupander on 2016-05-19.
  */
 public class HsaAttributeExtractor {
 

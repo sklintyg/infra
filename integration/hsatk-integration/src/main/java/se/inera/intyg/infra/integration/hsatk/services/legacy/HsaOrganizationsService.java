@@ -25,9 +25,6 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 
 import java.util.List;
 
-/**
- * @author eriklupander
- */
 public interface HsaOrganizationsService {
 
     /**
