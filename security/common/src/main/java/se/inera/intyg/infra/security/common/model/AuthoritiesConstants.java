@@ -100,6 +100,16 @@ public final class AuthoritiesConstants {
     public static final String FEATURE_ENABLE_SIGNED_CERTIFICATES_LIST = "SIGNED_CERTIFICATES_LIST";
 
     /**
+     * Feature to toggle if a u'DJUPINTEGRERAD' care provider should recieve a warning when logging in with origin 'NORMAL'
+     */
+    public static final String FEATURE_ENABLE_WARNING_ORIGIN_NORMAL = "VARNING_FRISTAENDE";
+
+    /**
+     * Feature to toggle if a 'DJUPINTEGRERAD' care provider should block certificate features when logging in with origin 'NORMAL'
+     */
+    public static final String FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL = "BLOCKERA_FRISTAENDE";
+
+    /**
      * Feature for toggling webcert functionality for handling messages.
      */
     public static final String FEATURE_USE_WEBCERT_MESSAGING = "WEBCERT_MESSAGE_HANDLING";
