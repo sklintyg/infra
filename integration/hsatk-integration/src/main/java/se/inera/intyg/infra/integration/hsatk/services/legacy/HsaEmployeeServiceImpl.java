@@ -18,16 +18,17 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services.legacy;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.xml.ws.WebServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.client.EmployeeClient;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
-import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
-
-import javax.xml.ws.WebServiceException;
-import java.util.List;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.infra.integration.hsatk.util.HsaTypeConverter;
 
 @Service
 public class HsaEmployeeServiceImpl implements HsaEmployeeService {
@@ -37,10 +38,15 @@ public class HsaEmployeeServiceImpl implements HsaEmployeeService {
     @Autowired
     private EmployeeClient employeeClient;
 
+    HsaTypeConverter hsaTypeConverter = new HsaTypeConverter();
+
     @Override
-    public List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber) throws WebServiceException {
+    public List<PersonInformation> getEmployee(String personHsaId, String personalIdentityNumber) throws WebServiceException {
         try {
-            return employeeClient.getEmployee(personalIdentityNumber, personHsaId, null);
+            return employeeClient.getEmployee(personalIdentityNumber, personHsaId, null)
+                .stream()
+                .map(hsaTypeConverter::toPersonInformation)
+                .collect(Collectors.toList());
         } catch (HsaServiceCallException e) {
             LOG.error(e.getMessage());
             throw new WebServiceException(e.getMessage());
@@ -48,10 +54,13 @@ public class HsaEmployeeServiceImpl implements HsaEmployeeService {
     }
 
     @Override
-    public List<PersonInformationType> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase)
-            throws WebServiceException {
+    public List<PersonInformation> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase)
+        throws WebServiceException {
         try {
-            return employeeClient.getEmployee(personalIdentityNumber, personHsaId, null);
+            return employeeClient.getEmployee(personalIdentityNumber, personHsaId, null)
+                .stream()
+                .map(hsaTypeConverter::toPersonInformation)
+                .collect(Collectors.toList());
         } catch (HsaServiceCallException e) {
             LOG.error(e.getMessage());
             throw new WebServiceException(e.getMessage());
