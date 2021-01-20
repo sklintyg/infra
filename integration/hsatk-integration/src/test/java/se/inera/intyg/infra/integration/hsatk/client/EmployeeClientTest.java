@@ -18,6 +18,17 @@
  */
 package se.inera.intyg.infra.integration.hsatk.client;
 
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.AdditionalMatchers.or;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import javax.xml.ws.soap.SOAPFaultException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -28,17 +39,6 @@ import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedper
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v2.GetEmployeeIncludingProtectedPersonResponseType;
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v2.GetEmployeeIncludingProtectedPersonType;
 import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
-
-import javax.xml.ws.soap.SOAPFaultException;
-import java.util.List;
-
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.AdditionalMatchers.or;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EmployeeClientTest {
@@ -54,10 +54,8 @@ public class EmployeeClientTest {
 
     @Test
     public void testOk() throws HsaServiceCallException {
-        when(getEmployeeService.getEmployeeIncludingProtectedPerson(
-                or(isNull(), anyString()),
-                any(GetEmployeeIncludingProtectedPersonType.class))
-        ).thenReturn(buildResponse());
+        doReturn(buildResponse()).when(getEmployeeService)
+            .getEmployeeIncludingProtectedPerson(any(), any(GetEmployeeIncludingProtectedPersonType.class));
 
         List<PersonInformationType> response = employeeClient.getEmployee(HSA_ID, null, null);
         assertNotNull(response);
@@ -77,16 +75,25 @@ public class EmployeeClientTest {
     public void testWebServiceExceptionIsThrownForSoapFault() throws HsaServiceCallException {
         SOAPFaultException ex = mock(SOAPFaultException.class);
         when(getEmployeeService.getEmployeeIncludingProtectedPerson(
-                or(isNull(), anyString()),
-                any(GetEmployeeIncludingProtectedPersonType.class))
+            or(isNull(), anyString()),
+            any(GetEmployeeIncludingProtectedPersonType.class))
         ).thenThrow(ex);
 
         employeeClient.getEmployee(null, HSA_ID, null);
     }
 
+    @Test(expected = HsaServiceCallException.class)
+    public void testHSAReturnsEmptyResult() throws HsaServiceCallException {
+        doReturn(new GetEmployeeIncludingProtectedPersonResponseType()).when(getEmployeeService)
+            .getEmployeeIncludingProtectedPerson(any(), any(GetEmployeeIncludingProtectedPersonType.class));
+
+        List<PersonInformationType> response = employeeClient.getEmployee(HSA_ID, null, null);
+        assertNotNull(response);
+    }
+
     private GetEmployeeIncludingProtectedPersonResponseType buildResponse() {
         GetEmployeeIncludingProtectedPersonResponseType resp = new GetEmployeeIncludingProtectedPersonResponseType();
-        resp.getPersonInformation();
+        resp.getPersonInformation().add(new PersonInformationType());
         return resp;
     }
 }
