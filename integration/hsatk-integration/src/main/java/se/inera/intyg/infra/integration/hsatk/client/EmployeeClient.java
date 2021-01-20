@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.integration.hsatk.client;
 
+import java.util.List;
+import javax.xml.ws.soap.SOAPFaultException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +32,6 @@ import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedper
 import se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v2.GetEmployeeIncludingProtectedPersonType;
 import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 import se.riv.infrastructure.directory.employee.v2.ProfileEnum;
-
-import javax.xml.ws.soap.SOAPFaultException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class EmployeeClient {
@@ -79,12 +77,15 @@ public class EmployeeClient {
             throw new HsaServiceCallException(e);
         }
         if (response == null || response.getPersonInformation().isEmpty()) {
+            String logMessage;
             if (!StringUtils.isEmpty(personalIdentityNumber)) {
-                LOG.warn("Response null or empty for personalIdentityNumber: {}", personalIdentityNumber);
+                logMessage = String.format("Response null or empty for personalIdentityNumber: %s", personalIdentityNumber);
+
             } else {
-                LOG.warn("Response null or empty for personHsaId: {}", personHsaId);
+                logMessage = String.format("Response null or empty for personHsaId: %s", personHsaId);
             }
-            return new ArrayList<>();
+            LOG.warn(logMessage);
+            throw new HsaServiceCallException(logMessage);
         }
 
         return response.getPersonInformation();
