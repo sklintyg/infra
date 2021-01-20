@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.infra.integration.hsatk.util;
 
+import java.util.stream.Collectors;
 import se.inera.intyg.infra.integration.hsatk.model.Commission;
 import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.model.HCPSpecialityCodes;
@@ -45,12 +46,10 @@ import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresp
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMemberType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMembersType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.BusinessClassificationType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.GeoCoordRt90Type;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.GeoCoordSWEREF99Type;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
-
-import java.util.stream.Collectors;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.BusinessClassificationType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.GeoCoordRt90Type;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.GeoCoordSWEREF99Type;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.UnitType;
 
 public class HsaTypeConverter {
 

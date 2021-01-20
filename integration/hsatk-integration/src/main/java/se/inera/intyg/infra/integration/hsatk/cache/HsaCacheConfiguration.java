@@ -37,7 +37,7 @@ import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 import se.riv.infrastructure.directory.organization.gethealthcareproviderresponder.v1.HealthCareProviderType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMembersType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.UnitType;
 
 /**
  * While the cacheManager.getCache(...) isn't strictly necessary for creating the cache used,

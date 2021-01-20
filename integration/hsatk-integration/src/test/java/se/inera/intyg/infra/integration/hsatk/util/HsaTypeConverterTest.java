@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.infra.integration.hsatk.util;
 
+import java.time.LocalDateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,13 +48,11 @@ import se.riv.infrastructure.directory.organization.gethealthcareproviderrespond
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMemberType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMembersType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.BusinessClassificationType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.GeoCoordRt90Type;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.GeoCoordSWEREF99Type;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
-import se.riv.infrastructure.directory.organization.v2.AddressType;
-
-import java.time.LocalDateTime;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.BusinessClassificationType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.GeoCoordRt90Type;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.GeoCoordSWEREF99Type;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.UnitType;
+import se.riv.infrastructure.directory.organization.v3.AddressType;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HsaTypeConverterTest {
@@ -110,13 +109,15 @@ public class HsaTypeConverterTest {
     private static final String E = "E";
     private static final String N = "N";
 
-    private final AddressType POSTAL_ADDRESS = new AddressType();
+    private final AddressType POSTAL_ADDRESS_v3 = new AddressType();
+    private final se.riv.infrastructure.directory.organization.v2.AddressType POSTAL_ADDRESS_v2 = new se.riv.infrastructure.directory.organization.v2.AddressType();
 
     private HsaTypeConverter hsaTypeConverter = new HsaTypeConverter();
 
     @Before
     public void setup() {
-        POSTAL_ADDRESS.getAddressLine().add(ADDRESS_LINE);
+        POSTAL_ADDRESS_v3.getAddressLine().add(ADDRESS_LINE);
+        POSTAL_ADDRESS_v2.getAddressLine().add(ADDRESS_LINE);
     }
 
     @Test
@@ -287,7 +288,7 @@ public class HsaTypeConverterTest {
         healthCareUnitMemberType.setHealthCareUnitMemberStartDate(START_DATE);
         healthCareUnitMemberType.setHealthCareUnitMemberHsaId(HSA_ID);
         healthCareUnitMemberType.setHealthCareUnitMemberName(NAME);
-        healthCareUnitMemberType.setHealthCareUnitMemberpostalAddress(POSTAL_ADDRESS);
+        healthCareUnitMemberType.setHealthCareUnitMemberpostalAddress(POSTAL_ADDRESS_v2);
         healthCareUnitMemberType.setHealthCareUnitMemberpostalCode(POSTAL_CODE);
         healthCareUnitMemberType.getHealthCareUnitMemberPrescriptionCode().add(PRESCRIPTION_CODE);
         healthCareUnitMemberType.setHealthCareUnitMemberPublicName(PUBLIC_NAME);
@@ -308,7 +309,7 @@ public class HsaTypeConverterTest {
         healthCareUnitMembersType.setHealthCareUnitHsaId(HSA_ID);
         healthCareUnitMembersType.getHealthCareUnitPrescriptionCode().add(PRESCRIPTION_CODE);
         healthCareUnitMembersType.setHealthCareUnitPublicName(PUBLIC_NAME);
-        healthCareUnitMembersType.setPostalAddress(POSTAL_ADDRESS);
+        healthCareUnitMembersType.setPostalAddress(POSTAL_ADDRESS_v2);
         healthCareUnitMembersType.setPostalCode(POSTAL_CODE);
         healthCareUnitMembersType.getTelephoneNumber().add(TELEPHONE_NUMBER);
         healthCareUnitMembersType.setHealthCareProvider(healthCareProviderType);
@@ -346,7 +347,7 @@ public class HsaTypeConverterTest {
         unitType.getManagement().add(MANAGEMENT);
         unitType.setMunicipalityCode(CODE);
         unitType.setMunicipalityName(NAME);
-        unitType.setPostalAddress(POSTAL_ADDRESS);
+        unitType.setPostalAddress(POSTAL_ADDRESS_v3);
         unitType.setUnitEndDate(END_DATE);
         unitType.setUnitEndDate(START_DATE);
         unitType.setUnitHsaId(HSA_ID);

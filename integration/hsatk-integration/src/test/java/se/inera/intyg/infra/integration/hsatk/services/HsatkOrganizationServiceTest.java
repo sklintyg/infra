@@ -18,6 +18,13 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,16 +41,8 @@ import se.riv.infrastructure.directory.organization.gethealthcareproviderrespond
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMemberType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMembersType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.ProfileEnum;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.ProfileEnum;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.UnitType;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HsatkOrganizationServiceTest {

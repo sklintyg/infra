@@ -1,6 +1,6 @@
 <GetUnitResponse
-    xmlns="urn:riv:infrastructure:directory:organization:GetUnitResponder:2"
-    xmlns:ns2="urn:riv:infrastructure:directory:organization:2" xmlns:ns3="urn:riv:itintegration:registry:1">
+    xmlns="urn:riv:infrastructure:directory:organization:GetUnitResponder:3"
+    xmlns:ns2="urn:riv:infrastructure:directory:organization:3">
     <unit>
         <unitHsaId>TSTNMT2321000156-1039</unitHsaId>
         <unitName>EnhetWCTand</unitName>

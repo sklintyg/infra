@@ -18,8 +18,15 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services.legacy;
 
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URL;
+import javax.xml.bind.JAXB;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,17 +40,9 @@ import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.riv.infrastructure.directory.organization.gethealthcareunit.v2.rivtabp21.GetHealthCareUnitResponderInterface;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v2.rivtabp21.GetHealthCareUnitMembersResponderInterface;
-import se.riv.infrastructure.directory.organization.getunit.v2.rivtabp21.GetUnitResponderInterface;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitResponseType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
-
-import javax.xml.bind.JAXB;
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.URL;
-
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import se.riv.infrastructure.directory.organization.getunit.v3.rivtabp21.GetUnitResponderInterface;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.GetUnitResponseType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.UnitType;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HsaOrganizationsServiceMockTest {

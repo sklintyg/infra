@@ -18,6 +18,9 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +33,8 @@ import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
 import se.inera.intyg.infra.integration.hsatk.model.Unit;
 import se.inera.intyg.infra.integration.hsatk.util.HsaTypeConverter;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.ProfileEnum;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.GetUnitType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.ProfileEnum;
 
 @Service
 public class HsatkOrganizationServiceImpl implements HsatkOrganizationService {

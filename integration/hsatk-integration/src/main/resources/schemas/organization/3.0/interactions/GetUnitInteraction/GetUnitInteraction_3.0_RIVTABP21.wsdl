@@ -17,7 +17,7 @@
  specific language governing permissions and limitations
  under the License.
  -->		
-<wsdl:definitions name='GetUnitInteraction' xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:tjsr='urn:riv:infrastructure:directory:organization:GetUnitResponder:2' xmlns:tjsi='urn:riv:infrastructure:directory:organization:GetUnitInitiator:1' xmlns:tns='urn:riv:infrastructure:directory:organization:GetUnit:2:rivtabp21' targetNamespace='urn:riv:infrastructure:directory:organization:GetUnit:2:rivtabp21' xmlns:itr='urn:riv:itintegration:registry:1'>
+<wsdl:definitions name='GetUnitInteraction' xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:tjsr='urn:riv:infrastructure:directory:organization:GetUnitResponder:3' xmlns:tjsi='urn:riv:infrastructure:directory:organization:GetUnitInitiator:3' xmlns:tns='urn:riv:infrastructure:directory:organization:GetUnit:3:rivtabp21' targetNamespace='urn:riv:infrastructure:directory:organization:GetUnit:3:rivtabp21' xmlns:itr='urn:riv:itintegration:registry:1'>
   <wsdl:documentation>
 			 Tjänsteinteraktionens namn: GetUnitInteraction
 			 Beskrivning: 
@@ -29,8 +29,8 @@
 			 Förvaltning: Sveriges Kommuner och Landsting
 			 </wsdl:documentation>
   <wsdl:types>
-    <xs:schema targetNamespace='urn:riv:infrastructure:directory:organization:GetUnit:2:rivtabp21'>
-      <xs:import schemaLocation='GetUnitResponder_2.4.xsd' namespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:2' />
+    <xs:schema targetNamespace='urn:riv:infrastructure:directory:organization:GetUnit:3:rivtabp21'>
+      <xs:import schemaLocation='GetUnitResponder_3.0.xsd' namespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:3' />
       <xs:import schemaLocation='../../core_components/itintegration_registry_1.0.xsd' namespace='urn:riv:itintegration:registry:1' />
     </xs:schema>
   </wsdl:types>
@@ -52,7 +52,7 @@
   <wsdl:binding name='GetUnitResponderBinding' type='tns:GetUnitResponderInterface'>
     <soap:binding style='document' transport='http://schemas.xmlsoap.org/soap/http' />
     <wsdl:operation name='GetUnit'>
-      <soap:operation soapAction='urn:riv:infrastructure:directory:organization:GetUnitResponder:2:GetUnit' style='document' />
+      <soap:operation soapAction='urn:riv:infrastructure:directory:organization:GetUnitResponder:3:GetUnit' style='document' />
       <wsdl:input>
         <soap:header use='literal' message='tns:GetUnitRequest' part='LogicalAddress' />
         <soap:body use='literal' parts='parameters' />

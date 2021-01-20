@@ -23,11 +23,11 @@ import se.inera.intyg.infra.integration.hsatk.stub.model.AbstractUnitStub;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CareProviderStub;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CareUnitStub;
 import se.inera.intyg.infra.integration.hsatk.stub.model.SubUnitStub;
-import se.riv.infrastructure.directory.organization.getunit.v2.rivtabp21.GetUnitResponderInterface;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitResponseType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
-import se.riv.infrastructure.directory.organization.v2.AddressType;
+import se.riv.infrastructure.directory.organization.getunit.v3.rivtabp21.GetUnitResponderInterface;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.GetUnitResponseType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.GetUnitType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.UnitType;
+import se.riv.infrastructure.directory.organization.v3.AddressType;
 
 public class GetUnitResponderStub implements GetUnitResponderInterface {
 

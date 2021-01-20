@@ -18,6 +18,17 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services.legacy;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.xml.ws.WebServiceException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,19 +52,7 @@ import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInfo
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMemberType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMembersType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
-
-import javax.xml.ws.WebServiceException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.UnitType;
 
 @Service
 public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {

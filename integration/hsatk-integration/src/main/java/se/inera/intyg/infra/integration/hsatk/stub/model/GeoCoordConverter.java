@@ -19,8 +19,8 @@
 package se.inera.intyg.infra.integration.hsatk.stub.model;
 
 import se.inera.intyg.infra.integration.hsatk.model.Unit;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.GeoCoordRt90Type;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.GeoCoordSWEREF99Type;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.GeoCoordRt90Type;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.GeoCoordSWEREF99Type;
 
 public class GeoCoordConverter {
     public Unit.GeoCoordRt90 toRt90(GeoCoordRt90Type geoCoordRt90Type) {

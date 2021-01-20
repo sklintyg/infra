@@ -17,11 +17,8 @@
  specific language governing permissions and limitations
  under the License.
  -->		
-<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:tns='urn:riv:infrastructure:directory:organization:GetUnitResponder:2' xmlns:m1='urn:riv:infrastructure:directory:organization:GetUnitResponder:2.2' xmlns:m2='urn:riv:infrastructure:directory:organization:GetUnitResponder:2.3' xmlns:m3='urn:riv:infrastructure:directory:organization:GetUnitResponder:2.4' xmlns:core='urn:riv:infrastructure:directory:organization:2' targetNamespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:2' elementFormDefault='qualified' attributeFormDefault='unqualified' version='2.4'>
-  <xs:import schemaLocation='../../core_components/infrastructure_directory_organization_2.1.xsd' namespace='urn:riv:infrastructure:directory:organization:2' />
-  <xs:import namespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:2.2'	schemaLocation="GetUnitResponder_2.2_ext.xsd" />
-  <xs:import namespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:2.3'	schemaLocation="GetUnitResponder_2.3_ext.xsd" />
-  <xs:import namespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:2.4'	schemaLocation="GetUnitResponder_2.4_ext.xsd" />
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:tns='urn:riv:infrastructure:directory:organization:GetUnitResponder:3' xmlns:core='urn:riv:infrastructure:directory:organization:3' targetNamespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:3' elementFormDefault='qualified' attributeFormDefault='unqualified' version='3.0'>
+  <xs:import schemaLocation='../../core_components/infrastructure_directory_organization_3.0.xsd' namespace='urn:riv:infrastructure:directory:organization:3' />
   <xs:element name='GetUnit' type='tns:GetUnitType' />
   <xs:element name='GetUnitResponse' type='tns:GetUnitResponseType' />
   
@@ -30,7 +27,8 @@
       <xs:element name="unitHsaId" type="xs:string"/>
       <xs:element name="searchBase" type="core:DNType" minOccurs="0"/>
 	  <xs:element name="includeFeignedObject" type="xs:boolean" minOccurs="0" />
-	  <xs:element ref="m3:profile" minOccurs="0" />
+	  <xs:element name="profile" type="tns:ProfileEnum" minOccurs="0" />
+      <xs:any namespace='##other' processContents='lax' minOccurs='0' maxOccurs='unbounded' />
     </xs:sequence>
   </xs:complexType>
 
@@ -88,19 +86,19 @@
       <xs:element name="unitFunction" type="tns:UnitFunctionType" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="unitTemporaryInformation" type="core:DateSpanType" minOccurs="0"/>
       <xs:element name="visitingHour" type="core:TimeSpanType" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="visitingRuleAge" type="core:AgeSpanType" minOccurs="0"/>
+      <xs:element name="visitingRuleAge" type="core:AgeSpanType" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="referralRules" type="xs:string" minOccurs="0"/>
       <xs:element name="visitingRules" type="xs:string" minOccurs="0"/>
       <xs:element name="unitStartDate" type="xs:dateTime" minOccurs="0" />
       <xs:element name="unitEndDate" type="xs:dateTime" minOccurs="0" />
 	  <xs:element name="feignedUnit" type="xs:boolean" minOccurs="0" />
-	  <xs:element ref="m1:financingOrganization" minOccurs="0" maxOccurs="unbounded" />
-	  <xs:element ref="m2:indoorRouteDescription" minOccurs="0" />
-	  <xs:element ref="m2:geographicalCoordinatesSWEREF99Latitude" minOccurs="0" />
-	  <xs:element ref="m2:geographicalCoordinatesSWEREF99Longitude" minOccurs="0" />
+	  <xs:element name="financingOrganization" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+	  <xs:element name="indoorRouteDescription" type="xs:string" minOccurs="0" />
+	  <xs:element name="geographicalCoordinatesSWEREF99Latitude" type="xs:string" minOccurs="0" />
+	  <xs:element name="geographicalCoordinatesSWEREF99Longitude" type="xs:string" minOccurs="0" />
+	  <xs:any namespace='##other' processContents='lax' minOccurs='0' maxOccurs='unbounded' />
     </xs:sequence>
   </xs:complexType>
-
   
   <xs:complexType name='UnitFunctionType'>
     <xs:sequence>
@@ -134,5 +132,13 @@
       <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
+
+  <xs:simpleType name="ProfileEnum">
+    <xs:restriction base="xs:string">
+       <xs:enumeration value="basic" />
+       <xs:enumeration value="extended" />
+       <xs:enumeration value="all" />
+    </xs:restriction>
+  </xs:simpleType>
   
 </xs:schema>

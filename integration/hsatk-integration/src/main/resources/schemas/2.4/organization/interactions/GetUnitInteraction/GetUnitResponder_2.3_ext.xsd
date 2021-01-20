@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
-
-<xs:schema xmlns:tns="urn:riv:infrastructure:directory:organization:GetUnitResponder:2.3"   xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:riv:infrastructure:directory:organization:GetUnitResponder:2.3" elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.3">
-
-  <xs:element name="indoorRouteDescription" type="xs:string"/>
-  <xs:element name="geographicalCoordinatesSWEREF99Latitude" type="xs:string" />
-  <xs:element name="geographicalCoordinatesSWEREF99Longitude" type="xs:string" />
-
-</xs:schema>

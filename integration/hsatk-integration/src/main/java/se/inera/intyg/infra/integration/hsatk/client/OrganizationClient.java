@@ -36,11 +36,11 @@ import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresp
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.GetHealthCareUnitResponseType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.GetHealthCareUnitType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
-import se.riv.infrastructure.directory.organization.getunit.v2.rivtabp21.GetUnitResponderInterface;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitResponseType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.GetUnitType;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.ProfileEnum;
-import se.riv.infrastructure.directory.organization.getunitresponder.v2.UnitType;
+import se.riv.infrastructure.directory.organization.getunit.v3.rivtabp21.GetUnitResponderInterface;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.GetUnitResponseType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.GetUnitType;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.ProfileEnum;
+import se.riv.infrastructure.directory.organization.getunitresponder.v3.UnitType;
 
 @Service
 public class OrganizationClient {
