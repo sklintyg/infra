@@ -9,10 +9,16 @@
   "commissionList": [
     {
       "healthCareUnitHsaId": "TSTNMT2321000156-105P",
-      "commissionPurpose": ["STATISTIK"]
+      "commissionPurpose": [
+        "STATISTIK",
+        "Vård och behandling"
+      ]
     },
     {
-      "healthCareUnitHsaId": "TSTNMT2321000156-105Q"
+      "healthCareUnitHsaId": "TSTNMT2321000156-105Q",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
     }
   ],
   "fakeProperties": {
