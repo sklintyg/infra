@@ -35,7 +35,7 @@
     <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetHealthCareProvider/1/rivtabp21" implementor="se.inera.intyg.infra.integration.hsatk.stub.GetHealthCareProviderResponderStub"/>
     <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetHealthCareUnit/2/rivtabp21" implementor="se.inera.intyg.infra.integration.hsatk.stub.GetHealthCareUnitResponderStub"/>
     <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetHealthCareUnitMembers/2/rivtabp21" implementor="se.inera.intyg.infra.integration.hsatk.stub.GetHealthCareUnitMembersResponderStub"/>
-    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetUnit/2/rivtabp21" implementor="se.inera.intyg.infra.integration.hsatk.stub.GetUnitResponderStub"/>
+    <jaxws:endpoint address="/stubs/infrastructure/directory/organization/GetUnit/3/rivtabp21" implementor="se.inera.intyg.infra.integration.hsatk.stub.GetUnitResponderStub"/>
   </beans>
 
   <beans profile="dev,testability-api">

@@ -50,7 +50,7 @@
       address="${infrastructure.directory.authorizationmanagement.handlehospcertificationpersonresponderinterface.endpoint.url}"/>
 
   <jaxws:client id="getUnitResponderInterface"
-      serviceClass="se.riv.infrastructure.directory.organization.getunit.v2.rivtabp21.GetUnitResponderInterface"
+      serviceClass="se.riv.infrastructure.directory.organization.getunit.v3.rivtabp21.GetUnitResponderInterface"
       address="${infrastructure.directory.organization.getunit.endpoint.url}"/>
 
   <jaxws:client id="getHealthCareProviderResponderInterface"
