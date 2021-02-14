@@ -30,7 +30,7 @@
 			 </wsdl:documentation>
   <wsdl:types>
     <xs:schema targetNamespace='urn:riv:infrastructure:directory:organization:GetUnit:3:rivtabp21'>
-      <xs:import schemaLocation='GetUnitResponder_3.0.xsd' namespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:3' />
+      <xs:import schemaLocation='GetUnitResponder_3.1.xsd' namespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:3'/>
       <xs:import schemaLocation='../../core_components/itintegration_registry_1.0.xsd' namespace='urn:riv:itintegration:registry:1' />
     </xs:schema>
   </wsdl:types>

@@ -17,16 +17,17 @@
  specific language governing permissions and limitations
  under the License.
  -->		
-<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:tns='urn:riv:infrastructure:directory:organization:GetUnitResponder:3' xmlns:core='urn:riv:infrastructure:directory:organization:3' targetNamespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:3' elementFormDefault='qualified' attributeFormDefault='unqualified' version='3.0'>
-  <xs:import schemaLocation='../../core_components/infrastructure_directory_organization_3.0.xsd' namespace='urn:riv:infrastructure:directory:organization:3' />
-  <xs:element name='GetUnit' type='tns:GetUnitType' />
-  <xs:element name='GetUnitResponse' type='tns:GetUnitResponseType' />
-  
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:tns='urn:riv:infrastructure:directory:organization:GetUnitResponder:3' xmlns:m1='urn:riv:infrastructure:directory:organization:GetUnitResponder:3.1' xmlns:core='urn:riv:infrastructure:directory:organization:3' targetNamespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:3' elementFormDefault='qualified' attributeFormDefault='unqualified' version='3.1'>
+  <xs:import schemaLocation='../../core_components/infrastructure_directory_organization_3.0.xsd' namespace='urn:riv:infrastructure:directory:organization:3'/>
+  <xs:import namespace='urn:riv:infrastructure:directory:organization:GetUnitResponder:3.1' schemaLocation="GetUnitResponder_3.1_ext.xsd"/>
+  <xs:element name='GetUnit' type='tns:GetUnitType'/>
+  <xs:element name='GetUnitResponse' type='tns:GetUnitResponseType'/>
+
   <xs:complexType name='GetUnitType'>
     <xs:sequence>
       <xs:element name="unitHsaId" type="xs:string"/>
       <xs:element name="searchBase" type="core:DNType" minOccurs="0"/>
-	  <xs:element name="includeFeignedObject" type="xs:boolean" minOccurs="0" />
+      <xs:element name="includeFeignedObject" type="xs:boolean" minOccurs="0"/>
 	  <xs:element name="profile" type="tns:ProfileEnum" minOccurs="0" />
       <xs:any namespace='##other' processContents='lax' minOccurs='0' maxOccurs='unbounded' />
     </xs:sequence>
@@ -96,7 +97,7 @@
 	  <xs:element name="indoorRouteDescription" type="xs:string" minOccurs="0" />
 	  <xs:element name="geographicalCoordinatesSWEREF99Latitude" type="xs:string" minOccurs="0" />
 	  <xs:element name="geographicalCoordinatesSWEREF99Longitude" type="xs:string" minOccurs="0" />
-	  <xs:any namespace='##other' processContents='lax' minOccurs='0' maxOccurs='unbounded' />
+      <xs:element ref="m1:alternateTextLogotype" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
   

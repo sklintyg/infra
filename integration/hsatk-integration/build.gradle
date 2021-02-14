@@ -44,7 +44,7 @@ wsdl2java {
 
     def authorizationManagementVersion = "2.3"
     def employeeVersion = "2.2"
-    def organizationVersion = "3.0"
+    def organizationVersion = "3.1"
 
     def commonOptions = [
             "-xjc", "-b", "$wsdlDir/general-binding.xjb",
@@ -154,9 +154,11 @@ wsdl2java {
                     "urn:riv:infrastructure:directory:organization:GetUnit:3:rivtabp21=se.riv.infrastructure.directory.organization.getunit.v3.rivtabp21",
                     "-p",
                     "urn:riv:infrastructure:directory:organization:GetUnitResponder:3=se.riv.infrastructure.directory.organization.getunitresponder.v3",
+                    "-p",
+                    "urn:riv:infrastructure:directory:organization:GetUnitResponder:3.1=se.riv.infrastructure.directory.organization.getunitresponder.v3",
                     "-wsdlLocation",
-                    "classpath:interactions/GetUnitInteraction/GetUnitInteraction_3.0_RIVTABP21.wsdl",
-                    "$wsdlDir/organization/$organizationVersion/interactions/GetUnitInteraction/GetUnitInteraction_3.0_RIVTABP21.wsdl"],
+                    "classpath:interactions/GetUnitInteraction/GetUnitInteraction_3.1_RIVTABP21.wsdl",
+                    "$wsdlDir/organization/$organizationVersion/interactions/GetUnitInteraction/GetUnitInteraction_3.1_RIVTABP21.wsdl"],
 
             commonOrganizationOptions + [
                     "-p",
@@ -168,4 +170,3 @@ wsdl2java {
                     "$wsdlDir/organization/$organizationVersion/interactions/GetHealthCareProviderInteraction/GetHealthCareProviderInteraction_1.0_RIVTABP21.wsdl"]
     ]
 }
-
