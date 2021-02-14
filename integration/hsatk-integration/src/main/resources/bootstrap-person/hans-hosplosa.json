@@ -1,0 +1,11 @@
+{
+  "hsaId": "hans-hosplosa",
+	"givenName": "Hans",
+	"middleAndSurname": "Hosplösa",
+  "commissionList": [
+	{
+		"healthCareUnitHsaId": "TSTNMT2321000156-105F",
+		"commissionPurpose": ["STATISTIK"]
+	}
+  ]
+}

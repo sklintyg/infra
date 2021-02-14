@@ -1,0 +1,26 @@
+{
+  "hsaId": "IFV1239877878-104M",
+  "givenName": "Anders",
+  "middleAndSurname": "Larsson",
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "IFV1239877878-1045",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "paTitle": [{"titleName": "b", "titleCode": "204010"}],
+  "fakeProperties": {
+    "allowedInApplications": [],
+    "displayOrder": 90,
+    "env": "dev",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "IFV1239877878-1045",
+        "beskrivning": "Anders Larsson (AT Läkare | WebCert Enhet 2 + 2UE)"
+      }
+    ]
+  }
+}

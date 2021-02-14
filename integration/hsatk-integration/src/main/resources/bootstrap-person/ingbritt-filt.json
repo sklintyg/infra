@@ -1,0 +1,23 @@
+{
+  "hsaId": "ib-user-2",
+  "givenName": "Ingbritt",
+  "middleAndSurname": "Filt",
+  "systemRoles": [
+    "INTYG;FMU-VARDADMIN-IFV1239877878-1042"
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "IFV1239877878-1042"
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["IB"],
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "IFV1239877878-1042",
+        "beskrivning": "Ingbritt Filt (Vårdadminstratör 1 | Intygsbeställning)"
+      }
+    ]
+  }
+}

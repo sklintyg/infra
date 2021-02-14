@@ -1,0 +1,17 @@
+{
+    "id" : "IFV1239877878-1041",
+    "name" : "WebCert-Vårdgivare1",
+    "careUnits" : [
+        {
+            "id" : "IFV1239877878-1042",
+            "name" : "WebCert-Enhet1",
+            "mail" : "enhet1@webcert.invalid.se",
+            "telephoneNumber" : "0101234567890",
+            "postalAddress" : "Storgatan 1",
+            "postalCode" : "12345",
+            "postalTown" : "Småmåla",
+            "prescriptionCode" : "1234567890",
+            "healthCareProviderOrgno" : "2-orgnr-1041"
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+  "hsaId": "TSTNMT2321000156-105J",
+  "givenName": "Susanne",
+  "middleAndSurname": "Karlsson",
+  "systemRoles": [
+    "INTYG;Rehab-TSTNMT2321000156-105F"
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-105F",
+      "commissionPurpose": [
+        "Vård och behandling",
+        "STATISTIK"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": [],
+    "displayOrder": 340,
+    "env": "demo",
+    "readOnly": true,
+    "extraContextProperties": {
+      "pdlConsentGiven": "true"
+    },
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-105F",
+        "beskrivning": "Susanne Karlsson (Vårdadmin | NMT)"
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "hsaId": "sture-adminsson",
+  "givenName": "Sture",
+  "middleAndSurname": "Adminsson",
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["WC"],
+    "displayOrder": 11,
+    "env": "dev",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-1077",
+        "beskrivning": "Sture Adminsson (Vårdadmin | Har intyg och ärenden)"
+      }
+    ]
+  }
+}

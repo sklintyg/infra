@@ -1,0 +1,26 @@
+{
+  "hsaId": "TSTNMT2321000156-998V",
+  "givenName": "Ralf",
+  "middleAndSurname": "Enhetslöse",
+  "systemRoles": [
+    "INTYG;Rehab-some-other-careunit"
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-105N",
+      "commissionPurpose": ["STATISTIK"]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["RS"],
+    "displayOrder": 5,
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-105N",
+        "beskrivning": "Ralf Enhetlöse (saknar rätt enhet på systemroll)"
+      }
+    ]
+  }
+}
+

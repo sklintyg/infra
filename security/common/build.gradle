@@ -1,5 +1,5 @@
 dependencies {
-    compile project(':hsa-integration')
+    compile project(':hsatk-integration')
 
     compile "com.fasterxml.jackson.core:jackson-annotations"
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"

@@ -1,0 +1,41 @@
+{
+  "hsaId": "ib-user-3",
+  "givenName": "Harald",
+  "middleAndSurname": "Alltsson",
+  "systemRoles": [
+    "INTYG;FMU-VARDADMIN-IFV1239877878-1042",
+    "INTYG;FMU-VARDADMIN-linkoping",
+    "INTYG;FMU-SAMORDNARE-kronoberg",
+    "INTYG;FMU-SAMORDNARE-IFV1239877878-1041",
+    "INTYG;FMU-VARDADMIN-IFV1239877878-104D"
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "IFV1239877878-1042"
+    },
+    {
+      "healthCareUnitHsaId": "linkoping"
+    },
+    {
+      "healthCareUnitHsaId": "centrum-ost"
+    },
+    {
+      "healthCareUnitHsaId": "IFV1239877878-1045"
+    },
+    {
+      "healthCareUnitHsaId": "IFV1239877878-104D"
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": [
+      "IB"
+    ],
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "IFV1239877878-1042",
+        "beskrivning": "Harald Alltsson (Alla roller | Intygsbeställning)"
+      }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+"personalIdentityNumber": "195206142597",
+"personalPrescriptionCode": "1111111",
+"educationCodes":[],
+"restrictions":[],
+"specialities":[],
+  "healthCareProfessionalLicenceType": [
+    {
+      "healthCareProfessionalLicenceCode": "LK",
+      "healthCareProfessionalLicenceName": "Läkare"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "hsaId": "fitness2",
+  "givenName": "Fit",
+  "middleAndSurname": "Nesse",
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "vardenhet-fit-2"
+    }
+  ],
+  "personalPrescriptionCode": "2481632"
+}
+

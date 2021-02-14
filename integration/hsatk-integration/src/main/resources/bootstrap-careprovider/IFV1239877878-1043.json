@@ -1,0 +1,49 @@
+{
+    "id" : "IFV1239877878-1043",
+    "name" : "WebCert-Vårdgivare2",
+    "careUnits" : [
+        {
+            "id" : "IFV1239877878-1045",
+            "name" : "WebCert-Enhet2",
+            "mail" : "enhet1@webcert.invalid.se",
+            "telephoneNumber" : "0101234567890",
+            "postalAddress" : "Storgatan 1",
+            "postalCode" : "12345",
+            "postalTown" : "Småmåla",
+            "prescriptionCode" : "1234567890",
+            "subUnits" : [
+                {
+                    "id" : "IFV1239877878-1046",
+                    "name" : "WebCert-Enhet2-Mottagning1",
+                    "mail" : "mottagning1@webcert.invalid.se",
+                    "telephoneNumber" : "0101234567890",
+                    "postalAddress" : "Storgatan 1",
+                    "postalCode" : "12345",
+                    "postalTown" : "Småmåla",
+                    "prescriptionCode" : "1234567890"
+                },
+                {
+                    "id" : "IFV1239877878-104C",
+                    "name" : "WebCert-Enhet2-Mottagning2",
+                    "mail" : "mottagning2@webcert.invalid.se",
+                    "telephoneNumber" : "0101234567890",
+                    "postalAddress" : "Storgatan 1",
+                    "postalCode" : "12345",
+                    "postalTown" : "Småmåla",
+                    "prescriptionCode" : "1234567890"
+                }
+            ],
+            "healthCareProviderOrgno" : "2-orgnr-1043"
+        },
+        {
+            "id" : "IFV1239877878-104D",
+            "name" : "WebCert-Enhet3",
+            "telephoneNumber" : "0101234567890",
+            "postalAddress" : "Storgatan 1",
+            "postalCode" : "12345",
+            "postalTown" : "Småmåla",
+            "prescriptionCode" : "1234567890",
+            "healthCareProviderOrgno" : "2-orgnr-1041"
+        }
+    ]
+}

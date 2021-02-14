@@ -1,0 +1,11 @@
+{
+  "hsaId": "lakare_my",
+  "givenName": "My",
+  "middleAndSurname": "Åsgren",
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "enhet4",
+      "commissionPurpose": ["STATISTIK"]
+    }
+  ]
+}

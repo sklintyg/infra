@@ -1,0 +1,28 @@
+{
+  "hsaId": "TSTNMT2321000156-103F",
+  "givenName": "Leonie",
+  "middleAndSurname": "Koehl",
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-1039",
+      "commissionPurpose": [
+        "Vård och behandling",
+        "STATISTIK"
+      ]
+    }
+  ],
+  "paTitle": [{"titleName": "b", "titleCode": "204010"}],
+  "personalPrescriptionCode": "9300005",
+  "fakeProperties": {
+    "allowedInApplications": [],
+    "displayOrder": 20,
+    "env": "demo",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-1039",
+        "beskrivning": "Leonie Koehl (Läkare inom EU/ESS/Schweiz)"
+      }
+    ]
+  }
+}

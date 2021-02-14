@@ -1,0 +1,31 @@
+{
+    "personalIdentityNumber": "197705232382",
+    "personalPrescriptionCode": "1234568",
+    "educationCodes":["educationCode1","educationCode2"],
+    "restrictions":[
+        {
+            "restrictionName":"restriction1",
+            "restrictionCode":"restrictionCode1"
+        },
+        {
+            "restrictionName":"restriction2",
+            "restrictionCode":"restrictionCode2"
+        }
+    ],
+    "specialities":[
+        {
+            "specialityName":"specialityName1",
+            "specialityCode":"specialityCode1"
+        },
+        {
+            "specialityName":"specialityName2",
+            "specialityCode":"specialityCode2"
+        }
+    ],
+    "healthCareProfessionalLicenceType": [
+        {
+            "healthCareProfessionalLicenceCode": "LK",
+            "healthCareProfessionalLicenceName": "Läkare"
+        }
+    ]
+}

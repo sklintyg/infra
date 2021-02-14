@@ -1,0 +1,23 @@
+{
+  "hsaId": "ib-user-1",
+  "givenName": "Simona",
+  "middleAndSurname": "Samordnare",
+  "systemRoles": [
+    "INTYG;FMU-SAMORDNARE-IFV1239877878-1041"
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "IFV1239877878-1042"
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["IB"],
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "IFV1239877878-1042",
+        "beskrivning": "Simona Samordnare (Samordnare 1 | Intygsbeställning)"
+      }
+    ]
+  }
+}

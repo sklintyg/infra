@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements. See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership. Sveriges Kommuner och Landsting licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License. You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied. See the License for the
+ specific language governing permissions and limitations
+ under the License.
+ -->		
+<wsdl:definitions name='GetEmployeeInteraction' xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:tjsr='urn:riv:infrastructure:directory:employee:GetEmployeeResponder:2' xmlns:tjsi='urn:riv:infrastructure:directory:employee:GetEmployeeInitiator:1' xmlns:tns='urn:riv:infrastructure:directory:employee:GetEmployee:2:rivtabp21' targetNamespace='urn:riv:infrastructure:directory:employee:GetEmployee:2:rivtabp21' xmlns:itr='urn:riv:itintegration:registry:1'>
+    <wsdl:documentation>
+			 Tjänsteinteraktionens namn: GetEmployeeInteraction
+			 Beskrivning: 
+			   Details – e.g. name, titles and contact details – for a specified person. Does not include protected persons.
+			 Revisioner: 
+			 Tjänstedomän: infrastructure:directory:employee
+			 Tjänsteinteraktionstyp: Fråga-Svar
+			 RIV Teknisk Anvisning: RIVTABP21
+			 Förvaltning: Sveriges Kommuner och Landsting
+			 </wsdl:documentation>
+  <wsdl:types>
+    <xs:schema targetNamespace='urn:riv:infrastructure:directory:employee:GetEmployee:2:rivtabp21'>
+      <xs:import schemaLocation='GetEmployeeResponder_2.2.xsd' namespace='urn:riv:infrastructure:directory:employee:GetEmployeeResponder:2' />
+      <xs:import schemaLocation='../../core_components/itintegration_registry_1.0.xsd' namespace='urn:riv:itintegration:registry:1' />
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name='GetEmployeeRequest'>
+    <wsdl:part name='LogicalAddress' element='itr:LogicalAddress'>
+      <wsdl:documentation>The HSA-id of the source system</wsdl:documentation>
+    </wsdl:part>
+    <wsdl:part name='parameters' element='tjsr:GetEmployee' />
+  </wsdl:message>
+  <wsdl:message name='GetEmployeeResponse'>
+    <wsdl:part name='parameters' element='tjsr:GetEmployeeResponse' />
+  </wsdl:message>
+  <wsdl:portType name='GetEmployeeResponderInterface'>
+    <wsdl:operation name='GetEmployee'>
+      <wsdl:input message='tns:GetEmployeeRequest' />
+      <wsdl:output message='tns:GetEmployeeResponse' />
+     </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name='GetEmployeeResponderBinding' type='tns:GetEmployeeResponderInterface'>
+    <soap:binding style='document' transport='http://schemas.xmlsoap.org/soap/http' />
+    <wsdl:operation name='GetEmployee'>
+      <soap:operation soapAction='urn:riv:infrastructure:directory:employee:GetEmployeeResponder:2:GetEmployee' style='document' />
+      <wsdl:input>
+        <soap:header use='literal' message='tns:GetEmployeeRequest' part='LogicalAddress' />
+        <soap:body use='literal' parts='parameters' />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use='literal' />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name='GetEmployeeResponderService'>
+    <wsdl:port name='GetEmployeeResponderPort' binding='tns:GetEmployeeResponderBinding'>
+      <soap:address location='http://tempuri.org' />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

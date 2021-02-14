@@ -18,18 +18,19 @@
  */
 package se.inera.intyg.infra.security.siths;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
-import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-import se.inera.intyg.infra.integration.hsa.util.HsaAttributeExtractor;
+import se.inera.intyg.infra.integration.hsatk.model.HsaSystemRole;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.infra.integration.hsatk.util.HsaAttributeExtractor;
 import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
 import se.inera.intyg.infra.security.common.model.IntygUser;
-import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Provides a number of default implementations for decorating a IntygUser principal with various information extracted
@@ -44,7 +45,7 @@ public class DefaultUserDetailsDecorator {
 
     private HsaAttributeExtractor hsaAttributeExtractor = new HsaAttributeExtractor();
 
-    public void decorateIntygUserWithAdditionalInfo(IntygUser intygUser, List<PersonInformationType> hsaPersonInfo) {
+    public void decorateIntygUserWithAdditionalInfo(IntygUser intygUser, List<PersonInformation> hsaPersonInfo) {
 
         List<String> specialiseringar = hsaAttributeExtractor.extractSpecialiseringar(hsaPersonInfo);
         List<String> legitimeradeYrkesgrupper = hsaAttributeExtractor.extractLegitimeradeYrkesgrupper(hsaPersonInfo);
@@ -108,7 +109,7 @@ public class DefaultUserDetailsDecorator {
         return false;
     }
 
-    private static String hsaSystemRoleAsString(HsaSystemRoleType systemRole) {
+    private static String hsaSystemRoleAsString(HsaSystemRole systemRole) {
         if (systemRole.getSystemId() == null || systemRole.getSystemId().trim().isEmpty()) {
             return systemRole.getRole();
         } else {

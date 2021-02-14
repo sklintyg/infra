@@ -1,0 +1,29 @@
+{
+  "hsaId": "TSTNMT2321000156-1099",
+  "givenName": "Sara",
+  "middleAndSurname": "Sekretess",
+  "protectedPerson": true,
+  "healthCareProfessionalLicence": [
+    "Läkare"
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["WC"],
+    "displayOrder": 10,
+    "env": "demo",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-1077",
+        "beskrivning": "Sara Sekretess (Läkare (sekretessmarkerad)| Har intyg och ärenden)"
+      }
+    ]
+  }
+}
