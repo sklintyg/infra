@@ -53,6 +53,7 @@ import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresp
 import se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareUnitMembersType;
 import se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2.HealthCareUnitType;
 import se.riv.infrastructure.directory.organization.getunitresponder.v3.UnitType;
+import se.riv.infrastructure.directory.organization.v3.AddressType;
 
 @Service
 public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
@@ -103,7 +104,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         });
 
         updateWithEmailAndPhone(vardenhet, unit);
-        hsaUnitAddressParser.updateWithAddress(vardenhet, unit.getPostalAddress().getAddressLine(), unit.getPostalCode());
+        updateAddressIfExists(vardenhet, unit.getPostalAddress(), unit.getPostalCode());
 
         return vardenhet;
     }
@@ -219,7 +220,7 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         try {
             UnitType unit = getUnit(vardenhet.getId());
             updateWithEmailAndPhone(vardenhet, unit);
-            hsaUnitAddressParser.updateWithAddress(vardenhet, unit.getPostalAddress().getAddressLine(), unit.getPostalCode());
+            updateAddressIfExists(vardenhet, unit.getPostalAddress(), unit.getPostalCode());
         } catch (HsaServiceCallException e) {
             LOG.error(e.getMessage());
             return null;
@@ -309,11 +310,18 @@ public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
         return organizationClient.getUnit(careUnitHsaId, null);
     }
 
-
     private void updateWithEmailAndPhone(AbstractVardenhet vardenhet, UnitType response) {
         vardenhet.setEpost(response.getMail());
         if (!response.getTelephoneNumber().isEmpty()) {
             vardenhet.setTelefonnummer(response.getTelephoneNumber().get(0));
         }
+    }
+
+    private void updateAddressIfExists(AbstractVardenhet unit, AddressType addressType, String postalCode) {
+        if (addressType == null) {
+            return;
+        }
+
+        hsaUnitAddressParser.updateWithAddress(unit, addressType.getAddressLine(), postalCode);
     }
 }
