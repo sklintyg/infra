@@ -1,0 +1,22 @@
+{
+    "id" : "vardgivare-fitnesse",
+    "name" : "FitNesse vardgivare",
+    "careUnits" : [
+        {
+            "id" : "vardenhet-fit-1",
+            "name" : "Vardenhet Fitnesse 1",
+            "subUnits" : [
+                {
+                    "id" : "mottagning-fit-1",
+                    "name" : "Motagning FitNesse 1"
+                }
+            ],
+            "healthCareProviderOrgno" : "2-orgnr-fitnesse"
+        },
+        {
+            "id" : "vardenhet-fit-2",
+            "name" : "Vardenhet Fitnesse 2",
+            "healthCareProviderOrgno" : "2-orgnr-fitnesse"
+        }
+    ]
+}

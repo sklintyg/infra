@@ -23,13 +23,13 @@ import static org.junit.Assert.assertEquals;
 import java.util.Arrays;
 import java.util.Collections;
 import org.junit.Test;
-import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
-import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
-import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
+import se.inera.intyg.infra.integration.hsatk.model.HsaSystemRole;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.security.common.model.AuthConstants;
 import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
 import se.inera.intyg.infra.security.common.model.IntygUser;
-import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 
 /**
  * Created by eriklupander on 2016-05-19.
@@ -116,11 +116,11 @@ public class DefaultUserDetailsDecoratorTest {
     }
 
 
-    private HsaSystemRoleType hsaSystemRole(String systemId, String role) {
-        HsaSystemRoleType hsaSystemRoleType = new HsaSystemRoleType();
-        hsaSystemRoleType.setSystemId(systemId);
-        hsaSystemRoleType.setRole(role);
-        return hsaSystemRoleType;
+    private HsaSystemRole hsaSystemRole(String systemId, String role) {
+        HsaSystemRole hsaSystemRole = new HsaSystemRole();
+        hsaSystemRole.setSystemId(systemId);
+        hsaSystemRole.setRole(role);
+        return hsaSystemRole;
     }
 
 }

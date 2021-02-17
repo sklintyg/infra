@@ -1,0 +1,31 @@
+{
+  "hsaId": "TSTNMT2321000156-10CD",
+  "givenName": "Annika",
+  "middleAndSurname": "Larsson",
+  "systemRoles": ["INTYG;Rehab-TSTNMT2321000156-1077"],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+      "commissionPurpose": [
+        "Vård och behandling", "STATISTIK"
+      ]
+    },
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-1076",
+      "commissionPurpose": [
+        "STATISTIK"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["WC","RS"],
+    "displayOrder": 2,
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-1077",
+        "beskrivning": "Annika Larsson (Vårdadmin | Alfaenheten)"
+      }
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "hsaId": "TSTNMT2321000156-1079",
+  "givenName": "Arnold",
+  "middleAndSurname": "Johansson",
+  "healthCareProfessionalLicence": [
+    "Läkare"
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+      "commissionPurpose": [
+        "Vård och behandling", "STATISTIK"
+      ]
+    },
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-1076",
+      "commissionPurpose": [
+        "STATISTIK"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["WC","RS"],
+    "displayOrder": 1,
+    "env": "demo",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-1077",
+        "beskrivning": "Arnold Johansson (Läkare | Har intyg och ärenden)"
+      }
+    ]
+  }
+}

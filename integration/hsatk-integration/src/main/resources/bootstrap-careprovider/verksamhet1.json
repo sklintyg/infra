@@ -1,0 +1,13 @@
+{
+    "id" : "vg-verksamhet1",
+    "name" : "Småregionen",
+    "careUnits": [
+        {
+            "id" : "verksamhet1",
+            "name" : "Närhälsan i Småmåla"
+        },{
+            "id" : "verksamhet2",
+            "name" : "Småmålas akutmottagning"
+        }
+    ]
+}

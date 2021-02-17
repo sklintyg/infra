@@ -1,0 +1,172 @@
+plugins {
+    id "no.nils.wsdl2java" version "0.12" apply true
+}
+
+if (project.hasProperty("codeQuality")) {
+    license {
+        exclude "**/se/riv/**/*.java"
+    }
+}
+
+dependencies {
+    def jaxb2Version = "1.11.1"
+    def schemasSupportVersion = "2.1.5"
+
+    //testCompile "junit:junit:4.+"
+
+    compile project(':common-redis-cache-core')
+
+
+    compile "org.springframework.security:spring-security-web"
+
+    compile "org.apache.commons:commons-lang3"
+    compile "ch.qos.logback:logback-classic"
+    compile "com.google.guava:guava:${guavaVersion}"
+
+    compile "se.inera.intyg.schemas:schemas-support:${schemasSupportVersion}"
+    compile "com.fasterxml.jackson.core:jackson-databind"
+    compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+
+    compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    wsdl2java "se.inera.intyg.schemas:schemas-support:${schemasSupportVersion}"
+    wsdl2java "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:${jaxb2Version}"
+    wsdl2java "org.jvnet.jaxb2_commons:jaxb2-basics:${jaxb2Version}"
+    wsdl2java "org.jvnet.jaxb2_commons:jaxb2-namespace-prefix:1.3"
+}
+
+wsdl2java {
+    wsdlDir = file("src/main/resources/schemas")
+
+    def authorizationManagementVersion = "2.3"
+    def employeeVersion = "2.2"
+    def organizationVersion = "3.1"
+
+    def commonOptions = [
+            "-xjc", "-b", "$wsdlDir/general-binding.xjb",
+            "-p",
+            "urn:riv:itintegration:registry:1=se.riv.itintegration.registry.v1",
+    ]
+
+    def commonAuthorizationOptions = commonOptions + [
+            "-p",
+            "urn:riv:infrastructure:directory:authorizationmanagement:2=se.riv.infrastructure.directory.authorizationmanagement.v2",
+            "-p",
+            "urn:riv:infrastructure:directory:authorizationmanagement:2.1=se.riv.infrastructure.directory.authorizationmanagement.v2",
+            "-p",
+            "urn:riv:infrastructure:directory:authorizationmanagement:2.2=se.riv.infrastructure.directory.authorizationmanagement.v2",
+            "-p",
+            "urn:riv:infrastructure:directory:authorizationmanagement:2.3=se.riv.infrastructure.directory.authorizationmanagement.v2",
+    ]
+
+    def commonEmployeeOptions = commonOptions + [
+            "-p",
+            "urn:riv:infrastructure:directory:employee:2=se.riv.infrastructure.directory.employee.v2",
+            "-p",
+            "urn:riv:infrastructure:directory:employee:2.1=se.riv.infrastructure.directory.employee.v2",
+            "-p",
+            "urn:riv:infrastructure:directory:employee:2.2=se.riv.infrastructure.directory.employee.v2",
+    ]
+
+    def commonOrganizationOptions = commonOptions + [
+            "-p",
+            "urn:riv:infrastructure:directory:organization:2=se.riv.infrastructure.directory.organization.v2",
+            "-p",
+            "urn:riv:infrastructure:directory:organization:2.1=se.riv.infrastructure.directory.organization.v2",
+            "-p",
+            "urn:riv:infrastructure:directory:organization:3=se.riv.infrastructure.directory.organization.v3",
+            "-p",
+            "urn:riv:infrastructure:directory:organization:3.0=se.riv.infrastructure.directory.organization.v3",
+    ]
+
+    wsdlsToGenerate = [
+            commonAuthorizationOptions + [
+                    "-p",
+                    "urn:riv:infrastructure:directory:authorizationmanagement:GetCredentialsForPersonIncludingProtectedPerson:2:rivtabp21=se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedperson.v2.rivtabp21",
+                    "-p",
+                    "urn:riv:infrastructure:directory:authorizationmanagement:GetCredentialsForPersonIncludingProtectedPersonResponder:2=se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedpersonresponder.v2",
+                    "-p",
+                    "urn:riv:infrastructure:directory:authorizationmanagement:GetCredentialsForPersonIncludingProtectedPersonResponder:2.1=se.riv.infrastructure.directory.authorizationmanagement.getcredentialsforpersonincludingprotectedpersonresponder.v2",
+                    "-wsdlLocation",
+                    "classpath:interactions/GetCredentialsForPersonIncludingProtectedPersonInteraction/GetCredentialsForPersonIncludingProtectedPersonInteraction_2.2_RIVTABP21.wsdl",
+                    "$wsdlDir/authorizationmanagement/$authorizationManagementVersion/interactions/GetCredentialsForPersonIncludingProtectedPersonInteraction/GetCredentialsForPersonIncludingProtectedPersonInteraction_2.2_RIVTABP21.wsdl"],
+
+            commonAuthorizationOptions + [
+                    "-p",
+                    "urn:riv:infrastructure:directory:authorizationmanagement:HandleHospCertificationPerson:1:rivtabp21=se.riv.infrastructure.directory.authorizationmanagement.handlehospcertificationperson.v1.rivtabp21",
+                    "-p",
+                    "urn:riv:infrastructure:directory:authorizationmanagement:HandleHospCertificationPersonResponder:1=se.riv.infrastructure.directory.authorizationmanagement.handlehospcertificationpersonresponder.v1",
+                    "-wsdlLocation",
+                    "classpath:interactions/HandleHospCertificationPersonInteraction/HandleHospCertificationPersonInteraction_1.0_RIVTABP21.wsdl",
+                    "$wsdlDir/authorizationmanagement/$authorizationManagementVersion/interactions/HandleHospCertificationPersonInteraction/HandleHospCertificationPersonInteraction_1.0_RIVTABP21.wsdl"],
+
+            commonAuthorizationOptions + [
+                    "-p",
+                    "urn:riv:infrastructure:directory:authorizationmanagement:GetHospCredentialsForPerson:1:rivtabp21=se.riv.infrastructure.directory.authorizationmanagement.gethospcredentialsforperson.v1.rivtabp21",
+                    "-p",
+                    "urn:riv:infrastructure:directory:authorizationmanagement:GetHospCredentialsForPersonResponder:1=se.riv.infrastructure.directory.authorizationmanagement.gethospcredentialsforpersonresponder.v1",
+                    "-wsdlLocation",
+                    "classpath:interactions/GetHospCredentialsForPersonInteraction/GetHospCredentialsForPersonInteraction_1.0_RIVTABP21.wsdl",
+                    "$wsdlDir/authorizationmanagement/$authorizationManagementVersion/interactions/GetHospCredentialsForPersonInteraction/GetHospCredentialsForPersonInteraction_1.0_RIVTABP21.wsdl"],
+
+            commonAuthorizationOptions + [
+                    "-p",
+                    "urn:riv:infrastructure:directory:authorizationmanagement:GetHospLastUpdate:1:rivtabp21=se.riv.infrastructure.directory.authorizationmanagement.gethosplastupdate.v1.rivtabp21",
+                    "-p",
+                    "urn:riv:infrastructure:directory:authorizationmanagement:GetHospLastUpdateResponder:1=se.riv.infrastructure.directory.authorizationmanagement.gethosplastupdateresponder.v1",
+                    "-wsdlLocation",
+                    "classpath:interactions/GetHospLastUpdate/GetHospLastUpdateInteraction_1.0_RIVTABP21.wsdl",
+                    "$wsdlDir/authorizationmanagement/$authorizationManagementVersion/interactions/GetHospLastUpdateInteraction/GetHospLastUpdateInteraction_1.0_RIVTABP21.wsdl"],
+
+            commonEmployeeOptions + [
+                    "-p",
+                    "urn:riv:infrastructure:directory:employee:GetEmployeeIncludingProtectedPerson:2:rivtabp21=se.riv.infrastructure.directory.employee.getemployeeincludingprotectedperson.v2.rivtabp21",
+                    "-p",
+                    "urn:riv:infrastructure:directory:employee:GetEmployeeIncludingProtectedPersonResponder:2=se.riv.infrastructure.directory.employee.getemployeeincludingprotectedpersonresponder.v2",
+                    "-wsdlLocation",
+                    "classpath:interactions/GetEmployeeIncludingProtectedPersonInteraction/GetEmployeeIncludingProtectedPersonInteraction_2.2_RIVTABP21.wsdl",
+                    "$wsdlDir/employee/$employeeVersion/interactions/GetEmployeeIncludingProtectedPersonInteraction/GetEmployeeIncludingProtectedPersonInteraction_2.2_RIVTABP21.wsdl"],
+
+            commonOrganizationOptions + [
+                    "-p",
+                    "urn:riv:infrastructure:directory:organization:GetHealthCareUnit:2:rivtabp21=se.riv.infrastructure.directory.organization.gethealthcareunit.v2.rivtabp21",
+                    "-p",
+                    "urn:riv:infrastructure:directory:organization:GetHealthCareUnitResponder:2=se.riv.infrastructure.directory.organization.gethealthcareunitresponder.v2",
+                    "-wsdlLocation",
+                    "classpath:interactions/GetHealthCareUnitInteraction/GetHealthCareUnitInteraction_2.0_RIVTABP21.wsdl",
+                    "$wsdlDir/organization/$organizationVersion/interactions/GetHealthCareUnitInteraction/GetHealthCareUnitInteraction_2.0_RIVTABP21.wsdl"],
+
+            commonOrganizationOptions + [
+                    "-p",
+                    "urn:riv:infrastructure:directory:organization:GetHealthCareUnitMembers:2:rivtabp21=se.riv.infrastructure.directory.organization.gethealthcareunitmembers.v2.rivtabp21",
+                    "-p",
+                    "urn:riv:infrastructure:directory:organization:GetHealthCareUnitMembersResponder:2=se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2",
+                    "-wsdlLocation",
+                    "classpath:interactions/GetHealthCareUnitMembersInteraction/GetHealthCareUnitMembersInteraction_2.0_RIVTABP21.wsdl",
+                    "$wsdlDir/organization/$organizationVersion/interactions/GetHealthCareUnitMembersInteraction/GetHealthCareUnitMembersInteraction_2.0_RIVTABP21.wsdl"],
+
+            commonOrganizationOptions + [
+                    "-p",
+                    "urn:riv:infrastructure:directory:organization:GetUnit:3:rivtabp21=se.riv.infrastructure.directory.organization.getunit.v3.rivtabp21",
+                    "-p",
+                    "urn:riv:infrastructure:directory:organization:GetUnitResponder:3=se.riv.infrastructure.directory.organization.getunitresponder.v3",
+                    "-p",
+                    "urn:riv:infrastructure:directory:organization:GetUnitResponder:3.1=se.riv.infrastructure.directory.organization.getunitresponder.v3",
+                    "-wsdlLocation",
+                    "classpath:interactions/GetUnitInteraction/GetUnitInteraction_3.1_RIVTABP21.wsdl",
+                    "$wsdlDir/organization/$organizationVersion/interactions/GetUnitInteraction/GetUnitInteraction_3.1_RIVTABP21.wsdl"],
+
+            commonOrganizationOptions + [
+                    "-p",
+                    "urn:riv:infrastructure:directory:organization:GetHealthCareProvider:1:rivtabp21=se.riv.infrastructure.directory.organization.gethealthcareprovider.v1.rivtabp21",
+                    "-p",
+                    "urn:riv:infrastructure:directory:organization:GetHealthCareProviderResponder:1=se.riv.infrastructure.directory.organization.gethealthcareproviderresponder.v1",
+                    "-wsdlLocation",
+                    "classpath:interactions/GetHealthCareProviderInteraction/GetHealthCareProviderInteraction_1.0_RIVTABP21.wsdl",
+                    "$wsdlDir/organization/$organizationVersion/interactions/GetHealthCareProviderInteraction/GetHealthCareProviderInteraction_1.0_RIVTABP21.wsdl"]
+    ]
+}

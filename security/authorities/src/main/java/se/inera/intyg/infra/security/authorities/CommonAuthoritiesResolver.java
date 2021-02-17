@@ -36,8 +36,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
-import se.inera.intyg.infra.integration.hsa.util.HsaAttributeExtractor;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
+import se.inera.intyg.infra.integration.hsatk.util.HsaAttributeExtractor;
 import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
 import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
 import se.inera.intyg.infra.security.common.model.Feature;
@@ -49,7 +50,6 @@ import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.infra.security.common.model.RoleResolveResult;
 import se.inera.intyg.infra.security.common.model.Title;
 import se.inera.intyg.infra.security.common.model.TitleCode;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**
  * Created by Magnus Ekstrand on 20/11/15.
@@ -74,8 +74,8 @@ public class CommonAuthoritiesResolver {
         .findFirst()
         .orElse(null);
 
-    public RoleResolveResult resolveRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole,
-        UserCredentials userCredentials) {
+    public RoleResolveResult resolveRole(IntygUser user, List<PersonInformation> personInfo, String defaultRole,
+                                         UserCredentials userCredentials) {
         Assert.notNull(user, "Argument 'user' cannot be null");
 
         return lookupUserRole(user, personInfo, defaultRole, userCredentials);
@@ -178,7 +178,7 @@ public class CommonAuthoritiesResolver {
      *
      * @return the resolved role
      */
-    RoleResolveResult lookupUserRole(IntygUser user, List<PersonInformationType> personInfo, String defaultRole,
+    RoleResolveResult lookupUserRole(IntygUser user, List<PersonInformation> personInfo, String defaultRole,
         UserCredentials userCredentials) {
         RoleResolveResult roleResolveResult;
         List<String> legitimeradeYrkesgrupper = new HsaAttributeExtractor().extractLegitimeradeYrkesgrupper(personInfo);

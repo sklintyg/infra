@@ -1,0 +1,10 @@
+{
+    "id" : "ostmanland",
+    "name" : "Landstinget Östmanland",
+    "careUnits" : [
+        {
+            "id" : "vardcentrum-1",
+            "name" : "Vårdcentrum 1"
+        }
+    ]
+}

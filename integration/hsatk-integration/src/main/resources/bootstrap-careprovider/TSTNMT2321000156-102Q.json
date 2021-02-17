@@ -1,0 +1,28 @@
+{
+  "id" : "TSTNMT2321000156-102Q",
+  "name" : "NMT vg3",
+  "careUnits" : [
+    {
+      "id" : "TSTNMT2321000156-1077",
+      "name" : "NMT vg3 ve1",
+      "mail" : "enhet3@webcert.invalid.se",
+      "telephoneNumber" : "0101112131416",
+      "postalAddress" : "NMT gata 3",
+      "postalCode" : "12345",
+      "postalTown" : "Testhult",
+      "prescriptionCode" : "1234567890",
+      "healthCareProviderOrgno" : "5-orgnr-102Q"
+    },
+    {
+      "id" : "TSTNMT2321000156-1076",
+      "name" : "NMT vg3 ve2",
+      "mail" : "enhet3@webcert.invalid.se",
+      "telephoneNumber" : "0101112131416",
+      "postalAddress" : "NMT gata 3",
+      "postalCode" : "12345",
+      "postalTown" : "Testhult",
+      "prescriptionCode" : "1234567890",
+      "healthCareProviderOrgno" : "5-orgnr-102Q"
+    }
+  ]
+}

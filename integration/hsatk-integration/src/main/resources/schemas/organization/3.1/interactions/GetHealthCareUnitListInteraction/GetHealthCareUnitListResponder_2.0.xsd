@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements. See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership. Sveriges Kommuner och Landsting licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License. You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied. See the License for the
+ specific language governing permissions and limitations
+ under the License.
+ -->		
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:tns='urn:riv:infrastructure:directory:organization:GetHealthCareUnitListResponder:2' xmlns:core='urn:riv:infrastructure:directory:organization:2' targetNamespace='urn:riv:infrastructure:directory:organization:GetHealthCareUnitListResponder:2' elementFormDefault='qualified' attributeFormDefault='unqualified' version='2.0'>
+  <xs:import schemaLocation='../../core_components/infrastructure_directory_organization_2.1.xsd' namespace='urn:riv:infrastructure:directory:organization:2' />
+  <xs:element name='GetHealthCareUnitList' type='tns:GetHealthCareUnitListType' />
+  <xs:element name='GetHealthCareUnitListResponse' type='tns:GetHealthCareUnitListResponseType' />
+
+  <xs:complexType name='GetHealthCareUnitListType'>
+    <xs:sequence>
+      <xs:element name="healthCareProviderHsaId" type="xs:string" />
+      <xs:element name='searchBase' type='core:DNType' minOccurs="0"/>
+	  <xs:element name="includeFeignedObject" type="xs:boolean" minOccurs="0" />
+      <xs:any namespace='##other' processContents='lax' minOccurs='0' maxOccurs='unbounded' />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name='GetHealthCareUnitListResponseType'>
+    <xs:sequence>
+      <xs:element name="healthCareUnitList" type="tns:HealthCareUnitListType" minOccurs="0" />
+      <xs:any namespace='##other' processContents='lax' minOccurs='0' maxOccurs='unbounded' />
+    </xs:sequence>        
+  </xs:complexType>
+
+  <xs:complexType name="HealthCareUnitListType">
+    <xs:sequence>
+      <xs:element name="healthCareProviderHsaId" type="xs:string"/>
+      <xs:element name="healthCareProviderName" type="xs:string"/>
+      <xs:element name="healthCareProviderPublicName" type="xs:string"/>
+      <xs:element name="healthCareProviderOrgNo" type="xs:string" />
+      <xs:element name="healthCareProviderStartDate" type="xs:dateTime" minOccurs="0" />
+      <xs:element name="healthCareProviderEndDate" type="xs:dateTime" minOccurs="0" />			
+      <xs:element name="healthCareUnit" type="tns:HealthCareUnitType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="feignedHealthCareProvider" type="xs:boolean" minOccurs="0" />
+      <xs:element name="archivedHealthCareProvider" type="xs:boolean" minOccurs="0" />
+      <xs:any namespace='##other' processContents='lax' minOccurs='0' maxOccurs='unbounded' />
+      
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="HealthCareUnitType">
+    <xs:sequence>
+        <xs:element name="healthCareUnitHsaId" type="xs:string"/>
+        <xs:element name="healthCareUnitName" type="xs:string"/>
+        <xs:element name="healthCareUnitPublicName" type="xs:string"/>
+        <xs:element name="healthCareUnitStartDate" type="xs:dateTime" minOccurs="0" />
+        <xs:element name="healthCareUnitEndDate" type="xs:dateTime" minOccurs="0" />
+		<xs:element name="feignedHealthCareUnit" type="xs:boolean" minOccurs="0" />
+		<xs:element name="archivedHealthCareUnit" type="xs:boolean" minOccurs="0" />
+        <xs:any namespace='##other' processContents='lax' minOccurs='0' maxOccurs='unbounded' />
+    </xs:sequence>
+  </xs:complexType>
+    
+</xs:schema>

@@ -1,0 +1,21 @@
+{
+  "hsaId": "user5",
+  "commissionList": [
+	{
+		"healthCareUnitHsaId": "enhet1",
+		"commissionPurpose": ["STATISTIK"]
+	},
+	{
+		"healthCareUnitHsaId": "enhet2",
+		"commissionPurpose": ["STATISTIK"]
+	},
+	{
+		"healthCareUnitHsaId": "enhet3",
+		"commissionPurpose": ["STATISTIK"]
+	},
+	{
+		"healthCareUnitHsaId": "enhet4",
+		"commissionPurpose": ["STATISTIK"]
+	}
+  ]
+}

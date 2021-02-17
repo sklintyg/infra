@@ -20,7 +20,7 @@ dependencies {
     compileOnly "org.slf4j:slf4j-api:"
     compileOnly "ch.qos.logback:logback-classic:"
     compileOnly "javax.servlet:javax.servlet-api"
-    compileOnly "commons-io:commons-io"
+    compileOnly "commons-io:commons-io:${commonsIoVersion}"
 
     testCompile "org.aspectj:aspectjrt"
 }

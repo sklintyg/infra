@@ -1,0 +1,35 @@
+{
+  "hsaId": "IFV1239877878-1049",
+  "givenName": "Jan",
+  "middleAndSurname": "Nilsson",
+  "healthCareProfessionalLicence": [
+    "Läkare"
+  ],
+  "specialities": [
+    {
+      "specialityCode": "Kod1",
+      "specialityName": "Kirurgi i käkpartiet"
+    }
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "IFV1239877878-1042",
+      "commissionPurpose": [
+        "Vård och behandling",
+        "Admin"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["WC"],
+    "displayOrder": 30,
+    "env": "dev",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "IFV1239877878-1042",
+        "beskrivning": "Jan Nilsson (Läkare | WebCert Enhet 1)"
+      }
+    ]
+  }
+}

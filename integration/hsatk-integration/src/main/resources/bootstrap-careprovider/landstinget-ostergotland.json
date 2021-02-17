@@ -1,0 +1,41 @@
+{
+    "id" : "ostergotland",
+    "name" : "Landstinget Östergötland",
+    "careUnits" : [
+        {
+            "id" : "linkoping",
+            "name" : "Linköpings Universitetssjukhus",
+            "subUnits" : [
+                {
+                    "id" : "lkpg-ogon",
+                    "name" : "Ögonmottagningen"
+                },
+                {
+                    "id" : "lkpg-akuten",
+                    "name" : "Akuten"
+                }
+            ],
+            "healthCareProviderOrgno" : "2-orgnr-ostergotland"
+        },
+        {
+            "id" : "norrkoping",
+            "name" : "Vrinnevisjukhuset i Norrköping",
+            "subUnits" : [
+                {
+                  "id" : "nkpg-ogon",
+                  "name" : "Ögonmottagningen"
+                },
+                {
+                  "id" : "nkpg-akuten",
+                  "name" : "Akuten"
+                }
+            ],
+            "healthCareProviderOrgno" : "2-orgnr-ostergotland"
+        },
+        {
+            "id" : "motala",
+            "name" : "Vårdcentralen i Motala",
+            "healthCareProviderOrgno" : "2-orgnr-ostergotland"
+        }
+    ]
+}

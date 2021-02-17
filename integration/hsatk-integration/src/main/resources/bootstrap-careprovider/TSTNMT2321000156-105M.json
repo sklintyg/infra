@@ -1,0 +1,39 @@
+{
+  "id" : "TSTNMT2321000156-105M",
+  "name" : "Rehabstöd Vårdgivare 1",
+  "careUnits" : [
+    {
+      "id" : "TSTNMT2321000156-105N",
+      "name" : "Rehabstöd Enhet 1",
+      "mail" : "enhet1@rehabstod.invalid.se",
+      "telephoneNumber" : "0101234567890",
+      "postalAddress" : "Lasarettsgatan 1",
+      "postalCode" : "12345",
+      "postalTown" : "Testhult",
+      "prescriptionCode" : "1234567890",
+      "healthCareProviderOrgno" : "2-orgnr-105M"
+    },
+    {
+      "id" : "TSTNMT2321000156-105P",
+      "name" : "Rehabstöd Enhet 2",
+      "mail" : "enhet1@rehabstod.invalid.se",
+      "telephoneNumber" : "0101234567890",
+      "postalAddress" : "Lasarettsgatan 1",
+      "postalCode" : "12345",
+      "postalTown" : "Testhult",
+      "prescriptionCode" : "1234567890",
+      "healthCareProviderOrgno" : "2-orgnr-105M"
+    },
+    {
+      "id" : "TSTNMT2321000156-105Q",
+      "name" : "Rehabstöd Enhet 3",
+      "mail" : "enhet3@rehabstod.invalid.se",
+      "telephoneNumber" : "0101234567890",
+      "postalAddress" : "Lasarettsgatan 1",
+      "postalCode" : "12345",
+      "postalTown" : "Testhult",
+      "prescriptionCode" : "1234567890",
+      "healthCareProviderOrgno" : "2-orgnr-105M"
+    }
+  ]
+}

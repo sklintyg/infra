@@ -1,0 +1,52 @@
+{
+  "hsaId": "IFV1239877878-104B",
+  "givenName": "Åsa",
+  "middleAndSurname": "Andersson",
+  "healthCareProfessionalLicence": [
+    "Läkare"
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "IFV1239877878-1042",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    },
+    {
+      "healthCareUnitHsaId": "IFV1239877878-1045",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    },
+    {
+      "healthCareUnitHsaId": "IFV1239877878-1046",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["WC"],
+    "displayOrder": 30,
+    "env": "dev",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "IFV1239877878-1042",
+        "beskrivning": "Åsa Andersson (Läkare | WebCert Enhet 1)"
+      },
+      {
+        "forvaldEnhet": "IFV1239877878-1045",
+        "beskrivning": "Åsa Andersson (Läkare | WebCert Enhet 2 + 2UE)"
+      },
+      {
+        "forvaldEnhet": "IFV1239877878-1046",
+        "beskrivning": "Åsa Andersson (Läkare | WebCert Enhet 2 - Underenhet 1)"
+      },
+      {
+        "forvaldEnhet": "IFV1239877878-104C",
+        "beskrivning": "Åsa Andersson (Läkare | WebCert Enhet 2 - Underenhet 2)"
+      }
+    ]
+  }
+}

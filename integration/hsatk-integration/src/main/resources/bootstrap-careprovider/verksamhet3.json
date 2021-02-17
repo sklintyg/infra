@@ -1,0 +1,10 @@
+{
+    "id" : "vg-verksamhet2",
+    "name" : "Andraregionen",
+    "careUnits": [
+        {
+            "id" : "verksamhet3",
+            "name" : "Storstads privatläkare"
+        }
+    ]
+}

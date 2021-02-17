@@ -25,9 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.Test;
-
 import se.inera.intyg.infra.sjukfall.dto.Formaga;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
@@ -94,6 +92,22 @@ public class SjukfallLangdCalculatorTest {
     }
 
     /**
+     * Test FALL3 from confluence document /Krav/Rehabstod/Berakning av sjukfall. But with 11 days GAP allowed.
+     */
+    @Test
+    public void testGetEffectiveNumberOfSickDaysFall3WithElevenDaysGap() throws Exception {
+        final var gapBetweenIntyg = 11;
+
+        List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
+
+        // First add a simple intyg with a simple interval
+        intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-01T12:00:00"), createInterval("2016-02-01", "2016-02-10")));
+        intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-12T12:00:00"), createInterval("2016-02-12", "2016-02-20")));
+        intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-03-01T12:00:00"), createInterval("2016-03-01", "2016-03-05")));
+        assertEquals(24, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag, AKTIVT_DATUM, gapBetweenIntyg));
+    }
+
+    /**
      * Test FALL4 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      */
     @Test
@@ -110,17 +124,17 @@ public class SjukfallLangdCalculatorTest {
 
     /**
      * Test FALL5 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
-         */
-        @Test
-        public void testGetEffectiveNumberOfSickDaysFall5() throws Exception {
+     */
+    @Test
+    public void testGetEffectiveNumberOfSickDaysFall5() throws Exception {
 
-            List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
+        List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
-            // First add a simple intyg with a simple interval
-            intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-12T12:00:00"), createInterval("2016-02-12", "2016-02-20")));
-            intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-11T12:00:00"), createInterval("2016-02-12", "2016-02-25")));
-            assertEquals(14, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag, AKTIVT_DATUM));
-        }
+        // First add a simple intyg with a simple interval
+        intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-12T12:00:00"), createInterval("2016-02-12", "2016-02-20")));
+        intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-11T12:00:00"), createInterval("2016-02-12", "2016-02-25")));
+        assertEquals(14, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag, AKTIVT_DATUM));
+    }
 
 
     /**
@@ -147,7 +161,8 @@ public class SjukfallLangdCalculatorTest {
 
         // First add a simple intyg with a simple interval
         intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-01T12:00:00"), createInterval("2016-02-01", "2016-02-14")));
-        intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-15T12:00:00").plusDays(10), createInterval("2016-02-18", "2016-02-25")));
+        intygsUnderlag
+            .add(createIntyg(LocalDateTime.parse("2016-02-15T12:00:00").plusDays(10), createInterval("2016-02-18", "2016-02-25")));
         assertEquals(0, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag, AKTIVT_DATUM));
     }
 
@@ -235,8 +250,9 @@ public class SjukfallLangdCalculatorTest {
     public void testGetEffectiveNumberOfSickDaysAbutIntervals() throws Exception {
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
-        intygsUnderlag.add(createIntyg(SIGNERINGSTIDPUNKT, createInterval("2016-02-12", "2016-02-20"), createInterval("2016-02-21", "2016-02-26"),
-            createInterval("2016-02-26", "2016-03-19")));
+        intygsUnderlag
+            .add(createIntyg(SIGNERINGSTIDPUNKT, createInterval("2016-02-12", "2016-02-20"), createInterval("2016-02-21", "2016-02-26"),
+                createInterval("2016-02-26", "2016-03-19")));
 
         List<SjukfallIntyg> intygsUnderlag2 = new ArrayList<>();
         intygsUnderlag2.add(createIntyg(SIGNERINGSTIDPUNKT, createInterval("2016-02-12", "2016-03-19")));
@@ -259,7 +275,8 @@ public class SjukfallLangdCalculatorTest {
 
         // Add another intyg where one of the intervals should overlap/extend the first (by 2 days) and adds  separate
         // interval of 20 days
-        intygsUnderlag.add(createIntyg(SIGNERINGSTIDPUNKT, createInterval("2016-01-25", "2016-02-12"), createInterval("2016-02-20", "2016-03-10")));
+        intygsUnderlag
+            .add(createIntyg(SIGNERINGSTIDPUNKT, createInterval("2016-01-25", "2016-02-12"), createInterval("2016-02-20", "2016-03-10")));
         assertEquals(22 + 2 + 20, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag));
 
         // add another that effectively encompasses all the previous ones except a few days of the last one

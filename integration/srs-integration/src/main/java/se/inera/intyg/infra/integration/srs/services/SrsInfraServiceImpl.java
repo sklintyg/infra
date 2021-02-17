@@ -67,7 +67,7 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardstyp;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Diagnosstatistik;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.EgenBedomningRiskType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
-import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.srs.model.SrsCertificate;
 import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsPrediction;

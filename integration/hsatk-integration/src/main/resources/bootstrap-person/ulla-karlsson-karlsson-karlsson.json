@@ -1,0 +1,35 @@
+{
+  "hsaId": "TST5565594230-12T0",
+  "givenName": "Ulla",
+  "middleAndSurname": "Karlsson Karlsson Karlsson",
+  "healthCareProfessionalLicence": [
+    "Läkare"
+  ],
+  "systemRoles": [
+    "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1077",
+    "INTYG;Rehab-TSTNMT2321000156-105N"
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    },
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-105N"
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["WC","IB","RS"],
+    "displayOrder": 500,
+    "env": "demo",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-1077",
+        "beskrivning": "Ulla Karlsson Karlsson Karlsson (Läkare | SITHS-kort)"
+      }
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "hsaId": "peter-enkel",
+  "givenName": "Peter",
+  "middleAndSurname": "Enkel",
+  "healthCareProfessionalLicence": [
+    "Läkare"
+  ],
+  "specialities": [
+    {
+      "specialityCode": "100",
+      "specialityName": "Kirurgi"
+    },
+    {
+      "specialityCode": "200",
+      "specialityName": "Oftalmologi"
+    }
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "IFV1239877878-103H",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": ["RS"],
+    "displayOrder": 5,
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "",
+        "beskrivning": "Peter Enkel (Läkare | 1 VE med underenhet)"
+      }
+    ]
+  }
+}
