@@ -110,6 +110,11 @@ public final class AuthoritiesConstants {
      */
     public static final String FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL = "BLOCKERA_FRISTAENDE";
 
+    /**
+     * Feature for toggling webcert functionality for handling messages.
+     */
+    public static final String FEATURE_USE_WEBCERT_MESSAGING = "WEBCERT_MESSAGE_HANDLING";
+
     private AuthoritiesConstants() {
     }
 }
