@@ -30,4 +30,5 @@ public class TypedCertificateRequest {
     private List<String> certificateTypes;
     private LocalDate fromDate;
     private LocalDate toDate;
+    private List<String> doctorIds;
 }
