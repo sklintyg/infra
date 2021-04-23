@@ -115,6 +115,9 @@ public final class AuthoritiesConstants {
      */
     public static final String FEATURE_USE_WEBCERT_MESSAGING = "WEBCERT_MESSAGE_HANDLING";
 
+    public static final String FEATURE_SUBSCRIPTION_DURING_ADJUSTMENT_PERIOD = "SUBSCRIPTION_DURING_ADJUSTMENT_PERIOD";
+    public static final String FEATURE_SUBSCRIPTION_PAST_ADJUSTMENT_PERIOD = "SUBSCRIPTION_PAST_ADJUSTMENT_PERIOD";
+
     private AuthoritiesConstants() {
     }
 }
