@@ -30,6 +30,7 @@ dependencies {
 
     compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
 
+    testCompile "org.awaitility:awaitility:"
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
