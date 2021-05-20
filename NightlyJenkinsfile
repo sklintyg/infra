@@ -1,7 +1,7 @@
 #!groovy
 
 node {
-    def buildVersion = "3.15.0.${BUILD_NUMBER}-nightly"
+    def buildVersion = "3.15.1.${BUILD_NUMBER}-nightly"
     def versionFlags = "-DbuildVersion=${buildVersion}"
 
     stage('checkout') {

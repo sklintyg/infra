@@ -266,7 +266,7 @@ pilots:
   - name: BLOCKERA_FRISTAENDE
     desc: Blockerar djupintegrerade vårdgivares användare från att använda vissa funktioner i fristående.
     hsaIds:
-      - TSTNMT2321000156-1077
+      - tstnmt2321000156-1077
     activated:
       - &pf110
         name: *kf280
