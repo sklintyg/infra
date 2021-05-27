@@ -55,7 +55,7 @@ public class CommonAuthoritiesResolverTest {
 
     @Test
     public void testFeaturesEnabled() {
-        final var availableFeatures = commonAuthoritiesResolver.getFeatures(Collections.singletonList("tstnmt2321000156-1077"));
+        final var availableFeatures = commonAuthoritiesResolver.getFeatures(Collections.singletonList("TSTNMT2321000156-1077"));
         assertTrue(availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_WARNING_ORIGIN_NORMAL).getGlobal());
         assertTrue(availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL).getGlobal());
     }
