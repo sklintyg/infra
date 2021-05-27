@@ -115,6 +115,8 @@ public final class AuthoritiesConstants {
      */
     public static final String FEATURE_USE_WEBCERT_MESSAGING = "WEBCERT_MESSAGE_HANDLING";
 
+    public static final String FEATURE_INACTIVATE_PREVIOUS_MAJOR_VERSION = "INAKTIVERA_TIDIGARE_HUVUDVERSION";
+
     private AuthoritiesConstants() {
     }
 }
