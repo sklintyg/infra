@@ -30,6 +30,7 @@ include ':integreradeenheter'
 include ':driftbanner-dto'
 include ':testcertificate'
 include ':message'
+include ':privatepractitioner'
 include ':certificate'
 include ':hsatk-integration'
 
@@ -55,6 +56,7 @@ project(':integreradeenheter').projectDir = "$rootDir/internalapi/integreradeenh
 project(':driftbanner-dto').projectDir = "$rootDir/internalapi/driftbannerdto" as File
 project(':testcertificate').projectDir = "$rootDir/internalapi/testcertificate" as File
 project(':message').projectDir = "$rootDir/internalapi/message" as File
+project(':privatepractitioner').projectDir = "$rootDir/internalapi/privatepractitioner" as File
 project(':certificate').projectDir = "$rootDir/internalapi/certificate" as File
 project(':hsatk-integration').projectDir = "$rootDir/integration/hsatk-integration" as File
 
