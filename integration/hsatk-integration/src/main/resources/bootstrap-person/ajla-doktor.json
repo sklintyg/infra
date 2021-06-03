@@ -1,0 +1,39 @@
+{
+  "hsaId": "TSTNMT2321000156-DRAJ",
+  "givenName": "Ajla",
+  "middleAndSurname": "Doktor",
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-ALVC",
+      "commissionPurpose": [
+        "Vård och behandling",
+        "STATISTIK"
+      ]
+    },
+    {
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALMC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-ALHC",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "paTitle": [{"titleName": "b", "titleCode": "204010"}],
+  "fakeProperties": {
+    "allowedInApplications": [],
+    "displayOrder": 90,
+    "env": "dev",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-ALMC",
+        "beskrivning": "Doktor AJLA   (AT Läkare | WebCert Enhet 2 + 2UE)"
+      }
+    ]
+  }
+}
