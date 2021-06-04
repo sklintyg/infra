@@ -1,0 +1,151 @@
+{
+    "id" : "TSTNMT2321000156-ALFA",
+    "name" : "Alfa Regionen",
+    "careUnits" : [
+        {
+            "id" : "TSTNMT2321000156-ALVC",
+            "name" : "Alfa Vårdcentral",
+            "mail" : "AlfaVC@webcert.invalid.se",
+            "telephoneNumber" : "0101234567890",
+            "postalAddress" : "Storgatan 1",
+            "postalCode" : "12345",
+            "postalTown" : "Småmåla",
+            "prescriptionCode" : "1234567890",
+            "subUnits" : [
+                {
+                    "id" : "TSTNMT2321000156-ALLM",
+                    "name" : "Alfa Läkarmottagningen",
+                    "mail" : "AlfaLM@webcert.invalid.se",
+                    "telephoneNumber" : "0101234567890",
+                    "postalAddress" : "Storgatan 1",
+                    "postalCode" : "12345",
+                    "postalTown" : "Småmåla",
+                    "prescriptionCode" : "1234567890"
+                }
+            ],
+            "healthCareProviderOrgno" : "2-orgnr-ALFA"
+        },
+        {
+            "id" : "TSTNMT2321000156-ALMC",
+            "name" : "Alfa Medicincentrum",
+            "mail" : "AlfaMC@webcert.invalid.se",
+            "telephoneNumber" : "0101234567890",
+            "postalAddress" : "Storgatan 1",
+            "postalCode" : "12345",
+            "postalTown" : "Småmåla",
+            "prescriptionCode" : "1234567890",
+            "subUnits" : [
+                {
+                    "id" : "TSTNMT2321000156-ALAM",
+                    "name" : "Alfa Allergimottagningen",
+                    "mail" : "AlfaAM@webcert.invalid.se",
+                    "telephoneNumber" : "0101234567890",
+                    "postalAddress" : "Storgatan 1",
+                    "postalCode" : "12345",
+                    "postalTown" : "Småmåla",
+                    "prescriptionCode" : "1234567890"
+                },
+                {
+                    "id" : "TSTNMT2321000156-ALHM",
+                    "name" : "Alfa Hudmottagningen",
+                    "mail" : "AlfaHM@webcert.invalid.se",
+                    "telephoneNumber" : "0101234567890",
+                    "postalAddress" : "Storgatan 1",
+                    "postalCode" : "12345",
+                    "postalTown" : "Småmåla",
+                    "prescriptionCode" : "1234567890"
+                },
+                {
+                    "id" : "TSTNMT2321000156-ALIM",
+                    "name" : "Alfa Infektionsmottagningen",
+                    "mail" : "AlfaIM@webcert.invalid.se",
+                    "telephoneNumber" : "0101234567890",
+                    "postalAddress" : "Storgatan 1",
+                    "postalCode" : "12345",
+                    "postalTown" : "Småmåla",
+                    "prescriptionCode" : "1234567890"
+                }
+            ],
+            "healthCareProviderOrgno" : "2-orgnr-ALFAMC"
+        },
+        {
+            "id" : "TSTNMT2321000156-ALPC",
+            "name" : "Alfa Psykiatricentrum",
+            "mail" : "AlfaPC@webcert.invalid.se",
+            "telephoneNumber" : "0101234567890",
+            "postalAddress" : "Storgatan 1",
+            "postalCode" : "12345",
+            "postalTown" : "Småmåla",
+            "prescriptionCode" : "1234567890",
+            "subUnits" : [
+                {
+                    "id" : "TSTNMT2321000156-ALPM",
+                    "name" : "Alfa Psykologiskamottagningen",
+                    "mail" : "AlfaPM@webcert.invalid.se",
+                    "telephoneNumber" : "0101234567890",
+                    "postalAddress" : "Storgatan 1",
+                    "postalCode" : "12345",
+                    "postalTown" : "Småmåla",
+                    "prescriptionCode" : "1234567890"
+                },
+                {
+                    "id" : "TSTNMT2321000156-ALBM",
+                    "name" : "Alfa Barn och Ungdoms Psykologiska-mottagningen",
+                    "mail" : "AlfaBM@webcert.invalid.se",
+                    "telephoneNumber" : "0101234567890",
+                    "postalAddress" : "Storgatan 1",
+                    "postalCode" : "12345",
+                    "postalTown" : "Småmåla",
+                    "prescriptionCode" : "1234567890"
+                }
+            ],
+            "healthCareProviderOrgno" : "2-orgnr-ALFAPC"
+        },
+        {
+            "id" : "TSTNMT2321000156-ALOC",
+            "name" : "Alfa Ortopedicentrum",
+            "mail" : "AlfaOC@webcert.invalid.se",
+            "telephoneNumber" : "0101234567890",
+            "postalAddress" : "Storgatan 1",
+            "postalCode" : "12345",
+            "postalTown" : "Småmåla",
+            "prescriptionCode" : "1234567890",
+            "subUnits" : [
+                {
+                    "id" : "TSTNMT2321000156-ALKM",
+                    "name" : "Alfa Kirurgiska mottagningen",
+                    "mail" : "AlfaKM@webcert.invalid.se",
+                    "telephoneNumber" : "0101234567890",
+                    "postalAddress" : "Storgatan 1",
+                    "postalCode" : "12345",
+                    "postalTown" : "Småmåla",
+                    "prescriptionCode" : "1234567890"
+                }
+            ],
+            "healthCareProviderOrgno" : "2-orgnr-ALFAOC"
+        },
+        {
+            "id" : "TSTNMT2321000156-ALHC",
+            "name" : "Alfa Hjärtcentrum",
+            "mail" : "AlfaHC@webcert.invalid.se",
+            "telephoneNumber" : "0101234567890",
+            "postalAddress" : "Storgatan 1",
+            "postalCode" : "12345",
+            "postalTown" : "Småmåla",
+            "prescriptionCode" : "1234567890",
+            "subUnits" : [
+                {
+                    "id" : "TSTNMT2321000156-ALFM",
+                    "name" : "Alfa Fysiologiskamottagningen",
+                    "mail" : "AlfaFM@webcert.invalid.se",
+                    "telephoneNumber" : "0101234567890",
+                    "postalAddress" : "Storgatan 1",
+                    "postalCode" : "12345",
+                    "postalTown" : "Småmåla",
+                    "prescriptionCode" : "1234567890"
+                }
+            ],
+            "healthCareProviderOrgno" : "2-orgnr-ALFAHC"
+        }
+    ]
+}
