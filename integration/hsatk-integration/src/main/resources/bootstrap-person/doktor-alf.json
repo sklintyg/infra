@@ -34,13 +34,13 @@
   ],
   "fakeProperties": {
     "allowedInApplications": [],
-    "displayOrder": 360,
+    "displayOrder": 90,
     "env": "demo",
     "readOnly": true,
     "logins": [
       {
         "forvaldEnhet": "TSTNMT2321000156-ALVC",
-        "beskrivning": "Doktor Alf (Läkare 1 | Webcert)"
+        "beskrivning": "Doktor ALF (Läkare | Alfa Regionen)"
       }
     ]
   }
