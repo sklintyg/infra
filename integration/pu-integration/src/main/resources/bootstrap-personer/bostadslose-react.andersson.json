@@ -1,0 +1,24 @@
+{
+  "personalIdentity": {
+    "extension": "194110147495"
+  },
+  "protectedPersonIndicator": false,
+  "testIndicator": false,
+  "primaryIdentity": false,
+  "name": {
+    "givenName": {
+      "name": "Bostadslöse"
+    },
+    "middleName": {
+      "name": "React"
+    },
+    "surname": {
+      "name": "Andersson"
+    }
+  },
+  "addressInformation": {
+    "residentialAddress": {
+      
+    }
+  }
+}

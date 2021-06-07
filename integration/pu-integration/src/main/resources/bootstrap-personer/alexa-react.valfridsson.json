@@ -1,0 +1,26 @@
+{
+  "personalIdentity": {
+    "extension": "194110299221"
+  },
+  "protectedPersonIndicator": true,
+  "testIndicator": false,
+  "primaryIdentity": false,
+  "name": {
+    "givenName": {
+      "name": "Alexa"
+    },
+    "middleName": {
+      "name": "React"
+    },
+    "surname": {
+      "name": "Valfridsson"
+    }
+  },
+  "addressInformation": {
+    "residentialAddress": {
+      "postalAddress1": "Valideringsgatan 456",
+      "postalCode": 65340,
+      "city": "Karlstad"
+    }
+  }
+}
