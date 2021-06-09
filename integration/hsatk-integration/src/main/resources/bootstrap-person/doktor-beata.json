@@ -1,0 +1,51 @@
+{
+    "hsaId": "TSTNMT2321000156-DRBE",
+    "givenName": "Beata",
+    "middleAndSurname": "Doktor",
+    "commissionList": [
+      {
+        "healthCareUnitHsaId": "TSTNMT2321000156-BEVC",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      },
+      {
+          "healthCareUnitHsaId": "TSTNMT2321000156-BEPC",
+          "commissionPurpose": [
+            "Vård och behandling"
+          ]
+      },
+      {
+        "healthCareUnitHsaId": "TSTNMT2321000156-BEOC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+          "healthCareUnitHsaId": "TSTNMT2321000156-BEMC",
+          "commissionPurpose": [
+            "Vård och behandling"
+          ]
+        },
+      {
+        "healthCareUnitHsaId": "TSTNMT2321000156-BEHC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ],
+    "paTitle": [{"titleName": "b", "titleCode": "204010"}],
+    "fakeProperties": {
+      "allowedInApplications": [],
+      "displayOrder": 90,
+      "env": "dev",
+      "readOnly": true,
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-BEVC",
+          "beskrivning": "Doktor BEATA (Läkare | Beta Regionen)"
+        }
+      ]
+    }
+  }

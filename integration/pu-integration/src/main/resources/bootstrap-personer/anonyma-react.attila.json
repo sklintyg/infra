@@ -1,0 +1,23 @@
+{
+  "personalIdentity": {
+    "extension": "194012019149"
+  },
+  "protectedPersonIndicator": true,
+  "testIndicator": false,
+  "primaryIdentity": false,
+  "name": {
+    "givenName": {
+      "name": "Athena"
+    },
+    "middleName": {
+      "name": "React"
+    },
+    "surname": {
+      "name": "Andersson"
+    }
+  },
+  "addressInformation": {
+    "residentialAddress": {
+    }
+  }
+}

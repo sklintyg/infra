@@ -1,0 +1,47 @@
+{
+  "hsaId": "TSTNMT2321000156-DRAL",
+  "givenName": "Alf",
+  "middleAndSurname": "Doktor",
+  "healthCareProfessionalLicence": [
+    "Läkare"
+  ],
+  "commissionList": [
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-ALVC",
+      "commissionPurpose": [
+        "Vård och behandling",
+        "STATISTIK"
+      ]
+    },
+    {
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALPC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+    },
+    {
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALMC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-ALHC",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    }
+  ],
+  "fakeProperties": {
+    "allowedInApplications": [],
+    "displayOrder": 90,
+    "env": "demo",
+    "readOnly": true,
+    "logins": [
+      {
+        "forvaldEnhet": "TSTNMT2321000156-ALVC",
+        "beskrivning": "Doktor ALF (Läkare | Alfa Regionen)"
+      }
+    ]
+  }
+}

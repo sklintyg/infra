@@ -1,0 +1,26 @@
+{
+  "personalIdentity": {
+    "extension": "194011306125"
+  },
+  "protectedPersonIndicator": false,
+  "testIndicator": false,
+  "primaryIdentity": false,
+  "name": {
+    "givenName": {
+      "name": "Athena"
+    },
+    "middleName": {
+      "name": "React"
+    },
+    "surname": {
+      "name": "Andersson"
+    }
+  },
+  "addressInformation": {
+    "residentialAddress": {
+      "postalAddress2": "Grekstigen 90",
+      "postalCode": 65340,
+      "city": "Karlstad"
+    }
+  }
+}
