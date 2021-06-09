@@ -1,0 +1,29 @@
+{
+  "personalIdentity": {
+    "extension": "194111299055"
+  },
+  "protectedPersonIndicator": false,
+  "testIndicator": false,
+  "primaryIdentity": false,
+  "name": {
+    "givenName": {
+      "name": "Atlas"
+    },
+    "middleName": {
+      "name": "React"
+    },
+    "surname": {
+      "name": "Abrahamsson"
+    }
+  },
+  "addressInformation": {
+    "residentialAddress": {
+      "postalAddress1": "Avlidengatan 456",
+      "postalCode": 65340,
+      "city": "Karlstad"
+    }
+  },
+  "deregistration": {
+    "deregistrationReasonCode": "AV"
+  }
+}
