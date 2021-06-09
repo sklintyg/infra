@@ -2,8 +2,8 @@
   "personalIdentity": {
     "extension": "194110299221"
   },
-  "protectedPersonIndicator": true,
-  "testIndicator": false,
+  "protectedPersonIndicator": false,
+  "testIndicator": true,
   "primaryIdentity": false,
   "name": {
     "givenName": {
