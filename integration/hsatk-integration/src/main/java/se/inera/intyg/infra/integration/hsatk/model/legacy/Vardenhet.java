@@ -36,6 +36,8 @@ public class Vardenhet extends AbstractVardenhet {
     private String vardgivareHsaId;
 
     private List<Mottagning> mottagningar = new ArrayList<>();
+    private SubscriptionAction subscriptionAction = SubscriptionAction.NONE;
+
 
     public Vardenhet() {
         // Needed for deserialization

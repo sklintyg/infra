@@ -33,6 +33,8 @@ public class Mottagning extends AbstractVardenhet {
     private LocalDateTime start;
     private LocalDateTime end;
     private String parentHsaId;
+    private SubscriptionAction subscriptionAction = SubscriptionAction.NONE;
+
 
     public Mottagning() {
         // Needed for deserialization
