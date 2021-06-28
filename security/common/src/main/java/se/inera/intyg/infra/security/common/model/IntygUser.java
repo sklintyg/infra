@@ -328,6 +328,7 @@ public class IntygUser implements UserDetails {
         this.titel = titel;
     }
 
+    @JsonIgnore
     public int getTotaltAntalVardenheter() {
         return getIdsOfAllVardenheter().size();
     }
@@ -412,11 +413,13 @@ public class IntygUser implements UserDetails {
      *
      * @return true if role is one the above, otherwise false
      */
+    @JsonIgnore
     public boolean isLakare() {
         return roles.containsKey(AuthoritiesConstants.ROLE_LAKARE) || roles.containsKey(AuthoritiesConstants.ROLE_PRIVATLAKARE)
             || roles.containsKey(AuthoritiesConstants.ROLE_TANDLAKARE);
     }
 
+    @JsonIgnore
     public boolean isPrivatLakare() {
         return roles.containsKey(AuthoritiesConstants.ROLE_PRIVATLAKARE);
     }
