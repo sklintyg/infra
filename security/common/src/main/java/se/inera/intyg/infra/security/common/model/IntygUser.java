@@ -36,7 +36,7 @@ public class IntygUser implements UserDetails {
 
     public static final int THIRTYONE = 31;
     private static final long serialVersionUID = -2624303818412468774L;
-    protected boolean privatLakareAvtalGodkand;
+    protected boolean userTermsApprovedOrSubscriptionInUse;
 
     protected String personId;
     protected String hsaId;
@@ -424,12 +424,12 @@ public class IntygUser implements UserDetails {
         return roles.containsKey(AuthoritiesConstants.ROLE_PRIVATLAKARE);
     }
 
-    public boolean isPrivatLakareAvtalGodkand() {
-        return privatLakareAvtalGodkand;
+    public boolean isUserTermsApprovedOrSubscriptionInUse() {
+        return userTermsApprovedOrSubscriptionInUse;
     }
 
-    public void setPrivatLakareAvtalGodkand(boolean privatLakareAvtalGodkand) {
-        this.privatLakareAvtalGodkand = privatLakareAvtalGodkand;
+    public void setUserTermsApprovedOrSubscriptionInUse(boolean userTermsApprovedOrSubscriptionInUse) {
+        this.userTermsApprovedOrSubscriptionInUse = userTermsApprovedOrSubscriptionInUse;
     }
 
     // CHECKSTYLE:OFF NeedBraces
@@ -444,7 +444,7 @@ public class IntygUser implements UserDetails {
 
         IntygUser intygUser = (IntygUser) o;
 
-        if (privatLakareAvtalGodkand != intygUser.privatLakareAvtalGodkand) {
+        if (userTermsApprovedOrSubscriptionInUse != intygUser.userTermsApprovedOrSubscriptionInUse) {
             return false;
         }
         if (isSekretessMarkerad != intygUser.isSekretessMarkerad) {
@@ -513,7 +513,7 @@ public class IntygUser implements UserDetails {
 
     @Override
     public int hashCode() {
-        int result = (privatLakareAvtalGodkand ? 1 : 0);
+        int result = (userTermsApprovedOrSubscriptionInUse ? 1 : 0);
         result = THIRTYONE * result + (personId != null ? personId.hashCode() : 0);
         result = THIRTYONE * result + hsaId.hashCode();
         result = THIRTYONE * result + (namn != null ? namn.hashCode() : 0);
