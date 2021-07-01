@@ -20,6 +20,6 @@ package se.inera.intyg.privatepractitioner.dto;
 
 public enum ValidatePrivatePractitionerResultCode {
     OK,
-    ERROR_NO_ACCOUNT,
-    ERROR_NOT_AUTHORIZED_IN_HOSP
+    NO_ACCOUNT,
+    NOT_AUTHORIZED_IN_HOSP
 }
