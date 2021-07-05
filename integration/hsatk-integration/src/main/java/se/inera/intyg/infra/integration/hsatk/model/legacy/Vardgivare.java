@@ -32,6 +32,7 @@ public class Vardgivare implements SelectableVardenhet, Comparable<Vardgivare>, 
 
     private String id;
     private String namn;
+    private SubscriptionAction subscriptionAction = SubscriptionAction.NONE;
 
     private List<Vardenhet> vardenheter = new ArrayList<>();
 

@@ -117,6 +117,9 @@ public final class AuthoritiesConstants {
 
     public static final String FEATURE_INACTIVATE_PREVIOUS_MAJOR_VERSION = "INAKTIVERA_TIDIGARE_HUVUDVERSION";
 
+    public static final String FEATURE_SUBSCRIPTION_ADAPTATION_PERIOD = "SUBSCRIPTION_ADAPTATION_PERIOD";
+    public static final String FEATURE_SUBSCRIPTION_REQUIRED = "SUBSCRIPTION_REQUIRED";
+
     private AuthoritiesConstants() {
     }
 }
