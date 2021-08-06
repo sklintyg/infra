@@ -20,110 +20,148 @@
         "Vård och behandling"
       ]
     },
-    { "healthCareUnitHsaId": "TSTNMT2321000156-105N"},
-    { "healthCareUnitHsaId": "vg1-enhet-1",
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-ALMC",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    },
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-ALVC",
+      "commissionPurpose": [
+        "Vård och behandling"
+      ]
+    },
+    {
+      "healthCareUnitHsaId": "TSTNMT2321000156-105N"
+    },
+    {
+      "healthCareUnitHsaId": "vg1-enhet-1",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-2",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-2",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-3",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-3",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-4",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-4",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-5",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-5",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-6",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-6",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-7",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-7",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-8",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-8",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-9",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-9",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-10",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-10",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-11",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-11",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-12",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-12",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-13",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-13",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-14",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-14",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-15",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-15",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-16",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-16",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-17",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-17",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-18",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-18",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-19",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-19",
       "commissionPurpose": [
         "STATISTIK"
       ]
     },
-    { "healthCareUnitHsaId": "vg1-enhet-20",
+    {
+      "healthCareUnitHsaId": "vg1-enhet-20",
       "commissionPurpose": [
         "STATISTIK"
       ]
     }
   ],
   "fakeProperties": {
-    "allowedInApplications": ["WC","IB","RS"],
+    "allowedInApplications": [
+      "WC",
+      "IB",
+      "RS"
+    ],
     "displayOrder": 500,
     "env": "demo",
     "readOnly": true,
