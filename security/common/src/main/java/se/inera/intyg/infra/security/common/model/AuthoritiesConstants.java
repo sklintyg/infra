@@ -119,6 +119,9 @@ public final class AuthoritiesConstants {
 
     public static final String FEATURE_USE_REACT_WEBCLIENT = "ANVAND_REACT_WEBKLIENT";
 
+    public static final String FEATURE_SUBSCRIPTION_ADAPTATION_PERIOD = "SUBSCRIPTION_ADAPTATION_PERIOD";
+    public static final String FEATURE_SUBSCRIPTION_REQUIRED = "SUBSCRIPTION_REQUIRED";
+
     private AuthoritiesConstants() {
     }
 }
