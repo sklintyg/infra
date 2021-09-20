@@ -30,6 +30,7 @@ public final class AuthConstants {
 
     public static final String ALIAS_SITHS = "defaultAlias";
     public static final String ALIAS_ELEG = "eleg";
+    public static final String ALIAS_WWW_ELEG = "www-eleg";
 
     public static final String SPRING_SECURITY_CONTEXT = "SPRING_SECURITY_CONTEXT";
     public static final String SPRING_SECURITY_SAVED_REQUEST_KEY = "SPRING_SECURITY_SAVED_REQUEST";
