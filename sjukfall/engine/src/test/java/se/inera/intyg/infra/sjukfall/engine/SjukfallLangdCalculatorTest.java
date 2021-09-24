@@ -349,6 +349,51 @@ public class SjukfallLangdCalculatorTest {
         assertEquals(b2.getEndDate(), result.get(0).getEndDate());
     }
 
+    @Test
+    public void testProperReturnValuesWhenZeroDayGapBetweenSjukfall() {
+        List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
+        intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-01T12:00:00"), createInterval("2016-02-01", "2016-02-10")));
+        intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-11T12:00:00"), createInterval("2016-02-11", "2016-02-20")));
+
+        final var value1 = SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag, 0);
+        final var value2 = SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag, 1);
+        final var value3 = SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag, 2);
+
+        assertEquals(20, value1);
+        assertEquals(20, value2);
+        assertEquals(20, value3);
+    }
+
+    @Test
+    public void testProperReturnValuesWhenOneDayGapBetweenSjukfall() {
+        List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
+        intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-01T12:00:00"), createInterval("2016-02-01", "2016-02-10")));
+        intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-12T12:00:00"), createInterval("2016-02-12", "2016-02-20")));
+
+        final var value1 = SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag, 0);
+        final var value2 = SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag, 1);
+        final var value3 = SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag, 2);
+
+        assertEquals(9, value1);
+        assertEquals(19, value2);
+        assertEquals(19, value3);
+    }
+
+    @Test
+    public void testProperReturnValuesWhenFiveDayGapBetweenSjukfall() {
+        List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
+        intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-01T12:00:00"), createInterval("2016-02-01", "2016-02-10")));
+        intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-16T12:00:00"), createInterval("2016-02-16", "2016-02-20")));
+
+        final var value1 = SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag, 4);
+        final var value2 = SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag, 5);
+        final var value3 = SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(intygsUnderlag, 6);
+
+        assertEquals(5, value1);
+        assertEquals(15, value2);
+        assertEquals(15, value3);
+    }
+
     private SjukfallIntyg createIntyg(LocalDateTime signeringsTidpunkt, LocalDateInterval... intervals) {
         final List<Formaga> formagor = new ArrayList<>();
 
