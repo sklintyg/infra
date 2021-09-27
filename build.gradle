@@ -32,7 +32,7 @@ ext {
     saxonVersion = "9.9.1-6"
     shedlockSpringVersion = "4.5.0"
     springSecuritySaml2CoreVersion = "1.0.3.RELEASE" //Higher versions require opensaml 2.6.6 (not available 2020-03-23)
-    uapVersion = "1.4.3"
+    uapVersion = "1.5.2"
     xmlSecVersion = "2.1.4"
 
     springbootMavenBomVersion = "2.2.5.RELEASE"
