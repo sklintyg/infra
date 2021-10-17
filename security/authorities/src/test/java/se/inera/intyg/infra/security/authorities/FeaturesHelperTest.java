@@ -38,8 +38,8 @@ public class FeaturesHelperTest {
     @InjectMocks
     private FeaturesHelper featuresHelper;
 
-    private static final String FEATURE_NAME = "NOTIFICATION_DISCARD_FELB";
-    private static final String RENSNING_AV_MEDDELANDEN_AV_FEL_B = "Rensning av meddelanden av fel B";
+    private static final String FEATURE_NAME = "SEKRETESSMARKERING";
+    private static final String RENSNING_AV_MEDDELANDEN_AV_FEL_B = "Sekretessmarkering tillåten";
 
     @Test
     public void testReadActiveFeature() {

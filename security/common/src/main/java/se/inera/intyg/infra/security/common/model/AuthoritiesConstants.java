@@ -81,24 +81,13 @@ public final class AuthoritiesConstants {
     public static final String FEATURE_TAK_KONTROLL_TRADKLATTRING = "TAK_KONTROLL_TRADKLATTRING";
     public static final String FEATURE_TAK_KONTROLL = "TAK_KONTROLL";
     public static final String FEATURE_SEKRETESSMARKERING = "SEKRETESSMARKERING";
-    public static final String FEATURE_NOTIFICATION_DISCARD_FELB = "NOTIFICATION_DISCARD_FELB";
     public static final String FEATURE_OAUTH_AUTHENTICATION = "OAUTH_AUTHENTICATION";
     public static final String FEATURE_ENABLE_CREATE_DRAFT_PREFILL = "CREATE_DRAFT_PREFILL";
-
-    /**
-     * Feature to toggle if messages that are outdated should be sent or not to the integrated EHR-system.
-     */
-    public static final String FEATURE_ENABLE_FILTER_OUTDATED_MESSAGES = "FILTER_OUTDATED_MESSAGES";
 
     /**
      * Feature to toggle if patients with testIndicator flag is allowed to be used or not.
      */
     public static final String FEATURE_ALLOW_TEST_INDICATED_PERSON = "TILLAT_VALIDERINGSPERSON";
-
-    /**
-     * Feature to toggle if the signed certificate list view should be used or not.
-     */
-    public static final String FEATURE_ENABLE_SIGNED_CERTIFICATES_LIST = "SIGNED_CERTIFICATES_LIST";
 
     /**
      * Feature to toggle if a u'DJUPINTEGRERAD' care provider should recieve a warning when logging in with origin 'NORMAL'
@@ -109,11 +98,6 @@ public final class AuthoritiesConstants {
      * Feature to toggle if a 'DJUPINTEGRERAD' care provider should block certificate features when logging in with origin 'NORMAL'
      */
     public static final String FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL = "BLOCKERA_FRISTAENDE";
-
-    /**
-     * Feature for toggling webcert functionality for handling messages.
-     */
-    public static final String FEATURE_USE_WEBCERT_MESSAGING = "WEBCERT_MESSAGE_HANDLING";
 
     public static final String FEATURE_INACTIVATE_PREVIOUS_MAJOR_VERSION = "INAKTIVERA_TIDIGARE_HUVUDVERSION";
 
