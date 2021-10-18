@@ -129,8 +129,8 @@ public final class SjukfallLangdCalculator {
 
     private static boolean isSickLeaveCertificateLinkedToPrevious(SjukfallIntyg sickLeaveCertificate,
         SjukfallIntyg previousSickLeaveCertificate, int gapBetweenIntyg) {
-        return isFirstSickLeaveCertificate(previousSickLeaveCertificate) || previousSickLeaveCertificate.getSlutDatum()
-            .plusDays(gapBetweenIntyg).isAfter(sickLeaveCertificate.getStartDatum());
+        return isFirstSickLeaveCertificate(previousSickLeaveCertificate) || !previousSickLeaveCertificate.getSlutDatum()
+            .plusDays(gapBetweenIntyg + 1).isBefore(sickLeaveCertificate.getStartDatum());
     }
 
     private static boolean isFirstSickLeaveCertificate(SjukfallIntyg sickLeaveCertificate) {
