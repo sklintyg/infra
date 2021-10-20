@@ -38,8 +38,8 @@ public class FeaturesHelperTest {
     @InjectMocks
     private FeaturesHelper featuresHelper;
 
-    private static final String FEATURE_NAME = "NOTIFICATION_DISCARD_FELB";
-    private static final String RENSNING_AV_MEDDELANDEN_AV_FEL_B = "Rensning av meddelanden av fel B";
+    private static final String FEATURE_NAME = "SEKRETESSMARKERING";
+    private static final String SEKRETESSMARKERING_TILLATEN = "Sekretessmarkering tillåten";
 
     @Test
     public void testReadActiveFeature() {
@@ -51,7 +51,7 @@ public class FeaturesHelperTest {
 
     private ImmutableMap<String, Feature> createActiveFeatureMap() {
         Feature feature = new Feature();
-        feature.setDesc(RENSNING_AV_MEDDELANDEN_AV_FEL_B);
+        feature.setDesc(SEKRETESSMARKERING_TILLATEN);
         feature.setGlobal(true);
         feature.setName(FEATURE_NAME);
         return ImmutableMap.of(FEATURE_NAME, feature);
