@@ -103,17 +103,19 @@ public class SessionTimeoutFilter extends OncePerRequestFilter {
 
     private boolean invalidateSessionIfTimeToInvalidateHasPassed(HttpSession session) {
         final var invalidTime = (Long) session.getAttribute(TIME_TO_INVALIDATE_ATTRIBUTE_NAME);
-        if (invalidTime != null) {
-            final var currentTime = Instant.now().toEpochMilli();
-            if (invalidTime < currentTime) {
-                LOG.info("Current time " + currentTime + " is past invalid time " + invalidTime);
-                session.invalidate();
-                return true;
-            } else {
-                LOG.info("Current time " + currentTime + " is before invalid time " + invalidTime);
-            }
+        if (invalidTime == null) {
+            return false;
         }
-        return false;
+
+        final var currentTime = Instant.now().toEpochMilli();
+        if (currentTime < invalidTime) {
+            LOG.info("Current time {} is before invalid time {} - The session remains valid!", currentTime, invalidTime);
+            return false;
+        }
+
+        LOG.info("Current time {} is past invalid time {} - The session will be invalidated!", currentTime, invalidTime);
+        session.invalidate();
+        return true;
     }
 
 
