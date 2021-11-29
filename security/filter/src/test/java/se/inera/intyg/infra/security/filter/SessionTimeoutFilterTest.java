@@ -20,10 +20,14 @@ package se.inera.intyg.infra.security.filter;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static se.inera.intyg.infra.security.filter.SessionTimeoutFilter.TIME_TO_INVALIDATE_ATTRIBUTE_NAME;
 
+import java.time.Instant;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -125,6 +129,53 @@ public class SessionTimeoutFilterTest {
         verify(session, never()).invalidate();
         verify(session, never()).setAttribute(any(), any());
 
+    }
+
+    @Test
+    public void testInvalidateSessionIfTimeToInvalidateHasPassed() throws Exception {
+        // Arrange
+        setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL, Instant.now().minusSeconds(1).toEpochMilli());
+
+        // Act
+        filter.doFilterInternal(request, response, filterChain);
+
+        // Assert
+        verify(filterChain).doFilter(request, response);
+        verify(session, times(1)).invalidate();
+        verify(session, never()).setAttribute(any(), any());
+    }
+
+    @Test
+    public void testDontInvalidateSessionIfTimeToInvalidateHasNotPassed() throws Exception {
+        // Arrange
+        setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL, Instant.now().plusSeconds(2).toEpochMilli());
+
+        // Act
+        filter.doFilterInternal(request, response, filterChain);
+
+        // Assert
+        verify(filterChain).doFilter(request, response);
+        verify(session, never()).invalidate();
+        verify(session, never()).setAttribute(any(), any());
+    }
+
+    @Test
+    public void testDontInvalidateSessionIfTimeToInvalidateIsNull() throws Exception {
+        // Arrange
+        setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL, null);
+
+        // Act
+        filter.doFilterInternal(request, response, filterChain);
+
+        // Assert
+        verify(filterChain).doFilter(request, response);
+        verify(session, never()).invalidate();
+        verify(session, never()).setAttribute(any(), any());
+    }
+
+    private void setupMocks(int sessionLengthInSeconds, String reportedRequestURI, Long timeToInvalidate) {
+        setupMocks(sessionLengthInSeconds, reportedRequestURI);
+        doReturn(timeToInvalidate).when(session).getAttribute(TIME_TO_INVALIDATE_ATTRIBUTE_NAME);
     }
 
     private void setupMocks(int sessionLengthInSeconds, String reportedRequestURI) {

@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.security.filter;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,6 +38,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  */
 public class SessionTimeoutFilter extends OncePerRequestFilter {
 
+    public static final String TIME_TO_INVALIDATE_ATTRIBUTE_NAME = SessionTimeoutFilter.class.getName() + ".SessionTimeToInvalidate";
     public static final String SECONDS_UNTIL_SESSIONEXPIRE_ATTRIBUTE_KEY = SessionTimeoutFilter.class.getName() + ".secondsToLive";
 
     private static final Logger LOG = LoggerFactory.getLogger(SessionTimeoutFilter.class);
@@ -81,6 +83,10 @@ public class SessionTimeoutFilter extends OncePerRequestFilter {
         if (session != null) {
             Long lastAccess = (Long) session.getAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME);
 
+            if (invalidateSessionIfTimeToInvalidateHasPassed(session)) {
+                return;
+            }
+
             // Set an request attribute that other parties further down the request chaing can use.
             Long msUntilExpire = updateTimeLeft(request, session);
 
@@ -94,6 +100,22 @@ public class SessionTimeoutFilter extends OncePerRequestFilter {
             }
         }
     }
+
+    private boolean invalidateSessionIfTimeToInvalidateHasPassed(HttpSession session) {
+        final var invalidTime = (Long) session.getAttribute(TIME_TO_INVALIDATE_ATTRIBUTE_NAME);
+        if (invalidTime != null) {
+            final var currentTime = Instant.now().toEpochMilli();
+            if (invalidTime < currentTime) {
+                LOG.info("Current time " + currentTime + " is past invalid time " + invalidTime);
+                session.invalidate();
+                return true;
+            } else {
+                LOG.info("Current time " + currentTime + " is before invalid time " + invalidTime);
+            }
+        }
+        return false;
+    }
+
 
     private Long updateTimeLeft(HttpServletRequest request, HttpSession session) {
         Long lastAccess = (Long) session.getAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME);
