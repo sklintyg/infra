@@ -105,7 +105,29 @@ public class AuthoritiesResolverTest {
     }
 
     @Test
-    public void lookupUserRoleWhenTitleCodeIsNot204010() {
+    public void lookupUserRoleWhenTitleCodeIs203020() {
+        // given
+        List<String> befattningsKoder = Collections.singletonList("203020");
+        // when
+        RoleResolveResult roleResolveResult  = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
+        // then
+        assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
+        assertTrue(roleResolveResult.getRoleTypeName().equalsIgnoreCase("Läkare-203020"));
+    }
+
+    @Test
+    public void lookupUserRoleWhenTitleCodes204010And203020() {
+        // given
+        List<String> befattningsKoder = Arrays.asList("203020", "204010");
+        // when
+        RoleResolveResult roleResolveResult  = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
+        // then
+        assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
+        assertTrue(roleResolveResult.getRoleTypeName().equalsIgnoreCase("Läkare-204010"));
+    }
+
+    @Test
+    public void lookupUserRoleWhenTitleCodeIsNot204010Or203020() {
         // given
         List<String> befattningsKoder = Arrays.asList("203090", "204090", "", null);
         // when
@@ -117,10 +139,10 @@ public class AuthoritiesResolverTest {
     @Test
     public void lookupUserRoleByTitleCodeAndGroupPrescriptionCode() {
         // given
-        List<String> befattningsKoder = Arrays.asList("204010", "203090", "204090");
+        List<String> befattningsKoder = Arrays.asList("204010", "203020", "203090", "204090");
         List<String> gruppforskrivarKoder = Arrays.asList("9300005", "9100009");
 
-        Role[][] roleMatrix = new Role[3][2];
+        Role[][] roleMatrix = new Role[4][2];
 
         // when
         for (int i = 0; i < befattningsKoder.size(); i++) {
@@ -136,19 +158,23 @@ public class AuthoritiesResolverTest {
         /* Expected matrix:
             [0,0] null
             [0,1] null
-            [1,0] LAKARE
+            [1,0] null
             [1,1] null
-            [2,0] null
-            [2,1] LAKARE
+            [2,0] LAKARE
+            [2,1] null
+            [3,0] null
+            [3,1] LAKARE
          */
 
         for (int i = 0; i < befattningsKoder.size(); i++) {
             for (int j = 0; j < gruppforskrivarKoder.size(); j++) {
-                if ((i == 0) && ((j == 0) || (j == 1))) {
+                if (i == 0) {
                     assertNull(roleMatrix[i][j]);
-                } else if ((i == 2) && (j == 0)) {
+                } else if (i == 1) {
                     assertNull(roleMatrix[i][j]);
-                } else if ((i == 1) && (j == 1)) {
+                } else if ((i == 3) && (j == 0)) {
+                    assertNull(roleMatrix[i][j]);
+                } else if ((i == 2) && (j == 1)) {
                     assertNull(roleMatrix[i][j]);
                 } else {
                     assertTrue(roleMatrix[i][j].getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));

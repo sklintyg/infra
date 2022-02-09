@@ -19,6 +19,8 @@
 package se.inera.intyg.infra.security.authorities;
 
 import static se.inera.intyg.infra.security.authorities.AuthoritiesResolverUtil.toMap;
+import static se.inera.intyg.infra.security.common.model.AuthoritiesConstants.TITLECODE_AT_LAKARE;
+import static se.inera.intyg.infra.security.common.model.AuthoritiesConstants.TITLECODE_BT_LAKARE;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -260,12 +262,12 @@ public class CommonAuthoritiesResolver {
             return null;
         }
 
-        if (befattningsKoder.contains(AuthoritiesConstants.TITLECODE_AT_LAKARE)) {
+        if (befattningsKoder.contains(TITLECODE_AT_LAKARE) || befattningsKoder.contains(TITLECODE_BT_LAKARE)) {
             //Look up roleTypeName from titleCode
-            final String roleTypeName = getTitleCodes()
-                .stream()
-                .filter(tc -> tc.getTitleCode().equals(AuthoritiesConstants.TITLECODE_AT_LAKARE))
-                .findAny().map(TitleCode::getRoleTypeName)
+            final var roleTypeName = getTitleCodes().stream()
+                .filter(tc -> tc.getTitleCode().equals(TITLECODE_AT_LAKARE) || tc.getTitleCode().equals(TITLECODE_BT_LAKARE))
+                .filter(tc -> befattningsKoder.contains(tc.getTitleCode()))
+                .findFirst().map(TitleCode::getRoleTypeName)
                 .orElse(AuthoritiesConstants.TITLE_LAKARE);
             return new RoleResolveResult(fnRole.apply(AuthoritiesConstants.ROLE_LAKARE), roleTypeName);
         }
