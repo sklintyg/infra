@@ -29,6 +29,7 @@ public final class AuthoritiesConstants {
     // Title codes, a.k.a 'befattningskod', has a coding system governing these codes. See:
     // HSA Innehåll Befattning
     // http://www.inera.se/TJANSTER--PROJEKT/HSA/Dokument/HSA-kodverk/
+    public static final String TITLECODE_BT_LAKARE = "203020";
     public static final String TITLECODE_AT_LAKARE = "204010";
 
     // Known roles (these roles are copied from authorities.yaml which is the master authorities configuration)
