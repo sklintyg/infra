@@ -38,6 +38,7 @@ dependencies {
     wsdl2java "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:${jaxb2Version}"
     wsdl2java "org.jvnet.jaxb2_commons:jaxb2-basics:${jaxb2Version}"
     wsdl2java "org.jvnet.jaxb2_commons:jaxb2-namespace-prefix:1.3"
+    wsdl2java "com.sun.xml.bind:jaxb-impl:2.3.6" // NEW Dependency - should be confirmed!
 }
 
 wsdl2java {

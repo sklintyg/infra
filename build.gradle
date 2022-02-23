@@ -20,22 +20,21 @@ ext {
 
     schemasContractVersion = "2.1.8"
 
-    aspectjWeaverVersion = "1.8.9"
-    commonsIoVersion = "2.6"
+    commonsIoVersion = "2.11.0"
     commonsCollectionsVersion = "4.4"
-    cxfVersion = "3.2.4"
-    embeddedRedisVersion = "0.7.2"
-    guavaVersion = "28.2-jre"
-    jakartaJwsApiVersion = "2.1.0"
-    kryoVersion = "4.0.2"
-    prometheusClientVersion = "0.8.1"
-    saxonVersion = "9.9.1-6"
-    shedlockSpringVersion = "4.5.0"
+    cxfVersion = "3.5.0"
+    embeddedRedisVersion = "0.7.3"
+    guavaVersion = "31.0.1-jre"
+    jakartaJwsApiVersion = "3.0.0"
+    kryoVersion = "5.3.0"
+    prometheusClientVersion = "0.15.0"
+    saxonVersion = "11.1.1"
+    shedlockSpringVersion = "4.33.0"
     springSecuritySaml2CoreVersion = "1.0.3.RELEASE" //Higher versions require opensaml 2.6.6 (not available 2020-03-23)
     uapVersion = "1.5.2"
-    xmlSecVersion = "2.1.4"
+    xmlSecVersion = "2.3.0"
 
-    springbootMavenBomVersion = "2.2.5.RELEASE"
+    springbootMavenBomVersion = "2.6.3"
 
 }
 

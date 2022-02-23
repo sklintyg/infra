@@ -219,8 +219,9 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
     private String canonicalizeXml(String intygXml) {
         try {
             Canonicalizer canonicalizer = Canonicalizer.getInstance(CanonicalizationMethod.EXCLUSIVE);
-            byte[] canonicalizedXmlAsBytes = canonicalizer.canonicalize(intygXml.getBytes(StandardCharsets.UTF_8));
-            return new String(canonicalizedXmlAsBytes, StandardCharsets.UTF_8);
+            final var outputStream = new ByteArrayOutputStream();
+            canonicalizer.canonicalize(intygXml.getBytes(StandardCharsets.UTF_8), outputStream, true);
+            return outputStream.toString(StandardCharsets.UTF_8);
         } catch (Exception e) {
             LOG.error(e.getClass().getName() + " caught canonicalizing intyg XML, message: " + e.getMessage());
             throw new IllegalArgumentException(e.getCause());
