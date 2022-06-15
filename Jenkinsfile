@@ -11,7 +11,7 @@ node {
 
     stage('build') {
         try {
-            shgradle11 "--refresh-dependencies clean build -x Test -DgruntColors=false ${versionFlags}"
+            shgradle11 "--refresh-dependencies clean build -PcodeQuality -DgruntColors=false ${versionFlags}"
         } finally {
             publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'build/reports/allTests', \
                 reportFiles: 'index.html', reportName: 'JUnit results'
