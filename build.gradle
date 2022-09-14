@@ -1,9 +1,8 @@
 plugins {
-    id "se.inera.intyg.plugin.common" version "3.1.4" apply false
-    id "io.spring.dependency-management" version "1.0.9.RELEASE"
+    id "se.inera.intyg.plugin.common" version "3.2.0" apply false
+    id "io.spring.dependency-management" version "1.0.13.RELEASE"
     id 'idea'
 }
-
 
 ext {
     funktionstjansterGrpSchemasVersion = "1.0.6"
@@ -23,11 +22,11 @@ ext {
     aspectjWeaverVersion = "1.8.9"
     commonsIoVersion = "2.6"
     commonsCollectionsVersion = "4.4"
-    cxfVersion = "3.2.4"
+    cxfVersion = "3.5.3"
     embeddedRedisVersion = "0.7.2"
     guavaVersion = "28.2-jre"
     jakartaJwsApiVersion = "2.1.0"
-    kryoVersion = "4.0.2"
+    jaxbImplVersion = "2.3.6"
     prometheusClientVersion = "0.8.1"
     saxonVersion = "9.9.1-6"
     shedlockSpringVersion = "4.5.0"
@@ -35,7 +34,7 @@ ext {
     uapVersion = "1.5.2"
     xmlSecVersion = "2.1.4"
 
-    springbootMavenBomVersion = "2.2.5.RELEASE"
+    springbootMavenBomVersion = "2.7.3"
 
 }
 
@@ -52,6 +51,10 @@ allprojects {
                 excludeGroupByRegex "se\\.inera.*"
             }
         }
+    }
+
+    test {
+        useJUnitPlatform()
     }
 
     apply plugin: "io.spring.dependency-management"
@@ -77,9 +80,15 @@ allprojects {
         testCompile "org.glassfish.jaxb:jaxb-runtime"
         testCompile "com.sun.xml.messaging.saaj:saaj-impl"
 
-        testCompile "junit:junit:4.+"
+        testCompile "junit:junit"
+        testCompile "org.junit.jupiter:junit-jupiter-api"
+        testCompile "org.junit.jupiter:junit-jupiter-params"
+        testCompile "org.mockito:mockito-junit-jupiter"
         testCompile "org.springframework:spring-test"
         testCompile "org.mockito:mockito-core"
+
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+        testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
     }
 
     group = 'se.inera.intyg.infra'

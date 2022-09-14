@@ -21,11 +21,13 @@ package se.inera.intyg.infra.security.authorities.bootstrap;
 import java.io.IOException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ResourceUtils;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import se.inera.intyg.infra.security.authorities.AuthoritiesConfiguration;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
@@ -40,7 +42,7 @@ import se.inera.intyg.infra.security.authorities.FeaturesConfiguration;
  * and {@link SecurityConfigurationLoader#getFeaturesConfiguration()} method.
  */
 @Component("AuthoritiesConfigurationLoader")
-public class SecurityConfigurationLoader implements InitializingBean {
+public class SecurityConfigurationLoader extends YamlPropertiesFactoryBean implements InitializingBean {
 
     @Value("${authorities.configuration.file}")
     private String authoritiesConfigurationFile;
@@ -105,7 +107,9 @@ public class SecurityConfigurationLoader implements InitializingBean {
     }
 
     private <T> T loadConfiguration(String location, Class<T> type) {
-        Yaml yaml = new Yaml();
+        final var loaderOptions = new LoaderOptions();
+        loaderOptions.setMaxAliasesForCollections(500);
+        Yaml yaml = new Yaml(loaderOptions);
         try {
             return yaml.loadAs(getResource(location).getInputStream(), type);
         } catch (IOException e) {

@@ -18,26 +18,23 @@
  */
 package se.inera.intyg.infra.rediscache.core;
 
-import static org.junit.Assert.assertEquals;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Objects;
 import java.util.stream.IntStream;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import redis.embedded.RedisServer;
-
-/**
- * Tests
- */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class BasicRedisCacheConfigurationTest {
 
@@ -46,33 +43,25 @@ public class BasicRedisCacheConfigurationTest {
 
     private Cache testCache;
 
-    @Autowired
-    RedisServer redisServer;
-
-    @Before
+    @BeforeEach
     public void init() {
         testCache = cacheManager.getCache("testCache");
     }
 
-    @After
+    @AfterEach
     public void teardown() {
-        redisServer.stop();
-    }
-
-    @Test
-    public void testCache() throws InterruptedException {
-
-        IntStream.range(0, 100).forEach(i -> testCache.put("key" + i, "value" + i));
-        IntStream.range(0, 100).forEach(i -> assertEquals("value" + i, testCache.get("key" + i).get()));
-
-        Object o = testCache.get("key1").get();
-        assertEquals("value1", o);
-    }
-
-    @After
-    public void tearDown() {
         if (testCache != null) {
             testCache.clear();
         }
     }
+
+    @Test
+    public void testCache() {
+        IntStream.range(0, 100).forEach(i -> testCache.put("key" + i, "value" + i));
+        IntStream.range(0, 100).forEach(i -> assertEquals("value" + i, Objects.requireNonNull(testCache.get("key" + i)).get()));
+
+        Object o = Objects.requireNonNull(testCache.get("key1")).get();
+        assertEquals("value1", o);
+    }
+
 }
