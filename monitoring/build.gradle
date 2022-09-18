@@ -4,10 +4,10 @@ sourceSets {
 }
 
 dependencies {
-    compile "io.prometheus:simpleclient:${prometheusClientVersion}"
-    compile "io.prometheus:simpleclient_common:${prometheusClientVersion}"
-    compile "io.prometheus:simpleclient_hotspot:${prometheusClientVersion}"
-    compile "io.prometheus:simpleclient_servlet:${prometheusClientVersion}"
+    compile "io.prometheus:simpleclient"
+    compile "io.prometheus:simpleclient_common"
+    compile "io.prometheus:simpleclient_hotspot"
+    compile "io.prometheus:simpleclient_servlet"
     compile "org.aspectj:aspectjweaver"
     compile "com.google.guava:guava:${guavaVersion}"
     compile "com.github.ua-parser:uap-java:${uapVersion}"

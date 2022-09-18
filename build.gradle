@@ -19,23 +19,22 @@ ext {
 
     schemasContractVersion = "2.1.8"
 
-    aspectjWeaverVersion = "1.8.9"
-    commonsIoVersion = "2.6"
+    commonsIoVersion = "2.11.0"
     commonsCollectionsVersion = "4.4"
     cxfVersion = "3.5.3"
     embeddedRedisVersion = "0.7.2"
-    guavaVersion = "28.2-jre"
-    jakartaJwsApiVersion = "2.1.0"
+    guavaVersion = "31.1-jre"
+    jakartaJwsApiVersion = "3.0.0"
+    jaxb2Version = "0.13.1"
+    jaxb2NamespacePrefixVersion = "2.0"
     jaxbImplVersion = "2.3.6"
-    prometheusClientVersion = "0.8.1"
-    saxonVersion = "9.9.1-6"
-    shedlockSpringVersion = "4.5.0"
+    saxonVersion = "11.4"
+    shedlockSpringVersion = "4.42.0"
     springSecuritySaml2CoreVersion = "1.0.3.RELEASE" //Higher versions require opensaml 2.6.6 (not available 2020-03-23)
-    uapVersion = "1.5.2"
-    xmlSecVersion = "2.1.4"
+    uapVersion = "1.5.3"
+    xmlSecVersion = "3.0.1"
 
     springbootMavenBomVersion = "2.7.3"
-
 }
 
 allprojects {

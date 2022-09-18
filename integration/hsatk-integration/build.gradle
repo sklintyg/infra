@@ -9,7 +9,6 @@ if (project.hasProperty("codeQuality")) {
 }
 
 dependencies {
-    def jaxb2Version = "1.11.1"
     def schemasSupportVersion = "2.1.5"
 
     compile project(':common-redis-cache-core')
@@ -34,7 +33,7 @@ dependencies {
     wsdl2java "se.inera.intyg.schemas:schemas-support:${schemasSupportVersion}"
     wsdl2java "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:${jaxb2Version}"
     wsdl2java "org.jvnet.jaxb2_commons:jaxb2-basics:${jaxb2Version}"
-    wsdl2java "org.jvnet.jaxb2_commons:jaxb2-namespace-prefix:1.3"
+    wsdl2java "org.jvnet.jaxb2_commons:jaxb2-namespace-prefix:${jaxb2NamespacePrefixVersion}"
     wsdl2java "com.sun.xml.bind:jaxb-impl:${jaxbImplVersion}"
 }
 
