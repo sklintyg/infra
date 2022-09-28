@@ -2,7 +2,6 @@ dependencies {
     compile "org.springframework.data:spring-data-redis"
     compile "redis.clients:jedis"
     compile "org.springframework:spring-core"
-    compile "com.esotericsoftware:kryo:${kryoVersion}"
     compile "com.google.guava:guava:${guavaVersion}"
     compile "it.ozimov:embedded-redis:${embeddedRedisVersion}"
     compile 'javax.annotation:javax.annotation-api'

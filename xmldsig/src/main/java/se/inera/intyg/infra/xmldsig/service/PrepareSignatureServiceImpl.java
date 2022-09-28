@@ -70,7 +70,6 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
     private static final Logger LOG = LoggerFactory.getLogger(XMLDSigServiceImpl.class);
 
     private static final String DIGEST_ALGORITHM = "SHA-256";
-    private static final String UTF_8 = "UTF-8";
 
     @PostConstruct
     public void init() {
@@ -209,7 +208,7 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
             // Note that the "stripall.xslt" performs BOTH local() on all nodes AND filters unwanted stuff out.
             XsltUtil.transform(IOUtils.toInputStream(xml, StandardCharsets.UTF_8), out1, "transforms/stripall.xslt");
 
-            return new String(out1.toByteArray(), StandardCharsets.UTF_8);
+            return out1.toString(StandardCharsets.UTF_8);
         } catch (IOException e) {
             LOG.error(e.getMessage());
             throw new IntygXMLDSigException(e.getMessage());
@@ -218,9 +217,11 @@ public class PrepareSignatureServiceImpl implements PrepareSignatureService {
 
     private String canonicalizeXml(String intygXml) {
         try {
-            Canonicalizer canonicalizer = Canonicalizer.getInstance(CanonicalizationMethod.EXCLUSIVE);
-            byte[] canonicalizedXmlAsBytes = canonicalizer.canonicalize(intygXml.getBytes(StandardCharsets.UTF_8));
-            return new String(canonicalizedXmlAsBytes, StandardCharsets.UTF_8);
+            final var canonicalizer = Canonicalizer.getInstance(CanonicalizationMethod.EXCLUSIVE);
+            final var outputStream = new ByteArrayOutputStream();
+            final var intygXMLBytes = intygXml.getBytes(StandardCharsets.UTF_8);
+            canonicalizer.canonicalize(intygXMLBytes, outputStream, true);
+            return outputStream.toString(StandardCharsets.UTF_8);
         } catch (Exception e) {
             LOG.error(e.getClass().getName() + " caught canonicalizing intyg XML, message: " + e.getMessage());
             throw new IllegalArgumentException(e.getCause());
