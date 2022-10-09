@@ -50,6 +50,9 @@ public class SecurityConfigurationLoader extends YamlPropertiesFactoryBean imple
     @Value("${features.configuration.file}")
     private String featuresConfigurationFile;
 
+    @Value("${max.aliases.for.collections:300}")
+    private Integer maxAliasesForCollections;
+
     private AuthoritiesConfiguration authoritiesConfiguration;
     private FeaturesConfiguration featuresConfiguration;
 
@@ -77,7 +80,7 @@ public class SecurityConfigurationLoader extends YamlPropertiesFactoryBean imple
      * possible when all bean properties have been set and to throw an
      * exception in the event of misconfiguration.
      *
-     * @throws Exception in the event of misconfiguration (such
+     * @throws AuthoritiesException in the event of misconfiguration (such
      * as failure to set an essential property) or if initialization fails.
      */
     @Override
@@ -108,7 +111,7 @@ public class SecurityConfigurationLoader extends YamlPropertiesFactoryBean imple
 
     private <T> T loadConfiguration(String location, Class<T> type) {
         final var loaderOptions = new LoaderOptions();
-        loaderOptions.setMaxAliasesForCollections(500);
+        loaderOptions.setMaxAliasesForCollections(maxAliasesForCollections);
         Yaml yaml = new Yaml(loaderOptions);
         try {
             return yaml.loadAs(getResource(location).getInputStream(), type);
