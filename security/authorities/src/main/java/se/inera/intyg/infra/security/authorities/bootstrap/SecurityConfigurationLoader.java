@@ -44,14 +44,15 @@ import se.inera.intyg.infra.security.authorities.FeaturesConfiguration;
 @Component("AuthoritiesConfigurationLoader")
 public class SecurityConfigurationLoader extends YamlPropertiesFactoryBean implements InitializingBean {
 
+    private static final Integer DEFAULT_MAX_ALIASES_FOR_COLLECTIONS = 300;
+    @Value("${max.aliases.for.collections:300}")
+    private Integer maxAliasesForCollections;
+
     @Value("${authorities.configuration.file}")
     private String authoritiesConfigurationFile;
 
     @Value("${features.configuration.file}")
     private String featuresConfigurationFile;
-
-    @Value("${max.aliases.for.collections:300}")
-    private Integer maxAliasesForCollections;
 
     private AuthoritiesConfiguration authoritiesConfiguration;
     private FeaturesConfiguration featuresConfiguration;
@@ -70,6 +71,7 @@ public class SecurityConfigurationLoader extends YamlPropertiesFactoryBean imple
         Assert.notNull(featuresConfigurationFile, "Features configuration file must not be null");
         this.authoritiesConfigurationFile = authoritiesConfigurationFile;
         this.featuresConfigurationFile = featuresConfigurationFile;
+        this.maxAliasesForCollections = DEFAULT_MAX_ALIASES_FOR_COLLECTIONS;
     }
 
     /**
