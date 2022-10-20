@@ -29,13 +29,14 @@ public class CommonAuthoritiesConfigurationTestSetup {
 
     protected static final String AUTHORITIES_CONFIGURATION_LOCATION = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
     protected static final String FEATURES_CONFIGURATION_LOCATION = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
+    protected static final Integer DEFAULT_MAX_ALIASES_FOR_COLLECTIONS = 300;
 
     protected static final SecurityConfigurationLoader CONFIGURATION_LOADER = new SecurityConfigurationLoader(
-        AUTHORITIES_CONFIGURATION_LOCATION, FEATURES_CONFIGURATION_LOCATION);
+        AUTHORITIES_CONFIGURATION_LOCATION, FEATURES_CONFIGURATION_LOCATION, DEFAULT_MAX_ALIASES_FOR_COLLECTIONS);
     protected static final CommonAuthoritiesResolver AUTHORITIES_RESOLVER = new CommonAuthoritiesResolver();
 
     @BeforeClass
-    public static void setupAuthoritiesConfiguration() throws Exception {
+    public static void setupAuthoritiesConfiguration() {
         // Load configuration
         CONFIGURATION_LOADER.afterPropertiesSet();
 

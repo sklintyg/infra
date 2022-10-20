@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.infra.security.authorities;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -55,10 +56,11 @@ public class AuthoritiesHelperTest {
 
     private final String authoritiesConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
     private final String featuresConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
+    private final Integer defaultMaxAliasesForCollections = 300;
 
-    private SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationLocation,
-        featuresConfigurationLocation);
-    private CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();
+    private final SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationLocation,
+        featuresConfigurationLocation, defaultMaxAliasesForCollections);
+    private final CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();
 
     @Mock
     private HsaPersonService hsaPersonService;
@@ -67,38 +69,37 @@ public class AuthoritiesHelperTest {
     private AuthoritiesHelper authoritiesHelper = new AuthoritiesHelper(authoritiesResolver);
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         configurationLoader.afterPropertiesSet();
         authoritiesResolver.setConfigurationLoader(configurationLoader);
     }
 
     // Kända intygstyper
-    private List<String> knownIntygstyper = Arrays.asList("fk7263", "ts-bas", "ts-diabetes");
+    private final List<String> knownIntygstyper = Arrays.asList("fk7263", "ts-bas", "ts-diabetes");
 
     @Test
-    public void whenPrivilegeHasNoIntygstyperAndNoRequestOrigins() throws Exception {
+    public void whenPrivilegeHasNoIntygstyperAndNoRequestOrigins() {
         Privilege privilege = createPrivilege(SKRIVA_INTYG, new ArrayList<>(), new ArrayList<>());
         Set<String> intygstyper = authoritiesHelper.getIntygstyperForPrivilege(createWebCertUser(NORMAL, toMap(privilege)), SKRIVA_INTYG);
 
-        assertTrue(intygstyper.size() == authoritiesResolver.getIntygstyper().size());
+        assertEquals(intygstyper.size(), authoritiesResolver.getIntygstyper().size());
         assertTrue(intygstyper.containsAll(knownIntygstyper));
     }
 
     @Test
-    public void whenPrivilegeHasIntygstyperButNoRequestOrigins() throws Exception {
+    public void whenPrivilegeHasIntygstyperButNoRequestOrigins() {
         List<String> typer = knownIntygstyper.stream().limit(2).collect(Collectors.toList());
         Privilege privilege = createPrivilege(SKRIVA_INTYG, typer, new ArrayList<>());
 
         Set<String> intygstyper = authoritiesHelper.getIntygstyperForPrivilege(createWebCertUser(NORMAL, toMap(privilege)), SKRIVA_INTYG);
 
-        assertTrue(intygstyper.size() == typer.size());
+        assertEquals(intygstyper.size(), typer.size());
         assertTrue(intygstyper.containsAll(typer));
     }
 
     @Test
-    public void whenPrivilegeHasNoIntygstyperButRequestOrigins() throws Exception {
-        Set<String> intygstyper = null;
-        IntygUser user = null;
+    public void whenPrivilegeHasNoIntygstyperButRequestOrigins() {
+        Set<String> intygstyper;
 
         Map<String, List<String>> intygstyperOrigins = new HashMap<>();
         intygstyperOrigins.put(NORMAL, knownIntygstyper);
@@ -109,25 +110,25 @@ public class AuthoritiesHelperTest {
         Map<String, Privilege> privilegeMap = toMap(privilege);
 
         intygstyper = authoritiesHelper.getIntygstyperForPrivilege(createWebCertUser(NORMAL, privilegeMap), SKRIVA_INTYG);
-        assertTrue(intygstyper.size() == 3);
+        assertEquals(3, intygstyper.size());
         assertTrue(intygstyper.contains("fk7263"));
         assertTrue(intygstyper.contains("ts-bas"));
         assertTrue(intygstyper.contains("ts-diabetes"));
 
         intygstyper = authoritiesHelper.getIntygstyperForPrivilege(createWebCertUser(DJUPINTEGRATION, privilegeMap), SKRIVA_INTYG);
-        assertTrue(intygstyper.size() == 3);
+        assertEquals(3, intygstyper.size());
         assertTrue(intygstyper.contains("fk7263"));
         assertTrue(intygstyper.contains("ts-bas"));
         assertTrue(intygstyper.contains("ts-diabetes"));
 
         intygstyper = authoritiesHelper.getIntygstyperForPrivilege(createWebCertUser(UTHOPP, privilegeMap), SKRIVA_INTYG);
-        assertTrue(intygstyper.size() == 1);
+        assertEquals(1, intygstyper.size());
         assertTrue(intygstyper.contains("fk7263"));
     }
 
     @Test
-    public void whenPrivilegeHasIntygstyperAndRequestOrigins() throws Exception {
-        Set<String> intygstyper = null;
+    public void whenPrivilegeHasIntygstyperAndRequestOrigins() {
+        Set<String> intygstyper;
 
         List<String> intygstyperPrivilege = knownIntygstyper.stream().filter(typ -> typ.equals("fk7263") || typ.equals("ts-bas"))
             .collect(Collectors.toList());
@@ -141,23 +142,23 @@ public class AuthoritiesHelperTest {
         Map<String, Privilege> privilegeMap = toMap(privilege);
 
         intygstyper = authoritiesHelper.getIntygstyperForPrivilege(createWebCertUser(NORMAL, privilegeMap), SKRIVA_INTYG);
-        assertTrue(intygstyper.size() == 2);
+        assertEquals(2, intygstyper.size());
         assertTrue(intygstyper.contains("fk7263"));
         assertTrue(intygstyper.contains("ts-bas"));
 
         intygstyper = authoritiesHelper.getIntygstyperForPrivilege(createWebCertUser(DJUPINTEGRATION, privilegeMap), SKRIVA_INTYG);
-        assertTrue(intygstyper.size() == 2);
+        assertEquals(2, intygstyper.size());
         assertTrue(intygstyper.contains("fk7263"));
         assertTrue(intygstyper.contains("ts-bas"));
 
         intygstyper = authoritiesHelper.getIntygstyperForPrivilege(createWebCertUser(UTHOPP, privilegeMap), SKRIVA_INTYG);
-        assertTrue(intygstyper.size() == 1);
+        assertEquals(1, intygstyper.size());
         assertTrue(intygstyper.contains("fk7263"));
     }
 
     @Test
-    public void whenPrivilegeHasNoIntygstyperButRequestOriginsAndWhereNormalImplicitlyAllowsAll() throws Exception {
-        Set<String> intygstyper = null;
+    public void whenPrivilegeHasNoIntygstyperButRequestOriginsAndWhereNormalImplicitlyAllowsAll() {
+        Set<String> intygstyper;
 
         Map<String, List<String>> intygstyperOrigins = new HashMap<>();
         intygstyperOrigins.put(NORMAL, new ArrayList<>());
@@ -168,17 +169,17 @@ public class AuthoritiesHelperTest {
         Map<String, Privilege> privilegeMap = toMap(privilege);
 
         intygstyper = authoritiesHelper.getIntygstyperForPrivilege(createWebCertUser(NORMAL, privilegeMap), SKRIVA_INTYG);
-        assertTrue(intygstyper.size() == 3);
+        assertEquals(3, intygstyper.size());
         assertTrue(intygstyper.contains("fk7263"));
         assertTrue(intygstyper.contains("ts-bas"));
         assertTrue(intygstyper.contains("ts-diabetes"));
 
         intygstyper = authoritiesHelper.getIntygstyperForPrivilege(createWebCertUser(DJUPINTEGRATION, privilegeMap), SKRIVA_INTYG);
-        assertTrue(intygstyper.size() == 1);
+        assertEquals(1, intygstyper.size());
         assertTrue(intygstyper.contains("fk7263"));
 
         intygstyper = authoritiesHelper.getIntygstyperForPrivilege(createWebCertUser(UTHOPP, privilegeMap), SKRIVA_INTYG);
-        assertTrue(intygstyper.size() == 2);
+        assertEquals(2, intygstyper.size());
         assertTrue(intygstyper.contains("ts-bas"));
         assertTrue(intygstyper.contains("ts-diabetes"));
     }
@@ -217,7 +218,7 @@ public class AuthoritiesHelperTest {
 
     private List<String> getIntygstyper(String... intygstyper) {
         List<String> list = Arrays.asList(intygstyper);
-        return knownIntygstyper.stream().filter(t -> list.contains(t)).collect(Collectors.toList());
+        return knownIntygstyper.stream().filter(list::contains).collect(Collectors.toList());
     }
 
     private Map<String, Privilege> toMap(Privilege privilege) {

@@ -45,15 +45,16 @@ import se.inera.intyg.infra.security.common.model.RoleResolveResult;
 @RunWith(MockitoJUnitRunner.class)
 public class AuthoritiesResolverTest {
 
-    private String authoritiesConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
-    private String featuresConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
+    private final String authoritiesConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    private final String featuresConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
+    private final Integer defaultMaxAliasesForCollections = 300;
 
     @Mock
     private HsaPersonService hsaPersonService;
 
     @Spy
     private SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationLocation,
-        featuresConfigurationLocation);
+        featuresConfigurationLocation, defaultMaxAliasesForCollections);
 
     @InjectMocks
     private CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();
@@ -236,7 +237,7 @@ public class AuthoritiesResolverTest {
 
         assertEquals(9, features.get(AuthoritiesConstants.FEATURE_HANTERA_INTYGSUTKAST).getIntygstyper().size());
 
-        Map<String, Feature> featuresNonexistingHsaId = authoritiesResolver.getFeatures(Arrays.asList("non-existing"));
+        Map<String, Feature> featuresNonexistingHsaId = authoritiesResolver.getFeatures(List.of("non-existing"));
 
         // Sanity check for features which should always be active by default
         assertTrue(featuresNonexistingHsaId.containsKey(AuthoritiesConstants.FEATURE_HANTERA_INTYGSUTKAST));
@@ -252,14 +253,14 @@ public class AuthoritiesResolverTest {
 
     @Test
     public void testGetFeaturesAdditiveFeatures() {
-        Map<String, Feature> features = authoritiesResolver.getFeatures(Arrays.asList("additive"));
+        Map<String, Feature> features = authoritiesResolver.getFeatures(List.of("additive"));
         assertTrue(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
         assertEquals(Arrays.asList("fk7263", "lisjp"), features.get(AuthoritiesConstants.FEATURE_SRS).getIntygstyper());
     }
 
     @Test
     public void testGetFeaturesSubtractingFeatures() {
-        Map<String, Feature> features = authoritiesResolver.getFeatures(Arrays.asList("subtractive"));
+        Map<String, Feature> features = authoritiesResolver.getFeatures(List.of("subtractive"));
         assertFalse(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
         assertFalse(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getGlobal());
         assertFalse(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getIntygstyper().contains("db"));
@@ -267,7 +268,7 @@ public class AuthoritiesResolverTest {
 
     @Test
     public void testGetFeaturesBoth() {
-        Map<String, Feature> features = authoritiesResolver.getFeatures(Arrays.asList("both"));
+        Map<String, Feature> features = authoritiesResolver.getFeatures(List.of("both"));
         assertTrue(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
         assertFalse(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getGlobal());
         assertFalse(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getIntygstyper().contains("db"));
@@ -275,7 +276,7 @@ public class AuthoritiesResolverTest {
 
     @Test
     public void testGetFeaturesBoth2() {
-        Map<String, Feature> features = authoritiesResolver.getFeatures(Arrays.asList("both2"));
+        Map<String, Feature> features = authoritiesResolver.getFeatures(List.of("both2"));
         assertFalse(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
         List<String> expected = Arrays.asList("lisjp", "db", "doi");
         Collections.sort(expected);

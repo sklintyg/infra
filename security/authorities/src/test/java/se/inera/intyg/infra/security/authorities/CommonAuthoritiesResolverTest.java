@@ -31,14 +31,15 @@ public class CommonAuthoritiesResolverTest {
 
     private static final String authoritiesConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
     private static final String featuresConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
+    private static final Integer defaultMaxAliasesForCollections = 300;
 
     private static final SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationLocation,
-        featuresConfigurationLocation);
+        featuresConfigurationLocation, defaultMaxAliasesForCollections);
 
     private static final CommonAuthoritiesResolver commonAuthoritiesResolver = new CommonAuthoritiesResolver();
 
     @BeforeClass
-    public static void setupAuthoritiesConfiguration() throws Exception {
+    public static void setupAuthoritiesConfiguration() {
         // Load configuration
         configurationLoader.afterPropertiesSet();
 

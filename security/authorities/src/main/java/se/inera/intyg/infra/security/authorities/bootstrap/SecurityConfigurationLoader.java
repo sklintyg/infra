@@ -44,6 +44,9 @@ import se.inera.intyg.infra.security.authorities.FeaturesConfiguration;
 @Component("AuthoritiesConfigurationLoader")
 public class SecurityConfigurationLoader extends YamlPropertiesFactoryBean implements InitializingBean {
 
+    @Value("${max.aliases.for.collections:300}")
+    private Integer maxAliasesForCollections;
+
     @Value("${authorities.configuration.file}")
     private String authoritiesConfigurationFile;
 
@@ -62,11 +65,14 @@ public class SecurityConfigurationLoader extends YamlPropertiesFactoryBean imple
      *
      * @param authoritiesConfigurationFile path to YAML configuration file
      */
-    public SecurityConfigurationLoader(String authoritiesConfigurationFile, String featuresConfigurationFile) {
+    public SecurityConfigurationLoader(String authoritiesConfigurationFile, String featuresConfigurationFile,
+        Integer maxAliasesForCollections) {
         Assert.notNull(authoritiesConfigurationFile, "Authorities configuration file must not be null");
         Assert.notNull(featuresConfigurationFile, "Features configuration file must not be null");
+        Assert.notNull(maxAliasesForCollections, "Configuration maxAliasesForCollections must not be null");
         this.authoritiesConfigurationFile = authoritiesConfigurationFile;
         this.featuresConfigurationFile = featuresConfigurationFile;
+        this.maxAliasesForCollections = maxAliasesForCollections;
     }
 
     /**
@@ -77,7 +83,7 @@ public class SecurityConfigurationLoader extends YamlPropertiesFactoryBean imple
      * possible when all bean properties have been set and to throw an
      * exception in the event of misconfiguration.
      *
-     * @throws Exception in the event of misconfiguration (such
+     * @throws AuthoritiesException in the event of misconfiguration (such
      * as failure to set an essential property) or if initialization fails.
      */
     @Override
@@ -108,7 +114,7 @@ public class SecurityConfigurationLoader extends YamlPropertiesFactoryBean imple
 
     private <T> T loadConfiguration(String location, Class<T> type) {
         final var loaderOptions = new LoaderOptions();
-        loaderOptions.setMaxAliasesForCollections(500);
+        loaderOptions.setMaxAliasesForCollections(maxAliasesForCollections);
         Yaml yaml = new Yaml(loaderOptions);
         try {
             return yaml.loadAs(getResource(location).getInputStream(), type);
