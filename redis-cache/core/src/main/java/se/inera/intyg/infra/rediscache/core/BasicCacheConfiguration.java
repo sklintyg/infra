@@ -57,9 +57,9 @@ public class BasicCacheConfiguration {
     @Value("${redis.sentinel.master.name}")
     String redisSentinelMasterName;
 
-    @Value("${redis.cluster.nodes}")
+    @Value("${redis.cluster.nodes:}")
     String redisClusterNodes;
-    @Value("${redis.cluster.password}")
+    @Value("${redis.cluster.password:}")
     String redisClusterPassword;
     @Value("${redis.cluster.max.redirects:3}")
     Integer redisClusterMaxRedirects;
