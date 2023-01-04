@@ -22,7 +22,6 @@ ext {
     commonsIoVersion = "2.11.0"
     commonsCollectionsVersion = "4.4"
     cxfVersion = "3.5.5"
-    cxfPluginVersion = "4.0.0"
     embeddedRedisVersion = "0.7.2"
     guavaVersion = "31.1-jre"
     jakartaJwsApiVersion = "3.0.0"
