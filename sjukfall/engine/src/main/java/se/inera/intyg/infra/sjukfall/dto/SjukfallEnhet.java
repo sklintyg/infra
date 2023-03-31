@@ -178,7 +178,7 @@ public class SjukfallEnhet {
             return false;
         }
         final SjukfallEnhet that = (SjukfallEnhet) o;
-        return intyg == that.intyg && aktivGrad == that.aktivGrad && Objects.equals(vardgivare,
+        return dagar == that.dagar && intyg == that.intyg && aktivGrad == that.aktivGrad && Objects.equals(vardgivare,
             that.vardgivare) && Objects.equals(vardenhet, that.vardenhet) && Objects.equals(lakare, that.lakare)
             && Objects.equals(patient, that.patient) && Objects.equals(diagnosKod, that.diagnosKod)
             && Objects.equals(biDiagnoser, that.biDiagnoser) && Objects.equals(start, that.start)
