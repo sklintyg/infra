@@ -49,7 +49,7 @@ public final class LakareT {
 
         @Override
         public Lakare build() {
-            Lakare lakare = new Lakare(hsaId, fullstandigtNamn);
+            Lakare lakare = Lakare.create(hsaId, fullstandigtNamn);
             return lakare;
         }
     }

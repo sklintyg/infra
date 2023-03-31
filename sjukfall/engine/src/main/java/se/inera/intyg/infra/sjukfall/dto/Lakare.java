@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.sjukfall.dto;
 
+import java.util.Objects;
+
 /**
  * @author Magnus Ekstrand on 2017-02-10.
  */
@@ -26,9 +28,11 @@ public class Lakare {
     private String id;
     private String namn;
 
-    public Lakare(String lakareId, String lakareNamn) {
-        this.id = lakareId;
-        this.namn = lakareNamn;
+    public static Lakare create(String lakareId, String lakareNamn) {
+        final var lakare = new Lakare();
+        lakare.id = lakareId;
+        lakare.namn = lakareNamn;
+        return lakare;
     }
 
     public String getId() {
@@ -39,4 +43,36 @@ public class Lakare {
         return namn;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setNamn(String namn) {
+        this.namn = namn;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Lakare lakare = (Lakare) o;
+        return Objects.equals(id, lakare.id) && Objects.equals(namn, lakare.namn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, namn);
+    }
+
+    @Override
+    public String toString() {
+        return "Lakare{"
+            + "id='" + id + '\''
+            + ", namn='" + namn + '\''
+            + '}';
+    }
 }
