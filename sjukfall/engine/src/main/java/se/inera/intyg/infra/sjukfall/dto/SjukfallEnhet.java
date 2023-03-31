@@ -21,6 +21,7 @@ package se.inera.intyg.infra.sjukfall.dto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Magnus Ekstrand on 2017-02-10.
@@ -166,5 +167,49 @@ public class SjukfallEnhet {
 
     public void setIntygLista(List<String> intygLista) {
         this.intygLista = intygLista;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final SjukfallEnhet that = (SjukfallEnhet) o;
+        return intyg == that.intyg && aktivGrad == that.aktivGrad && Objects.equals(vardgivare,
+            that.vardgivare) && Objects.equals(vardenhet, that.vardenhet) && Objects.equals(lakare, that.lakare)
+            && Objects.equals(patient, that.patient) && Objects.equals(diagnosKod, that.diagnosKod)
+            && Objects.equals(biDiagnoser, that.biDiagnoser) && Objects.equals(start, that.start)
+            && Objects.equals(slut, that.slut) && Objects.equals(intygLista, that.intygLista) && Objects.equals(
+            grader, that.grader) && Objects.equals(aktivIntygsId, that.aktivIntygsId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(vardgivare, vardenhet, lakare, patient, diagnosKod, biDiagnoser, start, slut, dagar, intyg, intygLista,
+            aktivGrad,
+            grader, aktivIntygsId);
+    }
+
+    @Override
+    public String toString() {
+        return "SjukfallEnhet{"
+            + "vardgivare=" + vardgivare
+            + ", vardenhet=" + vardenhet
+            + ", lakare=" + lakare
+            + ", patient=" + patient
+            + ", diagnosKod=" + diagnosKod
+            + ", biDiagnoser=" + biDiagnoser
+            + ", start=" + start
+            + ", slut=" + slut
+            + ", dagar=" + dagar
+            + ", intyg=" + intyg
+            + ", intygLista=" + intygLista
+            + ", aktivGrad=" + aktivGrad
+            + ", grader=" + grader
+            + ", aktivIntygsId='" + aktivIntygsId + '\''
+            + '}';
     }
 }

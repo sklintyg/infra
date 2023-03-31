@@ -48,7 +48,7 @@ public final class VardenhetT {
 
         @Override
         public Vardenhet build() {
-            Vardenhet enhet = new Vardenhet(enhetsId, enhetsnamn);
+            Vardenhet enhet = Vardenhet.create(enhetsId, enhetsnamn);
             return enhet;
         }
     }

@@ -40,7 +40,7 @@ public class DiagnosKodTest {
 
     @Test
     public void testSplitNormalDignosKod() {
-        DiagnosKod kod = new DiagnosKod("M123   Palindrom reumatism");
+        DiagnosKod kod = DiagnosKod.create("M123   Palindrom reumatism");
 
         assertEquals("M123", kod.getCleanedCode());
         assertEquals("Palindrom reumatism", kod.getName());
@@ -48,7 +48,7 @@ public class DiagnosKodTest {
 
     @Test
     public void testSplitToShortDiagnosKod() {
-        DiagnosKod kod = new DiagnosKod("M123");
+        DiagnosKod kod = DiagnosKod.create("M123");
 
         assertEquals("M123", kod.getCleanedCode());
         assertNull(kod.getName());
@@ -56,12 +56,12 @@ public class DiagnosKodTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testEmptyDiagnosKod() {
-        DiagnosKod kod = new DiagnosKod("");
+        DiagnosKod kod = DiagnosKod.create("");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNullDiagnosKod() {
-        DiagnosKod kod = new DiagnosKod(null);
+        DiagnosKod kod = DiagnosKod.create(null);
     }
 
 }

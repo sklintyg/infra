@@ -158,7 +158,7 @@ public final class IntygDataT {
         }
 
         private DiagnosKod createDiagnosKod(String diagnoskod) {
-            return new DiagnosKod(this.diagnoskod);
+            return DiagnosKod.create(this.diagnoskod);
         }
 
         private List<DiagnosKod> createDiagnosKoder(List<String> diagnosKoder) {
@@ -166,7 +166,7 @@ public final class IntygDataT {
                 return new ArrayList<>();
             }
 
-            return diagnosKoder.stream().map(DiagnosKod::new).collect(Collectors.toList());
+            return diagnosKoder.stream().map(DiagnosKod::create).collect(Collectors.toList());
         }
     }
 }

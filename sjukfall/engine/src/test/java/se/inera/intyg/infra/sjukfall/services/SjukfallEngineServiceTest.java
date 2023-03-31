@@ -274,9 +274,9 @@ public class SjukfallEngineServiceTest {
         @Override
         protected SjukfallEnhet buildSjukfallEnhet(List<SjukfallIntyg> values, SjukfallIntyg aktivtIntyg, LocalDate aktivtDatum,
             IntygParametrar intygParameters) {
-            Vardgivare vardgivare = new Vardgivare(" IFV1239877878-0000 ", "Webcert-Vårdgivare1");
-            Vardenhet vardenhet = new Vardenhet(" IFV1239877878-1045 ", "Webcert-Enhet2");
-            Lakare lakare = new Lakare(aktivtIntyg.getLakareId(), aktivtIntyg.getLakareNamn());
+            Vardgivare vardgivare = Vardgivare.create(" IFV1239877878-0000 ", "Webcert-Vårdgivare1");
+            Vardenhet vardenhet = Vardenhet.create(" IFV1239877878-1045 ", "Webcert-Enhet2");
+            Lakare lakare = Lakare.create(aktivtIntyg.getLakareId(), aktivtIntyg.getLakareNamn());
 
             SjukfallEnhet sjukfallEnhet = super.buildSjukfallEnhet(values, aktivtIntyg, aktivtDatum, intygParameters);
             sjukfallEnhet.setVardgivare(vardgivare);
