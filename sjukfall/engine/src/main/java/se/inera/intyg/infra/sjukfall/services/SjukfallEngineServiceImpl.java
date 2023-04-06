@@ -170,7 +170,7 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
         String id = StringUtils.trim(sjukfallIntyg.getPatientId());
         String namn = sjukfallIntyg.getPatientNamn();
 
-        return new Patient(id, namn);
+        return Patient.create(id, namn);
     }
 
     private List<SjukfallEnhet> assembleSjukfallEnhetList(Map<String, List<SjukfallIntyg>> intygsData, LocalDate aktivtDatum,
@@ -219,15 +219,15 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
     }
 
     private Vardgivare getVardgivare(SjukfallIntyg sjukfallIntyg) {
-        return new Vardgivare(sjukfallIntyg.getVardgivareId(), sjukfallIntyg.getVardgivareNamn());
+        return Vardgivare.create(sjukfallIntyg.getVardgivareId(), sjukfallIntyg.getVardgivareNamn());
     }
 
     private Vardenhet getVardenhet(SjukfallIntyg sjukfallIntyg) {
-        return new Vardenhet(sjukfallIntyg.getVardenhetId(), sjukfallIntyg.getVardenhetNamn());
+        return Vardenhet.create(sjukfallIntyg.getVardenhetId(), sjukfallIntyg.getVardenhetNamn());
     }
 
     private Lakare getLakare(SjukfallIntyg sjukfallIntyg) {
-        return new Lakare(sjukfallIntyg.getLakareId(), sjukfallIntyg.getLakareNamn());
+        return Lakare.create(sjukfallIntyg.getLakareId(), sjukfallIntyg.getLakareNamn());
     }
 
     private Integer getAktivGrad(List<Formaga> list, LocalDate aktivtDatum) {

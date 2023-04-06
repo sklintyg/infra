@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.sjukfall.dto;
 
+import java.util.Objects;
+
 /**
  * @author Magnus Ekstrand on 2017-02-10.
  */
@@ -26,9 +28,11 @@ public class Vardgivare {
     private String id;
     private String namn;
 
-    public Vardgivare(String vardgivareId, String vardgivareNamn) {
-        this.id = vardgivareId;
-        this.namn = vardgivareNamn;
+    public static Vardgivare create(String vardgivareId, String vardgivareNamn) {
+        final var vardgivare = new Vardgivare();
+        vardgivare.id = vardgivareId;
+        vardgivare.namn = vardgivareNamn;
+        return vardgivare;
     }
 
     public String getId() {
@@ -39,4 +43,28 @@ public class Vardgivare {
         return this.namn;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Vardgivare that = (Vardgivare) o;
+        return Objects.equals(id, that.id) && Objects.equals(namn, that.namn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, namn);
+    }
+
+    @Override
+    public String toString() {
+        return "Vardgivare{"
+            + "id='" + id + '\''
+            + ", namn='" + namn + '\''
+            + '}';
+    }
 }

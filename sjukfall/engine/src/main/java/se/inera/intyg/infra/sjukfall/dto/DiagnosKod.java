@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.infra.sjukfall.dto;
 
+import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -31,18 +32,19 @@ public class DiagnosKod {
     private String cleanedCode;
     private String name;
 
-    public DiagnosKod(String originalCode) {
+    public static DiagnosKod create(String originalCode) {
+        final var diagnosKod = new DiagnosKod();
         if (StringUtils.isBlank(originalCode)) {
             throw new IllegalArgumentException("Argument 'originalCode' in call to DiagnosKod is either empty, null or blank");
         }
-
-        this.originalCode = originalCode;
-        if (this.originalCode.length() >= KOD_LENGTH) {
-            this.cleanedCode = cleanKod(this.originalCode.substring(0, KOD_LENGTH));
-            this.name = this.originalCode.substring(KOD_LENGTH).trim();
+        diagnosKod.originalCode = originalCode;
+        if (diagnosKod.originalCode.length() >= KOD_LENGTH) {
+            diagnosKod.cleanedCode = cleanKod(diagnosKod.originalCode.substring(0, KOD_LENGTH));
+            diagnosKod.name = diagnosKod.originalCode.substring(KOD_LENGTH).trim();
         } else {
-            this.cleanedCode = cleanKod(this.originalCode);
+            diagnosKod.cleanedCode = cleanKod(diagnosKod.originalCode);
         }
+        return diagnosKod;
     }
 
     public String getOriginalCode() {
@@ -60,5 +62,32 @@ public class DiagnosKod {
     public static String cleanKod(String kod) {
         String cleanedKod = kod.trim().toUpperCase();
         return cleanedKod.replaceAll("[^A-Z0-9\\-]", "");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final DiagnosKod that = (DiagnosKod) o;
+        return Objects.equals(originalCode, that.originalCode) && Objects.equals(cleanedCode, that.cleanedCode)
+            && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(originalCode, cleanedCode, name);
+    }
+
+    @Override
+    public String toString() {
+        return "DiagnosKod{"
+            + "originalCode='" + originalCode + '\''
+            + ", cleanedCode='" + cleanedCode + '\''
+            + ", name='" + name + '\''
+            + '}';
     }
 }

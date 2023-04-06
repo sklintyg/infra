@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.sjukfall.dto;
 
+import java.util.Objects;
+
 /**
  * @author Magnus Ekstrand on 2017-02-10.
  */
@@ -26,9 +28,11 @@ public class Patient {
     private String id;
     private String namn;
 
-    public Patient(String id, String namn) {
-        this.id = id;
-        this.namn = namn;
+    public static Patient create(String id, String namn) {
+        final var patient = new Patient();
+        patient.id = id;
+        patient.namn = namn;
+        return patient;
     }
 
     // getters and setters
@@ -41,4 +45,28 @@ public class Patient {
         return namn;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Patient patient = (Patient) o;
+        return Objects.equals(id, patient.id) && Objects.equals(namn, patient.namn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, namn);
+    }
+
+    @Override
+    public String toString() {
+        return "Patient{"
+            + "id='" + id + '\''
+            + ", namn='" + namn + '\''
+            + '}';
+    }
 }

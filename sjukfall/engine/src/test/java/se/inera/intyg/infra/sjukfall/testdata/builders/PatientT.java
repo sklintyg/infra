@@ -48,7 +48,7 @@ public final class PatientT {
 
         @Override
         public Patient build() {
-            Patient patient = new Patient(patientId, patientNamn);
+            Patient patient = Patient.create(patientId, patientNamn);
             return patient;
         }
     }
