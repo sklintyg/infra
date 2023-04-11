@@ -149,4 +149,13 @@ public class DiagnosKapitel {
     private static boolean isNullOrEmpty(String string) {
         return string == null || string.length() == 0;
     }
+
+    @Override
+    public String toString() {
+        return "DiagnosKapitel{"
+            + "from=" + from
+            + ", to=" + to
+            + ", name='" + name + '\''
+            + '}';
+    }
 }
