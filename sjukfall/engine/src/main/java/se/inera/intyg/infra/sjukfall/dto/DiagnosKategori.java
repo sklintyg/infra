@@ -40,6 +40,9 @@ public class DiagnosKategori {
         this.number = number;
     }
 
+    public DiagnosKategori() {
+    }
+
     public char getLetter() {
         return letter;
     }
