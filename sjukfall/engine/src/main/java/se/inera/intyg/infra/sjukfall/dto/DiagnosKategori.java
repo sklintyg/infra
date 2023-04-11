@@ -86,4 +86,12 @@ public class DiagnosKategori {
     private static boolean isNullOrEmpty(String string) {
         return string == null || string.length() == 0;
     }
+
+    @Override
+    public String toString() {
+        return "DiagnosKategori{"
+            + "letter=" + letter
+            + ", number=" + number
+            + '}';
+    }
 }
