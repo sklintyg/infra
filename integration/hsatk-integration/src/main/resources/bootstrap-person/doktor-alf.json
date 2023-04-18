@@ -3,6 +3,7 @@
   "givenName": "Alf",
   "middleAndSurname": "Doktor",
   "protectedPerson": true,
+  "systemRoles": ["INTYG;Rehab-TSTNMT2321000156-ALMC"],
   "healthCareProfessionalLicence": [
     "Läkare"
   ],

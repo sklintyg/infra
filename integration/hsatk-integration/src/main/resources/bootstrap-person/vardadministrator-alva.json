@@ -2,6 +2,7 @@
     "hsaId": "TSTNMT2321000156-VAAA",
     "givenName": "Alva",
     "middleAndSurname": "Vårdadministratör",
+    "systemRoles": ["INTYG;Rehab-TSTNMT2321000156-ALMC"],
     "commissionList": [
       {
         "healthCareUnitHsaId": "TSTNMT2321000156-ALVC",
