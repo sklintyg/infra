@@ -121,6 +121,7 @@ public class SjukfallEngineServiceImpl implements SjukfallEngineService {
             sjukfallEnhet.setAktivGrad(getAktivGrad(aktivtIntyg.getFormagor(), aktivtDatum));
         }
         sjukfallEnhet.setAktivIntygsId(aktivtIntyg.getIntygId());
+        sjukfallEnhet.setSysselsattning(aktivtIntyg.getSysselsattning());
         return sjukfallEnhet;
     }
 

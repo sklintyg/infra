@@ -49,6 +49,8 @@ public class SjukfallIntyg extends IntygData {
 
     private boolean nyligenAvslutat;
 
+    private List<String> sysselsattning;
+
     public SjukfallIntyg(SjukfallIntygBuilder builder) {
         super();
 
@@ -58,7 +60,7 @@ public class SjukfallIntyg extends IntygData {
         this.nyligenAvslutat = builder.nyligenAvslutat;
         this.dagar = builder.dagar;
         this.grader = builder.grader;
-
+        this.sysselsattning = builder.sysselsattning;
         this.setSysselsattning(builder.sysselsattning);
 
         this.setIntygId(builder.intygData.getIntygId());
@@ -145,7 +147,7 @@ public class SjukfallIntyg extends IntygData {
         private boolean aktivtIntyg;
 
         private boolean nyligenAvslutat;
-
+        
         public SjukfallIntygBuilder(IntygData intygData, LocalDate aktivtDatum, int maxAntalDagarSedanSjukfallAvslut) {
             this.intygData = intygData;
             this.startDatum = lookupStartDatum(intygData.getFormagor());

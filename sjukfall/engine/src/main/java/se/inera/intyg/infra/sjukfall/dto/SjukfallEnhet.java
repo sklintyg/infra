@@ -55,7 +55,18 @@ public class SjukfallEnhet {
     // ID för aktivt intyg.
     private String aktivIntygsId;
 
+    private List<String> sysselsattning;
+
     // getters and setters
+
+
+    public List<String> getSysselsattning() {
+        return sysselsattning;
+    }
+
+    public void setSysselsattning(List<String> sysselsattning) {
+        this.sysselsattning = sysselsattning;
+    }
 
     public Vardgivare getVardgivare() {
         return vardgivare;
