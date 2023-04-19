@@ -20,6 +20,7 @@ package se.inera.intyg.infra.sjukfall.services;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -169,6 +170,11 @@ public class SjukfallEngineServiceTest {
 
         assertSjukfallPatient(sjukfallListPatient.get(0), "2016-02-15", "2016-03-04", 3, 19);
         assertSjukfallPatient(sjukfallListPatient.get(1), "2016-02-01", "2016-02-05", 1, 5);
+    }
+
+    @Test
+    public void shouldContainSysselsattning() {
+        assertNotNull(sjukfallListUnit.get(0).getSysselsattning());
     }
 
     // - - -  Private scope  - - -
