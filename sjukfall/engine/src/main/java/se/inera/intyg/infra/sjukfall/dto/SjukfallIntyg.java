@@ -147,8 +147,7 @@ public class SjukfallIntyg extends IntygData {
         private boolean aktivtIntyg;
 
         private boolean nyligenAvslutat;
-
-
+        
         public SjukfallIntygBuilder(IntygData intygData, LocalDate aktivtDatum, int maxAntalDagarSedanSjukfallAvslut) {
             this.intygData = intygData;
             this.startDatum = lookupStartDatum(intygData.getFormagor());
