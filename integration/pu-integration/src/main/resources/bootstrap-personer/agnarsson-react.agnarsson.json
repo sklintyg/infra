@@ -1,0 +1,26 @@
+{
+  "personalIdentity": {
+    "extension": "198901192396"
+  },
+  "protectedPersonIndicator": false,
+  "testIndicator": false,
+  "primaryIdentity": false,
+  "name": {
+    "givenName": {
+      "name": "Agnarsson"
+    },
+    "middleName": {
+      "name": "React"
+    },
+    "surname": {
+      "name": "Agnarsson"
+    }
+  },
+  "addressInformation": {
+    "residentialAddress": {
+      "postalAddress2": "Grekstigen 90",
+      "postalCode": 65340,
+      "city": "Karlstad"
+    }
+  }
+}

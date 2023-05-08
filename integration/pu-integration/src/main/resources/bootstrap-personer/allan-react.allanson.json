@@ -1,0 +1,26 @@
+{
+  "personalIdentity": {
+    "extension": "199606282391"
+  },
+  "protectedPersonIndicator": false,
+  "testIndicator": false,
+  "primaryIdentity": false,
+  "name": {
+    "givenName": {
+      "name": "Allan"
+    },
+    "middleName": {
+      "name": "React"
+    },
+    "surname": {
+      "name": "Allanson"
+    }
+  },
+  "addressInformation": {
+    "residentialAddress": {
+      "postalAddress2": "Grekstigen 90",
+      "postalCode": 65340,
+      "city": "Karlstad"
+    }
+  }
+}
