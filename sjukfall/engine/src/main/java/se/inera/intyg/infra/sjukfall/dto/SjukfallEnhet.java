@@ -28,6 +28,7 @@ import java.util.Objects;
  */
 public class SjukfallEnhet {
 
+    private String rekoStatus;
     private Vardgivare vardgivare;
     private Vardenhet vardenhet;
     private Lakare lakare;
@@ -59,6 +60,13 @@ public class SjukfallEnhet {
 
     // getters and setters
 
+    public String getRekoStatus() {
+        return rekoStatus;
+    }
+
+    public void setRekoStatus(String rekoStatus) {
+        this.rekoStatus = rekoStatus;
+    }
 
     public List<String> getSysselsattning() {
         return sysselsattning;
