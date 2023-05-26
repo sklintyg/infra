@@ -28,7 +28,7 @@ import java.util.Objects;
  */
 public class SjukfallEnhet {
 
-    private String rekoStatus;
+    private RekoStatusDTO rekoStatus;
     private Vardgivare vardgivare;
     private Vardenhet vardenhet;
     private Lakare lakare;
@@ -60,11 +60,11 @@ public class SjukfallEnhet {
 
     // getters and setters
 
-    public String getRekoStatus() {
+    public RekoStatusDTO getRekoStatus() {
         return rekoStatus;
     }
 
-    public void setRekoStatus(String rekoStatus) {
+    public void setRekoStatus(RekoStatusDTO rekoStatus) {
         this.rekoStatus = rekoStatus;
     }
 
