@@ -23,19 +23,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RekoStatusDTO {
-    private RekoStatusTypeDTO status;
-    private String patientId;
-    private String careProviderId;
-    private String careUnitId;
-    private String unitId;
-    private String staffId;
-    private String staffName;
-    private LocalDateTime sickLeaveTimestamp;
-    private LocalDateTime registrationTimestamp;
+public class RekoStatusTypeDTO {
+    private String id;
+    private String name;
 }
