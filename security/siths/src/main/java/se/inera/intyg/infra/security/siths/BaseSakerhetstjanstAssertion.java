@@ -39,9 +39,13 @@ public class BaseSakerhetstjanstAssertion {
 
     // Användarens HSA-ID, legacy.
     public static final String HSA_ID_ATTRIBUTE_LEGACY = "urn:sambi:names:attribute:employeeHsaId";
+    
+    public static final String IDENTITY_PROVIDER_FOR_SIGN_ATTRIBUTE = "urn:identityProviderForSign";
 
     private String hsaId;
     private String authenticationScheme;
+
+    private String identityProviderForSign;
 
     /* Constructor taking an Assertion object */
     public BaseSakerhetstjanstAssertion(Assertion assertion) {
@@ -73,6 +77,10 @@ public class BaseSakerhetstjanstAssertion {
         return authenticationScheme;
     }
 
+    public String getIdentityProviderForSign() {
+        return identityProviderForSign;
+    }
+
     // - - - - - Private scope - - - - -
 
     private void extractAttributes(List<Attribute> attributes) {
@@ -88,6 +96,9 @@ public class BaseSakerhetstjanstAssertion {
                     if (val != null && hsaId == null) {
                         hsaId = val;
                     }
+                    break;
+                case IDENTITY_PROVIDER_FOR_SIGN_ATTRIBUTE:
+                    identityProviderForSign = getValue(attribute);
                     break;
                 default:
                     // Ignore.
