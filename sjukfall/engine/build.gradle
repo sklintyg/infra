@@ -1,5 +1,5 @@
 dependencies {
-    compile "org.apache.commons:commons-lang3"
-    compile "ch.qos.logback:logback-classic"
-    compile "org.springframework:spring-context"
+    implementation "org.apache.commons:commons-lang3"
+    implementation "ch.qos.logback:logback-classic"
+    implementation "org.springframework:spring-context"
 }

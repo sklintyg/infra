@@ -1,6 +1,6 @@
 plugins {
-    id "se.inera.intyg.plugin.common" version "3.2.7" apply false
-    id "io.spring.dependency-management" version "1.0.13.RELEASE"
+    id "se.inera.intyg.plugin.common" version "3.2.9-SNAPSHOT" apply false
+    id "io.spring.dependency-management" version "1.1.0"
     id 'idea'
 }
 
@@ -21,7 +21,7 @@ ext {
 
     commonsIoVersion = "2.11.0"
     commonsCollectionsVersion = "4.4"
-    cxfVersion = "3.5.5"
+    cxfVersion = "3.6.1"
     embeddedRedisVersion = "0.7.2"
     guavaVersion = "31.1-jre"
     jakartaJwsApiVersion = "3.0.0"
@@ -34,12 +34,13 @@ ext {
     uapVersion = "1.5.3"
     xmlSecVersion = "3.0.1"
 
-    springbootMavenBomVersion = "2.7.6"
+    springbootMavenBomVersion = "2.7.13"
 }
 
 allprojects {
     apply plugin: 'se.inera.intyg.plugin.common'
-    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+    apply plugin: 'java-library'
 
     repositories {
         mavenLocal()
@@ -56,6 +57,9 @@ allprojects {
         useJUnitPlatform()
     }
 
+    test.dependsOn('createVersionPropertyFile')
+    compileTestJava.dependsOn('createVersionPropertyFile')
+
     apply plugin: "io.spring.dependency-management"
 
     dependencyManagement {
@@ -65,10 +69,10 @@ allprojects {
     }
 
     dependencies {
-        compile "javax.annotation:javax.annotation-api"
-        compile "jakarta.xml.bind:jakarta.xml.bind-api"
-        compile "jakarta.xml.ws:jakarta.xml.ws-api"
-        compile "jakarta.jws:jakarta.jws-api:${jakartaJwsApiVersion}"
+        implementation "javax.annotation:javax.annotation-api"
+        implementation "jakarta.xml.bind:jakarta.xml.bind-api"
+        implementation "jakarta.xml.ws:jakarta.xml.ws-api"
+        implementation "jakarta.jws:jakarta.jws-api:${jakartaJwsApiVersion}"
 
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
@@ -76,15 +80,15 @@ allprojects {
         testCompileOnly 'org.projectlombok:lombok'
         testAnnotationProcessor 'org.projectlombok:lombok'
 
-        testCompile "org.glassfish.jaxb:jaxb-runtime"
-        testCompile "com.sun.xml.messaging.saaj:saaj-impl"
+        testImplementation "org.glassfish.jaxb:jaxb-runtime"
+        testImplementation "com.sun.xml.messaging.saaj:saaj-impl"
 
-        testCompile "junit:junit"
-        testCompile "org.junit.jupiter:junit-jupiter-api"
-        testCompile "org.junit.jupiter:junit-jupiter-params"
-        testCompile "org.mockito:mockito-junit-jupiter"
-        testCompile "org.springframework:spring-test"
-        testCompile "org.mockito:mockito-core"
+        testImplementation "junit:junit"
+        testImplementation "org.junit.jupiter:junit-jupiter-api"
+        testImplementation "org.junit.jupiter:junit-jupiter-params"
+        testImplementation "org.mockito:mockito-junit-jupiter"
+        testImplementation "org.springframework:spring-test"
+        testImplementation "org.mockito:mockito-core"
 
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
         testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
@@ -98,13 +102,33 @@ allprojects {
     sourceCompatibility = 11
     targetCompatibility = 11
 
-    task createVersionPropertyFile(type: VersionPropertyFileTask)
+    tasks.register('createVersionPropertyFile', VersionPropertyFileTask)
 
-    uploadArchives.repositories.mavenDeployer {
-        repository(url: "https://nexus.drift.inera.se/repository/maven-releases/") {
-            authentication(userName: System.properties['ineraNexusUsername'], password: System.properties['ineraNexusPassword'])
+    tasks.register('install') {
+        description("Publishes artifact to local maven repository.")
+        dependsOn(publishToMavenLocal)
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from components.java
+            }
+        }
+        repositories.maven {
+            url = uri("https://nexus.drift.inera.se/repository/maven-releases/")
+            credentials {
+                username = System.properties['ineraNexusUsername']
+                password = System.properties['ineraNexusPassword']
+            }
         }
     }
 }
 
-task tagRelease(type: TagReleaseTask)
+clean {
+    setDelete(fileTree(buildDir) {
+        exclude("/tmp/.cache/expanded/expanded.lock")
+    })
+}
+
+tasks.register('tagRelease', TagReleaseTask)

@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -48,7 +48,7 @@ public class SjukfallIntygPatientResolverTest {
 
     private static List<IntygData> intygDataList;
 
-    private LocalDate activeDate = LocalDate.parse("2016-02-16");
+    private final LocalDate activeDate = LocalDate.parse("2016-02-16");
 
     @Spy
     private SjukfallIntygPatientCreator creatorSpy;
@@ -61,7 +61,7 @@ public class SjukfallIntygPatientResolverTest {
         SjukfallIntygGenerator generator = new SjukfallIntygGenerator(LOCATION_INTYGSDATA);
         intygDataList = generator.generate().get();
 
-        assertTrue("Expected 5 but was " + intygDataList.size(), intygDataList.size() == 5);
+        assertEquals("Expected 5 but was " + intygDataList.size(), 5, intygDataList.size());
     }
 
 
@@ -85,14 +85,12 @@ public class SjukfallIntygPatientResolverTest {
     @Test
     public void testInvalidArgumentIntygsData() {
         Map<Integer, List<SjukfallIntyg>> map = testee.resolve(new ArrayList<>(), 0, activeDate);
-        assertTrue("Expected 0 but was " + map.size(), map.size() == 0);
+        assertEquals("Expected 0 but was " + map.size(), 0, map.size());
     }
 
     @Test
     public void testInvalidArgumentIntygsGlapp() {
         Map<Integer, List<SjukfallIntyg>> map = testee.resolve(intygDataList, -1, activeDate);
-        assertTrue("Expected 0 but was " + map.size(), map.size() == 0);
+        assertEquals("Expected 0 but was " + map.size(), 0, map.size());
     }
-
-
 }

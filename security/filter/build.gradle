@@ -18,15 +18,15 @@
  */
 
 dependencies {
-    compile "org.slf4j:slf4j-api"
-    compile "org.springframework:spring-web"
-    compile "org.springframework.security:spring-security-web"
+    implementation "org.slf4j:slf4j-api"
+    implementation "org.springframework:spring-web"
+    implementation "org.springframework.security:spring-security-web"
 
-    compile "javax.servlet:javax.servlet-api"
+    implementation "javax.servlet:javax.servlet-api"
 
-    compile "com.google.guava:guava:${guavaVersion}"
+    implementation "com.google.guava:guava:${guavaVersion}"
 
-    testCompile "org.hamcrest:hamcrest"
-    testCompile "org.hamcrest:hamcrest-library"
-    testCompile "org.mockito:mockito-core"
+    testImplementation "org.hamcrest:hamcrest"
+    testImplementation "org.hamcrest:hamcrest-library"
+    testImplementation "org.mockito:mockito-core"
 }

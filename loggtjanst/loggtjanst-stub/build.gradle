@@ -1,13 +1,13 @@
 dependencies {
-  compile project(':common-redis-cache-core')
+  api project(':common-redis-cache-core')
 
-  compile "org.springframework.data:spring-data-redis"
+  implementation "org.springframework.data:spring-data-redis"
 
-  compile "se.riv.informationsecurity.auditing.log:informationsecurity-auditing-log-schemas:${rivtaStoreLogSchemasVersion}"
+  implementation "se.riv.informationsecurity.auditing.log:informationsecurity-auditing-log-schemas:${rivtaStoreLogSchemasVersion}"
 
-  compile "com.fasterxml.jackson.core:jackson-databind"
-  compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
-  compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-  compile "org.springframework:spring-context"
-  compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+  implementation "com.fasterxml.jackson.core:jackson-databind"
+  implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
+  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+  implementation "org.springframework:spring-context"
+  implementation "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
 }

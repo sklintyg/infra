@@ -1,19 +1,17 @@
 
 dependencies {
-
   compileOnly project(":xmldsig")
 
-  compile "se.funktionstjanster.grp:funktionstjanster-grp-schemas:${funktionstjansterGrpSchemasVersion}"
+  implementation "se.funktionstjanster.grp:funktionstjanster-grp-schemas:${funktionstjansterGrpSchemasVersion}"
 
-  compile "org.springframework.security:spring-security-web"
+  implementation "ch.qos.logback:logback-classic"
 
-  compile "org.apache.commons:commons-lang3"
-  compile "ch.qos.logback:logback-classic"
-  compile "com.google.guava:guava:${guavaVersion}"
+  implementation "com.fasterxml.jackson.core:jackson-databind"
+  implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
+  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+  implementation "com.google.guava:guava:${guavaVersion}"
 
-  compile "com.fasterxml.jackson.core:jackson-databind"
-  compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
-  compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-
-  compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+  implementation "org.apache.commons:commons-lang3"
+  implementation "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+  implementation "org.springframework.security:spring-security-web"
 }

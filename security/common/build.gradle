@@ -1,15 +1,14 @@
 dependencies {
-    compile project(':hsatk-integration')
+    api project(':hsatk-integration')
 
-    compile "com.fasterxml.jackson.core:jackson-annotations"
-    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
+    implementation "com.fasterxml.jackson.core:jackson-annotations"
+    api "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
 
-
-    compile "org.springframework:spring-context"
-    compile "org.springframework.session:spring-session-core"
-    compile "org.slf4j:slf4j-api"
+    implementation "org.springframework:spring-context"
+    implementation "org.springframework.session:spring-session-core"
+    api "org.slf4j:slf4j-api"
 
     compileOnly "javax.servlet:javax.servlet-api"
 
-    testCompile "javax.servlet:javax.servlet-api"
+    testImplementation "javax.servlet:javax.servlet-api"
 }

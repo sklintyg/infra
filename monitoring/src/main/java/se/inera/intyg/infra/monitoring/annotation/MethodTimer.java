@@ -72,7 +72,7 @@ public class MethodTimer {
 
     PrometheusTimeMethod getAnnotation(final ProceedingJoinPoint pjp) {
         try {
-            final Class targetClass = pjp.getTarget().getClass();
+            final Class<?> targetClass = pjp.getTarget().getClass();
             final MethodSignature signature = (MethodSignature) pjp.getSignature();
             return findAnnotation(
                 targetClass.getDeclaredMethod(signature.getName(), signature.getParameterTypes()),

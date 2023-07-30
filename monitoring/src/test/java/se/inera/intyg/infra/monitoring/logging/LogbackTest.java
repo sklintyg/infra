@@ -80,7 +80,7 @@ public class LogbackTest {
             System.out.flush();
             System.setOut(old);
         }
-        return new String(out.toByteArray());
+        return out.toString();
     }
 
     @Test

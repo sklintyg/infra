@@ -1,20 +1,19 @@
 
 dependencies {
+  api project(':common-redis-cache-core')
 
-  compile project(':common-redis-cache-core')
+  implementation "org.springframework.data:spring-data-redis"
+  implementation "se.riv.strategicresourcemanagement.persons.person:strategicresourcemanagement-persons-person-schemas:${rivtaGetPersonsPersonSchemasVersion}"
 
-  compile "org.springframework.data:spring-data-redis"
-  compile "se.riv.strategicresourcemanagement.persons.person:strategicresourcemanagement-persons-person-schemas:${rivtaGetPersonsPersonSchemasVersion}"
+  implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
+  implementation "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+  implementation "org.apache.commons:commons-lang3"
+  implementation "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
+  runtimeOnly "org.springframework:spring-context-support"
 
-  compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
-  compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
-  compile "org.apache.commons:commons-lang3"
-  compile "org.apache.commons:commons-collections4:${commonsCollectionsVersion}"
-  runtime "org.springframework:spring-context-support"
+  testImplementation "org.springframework:spring-test"
+  testImplementation "org.hamcrest:hamcrest"
+  testImplementation "org.hamcrest:hamcrest-library"
 
-  testCompile "org.springframework:spring-test"
-  testCompile "org.hamcrest:hamcrest"
-  testCompile "org.hamcrest:hamcrest-library"
-
-  testCompile "it.ozimov:embedded-redis:${embeddedRedisVersion}"
+  testImplementation "it.ozimov:embedded-redis:${embeddedRedisVersion}"
 }
