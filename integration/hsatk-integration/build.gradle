@@ -9,8 +9,6 @@ if (project.hasProperty("codeQuality")) {
 }
 
 dependencies {
-    def schemasSupportVersion = "2.1.5"
-
     compile project(':common-redis-cache-core')
 
     compile "org.springframework.security:spring-security-web"

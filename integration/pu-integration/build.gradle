@@ -3,6 +3,8 @@ dependencies {
 
   compile project(':common-redis-cache-core')
 
+  implementation "com.fasterxml.jackson.core:jackson-databind"
+
   compile "org.springframework.data:spring-data-redis"
   compile "se.riv.strategicresourcemanagement.persons.person:strategicresourcemanagement-persons-person-schemas:${rivtaGetPersonsPersonSchemasVersion}"
 
