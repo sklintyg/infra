@@ -1,0 +1,11 @@
+dependencies {
+    compile project(':hsa-api-integration')
+
+    compileOnly 'org.projectlombok:lombok'
+
+    implementation "org.slf4j:slf4j-api:"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "org.springframework.security:spring-security-web"
+
+    testImplementation "org.springframework:spring-test"
+}
