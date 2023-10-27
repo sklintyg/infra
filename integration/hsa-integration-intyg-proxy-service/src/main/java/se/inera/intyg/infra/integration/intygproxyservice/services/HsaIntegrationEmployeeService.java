@@ -45,11 +45,11 @@ public class HsaIntegrationEmployeeService implements HsatkEmployeeService {
     }
 
     @Override
-    public List<PersonInformation> getEmployee(String personalIdentityNumber, String personHsaId, String profile) {
+    public List<PersonInformation> getEmployee(String personId, String personHsaId, String profile) {
         try {
             final var employee = hsaEmployeeClient.getEmployee(
                 GetEmployeeRequestDTO.builder()
-                    .personalIdentityNumber(personalIdentityNumber)
+                    .personId(personId)
                     .personHsaId(personHsaId)
                     .build()
             );

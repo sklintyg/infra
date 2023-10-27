@@ -26,6 +26,6 @@ import lombok.Value;
 @Builder
 public class GetEmployeeRequestDTO {
 
-    String personalIdentityNumber;
+    String personId;
     String personHsaId;
 }

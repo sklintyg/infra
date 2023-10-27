@@ -39,7 +39,7 @@ public class HsaEmployeeClient {
     private String intygProxyServiceBaseUrl;
 
     @Cacheable(cacheResolver = "hsaIntygProxyServiceCacheResolver",
-        key = "#getEmployeeRequestDTO.personHsaId + #getEmployeeRequestDTO.personalIdentityNumber", unless = "#result == null")
+        key = "#getEmployeeRequestDTO.personHsaId + #getEmployeeRequestDTO.personId", unless = "#result == null")
     public GetEmployeeResponseDTO getEmployee(GetEmployeeRequestDTO getEmployeeRequestDTO)
         throws HsaServiceCallException {
 
@@ -49,11 +49,11 @@ public class HsaEmployeeClient {
     }
 
     private void validateRequestParameters(GetEmployeeRequestDTO getEmployeeRequestDTO) {
-        if (isNullOrEmpty(getEmployeeRequestDTO.getPersonHsaId()) && isNullOrEmpty(getEmployeeRequestDTO.getPersonalIdentityNumber())) {
+        if (isNullOrEmpty(getEmployeeRequestDTO.getPersonHsaId()) && isNullOrEmpty(getEmployeeRequestDTO.getPersonId())) {
             throw new IllegalArgumentException(
                 "Missing required parameters. Must provide either personalIdentityNumber or personHsaId");
         }
-        if (!isNullOrEmpty(getEmployeeRequestDTO.getPersonHsaId()) && !isNullOrEmpty(getEmployeeRequestDTO.getPersonalIdentityNumber())) {
+        if (!isNullOrEmpty(getEmployeeRequestDTO.getPersonHsaId()) && !isNullOrEmpty(getEmployeeRequestDTO.getPersonId())) {
             throw new IllegalArgumentException("Only provide either personalIdentityNumber or personHsaId. ");
         }
     }

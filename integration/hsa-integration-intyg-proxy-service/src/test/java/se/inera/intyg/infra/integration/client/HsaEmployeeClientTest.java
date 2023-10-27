@@ -52,7 +52,7 @@ class HsaEmployeeClientTest {
     @Test
     void shouldThrowIfMissingPersonalIdentityNumberAndPersonHsaId() {
         final var request = GetEmployeeRequestDTO.builder()
-            .personalIdentityNumber(null)
+            .personId(null)
             .personHsaId(null)
             .build();
         assertThrows(IllegalArgumentException.class, () -> hsaEmployeeClient.getEmployee(request));
@@ -61,7 +61,7 @@ class HsaEmployeeClientTest {
     @Test
     void shouldThrowIfBothPersonalIdentityNumberAndPersonHsaIdIsProvided() {
         final var request = GetEmployeeRequestDTO.builder()
-            .personalIdentityNumber(PERSONAL_IDENTITY_NUMBER)
+            .personId(PERSONAL_IDENTITY_NUMBER)
             .personHsaId(PERSON_HSA_ID)
             .build();
         assertThrows(IllegalArgumentException.class, () -> hsaEmployeeClient.getEmployee(request));
@@ -71,7 +71,7 @@ class HsaEmployeeClientTest {
     void shouldReturnGetEmployeeResponseDTOWhenPersonalIdentityNumberIsProvided() throws HsaServiceCallException {
         final var expectedResult = GetEmployeeResponseDTO.builder().build();
         final var request = GetEmployeeRequestDTO.builder()
-            .personalIdentityNumber(PERSONAL_IDENTITY_NUMBER)
+            .personId(PERSONAL_IDENTITY_NUMBER)
             .build();
 
         when(restTemplate.postForObject(

@@ -52,7 +52,7 @@ class HsaIntegrationEmployeeServiceTest {
         when(hsaEmployeeClient.getEmployee(
                 GetEmployeeRequestDTO.builder()
                     .personHsaId(PERSON_HSA_ID)
-                    .personalIdentityNumber(PERSONAL_IDENTITY_NUMBER)
+                    .personId(PERSONAL_IDENTITY_NUMBER)
                     .build()
             )
         ).thenThrow(HsaServiceCallException.class);
@@ -72,7 +72,7 @@ class HsaIntegrationEmployeeServiceTest {
         when(hsaEmployeeClient.getEmployee(
                 GetEmployeeRequestDTO.builder()
                     .personHsaId(PERSON_HSA_ID)
-                    .personalIdentityNumber(PERSONAL_IDENTITY_NUMBER)
+                    .personId(PERSONAL_IDENTITY_NUMBER)
                     .build()
             )
         ).thenReturn(expectedResult);
