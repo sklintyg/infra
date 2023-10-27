@@ -26,7 +26,7 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class RestTemplateConfiguration {
 
-    @Bean("hsa.intygProxyServiceRestTemplate")
+    @Bean("hsaIntygProxyServiceRestTemplate")
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
