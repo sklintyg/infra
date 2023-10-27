@@ -21,6 +21,7 @@ package se.inera.intyg.infra.integration.client;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integration.dto.GetEmployeeRequestDTO;
@@ -38,8 +39,10 @@ public class HsaEmployeeClient {
     @Value("${integration.intygproxyservice.baseurl}")
     private String intygProxyServiceBaseUrl;
 
+    @Cacheable(cacheResolver = "hsaCacheResolver", key = "#getEmployeeRequestDTO.personHsaId + #getEmployeeRequestDTO.personalIdentityNumber", unless = "#result == null")
     public GetEmployeeResponseDTO getEmployee(GetEmployeeRequestDTO getEmployeeRequestDTO)
         throws HsaServiceCallException {
+
         validateRequestParameters(getEmployeeRequestDTO);
         final var url = intygProxyServiceBaseUrl + employeeEndpoint;
         return restTemplate.postForObject(url, getEmployeeRequestDTO, GetEmployeeResponseDTO.class);

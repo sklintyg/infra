@@ -1,5 +1,6 @@
 dependencies {
     implementation project(':hsa-integration-api')
+    implementation project(':common-redis-cache-core')
 
     compileOnly 'org.projectlombok:lombok'
 
