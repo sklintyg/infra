@@ -31,7 +31,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRespons
 @Service
 public class HsaEmployeeClient {
 
-    @Qualifier("intygProxyServiceRestTemplate")
+    @Qualifier("hsa.intygProxyServiceRestTemplate")
     private RestTemplate restTemplate;
     @Value("${integration.intygproxyservice.employee.endpoint}")
     private String employeeEndpoint;
