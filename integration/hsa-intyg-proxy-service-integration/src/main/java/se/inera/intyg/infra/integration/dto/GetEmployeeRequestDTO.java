@@ -19,18 +19,14 @@
 
 package se.inera.intyg.infra.integration.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
-@Data
+@Value
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class GetEmployeeRequestDTO {
 
-    private String personalIdentityNumber;
-    private String personHsaId;
-    private String profile;
+    String personalIdentityNumber;
+    String personHsaId;
+    String profile;
 }

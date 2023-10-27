@@ -20,12 +20,16 @@
 package se.inera.intyg.infra.integration.dto;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 
-@Value
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class GetEmployeeResponseDTO {
 
     List<PersonInformation> personInformationList;
