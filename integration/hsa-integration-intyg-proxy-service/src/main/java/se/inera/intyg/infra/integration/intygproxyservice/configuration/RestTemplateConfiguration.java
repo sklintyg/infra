@@ -19,24 +19,15 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.configuration;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.Cache;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
-@RequiredArgsConstructor
-public class CacheConfiguration {
+public class RestTemplateConfiguration {
 
-    private final RedisCacheOptionsSetter redisCacheOptionsSetter;
-    static final String HSA_EMPLOYEE_CACHE_PREFIX = "hsaEmployeeCache:";
-    @Value("${hsa.intygproxyservice.getemployee.cache.expiry}")
-    private String hsaEmployeeCacheExpirySeconds;
-
-    @Bean(name = "hsaIntygProxyServiceCacheResolver")
-    public Cache hsaCacheResolver() {
-        return redisCacheOptionsSetter.createCache(HSA_EMPLOYEE_CACHE_PREFIX, hsaEmployeeCacheExpirySeconds);
+    @Bean("intygProxyServiceRestTemplate")
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }

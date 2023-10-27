@@ -19,7 +19,7 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.client;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -29,18 +29,17 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequest
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeResponseDTO;
 
 @Service
-@RequiredArgsConstructor
 public class HsaEmployeeClient {
 
-    // DEFINE BEAN FOR RESTTEMPLADE
-    private final RestTemplate restTemplate;
-
+    @Qualifier("intygProxyServiceRestTemplate")
+    private RestTemplate restTemplate;
     @Value("${integration.intygproxyservice.employee.endpoint}")
     private String employeeEndpoint;
     @Value("${integration.intygproxyservice.baseurl}")
     private String intygProxyServiceBaseUrl;
 
-    @Cacheable(cacheResolver = "hsaCacheResolver", key = "#getEmployeeRequestDTO.personHsaId + #getEmployeeRequestDTO.personalIdentityNumber", unless = "#result == null")
+    @Cacheable(cacheResolver = "hsaIntygProxyServiceCacheResolver",
+        key = "#getEmployeeRequestDTO.personHsaId + #getEmployeeRequestDTO.personalIdentityNumber", unless = "#result == null")
     public GetEmployeeResponseDTO getEmployee(GetEmployeeRequestDTO getEmployeeRequestDTO)
         throws HsaServiceCallException {
 
