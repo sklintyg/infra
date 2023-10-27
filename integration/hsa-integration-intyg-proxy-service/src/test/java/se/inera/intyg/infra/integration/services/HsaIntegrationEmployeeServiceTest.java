@@ -34,15 +34,15 @@ import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.intygproxyservice.client.HsaEmployeeClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeResponseDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.services.HsaEmployeeServiceImpl;
+import se.inera.intyg.infra.integration.intygproxyservice.services.HsaIntegrationEmployeeService;
 
 @ExtendWith(MockitoExtension.class)
-class HsaEmployeeServiceImplTest {
+class HsaIntegrationEmployeeServiceTest {
 
     @Mock
     private HsaEmployeeClient hsaEmployeeClient;
     @InjectMocks
-    private HsaEmployeeServiceImpl hsaEmployeeService;
+    private HsaIntegrationEmployeeService hsaEmployeeService;
 
     private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
     private static final String PERSON_HSA_ID = "personHsaId";

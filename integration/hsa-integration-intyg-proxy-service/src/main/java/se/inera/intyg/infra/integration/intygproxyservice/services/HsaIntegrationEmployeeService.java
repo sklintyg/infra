@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
@@ -32,8 +33,9 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequest
 
 @Slf4j
 @Service
+@Profile("${hsa.intygproxyservice}")
 @RequiredArgsConstructor
-public class HsaEmployeeServiceImpl implements HsatkEmployeeService {
+public class HsaIntegrationEmployeeService implements HsatkEmployeeService {
 
     private final HsaEmployeeClient hsaEmployeeClient;
 
