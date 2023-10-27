@@ -32,6 +32,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRespons
 @RequiredArgsConstructor
 public class HsaEmployeeClient {
 
+    // DEFINE BEAN FOR RESTTEMPLADE
     private final RestTemplate restTemplate;
 
     @Value("${integration.intygproxyservice.employee.endpoint}")
