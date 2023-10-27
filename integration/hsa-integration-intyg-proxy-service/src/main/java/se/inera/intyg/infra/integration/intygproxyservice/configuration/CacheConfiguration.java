@@ -31,7 +31,7 @@ import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
 public class CacheConfiguration {
 
     private final RedisCacheOptionsSetter redisCacheOptionsSetter;
-    static final String HSA_EMPLOYEE_CACHE_PREFIX = "hsaEmployeeCache:";
+    private static final String HSA_EMPLOYEE_CACHE_PREFIX = "hsaEmployeeCache:";
     @Value("${hsa.intygproxyservice.getemployee.cache.expiry}")
     private String hsaEmployeeCacheExpirySeconds;
 
