@@ -52,7 +52,6 @@ public class HsaEmployeeServiceImpl implements HsatkEmployeeService {
                 GetEmployeeRequestDTO.builder()
                     .personalIdentityNumber(personalIdentityNumber)
                     .personHsaId(personHsaId)
-                    .profile(profile)
                     .build()
             );
             return employee.getPersonInformationList();

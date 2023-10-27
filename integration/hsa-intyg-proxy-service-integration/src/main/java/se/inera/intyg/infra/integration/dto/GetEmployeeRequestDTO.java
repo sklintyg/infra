@@ -28,5 +28,4 @@ public class GetEmployeeRequestDTO {
 
     String personalIdentityNumber;
     String personHsaId;
-    String profile;
 }

@@ -45,14 +45,12 @@ class HsaEmployeeClientTest {
 
     private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
     private static final String PERSON_HSA_ID = "personHsaId";
-    private static final String PROFILE = "profile";
 
     @Test
     void shouldThrowIfMissingPersonalIdentityNumberAndPersonHsaId() {
         final var request = GetEmployeeRequestDTO.builder()
             .personalIdentityNumber(null)
             .personHsaId(null)
-            .profile(PROFILE)
             .build();
         assertThrows(IllegalArgumentException.class, () -> hsaEmployeeClient.getEmployee(request));
     }
@@ -62,7 +60,6 @@ class HsaEmployeeClientTest {
         final var request = GetEmployeeRequestDTO.builder()
             .personalIdentityNumber(PERSONAL_IDENTITY_NUMBER)
             .personHsaId(PERSON_HSA_ID)
-            .profile(PROFILE)
             .build();
         assertThrows(IllegalArgumentException.class, () -> hsaEmployeeClient.getEmployee(request));
     }
@@ -72,7 +69,6 @@ class HsaEmployeeClientTest {
         final var expectedResult = GetEmployeeResponseDTO.builder().build();
         final var request = GetEmployeeRequestDTO.builder()
             .personalIdentityNumber(PERSONAL_IDENTITY_NUMBER)
-            .profile(PROFILE)
             .build();
 
         when(restTemplate.postForObject(
@@ -90,7 +86,6 @@ class HsaEmployeeClientTest {
         final var expectedResult = GetEmployeeResponseDTO.builder().build();
         final var request = GetEmployeeRequestDTO.builder()
             .personHsaId(PERSON_HSA_ID)
-            .profile(PROFILE)
             .build();
 
         when(restTemplate.postForObject(

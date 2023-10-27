@@ -45,7 +45,6 @@ class HsaEmployeeServiceImplTest {
 
     private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
     private static final String PERSON_HSA_ID = "personHsaId";
-    private static final String PROFILE = "profile";
 
     @Test
     void shouldReturnEmptyListIfClientThrowsError() throws HsaServiceCallException {
@@ -53,11 +52,10 @@ class HsaEmployeeServiceImplTest {
                 GetEmployeeRequestDTO.builder()
                     .personHsaId(PERSON_HSA_ID)
                     .personalIdentityNumber(PERSONAL_IDENTITY_NUMBER)
-                    .profile(PROFILE)
                     .build()
             )
         ).thenThrow(HsaServiceCallException.class);
-        final var result = hsaEmployeeService.getEmployee(PERSONAL_IDENTITY_NUMBER, PERSON_HSA_ID, PROFILE);
+        final var result = hsaEmployeeService.getEmployee(PERSONAL_IDENTITY_NUMBER, PERSON_HSA_ID);
 
         assertTrue(result.isEmpty());
     }
@@ -74,11 +72,10 @@ class HsaEmployeeServiceImplTest {
                 GetEmployeeRequestDTO.builder()
                     .personHsaId(PERSON_HSA_ID)
                     .personalIdentityNumber(PERSONAL_IDENTITY_NUMBER)
-                    .profile(PROFILE)
                     .build()
             )
         ).thenReturn(expectedResult);
-        final var result = hsaEmployeeService.getEmployee(PERSONAL_IDENTITY_NUMBER, PERSON_HSA_ID, PROFILE);
+        final var result = hsaEmployeeService.getEmployee(PERSONAL_IDENTITY_NUMBER, PERSON_HSA_ID);
 
         assertEquals(expectedResult.getPersonInformationList(), result);
     }
