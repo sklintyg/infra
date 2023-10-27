@@ -1,11 +1,11 @@
 dependencies {
-    implementation project(':hsa-api-integration')
+    implementation project(':hsa-integration-api')
 
-    compileOnly "org.slf4j:slf4j-api"
     compileOnly 'org.projectlombok:lombok'
 
     annotationProcessor 'org.projectlombok:lombok'
 
+    implementation "org.slf4j:slf4j-api"
     implementation "com.fasterxml.jackson.core:jackson-databind"
     implementation "org.springframework:spring-web"
     implementation "org.springframework:spring-context"

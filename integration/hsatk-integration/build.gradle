@@ -10,7 +10,7 @@ if (project.hasProperty("codeQuality")) {
 
 dependencies {
     compile project(':common-redis-cache-core')
-    compile project(':hsa-api-integration')
+    compile project(':hsa-integration-api')
 
     compile "org.springframework.security:spring-security-web"
 
