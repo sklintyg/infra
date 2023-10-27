@@ -21,11 +21,13 @@ package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.model.HospCredentialsForPerson;
 import se.inera.intyg.infra.integration.hsatk.model.Result;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkAuthorizationManagementService;
 
+@Service
 public class HsaIntegrationAuthorizationManagementService implements HsatkAuthorizationManagementService {
 
     @Override

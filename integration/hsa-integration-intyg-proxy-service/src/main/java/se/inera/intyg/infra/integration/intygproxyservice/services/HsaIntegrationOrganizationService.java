@@ -20,12 +20,14 @@
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import java.util.List;
+import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareProvider;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
 import se.inera.intyg.infra.integration.hsatk.model.Unit;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkOrganizationService;
 
+@Service
 public class HsaIntegrationOrganizationService implements HsatkOrganizationService {
 
     @Override
