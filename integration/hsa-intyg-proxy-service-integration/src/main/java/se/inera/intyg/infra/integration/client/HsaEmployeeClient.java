@@ -19,6 +19,7 @@
 
 package se.inera.intyg.infra.integration.client;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integration.dto.GetEmployeeRequestDTO;
@@ -26,14 +27,11 @@ import se.inera.intyg.infra.integration.dto.GetEmployeeResponseDTO;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 
 @Service
+@RequiredArgsConstructor
 public class HsaEmployeeClient {
 
     private final RestTemplate restTemplate;
 
-    public HsaEmployeeClient(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-    
     public GetEmployeeResponseDTO getEmployee(GetEmployeeRequestDTO getEmployeeRequestDTO)
         throws HsaServiceCallException {
 

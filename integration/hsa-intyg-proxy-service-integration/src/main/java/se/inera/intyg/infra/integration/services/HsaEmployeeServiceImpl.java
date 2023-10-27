@@ -21,6 +21,7 @@ package se.inera.intyg.infra.integration.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,14 +32,11 @@ import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkEmployeeService;
 
 @Service
+@RequiredArgsConstructor
 public class HsaEmployeeServiceImpl implements HsatkEmployeeService {
 
     private final HsaEmployeeClient hsaEmployeeClient;
     private static final Logger LOG = LoggerFactory.getLogger(HsaEmployeeServiceImpl.class);
-
-    public HsaEmployeeServiceImpl(HsaEmployeeClient hsaEmployeeClient) {
-        this.hsaEmployeeClient = hsaEmployeeClient;
-    }
 
     @Override
     public List<PersonInformation> getEmployee(String personalIdentityNumber, String personHsaId) {
