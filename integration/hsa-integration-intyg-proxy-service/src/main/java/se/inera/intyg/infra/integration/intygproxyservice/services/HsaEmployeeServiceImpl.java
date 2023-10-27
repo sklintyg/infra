@@ -17,18 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.services;
+package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.client.HsaEmployeeClient;
-import se.inera.intyg.infra.integration.dto.GetEmployeeRequestDTO;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkEmployeeService;
+import se.inera.intyg.infra.integration.intygproxyservice.client.HsaEmployeeClient;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
 
 @Slf4j
 @Service

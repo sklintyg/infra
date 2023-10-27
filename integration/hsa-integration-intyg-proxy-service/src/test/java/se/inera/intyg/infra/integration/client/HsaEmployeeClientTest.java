@@ -31,9 +31,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.infra.integration.dto.GetEmployeeRequestDTO;
-import se.inera.intyg.infra.integration.dto.GetEmployeeResponseDTO;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
+import se.inera.intyg.infra.integration.intygproxyservice.client.HsaEmployeeClient;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
 class HsaEmployeeClientTest {
