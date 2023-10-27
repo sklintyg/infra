@@ -21,6 +21,8 @@ package se.inera.intyg.infra.integration.client;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
@@ -72,9 +74,9 @@ class HsaEmployeeClientTest {
             .build();
 
         when(restTemplate.postForObject(
-            INTYG_PROXY_SERVICE_ENDPOINT_GET_EMPLOYEE_URL,
-            request,
-            GetEmployeeResponseDTO.class)
+            anyString(),
+            eq(request),
+            eq(GetEmployeeResponseDTO.class))
         ).thenReturn(expectedResult);
 
         final var response = hsaEmployeeClient.getEmployee(request);
@@ -89,9 +91,9 @@ class HsaEmployeeClientTest {
             .build();
 
         when(restTemplate.postForObject(
-            INTYG_PROXY_SERVICE_ENDPOINT_GET_EMPLOYEE_URL,
-            request,
-            GetEmployeeResponseDTO.class)
+            anyString(),
+            eq(request),
+            eq(GetEmployeeResponseDTO.class))
         ).thenReturn(expectedResult);
 
         final var response = hsaEmployeeClient.getEmployee(request);

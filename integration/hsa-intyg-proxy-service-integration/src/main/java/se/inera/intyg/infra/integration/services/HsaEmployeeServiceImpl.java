@@ -22,8 +22,7 @@ package se.inera.intyg.infra.integration.services;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.client.HsaEmployeeClient;
 import se.inera.intyg.infra.integration.dto.GetEmployeeRequestDTO;
@@ -31,12 +30,12 @@ import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkEmployeeService;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HsaEmployeeServiceImpl implements HsatkEmployeeService {
 
     private final HsaEmployeeClient hsaEmployeeClient;
-    private static final Logger LOG = LoggerFactory.getLogger(HsaEmployeeServiceImpl.class);
 
     @Override
     public List<PersonInformation> getEmployee(String personalIdentityNumber, String personHsaId) {
@@ -54,7 +53,7 @@ public class HsaEmployeeServiceImpl implements HsatkEmployeeService {
             );
             return employee.getPersonInformationList();
         } catch (HsaServiceCallException exception) {
-            LOG.warn("HsaServiceCallException thrown: {}", exception);
+            log.warn("HsaServiceCallException thrown: {}", exception);
             return new ArrayList<>();
         }
     }

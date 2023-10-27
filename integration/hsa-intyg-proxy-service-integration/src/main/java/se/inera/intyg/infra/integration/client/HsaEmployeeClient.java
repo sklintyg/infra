@@ -20,6 +20,7 @@
 package se.inera.intyg.infra.integration.client;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integration.dto.GetEmployeeRequestDTO;
@@ -32,12 +33,15 @@ public class HsaEmployeeClient {
 
     private final RestTemplate restTemplate;
 
+    @Value("${integration.intygproxyservice.employee.endpoint}")
+    private String employeeEndpoint;
+    @Value("${integration.intygproxyservice.baseurl}")
+    private String intygProxyServiceBaseUrl;
+
     public GetEmployeeResponseDTO getEmployee(GetEmployeeRequestDTO getEmployeeRequestDTO)
         throws HsaServiceCallException {
-
         validateRequestParameters(getEmployeeRequestDTO);
-        // How do we implement so that this is configureable?
-        final var url = "http://localhost:18020/api/v1/person";
+        final var url = intygProxyServiceBaseUrl + employeeEndpoint;
         return restTemplate.postForObject(url, getEmployeeRequestDTO, GetEmployeeResponseDTO.class);
     }
 
