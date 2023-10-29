@@ -1,5 +1,5 @@
 plugins {
-    id "com.yupzip.wsdl2java" version "2.3.2" apply true
+    id "com.yupzip.wsdl2java" version "3.0.0" apply true
 }
 
 if (project.hasProperty("codeQuality")) {
@@ -9,25 +9,23 @@ if (project.hasProperty("codeQuality")) {
 }
 
 dependencies {
-    compile project(':common-redis-cache-core')
-    compile project(':hsa-api-integration')
+    implementation project(':common-redis-cache-core')
+    implementation project(':hsa-api-integration')
 
-    compile "org.springframework.security:spring-security-web"
+    implementation "ch.qos.logback:logback-classic"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:"
+    implementation "com.google.guava:guava:${guavaVersion}"
+    implementation "org.apache.commons:commons-lang3"
+    implementation "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+    implementation "org.springframework.security:spring-security-web"
+    implementation "se.inera.intyg.schemas:schemas-support:${schemasSupportVersion}"
 
-    compile "org.apache.commons:commons-lang3"
-    compile "ch.qos.logback:logback-classic"
-    compile "com.google.guava:guava:${guavaVersion}"
-
-    compile "se.inera.intyg.schemas:schemas-support:${schemasSupportVersion}"
-    compile "com.fasterxml.jackson.core:jackson-databind"
-    compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-
-    compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
-
-    testCompile "org.awaitility:awaitility:"
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation "org.awaitility:awaitility:"
 
     wsdl2java "se.inera.intyg.schemas:schemas-support:${schemasSupportVersion}"
     wsdl2java "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:${jaxb2Version}"
@@ -39,6 +37,7 @@ dependencies {
 wsdl2java {
     wsdlDir = file("src/main/resources/schemas")
     cxfVersion = project.getProperties().get("cxfVersion")
+    cxfPluginVersion = project.getProperties().get("cxfPluginVersion")
 
     def authorizationManagementVersion = "2.3"
     def employeeVersion = "2.2"

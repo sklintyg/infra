@@ -1,15 +1,18 @@
 dependencies {
-    compile project(':hsatk-integration')
+    implementation project(":hsa-api-integration")
+    implementation project(":hsatk-integration")
 
-    compile "com.fasterxml.jackson.core:jackson-annotations"
-    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
+    implementation "com.fasterxml.jackson.core:jackson-annotations"
+    implementation "com.fasterxml.jackson.core:jackson-core"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    implementation "com.google.guava:guava:${guavaVersion}"
 
+    implementation "org.springframework:spring-web"
+    implementation "org.springframework.security:spring-security-core"
+    implementation "org.springframework.session:spring-session-core"
 
-    compile "org.springframework:spring-context"
-    compile "org.springframework.session:spring-session-core"
-    compile "org.slf4j:slf4j-api"
-
-    compileOnly "javax.servlet:javax.servlet-api"
-
-    testCompile "javax.servlet:javax.servlet-api"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
+    testImplementation "jakarta.servlet:jakarta.servlet-api"
 }

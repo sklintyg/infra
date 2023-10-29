@@ -1,24 +1,13 @@
 dependencies {
-  compile project(':common-redis-cache-core')
-  compile project(':driftbanner-dto')
-  compile project(':monitoring')
+    implementation project(':common-redis-cache-core')
+    implementation project(':driftbanner-dto')
+    implementation project(':monitoring')
 
-  compile "org.springframework.data:spring-data-redis"
-  compile "org.springframework.security:spring-security-web"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
-  compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
-  compile "com.fasterxml.jackson.core:jackson-databind"
-  compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
-  compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    implementation "jakarta.ws.rs:jakarta.ws.rs-api"
+    implementation "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
 
-  compile "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
-  compile "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
-
-  runtime "org.springframework:spring-context-support"
-
-  testCompile "org.springframework:spring-test"
-  testCompile "org.hamcrest:hamcrest"
-  testCompile "org.hamcrest:hamcrest-library"
-
-  testCompile "it.ozimov:embedded-redis:${embeddedRedisVersion}"
+    implementation "org.springframework.security:spring-security-web"
 }

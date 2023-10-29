@@ -1,6 +1,5 @@
 dependencies {
-    compile "org.slf4j:slf4j-api"
-    compile "ch.qos.logback:logback-classic"
-    compile "org.springframework:spring-context"
-    compile "com.fasterxml.jackson.core:jackson-databind"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "org.slf4j:slf4j-api"
+    implementation "org.springframework:spring-context"
 }

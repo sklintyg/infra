@@ -27,8 +27,8 @@ import java.util.regex.Pattern;
 
 public class IneraCookieSerializer extends DefaultCookieSerializer {
 
-    private boolean useSameSiteNoneExclusion;
-    private Pattern ucBrowserPattern = Pattern.compile("UCBrowser/(\\d+)\\.(\\d+)\\.(\\d+)\\.");
+    private final boolean useSameSiteNoneExclusion;
+    private final Pattern ucBrowserPattern = Pattern.compile("UCBrowser/(\\d+)\\.(\\d+)\\.(\\d+)\\.");
 
     public IneraCookieSerializer() {
         this(false);
@@ -65,14 +65,14 @@ public class IneraCookieSerializer extends DefaultCookieSerializer {
      * @return true if samesite=none should not be set.
      */
     private boolean shouldntGetSameSiteNone(String userAgent) {
-        return userAgent.contains("iPhone OS 12_") || userAgent.contains("iPad; CPU OS 12_") ||  //iOS 12
-                (userAgent.contains("UCBrowser/")
-                        ? isOlderUcBrowser(userAgent)                                             //UC Browser < 12.13.2
-                        : (userAgent.contains("Chrome/5") || userAgent.contains("Chrome/6"))) ||         //Chrome
-                userAgent.contains("Chromium/5") || userAgent.contains("Chromium/6") ||              //Chromium
-                (userAgent.contains(" OS X 10_14_")
-                        && ((userAgent.contains("Version/") && userAgent.contains("Safari")) ||             //Safari on MacOS 10.14
-                        userAgent.endsWith("(KHTML, like Gecko)")));                              //Embedded browser on MacOS 10.14
+        return userAgent.contains("iPhone OS 12_") || userAgent.contains("iPad; CPU OS 12_")    //iOS 12
+            || (userAgent.contains("UCBrowser/")
+            ? isOlderUcBrowser(userAgent)                                                       //UC Browser < 12.13.2
+            : (userAgent.contains("Chrome/5") || userAgent.contains("Chrome/6")))               //Chrome
+            || userAgent.contains("Chromium/5") || userAgent.contains("Chromium/6")             //Chromium
+            || (userAgent.contains(" OS X 10_14_")
+            && ((userAgent.contains("Version/") && userAgent.contains("Safari"))                //Safari on MacOS 10.14
+            || userAgent.endsWith("(KHTML, like Gecko)")));                                     //Embedded browser on MacOS 10.14
     }
 
     private boolean isOlderUcBrowser(String userAgent) {

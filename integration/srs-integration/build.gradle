@@ -1,15 +1,18 @@
 dependencies {
+  implementation project (":hsa-api-integration")
+  implementation project(':hsatk-integration')
+  implementation project(':security-common')
 
-  compile project(':security-common')
-  compile project(':hsa-integration')
+  implementation "com.google.guava:guava:${guavaVersion}"
 
-  compile "se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:${srsSchemasVersion}"
-  compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
-  compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+  implementation "org.apache.commons:commons-lang3"
+  implementation "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+  implementation "org.slf4j:slf4j-api"
+  implementation "org.springframework:spring-context-support"
+  implementation "org.springframework:spring-web"
 
-  runtime "org.springframework:spring-context-support"
+  implementation "se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:${srsSchemasVersion}"
+  implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
 
-  testCompile "org.springframework:spring-test"
-  testCompile "org.hamcrest:hamcrest"
-  testCompile "org.hamcrest:hamcrest-library"
+  testCompileOnly "com.fasterxml.jackson.core:jackson-annotations"
 }
