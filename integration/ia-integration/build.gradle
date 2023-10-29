@@ -5,9 +5,7 @@ dependencies {
 
     implementation "com.fasterxml.jackson.core:jackson-databind"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-
     implementation "jakarta.ws.rs:jakarta.ws.rs-api"
     implementation "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
-
     implementation "org.springframework.security:spring-security-web"
 }

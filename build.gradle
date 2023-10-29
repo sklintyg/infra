@@ -1,6 +1,7 @@
 plugins {
     id "se.inera.intyg.plugin.common" version "3.2.10-SNAPSHOT" apply false
     id "io.spring.dependency-management" version "1.1.3" apply false
+    id 'test-report-aggregation'
     id 'idea'
 }
 
@@ -40,15 +41,13 @@ ext {
 }
 
 allprojects {
+    apply plugin: 'se.inera.intyg.plugin.common'
     apply plugin: "io.spring.dependency-management"
     apply plugin: 'maven-publish'
     apply plugin: 'java'
 
     group = 'se.inera.intyg.infra'
     version = System.properties['buildVersion'] ?: '3.20.0-SNAPSHOT'
-
-    compileJava.options.encoding = 'UTF-8'
-
     sourceCompatibility = 11
     targetCompatibility = 11
 
@@ -57,41 +56,6 @@ allprojects {
             mavenBom "org.springframework.boot:spring-boot-dependencies:${springbootMavenBomVersion}"
         }
     }
-
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                from components.java
-            }
-        }
-        repositories.maven {
-            url = uri("https://nexus.drift.inera.se/repository/maven-releases/")
-            credentials {
-                username = System.properties['ineraNexusUsername']
-                password = System.properties['ineraNexusPassword']
-            }
-        }
-    }
-
-    tasks.register('install') {
-        description("Publishes artifact to local maven repository.")
-        dependsOn(publishToMavenLocal)
-    }
-
-    repositories {
-        mavenLocal()
-        maven { url "https://nexus.drift.inera.se/repository/it-public/" }
-        mavenCentral {
-            content {
-                // this repository contains everything BUT artifacts with group starting with "se.inera"
-                excludeGroupByRegex "se\\.inera.*"
-            }
-        }
-    }
-}
-
-subprojects {
-    apply plugin: 'se.inera.intyg.plugin.common'
 
     dependencies {
         implementation "javax.annotation:javax.annotation-api"
@@ -118,15 +82,42 @@ subprojects {
         testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
     }
 
-    test {
-        useJUnitPlatform()
+    tasks.register("install") {
+        description("Publishes artifact to local maven repository.")
+        dependsOn(publishToMavenLocal)
     }
 
-    tasks.register('tagRelease', TagReleaseTask)
-    tasks.register('createVersionPropertyFile', VersionPropertyFileTask)
+    tasks.register("createVersionPropertyFile", VersionPropertyFileTask)
 
-    compileTestJava.dependsOn('createVersionPropertyFile')
-    checkstyleMain.dependsOn('createVersionPropertyFile')
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.dependsOn createVersionPropertyFile
+    checkstyleMain.dependsOn createVersionPropertyFile
+    test { useJUnitPlatform() }
+
+    repositories {
+        mavenLocal()
+        maven { url "https://nexus.drift.inera.se/repository/it-public/" }
+        mavenCentral {
+            content {
+                excludeGroupByRegex "se\\.inera.*"
+            }
+        }
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from components.java
+            }
+        }
+        repositories.maven {
+            url = uri("https://nexus.drift.inera.se/repository/maven-releases/")
+            credentials {
+                username = System.properties['ineraNexusUsername']
+                password = System.properties['ineraNexusPassword']
+            }
+        }
+    }
 
     clean {
         setDelete(fileTree(project.layout.buildDirectory.get().asFile) {
@@ -143,4 +134,10 @@ subprojects {
             }
         }
     }
+}
+
+tasks.register('tagRelease', TagReleaseTask)
+
+subprojects.collect {subproject -> subproject.name }.each { subprojectName ->
+    dependencies { testReportAggregation project(":${subprojectName}") }
 }

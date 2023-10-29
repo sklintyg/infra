@@ -4,11 +4,9 @@ dependencies {
   implementation "com.fasterxml.jackson.core:jackson-databind"
   implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
   implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-
   implementation "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
   implementation "org.jvnet.jaxb2_commons:jaxb2-basics:${jaxb2Version}"
   implementation "org.springframework:spring-context"
   implementation "org.springframework.data:spring-data-redis"
-
   implementation "se.riv.informationsecurity.auditing.log:informationsecurity-auditing-log-schemas:${rivtaStoreLogSchemasVersion}"
 }

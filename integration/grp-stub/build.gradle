@@ -5,10 +5,8 @@ dependencies {
   implementation "com.fasterxml.jackson.core:jackson-annotations"
   implementation "com.google.guava:guava:${guavaVersion}"
   implementation "jakarta.ws.rs:jakarta.ws.rs-api"
-
   implementation "org.apache.commons:commons-lang3"
   implementation "org.slf4j:slf4j-api:"
   implementation "org.springframework.security:spring-security-web"
-
   implementation "se.funktionstjanster.grp:funktionstjanster-grp-schemas:${funktionstjansterGrpSchemasVersion}"
 }
