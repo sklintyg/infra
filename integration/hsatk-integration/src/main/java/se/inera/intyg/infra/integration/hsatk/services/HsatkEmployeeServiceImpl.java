@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services;
 
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntygProxyServiceConstans.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +38,7 @@ import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 import se.riv.infrastructure.directory.employee.v2.ProfileEnum;
 
 @Service
-@Profile("!hsa-integration-intyg-proxy-service")
+@Profile("!" + HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsatkEmployeeServiceImpl implements HsatkEmployeeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HsatkEmployeeServiceImpl.class);

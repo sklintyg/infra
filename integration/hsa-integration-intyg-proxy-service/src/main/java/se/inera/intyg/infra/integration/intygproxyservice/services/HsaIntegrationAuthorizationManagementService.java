@@ -19,6 +19,8 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntygProxyServiceConstans.HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.context.annotation.Profile;
@@ -29,7 +31,7 @@ import se.inera.intyg.infra.integration.hsatk.model.Result;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkAuthorizationManagementService;
 
 @Service
-@Profile("hsa-integration-intyg-proxy-service-not-activated")
+@Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE)
 public class HsaIntegrationAuthorizationManagementService implements HsatkAuthorizationManagementService {
 
     @Override

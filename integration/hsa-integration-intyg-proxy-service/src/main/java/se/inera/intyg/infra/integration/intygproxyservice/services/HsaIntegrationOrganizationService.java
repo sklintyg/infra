@@ -19,6 +19,8 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntygProxyServiceConstans.HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE;
+
 import java.util.List;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,7 @@ import se.inera.intyg.infra.integration.hsatk.model.Unit;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkOrganizationService;
 
 @Service
-@Profile("hsa-integration-intyg-proxy-service-not-activated")
+@Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE)
 public class HsaIntegrationOrganizationService implements HsatkOrganizationService {
 
     @Override

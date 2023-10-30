@@ -19,6 +19,8 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntygProxyServiceConstans.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
+
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +35,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequest
 
 @Slf4j
 @Service
-@Profile("hsa-integration-intyg-proxy-service")
+@Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 @RequiredArgsConstructor
 public class HsaIntegrationEmployeeService implements HsatkEmployeeService {
 

@@ -19,7 +19,7 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.client;
 
-import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstans.EMPLOYEE_CACHE_NAME;
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntygProxyServiceConstans.EMPLOYEE_CACHE_NAME;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

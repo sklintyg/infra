@@ -17,11 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.constants;
+package se.inera.intyg.infra.integration.hsatk.constants;
 
 public class HsaIntygProxyServiceConstans {
 
     public static final String EMPLOYEE_CACHE_NAME = "hsaIntygProxyServiceEmployeeCache";
+    public static final String HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE = "hsa-integration-intyg-proxy-service";
+    public static final String HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE =
+        "hsa-integration-intyg-proxy-service-not-activated";
     public static final String HSA_INTYG_PROXY_SERVICE_REST_TEMPLATE = "hsaIntygProxyServiceRestTemplate";
 
 }

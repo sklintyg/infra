@@ -19,7 +19,7 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.configuration;
 
-import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstans.HSA_INTYG_PROXY_SERVICE_REST_TEMPLATE;
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntygProxyServiceConstans.HSA_INTYG_PROXY_SERVICE_REST_TEMPLATE;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +27,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class RestTemplateConfiguration {
-    
+
 
     @Bean(HSA_INTYG_PROXY_SERVICE_REST_TEMPLATE)
     public RestTemplate restTemplate() {

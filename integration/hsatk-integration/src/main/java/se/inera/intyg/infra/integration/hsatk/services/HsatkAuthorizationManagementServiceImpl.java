@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services;
 
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntygProxyServiceConstans.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,7 +40,7 @@ import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertifi
 import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
 
 @Service
-@Profile("!hsa-integration-intyg-proxy-service")
+@Profile("!" + HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsatkAuthorizationManagementServiceImpl implements HsatkAuthorizationManagementService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HsatkAuthorizationManagementServiceImpl.class);
