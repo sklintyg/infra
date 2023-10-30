@@ -60,7 +60,7 @@ public class HsaIntegrationEmployeeService implements HsatkEmployeeService {
             );
             return getEmployeeResponse.getEmployee().getPersonInformation();
         } catch (HsaServiceCallException exception) {
-            log.warn(exception.getMessage());
+            log.warn("HsaServiceCallException thrown: {}", exception);
             return new ArrayList<>();
         }
     }
