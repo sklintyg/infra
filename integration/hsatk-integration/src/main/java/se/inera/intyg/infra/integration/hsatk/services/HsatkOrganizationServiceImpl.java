@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services;
 
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.client.OrganizationClient;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
@@ -37,6 +40,7 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v3.GetUnitT
 import se.riv.infrastructure.directory.organization.getunitresponder.v3.ProfileEnum;
 
 @Service
+@Profile("!" + HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsatkOrganizationServiceImpl implements HsatkOrganizationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HsatkAuthorizationManagementServiceImpl.class);
@@ -52,7 +56,7 @@ public class HsatkOrganizationServiceImpl implements HsatkOrganizationService {
 
         try {
             healthCareProviderList = organizationClient.getHealthCareProvider(healthCareProviderHsaId, healthCareProviderOrgNo)
-                    .stream().map(hsaTypeConverter::toHealthCareProvider).collect(Collectors.toList());
+                .stream().map(hsaTypeConverter::toHealthCareProvider).collect(Collectors.toList());
         } catch (HsaServiceCallException e) {
             LOG.error("Failed to get HealthCareProvider from HSA: {}", e);
         }
@@ -78,7 +82,7 @@ public class HsatkOrganizationServiceImpl implements HsatkOrganizationService {
         HealthCareUnitMembers healthCareUnitMembers = new HealthCareUnitMembers();
         try {
             healthCareUnitMembers = hsaTypeConverter.toHealthCareUnitMembers(
-                    organizationClient.getHealthCareUnitMembers(healtCareUnitHsaId));
+                organizationClient.getHealthCareUnitMembers(healtCareUnitHsaId));
         } catch (HsaServiceCallException e) {
             LOG.error("Failed to get HealthCareUnitMembers from HSA: {}", e);
         }
