@@ -54,7 +54,7 @@ class HsaLegacyIntegrationOrganizationServiceTest {
 
         @Test
         void shouldTrowWebServiceExceptionIfClientError() throws HsaServiceCallException {
-            when(organizationClient.getHealthCareUnitMemberHsaId(
+            when(organizationClient.getHealthCareUnitMemberHsaIds(
                 GetHealthCareUnitMembersRequestDTO.builder()
                     .hsaId(CARE_UNIT_ID)
                     .build()
@@ -66,7 +66,7 @@ class HsaLegacyIntegrationOrganizationServiceTest {
         @Test
         void shouldReturnListOfHsaIdsForActiveSubUnits() throws HsaServiceCallException {
             final var expectedResult = List.of(ACTIVE_CARE_UNIT_HSA_ID_1, ACTIVE_CARE_UNIT_HSA_ID_2);
-            when(organizationClient.getHealthCareUnitMemberHsaId(
+            when(organizationClient.getHealthCareUnitMemberHsaIds(
                     GetHealthCareUnitMembersRequestDTO.builder()
                         .hsaId(CARE_UNIT_ID)
                         .build()

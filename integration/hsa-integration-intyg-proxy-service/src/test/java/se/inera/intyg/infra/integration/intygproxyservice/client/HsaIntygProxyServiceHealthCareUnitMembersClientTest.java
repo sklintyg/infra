@@ -49,13 +49,13 @@ class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
 
     @Test
     void shouldThrowIfUnitHsaIdIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> healthCareUnitMembersClient.getHealthCareUnitMemberHsaId(
+        assertThrows(IllegalArgumentException.class, () -> healthCareUnitMembersClient.getHealthCareUnitMemberHsaIds(
             GetHealthCareUnitMembersRequestDTO.builder().build()));
     }
 
     @Test
     void shouldThrowIfUnitHsaIdIsEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> healthCareUnitMembersClient.getHealthCareUnitMemberHsaId(
+        assertThrows(IllegalArgumentException.class, () -> healthCareUnitMembersClient.getHealthCareUnitMemberHsaIds(
             GetHealthCareUnitMembersRequestDTO.builder().hsaId(EMPTY).build()));
     }
 
@@ -67,7 +67,7 @@ class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
 
         when(restTemplate.postForObject(anyString(), eq(request), eq(GetHealthCareUnitMembersResponseDTO.class))).thenThrow(
             IllegalArgumentException.class);
-        assertThrows(HsaServiceCallException.class, () -> healthCareUnitMembersClient.getHealthCareUnitMemberHsaId(request));
+        assertThrows(HsaServiceCallException.class, () -> healthCareUnitMembersClient.getHealthCareUnitMemberHsaIds(request));
     }
 
     @Test
@@ -80,7 +80,7 @@ class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
             .build();
         when(restTemplate.postForObject(anyString(), eq(request), eq(GetHealthCareUnitMembersResponseDTO.class))).thenReturn(
             expectedResponse);
-        final var result = healthCareUnitMembersClient.getHealthCareUnitMemberHsaId(request);
+        final var result = healthCareUnitMembersClient.getHealthCareUnitMemberHsaIds(request);
         assertEquals(expectedResponse, result);
     }
 }

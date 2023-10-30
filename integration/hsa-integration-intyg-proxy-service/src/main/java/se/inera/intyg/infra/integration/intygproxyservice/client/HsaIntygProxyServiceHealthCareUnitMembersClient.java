@@ -39,7 +39,7 @@ public class HsaIntygProxyServiceHealthCareUnitMembersClient {
     @Value("${integration.intygproxyservice.baseurl}")
     private String intygProxyServiceBaseUrl;
 
-    public GetHealthCareUnitMembersResponseDTO getHealthCareUnitMemberHsaId(
+    public GetHealthCareUnitMembersResponseDTO getHealthCareUnitMemberHsaIds(
         GetHealthCareUnitMembersRequestDTO getHealthCareUnitMembersRequestDTO)
         throws HsaServiceCallException {
         validateRequest(getHealthCareUnitMembersRequestDTO);

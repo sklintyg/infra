@@ -69,7 +69,7 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
     @Cacheable(cacheNames = HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME, key = "#vardEnhetHsaId", unless = "#result == null")
     public List<String> getHsaIdForAktivaUnderenheter(String vardEnhetHsaId) {
         try {
-            final var healthCareUnitMemberHsaId = organizationClient.getHealthCareUnitMemberHsaId(
+            final var healthCareUnitMemberHsaId = organizationClient.getHealthCareUnitMemberHsaIds(
                 GetHealthCareUnitMembersRequestDTO.builder()
                     .hsaId(vardEnhetHsaId)
                     .build()
