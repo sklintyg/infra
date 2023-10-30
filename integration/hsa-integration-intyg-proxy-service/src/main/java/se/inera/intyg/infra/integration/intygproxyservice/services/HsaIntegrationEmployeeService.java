@@ -33,7 +33,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequest
 
 @Slf4j
 @Service
-@Profile("${hsa.intygproxyservice}")
+@Profile("${hsa-intygproxyservice}")
 @RequiredArgsConstructor
 public class HsaIntegrationEmployeeService implements HsatkEmployeeService {
 
