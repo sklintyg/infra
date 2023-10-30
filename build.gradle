@@ -97,7 +97,7 @@ allprojects {
     repositories {
         mavenLocal()
         maven { url "https://nexus.drift.inera.se/repository/it-public/" }
-        maven { url "http://localhost:37373/repository/it-public/" }
+        maven { url "http://172.21.0.1:37373/repository/it-public/" }
         mavenCentral {
             content {
                 excludeGroupByRegex "se\\.inera.*"
@@ -113,7 +113,8 @@ allprojects {
         }
         repositories.maven {
             //url = uri("https://nexus.drift.inera.se/repository/maven-releases/")
-            url = uri("http://localhost:37373/repository/maven-releases/")
+            url "http://172.21.0.1:37373/repository/maven-releases/"
+            allowInsecureProtocol = true
             credentials {
                 username = System.properties['ineraNexusUsername']
                 password = System.properties['ineraNexusPassword']
