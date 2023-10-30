@@ -67,6 +67,21 @@ class HsaIntygProxyServiceEmployeeClientTest {
     }
 
     @Test
+    void shouldThrowRuntimeExceptionIfCommunicationErrorWithIntygProxyService() {
+        final var request = GetEmployeeRequestDTO.builder()
+            .personId(PERSONAL_IDENTITY_NUMBER)
+            .build();
+
+        when(restTemplate.postForObject(
+                anyString(),
+                eq(request),
+                eq(GetEmployeeResponseDTO.class)
+            )
+        ).thenThrow(RuntimeException.class);
+        assertThrows(HsaServiceCallException.class, () -> hsaIntygProxyServiceEmployeeClient.getEmployee(request));
+    }
+
+    @Test
     void shouldReturnGetEmployeeResponseDTOWhenPersonalIdentityNumberIsProvided() throws HsaServiceCallException {
         final var expectedResult = GetEmployeeResponseDTO.builder().build();
         final var request = GetEmployeeRequestDTO.builder()

@@ -19,48 +19,42 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.client;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersResponseDTO;
 
 @Service
-public class HsaIntygProxyServiceEmployeeClient {
+public class HsaIntygProxyServiceHealthCareUnitMembersClient {
 
     @Autowired
     @Qualifier("hsaIntygProxyServiceRestTemplate")
     private RestTemplate restTemplate;
-    @Value("${integration.intygproxyservice.employee.endpoint}")
-    private String employeeEndpoint;
+
+    @Value("${integration.intygproxyservice.healthcareunitmembers.endpoint}")
+    private String healthCareUnitMembersEndpoint;
     @Value("${integration.intygproxyservice.baseurl}")
     private String intygProxyServiceBaseUrl;
 
-    public GetEmployeeResponseDTO getEmployee(GetEmployeeRequestDTO getEmployeeRequestDTO) throws HsaServiceCallException {
-        validateRequestParameters(getEmployeeRequestDTO);
-        final var url = intygProxyServiceBaseUrl + employeeEndpoint;
+    public GetHealthCareUnitMembersResponseDTO getHealthCareUnitMemberHsaId(
+        GetHealthCareUnitMembersRequestDTO getHealthCareUnitMembersRequestDTO)
+        throws HsaServiceCallException {
+        validateRequest(getHealthCareUnitMembersRequestDTO);
+        final var url = intygProxyServiceBaseUrl + healthCareUnitMembersEndpoint;
         try {
-            return restTemplate.postForObject(url, getEmployeeRequestDTO, GetEmployeeResponseDTO.class);
+            return restTemplate.postForObject(url, getHealthCareUnitMembersRequestDTO, GetHealthCareUnitMembersResponseDTO.class);
         } catch (Exception exception) {
             throw new HsaServiceCallException("Error occured when trying to communicate with intyg-proxy-service");
         }
     }
 
-    private void validateRequestParameters(GetEmployeeRequestDTO getEmployeeRequestDTO) {
-        if (isNullOrEmpty(getEmployeeRequestDTO.getHsaId()) && isNullOrEmpty(getEmployeeRequestDTO.getPersonId())) {
-            throw new IllegalArgumentException(
-                "Missing required parameters. Must provide either personalIdentityNumber or personHsaId");
+    private void validateRequest(GetHealthCareUnitMembersRequestDTO getHealthCareUnitMembersRequestDTO) {
+        if (getHealthCareUnitMembersRequestDTO.getHsaId() == null || getHealthCareUnitMembersRequestDTO.getHsaId().isEmpty()) {
+            throw new IllegalArgumentException("HsaId for unit was not provided");
         }
-        if (!isNullOrEmpty(getEmployeeRequestDTO.getHsaId()) && !isNullOrEmpty(getEmployeeRequestDTO.getPersonId())) {
-            throw new IllegalArgumentException("Only provide either personalIdentityNumber or personHsaId. ");
-        }
-    }
-
-    private boolean isNullOrEmpty(String value) {
-        return value == null || value.isEmpty();
     }
 }

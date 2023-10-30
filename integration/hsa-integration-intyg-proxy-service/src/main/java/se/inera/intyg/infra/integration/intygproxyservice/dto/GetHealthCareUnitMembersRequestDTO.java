@@ -17,16 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.constants;
+package se.inera.intyg.infra.integration.intygproxyservice.dto;
 
-public class HsaIntygProxyServiceConstans {
+import lombok.Builder;
+import lombok.Value;
 
-    private HsaIntygProxyServiceConstans() {
-        throw new IllegalStateException("Utility class!");
-    }
+@Value
+@Builder
+public class GetHealthCareUnitMembersRequestDTO {
 
-    public static final String EMPLOYEE_CACHE_NAME = "hsaIntygProxyServiceEmployeeCache";
-    public static final String HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME = "hsaIntygProxyServiceHealthCareUnitMembersCache";
-    public static final String HSA_INTYG_PROXY_SERVICE_REST_TEMPLATE = "hsaIntygProxyServiceRestTemplate";
-
+    String hsaId;
 }

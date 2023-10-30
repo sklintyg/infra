@@ -56,7 +56,7 @@ class HsaIntegrationEmployeeServiceTest {
                     .personId(PERSONAL_IDENTITY_NUMBER)
                     .build()
             )
-        ).thenThrow(HsaServiceCallException.class);
+        ).thenThrow(RuntimeException.class);
         final var result = hsaEmployeeService.getEmployee(PERSONAL_IDENTITY_NUMBER, PERSON_HSA_ID);
 
         assertTrue(result.isEmpty());
