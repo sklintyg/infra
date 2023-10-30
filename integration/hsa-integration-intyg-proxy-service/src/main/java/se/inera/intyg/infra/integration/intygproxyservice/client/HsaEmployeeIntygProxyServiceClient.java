@@ -30,7 +30,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequest
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeResponseDTO;
 
 @Service
-public class HsaEmployeeClient {
+public class HsaEmployeeIntygProxyServiceClient {
 
     @Autowired
     @Qualifier("hsaIntygProxyServiceRestTemplate")

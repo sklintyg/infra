@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkEmployeeService;
-import se.inera.intyg.infra.integration.intygproxyservice.client.HsaEmployeeClient;
+import se.inera.intyg.infra.integration.intygproxyservice.client.HsaEmployeeIntygProxyServiceClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
 
 @Slf4j
@@ -37,7 +37,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequest
 @RequiredArgsConstructor
 public class HsaIntegrationEmployeeService implements HsatkEmployeeService {
 
-    private final HsaEmployeeClient hsaEmployeeClient;
+    private final HsaEmployeeIntygProxyServiceClient hsaEmployeeIntygProxyServiceClient;
 
     @Override
     public List<PersonInformation> getEmployee(String personalIdentityNumber, String personHsaId) {
@@ -47,7 +47,7 @@ public class HsaIntegrationEmployeeService implements HsatkEmployeeService {
     @Override
     public List<PersonInformation> getEmployee(String personId, String personHsaId, String profile) {
         try {
-            final var employee = hsaEmployeeClient.getEmployee(
+            final var employee = hsaEmployeeIntygProxyServiceClient.getEmployee(
                 GetEmployeeRequestDTO.builder()
                     .personId(personId)
                     .personHsaId(personHsaId)

@@ -32,18 +32,18 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
-import se.inera.intyg.infra.integration.intygproxyservice.client.HsaEmployeeClient;
+import se.inera.intyg.infra.integration.intygproxyservice.client.HsaEmployeeIntygProxyServiceClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
-class HsaEmployeeClientTest {
+class HsaEmployeeIntygProxyServiceClientTest {
 
     @Mock
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private HsaEmployeeClient hsaEmployeeClient;
+    private HsaEmployeeIntygProxyServiceClient hsaEmployeeIntygProxyServiceClient;
     private static final String INTYG_PROXY_SERVICE_ENDPOINT_GET_EMPLOYEE_URL = "http://localhost:18020/api/v1/person";
 
     private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
@@ -55,7 +55,7 @@ class HsaEmployeeClientTest {
             .personId(null)
             .personHsaId(null)
             .build();
-        assertThrows(IllegalArgumentException.class, () -> hsaEmployeeClient.getEmployee(request));
+        assertThrows(IllegalArgumentException.class, () -> hsaEmployeeIntygProxyServiceClient.getEmployee(request));
     }
 
     @Test
@@ -64,7 +64,7 @@ class HsaEmployeeClientTest {
             .personId(PERSONAL_IDENTITY_NUMBER)
             .personHsaId(PERSON_HSA_ID)
             .build();
-        assertThrows(IllegalArgumentException.class, () -> hsaEmployeeClient.getEmployee(request));
+        assertThrows(IllegalArgumentException.class, () -> hsaEmployeeIntygProxyServiceClient.getEmployee(request));
     }
 
     @Test
@@ -80,7 +80,7 @@ class HsaEmployeeClientTest {
             eq(GetEmployeeResponseDTO.class))
         ).thenReturn(expectedResult);
 
-        final var response = hsaEmployeeClient.getEmployee(request);
+        final var response = hsaEmployeeIntygProxyServiceClient.getEmployee(request);
         assertEquals(expectedResult, response);
     }
 
@@ -97,7 +97,7 @@ class HsaEmployeeClientTest {
             eq(GetEmployeeResponseDTO.class))
         ).thenReturn(expectedResult);
 
-        final var response = hsaEmployeeClient.getEmployee(request);
+        final var response = hsaEmployeeIntygProxyServiceClient.getEmployee(request);
         assertEquals(expectedResult, response);
     }
 }
