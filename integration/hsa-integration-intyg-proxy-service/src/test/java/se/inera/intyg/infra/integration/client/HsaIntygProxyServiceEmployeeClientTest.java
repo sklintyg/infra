@@ -67,7 +67,7 @@ class HsaIntygProxyServiceEmployeeClientTest {
     }
 
     @Test
-    void shouldThrowRuntimeExceptionIfCommunicationErrorWithIntygProxyService() {
+    void shouldThrowHsaServiceCallExceptionIfCommunicationErrorWithIntygProxyService() {
         final var request = GetEmployeeRequestDTO.builder()
             .personId(PERSONAL_IDENTITY_NUMBER)
             .build();

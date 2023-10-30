@@ -34,7 +34,6 @@ public class HsaIntygProxyServiceHealthCareUnitMembersClient {
     @Autowired
     @Qualifier("hsaIntygProxyServiceRestTemplate")
     private RestTemplate restTemplate;
-
     @Value("${integration.intygproxyservice.healthcareunitmembers.endpoint}")
     private String healthCareUnitMembersEndpoint;
     @Value("${integration.intygproxyservice.baseurl}")
