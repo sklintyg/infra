@@ -31,7 +31,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
-import se.inera.intyg.infra.integration.intygproxyservice.client.HsaEmployeeIntygProxyServiceClient;
+import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxyServiceEmployeeClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeResponseDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.services.HsaIntegrationEmployeeService;
@@ -40,7 +40,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.services.HsaIntegratio
 class HsaIntegrationEmployeeServiceTest {
 
     @Mock
-    private HsaEmployeeIntygProxyServiceClient hsaEmployeeIntygProxyServiceClient;
+    private HsaIntygProxyServiceEmployeeClient hsaIntygProxyServiceEmployeeClient;
     @InjectMocks
     private HsaIntegrationEmployeeService hsaEmployeeService;
 
@@ -49,7 +49,7 @@ class HsaIntegrationEmployeeServiceTest {
 
     @Test
     void shouldReturnEmptyListIfClientThrowsError() throws HsaServiceCallException {
-        when(hsaEmployeeIntygProxyServiceClient.getEmployee(
+        when(hsaIntygProxyServiceEmployeeClient.getEmployee(
                 GetEmployeeRequestDTO.builder()
                     .personHsaId(PERSON_HSA_ID)
                     .personId(PERSONAL_IDENTITY_NUMBER)
@@ -69,7 +69,7 @@ class HsaIntegrationEmployeeServiceTest {
                     new PersonInformation()
                 )
             ).build();
-        when(hsaEmployeeIntygProxyServiceClient.getEmployee(
+        when(hsaIntygProxyServiceEmployeeClient.getEmployee(
                 GetEmployeeRequestDTO.builder()
                     .personHsaId(PERSON_HSA_ID)
                     .personId(PERSONAL_IDENTITY_NUMBER)

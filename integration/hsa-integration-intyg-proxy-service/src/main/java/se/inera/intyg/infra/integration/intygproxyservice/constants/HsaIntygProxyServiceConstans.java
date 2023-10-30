@@ -17,20 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.configuration;
+package se.inera.intyg.infra.integration.intygproxyservice.constants;
 
-import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstans.HSA_INTYG_PROXY_SERVICE_REST_TEMPLATE;
+public class HsaIntygProxyServiceConstans {
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
+    public static final String EMPLOYEE_CACHE_NAME = "hsaIntygProxyServiceEmployeeCache";
+    public static final String HSA_INTYG_PROXY_SERVICE_REST_TEMPLATE = "hsaIntygProxyServiceRestTemplate";
 
-@Configuration
-public class RestTemplateConfiguration {
-    
-
-    @Bean(HSA_INTYG_PROXY_SERVICE_REST_TEMPLATE)
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
 }
