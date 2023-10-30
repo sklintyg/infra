@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services;
 
-import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntygProxyServiceConstans.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
 
 import java.util.ArrayList;
 import java.util.List;

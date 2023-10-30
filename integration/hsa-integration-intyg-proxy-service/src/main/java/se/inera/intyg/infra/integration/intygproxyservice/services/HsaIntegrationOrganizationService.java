@@ -19,7 +19,7 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
-import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntygProxyServiceConstans.HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE;
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE;
 
 import java.util.List;
 import org.springframework.context.annotation.Profile;

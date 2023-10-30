@@ -17,20 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.configuration;
+package se.inera.intyg.infra.integration.hsatk.constants;
 
-import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstans.HSA_INTYG_PROXY_SERVICE_REST_TEMPLATE;
+public class HsaIntegrationApiConstants {
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
-
-@Configuration
-public class RestTemplateConfiguration {
-
-
-    @Bean(HSA_INTYG_PROXY_SERVICE_REST_TEMPLATE)
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
+    private HsaIntegrationApiConstants() {
+        throw new IllegalStateException("Utility class!");
     }
+
+    public static final String HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE = "hsa-integration-intyg-proxy-service";
+    public static final String HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE =
+        "hsa-integration-intyg-proxy-service-not-activated";
+
 }
