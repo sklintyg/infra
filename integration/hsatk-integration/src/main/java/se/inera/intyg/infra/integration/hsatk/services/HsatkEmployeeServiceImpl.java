@@ -18,10 +18,15 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.xml.ws.WebServiceException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.client.EmployeeClient;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
@@ -30,12 +35,8 @@ import se.inera.intyg.infra.integration.hsatk.util.HsaTypeConverter;
 import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 import se.riv.infrastructure.directory.employee.v2.ProfileEnum;
 
-import javax.xml.ws.WebServiceException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
+@Profile("!hsa-integration-intyg-proxy-service")
 public class HsatkEmployeeServiceImpl implements HsatkEmployeeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HsatkEmployeeServiceImpl.class);

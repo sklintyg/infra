@@ -19,6 +19,7 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.client;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -31,6 +32,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRespons
 @Service
 public class HsaEmployeeClient {
 
+    @Autowired
     @Qualifier("hsaIntygProxyServiceRestTemplate")
     private RestTemplate restTemplate;
     @Value("${integration.intygproxyservice.employee.endpoint}")
@@ -38,7 +40,7 @@ public class HsaEmployeeClient {
     @Value("${integration.intygproxyservice.baseurl}")
     private String intygProxyServiceBaseUrl;
 
-    @Cacheable(cacheResolver = "hsaIntygProxyServiceCacheResolver",
+    @Cacheable(cacheNames = "hsaIntygProxyServiceEmployeeCache",
         key = "#getEmployeeRequestDTO.personHsaId + #getEmployeeRequestDTO.personId", unless = "#result == null")
     public GetEmployeeResponseDTO getEmployee(GetEmployeeRequestDTO getEmployeeRequestDTO)
         throws HsaServiceCallException {

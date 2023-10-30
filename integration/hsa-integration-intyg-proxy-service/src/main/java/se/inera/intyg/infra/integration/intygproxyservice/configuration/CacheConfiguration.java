@@ -31,12 +31,13 @@ import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
 public class CacheConfiguration {
 
     private final RedisCacheOptionsSetter redisCacheOptionsSetter;
-    private static final String HSA_EMPLOYEE_CACHE_PREFIX = "hsaEmployeeCache:";
-    @Value("${hsa.intygproxyservice.getemployee.cache.expiry}")
+    private static final String HSA_EMPLOYEE_CACHE_PREFIX = "hsaIntygProxyServiceEmployeeCache:";
+
+    @Value("${hsa.intygproxyservice.getemployee.cache.expiry:60}")
     private String hsaEmployeeCacheExpirySeconds;
 
-    @Bean(name = "hsaIntygProxyServiceCacheResolver")
-    public Cache hsaCacheResolver() {
+    @Bean(name = "hsaIntygProxyServiceEmployeeCache")
+    public Cache hsaIntygProxyServiceEmployeeCache() {
         return redisCacheOptionsSetter.createCache(HSA_EMPLOYEE_CACHE_PREFIX, hsaEmployeeCacheExpirySeconds);
     }
 }
