@@ -19,13 +19,18 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.dto;
 
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 
-@Value
+@Data
 @Builder
-public class GetEmployeeRequestDTO {
+@NoArgsConstructor
+@AllArgsConstructor
+public class EmployeeDTO {
 
-    String hsaId;
-    String personId;
+    List<PersonInformation> personInformation;
 }

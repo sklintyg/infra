@@ -37,14 +37,13 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequest
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
-class HsaEmployeeIntygProxyServiceClientTest {
+class HsaIntygProxyServiceEmployeeClientTest {
 
     @Mock
     private RestTemplate restTemplate;
 
     @InjectMocks
     private HsaIntygProxyServiceEmployeeClient hsaIntygProxyServiceEmployeeClient;
-    private static final String INTYG_PROXY_SERVICE_ENDPOINT_GET_EMPLOYEE_URL = "http://localhost:18020/api/v1/person";
 
     private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
     private static final String PERSON_HSA_ID = "personHsaId";
@@ -53,7 +52,7 @@ class HsaEmployeeIntygProxyServiceClientTest {
     void shouldThrowIfMissingPersonalIdentityNumberAndPersonHsaId() {
         final var request = GetEmployeeRequestDTO.builder()
             .personId(null)
-            .personHsaId(null)
+            .hsaId(null)
             .build();
         assertThrows(IllegalArgumentException.class, () -> hsaIntygProxyServiceEmployeeClient.getEmployee(request));
     }
@@ -62,7 +61,7 @@ class HsaEmployeeIntygProxyServiceClientTest {
     void shouldThrowIfBothPersonalIdentityNumberAndPersonHsaIdIsProvided() {
         final var request = GetEmployeeRequestDTO.builder()
             .personId(PERSONAL_IDENTITY_NUMBER)
-            .personHsaId(PERSON_HSA_ID)
+            .hsaId(PERSON_HSA_ID)
             .build();
         assertThrows(IllegalArgumentException.class, () -> hsaIntygProxyServiceEmployeeClient.getEmployee(request));
     }
@@ -88,7 +87,7 @@ class HsaEmployeeIntygProxyServiceClientTest {
     void shouldReturnGetEmployeeResponseDTOWhenPersonHsaIdIsProvided() throws HsaServiceCallException {
         final var expectedResult = GetEmployeeResponseDTO.builder().build();
         final var request = GetEmployeeRequestDTO.builder()
-            .personHsaId(PERSON_HSA_ID)
+            .hsaId(PERSON_HSA_ID)
             .build();
 
         when(restTemplate.postForObject(

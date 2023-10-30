@@ -47,13 +47,13 @@ public class HsaIntegrationEmployeeService implements HsatkEmployeeService {
     @Override
     public List<PersonInformation> getEmployee(String personId, String personHsaId, String profile) {
         try {
-            final var employee = hsaIntygProxyServiceEmployeeClient.getEmployee(
+            final var getEmployeeResponse = hsaIntygProxyServiceEmployeeClient.getEmployee(
                 GetEmployeeRequestDTO.builder()
                     .personId(personId)
-                    .personHsaId(personHsaId)
+                    .hsaId(personHsaId)
                     .build()
             );
-            return employee.getPersonInformationList();
+            return getEmployeeResponse.getEmployee().getPersonInformation();
         } catch (HsaServiceCallException exception) {
             log.warn("HsaServiceCallException thrown: {}", exception);
             return new ArrayList<>();

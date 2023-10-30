@@ -32,6 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxyServiceEmployeeClient;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.EmployeeDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeResponseDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.services.HsaIntegrationEmployeeService;
@@ -51,7 +52,7 @@ class HsaIntegrationEmployeeServiceTest {
     void shouldReturnEmptyListIfClientThrowsError() throws HsaServiceCallException {
         when(hsaIntygProxyServiceEmployeeClient.getEmployee(
                 GetEmployeeRequestDTO.builder()
-                    .personHsaId(PERSON_HSA_ID)
+                    .hsaId(PERSON_HSA_ID)
                     .personId(PERSONAL_IDENTITY_NUMBER)
                     .build()
             )
@@ -64,20 +65,24 @@ class HsaIntegrationEmployeeServiceTest {
     @Test
     void shouldReturnListOfPersonInformation() throws HsaServiceCallException {
         final var expectedResult = GetEmployeeResponseDTO.builder()
-            .personInformationList(
-                List.of(
-                    new PersonInformation()
-                )
+            .employee(
+                EmployeeDTO.builder()
+                    .personInformation(
+                        List.of(
+                            new PersonInformation()
+                        )
+                    )
+                    .build()
             ).build();
         when(hsaIntygProxyServiceEmployeeClient.getEmployee(
                 GetEmployeeRequestDTO.builder()
-                    .personHsaId(PERSON_HSA_ID)
+                    .hsaId(PERSON_HSA_ID)
                     .personId(PERSONAL_IDENTITY_NUMBER)
                     .build()
             )
         ).thenReturn(expectedResult);
         final var result = hsaEmployeeService.getEmployee(PERSONAL_IDENTITY_NUMBER, PERSON_HSA_ID);
 
-        assertEquals(expectedResult.getPersonInformationList(), result);
+        assertEquals(expectedResult.getEmployee().getPersonInformation(), result);
     }
 }
