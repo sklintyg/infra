@@ -25,7 +25,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,6 +32,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersResponseDTO;
 
@@ -41,7 +41,6 @@ class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
 
     private static final String EMPTY = "";
     private static final String HSA_ID = "hsaId";
-    private static final List<String> HSA_IDS = List.of(HSA_ID, HSA_ID, HSA_ID);
     @Mock
     private RestTemplate restTemplate;
     @InjectMocks
@@ -76,7 +75,9 @@ class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
             .hsaId(HSA_ID)
             .build();
         final var expectedResponse = GetHealthCareUnitMembersResponseDTO.builder()
-            .hsaIds(HSA_IDS)
+            .healthCareUnitMembers(
+                new HealthCareUnitMembers()
+            )
             .build();
         when(restTemplate.postForObject(anyString(), eq(request), eq(GetHealthCareUnitMembersResponseDTO.class))).thenReturn(
             expectedResponse);

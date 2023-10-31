@@ -19,9 +19,12 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.client;
 
+import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstans.HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
@@ -39,6 +42,8 @@ public class HsaIntygProxyServiceHealthCareUnitMembersClient {
     @Value("${integration.intygproxyservice.baseurl}")
     private String intygProxyServiceBaseUrl;
 
+    @Cacheable(cacheNames = HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME, key = "#getHealthCareUnitMembersRequestDTO.hsaId",
+        unless = "#result == null")
     public GetHealthCareUnitMembersResponseDTO getHealthCareUnitMemberHsaIds(
         GetHealthCareUnitMembersRequestDTO getHealthCareUnitMembersRequestDTO)
         throws HsaServiceCallException {

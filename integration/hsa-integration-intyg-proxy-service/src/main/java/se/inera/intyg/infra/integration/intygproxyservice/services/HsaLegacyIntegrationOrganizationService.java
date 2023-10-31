@@ -20,16 +20,16 @@
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
-import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstans.HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.xml.ws.WebServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMember;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.UserAuthorizationInfo;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
@@ -66,15 +66,19 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
     }
 
     @Override
-    @Cacheable(cacheNames = HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME, key = "#vardEnhetHsaId", unless = "#result == null")
     public List<String> getHsaIdForAktivaUnderenheter(String vardEnhetHsaId) {
         try {
-            final var healthCareUnitMemberHsaId = organizationClient.getHealthCareUnitMemberHsaIds(
+            final var getHealthCareUnitMembersResponseDTO = organizationClient.getHealthCareUnitMemberHsaIds(
                 GetHealthCareUnitMembersRequestDTO.builder()
                     .hsaId(vardEnhetHsaId)
                     .build()
             );
-            return healthCareUnitMemberHsaId.getHsaIds();
+            return getHealthCareUnitMembersResponseDTO
+                .getHealthCareUnitMembers()
+                .getHealthCareUnitMember()
+                .stream()
+                .map(HealthCareUnitMember::getHealthCareUnitMemberHsaId)
+                .collect(Collectors.toList());
         } catch (HsaServiceCallException e) {
             log.error(e.getMessage());
             throw new WebServiceException(e.getMessage());

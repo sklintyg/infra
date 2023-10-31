@@ -32,6 +32,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMember;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
 import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxyServiceHealthCareUnitMembersClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersResponseDTO;
@@ -65,6 +67,15 @@ class HsaLegacyIntegrationOrganizationServiceTest {
 
         @Test
         void shouldReturnListOfHsaIdsForActiveSubUnits() throws HsaServiceCallException {
+            final var healthCareUnitMembers = new HealthCareUnitMembers();
+            final var healthCareUnitMember1 = getHealthCareUnitMember(ACTIVE_CARE_UNIT_HSA_ID_1);
+            final var healthCareUnitMember2 = getHealthCareUnitMember(ACTIVE_CARE_UNIT_HSA_ID_2);
+            healthCareUnitMembers.setHealthCareUnitMember(
+                List.of(
+                    healthCareUnitMember1,
+                    healthCareUnitMember2
+                )
+            );
             final var expectedResult = List.of(ACTIVE_CARE_UNIT_HSA_ID_1, ACTIVE_CARE_UNIT_HSA_ID_2);
             when(organizationClient.getHealthCareUnitMemberHsaIds(
                     GetHealthCareUnitMembersRequestDTO.builder()
@@ -72,11 +83,17 @@ class HsaLegacyIntegrationOrganizationServiceTest {
                         .build()
                 )
             ).thenReturn(GetHealthCareUnitMembersResponseDTO.builder()
-                .hsaIds(expectedResult)
+                .healthCareUnitMembers(healthCareUnitMembers)
                 .build()
             );
             final var result = organizationService.getHsaIdForAktivaUnderenheter(CARE_UNIT_ID);
             assertEquals(expectedResult, result);
+        }
+
+        private HealthCareUnitMember getHealthCareUnitMember(String hsaId) {
+            final var healthCareUnitMember = new HealthCareUnitMember();
+            healthCareUnitMember.setHealthCareUnitMemberHsaId(hsaId);
+            return healthCareUnitMember;
         }
     }
 }

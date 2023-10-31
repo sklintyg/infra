@@ -19,11 +19,11 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.dto;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
 
 @Data
 @Builder
@@ -31,6 +31,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GetHealthCareUnitMembersResponseDTO {
 
-
-    List<String> hsaIds;
+    HealthCareUnitMembers healthCareUnitMembers;
 }
