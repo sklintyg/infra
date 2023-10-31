@@ -36,7 +36,8 @@ include ':message'
 include ':privatepractitioner'
 include ':certificate'
 include ':hsatk-integration'
-include ':hsa-api-integration'
+include ':hsa-integration-api'
+include ':hsa-integration-intyg-proxy-service'
 
 project(':common-redis-cache-core').projectDir = "$rootDir/redis-cache/core" as File
 project(':dynamiclink').projectDir = "$rootDir/dynamiclink" as File
@@ -63,5 +64,6 @@ project(':message').projectDir = "$rootDir/internalapi/message" as File
 project(':privatepractitioner').projectDir = "$rootDir/internalapi/privatepractitioner" as File
 project(':certificate').projectDir = "$rootDir/internalapi/certificate" as File
 project(':hsatk-integration').projectDir = "$rootDir/integration/hsatk-integration" as File
-project(':hsa-api-integration').projectDir = "$rootDir/integration/hsa-api-integration" as File
+project(':hsa-integration-api').projectDir = "$rootDir/integration/hsa-integration-api" as File
+project(':hsa-integration-intyg-proxy-service').projectDir = "$rootDir/integration/hsa-integration-intyg-proxy-service" as File
 

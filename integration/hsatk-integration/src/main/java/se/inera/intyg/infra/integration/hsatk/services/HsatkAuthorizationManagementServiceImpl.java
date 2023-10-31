@@ -18,9 +18,16 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services;
 
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.xml.ws.WebServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.client.AuthorizationManagementClient;
 import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
@@ -32,12 +39,8 @@ import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertifi
 import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertificationpersonresponder.v1.OperationEnum;
 import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
 
-import javax.xml.ws.WebServiceException;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
+@Profile("!" + HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsatkAuthorizationManagementServiceImpl implements HsatkAuthorizationManagementService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HsatkAuthorizationManagementServiceImpl.class);
@@ -91,9 +94,9 @@ public class HsatkAuthorizationManagementServiceImpl implements HsatkAuthorizati
             .map(hsaTypeConverter::toRestriction)
             .collect(Collectors.toList()));
         hospCredentialsForPerson.setHealthCareProfessionalLicenceSpeciality(
-                responseType.getHealthCareProfessionalLicenceSpeciality()
-                        .stream()
-                        .map(hsaTypeConverter::toHCPSpecialityCodes)
+            responseType.getHealthCareProfessionalLicenceSpeciality()
+                .stream()
+                .map(hsaTypeConverter::toHCPSpecialityCodes)
                 .collect(Collectors.toList()));
 
         hospCredentialsForPerson.setHealthcareProfessionalLicenseIdentityNumber(responseType
