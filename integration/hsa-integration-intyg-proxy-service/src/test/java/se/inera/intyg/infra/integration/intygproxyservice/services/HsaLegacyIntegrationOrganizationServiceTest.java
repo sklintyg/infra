@@ -20,29 +20,22 @@
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import javax.xml.ws.WebServiceException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
-import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMember;
-import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
-import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxyServiceHealthCareUnitMembersClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
 class HsaLegacyIntegrationOrganizationServiceTest {
 
     @Mock
-    private HsaIntygProxyServiceHealthCareUnitMembersClient organizationClient;
+    private GetHealthCareUnitMemberHsaIdService getHealthCareUnitMemberHsaIdService;
 
     @InjectMocks
     private HsaLegacyIntegrationOrganizationService organizationService;
@@ -55,45 +48,16 @@ class HsaLegacyIntegrationOrganizationServiceTest {
         private static final String ACTIVE_CARE_UNIT_HSA_ID_2 = "careUnitId2";
 
         @Test
-        void shouldTrowWebServiceExceptionIfClientError() throws HsaServiceCallException {
-            when(organizationClient.getHealthCareUnitMemberHsaIds(
-                GetHealthCareUnitMembersRequestDTO.builder()
-                    .hsaId(CARE_UNIT_ID)
-                    .build()
-            )).thenThrow(HsaServiceCallException.class);
-
-            assertThrows(WebServiceException.class, () -> organizationService.getHsaIdForAktivaUnderenheter(CARE_UNIT_ID));
-        }
-
-        @Test
-        void shouldReturnListOfHsaIdsForActiveSubUnits() throws HsaServiceCallException {
-            final var healthCareUnitMembers = new HealthCareUnitMembers();
-            final var healthCareUnitMember1 = getHealthCareUnitMember(ACTIVE_CARE_UNIT_HSA_ID_1);
-            final var healthCareUnitMember2 = getHealthCareUnitMember(ACTIVE_CARE_UNIT_HSA_ID_2);
-            healthCareUnitMembers.setHealthCareUnitMember(
-                List.of(
-                    healthCareUnitMember1,
-                    healthCareUnitMember2
-                )
-            );
+        void shouldReturnListOfHsaIdsForActiveSubUnits() {
             final var expectedResult = List.of(ACTIVE_CARE_UNIT_HSA_ID_1, ACTIVE_CARE_UNIT_HSA_ID_2);
-            when(organizationClient.getHealthCareUnitMemberHsaIds(
+            when(getHealthCareUnitMemberHsaIdService.getHealthCareUnitMembersHsaIds(
                     GetHealthCareUnitMembersRequestDTO.builder()
                         .hsaId(CARE_UNIT_ID)
                         .build()
                 )
-            ).thenReturn(GetHealthCareUnitMembersResponseDTO.builder()
-                .healthCareUnitMembers(healthCareUnitMembers)
-                .build()
-            );
+            ).thenReturn(expectedResult);
             final var result = organizationService.getHsaIdForAktivaUnderenheter(CARE_UNIT_ID);
             assertEquals(expectedResult, result);
-        }
-
-        private HealthCareUnitMember getHealthCareUnitMember(String hsaId) {
-            final var healthCareUnitMember = new HealthCareUnitMember();
-            healthCareUnitMember.setHealthCareUnitMemberHsaId(hsaId);
-            return healthCareUnitMember;
         }
     }
 }

@@ -46,7 +46,7 @@ public class HsaIntygProxyServiceEmployeeClient {
         try {
             return restTemplate.postForObject(url, getEmployeeRequestDTO, GetEmployeeResponseDTO.class);
         } catch (Exception exception) {
-            throw new HsaServiceCallException("Error occured when trying to communicate with intyg-proxy-service");
+            throw new HsaServiceCallException("Error occured when trying to communicate with intyg-proxy-service", exception);
         }
     }
 

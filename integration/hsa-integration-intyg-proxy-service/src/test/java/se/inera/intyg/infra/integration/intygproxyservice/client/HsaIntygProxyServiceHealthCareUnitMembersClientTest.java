@@ -20,7 +20,6 @@
 package se.inera.intyg.infra.integration.intygproxyservice.client;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -31,7 +30,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersResponseDTO;
@@ -39,7 +37,6 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitM
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
 
-    private static final String EMPTY = "";
     private static final String HSA_ID = "hsaId";
     @Mock
     private RestTemplate restTemplate;
@@ -47,41 +44,17 @@ class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
     private HsaIntygProxyServiceHealthCareUnitMembersClient healthCareUnitMembersClient;
 
     @Test
-    void shouldThrowIfUnitHsaIdIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> healthCareUnitMembersClient.getHealthCareUnitMemberHsaIds(
-            GetHealthCareUnitMembersRequestDTO.builder().build()));
-    }
-
-    @Test
-    void shouldThrowIfUnitHsaIdIsEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> healthCareUnitMembersClient.getHealthCareUnitMemberHsaIds(
-            GetHealthCareUnitMembersRequestDTO.builder().hsaId(EMPTY).build()));
-    }
-
-    @Test
-    void shouldThrowHsaServiceCallExceptionIfCommunicationErrorWithIntygProxyService() {
-        final var request = GetHealthCareUnitMembersRequestDTO.builder()
-            .hsaId(HSA_ID)
-            .build();
-
-        when(restTemplate.postForObject(anyString(), eq(request), eq(GetHealthCareUnitMembersResponseDTO.class))).thenThrow(
-            IllegalArgumentException.class);
-        assertThrows(HsaServiceCallException.class, () -> healthCareUnitMembersClient.getHealthCareUnitMemberHsaIds(request));
-    }
-
-    @Test
-    void shouldReturnGetHealthCareUnitMembersResponse() throws HsaServiceCallException {
+    void shouldReturnGetHealthCareUnitMembers() {
         final var request = GetHealthCareUnitMembersRequestDTO.builder()
             .hsaId(HSA_ID)
             .build();
         final var expectedResponse = GetHealthCareUnitMembersResponseDTO.builder()
-            .healthCareUnitMembers(
-                new HealthCareUnitMembers()
-            )
+            .healthCareUnitMembers(new HealthCareUnitMembers())
             .build();
         when(restTemplate.postForObject(anyString(), eq(request), eq(GetHealthCareUnitMembersResponseDTO.class))).thenReturn(
-            expectedResponse);
-        final var result = healthCareUnitMembersClient.getHealthCareUnitMemberHsaIds(request);
+            expectedResponse
+        );
+        final var result = healthCareUnitMembersClient.getHealthCareUnitMembers(request);
         assertEquals(expectedResponse, result);
     }
 }
