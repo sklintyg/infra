@@ -19,9 +19,9 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.constants;
 
-public class HsaIntygProxyServiceConstans {
+public class HsaIntygProxyServiceConstants {
 
-    private HsaIntygProxyServiceConstans() {
+    private HsaIntygProxyServiceConstants() {
         throw new IllegalStateException("Utility class!");
     }
 

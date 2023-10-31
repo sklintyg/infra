@@ -19,7 +19,7 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.configuration;
 
-import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstans.HSA_INTYG_PROXY_SERVICE_REST_TEMPLATE;
+import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.HSA_INTYG_PROXY_SERVICE_REST_TEMPLATE;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
