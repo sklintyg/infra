@@ -73,10 +73,6 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     @Override
     public String getParentUnit(String hsaId) throws HsaServiceCallException {
-        try {
-            return null;
-        } catch (Exception exception) {
-            throw new HsaServiceCallException();
-        }
+        return null;
     }
 }
