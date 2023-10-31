@@ -43,6 +43,7 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     @Override
     public UserAuthorizationInfo getAuthorizedEnheterForHosPerson(String hosPersonHsaId) {
+        log.info("work in progress");
         return null;
     }
 
@@ -72,6 +73,10 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     @Override
     public String getParentUnit(String hsaId) throws HsaServiceCallException {
-        return null;
+        try {
+            return null;
+        } catch (Exception exception) {
+            throw new HsaServiceCallException();
+        }
     }
 }
