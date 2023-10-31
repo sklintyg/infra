@@ -50,7 +50,7 @@ class HsaLegacyIntegrationOrganizationServiceTest {
         @Test
         void shouldReturnListOfHsaIdsForActiveSubUnits() {
             final var expectedResult = List.of(ACTIVE_CARE_UNIT_HSA_ID_1, ACTIVE_CARE_UNIT_HSA_ID_2);
-            when(getHealthCareUnitMemberHsaIdService.getHealthCareUnitMembersHsaIds(
+            when(getHealthCareUnitMemberHsaIdService.get(
                     GetHealthCareUnitMembersRequestDTO.builder()
                         .hsaId(CARE_UNIT_ID)
                         .build()

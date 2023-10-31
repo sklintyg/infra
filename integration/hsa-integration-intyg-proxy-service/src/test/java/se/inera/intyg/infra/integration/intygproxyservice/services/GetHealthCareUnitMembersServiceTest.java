@@ -47,13 +47,13 @@ class GetHealthCareUnitMembersServiceTest {
     @Test
     void shouldThrowIfProvidedHsaIdFromRequestIsNull() {
         final var request = GetHealthCareUnitMembersRequestDTO.builder().build();
-        assertThrows(IllegalArgumentException.class, () -> getHealthCareUnitMembersService.getHealthCareUnitMembers(request));
+        assertThrows(IllegalArgumentException.class, () -> getHealthCareUnitMembersService.get(request));
     }
 
     @Test
     void shouldThrowIfProvidedHsaIdFromRequestIsEmpty() {
         final var request = GetHealthCareUnitMembersRequestDTO.builder().hsaId(EMPTY).build();
-        assertThrows(IllegalArgumentException.class, () -> getHealthCareUnitMembersService.getHealthCareUnitMembers(request));
+        assertThrows(IllegalArgumentException.class, () -> getHealthCareUnitMembersService.get(request));
     }
 
     @Test
@@ -65,7 +65,7 @@ class GetHealthCareUnitMembersServiceTest {
                 .healthCareUnitMembers(expectedResponse)
                 .build()
         );
-        final var result = getHealthCareUnitMembersService.getHealthCareUnitMembers(request);
+        final var result = getHealthCareUnitMembersService.get(request);
         assertEquals(expectedResponse, result);
     }
 }

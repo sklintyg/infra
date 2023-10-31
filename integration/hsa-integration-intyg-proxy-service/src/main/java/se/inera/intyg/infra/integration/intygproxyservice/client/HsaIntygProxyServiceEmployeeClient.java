@@ -41,26 +41,11 @@ public class HsaIntygProxyServiceEmployeeClient {
     private String intygProxyServiceBaseUrl;
 
     public GetEmployeeResponseDTO getEmployee(GetEmployeeRequestDTO getEmployeeRequestDTO) throws HsaServiceCallException {
-        validateRequestParameters(getEmployeeRequestDTO);
         final var url = intygProxyServiceBaseUrl + employeeEndpoint;
         try {
             return restTemplate.postForObject(url, getEmployeeRequestDTO, GetEmployeeResponseDTO.class);
         } catch (Exception exception) {
             throw new HsaServiceCallException("Error occured when trying to communicate with intyg-proxy-service", exception);
         }
-    }
-
-    private void validateRequestParameters(GetEmployeeRequestDTO getEmployeeRequestDTO) {
-        if (isNullOrEmpty(getEmployeeRequestDTO.getHsaId()) && isNullOrEmpty(getEmployeeRequestDTO.getPersonId())) {
-            throw new IllegalArgumentException(
-                "Missing required parameters. Must provide either personalIdentityNumber or personHsaId");
-        }
-        if (!isNullOrEmpty(getEmployeeRequestDTO.getHsaId()) && !isNullOrEmpty(getEmployeeRequestDTO.getPersonId())) {
-            throw new IllegalArgumentException("Only provide either personalIdentityNumber or personHsaId. ");
-        }
-    }
-
-    private boolean isNullOrEmpty(String value) {
-        return value == null || value.isEmpty();
     }
 }

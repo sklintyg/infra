@@ -20,19 +20,16 @@
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
-import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.EMPLOYEE_CACHE_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkEmployeeService;
-import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxyServiceEmployeeClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
 
 @Slf4j
@@ -41,7 +38,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequest
 @RequiredArgsConstructor
 public class HsaIntegrationEmployeeService implements HsatkEmployeeService {
 
-    private final HsaIntygProxyServiceEmployeeClient hsaIntygProxyServiceEmployeeClient;
+    private final GetEmployeeService getEmployeeService;
 
     @Override
     public List<PersonInformation> getEmployee(String personalIdentityNumber, String personHsaId) {
@@ -49,16 +46,14 @@ public class HsaIntegrationEmployeeService implements HsatkEmployeeService {
     }
 
     @Override
-    @Cacheable(cacheNames = EMPLOYEE_CACHE_NAME, key = "#personId + #personHsaId", unless = "#result == null")
     public List<PersonInformation> getEmployee(String personId, String personHsaId, String profile) {
         try {
-            final var getEmployeeResponse = hsaIntygProxyServiceEmployeeClient.getEmployee(
+            return getEmployeeService.get(
                 GetEmployeeRequestDTO.builder()
                     .personId(personId)
                     .hsaId(personHsaId)
                     .build()
             );
-            return getEmployeeResponse.getEmployee().getPersonInformation();
         } catch (HsaServiceCallException exception) {
             log.warn("HsaServiceCallException thrown: {}", exception);
             return new ArrayList<>();

@@ -34,9 +34,8 @@ public class GetHealthCareUnitMemberHsaIdService {
 
     private final GetHealthCareUnitMembersService getHealthCareUnitMembersService;
 
-    public List<String> getHealthCareUnitMembersHsaIds(
-        GetHealthCareUnitMembersRequestDTO getHealthCareUnitMembersRequest) {
-        final var healthCareUnitMembers = getHealthCareUnitMembersService.getHealthCareUnitMembers(getHealthCareUnitMembersRequest);
+    public List<String> get(GetHealthCareUnitMembersRequestDTO getHealthCareUnitMembersRequest) {
+        final var healthCareUnitMembers = getHealthCareUnitMembersService.get(getHealthCareUnitMembersRequest);
         if (responseIsNullOrEmpty(healthCareUnitMembers)) {
             return Collections.emptyList();
         }

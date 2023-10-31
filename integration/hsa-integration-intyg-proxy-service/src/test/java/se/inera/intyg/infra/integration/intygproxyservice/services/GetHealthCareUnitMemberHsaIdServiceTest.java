@@ -49,8 +49,8 @@ class GetHealthCareUnitMemberHsaIdServiceTest {
     @Test
     void shouldReturnAEmptyListIfResponseIsNull() {
         final var request = GetHealthCareUnitMembersRequestDTO.builder().hsaId(HSA_ID).build();
-        when(getHealthCareUnitMembersService.getHealthCareUnitMembers(request)).thenReturn(null);
-        final var result = getHealthCareUnitMemberHsaIdService.getHealthCareUnitMembersHsaIds(request);
+        when(getHealthCareUnitMembersService.get(request)).thenReturn(null);
+        final var result = getHealthCareUnitMemberHsaIdService.get(request);
         assertTrue(result.isEmpty());
     }
 
@@ -58,8 +58,8 @@ class GetHealthCareUnitMemberHsaIdServiceTest {
     void shouldReturnAEmptyListIfListOfHealthCareUnitMemberIsNull() {
         final var request = GetHealthCareUnitMembersRequestDTO.builder().hsaId(HSA_ID).build();
         final var healthCareUnitMembers = new HealthCareUnitMembers();
-        when(getHealthCareUnitMembersService.getHealthCareUnitMembers(request)).thenReturn(healthCareUnitMembers);
-        final var result = getHealthCareUnitMemberHsaIdService.getHealthCareUnitMembersHsaIds(request);
+        when(getHealthCareUnitMembersService.get(request)).thenReturn(healthCareUnitMembers);
+        final var result = getHealthCareUnitMemberHsaIdService.get(request);
         assertTrue(result.isEmpty());
     }
 
@@ -68,8 +68,8 @@ class GetHealthCareUnitMemberHsaIdServiceTest {
         final var request = GetHealthCareUnitMembersRequestDTO.builder().hsaId(HSA_ID).build();
         final var healthCareUnitMembers = new HealthCareUnitMembers();
         healthCareUnitMembers.setHealthCareUnitMember(Collections.emptyList());
-        when(getHealthCareUnitMembersService.getHealthCareUnitMembers(request)).thenReturn(healthCareUnitMembers);
-        final var result = getHealthCareUnitMemberHsaIdService.getHealthCareUnitMembersHsaIds(request);
+        when(getHealthCareUnitMembersService.get(request)).thenReturn(healthCareUnitMembers);
+        final var result = getHealthCareUnitMemberHsaIdService.get(request);
         assertTrue(result.isEmpty());
     }
 
@@ -81,8 +81,8 @@ class GetHealthCareUnitMemberHsaIdServiceTest {
         final var healthCareUnitMember2 = getHealthCareUnitMember(HEALTH_CARE_UNIT_MEMBER_HSA_ID_2);
         healthCareUnitMembers.setHealthCareUnitMember(List.of(healthCareUnitMember1, healthCareUnitMember2));
         final var expectedResult = List.of(HEALTH_CARE_UNIT_MEMBER_HSA_ID_1, HEALTH_CARE_UNIT_MEMBER_HSA_ID_2);
-        when(getHealthCareUnitMembersService.getHealthCareUnitMembers(request)).thenReturn(healthCareUnitMembers);
-        final var result = getHealthCareUnitMemberHsaIdService.getHealthCareUnitMembersHsaIds(request);
+        when(getHealthCareUnitMembersService.get(request)).thenReturn(healthCareUnitMembers);
+        final var result = getHealthCareUnitMemberHsaIdService.get(request);
         assertEquals(expectedResult, result);
     }
 

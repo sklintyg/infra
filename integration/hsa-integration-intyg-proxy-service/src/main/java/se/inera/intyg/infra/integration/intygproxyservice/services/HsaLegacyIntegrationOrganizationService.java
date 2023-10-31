@@ -63,7 +63,7 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     @Override
     public List<String> getHsaIdForAktivaUnderenheter(String vardEnhetHsaId) {
-        return getHealthCareUnitMemberHsaIdService.getHealthCareUnitMembersHsaIds(
+        return getHealthCareUnitMemberHsaIdService.get(
             GetHealthCareUnitMembersRequestDTO.builder()
                 .hsaId(vardEnhetHsaId)
                 .build()

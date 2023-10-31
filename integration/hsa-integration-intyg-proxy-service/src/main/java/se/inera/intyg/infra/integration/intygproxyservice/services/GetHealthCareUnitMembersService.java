@@ -36,7 +36,7 @@ public class GetHealthCareUnitMembersService {
 
     @Cacheable(cacheNames = HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME, key = "#getHealthCareUnitMembersRequest.hsaId",
         unless = "#result == null")
-    public HealthCareUnitMembers getHealthCareUnitMembers(GetHealthCareUnitMembersRequestDTO getHealthCareUnitMembersRequest) {
+    public HealthCareUnitMembers get(GetHealthCareUnitMembersRequestDTO getHealthCareUnitMembersRequest) {
         validateRequest(getHealthCareUnitMembersRequest.getHsaId());
         final var healthCareUnitMembersResponse = healthCareUnitMembersClient.getHealthCareUnitMembers(getHealthCareUnitMembersRequest);
         return healthCareUnitMembersResponse.getHealthCareUnitMembers();
@@ -44,7 +44,7 @@ public class GetHealthCareUnitMembersService {
 
     private void validateRequest(String hsaId) {
         if (hsaId == null || hsaId.isEmpty()) {
-            throw new IllegalArgumentException("HsaId for unit was not provided");
+            throw new IllegalArgumentException("HsaId for unit was not provided '" + hsaId + "'");
         }
     }
 }
