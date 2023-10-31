@@ -34,7 +34,8 @@ public class GetCareProviderOfCareUnitService {
 
     private final HsaIntygProxyServiceCareProviderOfCareUnitClient hsaIntygProxyServiceCareProviderOfCareUnitClient;
 
-    @Cacheable(cacheNames = CARE_PROVIDER_OF_CARE_UNIT_CACHE_NAME, key = "#getCareProviderOfCareUnitRequestDTO.careUnitHsaId", unless = "#result == null")
+    @Cacheable(cacheNames = CARE_PROVIDER_OF_CARE_UNIT_CACHE_NAME, key = "#getCareProviderOfCareUnitRequestDTO.careUnitHsaId",
+        unless = "#result == null")
     public String get(GetCareProviderOfCareUnitRequestDTO getCareProviderOfCareUnitRequestDTO) throws HsaServiceCallException {
         validateRequestParameters(getCareProviderOfCareUnitRequestDTO);
         final var careProviderOfCareUnit = hsaIntygProxyServiceCareProviderOfCareUnitClient.getCareProviderOfCareUnit(

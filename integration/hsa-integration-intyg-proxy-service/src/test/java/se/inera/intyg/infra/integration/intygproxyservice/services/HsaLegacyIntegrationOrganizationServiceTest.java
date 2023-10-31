@@ -47,11 +47,11 @@ class HsaLegacyIntegrationOrganizationServiceTest {
     private GetHealthCareUnitMemberHsaIdService getHealthCareUnitMemberHsaIdService;
 
 
-    private final static String CARE_PROVIDER_HSA_ID = "careProviderHsaId";
-    private final static String CARE_UNIT_HSA_ID = "careUnitHsaId";
+    private static final String CARE_PROVIDER_HSA_ID = "careProviderHsaId";
+    private static final String CARE_UNIT_HSA_ID = "careUnitHsaId";
 
     @Nested
-    class vardgivareOfvardenhet {
+    class VardgivareOfvardenhet {
 
         @Test
         void shouldReturnCareProviderHsaIdWhenCareUnitHsaIdIsProvided() throws HsaServiceCallException {
