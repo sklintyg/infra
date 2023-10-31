@@ -1,5 +1,5 @@
 dependencies {
-    implementation project(":hsa-api-integration")
+    implementation project(":hsa-integration-api")
     implementation project(":hsatk-integration")
 
     implementation "com.fasterxml.jackson.core:jackson-annotations"

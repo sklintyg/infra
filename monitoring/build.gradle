@@ -13,7 +13,7 @@ dependencies {
     implementation "io.prometheus:simpleclient_servlet"
     implementation "org.aspectj:aspectjweaver"
 
-    compileOnly project(':hsa-api-integration')
+    compileOnly project(':hsa-integration-api')
     compileOnly project(':hsatk-integration')
     compileOnly project(':security-common')
 

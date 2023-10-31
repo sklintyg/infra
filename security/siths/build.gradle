@@ -1,5 +1,5 @@
 dependencies {
-  implementation project(":hsa-api-integration")
+  implementation project(":hsa-integration-api")
   implementation project(':hsatk-integration')
   implementation project(':security-common')
   implementation project(':security-authorities')
