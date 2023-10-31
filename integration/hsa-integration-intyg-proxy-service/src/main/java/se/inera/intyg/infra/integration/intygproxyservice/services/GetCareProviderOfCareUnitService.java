@@ -19,7 +19,7 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
-import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstans.CARE_PROVIDER_OF_CARE_UNIT_CACHE_NAME;
+import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.CARE_PROVIDER_OF_CARE_UNIT_CACHE_NAME;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;

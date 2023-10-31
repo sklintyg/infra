@@ -22,6 +22,7 @@ package se.inera.intyg.infra.integration.intygproxyservice.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetCareProviderOfCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
 class HsaLegacyIntegrationOrganizationServiceTest {
@@ -40,6 +42,10 @@ class HsaLegacyIntegrationOrganizationServiceTest {
 
     @Mock
     private GetCareProviderOfCareUnitService getCareProviderOfCareUnitService;
+
+    @Mock
+    private GetHealthCareUnitMemberHsaIdService getHealthCareUnitMemberHsaIdService;
+
 
     private final static String CARE_PROVIDER_HSA_ID = "careProviderHsaId";
     private final static String CARE_UNIT_HSA_ID = "careUnitHsaId";
@@ -70,4 +76,24 @@ class HsaLegacyIntegrationOrganizationServiceTest {
         }
     }
 
+    @Nested
+    class GetHsaIdForAktivaUnderenheter {
+
+        private static final String CARE_UNIT_ID = "careUnitId";
+        private static final String ACTIVE_CARE_UNIT_HSA_ID_1 = "careUnitId1";
+        private static final String ACTIVE_CARE_UNIT_HSA_ID_2 = "careUnitId2";
+
+        @Test
+        void shouldReturnListOfHsaIdsForActiveSubUnits() {
+            final var expectedResult = List.of(ACTIVE_CARE_UNIT_HSA_ID_1, ACTIVE_CARE_UNIT_HSA_ID_2);
+            when(getHealthCareUnitMemberHsaIdService.get(
+                    GetHealthCareUnitMembersRequestDTO.builder()
+                        .hsaId(CARE_UNIT_ID)
+                        .build()
+                )
+            ).thenReturn(expectedResult);
+            final var result = organizationService.getHsaIdForAktivaUnderenheter(CARE_UNIT_ID);
+            assertEquals(expectedResult, result);
+        }
+    }
 }

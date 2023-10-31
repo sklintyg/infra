@@ -17,83 +17,70 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.client;
+package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxyServiceEmployeeClient;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.EmployeeDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
-class HsaIntygProxyServiceEmployeeClientTest {
+class GetEmployeeServiceTest {
 
     @Mock
-    private RestTemplate restTemplate;
+    private HsaIntygProxyServiceEmployeeClient employeeClient;
 
     @InjectMocks
-    private HsaIntygProxyServiceEmployeeClient hsaIntygProxyServiceEmployeeClient;
+    private GetEmployeeService getEmployeeService;
 
     private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
     private static final String PERSON_HSA_ID = "personHsaId";
 
     @Test
-    void shouldThrowHsaServiceCallExceptionIfCommunicationErrorWithIntygProxyService() {
+    void shouldThrowIfMissingPersonalIdentityNumberAndPersonHsaId() {
         final var request = GetEmployeeRequestDTO.builder()
-            .personId(PERSONAL_IDENTITY_NUMBER)
+            .personId(null)
+            .hsaId(null)
             .build();
-
-        when(restTemplate.postForObject(
-                anyString(),
-                eq(request),
-                eq(GetEmployeeResponseDTO.class)
-            )
-        ).thenThrow(RuntimeException.class);
-        assertThrows(HsaServiceCallException.class, () -> hsaIntygProxyServiceEmployeeClient.getEmployee(request));
+        assertThrows(IllegalArgumentException.class, () -> getEmployeeService.get(request));
     }
 
     @Test
-    void shouldReturnGetEmployeeResponseDTOWhenPersonalIdentityNumberIsProvided() throws HsaServiceCallException {
-        final var expectedResult = GetEmployeeResponseDTO.builder().build();
+    void shouldThrowIfBothPersonalIdentityNumberAndPersonHsaIdIsProvided() {
         final var request = GetEmployeeRequestDTO.builder()
             .personId(PERSONAL_IDENTITY_NUMBER)
-            .build();
-
-        when(restTemplate.postForObject(
-            anyString(),
-            eq(request),
-            eq(GetEmployeeResponseDTO.class))
-        ).thenReturn(expectedResult);
-
-        final var response = hsaIntygProxyServiceEmployeeClient.getEmployee(request);
-        assertEquals(expectedResult, response);
-    }
-
-    @Test
-    void shouldReturnGetEmployeeResponseDTOWhenPersonHsaIdIsProvided() throws HsaServiceCallException {
-        final var expectedResult = GetEmployeeResponseDTO.builder().build();
-        final var request = GetEmployeeRequestDTO.builder()
             .hsaId(PERSON_HSA_ID)
             .build();
+        assertThrows(IllegalArgumentException.class, () -> getEmployeeService.get(request));
+    }
 
-        when(restTemplate.postForObject(
-            anyString(),
-            eq(request),
-            eq(GetEmployeeResponseDTO.class))
-        ).thenReturn(expectedResult);
-
-        final var response = hsaIntygProxyServiceEmployeeClient.getEmployee(request);
-        assertEquals(expectedResult, response);
+    @Test
+    void shouldReturnListOfPersonalInformation() throws HsaServiceCallException {
+        final var request = GetEmployeeRequestDTO.builder()
+            .personId(PERSONAL_IDENTITY_NUMBER)
+            .build();
+        final var expectedResult = List.of(new PersonInformation());
+        when(employeeClient.getEmployee(request)).thenReturn(
+            GetEmployeeResponseDTO.builder()
+                .employee(
+                    EmployeeDTO.builder()
+                        .personInformation(expectedResult)
+                        .build()
+                )
+                .build());
+        final var result = getEmployeeService.get(request);
+        assertEquals(expectedResult, result);
     }
 }

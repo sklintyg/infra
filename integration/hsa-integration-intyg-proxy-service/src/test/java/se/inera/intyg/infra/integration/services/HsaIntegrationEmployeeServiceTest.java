@@ -31,17 +31,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
-import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxyServiceEmployeeClient;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.EmployeeDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.services.GetEmployeeService;
 import se.inera.intyg.infra.integration.intygproxyservice.services.HsaIntegrationEmployeeService;
 
 @ExtendWith(MockitoExtension.class)
 class HsaIntegrationEmployeeServiceTest {
 
     @Mock
-    private HsaIntygProxyServiceEmployeeClient hsaIntygProxyServiceEmployeeClient;
+    private GetEmployeeService getEmployeeService;
     @InjectMocks
     private HsaIntegrationEmployeeService hsaEmployeeService;
 
@@ -50,7 +48,7 @@ class HsaIntegrationEmployeeServiceTest {
 
     @Test
     void shouldReturnEmptyListIfClientThrowsError() throws HsaServiceCallException {
-        when(hsaIntygProxyServiceEmployeeClient.getEmployee(
+        when(getEmployeeService.get(
                 GetEmployeeRequestDTO.builder()
                     .hsaId(PERSON_HSA_ID)
                     .personId(PERSONAL_IDENTITY_NUMBER)
@@ -64,17 +62,10 @@ class HsaIntegrationEmployeeServiceTest {
 
     @Test
     void shouldReturnListOfPersonInformation() throws HsaServiceCallException {
-        final var expectedResult = GetEmployeeResponseDTO.builder()
-            .employee(
-                EmployeeDTO.builder()
-                    .personInformation(
-                        List.of(
-                            new PersonInformation()
-                        )
-                    )
-                    .build()
-            ).build();
-        when(hsaIntygProxyServiceEmployeeClient.getEmployee(
+        final var expectedResult = List.of(
+            new PersonInformation()
+        );
+        when(getEmployeeService.get(
                 GetEmployeeRequestDTO.builder()
                     .hsaId(PERSON_HSA_ID)
                     .personId(PERSONAL_IDENTITY_NUMBER)
@@ -83,6 +74,6 @@ class HsaIntegrationEmployeeServiceTest {
         ).thenReturn(expectedResult);
         final var result = hsaEmployeeService.getEmployee(PERSONAL_IDENTITY_NUMBER, PERSON_HSA_ID);
 
-        assertEquals(expectedResult.getEmployee().getPersonInformation(), result);
+        assertEquals(expectedResult, result);
     }
 }
