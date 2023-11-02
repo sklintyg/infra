@@ -40,11 +40,11 @@ public class HsaIntygProxyServiceHealthCareUnitClient {
     private String intygProxyServiceBaseUrl;
 
     public HealthCareUnitResponseDTO getHealthCareUnit(
-        GetHealthCareUnitRequestDTO getCareProviderOfCareUnitRequestDTO) throws HsaServiceCallException {
+        GetHealthCareUnitRequestDTO getHealthCareUnitRequestDTO) throws HsaServiceCallException {
         final var url = intygProxyServiceBaseUrl + healthCareUnitEndpoint;
 
         try {
-            return restTemplate.postForObject(url, getCareProviderOfCareUnitRequestDTO, HealthCareUnitResponseDTO.class);
+            return restTemplate.postForObject(url, getHealthCareUnitRequestDTO, HealthCareUnitResponseDTO.class);
         } catch (Exception exception) {
             throw new HsaServiceCallException("Error occured when trying to communicate with intyg-proxy-service", exception);
         }

@@ -39,11 +39,11 @@ public class CacheConfiguration {
     @Value("${hsa.intygproxyservice.getemployee.cache.expiry:60}")
     private String hsaEmployeeCacheExpirySeconds;
 
-    @Value("${hsa.intygproxyservice.getcareproviderofcareunit.cache.expiry:60}")
-    private String hsaCareProviderOfCareUnitCacheExpirySeconds;
+    @Value("${hsa.intygproxyservice.gethealthcareunit.cache.expiry:60}")
+    private String hsaHealthCareUnitCacheExpirySeconds;
 
-    @Value("${hsa.intygproxyservice.gethealthunitmembers.cache.expiry:60}")
-    private String hsaHealthUnitMembersCacheExpirySeconds;
+    @Value("${hsa.intygproxyservice.gethealthcareunitmembers.cache.expiry:60}")
+    private String hsaHealthCareUnitMembersCacheExpirySeconds;
 
     @Bean(name = EMPLOYEE_CACHE_NAME)
     public Cache hsaIntygProxyServiceEmployeeCache() {
@@ -51,12 +51,12 @@ public class CacheConfiguration {
     }
 
     @Bean(name = HEALTH_CARE_UNIT_CACHE_NAME)
-    public Cache hsaIntygProxyServiceCareProviderOfCareUnitCache() {
-        return redisCacheOptionsSetter.createCache(HEALTH_CARE_UNIT_CACHE_NAME, hsaCareProviderOfCareUnitCacheExpirySeconds);
+    public Cache hsaIntygProxyServiceHealthCareUnitCache() {
+        return redisCacheOptionsSetter.createCache(HEALTH_CARE_UNIT_CACHE_NAME, hsaHealthCareUnitCacheExpirySeconds);
     }
 
     @Bean(name = HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME)
     public Cache hsaIntygProxyServiceHealthCareUnitMembersCache() {
-        return redisCacheOptionsSetter.createCache(HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME, hsaHealthUnitMembersCacheExpirySeconds);
+        return redisCacheOptionsSetter.createCache(HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME, hsaHealthCareUnitMembersCacheExpirySeconds);
     }
 }

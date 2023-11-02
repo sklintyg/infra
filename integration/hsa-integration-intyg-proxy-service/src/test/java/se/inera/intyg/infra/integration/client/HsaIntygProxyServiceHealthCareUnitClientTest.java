@@ -47,7 +47,7 @@ class HsaIntygProxyServiceHealthCareUnitClientTest {
     private static final String CARE_UNIT_HSA_ID = "careUnitHsaId";
 
     @Test
-    void shouldReturnGetCareProviderOfCareUnitResponseWhenHsaIdIsProvided() throws HsaServiceCallException {
+    void shouldReturnGetHealthCareUnitResponseWhenHsaIdIsProvided() throws HsaServiceCallException {
         final var request = GetHealthCareUnitRequestDTO.builder()
             .hsaId(CARE_UNIT_HSA_ID)
             .build();

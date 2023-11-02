@@ -35,7 +35,7 @@ public class GetHealthCareUnitService {
 
     private final HsaIntygProxyServiceHealthCareUnitClient hsaIntygProxyServiceHealthCareUnitClient;
 
-    @Cacheable(cacheNames = HEALTH_CARE_UNIT_CACHE_NAME, key = "#getCareProviderOfCareUnitRequestDTO.careUnitHsaId",
+    @Cacheable(cacheNames = HEALTH_CARE_UNIT_CACHE_NAME, key = "#getHealthCareUnitRequestDTO.hsaId",
         unless = "#result == null")
     public HealthCareUnit get(GetHealthCareUnitRequestDTO getHealthCareUnitRequestDTO) throws HsaServiceCallException {
         validateRequestParameters(getHealthCareUnitRequestDTO);
