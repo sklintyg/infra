@@ -36,7 +36,6 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitM
 public class GetActiveHealthCareUnitMemberHsaIdService {
 
     private final GetHealthCareUnitMembersService getHealthCareUnitMembersService;
-    private static final LocalDateTime NOW = LocalDateTime.now(ZoneId.systemDefault());
 
     public List<String> get(GetHealthCareUnitMembersRequestDTO getHealthCareUnitMembersRequest) {
         final var healthCareUnitMembers = getHealthCareUnitMembersService.get(getHealthCareUnitMembersRequest);
@@ -56,11 +55,11 @@ public class GetActiveHealthCareUnitMemberHsaIdService {
     }
 
     private static boolean isNullOrBeforeToday(LocalDateTime date) {
-        return date == null || !date.isBefore(NOW);
+        return date == null || !date.isBefore(LocalDateTime.now(ZoneId.systemDefault()));
     }
 
     private static boolean isNullOrAfterToday(LocalDateTime date) {
-        return date == null || !date.isAfter(NOW);
+        return date == null || !date.isAfter(LocalDateTime.now(ZoneId.systemDefault()));
     }
 
     private static boolean responseIsNullOrEmpty(HealthCareUnitMembers healthCareUnitMembers) {
