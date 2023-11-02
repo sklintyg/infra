@@ -32,6 +32,7 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitRequestDTO;
 
 @Slf4j
 @Service
@@ -39,6 +40,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitM
 @Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsaLegacyIntegrationOrganizationService implements HsaOrganizationsService {
 
+    private final GetHealthCareUnitService getHealthCareUnitService;
     private final GetHealthCareUnitMemberHsaIdService getHealthCareUnitMemberHsaIdService;
 
     @Override
@@ -49,7 +51,18 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     @Override
     public String getVardgivareOfVardenhet(String vardenhetHsaId) {
-        return null;
+        try {
+            final var healthCareUnit = getHealthCareUnitService.get(
+                GetHealthCareUnitRequestDTO.builder()
+                    .hsaId(vardenhetHsaId)
+                    .build()
+            );
+            return healthCareUnit.getHealthCareProviderHsaId();
+
+        } catch (HsaServiceCallException hsaServiceCallException) {
+            log.warn(String.format("Could not fetch health care unit: '%s'", vardenhetHsaId), hsaServiceCallException);
+            return null;
+        }
     }
 
     @Override
