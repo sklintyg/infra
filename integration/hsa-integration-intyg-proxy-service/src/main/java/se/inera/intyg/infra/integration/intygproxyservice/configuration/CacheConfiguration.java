@@ -19,8 +19,8 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.configuration;
 
-import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.CARE_PROVIDER_OF_CARE_UNIT_CACHE_NAME;
 import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.EMPLOYEE_CACHE_NAME;
+import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.HEALTH_CARE_UNIT_CACHE_NAME;
 import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME;
 
 import lombok.RequiredArgsConstructor;
@@ -50,9 +50,9 @@ public class CacheConfiguration {
         return redisCacheOptionsSetter.createCache(EMPLOYEE_CACHE_NAME, hsaEmployeeCacheExpirySeconds);
     }
 
-    @Bean(name = CARE_PROVIDER_OF_CARE_UNIT_CACHE_NAME)
+    @Bean(name = HEALTH_CARE_UNIT_CACHE_NAME)
     public Cache hsaIntygProxyServiceCareProviderOfCareUnitCache() {
-        return redisCacheOptionsSetter.createCache(CARE_PROVIDER_OF_CARE_UNIT_CACHE_NAME, hsaCareProviderOfCareUnitCacheExpirySeconds);
+        return redisCacheOptionsSetter.createCache(HEALTH_CARE_UNIT_CACHE_NAME, hsaCareProviderOfCareUnitCacheExpirySeconds);
     }
 
     @Bean(name = HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME)

@@ -25,32 +25,32 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetCareProviderOfCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
-class GetCareProviderOfCareUnitServiceTest {
+class GetHealthCareUnitServiceTest {
 
     @InjectMocks
-    private GetCareProviderOfCareUnitService getCareProviderOfCareUnitService;
+    private GetHealthCareUnitService getHealthCareUnitService;
 
     @Test
     void shouldThrowIfHsaIdIsNull() {
-        final var request = GetCareProviderOfCareUnitRequestDTO.builder()
-            .careUnitHsaId(null)
+        final var request = GetHealthCareUnitRequestDTO.builder()
+            .hsaId(null)
             .build();
 
         assertThrows(IllegalArgumentException.class,
-            () -> getCareProviderOfCareUnitService.get(request));
+            () -> getHealthCareUnitService.get(request));
     }
 
     @Test
     void shouldThrowIfHsaIdIsEmpty() {
-        final var request = GetCareProviderOfCareUnitRequestDTO.builder()
-            .careUnitHsaId("")
+        final var request = GetHealthCareUnitRequestDTO.builder()
+            .hsaId("")
             .build();
 
         assertThrows(IllegalArgumentException.class,
-            () -> getCareProviderOfCareUnitService.get(request));
+            () -> getHealthCareUnitService.get(request));
     }
 
 }

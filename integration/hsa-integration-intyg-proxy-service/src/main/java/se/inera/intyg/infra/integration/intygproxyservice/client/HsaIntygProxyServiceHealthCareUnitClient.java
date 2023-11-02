@@ -25,26 +25,26 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetCareProviderOfCareUnitRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetCareProviderOfCareUnitResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.HealthCareUnitResponseDTO;
 
 @Service
-public class HsaIntygProxyServiceCareProviderOfCareUnitClient {
+public class HsaIntygProxyServiceHealthCareUnitClient {
 
     @Autowired
     @Qualifier("hsaIntygProxyServiceRestTemplate")
     private RestTemplate restTemplate;
     @Value("${integration.intygproxyservice.healthcareunit.endpoint}")
-    private String careProviderOfCareUnitEndpoint;
+    private String healthCareUnitEndpoint;
     @Value("${integration.intygproxyservice.baseurl}")
     private String intygProxyServiceBaseUrl;
 
-    public GetCareProviderOfCareUnitResponseDTO getCareProviderOfCareUnit(
-        GetCareProviderOfCareUnitRequestDTO getCareProviderOfCareUnitRequestDTO) throws HsaServiceCallException {
-        final var url = intygProxyServiceBaseUrl + careProviderOfCareUnitEndpoint;
+    public HealthCareUnitResponseDTO getHealthCareUnit(
+        GetHealthCareUnitRequestDTO getCareProviderOfCareUnitRequestDTO) throws HsaServiceCallException {
+        final var url = intygProxyServiceBaseUrl + healthCareUnitEndpoint;
 
         try {
-            return restTemplate.postForObject(url, getCareProviderOfCareUnitRequestDTO, GetCareProviderOfCareUnitResponseDTO.class);
+            return restTemplate.postForObject(url, getCareProviderOfCareUnitRequestDTO, HealthCareUnitResponseDTO.class);
         } catch (Exception exception) {
             throw new HsaServiceCallException("Error occured when trying to communicate with intyg-proxy-service", exception);
         }

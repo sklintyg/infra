@@ -31,36 +31,36 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
-import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxyServiceCareProviderOfCareUnitClient;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetCareProviderOfCareUnitRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetCareProviderOfCareUnitResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxyServiceHealthCareUnitClient;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.HealthCareUnitResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
-class HsaIntygProxyServiceCareProviderOfCareUnitClientTest {
+class HsaIntygProxyServiceHealthCareUnitClientTest {
 
     @Mock
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private HsaIntygProxyServiceCareProviderOfCareUnitClient hsaIntygProxyServiceCareProviderOfCareUnitClient;
+    private HsaIntygProxyServiceHealthCareUnitClient hsaIntygProxyServiceHealthCareUnitClient;
 
     private static final String CARE_UNIT_HSA_ID = "careUnitHsaId";
 
     @Test
     void shouldReturnGetCareProviderOfCareUnitResponseWhenHsaIdIsProvided() throws HsaServiceCallException {
-        final var request = GetCareProviderOfCareUnitRequestDTO.builder()
-            .careUnitHsaId(CARE_UNIT_HSA_ID)
+        final var request = GetHealthCareUnitRequestDTO.builder()
+            .hsaId(CARE_UNIT_HSA_ID)
             .build();
 
-        final var expectedResponse = GetCareProviderOfCareUnitResponseDTO.builder().build();
+        final var expectedResponse = HealthCareUnitResponseDTO.builder().build();
 
         when(restTemplate.postForObject(
             anyString(),
             eq(request),
-            eq(GetCareProviderOfCareUnitResponseDTO.class))
+            eq(HealthCareUnitResponseDTO.class))
         ).thenReturn(expectedResponse);
 
-        final var actualResponse = hsaIntygProxyServiceCareProviderOfCareUnitClient.getCareProviderOfCareUnit(request);
+        final var actualResponse = hsaIntygProxyServiceHealthCareUnitClient.getHealthCareUnit(request);
         assertEquals(expectedResponse, actualResponse);
     }
 }

@@ -19,17 +19,13 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
+import lombok.Value;
 
-@Data
+@Value
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class GetCareProviderOfCareUnitResponseDTO {
+public class GetHealthCareUnitRequestDTO {
 
-    HealthCareUnit healthCareUnit;
+    String hsaId;
+
 }

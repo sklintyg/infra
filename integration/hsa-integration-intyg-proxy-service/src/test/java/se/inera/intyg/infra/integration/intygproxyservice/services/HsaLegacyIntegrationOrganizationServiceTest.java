@@ -31,47 +31,48 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetCareProviderOfCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
 class HsaLegacyIntegrationOrganizationServiceTest {
 
+    public static final String CARE_PROVIDER_HSA_ID = "careProviderHsaId";
     @InjectMocks
-    private HsaLegacyIntegrationOrganizationService organizationService;
+    private HsaLegacyIntegrationOrganizationService hsaLegacyIntegrationOrganizationService;
 
     @Mock
-    private GetCareProviderOfCareUnitService getCareProviderOfCareUnitService;
+    private GetHealthCareUnitService getHealthCareUnitService;
 
     @Mock
     private GetHealthCareUnitMemberHsaIdService getHealthCareUnitMemberHsaIdService;
 
-
-    private static final String CARE_PROVIDER_HSA_ID = "careProviderHsaId";
     private static final String CARE_UNIT_HSA_ID = "careUnitHsaId";
 
     @Nested
     class VardgivareOfvardenhet {
 
         @Test
-        void shouldReturnCareProviderHsaIdWhenCareUnitHsaIdIsProvided() throws HsaServiceCallException {
-            final var expectedResult = CARE_PROVIDER_HSA_ID;
+        void shouldReturnHealthCareProviderHsaIdWhenCareUnitHsaIdIsProvided() throws HsaServiceCallException {
+            final var healthCareUnit = new HealthCareUnit();
+            healthCareUnit.setHealthCareProviderHsaId(CARE_PROVIDER_HSA_ID);
 
-            when(getCareProviderOfCareUnitService.get(GetCareProviderOfCareUnitRequestDTO.builder()
-                .careUnitHsaId(CARE_UNIT_HSA_ID)
-                .build())).thenReturn(expectedResult);
+            when(getHealthCareUnitService.get(GetHealthCareUnitRequestDTO.builder()
+                .hsaId(CARE_UNIT_HSA_ID)
+                .build())).thenReturn(healthCareUnit);
 
-            final var actualResult = organizationService.getVardgivareOfVardenhet(CARE_UNIT_HSA_ID);
-            assertEquals(expectedResult, actualResult);
+            final var actualResult = hsaLegacyIntegrationOrganizationService.getVardgivareOfVardenhet(CARE_UNIT_HSA_ID);
+            assertEquals(CARE_PROVIDER_HSA_ID, actualResult);
         }
 
         @Test
         void shouldReturnNullWhenExceptionIsThrown() throws HsaServiceCallException {
-            when(getCareProviderOfCareUnitService.get(GetCareProviderOfCareUnitRequestDTO.builder()
-                .careUnitHsaId(CARE_UNIT_HSA_ID)
+            when(getHealthCareUnitService.get(GetHealthCareUnitRequestDTO.builder()
+                .hsaId(CARE_UNIT_HSA_ID)
                 .build())).thenThrow(HsaServiceCallException.class);
 
-            final var actualResult = organizationService.getVardgivareOfVardenhet(CARE_UNIT_HSA_ID);
+            final var actualResult = hsaLegacyIntegrationOrganizationService.getVardgivareOfVardenhet(CARE_UNIT_HSA_ID);
             Assertions.assertNull(actualResult);
         }
     }
@@ -92,7 +93,7 @@ class HsaLegacyIntegrationOrganizationServiceTest {
                         .build()
                 )
             ).thenReturn(expectedResult);
-            final var result = organizationService.getHsaIdForAktivaUnderenheter(CARE_UNIT_ID);
+            final var result = hsaLegacyIntegrationOrganizationService.getHsaIdForAktivaUnderenheter(CARE_UNIT_ID);
             assertEquals(expectedResult, result);
         }
     }
