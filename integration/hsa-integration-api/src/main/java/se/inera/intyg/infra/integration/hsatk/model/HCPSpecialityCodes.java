@@ -18,10 +18,13 @@
  */
 package se.inera.intyg.infra.integration.hsatk.model;
 
+import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class HCPSpecialityCodes {
+public class HCPSpecialityCodes implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     protected String healthCareProfessionalLicenceCode;
     protected String specialityCode;
     protected String specialityName;

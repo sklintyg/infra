@@ -18,14 +18,16 @@
  */
 package se.inera.intyg.infra.integration.hsatk.model;
 
-import lombok.Data;
-
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
 
 @Data
-public class PersonInformation {
+public class PersonInformation implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     protected String personHsaId;
     protected String givenName;
     protected String middleAndSurName;
@@ -43,7 +45,8 @@ public class PersonInformation {
     protected String title;
 
     @Data
-    public static class PaTitle {
+    public static class PaTitle implements Serializable {
+
         private String paTitleName;
         private String paTitleCode;
     }

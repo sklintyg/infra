@@ -46,7 +46,7 @@ class HsaLegacyIntegrationOrganizationServiceTest {
     private GetHealthCareUnitService getHealthCareUnitService;
 
     @Mock
-    private GetHealthCareUnitMemberHsaIdService getHealthCareUnitMemberHsaIdService;
+    private GetActiveHealthCareUnitMemberHsaIdService getHealthCareUnitMemberHsaIdService;
 
     private static final String CARE_UNIT_HSA_ID = "careUnitHsaId";
 
