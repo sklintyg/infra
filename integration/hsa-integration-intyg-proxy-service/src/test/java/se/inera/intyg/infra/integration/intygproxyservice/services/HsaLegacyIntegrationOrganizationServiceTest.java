@@ -35,7 +35,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitM
 class HsaLegacyIntegrationOrganizationServiceTest {
 
     @Mock
-    private GetHealthCareUnitMemberHsaIdService getHealthCareUnitMemberHsaIdService;
+    private GetActiveHealthCareUnitMemberHsaIdService getHealthCareUnitMemberHsaIdService;
 
     @InjectMocks
     private HsaLegacyIntegrationOrganizationService organizationService;

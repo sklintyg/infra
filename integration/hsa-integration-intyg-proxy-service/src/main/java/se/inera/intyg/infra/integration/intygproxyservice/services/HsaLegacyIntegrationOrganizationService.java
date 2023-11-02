@@ -39,7 +39,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitM
 @Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsaLegacyIntegrationOrganizationService implements HsaOrganizationsService {
 
-    private final GetHealthCareUnitMemberHsaIdService getHealthCareUnitMemberHsaIdService;
+    private final GetActiveHealthCareUnitMemberHsaIdService getActiveHealthCareUnitMemberHsaIdService;
 
     @Override
     public UserAuthorizationInfo getAuthorizedEnheterForHosPerson(String hosPersonHsaId) {
@@ -64,7 +64,7 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     @Override
     public List<String> getHsaIdForAktivaUnderenheter(String vardEnhetHsaId) {
-        return getHealthCareUnitMemberHsaIdService.get(
+        return getActiveHealthCareUnitMemberHsaIdService.get(
             GetHealthCareUnitMembersRequestDTO.builder()
                 .hsaId(vardEnhetHsaId)
                 .build()
