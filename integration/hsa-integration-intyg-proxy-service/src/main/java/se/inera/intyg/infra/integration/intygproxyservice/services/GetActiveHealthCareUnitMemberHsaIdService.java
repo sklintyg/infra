@@ -21,7 +21,7 @@ package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -40,7 +40,7 @@ public class GetActiveHealthCareUnitMemberHsaIdService {
     public List<String> get(GetHealthCareUnitMembersRequestDTO getHealthCareUnitMembersRequest) {
         final var healthCareUnitMembers = getHealthCareUnitMembersService.get(getHealthCareUnitMembersRequest);
         if (responseIsNullOrEmpty(healthCareUnitMembers)) {
-            return Collections.emptyList();
+            return new ArrayList<>();
         }
         return healthCareUnitMembers.getHealthCareUnitMember().stream()
             .filter(removeInactiveCareUnitMembers())
