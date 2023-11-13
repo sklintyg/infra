@@ -18,12 +18,13 @@
  */
 package se.inera.intyg.infra.integration.hsatk.model;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
-public class HealthCareUnit {
+public class HealthCareUnit implements Serializable {
+
     protected Boolean unitIsHealthCareUnit;
     protected String healthCareUnitMemberHsaId;
     protected String healthCareUnitMemberName;

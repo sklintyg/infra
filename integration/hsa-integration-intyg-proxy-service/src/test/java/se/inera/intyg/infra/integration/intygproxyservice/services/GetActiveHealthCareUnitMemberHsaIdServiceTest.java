@@ -23,8 +23,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,12 +37,12 @@ import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
-class GetHealthCareUnitMemberHsaIdServiceTest {
+class GetActiveHealthCareUnitMemberHsaIdServiceTest {
 
     @Mock
     private GetHealthCareUnitMembersService getHealthCareUnitMembersService;
     @InjectMocks
-    private GetHealthCareUnitMemberHsaIdService getHealthCareUnitMemberHsaIdService;
+    private GetActiveHealthCareUnitMemberHsaIdService getHealthCareUnitMemberHsaIdService;
 
     private static final String HSA_ID = "hsaId";
     private static final String HEALTH_CARE_UNIT_MEMBER_HSA_ID_1 = "healthCareUnitMemberHsaId1";
@@ -85,6 +87,65 @@ class GetHealthCareUnitMemberHsaIdServiceTest {
         final var result = getHealthCareUnitMemberHsaIdService.get(request);
         assertEquals(expectedResult, result);
     }
+
+    @Nested
+    class FilterInactiveUnitMember {
+
+        @Test
+        void shouldFilterOnUnitMemberStartDate() {
+            final var request = GetHealthCareUnitMembersRequestDTO.builder().hsaId(HSA_ID).build();
+            final var healthCareUnitMembers = new HealthCareUnitMembers();
+
+            final var healthCareUnitMember1 = getHealthCareUnitMember(HEALTH_CARE_UNIT_MEMBER_HSA_ID_1);
+            healthCareUnitMember1.setHealthCareUnitMemberStartDate(LocalDateTime.now().plusDays(1));
+            healthCareUnitMember1.setHealthCareUnitMemberEndDate(null);
+
+            final var healthCareUnitMember2 = getHealthCareUnitMember(HEALTH_CARE_UNIT_MEMBER_HSA_ID_2);
+            healthCareUnitMember2.setHealthCareUnitMemberStartDate(LocalDateTime.now().minusDays(1));
+            healthCareUnitMember2.setHealthCareUnitMemberEndDate(LocalDateTime.now().plusDays(1));
+
+            healthCareUnitMembers.setHealthCareUnitMember(List.of(healthCareUnitMember1, healthCareUnitMember2));
+            final var expectedResult = List.of(HEALTH_CARE_UNIT_MEMBER_HSA_ID_2);
+            when(getHealthCareUnitMembersService.get(request)).thenReturn(healthCareUnitMembers);
+            final var result = getHealthCareUnitMemberHsaIdService.get(request);
+            assertEquals(expectedResult, result);
+        }
+
+        @Test
+        void shouldFilterOnUnitMemberEndDate() {
+            final var request = GetHealthCareUnitMembersRequestDTO.builder().hsaId(HSA_ID).build();
+            final var healthCareUnitMembers = new HealthCareUnitMembers();
+
+            final var healthCareUnitMember1 = getHealthCareUnitMember(HEALTH_CARE_UNIT_MEMBER_HSA_ID_1);
+            healthCareUnitMember1.setHealthCareUnitMemberStartDate(null);
+            healthCareUnitMember1.setHealthCareUnitMemberEndDate(LocalDateTime.now().minusDays(1));
+
+            final var healthCareUnitMember2 = getHealthCareUnitMember(HEALTH_CARE_UNIT_MEMBER_HSA_ID_2);
+            healthCareUnitMember2.setHealthCareUnitMemberStartDate(LocalDateTime.now().minusDays(1));
+            healthCareUnitMember2.setHealthCareUnitMemberEndDate(LocalDateTime.now().plusDays(1));
+
+            healthCareUnitMembers.setHealthCareUnitMember(List.of(healthCareUnitMember1, healthCareUnitMember2));
+            final var expectedResult = List.of(HEALTH_CARE_UNIT_MEMBER_HSA_ID_2);
+            when(getHealthCareUnitMembersService.get(request)).thenReturn(healthCareUnitMembers);
+            final var result = getHealthCareUnitMemberHsaIdService.get(request);
+            assertEquals(expectedResult, result);
+        }
+    }
+
+    @Test
+    void shouldReturnListOfHsaIdsExtractedFromHealthCareUnitMembersWithoutDuplicatedHsaIds() {
+        final var request = GetHealthCareUnitMembersRequestDTO.builder().hsaId(HSA_ID).build();
+        final var healthCareUnitMembers = new HealthCareUnitMembers();
+        final var healthCareUnitMember1 = getHealthCareUnitMember(HEALTH_CARE_UNIT_MEMBER_HSA_ID_1);
+        final var healthCareUnitMember2 = getHealthCareUnitMember(HEALTH_CARE_UNIT_MEMBER_HSA_ID_2);
+        final var healthCareUnitMember3 = getHealthCareUnitMember(HEALTH_CARE_UNIT_MEMBER_HSA_ID_2);
+        healthCareUnitMembers.setHealthCareUnitMember(List.of(healthCareUnitMember1, healthCareUnitMember2, healthCareUnitMember3));
+        final var expectedResult = List.of(HEALTH_CARE_UNIT_MEMBER_HSA_ID_1, HEALTH_CARE_UNIT_MEMBER_HSA_ID_2);
+        when(getHealthCareUnitMembersService.get(request)).thenReturn(healthCareUnitMembers);
+        final var result = getHealthCareUnitMemberHsaIdService.get(request);
+        assertEquals(expectedResult, result);
+    }
+
 
     private static HealthCareUnitMember getHealthCareUnitMember(String hsaId) {
         final var healthCareUnitMember = new HealthCareUnitMember();

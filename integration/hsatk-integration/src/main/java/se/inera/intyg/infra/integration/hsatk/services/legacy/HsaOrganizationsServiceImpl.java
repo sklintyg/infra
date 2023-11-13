@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services.legacy;
 
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.client.AuthorizationManagementClient;
 import se.inera.intyg.infra.integration.hsatk.client.OrganizationClient;
@@ -56,6 +59,7 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v3.UnitType
 import se.riv.infrastructure.directory.organization.v3.AddressType;
 
 @Service
+@Profile("!" + HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsaOrganizationsServiceImpl implements HsaOrganizationsService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HsaOrganizationsServiceImpl.class);

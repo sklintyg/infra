@@ -10,4 +10,5 @@ dependencies {
     implementation "org.springframework:spring-context"
 
     testImplementation "org.springframework:spring-test"
+    testRuntimeOnly "org.slf4j:slf4j-simple"
 }

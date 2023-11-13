@@ -19,8 +19,11 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +33,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitM
 
 @Service
 @RequiredArgsConstructor
-public class GetHealthCareUnitMemberHsaIdService {
+public class GetActiveHealthCareUnitMemberHsaIdService {
 
     private final GetHealthCareUnitMembersService getHealthCareUnitMembersService;
 
@@ -40,8 +43,23 @@ public class GetHealthCareUnitMemberHsaIdService {
             return Collections.emptyList();
         }
         return healthCareUnitMembers.getHealthCareUnitMember().stream()
+            .filter(removeInactiveCareUnitMembers())
             .map(HealthCareUnitMember::getHealthCareUnitMemberHsaId)
+            .distinct()
             .collect(Collectors.toList());
+    }
+
+    private static Predicate<HealthCareUnitMember> removeInactiveCareUnitMembers() {
+        return member -> isNullOrAfterToday(member.getHealthCareUnitMemberStartDate()) && isNullOrBeforeToday(
+            member.getHealthCareUnitMemberEndDate());
+    }
+
+    private static boolean isNullOrBeforeToday(LocalDateTime date) {
+        return date == null || !date.isBefore(LocalDateTime.now(ZoneId.systemDefault()));
+    }
+
+    private static boolean isNullOrAfterToday(LocalDateTime date) {
+        return date == null || !date.isAfter(LocalDateTime.now(ZoneId.systemDefault()));
     }
 
     private static boolean responseIsNullOrEmpty(HealthCareUnitMembers healthCareUnitMembers) {
