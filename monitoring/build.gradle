@@ -16,15 +16,9 @@ dependencies {
     compileOnly project(':hsa-integration-api')
     compileOnly project(':hsatk-integration')
     compileOnly project(':security-common')
-
-    compileOnly "ch.qos.logback:logback-classic"
     compileOnly "commons-io:commons-io:${commonsIoVersion}"
     compileOnly "jakarta.servlet:jakarta.servlet-api"
-
-    compileOnly "org.slf4j:slf4j-api:"
     compileOnly "org.springframework.security:spring-security-web"
-    compileOnly "org.springframework:spring-context"
-    compileOnly "org.springframework:spring-core"
     compileOnly "org.springframework:spring-webmvc"
 
     testCompileOnly "com.fasterxml.jackson.core:jackson-annotations"

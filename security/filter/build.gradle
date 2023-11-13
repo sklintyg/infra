@@ -1,6 +1,5 @@
 dependencies {
     implementation "com.google.guava:guava:${guavaVersion}"
     implementation "jakarta.servlet:jakarta.servlet-api"
-    implementation "org.slf4j:slf4j-api"
     implementation "org.springframework.security:spring-security-web"
 }

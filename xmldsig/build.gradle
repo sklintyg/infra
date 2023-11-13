@@ -1,10 +1,8 @@
 dependencies {
-    implementation "ch.qos.logback:logback-classic"
     implementation "com.fasterxml.jackson.core:jackson-databind"
     implementation "commons-io:commons-io:${commonsIoVersion}"
     implementation "net.sf.saxon:Saxon-HE:${saxonVersion}"
     implementation "org.apache.santuario:xmlsec:${xmlSecVersion}"
-    implementation "org.slf4j:slf4j-api"
     implementation "org.springframework:spring-context"
     implementation "se.inera.intyg.clinicalprocess.healthcond.certificate:intyg-clinicalprocess-healthcond-certificate-schemas:${intygClinicalprocessSchemasVersion}"
 }
