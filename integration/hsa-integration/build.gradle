@@ -1,23 +1,16 @@
-
 dependencies {
-  compile project(':common-redis-cache-core')
+  implementation project(':common-redis-cache-core')
 
-  compile "se.riv.infrastructure.directory.authorizationmanagement:infrastructure-directory-authorizationmanagement-schemas:${rivtaHsaAuthorizationmanagementSchemasVersion}"
-  compile "se.riv.infrastructure.directory.employee:infrastructure-directory-employee-schemas:${rivtaHsaEmployeeSchemasVersion}"
-  compile "se.riv.infrastructure.directory.organization:infrastructure-directory-organization-schemas:${rivtaDirectoryOrganizationSchemasVersion}"
+  implementation "com.fasterxml.jackson.core:jackson-annotations"
+  implementation "com.fasterxml.jackson.core:jackson-databind"
+  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+  implementation "com.google.guava:guava:${guavaVersion}"
+  implementation "jakarta.ws.rs:jakarta.ws.rs-api"
+  implementation "org.apache.commons:commons-lang3"
+  implementation "org.springframework.security:spring-security-web"
+  implementation "se.riv.infrastructure.directory.authorizationmanagement:infrastructure-directory-authorizationmanagement-schemas:${rivtaHsaAuthorizationmanagementSchemasVersion}"
+  implementation "se.riv.infrastructure.directory.employee:infrastructure-directory-employee-schemas:${rivtaHsaEmployeeSchemasVersion}"
+  implementation "se.riv.infrastructure.directory.organization:infrastructure-directory-organization-schemas:${rivtaDirectoryOrganizationSchemasVersion}"
 
-  compile "org.springframework.security:spring-security-web"
-
-  compile "org.apache.commons:commons-lang3"
-  compile "ch.qos.logback:logback-classic"
-  compile "com.google.guava:guava:${guavaVersion}"
-
-  compile "com.fasterxml.jackson.core:jackson-databind"
-  compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:"
-  compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-
-  compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
-
-  testCompile "org.awaitility:awaitility:"
-  testCompile "it.ozimov:embedded-redis:${embeddedRedisVersion}"
+  testImplementation "org.awaitility:awaitility:"
 }

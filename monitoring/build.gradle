@@ -1,26 +1,25 @@
-sourceSets {
-    test.compileClasspath += configurations.compileOnly
-    test.runtimeClasspath += configurations.compileOnly
+configurations {
+    testCompileClasspath.extendsFrom compileOnly
+    testRuntimeClasspath.extendsFrom compileOnly
 }
 
 dependencies {
-    compile "io.prometheus:simpleclient"
-    compile "io.prometheus:simpleclient_common"
-    compile "io.prometheus:simpleclient_hotspot"
-    compile "io.prometheus:simpleclient_servlet"
-    compile "org.aspectj:aspectjweaver"
-    compile "com.google.guava:guava:${guavaVersion}"
-    compile "com.github.ua-parser:uap-java:${uapVersion}"
+    implementation "com.github.ua-parser:uap-java:${uapVersion}"
+    implementation "com.google.guava:guava:${guavaVersion}"
 
+    implementation "io.prometheus:simpleclient"
+    implementation "io.prometheus:simpleclient_common"
+    implementation "io.prometheus:simpleclient_hotspot"
+    implementation "io.prometheus:simpleclient_servlet"
+    implementation "org.aspectj:aspectjweaver"
+
+    compileOnly project(':hsa-integration-api')
+    compileOnly project(':hsatk-integration')
     compileOnly project(':security-common')
-    compileOnly "org.springframework:spring-webmvc"
-    compileOnly "org.springframework:spring-context"
-    compileOnly "org.springframework:spring-core"
-    compileOnly "org.springframework.security:spring-security-web"
-    compileOnly "org.slf4j:slf4j-api:"
-    compileOnly "ch.qos.logback:logback-classic:"
-    compileOnly "javax.servlet:javax.servlet-api"
     compileOnly "commons-io:commons-io:${commonsIoVersion}"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
+    compileOnly "org.springframework.security:spring-security-web"
+    compileOnly "org.springframework:spring-webmvc"
 
-    testCompile "org.aspectj:aspectjrt"
+    testCompileOnly "com.fasterxml.jackson.core:jackson-annotations"
 }

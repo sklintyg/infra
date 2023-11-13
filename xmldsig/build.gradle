@@ -1,11 +1,8 @@
 dependencies {
-    compile "se.inera.intyg.clinicalprocess.healthcond.certificate:intyg-clinicalprocess-healthcond-certificate-schemas:${intygClinicalprocessSchemasVersion}"
-
-    compile "ch.qos.logback:logback-classic"
-    compile "com.fasterxml.jackson.core:jackson-databind"
-    compile "commons-io:commons-io:${commonsIoVersion}"
-    compile "net.sf.saxon:Saxon-HE:${saxonVersion}"
-    compile "org.apache.santuario:xmlsec:${xmlSecVersion}"
-    compile "org.slf4j:slf4j-api"
-    compile "org.springframework:spring-context"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "commons-io:commons-io:${commonsIoVersion}"
+    implementation "net.sf.saxon:Saxon-HE:${saxonVersion}"
+    implementation "org.apache.santuario:xmlsec:${xmlSecVersion}"
+    implementation "org.springframework:spring-context"
+    implementation "se.inera.intyg.clinicalprocess.healthcond.certificate:intyg-clinicalprocess-healthcond-certificate-schemas:${intygClinicalprocessSchemasVersion}"
 }

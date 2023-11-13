@@ -1,3 +1,10 @@
 dependencies {
-  compile project(':security-common')
+  implementation project(":hsa-integration-api")
+  implementation project(':hsatk-integration')
+  implementation project(':security-common')
+
+  implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
+  implementation "com.google.guava:guava:${guavaVersion}"
+  implementation "org.springframework:spring-context-support"
+  implementation "org.springframework.security:spring-security-core"
 }

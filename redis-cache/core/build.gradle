@@ -1,14 +1,8 @@
 dependencies {
-    compile "org.springframework.data:spring-data-redis"
-    compile "redis.clients:jedis"
-    compile "org.springframework:spring-core"
-    compile "com.google.guava:guava:${guavaVersion}"
-    compile "it.ozimov:embedded-redis:${embeddedRedisVersion}"
-    compile 'javax.annotation:javax.annotation-api'
-
-    runtime "org.springframework:spring-context-support"
-
-    testRuntime "ch.qos.logback:logback-classic"
-
-    testCompile "org.springframework:spring-test"
+    implementation "com.google.guava:guava:${guavaVersion}"
+    implementation "it.ozimov:embedded-redis:${embeddedRedisVersion}"
+    implementation "org.springframework.data:spring-data-redis"
+    implementation "org.springframework:spring-beans"
+    implementation "org.springframework:spring-context"
+    implementation "redis.clients:jedis"
 }

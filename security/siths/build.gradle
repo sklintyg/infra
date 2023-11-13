@@ -1,10 +1,15 @@
 dependencies {
-  compile project(':security-common')
-  compile project(':security-authorities')
+  implementation project(":hsa-integration-api")
+  implementation project(':hsatk-integration')
+  implementation project(':security-common')
+  implementation project(':security-authorities')
 
-  compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecuritySaml2CoreVersion}"
+  implementation "org.springframework.security.extensions:spring-security-saml2-core:${springSecuritySaml2CoreVersion}"
+  implementation "org.apache.commons:commons-lang3"
 
-  compileOnly "javax.servlet:javax.servlet-api"
+  compileOnly "com.fasterxml.jackson.core:jackson-annotations"
+  compileOnly "jakarta.servlet:jakarta.servlet-api"
 
-  testCompile "javax.servlet:javax.servlet-api"
+  testImplementation "org.apache.cxf:cxf-core:${cxfVersion}"
+  testImplementation "jakarta.servlet:jakarta.servlet-api"
 }
