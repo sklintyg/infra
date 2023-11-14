@@ -94,14 +94,16 @@ allprojects {
     if (project.hasProperty('codeQuality')) {
         tasks.register('spotbugsIncludesAndExcludes') {
             dependsOn ":unzipBuildTools"
+            def spotbugsToolDir = "${rootProject.layout.buildDirectory.get().asFile}/build-tools/spotbugs"
             spotbugsMain {
-                includeFilter.set(rootProject.layout.buildDirectory.file("/build-tools/spotbugs/spotbugsIncludeFilter.xml").get().asFile)
-                excludeFilter.set(rootProject.layout.buildDirectory.file("/build-tools/spotbugs/spotbugsExcludeFilter.xml").get().asFile)
+                includeFilter.set(file("${spotbugsToolDir}/spotbugsIncludeFilter.xml"))
+                excludeFilter.set(file("${spotbugsToolDir}/spotbugsExcludeFilter.xml"))
             }
         }
 
+        checkstyleMain.dependsOn createVersionPropertyFile
+        jacocoTestReport.mustRunAfter createVersionPropertyFile
         spotbugsMain.dependsOn('spotbugsIncludesAndExcludes')
-        spotbugsMain.dependsOn(':unzipBuildTools')
         spotbugsTest.enabled(false)
         dependencies { spotbugsSlf4j "org.slf4j:slf4j-simple" }
 
@@ -114,7 +116,6 @@ allprojects {
 
     compileJava.options.encoding = 'UTF-8'
     compileTestJava.dependsOn createVersionPropertyFile
-    checkstyleMain.dependsOn createVersionPropertyFile
     test { useJUnitPlatform() }
 
     repositories {
