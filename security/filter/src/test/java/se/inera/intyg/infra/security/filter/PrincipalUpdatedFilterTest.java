@@ -31,10 +31,10 @@ import static org.mockito.Mockito.when;
 
 import com.google.common.hash.HashCode;
 import java.io.Serializable;
-import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -168,11 +168,9 @@ public class PrincipalUpdatedFilterTest {
             if (this == o) {
                 return true;
             }
-            if (!(o instanceof SomeUser)) {
+            if (!(o instanceof SomeUser someUser)) {
                 return false;
             }
-
-            SomeUser someUser = (SomeUser) o;
 
             if (hsaId != null ? !hsaId.equals(someUser.hsaId) : someUser.hsaId != null) {
                 return false;

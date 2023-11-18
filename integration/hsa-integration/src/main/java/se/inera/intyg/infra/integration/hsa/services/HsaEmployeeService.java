@@ -19,7 +19,7 @@
 package se.inera.intyg.infra.integration.hsa.services;
 
 import java.util.List;
-import javax.xml.ws.WebServiceException;
+import jakarta.xml.ws.WebServiceException;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**

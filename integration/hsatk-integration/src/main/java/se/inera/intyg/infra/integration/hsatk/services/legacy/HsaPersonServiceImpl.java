@@ -32,7 +32,7 @@ import se.inera.intyg.infra.integration.hsatk.util.HsaTypeConverter;
 import se.riv.infrastructure.directory.authorizationmanagement.v2.CommissionType;
 import se.riv.infrastructure.directory.authorizationmanagement.v2.CredentialInformationType;
 
-import javax.xml.ws.WebServiceException;
+import jakarta.xml.ws.WebServiceException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;

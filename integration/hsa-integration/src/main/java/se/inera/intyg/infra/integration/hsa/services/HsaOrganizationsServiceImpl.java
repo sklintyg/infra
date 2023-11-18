@@ -36,7 +36,7 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v1.UnitType
 import se.riv.infrastructure.directory.v1.CommissionType;
 import se.riv.infrastructure.directory.v1.CredentialInformationType;
 
-import javax.xml.ws.WebServiceException;
+import jakarta.xml.ws.WebServiceException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;

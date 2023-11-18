@@ -27,7 +27,7 @@ import com.google.common.io.Resources;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
-import javax.xml.bind.JAXB;
+import jakarta.xml.bind.JAXB;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

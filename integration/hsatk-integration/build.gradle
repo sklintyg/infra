@@ -26,17 +26,20 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
-    wsdl2java "se.inera.intyg.schemas:schemas-support:${schemasSupportVersion}"
-    wsdl2java "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:${jaxb2Version}"
-    wsdl2java "org.jvnet.jaxb2_commons:jaxb2-basics:${jaxb2Version}"
+    wsdl2java "codes.rafael.jaxb2_commons:jaxb2-basics:${jaxb2Version}"
+    wsdl2java "codes.rafael.jaxb2_commons:jaxb2-basics-runtime:${jaxb2Version}"
+    wsdl2java "com.sun.xml.bind:jaxb-impl"
+    wsdl2java "com.sun.xml.ws:rt:${xmlWsRtVersion}"
+    wsdl2java "jakarta.xml.ws:jakarta.xml.ws-api"
+    wsdl2java "org.apache.cxf.xjc-utils:cxf-xjc-runtime:${cxfPluginVersion}"
     wsdl2java "org.jvnet.jaxb2_commons:jaxb2-namespace-prefix:${jaxb2NamespacePrefixVersion}"
-    wsdl2java "com.sun.xml.bind:jaxb-impl:${jaxbImplVersion}"
 }
 
 wsdl2java {
     wsdlDir = file("src/main/resources/schemas")
     cxfVersion = project.getProperties().get("cxfVersion")
     cxfPluginVersion = project.getProperties().get("cxfPluginVersion")
+    includeJava8XmlDependencies = false
 
     def authorizationManagementVersion = "2.3"
     def employeeVersion = "2.2"

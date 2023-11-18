@@ -24,11 +24,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -78,7 +78,7 @@ public class SessionTimeoutFilter extends OncePerRequestFilter {
 
         // Is it a request that should'nt prolong the expiration?
         String url = request.getRequestURI();
-        boolean skipSessionUpdate = skipRenewSessionUrlsList.stream().filter(s -> url.contains(s)).count() > 0;
+        boolean skipSessionUpdate = skipRenewSessionUrlsList.stream().anyMatch(url::contains);
 
         if (session != null) {
             Long lastAccess = (Long) session.getAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME);

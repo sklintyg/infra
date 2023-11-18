@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.infra.security.common.model;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Created by eriklupander on 2016-05-13.

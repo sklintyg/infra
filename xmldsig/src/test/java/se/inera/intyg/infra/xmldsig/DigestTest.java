@@ -20,7 +20,7 @@ package se.inera.intyg.infra.xmldsig;
 
 import static org.junit.Assert.assertEquals;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -38,7 +38,7 @@ public class DigestTest {
     private String sha256AsBase64(String signingData) {
         try {
             MessageDigest sha = MessageDigest.getInstance("SHA-1");
-            sha.update(signingData.getBytes(Charset.forName("UTF-8")));
+            sha.update(signingData.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(sha.digest());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

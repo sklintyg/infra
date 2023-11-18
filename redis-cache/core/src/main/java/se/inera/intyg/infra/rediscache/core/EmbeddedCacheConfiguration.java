@@ -18,10 +18,10 @@
  */
 package se.inera.intyg.infra.rediscache.core;
 
+import jakarta.annotation.PreDestroy;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
-import javax.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.EnableCaching;

@@ -8,4 +8,6 @@ dependencies {
   implementation "org.springframework.data:spring-data-redis"
   implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
   implementation "se.riv.strategicresourcemanagement.persons.person:strategicresourcemanagement-persons-person-schemas:${rivtaGetPersonsPersonSchemasVersion}"
+
+  testImplementation "com.sun.xml.messaging.saaj:saaj-impl"
 }

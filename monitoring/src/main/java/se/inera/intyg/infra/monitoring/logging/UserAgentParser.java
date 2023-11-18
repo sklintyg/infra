@@ -19,7 +19,7 @@
 package se.inera.intyg.infra.monitoring.logging;
 
 import java.io.IOException;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import ua_parser.Client;

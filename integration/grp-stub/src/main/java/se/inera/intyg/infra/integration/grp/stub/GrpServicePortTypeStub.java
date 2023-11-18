@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.funktionstjanster.grp.v1.AuthenticateRequestType;
 import se.funktionstjanster.grp.v1.CollectRequestType;
@@ -184,5 +184,4 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
             throw new GrpFault(Joiner.on(", ").join(messages));
         }
     }
-
 }

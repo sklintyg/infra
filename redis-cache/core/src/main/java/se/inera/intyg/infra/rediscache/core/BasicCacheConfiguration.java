@@ -21,7 +21,7 @@ package se.inera.intyg.infra.rediscache.core;
 import com.google.common.base.Strings;
 import java.time.Duration;
 import java.util.List;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -133,7 +133,7 @@ public class BasicCacheConfiguration {
         List<String> hosts = ConnectionStringUtil.parsePropertyString(redisHost);
         List<String> ports = ConnectionStringUtil.parsePropertyString(redisPort);
 
-        if (hosts.size() == 0 || ports.size() == 0 || hosts.size() != ports.size()) {
+        if (hosts.isEmpty() || ports.isEmpty() || hosts.size() != ports.size()) {
             throw new IllegalStateException(
                 "Cannot bootstrap RedisSentinelConfiguration, number of redis.host and/or redis.port was zero or not equal.");
         }

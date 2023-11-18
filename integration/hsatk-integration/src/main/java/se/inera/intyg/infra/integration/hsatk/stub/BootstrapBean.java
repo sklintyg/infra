@@ -28,7 +28,7 @@ import se.inera.intyg.infra.integration.hsatk.stub.model.CareProviderStub;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.stub.model.HsaPerson;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;

@@ -19,7 +19,7 @@
 package se.inera.intyg.infra.integration.hsa.services;
 
 import java.util.List;
-import javax.xml.ws.WebServiceException;
+import jakarta.xml.ws.WebServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

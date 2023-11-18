@@ -40,7 +40,7 @@ import se.riv.infrastructure.directory.authorizationmanagement.v2.IIType;
 import se.riv.infrastructure.directory.authorizationmanagement.v2.NursePrescriptionRightType;
 import se.riv.infrastructure.directory.authorizationmanagement.v2.RestrictionType;
 
-import javax.xml.ws.WebServiceException;
+import jakarta.xml.ws.WebServiceException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +74,8 @@ public class HsatkAuthorizationManagementServiceTest {
     @Test(expected = WebServiceException.class)
     public void testGetCredentialInformationException() throws HsaServiceCallException {
 
-        when(authorizationManagementClient.getCredentialInformationForPerson(any(), eq(HSA_ID), any())).thenThrow(new HsaServiceCallException());
+        when(authorizationManagementClient.getCredentialInformationForPerson(any(), eq(HSA_ID), any()))
+            .thenThrow(new HsaServiceCallException());
 
         List<CredentialInformation> informationList = authorizationManagementService.getCredentialInformationForPerson(null, HSA_ID, null);
     }
@@ -97,8 +98,10 @@ public class HsatkAuthorizationManagementServiceTest {
 
     @Test
     public void testHandleHospCertificationAddOK() {
-        when(authorizationManagementClient.handleHospCertificationPerson(eq(CERTID), eq(OperationEnum.ADD), eq(PIN), any())).thenReturn(buildHospCertificationReply(ResultCodeEnum.OK));
-        Result result = authorizationManagementService.handleHospCertificationPersonResponseType(CERTID, OperationEnum.ADD.value(), PIN, null);
+        when(authorizationManagementClient.handleHospCertificationPerson(eq(CERTID), eq(OperationEnum.ADD), eq(PIN), any()))
+            .thenReturn(buildHospCertificationReply(ResultCodeEnum.OK));
+        Result result = authorizationManagementService
+            .handleHospCertificationPersonResponseType(CERTID, OperationEnum.ADD.value(), PIN, null);
 
         Assert.assertNotNull(result);
 
@@ -107,8 +110,10 @@ public class HsatkAuthorizationManagementServiceTest {
 
     @Test
     public void testHandleHospCertificationRemoveOK() {
-        when(authorizationManagementClient.handleHospCertificationPerson(eq(CERTID), eq(OperationEnum.REMOVE), eq(PIN), any())).thenReturn(buildHospCertificationReply(ResultCodeEnum.OK));
-        Result result = authorizationManagementService.handleHospCertificationPersonResponseType(CERTID, OperationEnum.REMOVE.value(), PIN, null);
+        when(authorizationManagementClient.handleHospCertificationPerson(eq(CERTID), eq(OperationEnum.REMOVE), eq(PIN), any()))
+            .thenReturn(buildHospCertificationReply(ResultCodeEnum.OK));
+        Result result = authorizationManagementService
+            .handleHospCertificationPersonResponseType(CERTID, OperationEnum.REMOVE.value(), PIN, null);
 
         Assert.assertNotNull(result);
 

@@ -18,10 +18,10 @@
  */
 package se.inera.intyg.infra.integration.pu.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -35,20 +35,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPFactory;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.soap.SOAPFaultException;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import jakarta.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPFactory;
+import jakarta.xml.ws.WebServiceException;
+import jakarta.xml.ws.soap.SOAPFaultException;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.schemas.contract.Personnummer;
@@ -62,8 +62,8 @@ import se.riv.strategicresourcemanagement.persons.person.v3.NameType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 import se.riv.strategicresourcemanagement.persons.person.v3.RequestedPersonRecordType;
 
-@RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration("classpath:PUServiceTest/test-context.xml")
 @ActiveProfiles({"test"})
 public class PUServiceTest {
@@ -79,14 +79,14 @@ public class PUServiceTest {
 
     static String logicalAddress = "${putjanst.logicaladdress}";
 
-    private static IIType iiType = new IIType();
+    private static final IIType iiType = new IIType();
 
-    @BeforeClass
+    @BeforeAll
     public static void setupIITy() {
         iiType.setExtension("191212121212");
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         puCache.clear();
         service.clearCache();
@@ -95,7 +95,7 @@ public class PUServiceTest {
     }
 
     @Test
-    public void checkExistingPersonWithFullAddress() {
+    void checkExistingPersonWithFullAddress() {
         Person person = service.getPerson(createPnr("19121212-1212")).getPerson();
         assertEquals("Tolvan", person.getFornamn());
         assertEquals("Tolvansson", person.getEfternamn());
@@ -105,7 +105,7 @@ public class PUServiceTest {
     }
 
     @Test
-    public void checkExistingPersonWithMinimalAddress() {
+    void checkExistingPersonWithMinimalAddress() {
         Person person = service.getPerson(createPnr("20121212-1212")).getPerson();
         assertEquals("Lilltolvan", person.getFornamn());
         assertEquals("Tolvansson", person.getEfternamn());
@@ -115,7 +115,7 @@ public class PUServiceTest {
     }
 
     @Test
-    public void checkExistingPersonWithMellannamn() {
+    void checkExistingPersonWithMellannamn() {
         Person person = service.getPerson(createPnr("19520614-2597")).getPerson();
         assertEquals("Per Peter", person.getFornamn());
         assertEquals("Pärsson", person.getEfternamn());
@@ -123,7 +123,7 @@ public class PUServiceTest {
     }
 
     @Test
-    public void checkExistingPersonWithoutAddress() {
+    void checkExistingPersonWithoutAddress() {
         Person person = service.getPerson(createPnr("19520529-2260")).getPerson();
         assertEquals("Maria Louise", person.getFornamn());
         assertEquals("Pärsson", person.getEfternamn());
@@ -133,14 +133,14 @@ public class PUServiceTest {
     }
 
     @Test
-    public void checkNonExistingPerson() {
+    void checkNonExistingPerson() {
         PersonSvar svar = service.getPerson(createPnr("19121212-7169"));
         assertNull(svar.getPerson());
         assertEquals(NOT_FOUND, svar.getStatus());
     }
 
     @Test
-    public void checkNoneExistingPersons() {
+    void checkNoneExistingPersons() {
         List<Personnummer> pnrs = Arrays.asList(createPnr("19121212-7169"), createPnr("19971230-2380"),
             createPnr("19980919-2397"), createPnr("19981029-2392"));
 
@@ -162,16 +162,16 @@ public class PUServiceTest {
         assertEquals(4, persons.size());
 
         // Assert content
-        persons.entrySet().stream().forEach(entry -> {
-            assertNotNull(entry.getValue());
-            assertNull(entry.getValue().getPerson());
-            assertEquals(NOT_FOUND, entry.getValue().getStatus());
+        persons.forEach((key, value) -> {
+            assertNotNull(value);
+            assertNull(value.getPerson());
+            assertEquals(NOT_FOUND, value.getStatus());
         });
 
     }
 
     @Test
-    public void checkSomeExistingPersons() {
+    void checkSomeExistingPersons() {
         List<Personnummer> pnrs = Arrays.asList(createPnr("19520614-2597"), createPnr("19971230-2380"),
             createPnr("20121212-1212"), createPnr("19981029-2392"));
 
@@ -206,7 +206,7 @@ public class PUServiceTest {
     }
 
     @Test
-    public void checkConfidentialPerson() {
+    void checkConfidentialPerson() {
         Person person = service.getPerson(createPnr("19540123-2540")).getPerson();
         assertEquals("Maj", person.getFornamn());
         assertEquals("Pärsson", person.getEfternamn());
@@ -217,13 +217,13 @@ public class PUServiceTest {
     }
 
     @Test
-    public void checkIsProtectedPopulationRecord() {
+    void checkIsProtectedPopulationRecord() {
         Person person = service.getPerson(createPnr("20051231-2398")).getPerson();
         assertTrue(person.isSekretessmarkering());
     }
 
     @Test
-    public void checkDeadPerson() {
+    void checkDeadPerson() {
         Person person = service.getPerson(createPnr("19000525-9809")).getPerson();
         assertEquals("Tod", person.getFornamn());
         assertEquals("Svensson", person.getEfternamn());
@@ -234,7 +234,7 @@ public class PUServiceTest {
     }
 
     @Test
-    public void checkCachedPerson() throws Exception {
+    void checkCachedPerson() {
         // Create mock
         GetPersonsForProfileType parameters = new GetPersonsForProfileType();
         parameters.setProfile(LookupProfileType.P_1);
@@ -269,7 +269,7 @@ public class PUServiceTest {
     }
 
     @Test
-    public void dontCachePersonLookupError() throws Exception {
+    void dontCachePersonLookupError() throws Exception {
         // Create mock
         GetPersonsForProfileType parameters = new GetPersonsForProfileType();
         parameters.setProfile(LookupProfileType.P_1);
@@ -288,21 +288,21 @@ public class PUServiceTest {
         // First request should call the lookup service
         PersonSvar personsvar = service.getPerson(createPnr("19121212-1212"));
         verify(mockResidentService).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
-        assertEquals(personsvar.getStatus(), PersonSvar.Status.ERROR);
+        assertEquals(PersonSvar.Status.ERROR, personsvar.getStatus());
         assertNull(personsvar.getPerson());
 
         // since first request returned an error this request should call the lookup service again
         personsvar = service.getPerson(createPnr("19121212-1212"));
         // lookupResidentForFullProfile should still only be called once
         verify(mockResidentService, times(2)).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
-        assertEquals(personsvar.getStatus(), PersonSvar.Status.ERROR);
+        assertEquals(PersonSvar.Status.ERROR, personsvar.getStatus());
         assertNull(personsvar.getPerson());
 
         // the third attempt will go through and should return real data
         personsvar = service.getPerson(createPnr("19121212-1212"));
         // lookupResidentForFullProfile should still only be called once
         verify(mockResidentService, times(3)).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
-        assertEquals(personsvar.getStatus(), PersonSvar.Status.FOUND);
+        assertEquals(PersonSvar.Status.FOUND, personsvar.getStatus());
         Person person = personsvar.getPerson();
         assertEquals("Tolvan", person.getFornamn());
         assertEquals("Tolvansson", person.getEfternamn());
@@ -314,7 +314,7 @@ public class PUServiceTest {
         personsvar = service.getPerson(createPnr("19121212-1212"));
         // lookupResidentForFullProfile should still only be called once
         verify(mockResidentService, times(3)).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
-        assertEquals(personsvar.getStatus(), PersonSvar.Status.FOUND);
+        assertEquals(PersonSvar.Status.FOUND, personsvar.getStatus());
         person = personsvar.getPerson();
         assertEquals("Tolvan", person.getFornamn());
         assertEquals("Tolvansson", person.getEfternamn());
@@ -324,7 +324,7 @@ public class PUServiceTest {
     }
 
     @Test
-    public void testGetPersonsSinglePage() throws Exception {
+    void testGetPersonsSinglePage() {
         GetPersonsForProfileResponderInterface mockResidentService = createGetPersonsMock();
         service.setService(mockResidentService);
 
@@ -334,14 +334,12 @@ public class PUServiceTest {
         }
 
         Map<Personnummer, PersonSvar> response = service.getPersons(pnrList);
-
         verify(mockResidentService, times(1)).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
-
-        assertEquals(response.size(), 500);
+        assertEquals(500, response.size());
     }
 
     @Test
-    public void testGetPersonsWithPaging() throws Exception {
+    void testGetPersonsWithPaging() {
 
         // Create a mock returning max 500 entries
         GetPersonsForProfileResponderInterface mockResidentService = createGetPersonsMock();
@@ -358,7 +356,7 @@ public class PUServiceTest {
         verify(mockResidentService, times(3)).getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class));
 
         // Verify all requested personnummer are present and has correct name
-        assertEquals(response.size(), 1001);
+        assertEquals(1001, response.size());
         for (Personnummer requestedPnr : pnrList) {
             PersonSvar personSvar = response.get(requestedPnr);
 
@@ -372,7 +370,6 @@ public class PUServiceTest {
     private GetPersonsForProfileResponderInterface createGetPersonsMock() {
         // Create a mock returning max 500 entries
         GetPersonsForProfileResponderInterface mockResidentService = mock(GetPersonsForProfileResponderInterface.class);
-        GetPersonsForProfileResponseType mockResponse = new GetPersonsForProfileResponseType();
         when(mockResidentService.getPersonsForProfile(anyString(), any(GetPersonsForProfileType.class)))
             .thenAnswer((invocation) -> {
                 GetPersonsForProfileType request = invocation.getArgument(1);
@@ -397,7 +394,7 @@ public class PUServiceTest {
     }
 
     private Personnummer createPnr(String pnr) {
-        return Personnummer.createPersonnummer(pnr).get();
+        return Personnummer.createPersonnummer(pnr).orElseThrow();
     }
 
 }

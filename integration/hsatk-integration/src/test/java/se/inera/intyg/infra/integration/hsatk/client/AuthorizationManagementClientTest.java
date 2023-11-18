@@ -85,7 +85,8 @@ public class AuthorizationManagementClientTest {
                 any(GetCredentialsForPersonIncludingProtectedPersonType.class))
         ).thenReturn(buildCredentialInformationResponse());
 
-        List<CredentialInformationType> authorizationsForPerson = authorizationManagementClient.getCredentialInformationForPerson(null, HSA_ID, null);
+        List<CredentialInformationType> authorizationsForPerson = authorizationManagementClient
+            .getCredentialInformationForPerson(null, HSA_ID, null);
         assertNotNull(authorizationsForPerson);
     }
 
@@ -124,7 +125,8 @@ public class AuthorizationManagementClientTest {
     }
 
     private GetCredentialsForPersonIncludingProtectedPersonResponseType buildCredentialInformationResponse() {
-        GetCredentialsForPersonIncludingProtectedPersonResponseType resp = new GetCredentialsForPersonIncludingProtectedPersonResponseType();
+        GetCredentialsForPersonIncludingProtectedPersonResponseType resp =
+            new GetCredentialsForPersonIncludingProtectedPersonResponseType();
 
         CredentialInformationType credentialInformationType = new CredentialInformationType();
 

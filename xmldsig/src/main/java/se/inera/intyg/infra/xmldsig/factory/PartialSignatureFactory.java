@@ -20,7 +20,7 @@ package se.inera.intyg.infra.xmldsig.factory;
 
 import java.io.IOException;
 import java.util.Base64;
-import javax.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBElement;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.DigestMethod;
 import javax.xml.crypto.dsig.Transform;

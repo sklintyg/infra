@@ -19,7 +19,7 @@
 package se.inera.intyg.infra.integration.hsatk.client;
 
 import java.util.List;
-import javax.xml.ws.soap.SOAPFaultException;
+import jakarta.xml.ws.soap.SOAPFaultException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

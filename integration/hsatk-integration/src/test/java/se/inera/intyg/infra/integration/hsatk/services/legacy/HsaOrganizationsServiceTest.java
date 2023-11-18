@@ -18,44 +18,39 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services.legacy;
 
+import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.AgandeForm;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.stub.HsaServiceStub;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CareProviderStub;
 import se.inera.intyg.infra.integration.hsatk.stub.model.CredentialInformation;
+import se.inera.intyg.infra.integration.hsatk.stub.model.CredentialInformation.Commission;
 import se.inera.intyg.infra.integration.hsatk.stub.model.HsaPerson;
+import se.inera.intyg.infra.integration.hsatk.stub.model.HsaPerson.PaTitle;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration("/HsaOrganizationsServiceTest/test-context.xml")
-public class HsaOrganizationsServiceTest {
+class HsaOrganizationsServiceTest {
 
     private static final String PERSON_HSA_ID = "person-123";
 
@@ -66,11 +61,7 @@ public class HsaOrganizationsServiceTest {
     private static final String EFTERNAMN = "Gunillasdotter";
     private static final String BEFATTNINGSKOD = "bef-123";
     private static final String FORSKRIVARKOD = "frskrkd-321";
-    private static ObjectMapper mapper = new ObjectMapper();
-
-    {
-        mapper.findAndRegisterModules();
-    }
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Autowired
     private HsaOrganizationsService service;
@@ -78,31 +69,39 @@ public class HsaOrganizationsServiceTest {
     @Autowired
     private HsaServiceStub serviceStub;
 
-    @Before
-    public void init() {
-        addHosPerson(PERSON_HSA_ID);
+    @BeforeEach
+    public void init() throws IOException {
+        OBJECT_MAPPER.registerModule(new JavaTimeModule());
+        addHosPerson();
+        addVardgivare("HsaOrganizationsServiceTest/landstinget-vastmanland.json");
+    }
+
+    @AfterEach
+    public void cleanupServiceStub() {
+        serviceStub.getCareProvider().clear();
+        serviceStub.getCredentialInformation().clear();
+        serviceStub.getHsaPerson().clear();
     }
 
     @Test
-    public void testEmptyResultSet() {
-
-        Collection<Vardgivare> vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
+    void testEmptyResultSet() {
+        final var vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
         assertTrue(vardgivare.isEmpty());
     }
 
     @Test
-    public void testSingleEnhetWithoutMottagningar() {
-        addMedarbetaruppdrag(PERSON_HSA_ID, "vastmanland", asList(CENTRUM_NORR));
+    void testSingleEnhetWithoutMottagningar() {
+        addMedarbetaruppdrag("vastmanland", List.of(CENTRUM_NORR));
 
-        List<Vardgivare> vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
+        final var vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
         assertEquals(1, vardgivare.size());
 
-        Vardgivare vg = vardgivare.get(0);
+        final var vg = vardgivare.get(0);
         assertEquals("vastmanland", vg.getId());
         assertEquals("Landstinget Västmanland", vg.getNamn());
         assertEquals(1, vg.getVardenheter().size());
 
-        Vardenhet enhet = vg.getVardenheter().get(0);
+        final var enhet = vg.getVardenheter().get(0);
         assertEquals("centrum-norr", enhet.getId());
         assertEquals(AgandeForm.PRIVAT, enhet.getAgandeForm());
         assertEquals("Vårdcentrum i Norr", enhet.getNamn());
@@ -111,197 +110,145 @@ public class HsaOrganizationsServiceTest {
     }
 
     @Test
-    public void ifEnhetHasNoArbetsplatskodThenDefaultShouldBeAssumed() {
-        addMedarbetaruppdrag(PERSON_HSA_ID, "vastmanland", asList(CENTRUM_VAST));
+    void ifEnhetHasNoArbetsplatskodThenDefaultShouldBeAssumed() {
+        addMedarbetaruppdrag("vastmanland", List.of(CENTRUM_VAST));
 
-        List<Vardgivare> vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
+        final var vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
         assertEquals(1, vardgivare.size());
 
-        Vardgivare vg = vardgivare.get(0);
-        Vardenhet enhet = vg.getVardenheter().get(0);
+        final var vg = vardgivare.get(0);
+        final var enhet = vg.getVardenheter().get(0);
         assertEquals("0000000", enhet.getArbetsplatskod());
     }
 
     @Test
-    public void fetchArbetsplatskod() {
-        addMedarbetaruppdrag(PERSON_HSA_ID, "vastmanland", asList(CENTRUM_NORR));
+    void fetchArbetsplatskod() {
+        addMedarbetaruppdrag("vastmanland", List.of(CENTRUM_NORR));
 
-        List<Vardgivare> vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
+        final var vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
         assertEquals(1, vardgivare.size());
 
-        Vardgivare vg = vardgivare.get(0);
-        Vardenhet enhet = vg.getVardenheter().get(0);
+        final var vg = vardgivare.get(0);
+        final var enhet = vg.getVardenheter().get(0);
         assertEquals("arbetsplatskod_centrum-norr", enhet.getArbetsplatskod());
     }
 
     @Test
-    public void isPrivateForPrivateUnit() {
-        addMedarbetaruppdrag(PERSON_HSA_ID, "vastmanland", asList(CENTRUM_NORR));
+    void isPrivateForPrivateUnit() {
+        addMedarbetaruppdrag("vastmanland", List.of(CENTRUM_NORR));
 
-        List<Vardgivare> vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
+        final var vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
         assertEquals(1, vardgivare.size());
 
-        Vardgivare vg = vardgivare.get(0);
-        Vardenhet enhet = vg.getVardenheter().get(0);
+        final var vg = vardgivare.get(0);
+        final var enhet = vg.getVardenheter().get(0);
         assertEquals(AgandeForm.PRIVAT, enhet.getAgandeForm());
     }
 
     @Test
-    public void isPrivateForNonPrivateUnit() {
-        addMedarbetaruppdrag(PERSON_HSA_ID, "vastmanland", asList(CENTRUM_VAST));
+    void isPrivateForNonPrivateUnit() {
+        addMedarbetaruppdrag("vastmanland", List.of(CENTRUM_VAST));
 
-        List<Vardgivare> vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
+        final var vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
         assertEquals(1, vardgivare.size());
 
-        Vardgivare vg = vardgivare.get(0);
-        Vardenhet enhet = vg.getVardenheter().get(0);
+        final var vg = vardgivare.get(0);
+        final var enhet = vg.getVardenheter().get(0);
         assertEquals(AgandeForm.OFFENTLIG, enhet.getAgandeForm());
     }
 
     @Test
-    public void testMultipleEnheter() {
+    void testMultipleEnheter() {
 
         // Load with 3 MIUs belonging to the same vårdgivare
-        addMedarbetaruppdrag(PERSON_HSA_ID, "vastmanland", asList(CENTRUM_VAST, CENTRUM_OST, CENTRUM_NORR));
+        addMedarbetaruppdrag("vastmanland", asList(CENTRUM_VAST, CENTRUM_OST, CENTRUM_NORR));
 
-        List<Vardgivare> vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
+        final var vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
         assertEquals(1, vardgivare.size());
 
-        Vardgivare vg = vardgivare.get(0);
+        final var vg = vardgivare.get(0);
         assertEquals(3, vg.getVardenheter().size());
 
         // Assert that mottagningar was loaded for 'centrum-ost'
-        Vardenhet centrumOst = getVardenhetById(CENTRUM_OST, vg.getVardenheter());
+        final var centrumOst = getVardenhetById(vg.getVardenheter());
+        assert centrumOst != null;
         assertEquals(1, centrumOst.getMottagningar().size());
 
         // Assert that vårdenheter is sorted alphabetically
-        List<String> correct = Arrays.asList("Vårdcentrum i Norr", "Vårdcentrum i Väst", "Vårdcentrum i Öst");
+        final var correct = List.of("Vårdcentrum i Norr", "Vårdcentrum i Väst", "Vårdcentrum i Öst");
 
-        List<String> vardenheterNames = new ArrayList<String>();
+        final var vardenheterNames = new ArrayList<>();
         for (Vardenhet ve : vg.getVardenheter()) {
             vardenheterNames.add(ve.getNamn());
         }
 
-        assertThat(vardenheterNames, is(correct));
+        assertEquals(correct, vardenheterNames);
 
-    }
-
-    private Vardenhet getVardenhetById(final String vardenhetId, List<Vardenhet> vardenheter) {
-
-        Predicate<Vardenhet> pred = new Predicate<Vardenhet>() {
-            public boolean apply(Vardenhet v) {
-                return vardenhetId.equalsIgnoreCase(v.getId());
-            }
-        };
-
-        Optional<Vardenhet> results = Iterables.tryFind(vardenheter, pred);
-
-        return (results.isPresent()) ? results.get() : null;
     }
 
     @Test
-    public void testMultipleVardgivare() throws IOException {
+    void testMultipleVardgivare() throws IOException {
 
         // Load with another vardgivare, which gives two vardgivare available
         addVardgivare("HsaOrganizationsServiceTest/landstinget-ostmanland.json");
 
         // Assign Gunilla one MIU from each vardgivare
-        addMedarbetaruppdrag(PERSON_HSA_ID, "vastmanland", asList(CENTRUM_NORR));
-        addMedarbetaruppdrag(PERSON_HSA_ID, "ostmanland", asList("vardcentrum-1"));
+        addMedarbetaruppdrag("vastmanland", List.of(CENTRUM_NORR));
+        addMedarbetaruppdrag("ostmanland", List.of("vardcentrum-1"));
 
         List<Vardgivare> vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
 
         assertEquals(2, vardgivare.size());
 
         // Assert that vardgivare is sorted alphabetically
-        List<String> correct = Arrays.asList("Landstinget Västmanland", "Landstinget Östmanland");
+        final var correct = asList("Landstinget Västmanland", "Landstinget Östmanland");
 
-        List<String> vardgivareNames = new ArrayList<String>();
+        final var vardgivareNames = new ArrayList<String>();
         for (Vardgivare vg : vardgivare) {
             vardgivareNames.add(vg.getNamn());
         }
 
-        assertThat(vardgivareNames, is(correct));
-    }
-
-    private void addMedarbetaruppdrag(String hsaId, String vardgivare, List<String> enhetIds) {
-        List<CredentialInformation.Commission> uppdrag = new ArrayList<>();
-        for (String enhet : enhetIds) {
-            CredentialInformation.Commission commission = new CredentialInformation
-                    .Commission(enhet, CredentialInformation.VARD_OCH_BEHANDLING);
-            commission.setHealthCareProviderHsaId(vardgivare);
-            uppdrag.add(commission);
-        }
-        serviceStub.updateCredentialInformation(new CredentialInformation(hsaId, uppdrag));
-    }
-
-    private void addHosPerson(String hsaId) {
-        HsaPerson hsaPerson = new HsaPerson(hsaId, FORNAMN, EFTERNAMN);
-        HsaPerson.PaTitle paTitle = new HsaPerson.PaTitle();
-        paTitle.setTitleCode(BEFATTNINGSKOD);
-        paTitle.setTitleName(BEFATTNINGSKOD);
-        hsaPerson.setPaTitle(Arrays.asList(paTitle));
-        hsaPerson.setPersonalPrescriptionCode(FORSKRIVARKOD);
-
-        serviceStub.addHsaPerson(hsaPerson);
-    }
-
-    private void addVardgivare(String file) throws IOException {
-        CareProviderStub careProviderStub = mapper.readValue(new ClassPathResource(file).getFile(), CareProviderStub.class);
-        serviceStub.addCareProvider(careProviderStub);
-    }
-
-    @Before
-    public void setupVardgivare() throws IOException {
-        addVardgivare("HsaOrganizationsServiceTest/landstinget-vastmanland.json");
-    }
-
-    @After
-    public void cleanupServiceStub() {
-        serviceStub.getCareProvider().clear();
-        serviceStub.getCredentialInformation().clear();
-        serviceStub.getHsaPerson().clear();
+        assertEquals(correct, vardgivareNames);
     }
 
     @Test
-    public void testInactiveEnhetFiltering() throws IOException {
-
+    void testInactiveEnhetFiltering() throws IOException {
         addVardgivare("HsaOrganizationsServiceTest/landstinget-upp-och-ner.json");
 
         // Assign Gunilla 5 MIUs where 2 is inactive (finito and futuro)
-        addMedarbetaruppdrag(PERSON_HSA_ID, "upp-och-ner", asList("finito", "here-and-now", "futuro", "still-open", "will-shutdown"));
+        addMedarbetaruppdrag("upp-och-ner", asList("finito", "here-and-now", "futuro", "still-open", "will-shutdown"));
 
-        List<Vardgivare> vardgivareList = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
+        final var vardgivareList = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
         assertEquals(1, vardgivareList.size());
         assertEquals("upp-och-ner", vardgivareList.get(0).getId());
         assertEquals(3, vardgivareList.get(0).getVardenheter().size());
     }
 
     @Test
-    public void testInactiveEnhetFilteringEmptyVardgivare() throws IOException {
+    void testInactiveEnhetFilteringEmptyVardgivare() throws IOException {
 
         addVardgivare("HsaOrganizationsServiceTest/landstinget-upp-och-ner.json");
 
         // Assign Gunilla 5 MIUs where 2 is inactive (finito and futuro)
-        addMedarbetaruppdrag(PERSON_HSA_ID, "upp-och-ner", asList("finito", "futuro"));
+        addMedarbetaruppdrag("upp-och-ner", asList("finito", "futuro"));
 
-        List<Vardgivare> vardgivareList = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
+        final var vardgivareList = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
         assertEquals(0, vardgivareList.size());
     }
 
     @Test
-    public void testInactiveMottagningFiltering() throws IOException {
+    void testInactiveMottagningFiltering() throws IOException {
         addVardgivare("HsaOrganizationsServiceTest/landstinget-upp-och-ner.json");
 
-        addMedarbetaruppdrag(PERSON_HSA_ID, "upp-och-ner", asList("with-subs"));
+        addMedarbetaruppdrag("upp-och-ner", List.of("with-subs"));
 
-        List<Vardgivare> vardgivareList = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
+        final var vardgivareList = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
         assertEquals(1, vardgivareList.size());
 
-        Vardgivare vardgivare = vardgivareList.get(0);
+        final var vardgivare = vardgivareList.get(0);
         assertEquals(1, vardgivare.getVardenheter().size());
 
-        List<Mottagning> mottagningar = vardgivare.getVardenheter().get(0).getMottagningar();
+        final var mottagningar = vardgivare.getVardenheter().get(0).getMottagningar();
         assertEquals(3, mottagningar.size());
 
         assertEquals("mottagning-here-and-now", mottagningar.get(0).getId());
@@ -310,59 +257,58 @@ public class HsaOrganizationsServiceTest {
     }
 
     @Test
-    public void testUppdragFiltering() {
+    void testUppdragFiltering() {
 
         // user has a different medarbetaruppdrag ändamål 'Animatör' in one enhet
         serviceStub.addCredentialInformation(new CredentialInformation(PERSON_HSA_ID,
-                asList(new CredentialInformation.Commission("centrum-ost", "Animatör"))));
+            List.of(new Commission("centrum-ost", "Animatör"))));
 
-        List<Vardgivare> vardgivareList = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
+        final var vardgivareList = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
 
         // no authorized vardgivere should be returned
         assertTrue(vardgivareList.isEmpty());
     }
 
     @Test
-    public void mottagningListasMenFinnsEj() throws IOException {
+    void mottagningListasMenFinnsEj() throws IOException {
         // WEBCERT-749
 
         addVardgivare("HsaOrganizationsServiceTest/landstinget-inkonsistent.json");
-
-        addMedarbetaruppdrag(PERSON_HSA_ID, "landsting-inkonsistent", asList("enhet1"));
-        List<Vardgivare> vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
+        addMedarbetaruppdrag("landsting-inkonsistent", List.of("enhet1"));
+        final var vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
 
         assertEquals(1, vardgivare.size());
         assertTrue(vardgivare.get(0).getVardenheter().get(0).getMottagningar().isEmpty());
     }
 
     @Test
-    public void medarbetarUppdragPaEnhetSomInteFinns() throws IOException {
+    void medarbetarUppdragPaEnhetSomInteFinns() {
         // WEBCERT-1167
-        addMedarbetaruppdrag(PERSON_HSA_ID, "vastmanland", asList("enhet-finns-ej"));
-        List<Vardgivare> vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
+        addMedarbetaruppdrag("vastmanland", List.of("enhet-finns-ej"));
+        final var vardgivare = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
         assertEquals(0, vardgivare.size());
     }
 
     @Test
-    public void hamtaVardenhet() {
-        Vardenhet vardenhet = service.getVardenhet(CENTRUM_VAST);
+    void hamtaVardenhet() {
+        final var vardenhet = service.getVardenhet(CENTRUM_VAST);
         assertNotNull(vardenhet);
         assertEquals(CENTRUM_VAST, vardenhet.getId());
         assertEquals(2, vardenhet.getMottagningar().size());
     }
 
     @Test
-    public void testGetHsaIdForAktivaUnderenheter() throws IOException {
+    void testGetHsaIdForAktivaUnderenheter() throws IOException {
         addVardgivare("HsaOrganizationsServiceTest/landstinget-vastmanland.json");
-        List<String> underenheter = service.getHsaIdForAktivaUnderenheter(CENTRUM_VAST);
+        final var underenheter = service.getHsaIdForAktivaUnderenheter(CENTRUM_VAST);
         assertTrue(underenheter.contains("dialys"));
         assertTrue(underenheter.contains("akuten"));
     }
 
     @Test
-    public void testGetHsaIdForInAktivaUnderenheter() throws IOException {
+    void testGetHsaIdForInAktivaUnderenheter() throws IOException {
         addVardgivare("HsaOrganizationsServiceTest/landstinget-upp-och-ner.json");
-        List<String> underenheter = service.getHsaIdForAktivaUnderenheter("with-subs");
+        final var underenheter = service.getHsaIdForAktivaUnderenheter("with-subs");
         assertTrue(underenheter.contains("mottagning-here-and-now"));
         assertTrue(underenheter.contains("mottagning-still-open"));
         assertTrue(underenheter.contains("mottagning-will-shutdown"));
@@ -371,17 +317,48 @@ public class HsaOrganizationsServiceTest {
     }
 
     @Test
-    public void testGetCareGiverIdForCareUnit() throws IOException {
+    void testGetCareGiverIdForCareUnit() throws IOException {
         addVardgivare("HsaOrganizationsServiceTest/landstinget-vastmanland.json");
-        String vardGivareHsaId = service.getVardgivareOfVardenhet("centrum-vast");
+        final var vardGivareHsaId = service.getVardgivareOfVardenhet("centrum-vast");
         assertEquals("vastmanland", vardGivareHsaId);
     }
 
     @Test
-    public void testGetVardgivareInfo() throws IOException {
+    void testGetVardgivareInfo() throws IOException {
         addVardgivare("HsaOrganizationsServiceTest/landstinget-vastmanland.json");
-        Vardgivare vg = service.getVardgivareInfo("vastmanland");
+        final var vg = service.getVardgivareInfo("vastmanland");
         assertEquals("vastmanland", vg.getId());
         assertEquals("Landstinget Västmanland", vg.getNamn());
+    }
+
+    private Vardenhet getVardenhetById(List<Vardenhet> vardenheter) {
+        return vardenheter.stream().filter(v -> CENTRUM_OST.equalsIgnoreCase(v.getId())).findFirst()
+            .orElse(null);
+    }
+
+    private void addMedarbetaruppdrag(String vardgivare, List<String> enhetIds) {
+        final var uppdrag = new ArrayList<Commission>();
+        for (String enhet : enhetIds) {
+            final var commission = new Commission(enhet, CredentialInformation.VARD_OCH_BEHANDLING);
+            commission.setHealthCareProviderHsaId(vardgivare);
+            uppdrag.add(commission);
+        }
+        serviceStub.updateCredentialInformation(new CredentialInformation(PERSON_HSA_ID, uppdrag));
+    }
+
+    private void addHosPerson() {
+        final var hsaPerson = new HsaPerson(PERSON_HSA_ID, FORNAMN, EFTERNAMN);
+        final var paTitle = new PaTitle();
+        paTitle.setTitleCode(BEFATTNINGSKOD);
+        paTitle.setTitleName(BEFATTNINGSKOD);
+        hsaPerson.setPaTitle(List.of(paTitle));
+        hsaPerson.setPersonalPrescriptionCode(FORSKRIVARKOD);
+
+        serviceStub.addHsaPerson(hsaPerson);
+    }
+
+    private void addVardgivare(String file) throws IOException {
+        final var careProviderStub = OBJECT_MAPPER.readValue(new ClassPathResource(file).getFile(), CareProviderStub.class);
+        serviceStub.addCareProvider(careProviderStub);
     }
 }

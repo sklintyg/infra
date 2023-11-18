@@ -32,7 +32,7 @@ import se.riv.infrastructure.directory.employee.v2.PaTitleType;
 import se.riv.infrastructure.directory.employee.v2.PersonInformationType;
 import se.riv.infrastructure.directory.employee.v2.ProfileEnum;
 
-import javax.xml.ws.WebServiceException;
+import jakarta.xml.ws.WebServiceException;
 import java.util.ArrayList;
 import java.util.List;
 

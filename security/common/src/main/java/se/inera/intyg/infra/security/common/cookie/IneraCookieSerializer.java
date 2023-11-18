@@ -21,7 +21,7 @@ package se.inera.intyg.infra.security.common.cookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.session.web.http.DefaultCookieSerializer;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
