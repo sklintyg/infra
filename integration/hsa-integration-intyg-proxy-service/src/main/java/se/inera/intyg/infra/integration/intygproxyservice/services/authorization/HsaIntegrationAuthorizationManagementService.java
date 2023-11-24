@@ -17,27 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.services;
+package se.inera.intyg.infra.integration.intygproxyservice.services.authorization;
 
 import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.model.HospCredentialsForPerson;
 import se.inera.intyg.infra.integration.hsatk.model.Result;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkAuthorizationManagementService;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.GetCredentialInformationRequestDTO;
 
 @Service
+@RequiredArgsConstructor
 @Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE)
 public class HsaIntegrationAuthorizationManagementService implements HsatkAuthorizationManagementService {
+
+    private final GetCredentialInformationForPersonService getCredentialInformationForPersonService;
 
     @Override
     public List<CredentialInformation> getCredentialInformationForPerson(String personalIdentityNumber, String personHsaId,
         String profile) {
-        return null;
+        return getCredentialInformationForPersonService.get(
+            GetCredentialInformationRequestDTO.builder()
+                .personHsaId(personHsaId)
+                .build()
+        );
     }
 
     @Override
