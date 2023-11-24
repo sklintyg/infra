@@ -35,6 +35,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxySe
 import se.inera.intyg.infra.integration.intygproxyservice.dto.EmployeeDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.services.employee.GetEmployeeService;
 
 @ExtendWith(MockitoExtension.class)
 class GetEmployeeServiceTest {
