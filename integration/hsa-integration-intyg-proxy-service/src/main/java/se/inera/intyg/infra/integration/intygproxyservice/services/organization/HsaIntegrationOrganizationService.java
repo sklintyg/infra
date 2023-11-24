@@ -17,22 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.services;
+package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareProvider;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
 import se.inera.intyg.infra.integration.hsatk.model.Unit;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkOrganizationService;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 @Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE)
 public class HsaIntegrationOrganizationService implements HsatkOrganizationService {
+
+    private final GetUnitService getUnitService;
 
     @Override
     public List<HealthCareProvider> getHealthCareProvider(String healthCareProviderHsaId, String healthCareProviderOrgNo) {
@@ -51,6 +59,15 @@ public class HsaIntegrationOrganizationService implements HsatkOrganizationServi
 
     @Override
     public Unit getUnit(String unitHsaId, String profile) {
-        return null;
+        try {
+            return getUnitService.get(
+                GetUnitRequestDTO.builder()
+                    .hsaId(unitHsaId)
+                    .build()
+            );
+        } catch (HsaServiceCallException hsaServiceCallException) {
+            log.warn(String.format("Could not get unit from HSA: '%s'", unitHsaId), hsaServiceCallException);
+            return new Unit();
+        }
     }
 }
