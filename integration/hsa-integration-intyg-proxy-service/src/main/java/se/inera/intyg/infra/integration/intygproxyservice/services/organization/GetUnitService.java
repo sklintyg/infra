@@ -19,7 +19,7 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
-import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.UNIT_MEMBERS_CACHE_NAME;
+import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.UNIT_CACHE_NAME;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -36,7 +36,7 @@ public class GetUnitService {
 
     private final HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
 
-    @Cacheable(cacheNames = UNIT_MEMBERS_CACHE_NAME, key = "#getUnitRequestDTO.hsaId",
+    @Cacheable(cacheNames = UNIT_CACHE_NAME, key = "#getUnitRequestDTO.hsaId",
         unless = "#result == null")
     public Unit get(GetUnitRequestDTO getUnitRequestDTO) throws HsaServiceCallException {
         validateRequest(getUnitRequestDTO);
