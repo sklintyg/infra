@@ -25,8 +25,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.HealthCareUnitResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.HealthCareUnitResponseDTO;
 
 @Service
 public class HsaIntygProxyServiceHealthCareUnitClient {

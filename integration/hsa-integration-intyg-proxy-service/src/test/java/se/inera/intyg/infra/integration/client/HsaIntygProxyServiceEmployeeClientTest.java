@@ -33,8 +33,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxyServiceEmployeeClient;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceEmployeeClientTest {

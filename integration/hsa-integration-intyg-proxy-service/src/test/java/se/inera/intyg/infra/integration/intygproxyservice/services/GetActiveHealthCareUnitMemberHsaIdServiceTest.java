@@ -34,7 +34,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMember;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetActiveHealthCareUnitMemberHsaIdService;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetHealthCareUnitMembersService;
 
 @ExtendWith(MockitoExtension.class)
 class GetActiveHealthCareUnitMemberHsaIdServiceTest {
