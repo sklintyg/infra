@@ -11,19 +11,33 @@ plugins {
 }
 
 ext {
+//    // Below three schema versions can be removed when old HSA package is retired.
+//    rivtaDirectoryOrganizationSchemasVersion = "1.1.5.6.1"
+//    rivtaHsaAuthorizationmanagementSchemasVersion = "1.0.4.6.1"
+//    rivtaHsaEmployeeSchemasVersion  = "1.0.4.6.1"
+//    // Above three schema versions can be removed when old HSA package is retired.
+//
+//    funktionstjansterGrpSchemasVersion = "1.0.6.2"
+//    intygClinicalprocessSchemasVersion = "1.0.24.2"
+//    rivtaGetPersonsPersonSchemasVersion = "3.1.1.2"
+//    rivtaStoreLogSchemasVersion = "2.0.1.2"
+//    schemasContractVersion = "2.1.8.2"
+//    schemasSupportVersion = "2.1.5.2"
+//    srsSchemasVersion = "0.0.16.2"
+
     // Below three schema versions can be removed when old HSA package is retired.
-    rivtaDirectoryOrganizationSchemasVersion = "1.1.5.6.1"
-    rivtaHsaAuthorizationmanagementSchemasVersion = "1.0.4.6.1"
-    rivtaHsaEmployeeSchemasVersion  = "1.0.4.6.1"
+    rivtaDirectoryOrganizationSchemasVersion = "0-SNAPSHOT"
+    rivtaHsaAuthorizationmanagementSchemasVersion = "0-SNAPSHOT"
+    rivtaHsaEmployeeSchemasVersion  = "0-SNAPSHOT"
     // Above three schema versions can be removed when old HSA package is retired.
 
-    funktionstjansterGrpSchemasVersion = "1.0.6.2"
-    intygClinicalprocessSchemasVersion = "1.0.24.2"
-    rivtaGetPersonsPersonSchemasVersion = "3.1.1.2"
-    rivtaStoreLogSchemasVersion = "2.0.1.2"
-    schemasContractVersion = "2.1.8.2"
-    schemasSupportVersion = "2.1.5.2"
-    srsSchemasVersion = "0.0.16.2"
+    funktionstjansterGrpSchemasVersion = "0-SNAPSHOT"
+    intygClinicalprocessSchemasVersion = "0-SNAPSHOT"
+    rivtaGetPersonsPersonSchemasVersion = "0-SNAPSHOT"
+    rivtaStoreLogSchemasVersion = "0-SNAPSHOT"
+    schemasContractVersion = "0-SNAPSHOT"
+    schemasSupportVersion = "0-SNAPSHOT"
+    srsSchemasVersion = "0-SNAPSHOT"
 
     commonsIoVersion = "2.14.0"
     commonsCollectionsVersion = "4.4"

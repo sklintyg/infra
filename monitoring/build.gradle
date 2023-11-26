@@ -16,6 +16,7 @@ dependencies {
     compileOnly project(':hsa-integration-api')
     compileOnly project(':hsatk-integration')
     compileOnly project(':security-common')
+    compileOnly "com.fasterxml.jackson.core:jackson-annotations"
     compileOnly "commons-io:commons-io:${commonsIoVersion}"
     compileOnly "jakarta.servlet:jakarta.servlet-api"
     compileOnly "org.springframework.security:spring-security-web"

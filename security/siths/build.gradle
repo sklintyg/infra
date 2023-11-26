@@ -12,4 +12,6 @@ dependencies {
 
   testImplementation "org.apache.cxf:cxf-core:${cxfVersion}"
   testImplementation "jakarta.servlet:jakarta.servlet-api"
+
+  testCompileOnly "com.fasterxml.jackson.core:jackson-annotations"
 }
