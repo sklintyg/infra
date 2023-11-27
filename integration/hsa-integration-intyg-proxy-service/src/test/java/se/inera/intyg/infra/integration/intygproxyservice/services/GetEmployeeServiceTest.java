@@ -32,9 +32,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxyServiceEmployeeClient;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.EmployeeDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.EmployeeDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.services.employee.GetEmployeeService;
 
 @ExtendWith(MockitoExtension.class)
 class GetEmployeeServiceTest {

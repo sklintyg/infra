@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.dto;
+package se.inera.intyg.infra.integration.intygproxyservice.dto.employee;
 
 import java.util.List;
 import lombok.AllArgsConstructor;

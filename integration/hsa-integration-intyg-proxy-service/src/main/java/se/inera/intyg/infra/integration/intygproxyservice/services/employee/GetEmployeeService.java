@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.services;
+package se.inera.intyg.infra.integration.intygproxyservice.services.employee;
 
 import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.EMPLOYEE_CACHE_NAME;
 
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxyServiceEmployeeClient;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
 
 @Service
 @RequiredArgsConstructor

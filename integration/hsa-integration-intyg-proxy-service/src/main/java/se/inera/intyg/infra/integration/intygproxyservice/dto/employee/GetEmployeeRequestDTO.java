@@ -17,15 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.dto;
+package se.inera.intyg.infra.integration.intygproxyservice.dto.employee;
 
 import lombok.Builder;
 import lombok.Value;
 
 @Value
 @Builder
-public class GetHealthCareUnitRequestDTO {
+public class GetEmployeeRequestDTO {
 
     String hsaId;
-
+    String personId;
 }

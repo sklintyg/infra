@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.client;
-
+package se.inera.intyg.infra.integration.intygproxyservice.client.organization;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,24 +25,26 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.HealthCareUnitResponseDTO;
 
 @Service
-public class HsaIntygProxyServiceEmployeeClient {
+public class HsaIntygProxyServiceHealthCareUnitClient {
 
     @Autowired
     @Qualifier("hsaIntygProxyServiceRestTemplate")
     private RestTemplate restTemplate;
-    @Value("${integration.intygproxyservice.employee.endpoint}")
-    private String employeeEndpoint;
+    @Value("${integration.intygproxyservice.healthcareunit.endpoint}")
+    private String healthCareUnitEndpoint;
     @Value("${integration.intygproxyservice.baseurl}")
     private String intygProxyServiceBaseUrl;
 
-    public GetEmployeeResponseDTO getEmployee(GetEmployeeRequestDTO getEmployeeRequestDTO) throws HsaServiceCallException {
-        final var url = intygProxyServiceBaseUrl + employeeEndpoint;
+    public HealthCareUnitResponseDTO getHealthCareUnit(
+        GetHealthCareUnitRequestDTO getHealthCareUnitRequestDTO) throws HsaServiceCallException {
+        final var url = intygProxyServiceBaseUrl + healthCareUnitEndpoint;
+
         try {
-            return restTemplate.postForObject(url, getEmployeeRequestDTO, GetEmployeeResponseDTO.class);
+            return restTemplate.postForObject(url, getHealthCareUnitRequestDTO, HealthCareUnitResponseDTO.class);
         } catch (Exception exception) {
             throw new HsaServiceCallException("Error occured when trying to communicate with intyg-proxy-service", exception);
         }
