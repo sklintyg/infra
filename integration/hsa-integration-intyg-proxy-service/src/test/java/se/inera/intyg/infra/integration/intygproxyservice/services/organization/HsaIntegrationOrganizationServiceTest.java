@@ -29,7 +29,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.Unit;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 
@@ -46,7 +45,7 @@ class HsaIntegrationOrganizationServiceTest {
     class GetUnit {
 
         @Test
-        void shouldReturnUnit() throws HsaServiceCallException {
+        void shouldReturnUnit() {
             final var expectedUnit = new Unit();
 
             when(getUnitService.get(any(GetUnitRequestDTO.class))).thenReturn(expectedUnit);
@@ -54,13 +53,6 @@ class HsaIntegrationOrganizationServiceTest {
             final var result = hsaIntegrationOrganizationService.getUnit(UNIT_HSA_ID, null);
 
             assertEquals(expectedUnit, result);
-        }
-
-        @Test
-        void shouldReturnUnitIfGetUnitServiveThrowsHsaServiceCallException() throws HsaServiceCallException {
-            when(getUnitService.get(any(GetUnitRequestDTO.class))).thenThrow(HsaServiceCallException.class);
-            final var result = hsaIntegrationOrganizationService.getUnit(UNIT_HSA_ID, null);
-            assertEquals(Unit.class, result.getClass());
         }
     }
 }

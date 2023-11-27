@@ -26,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareProvider;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
@@ -59,15 +58,10 @@ public class HsaIntegrationOrganizationService implements HsatkOrganizationServi
 
     @Override
     public Unit getUnit(String unitHsaId, String profile) {
-        try {
-            return getUnitService.get(
-                GetUnitRequestDTO.builder()
-                    .hsaId(unitHsaId)
-                    .build()
-            );
-        } catch (HsaServiceCallException hsaServiceCallException) {
-            log.warn(String.format("Could not get unit from HSA: '%s'", unitHsaId), hsaServiceCallException);
-            return new Unit();
-        }
+        return getUnitService.get(
+            GetUnitRequestDTO.builder()
+                .hsaId(unitHsaId)
+                .build()
+        );
     }
 }

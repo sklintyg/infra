@@ -22,14 +22,15 @@ package se.inera.intyg.infra.integration.intygproxyservice.services.organization
 import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.UNIT_CACHE_NAME;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.Unit;
 import se.inera.intyg.infra.integration.intygproxyservice.client.organization.HsaIntygProxyServiceUnitClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitResponseDTO;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GetUnitService {
@@ -38,10 +39,13 @@ public class GetUnitService {
 
     @Cacheable(cacheNames = UNIT_CACHE_NAME, key = "#getUnitRequestDTO.hsaId",
         unless = "#result == null")
-    public Unit get(GetUnitRequestDTO getUnitRequestDTO) throws HsaServiceCallException {
+    public Unit get(GetUnitRequestDTO getUnitRequestDTO) {
         validateRequest(getUnitRequestDTO);
         final var getUnitResponseDTO = hsaIntygProxyServiceUnitClient.getUnit(getUnitRequestDTO);
-        validateResponse(getUnitResponseDTO, getUnitRequestDTO.getHsaId());
+        if (responseIsInvalid(getUnitResponseDTO)) {
+            log.warn("No unit was found with hsaId '{}', returning empty unit", getUnitRequestDTO.getHsaId());
+            return new Unit();
+        }
         return getUnitResponseDTO.getUnit();
     }
 
@@ -51,9 +55,7 @@ public class GetUnitService {
         }
     }
 
-    private void validateResponse(GetUnitResponseDTO getUnitResponseDTO, String hsaId) throws HsaServiceCallException {
-        if (getUnitResponseDTO == null || getUnitResponseDTO.getUnit() == null) {
-            throw new HsaServiceCallException(String.format("Could not get unit with hsaId: '%s'", hsaId));
-        }
+    private boolean responseIsInvalid(GetUnitResponseDTO getUnitResponseDTO) {
+        return getUnitResponseDTO == null || getUnitResponseDTO.getUnit() == null;
     }
 }

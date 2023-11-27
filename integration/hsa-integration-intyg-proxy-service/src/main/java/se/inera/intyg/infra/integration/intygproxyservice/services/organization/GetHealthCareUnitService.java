@@ -41,7 +41,6 @@ public class GetHealthCareUnitService {
         validateRequestParameters(getHealthCareUnitRequestDTO);
         final var healthCareUnit = hsaIntygProxyServiceHealthCareUnitClient.getHealthCareUnit(
             getHealthCareUnitRequestDTO);
-
         return healthCareUnit.getHealthCareUnit();
     }
 
