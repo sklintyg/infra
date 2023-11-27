@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.services;
+package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.HEALTH_CARE_UNIT_CACHE_NAME;
 
@@ -26,8 +26,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
-import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxyServiceHealthCareUnitClient;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.client.organization.HsaIntygProxyServiceHealthCareUnitClient;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +41,6 @@ public class GetHealthCareUnitService {
         validateRequestParameters(getHealthCareUnitRequestDTO);
         final var healthCareUnit = hsaIntygProxyServiceHealthCareUnitClient.getHealthCareUnit(
             getHealthCareUnitRequestDTO);
-
         return healthCareUnit.getHealthCareUnit();
     }
 

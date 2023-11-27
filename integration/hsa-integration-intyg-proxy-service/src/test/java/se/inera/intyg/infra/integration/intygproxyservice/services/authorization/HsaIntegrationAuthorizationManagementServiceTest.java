@@ -30,7 +30,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetCredentialInformationRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
 class HsaIntegrationAuthorizationManagementServiceTest {

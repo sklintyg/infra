@@ -25,7 +25,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetHealthCareUnitService;
 
 @ExtendWith(MockitoExtension.class)
 class GetHealthCareUnitServiceTest {

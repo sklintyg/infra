@@ -23,8 +23,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
-import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxyServiceCredentialInformationForPersonClient;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetCredentialInformationRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.client.authorization.HsaIntygProxyServiceCredentialInformationForPersonClient;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
 
 @Service
 @RequiredArgsConstructor

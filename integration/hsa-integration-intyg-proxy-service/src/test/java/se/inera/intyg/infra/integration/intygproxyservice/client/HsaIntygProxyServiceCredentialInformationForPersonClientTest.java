@@ -32,8 +32,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetCredentialInformationRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetCredentialInformationResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.client.authorization.HsaIntygProxyServiceCredentialInformationForPersonClient;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceCredentialInformationForPersonClientTest {

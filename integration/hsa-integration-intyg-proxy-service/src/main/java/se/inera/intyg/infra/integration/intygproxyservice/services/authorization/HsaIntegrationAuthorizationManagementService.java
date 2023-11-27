@@ -30,7 +30,7 @@ import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.model.HospCredentialsForPerson;
 import se.inera.intyg.infra.integration.hsatk.model.Result;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkAuthorizationManagementService;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetCredentialInformationRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
 
 @Service
 @RequiredArgsConstructor
