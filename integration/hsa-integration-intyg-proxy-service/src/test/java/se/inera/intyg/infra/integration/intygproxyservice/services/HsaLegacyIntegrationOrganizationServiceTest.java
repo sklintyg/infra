@@ -32,8 +32,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetActiveHealthCareUnitMemberHsaIdService;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetHealthCareUnitService;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.HsaLegacyIntegrationOrganizationService;
 
 @ExtendWith(MockitoExtension.class)
 class HsaLegacyIntegrationOrganizationServiceTest {

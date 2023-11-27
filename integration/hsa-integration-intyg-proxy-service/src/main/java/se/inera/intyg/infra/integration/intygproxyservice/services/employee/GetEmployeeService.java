@@ -27,8 +27,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
-import se.inera.intyg.infra.integration.intygproxyservice.client.HsaIntygProxyServiceEmployeeClient;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.client.employee.HsaIntygProxyServiceEmployeeClient;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
 
 @Service
 @RequiredArgsConstructor

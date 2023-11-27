@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkEmployeeService;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetEmployeeRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
 
 @Slf4j
 @Service

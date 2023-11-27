@@ -17,19 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.dto;
+package se.inera.intyg.infra.integration.intygproxyservice.dto.organization;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
+import se.inera.intyg.infra.integration.hsatk.model.Unit;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetHealthCareUnitMembersResponseDTO {
+public class GetUnitResponseDTO {
 
-    HealthCareUnitMembers healthCareUnitMembers;
+    private Unit unit;
 }

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.services;
+package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMember;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 
 @Service
 @RequiredArgsConstructor
