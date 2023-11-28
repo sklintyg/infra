@@ -42,9 +42,9 @@ public class GetUnitService {
     public Unit get(GetUnitRequestDTO getUnitRequestDTO) {
         validateRequest(getUnitRequestDTO);
         final var getUnitResponseDTO = hsaIntygProxyServiceUnitClient.getUnit(getUnitRequestDTO);
-        if (responseIsInvalid(getUnitResponseDTO)) {
-            log.warn("No unit was found with hsaId '{}', returning empty unit", getUnitRequestDTO.getHsaId());
-            return new Unit();
+        if (invalidResponseOrNoUnitFound(getUnitResponseDTO)) {
+            log.warn("No unit was found with hsaId '{}', returning null", getUnitRequestDTO.getHsaId());
+            return null;
         }
         return getUnitResponseDTO.getUnit();
     }
@@ -55,7 +55,7 @@ public class GetUnitService {
         }
     }
 
-    private boolean responseIsInvalid(GetUnitResponseDTO getUnitResponseDTO) {
+    private boolean invalidResponseOrNoUnitFound(GetUnitResponseDTO getUnitResponseDTO) {
         return getUnitResponseDTO == null || getUnitResponseDTO.getUnit() == null;
     }
 }

@@ -20,6 +20,7 @@
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -50,17 +51,19 @@ class GetUnitServiceTest {
     }
 
     @Test
-    void shouldReturnEmptyUnitIfNoUnitWasFound() {
+    void shouldReturnNullIfNoUnitWasFound() {
         final var request = GetUnitRequestDTO.builder()
             .hsaId(HSA_ID)
             .build();
 
-        final var response = GetUnitResponseDTO.builder().build();
+        final var response = GetUnitResponseDTO.builder()
+            .unit(null)
+            .build();
 
         when(hsaIntygProxyServiceUnitClient.getUnit(request)).thenReturn(response);
 
         final var result = getUnitService.get(request);
-        assertEquals(Unit.class, result.getClass());
+        assertNull(result);
     }
 
     @Test
