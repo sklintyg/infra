@@ -33,6 +33,7 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 
 @Slf4j
 @Service
@@ -42,6 +43,7 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     private final GetActiveHealthCareUnitMemberHsaIdService getActiveHealthCareUnitMemberHsaIdService;
     private final GetHealthCareUnitService getHealthCareUnitService;
+    private final GetUnitService getUnitService;
 
     @Override
     public UserAuthorizationInfo getAuthorizedEnheterForHosPerson(String hosPersonHsaId) {
@@ -72,7 +74,13 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     @Override
     public Vardgivare getVardgivareInfo(String vardgivareHsaId) {
-        return null;
+        final var unit = getUnitService.get(
+            GetUnitRequestDTO.builder()
+                .hsaId(vardgivareHsaId)
+                .build()
+        );
+
+        return new Vardgivare(unit.getUnitHsaId(), unit.getUnitName());
     }
 
     @Override

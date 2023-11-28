@@ -32,10 +32,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
+import se.inera.intyg.infra.integration.hsatk.model.Unit;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetActiveHealthCareUnitMemberHsaIdService;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetHealthCareUnitService;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetUnitService;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.HsaLegacyIntegrationOrganizationService;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,6 +54,9 @@ class HsaLegacyIntegrationOrganizationServiceTest {
 
     @Mock
     private GetActiveHealthCareUnitMemberHsaIdService getHealthCareUnitMemberHsaIdService;
+
+    @Mock
+    private GetUnitService getUnitService;
 
     private static final String CARE_UNIT_HSA_ID = "careUnitHsaId";
 
@@ -121,6 +128,30 @@ class HsaLegacyIntegrationOrganizationServiceTest {
             final var result = hsaLegacyIntegrationOrganizationService.getParentUnit(CARE_UNIT_ID);
 
             assertEquals(CARE_UNIT_ID, result);
+        }
+    }
+
+    @Nested
+    class GetVardgivareInfo {
+
+        private static final String CARE_UNIT_ID = "careUnitId";
+        private static final String CARE_UNIT_NAME = "careUnitName";
+        private final Unit UNIT = new Unit();
+
+        @Test
+        void shouldReturnInfo() {
+            UNIT.setUnitHsaId(CARE_UNIT_ID);
+            UNIT.setUnitName(CARE_UNIT_NAME);
+            when(getUnitService.get(
+                    GetUnitRequestDTO.builder()
+                        .hsaId(CARE_UNIT_ID)
+                        .build()
+                )
+            ).thenReturn(UNIT);
+
+            final var result = hsaLegacyIntegrationOrganizationService.getVardgivareInfo(CARE_UNIT_ID);
+
+            assertEquals(new Vardgivare(CARE_UNIT_ID, CARE_UNIT_NAME), result);
         }
     }
 }
