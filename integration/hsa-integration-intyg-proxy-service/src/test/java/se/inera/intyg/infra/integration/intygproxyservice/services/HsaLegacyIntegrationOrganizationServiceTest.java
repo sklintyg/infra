@@ -112,18 +112,17 @@ class HsaLegacyIntegrationOrganizationServiceTest {
     class GetParentUnit {
 
         private static final String CARE_UNIT_ID = "careUnitId";
-        private final HealthCareUnit UNIT = new HealthCareUnit();
-
 
         @Test
         void shouldReturnParentId() throws HsaServiceCallException {
-            UNIT.setHealthCareUnitHsaId(CARE_UNIT_ID);
+            final var unit = new HealthCareUnit();
+            unit.setHealthCareUnitHsaId(CARE_UNIT_ID);
             when(getHealthCareUnitService.get(
                     GetHealthCareUnitRequestDTO.builder()
                         .hsaId(CARE_UNIT_ID)
                         .build()
                 )
-            ).thenReturn(UNIT);
+            ).thenReturn(unit);
 
             final var result = hsaLegacyIntegrationOrganizationService.getParentUnit(CARE_UNIT_ID);
 
@@ -136,18 +135,18 @@ class HsaLegacyIntegrationOrganizationServiceTest {
 
         private static final String CARE_UNIT_ID = "careUnitId";
         private static final String CARE_UNIT_NAME = "careUnitName";
-        private final Unit UNIT = new Unit();
 
         @Test
         void shouldReturnInfo() {
-            UNIT.setUnitHsaId(CARE_UNIT_ID);
-            UNIT.setUnitName(CARE_UNIT_NAME);
+            final var unit = new Unit();
+            unit.setUnitHsaId(CARE_UNIT_ID);
+            unit.setUnitName(CARE_UNIT_NAME);
             when(getUnitService.get(
                     GetUnitRequestDTO.builder()
                         .hsaId(CARE_UNIT_ID)
                         .build()
                 )
-            ).thenReturn(UNIT);
+            ).thenReturn(unit);
 
             final var result = hsaLegacyIntegrationOrganizationService.getVardgivareInfo(CARE_UNIT_ID);
 
