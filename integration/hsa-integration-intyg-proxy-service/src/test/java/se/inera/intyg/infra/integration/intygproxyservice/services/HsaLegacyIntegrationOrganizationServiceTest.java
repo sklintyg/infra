@@ -97,4 +97,27 @@ class HsaLegacyIntegrationOrganizationServiceTest {
             assertEquals(expectedResult, result);
         }
     }
+
+    @Nested
+    class GetParentUnit {
+
+        private static final String CARE_UNIT_ID = "careUnitId";
+        private final HealthCareUnit UNIT = new HealthCareUnit();
+
+
+        @Test
+        void shouldReturnParentId() throws HsaServiceCallException {
+            UNIT.setHealthCareUnitHsaId(CARE_UNIT_ID);
+            when(getHealthCareUnitService.get(
+                    GetHealthCareUnitRequestDTO.builder()
+                        .hsaId(CARE_UNIT_ID)
+                        .build()
+                )
+            ).thenReturn(UNIT);
+
+            final var result = hsaLegacyIntegrationOrganizationService.getParentUnit(CARE_UNIT_ID);
+
+            assertEquals(CARE_UNIT_ID, result);
+        }
+    }
 }

@@ -86,6 +86,11 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     @Override
     public String getParentUnit(String hsaId) throws HsaServiceCallException {
-        return null;
+        final var unit = getHealthCareUnitService.get(
+            GetHealthCareUnitRequestDTO.builder()
+                .hsaId(hsaId)
+                .build()
+        );
+        return unit.getHealthCareUnitHsaId();
     }
 }
