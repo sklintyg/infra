@@ -24,38 +24,43 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
-import se.inera.intyg.infra.integration.intygproxyservice.client.organization.HsaIntygProxyServiceHealthCareUnitMembersClient;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersResponseDTO;
+import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
+import se.inera.intyg.infra.integration.intygproxyservice.client.authorization.HsaIntygProxyServiceCredentialInformationForPersonClient;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
-class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
+class HsaIntygProxyServiceCredentialInformationForPersonClientTest {
 
-    private static final String HSA_ID = "hsaId";
+    private static final List<CredentialInformation> CREDENTIAL_INFORMATIONS = List.of(new CredentialInformation());
     @Mock
     private RestTemplate restTemplate;
+
     @InjectMocks
-    private HsaIntygProxyServiceHealthCareUnitMembersClient healthCareUnitMembersClient;
+    private HsaIntygProxyServiceCredentialInformationForPersonClient credentialInformationForPersonClient;
 
     @Test
-    void shouldReturnGetHealthCareUnitMembers() {
-        final var request = GetHealthCareUnitMembersRequestDTO.builder()
-            .hsaId(HSA_ID)
+    void shouldReturnGetCredentialInformationResponse() {
+        final var request = GetCredentialInformationRequestDTO.builder()
+            .personHsaId("personHsaId")
             .build();
-        final var expectedResponse = GetHealthCareUnitMembersResponseDTO.builder()
-            .healthCareUnitMembers(new HealthCareUnitMembers())
+
+        final var expectedResponse = GetCredentialInformationResponseDTO.builder()
+            .credentialInformations(CREDENTIAL_INFORMATIONS)
             .build();
-        when(restTemplate.postForObject(anyString(), eq(request), eq(GetHealthCareUnitMembersResponseDTO.class))).thenReturn(
-            expectedResponse
-        );
-        final var result = healthCareUnitMembersClient.getHealthCareUnitMembers(request);
+
+        when(restTemplate.postForObject(anyString(), eq(request), eq(GetCredentialInformationResponseDTO.class))).thenReturn(
+            expectedResponse);
+
+        final var result = credentialInformationForPersonClient.get(request);
+
         assertEquals(expectedResponse, result);
     }
 }
