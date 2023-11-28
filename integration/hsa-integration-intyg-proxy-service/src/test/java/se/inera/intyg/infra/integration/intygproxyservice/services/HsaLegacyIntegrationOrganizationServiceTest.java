@@ -20,9 +20,11 @@
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import javax.xml.ws.WebServiceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -151,6 +153,18 @@ class HsaLegacyIntegrationOrganizationServiceTest {
             final var result = hsaLegacyIntegrationOrganizationService.getVardgivareInfo(CARE_UNIT_ID);
 
             assertEquals(new Vardgivare(CARE_UNIT_ID, CARE_UNIT_NAME), result);
+        }
+
+        @Test
+        void shouldThrowErrorIfUnitIsNull() {
+            when(getUnitService.get(
+                    GetUnitRequestDTO.builder()
+                        .hsaId(CARE_UNIT_ID)
+                        .build()
+                )
+            ).thenReturn(null);
+
+            assertThrows(WebServiceException.class, () -> hsaLegacyIntegrationOrganizationService.getVardgivareInfo(CARE_UNIT_ID));
         }
     }
 }
