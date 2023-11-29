@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,6 +67,38 @@ class GetEmployeeServiceTest {
             .build();
         assertThrows(IllegalArgumentException.class, () -> getEmployeeService.get(request));
     }
+
+    @Test
+    void shouldThrowIfResponseIsNull() throws HsaServiceCallException {
+        final var request = GetEmployeeRequestDTO.builder()
+            .personId(PERSONAL_IDENTITY_NUMBER)
+            .build();
+
+        when(employeeClient.getEmployee(request)).thenReturn(
+            GetEmployeeResponseDTO.builder()
+                .build());
+
+        assertThrows(HsaServiceCallException.class, () -> getEmployeeService.get(request));
+    }
+
+    @Test
+    void shouldThrowIfResponseIfPersonalInformationIsEmpty() throws HsaServiceCallException {
+        final var request = GetEmployeeRequestDTO.builder()
+            .personId(PERSONAL_IDENTITY_NUMBER)
+            .build();
+
+        when(employeeClient.getEmployee(request)).thenReturn(
+            GetEmployeeResponseDTO.builder()
+                .employee(
+                    EmployeeDTO.builder()
+                        .personInformation(Collections.emptyList())
+                        .build()
+                )
+                .build());
+
+        assertThrows(HsaServiceCallException.class, () -> getEmployeeService.get(request));
+    }
+
 
     @Test
     void shouldReturnListOfPersonalInformation() throws HsaServiceCallException {

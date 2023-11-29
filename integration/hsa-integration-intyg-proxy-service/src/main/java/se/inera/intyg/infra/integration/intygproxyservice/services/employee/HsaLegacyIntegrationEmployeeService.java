@@ -56,7 +56,7 @@ public class HsaLegacyIntegrationEmployeeService implements HsaEmployeeService {
                     .build()
             );
         } catch (HsaServiceCallException hsaServiceCallException) {
-            log.error(hsaServiceCallException.getMessage());
+            log.warn("Error getting employee with personHsaId '{}' personalIdentityNumber '{}'", personHsaId, personalIdentityNumber);
             throw new WebServiceException(hsaServiceCallException);
         }
     }

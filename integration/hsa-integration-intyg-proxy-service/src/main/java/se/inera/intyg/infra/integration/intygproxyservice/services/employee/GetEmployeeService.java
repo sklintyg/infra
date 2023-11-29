@@ -29,6 +29,7 @@ import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.intygproxyservice.client.employee.HsaIntygProxyServiceEmployeeClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeResponseDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +42,14 @@ public class GetEmployeeService {
     public List<PersonInformation> get(GetEmployeeRequestDTO getEmployeeRequestDTO) throws HsaServiceCallException {
         validateRequestParameters(getEmployeeRequestDTO);
         final var employee = hsaIntygProxyServiceEmployeeClient.getEmployee(getEmployeeRequestDTO);
+        validateResponse(employee);
         return employee.getEmployee().getPersonInformation();
+    }
+
+    private void validateResponse(GetEmployeeResponseDTO employee) throws HsaServiceCallException {
+        if (employee.getEmployee() == null || employee.getEmployee().getPersonInformation().isEmpty()) {
+            throw new HsaServiceCallException("Response null or empty)");
+        }
     }
 
     private void validateRequestParameters(GetEmployeeRequestDTO getEmployeeRequestDTO) {
