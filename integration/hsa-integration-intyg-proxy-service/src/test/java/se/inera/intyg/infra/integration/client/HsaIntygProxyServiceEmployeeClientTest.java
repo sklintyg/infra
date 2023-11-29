@@ -49,7 +49,7 @@ class HsaIntygProxyServiceEmployeeClientTest {
     private static final String PERSON_HSA_ID = "personHsaId";
 
     @Test
-    void shouldThrowHsaServiceCallExceptionIfCommunicationErrorWithIntygProxyService() {
+    void shouldThrowIllegalStateExceptionIfCommunicationErrorWithIntygProxyService() {
         final var request = GetEmployeeRequestDTO.builder()
             .personId(PERSONAL_IDENTITY_NUMBER)
             .build();
@@ -60,11 +60,11 @@ class HsaIntygProxyServiceEmployeeClientTest {
                 eq(GetEmployeeResponseDTO.class)
             )
         ).thenThrow(RuntimeException.class);
-        assertThrows(HsaServiceCallException.class, () -> hsaIntygProxyServiceEmployeeClient.getEmployee(request));
+        assertThrows(IllegalStateException.class, () -> hsaIntygProxyServiceEmployeeClient.getEmployee(request));
     }
 
     @Test
-    void shouldReturnGetEmployeeResponseDTOWhenPersonalIdentityNumberIsProvided() throws HsaServiceCallException {
+    void shouldReturnGetEmployeeResponseDTOWhenPersonalIdentityNumberIsProvided() {
         final var expectedResult = GetEmployeeResponseDTO.builder().build();
         final var request = GetEmployeeRequestDTO.builder()
             .personId(PERSONAL_IDENTITY_NUMBER)
