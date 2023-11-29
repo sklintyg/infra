@@ -48,7 +48,7 @@ public class GetEmployeeService {
 
     private void validateResponse(GetEmployeeResponseDTO employee) throws HsaServiceCallException {
         if (employee.getEmployee() == null || employee.getEmployee().getPersonInformation().isEmpty()) {
-            throw new HsaServiceCallException("Response null or empty)");
+            throw new HsaServiceCallException("Response null or empty");
         }
     }
 
