@@ -36,7 +36,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUn
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Profile("!" + HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
+@Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsaIntegrationOrganizationService implements HsatkOrganizationService {
 
     private final GetUnitService getUnitService;

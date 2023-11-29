@@ -20,9 +20,12 @@
 package se.inera.intyg.infra.integration.intygproxyservice.services.authorization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
+import javax.xml.ws.WebServiceException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,6 +47,19 @@ class HsaIntegrationAuthorizationManagementServiceTest {
 
     @Nested
     class GetCredentialInformationForPerson {
+
+        @Test
+        void shouldThrowWebServiceExceptionIfResponseIsEmpty() {
+            final var request = GetCredentialInformationRequestDTO.builder()
+                .personHsaId(PERSON_HSA_ID)
+                .build();
+
+            when(credentialInformationForPersonService.get(request)).thenReturn(Collections.emptyList());
+
+            assertThrows(WebServiceException.class,
+                () -> hsaIntegrationAuthorizationManagementService.getCredentialInformationForPerson(null,
+                    PERSON_HSA_ID, null));
+        }
 
         @Test
         void shouldReturnListOfCredentialInformation() {

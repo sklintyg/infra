@@ -21,6 +21,7 @@ package se.inera.intyg.infra.integration.intygproxyservice.services.authorizatio
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -49,6 +50,22 @@ class GetCredentialInformationForPersonServiceTest {
         final var request = GetCredentialInformationRequestDTO.builder().build();
 
         assertThrows(IllegalArgumentException.class, () -> getCredentialInformationForPersonService.get(request));
+    }
+
+    @Test
+    void shouldReturnAnEmptyListIfResponseIsNull() {
+        final var request = GetCredentialInformationRequestDTO.builder()
+            .personHsaId(PERSON_HSA_ID)
+            .build();
+
+        final var response = GetCredentialInformationResponseDTO.builder()
+            .build();
+
+        when(credentialInformationForPersonClient.get(request)).thenReturn(response);
+
+        final var result = getCredentialInformationForPersonService.get(request);
+
+        assertTrue(result.isEmpty());
     }
 
     @Test

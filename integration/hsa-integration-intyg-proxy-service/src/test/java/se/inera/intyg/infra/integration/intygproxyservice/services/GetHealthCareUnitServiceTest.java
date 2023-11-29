@@ -20,6 +20,7 @@
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -28,7 +29,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.infra.integration.intygproxyservice.client.organization.HsaIntygProxyServiceHealthCareUnitClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
@@ -66,19 +66,23 @@ class GetHealthCareUnitServiceTest {
     }
 
     @Test
-    void shouldThrowIfResponseIsNull() {
+    void shouldReturnNullIfHealthCareUnitIsNull() {
         final var request = GetHealthCareUnitRequestDTO.builder()
             .hsaId(HSA_ID)
             .build();
 
-        when(healthCareUnitClient.getHealthCareUnit(request)).thenReturn(HealthCareUnitResponseDTO.builder().build());
+        when(healthCareUnitClient.getHealthCareUnit(request)).thenReturn(
+            HealthCareUnitResponseDTO.builder()
+                .build()
+        );
 
-        assertThrows(HsaServiceCallException.class,
-            () -> getHealthCareUnitService.get(request));
+        final var result = getHealthCareUnitService.get(request);
+
+        assertNull(result);
     }
 
     @Test
-    void shouldReturnHealthCareUnit() throws HsaServiceCallException {
+    void shouldReturnHealthCareUnit() {
         final var request = GetHealthCareUnitRequestDTO.builder()
             .hsaId(HSA_ID)
             .build();

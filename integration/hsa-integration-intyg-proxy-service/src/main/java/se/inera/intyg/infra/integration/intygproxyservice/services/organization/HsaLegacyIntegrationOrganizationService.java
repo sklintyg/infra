@@ -54,18 +54,12 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     @Override
     public String getVardgivareOfVardenhet(String vardenhetHsaId) {
-        try {
-            final var healthCareUnit = getHealthCareUnitService.get(
-                GetHealthCareUnitRequestDTO.builder()
-                    .hsaId(vardenhetHsaId)
-                    .build()
-            );
-            return healthCareUnit.getHealthCareProviderHsaId();
-
-        } catch (HsaServiceCallException hsaServiceCallException) {
-            log.warn(String.format("Could not fetch health care unit: '%s'", vardenhetHsaId), hsaServiceCallException);
-            return null;
-        }
+        final var healthCareUnit = getHealthCareUnitService.get(
+            GetHealthCareUnitRequestDTO.builder()
+                .hsaId(vardenhetHsaId)
+                .build()
+        );
+        return healthCareUnit != null ? healthCareUnit.getHealthCareProviderHsaId() : null;
     }
 
     @Override
@@ -104,6 +98,13 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
                 .hsaId(hsaId)
                 .build()
         );
+
+        if (unit == null) {
+            throw new HsaServiceCallException(
+                String.format("Could not get HealthCareUnit with hsaId: '%s'", hsaId)
+            );
+        }
+
         return unit.getHealthCareUnitHsaId();
     }
 }

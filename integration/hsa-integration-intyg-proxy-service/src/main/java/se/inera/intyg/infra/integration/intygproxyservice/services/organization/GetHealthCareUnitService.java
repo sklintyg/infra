@@ -22,14 +22,14 @@ package se.inera.intyg.infra.integration.intygproxyservice.services.organization
 import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.HEALTH_CARE_UNIT_CACHE_NAME;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.infra.integration.intygproxyservice.client.organization.HsaIntygProxyServiceHealthCareUnitClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.HealthCareUnitResponseDTO;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GetHealthCareUnitService {
@@ -38,20 +38,15 @@ public class GetHealthCareUnitService {
 
     @Cacheable(cacheNames = HEALTH_CARE_UNIT_CACHE_NAME, key = "#getHealthCareUnitRequestDTO.hsaId",
         unless = "#result == null")
-    public HealthCareUnit get(GetHealthCareUnitRequestDTO getHealthCareUnitRequestDTO) throws HsaServiceCallException {
+    public HealthCareUnit get(GetHealthCareUnitRequestDTO getHealthCareUnitRequestDTO) {
         validateRequestParameters(getHealthCareUnitRequestDTO);
         final var healthCareUnit = hsaIntygProxyServiceHealthCareUnitClient.getHealthCareUnit(
             getHealthCareUnitRequestDTO);
-        validateResponse(healthCareUnit, getHealthCareUnitRequestDTO.getHsaId());
-        return healthCareUnit.getHealthCareUnit();
-    }
-
-    private static void validateResponse(HealthCareUnitResponseDTO healthCareUnit, String hsaId) throws HsaServiceCallException {
         if (healthCareUnit.getHealthCareUnit() == null) {
-            throw new HsaServiceCallException(
-                String.format("Could not get HealthCareUnit with hsaId: '%s'", hsaId)
-            );
+            log.warn(String.format("Could not fetch health care unit: '%s'", getHealthCareUnitRequestDTO.getHsaId()));
+            return null;
         }
+        return healthCareUnit.getHealthCareUnit();
     }
 
     private void validateRequestParameters(GetHealthCareUnitRequestDTO getHealthCareUnitRequestDTO) {

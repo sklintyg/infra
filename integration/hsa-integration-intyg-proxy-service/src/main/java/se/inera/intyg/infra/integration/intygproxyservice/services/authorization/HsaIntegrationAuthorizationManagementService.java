@@ -23,6 +23,7 @@ import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApi
 
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.xml.ws.WebServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -42,11 +43,17 @@ public class HsaIntegrationAuthorizationManagementService implements HsatkAuthor
     @Override
     public List<CredentialInformation> getCredentialInformationForPerson(String personalIdentityNumber, String personHsaId,
         String profile) {
-        return getCredentialInformationForPersonService.get(
+        final var credentialInformations = getCredentialInformationForPersonService.get(
             GetCredentialInformationRequestDTO.builder()
                 .personHsaId(personHsaId)
                 .build()
         );
+
+        if (credentialInformations.isEmpty()) {
+            throw new WebServiceException();
+        }
+
+        return credentialInformations;
     }
 
     @Override

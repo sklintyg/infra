@@ -21,16 +21,18 @@ package se.inera.intyg.infra.integration.intygproxyservice.services.employee;
 
 import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.EMPLOYEE_CACHE_NAME;
 
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.intygproxyservice.client.employee.HsaIntygProxyServiceEmployeeClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeResponseDTO;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GetEmployeeService {
@@ -39,17 +41,20 @@ public class GetEmployeeService {
 
     @Cacheable(cacheNames = EMPLOYEE_CACHE_NAME, key = "#getEmployeeRequestDTO.personId + #getEmployeeRequestDTO.hsaId",
         unless = "#result == null")
-    public List<PersonInformation> get(GetEmployeeRequestDTO getEmployeeRequestDTO) throws HsaServiceCallException {
+    public List<PersonInformation> get(GetEmployeeRequestDTO getEmployeeRequestDTO) {
         validateRequestParameters(getEmployeeRequestDTO);
         final var employee = hsaIntygProxyServiceEmployeeClient.getEmployee(getEmployeeRequestDTO);
-        validateResponse(employee);
+        if (invalidResponse(employee)) {
+            log.warn("Person information for employee with personalIdentityNumber '{}' personHsaId '{}' was not found.",
+                getEmployeeRequestDTO.getPersonId(), getEmployeeRequestDTO.getHsaId());
+            return Collections.emptyList();
+        }
         return employee.getEmployee().getPersonInformation();
     }
 
-    private void validateResponse(GetEmployeeResponseDTO employee) throws HsaServiceCallException {
-        if (employee.getEmployee() == null || employee.getEmployee().getPersonInformation().isEmpty()) {
-            throw new HsaServiceCallException("Response null or empty");
-        }
+    private boolean invalidResponse(GetEmployeeResponseDTO employee) {
+        return employee.getEmployee() == null || employee.getEmployee().getPersonInformation() == null || employee.getEmployee()
+            .getPersonInformation().isEmpty();
     }
 
     private void validateRequestParameters(GetEmployeeRequestDTO getEmployeeRequestDTO) {

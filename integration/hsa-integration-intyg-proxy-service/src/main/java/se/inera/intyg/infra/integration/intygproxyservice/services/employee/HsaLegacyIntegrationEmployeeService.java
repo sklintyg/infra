@@ -27,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaEmployeeService;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
@@ -48,16 +47,16 @@ public class HsaLegacyIntegrationEmployeeService implements HsaEmployeeService {
     @Override
     public List<PersonInformation> getEmployee(String personHsaId, String personalIdentityNumber, String searchBase)
         throws WebServiceException {
-        try {
-            return getEmployeeService.get(
-                GetEmployeeRequestDTO.builder()
-                    .hsaId(personHsaId)
-                    .personId(personalIdentityNumber)
-                    .build()
-            );
-        } catch (HsaServiceCallException hsaServiceCallException) {
-            log.warn("Error getting employee with personHsaId '{}' personalIdentityNumber '{}'", personHsaId, personalIdentityNumber);
-            throw new WebServiceException(hsaServiceCallException);
+        final var personInformations = getEmployeeService.get(
+            GetEmployeeRequestDTO.builder()
+                .hsaId(personHsaId)
+                .personId(personalIdentityNumber)
+                .build()
+        );
+
+        if (personInformations.isEmpty()) {
+            throw new WebServiceException();
         }
+        return personInformations;
     }
 }

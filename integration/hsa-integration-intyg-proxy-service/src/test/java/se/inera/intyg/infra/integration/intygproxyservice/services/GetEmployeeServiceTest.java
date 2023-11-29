@@ -21,6 +21,7 @@ package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
@@ -30,7 +31,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.intygproxyservice.client.employee.HsaIntygProxyServiceEmployeeClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.EmployeeDTO;
@@ -69,7 +69,7 @@ class GetEmployeeServiceTest {
     }
 
     @Test
-    void shouldThrowIfResponseIsNull() throws HsaServiceCallException {
+    void shouldReturnEmptyListIfEmployeeIsNull() {
         final var request = GetEmployeeRequestDTO.builder()
             .personId(PERSONAL_IDENTITY_NUMBER)
             .build();
@@ -78,11 +78,32 @@ class GetEmployeeServiceTest {
             GetEmployeeResponseDTO.builder()
                 .build());
 
-        assertThrows(HsaServiceCallException.class, () -> getEmployeeService.get(request));
+        final var result = getEmployeeService.get(request);
+
+        assertTrue(result.isEmpty());
     }
 
     @Test
-    void shouldThrowIfResponseIfPersonalInformationIsEmpty() throws HsaServiceCallException {
+    void shouldReturnEmptyListIfPersonalInformationIsNull() {
+        final var request = GetEmployeeRequestDTO.builder()
+            .personId(PERSONAL_IDENTITY_NUMBER)
+            .build();
+
+        when(employeeClient.getEmployee(request)).thenReturn(
+            GetEmployeeResponseDTO.builder()
+                .employee(
+                    EmployeeDTO.builder()
+                        .build()
+                )
+                .build());
+
+        final var result = getEmployeeService.get(request);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void shouldReturnEmptyListIfPersonalInformationIsEmpty() {
         final var request = GetEmployeeRequestDTO.builder()
             .personId(PERSONAL_IDENTITY_NUMBER)
             .build();
@@ -96,12 +117,13 @@ class GetEmployeeServiceTest {
                 )
                 .build());
 
-        assertThrows(HsaServiceCallException.class, () -> getEmployeeService.get(request));
+        final var result = getEmployeeService.get(request);
+
+        assertTrue(result.isEmpty());
     }
 
-
     @Test
-    void shouldReturnListOfPersonalInformation() throws HsaServiceCallException {
+    void shouldReturnListOfPersonalInformation() {
         final var request = GetEmployeeRequestDTO.builder()
             .personId(PERSONAL_IDENTITY_NUMBER)
             .build();

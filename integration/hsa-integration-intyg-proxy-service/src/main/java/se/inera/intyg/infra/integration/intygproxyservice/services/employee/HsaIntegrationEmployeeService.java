@@ -21,13 +21,11 @@ package se.inera.intyg.infra.integration.intygproxyservice.services.employee;
 
 import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkEmployeeService;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
@@ -47,16 +45,11 @@ public class HsaIntegrationEmployeeService implements HsatkEmployeeService {
 
     @Override
     public List<PersonInformation> getEmployee(String personId, String personHsaId, String profile) {
-        try {
-            return getEmployeeService.get(
-                GetEmployeeRequestDTO.builder()
-                    .personId(personId)
-                    .hsaId(personHsaId)
-                    .build()
-            );
-        } catch (HsaServiceCallException exception) {
-            log.warn("HsaServiceCallException thrown: {}", exception);
-            return new ArrayList<>();
-        }
+        return getEmployeeService.get(
+            GetEmployeeRequestDTO.builder()
+                .personId(personId)
+                .hsaId(personHsaId)
+                .build()
+        );
     }
 }
