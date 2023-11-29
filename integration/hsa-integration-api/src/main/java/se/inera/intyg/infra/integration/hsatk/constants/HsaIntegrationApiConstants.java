@@ -26,4 +26,5 @@ public class HsaIntegrationApiConstants {
     }
 
     public static final String HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE = "hsa-integration-intyg-proxy-service";
+
 }
