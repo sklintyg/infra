@@ -22,6 +22,7 @@ package se.inera.intyg.infra.integration.intygproxyservice.services.organization
 import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
 
 import java.util.List;
+import javax.xml.ws.WebServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -33,6 +34,7 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 
 @Slf4j
 @Service
@@ -42,6 +44,7 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     private final GetActiveHealthCareUnitMemberHsaIdService getActiveHealthCareUnitMemberHsaIdService;
     private final GetHealthCareUnitService getHealthCareUnitService;
+    private final GetUnitService getUnitService;
 
     @Override
     public UserAuthorizationInfo getAuthorizedEnheterForHosPerson(String hosPersonHsaId) {
@@ -72,7 +75,17 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     @Override
     public Vardgivare getVardgivareInfo(String vardgivareHsaId) {
-        return null;
+        final var unit = getUnitService.get(
+            GetUnitRequestDTO.builder()
+                .hsaId(vardgivareHsaId)
+                .build()
+        );
+
+        if (unit == null) {
+            throw new WebServiceException("Could not get unit for unitHsaId " + vardgivareHsaId);
+        }
+
+        return new Vardgivare(unit.getUnitHsaId(), unit.getUnitName());
     }
 
     @Override
@@ -86,6 +99,11 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     @Override
     public String getParentUnit(String hsaId) throws HsaServiceCallException {
-        return null;
+        final var unit = getHealthCareUnitService.get(
+            GetHealthCareUnitRequestDTO.builder()
+                .hsaId(hsaId)
+                .build()
+        );
+        return unit.getHealthCareUnitHsaId();
     }
 }
