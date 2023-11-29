@@ -48,7 +48,7 @@ class HsaIntygProxyServiceUnitClientTest {
     private HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
 
     @Test
-    void shouldThrowHsaServiceCallException() {
+    void shouldThrowIllegalStateException() {
         final var request = GetUnitRequestDTO.builder().build();
         when(restTemplate.postForObject(anyString(), eq(request), eq(GetUnitResponseDTO.class))).thenThrow(IllegalStateException.class);
         assertThrows(IllegalStateException.class, () -> hsaIntygProxyServiceUnitClient.getUnit(request));

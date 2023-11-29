@@ -41,6 +41,10 @@ public class HsaIntygProxyServiceHealthCareUnitMembersClient {
     public GetHealthCareUnitMembersResponseDTO getHealthCareUnitMembers(
         GetHealthCareUnitMembersRequestDTO getHealthCareUnitMembersRequestDTO) {
         final var url = intygProxyServiceBaseUrl + healthCareUnitMembersEndpoint;
-        return restTemplate.postForObject(url, getHealthCareUnitMembersRequestDTO, GetHealthCareUnitMembersResponseDTO.class);
+        try {
+            return restTemplate.postForObject(url, getHealthCareUnitMembersRequestDTO, GetHealthCareUnitMembersResponseDTO.class);
+        } catch (Exception exception) {
+            throw new IllegalStateException("Error occured when trying to communicate with intyg-proxy-service", exception);
+        }
     }
 }

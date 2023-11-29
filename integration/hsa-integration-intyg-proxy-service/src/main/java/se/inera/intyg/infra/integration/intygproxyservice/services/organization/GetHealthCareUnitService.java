@@ -28,6 +28,7 @@ import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.infra.integration.intygproxyservice.client.organization.HsaIntygProxyServiceHealthCareUnitClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.HealthCareUnitResponseDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +42,16 @@ public class GetHealthCareUnitService {
         validateRequestParameters(getHealthCareUnitRequestDTO);
         final var healthCareUnit = hsaIntygProxyServiceHealthCareUnitClient.getHealthCareUnit(
             getHealthCareUnitRequestDTO);
+        validateResponse(healthCareUnit, getHealthCareUnitRequestDTO.getHsaId());
         return healthCareUnit.getHealthCareUnit();
+    }
+
+    private static void validateResponse(HealthCareUnitResponseDTO healthCareUnit, String hsaId) throws HsaServiceCallException {
+        if (healthCareUnit.getHealthCareUnit() == null) {
+            throw new HsaServiceCallException(
+                String.format("Could not get HealthCareUnit with hsaId: '%s'", hsaId)
+            );
+        }
     }
 
     private void validateRequestParameters(GetHealthCareUnitRequestDTO getHealthCareUnitRequestDTO) {

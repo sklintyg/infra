@@ -19,18 +19,29 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
+import se.inera.intyg.infra.integration.intygproxyservice.client.organization.HsaIntygProxyServiceHealthCareUnitClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.HealthCareUnitResponseDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetHealthCareUnitService;
 
 @ExtendWith(MockitoExtension.class)
 class GetHealthCareUnitServiceTest {
 
+    private static final String HSA_ID = "hsaId";
+    private static final HealthCareUnit EXPECTED_HEALTH_CARE_UNIT = new HealthCareUnit();
+    @Mock
+    private HsaIntygProxyServiceHealthCareUnitClient healthCareUnitClient;
     @InjectMocks
     private GetHealthCareUnitService getHealthCareUnitService;
 
@@ -54,4 +65,32 @@ class GetHealthCareUnitServiceTest {
             () -> getHealthCareUnitService.get(request));
     }
 
+    @Test
+    void shouldThrowIfResponseIsNull() {
+        final var request = GetHealthCareUnitRequestDTO.builder()
+            .hsaId(HSA_ID)
+            .build();
+
+        when(healthCareUnitClient.getHealthCareUnit(request)).thenReturn(HealthCareUnitResponseDTO.builder().build());
+
+        assertThrows(HsaServiceCallException.class,
+            () -> getHealthCareUnitService.get(request));
+    }
+
+    @Test
+    void shouldReturnHealthCareUnit() throws HsaServiceCallException {
+        final var request = GetHealthCareUnitRequestDTO.builder()
+            .hsaId(HSA_ID)
+            .build();
+
+        when(healthCareUnitClient.getHealthCareUnit(request)).thenReturn(
+            HealthCareUnitResponseDTO.builder()
+                .healthCareUnit(EXPECTED_HEALTH_CARE_UNIT)
+                .build()
+        );
+
+        final var result = getHealthCareUnitService.get(request);
+
+        assertEquals(EXPECTED_HEALTH_CARE_UNIT, result);
+    }
 }

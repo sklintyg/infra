@@ -20,6 +20,7 @@
 package se.inera.intyg.infra.integration.intygproxyservice.client;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -34,6 +35,7 @@ import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
 import se.inera.intyg.infra.integration.intygproxyservice.client.organization.HsaIntygProxyServiceHealthCareUnitMembersClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
@@ -43,6 +45,13 @@ class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
     private RestTemplate restTemplate;
     @InjectMocks
     private HsaIntygProxyServiceHealthCareUnitMembersClient healthCareUnitMembersClient;
+
+    @Test
+    void shouldThrowIllegalStateException() {
+        final var request = GetHealthCareUnitMembersRequestDTO.builder().build();
+        when(restTemplate.postForObject(anyString(), eq(request), eq(GetUnitResponseDTO.class))).thenThrow(IllegalStateException.class);
+        assertThrows(IllegalStateException.class, () -> healthCareUnitMembersClient.getHealthCareUnitMembers(request));
+    }
 
     @Test
     void shouldReturnGetHealthCareUnitMembers() {
