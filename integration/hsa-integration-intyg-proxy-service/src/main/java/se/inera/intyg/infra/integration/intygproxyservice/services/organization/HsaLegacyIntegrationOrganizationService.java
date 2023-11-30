@@ -20,8 +20,10 @@
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
+import static se.inera.intyg.infra.integration.intygproxyservice.services.organization.OrganizationUtil.isActive;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.xml.ws.WebServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +34,11 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.UserAuthorizationInfo
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.services.authorization.GetCredentialInformationForPersonService;
 
 @Slf4j
 @Service
@@ -42,14 +46,36 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUn
 @Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsaLegacyIntegrationOrganizationService implements HsaOrganizationsService {
 
+    private static final String VARD_OCH_BEHANDLING = "Vård och behandling";
+
     private final GetActiveHealthCareUnitMemberHsaIdService getActiveHealthCareUnitMemberHsaIdService;
     private final GetHealthCareUnitService getHealthCareUnitService;
     private final GetUnitService getUnitService;
+    private final GetCredentialInformationForPersonService getCredentialInformationForPersonService;
+    private final GetCareProviderListService getCareProviderListService;
+    private final UserCredentialListConverter userCredentialListConverter;
+    private final CommissionNameMapConverter commissionNameMapConverter;
 
     @Override
     public UserAuthorizationInfo getAuthorizedEnheterForHosPerson(String hosPersonHsaId) {
-        log.info("work in progress");
-        return null;
+        final var credentialInformation = getCredentialInformationForPersonService.get(
+            GetCredentialInformationRequestDTO.builder()
+                .personHsaId(hosPersonHsaId)
+                .build()
+        );
+
+        final var commissionList = credentialInformation.stream()
+            .flatMap(c -> c.getCommission().stream())
+            .filter(c -> isActive(c.getHealthCareProviderStartDate(), c.getHealthCareProviderEndDate()))
+            .filter(commission -> VARD_OCH_BEHANDLING.equalsIgnoreCase(commission.getCommissionPurpose()))
+            .collect(Collectors.toList());
+
+        log.debug("User '{}' has a total of {} medarbetaruppdrag", hosPersonHsaId, commissionList.size());
+
+        final var userCredentials = userCredentialListConverter.convert(credentialInformation);
+        final var commissionNameMap = commissionNameMapConverter.convert(commissionList);
+        final var careProviderList = getCareProviderListService.get(commissionList);
+        return new UserAuthorizationInfo(userCredentials, careProviderList, commissionNameMap);
     }
 
     @Override

@@ -18,14 +18,14 @@
  */
 package se.inera.intyg.infra.integration.hsatk.model;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class Unit {
+
     protected List<String> businessType = new ArrayList<>();
     protected List<BusinessClassification> businessClassification = new ArrayList<>();
     protected List<String> careType = new ArrayList<>();
@@ -44,22 +44,26 @@ public class Unit {
     protected List<String> postalAddress = new ArrayList<>();
     protected String postalCode;
     protected String mail;
+    protected List<String> telephoneNumber = new ArrayList<>();
     protected List<String> management = new ArrayList<>();
 
     @Data
     public static class GeoCoordRt90 {
+
         protected String xCoordinate;
         protected String yCoordinate;
     }
 
     @Data
     public static class GeoCoordSweref99 {
+
         protected String nCoordinate;
         protected String eCoordinate;
     }
 
     @Data
     public static class BusinessClassification {
+
         protected String businessClassificationName;
         protected String businessClassificationCode;
     }
