@@ -18,9 +18,12 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services.legacy;
 
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.client.AuthorizationManagementClient;
 import se.inera.intyg.infra.integration.hsatk.client.EmployeeClient;
@@ -45,6 +48,7 @@ import java.util.stream.Collectors;
  * infrastructure:directory:authorizationmanagement
  */
 @Service
+@Profile("!" + HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsaPersonServiceImpl implements HsaPersonService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HsaPersonServiceImpl.class);
@@ -69,9 +73,9 @@ public class HsaPersonServiceImpl implements HsaPersonService {
 
         try {
             return employeeClient.getEmployee(null, personHsaId, null)
-                    .stream()
-                    .map(hsaTypeConverter::toPersonInformation)
-                    .collect(Collectors.toList());
+                .stream()
+                .map(hsaTypeConverter::toPersonInformation)
+                .collect(Collectors.toList());
         } catch (HsaServiceCallException e) {
             LOG.error(e.getMessage());
             throw new WebServiceException(e.getMessage());
@@ -84,19 +88,19 @@ public class HsaPersonServiceImpl implements HsaPersonService {
         LOG.debug("Checking if person with HSA id '{}' has MIUs on unit '{}'", hosPersonHsaId, unitHsaId);
 
         List<CredentialInformationType> response = authorizationManagementClient.getCredentialInformationForPerson(
-                null, hosPersonHsaId, null);
+            null, hosPersonHsaId, null);
         List<CommissionType> commissions = response.stream()
-                .flatMap(ci -> ci.getCommission().stream())
-                .collect(Collectors.toList());
+            .flatMap(ci -> ci.getCommission().stream())
+            .collect(Collectors.toList());
 
         List<Commission> filteredMuisOnUnit = commissions.stream()
-                .filter(ct -> ct.getHealthCareUnitHsaId() != null && ct.getHealthCareUnitHsaId().equals(unitHsaId))
-                .filter(ct -> ct.getHealthCareUnitEndDate() == null
-                        || ct.getHealthCareUnitEndDate().isAfter(LocalDateTime.now(ZoneId.systemDefault())))
-                .filter(ct -> ct.getCommissionPurpose() != null
-                        && CredentialInformation.VARD_OCH_BEHANDLING.equalsIgnoreCase(ct.getCommissionPurpose()))
-                .map(hsaTypeConverter::toCommission)
-                .collect(Collectors.toList());
+            .filter(ct -> ct.getHealthCareUnitHsaId() != null && ct.getHealthCareUnitHsaId().equals(unitHsaId))
+            .filter(ct -> ct.getHealthCareUnitEndDate() == null
+                || ct.getHealthCareUnitEndDate().isAfter(LocalDateTime.now(ZoneId.systemDefault())))
+            .filter(ct -> ct.getCommissionPurpose() != null
+                && CredentialInformation.VARD_OCH_BEHANDLING.equalsIgnoreCase(ct.getCommissionPurpose()))
+            .map(hsaTypeConverter::toCommission)
+            .collect(Collectors.toList());
 
         LOG.debug("Person has {} MIUs on unit '{}'", filteredMuisOnUnit.size(), hosPersonHsaId);
 
