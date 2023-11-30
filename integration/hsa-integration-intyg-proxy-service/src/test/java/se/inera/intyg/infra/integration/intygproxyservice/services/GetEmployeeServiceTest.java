@@ -69,21 +69,6 @@ class GetEmployeeServiceTest {
     }
 
     @Test
-    void shouldReturnEmptyListIfEmployeeIsNull() {
-        final var request = GetEmployeeRequestDTO.builder()
-            .personId(PERSONAL_IDENTITY_NUMBER)
-            .build();
-
-        when(employeeClient.getEmployee(request)).thenReturn(
-            GetEmployeeResponseDTO.builder()
-                .build());
-
-        final var result = getEmployeeService.get(request);
-
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
     void shouldReturnEmptyListIfPersonalInformationIsNull() {
         final var request = GetEmployeeRequestDTO.builder()
             .personId(PERSONAL_IDENTITY_NUMBER)

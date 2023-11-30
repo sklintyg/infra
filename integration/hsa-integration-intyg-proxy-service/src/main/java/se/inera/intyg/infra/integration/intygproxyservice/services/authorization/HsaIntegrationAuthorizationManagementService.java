@@ -50,7 +50,9 @@ public class HsaIntegrationAuthorizationManagementService implements HsatkAuthor
         );
 
         if (credentialInformations.isEmpty()) {
-            throw new WebServiceException();
+            throw new WebServiceException(
+                String.format("Credential information was not found with personalIdentityNumber '%s' personHsaId '%s'",
+                    personalIdentityNumber, personHsaId));
         }
 
         return credentialInformations;

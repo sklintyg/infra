@@ -19,7 +19,6 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services.authorization;
 
-import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,9 +35,6 @@ public class GetCredentialInformationForPersonService {
     public List<CredentialInformation> get(GetCredentialInformationRequestDTO credentialInformationRequestDTO) {
         validateRequest(credentialInformationRequestDTO);
         final var credentialInformationResponseDTO = credentialInformationForPersonClient.get(credentialInformationRequestDTO);
-        if (credentialInformationResponseDTO.getCredentialInformations() == null) {
-            return Collections.emptyList();
-        }
         return credentialInformationResponseDTO.getCredentialInformations();
     }
 

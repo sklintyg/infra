@@ -43,18 +43,17 @@ public class GetEmployeeService {
         unless = "#result == null")
     public List<PersonInformation> get(GetEmployeeRequestDTO getEmployeeRequestDTO) {
         validateRequestParameters(getEmployeeRequestDTO);
-        final var employee = hsaIntygProxyServiceEmployeeClient.getEmployee(getEmployeeRequestDTO);
-        if (invalidResponse(employee)) {
+        final var getEmployeeResponse = hsaIntygProxyServiceEmployeeClient.getEmployee(getEmployeeRequestDTO);
+        if (personInformationIsNullOrEmpty(getEmployeeResponse)) {
             log.warn("Person information for employee with personalIdentityNumber '{}' personHsaId '{}' was not found.",
                 getEmployeeRequestDTO.getPersonId(), getEmployeeRequestDTO.getHsaId());
             return Collections.emptyList();
         }
-        return employee.getEmployee().getPersonInformation();
+        return getEmployeeResponse.getEmployee().getPersonInformation();
     }
 
-    private boolean invalidResponse(GetEmployeeResponseDTO employee) {
-        return employee.getEmployee() == null || employee.getEmployee().getPersonInformation() == null || employee.getEmployee()
-            .getPersonInformation().isEmpty();
+    private boolean personInformationIsNullOrEmpty(GetEmployeeResponseDTO employee) {
+        return employee.getEmployee().getPersonInformation() == null || employee.getEmployee().getPersonInformation().isEmpty();
     }
 
     private void validateRequestParameters(GetEmployeeRequestDTO getEmployeeRequestDTO) {
