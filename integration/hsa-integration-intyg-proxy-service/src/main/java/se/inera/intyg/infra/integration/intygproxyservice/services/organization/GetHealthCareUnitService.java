@@ -40,13 +40,13 @@ public class GetHealthCareUnitService {
         unless = "#result == null")
     public HealthCareUnit get(GetHealthCareUnitRequestDTO getHealthCareUnitRequestDTO) {
         validateRequestParameters(getHealthCareUnitRequestDTO);
-        final var healthCareUnit = hsaIntygProxyServiceHealthCareUnitClient.getHealthCareUnit(
+        final var healthCareUnitResponse = hsaIntygProxyServiceHealthCareUnitClient.getHealthCareUnit(
             getHealthCareUnitRequestDTO);
-        if (healthCareUnit.getHealthCareUnit() == null) {
+        if (healthCareUnitResponse.getHealthCareUnit() == null) {
             log.warn(String.format("Could not fetch health care unit: '%s'", getHealthCareUnitRequestDTO.getHsaId()));
             return null;
         }
-        return healthCareUnit.getHealthCareUnit();
+        return healthCareUnitResponse.getHealthCareUnit();
     }
 
     private void validateRequestParameters(GetHealthCareUnitRequestDTO getHealthCareUnitRequestDTO) {
