@@ -21,6 +21,7 @@ package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -42,14 +43,11 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUn
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetActiveHealthCareUnitMemberHsaIdService;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetHealthCareUnitService;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetUnitService;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.HsaLegacyGetCareUnitService;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.HsaLegacyIntegrationOrganizationService;
 
 @ExtendWith(MockitoExtension.class)
 class HsaLegacyIntegrationOrganizationServiceTest {
-
-    public static final String CARE_PROVIDER_HSA_ID = "careProviderHsaId";
-    @InjectMocks
-    private HsaLegacyIntegrationOrganizationService hsaLegacyIntegrationOrganizationService;
 
     @Mock
     private GetHealthCareUnitService getHealthCareUnitService;
@@ -60,6 +58,13 @@ class HsaLegacyIntegrationOrganizationServiceTest {
     @Mock
     private GetUnitService getUnitService;
 
+    @Mock
+    private HsaLegacyGetCareUnitService hsaLegacyGetCareUnitService;
+
+    @InjectMocks
+    private HsaLegacyIntegrationOrganizationService hsaLegacyIntegrationOrganizationService;
+
+    public static final String CARE_PROVIDER_HSA_ID = "careProviderHsaId";
     private static final String CARE_UNIT_HSA_ID = "careUnitHsaId";
 
     @Nested
@@ -86,6 +91,16 @@ class HsaLegacyIntegrationOrganizationServiceTest {
 
             final var actualResult = hsaLegacyIntegrationOrganizationService.getVardgivareOfVardenhet(CARE_UNIT_HSA_ID);
             Assertions.assertNull(actualResult);
+        }
+    }
+
+    @Nested
+    class GetVardenhet {
+
+        @Test
+        void shouldCallHsaLegacyGetCareUnitService() {
+            hsaLegacyIntegrationOrganizationService.getVardenhet(CARE_UNIT_HSA_ID);
+            verify(hsaLegacyGetCareUnitService).get(CARE_UNIT_HSA_ID);
         }
     }
 

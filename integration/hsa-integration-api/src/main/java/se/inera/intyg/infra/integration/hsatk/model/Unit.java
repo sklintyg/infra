@@ -44,6 +44,7 @@ public class Unit {
     protected List<String> postalAddress = new ArrayList<>();
     protected String postalCode;
     protected String mail;
+    protected List<String> telephoneNumber = new ArrayList<>();
     protected List<String> management = new ArrayList<>();
 
     @Data
