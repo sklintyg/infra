@@ -20,6 +20,7 @@
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -30,7 +31,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
-import se.inera.intyg.infra.integration.hsatk.model.Unit;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 
@@ -57,6 +57,15 @@ class HsaIntegrationOrganizationServiceTest {
 
             assertEquals(expectedUnit, result);
         }
+
+        @Test
+        void shouldReturnNullIfHealthCareUnitIsNull() {
+            when(getHealthCareUnitService.get(any(GetHealthCareUnitRequestDTO.class))).thenReturn(null);
+
+            final var result = hsaIntegrationOrganizationService.getHealthCareUnit(UNIT_HSA_ID);
+
+            assertNull(result);
+        }
     }
 
 
@@ -64,14 +73,12 @@ class HsaIntegrationOrganizationServiceTest {
     class GetUnit {
 
         @Test
-        void shouldReturnUnit() {
-            final var expectedUnit = new Unit();
-
-            when(getUnitService.get(any(GetUnitRequestDTO.class))).thenReturn(expectedUnit);
+        void shouldReturnNullIfUnitIsNull() {
+            when(getUnitService.get(any(GetUnitRequestDTO.class))).thenReturn(null);
 
             final var result = hsaIntegrationOrganizationService.getUnit(UNIT_HSA_ID, null);
 
-            assertEquals(expectedUnit, result);
+            assertNull(result);
         }
     }
 }
