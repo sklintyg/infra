@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.HealthCareUnitResponseDTO;
 
@@ -40,13 +39,13 @@ public class HsaIntygProxyServiceHealthCareUnitClient {
     private String intygProxyServiceBaseUrl;
 
     public HealthCareUnitResponseDTO getHealthCareUnit(
-        GetHealthCareUnitRequestDTO getHealthCareUnitRequestDTO) throws HsaServiceCallException {
+        GetHealthCareUnitRequestDTO getHealthCareUnitRequestDTO) {
         final var url = intygProxyServiceBaseUrl + healthCareUnitEndpoint;
 
         try {
             return restTemplate.postForObject(url, getHealthCareUnitRequestDTO, HealthCareUnitResponseDTO.class);
         } catch (Exception exception) {
-            throw new HsaServiceCallException("Error occured when trying to communicate with intyg-proxy-service", exception);
+            throw new IllegalStateException("Error occured when trying to communicate with intyg-proxy-service", exception);
         }
     }
 }

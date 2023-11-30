@@ -29,7 +29,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.infra.integration.hsatk.model.Unit;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,8 +40,25 @@ class HsaIntegrationOrganizationServiceTest {
     private static final String UNIT_HSA_ID = "unitHsaId";
     @Mock
     private GetUnitService getUnitService;
+    @Mock
+    private GetHealthCareUnitService getHealthCareUnitService;
     @InjectMocks
     private HsaIntegrationOrganizationService hsaIntegrationOrganizationService;
+
+    @Nested
+    class GetHealthCareUnit {
+
+        @Test
+        void shouldReturnHealthCareUnit() {
+            final var expectedUnit = new HealthCareUnit();
+            when(getHealthCareUnitService.get(any(GetHealthCareUnitRequestDTO.class))).thenReturn(expectedUnit);
+
+            final var result = hsaIntegrationOrganizationService.getHealthCareUnit(UNIT_HSA_ID);
+
+            assertEquals(expectedUnit, result);
+        }
+    }
+
 
     @Nested
     class GetUnit {

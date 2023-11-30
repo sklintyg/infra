@@ -30,7 +30,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.intygproxyservice.client.organization.HsaIntygProxyServiceHealthCareUnitClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.HealthCareUnitResponseDTO;
@@ -47,7 +46,7 @@ class HsaIntygProxyServiceHealthCareUnitClientTest {
     private static final String CARE_UNIT_HSA_ID = "careUnitHsaId";
 
     @Test
-    void shouldReturnGetHealthCareUnitResponseWhenHsaIdIsProvided() throws HsaServiceCallException {
+    void shouldReturnGetHealthCareUnitResponseWhenHsaIdIsProvided() {
         final var request = GetHealthCareUnitRequestDTO.builder()
             .hsaId(CARE_UNIT_HSA_ID)
             .build();
