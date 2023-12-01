@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.model.Commission;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter.CareProviderConverter;
 
 @Service
 @Slf4j

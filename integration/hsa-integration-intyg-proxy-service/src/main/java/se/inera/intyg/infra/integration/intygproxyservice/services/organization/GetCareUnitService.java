@@ -28,6 +28,7 @@ import se.inera.intyg.infra.integration.hsatk.model.Unit;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter.CareUnitConverter;
 
 @Service
 @Slf4j

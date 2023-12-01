@@ -17,27 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
+package se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter;
 
 import java.util.List;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 import se.inera.intyg.infra.integration.hsatk.model.Commission;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 
-@Service
-@Slf4j
-@RequiredArgsConstructor
-public class CareProviderConverter {
+@Component
+public class CommissionNameMapConverter {
 
-    public Vardgivare convert(Commission commission, List<Vardenhet> careUnits) {
-        final var careProvider = new Vardgivare();
-        careProvider.setId(commission.getHealthCareProviderHsaId());
-        careProvider.setNamn(commission.getHealthCareProviderName());
-        careProvider.setVardenheter(careUnits);
-
-        return careProvider;
+    public Map<String, String> convert(List<Commission> commissions) {
+        return commissions.stream()
+            .distinct()
+            .collect(Collectors.toMap(Commission::getHealthCareUnitHsaId, Commission::getCommissionName));
     }
 }

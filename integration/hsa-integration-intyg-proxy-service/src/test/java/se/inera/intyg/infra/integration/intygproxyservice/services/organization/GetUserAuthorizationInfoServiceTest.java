@@ -40,6 +40,8 @@ import se.inera.intyg.infra.integration.hsatk.model.Commission;
 import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter.CommissionNameMapConverter;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter.UserCredentialListConverter;
 
 @ExtendWith(MockitoExtension.class)
 class GetUserAuthorizationInfoServiceTest {

@@ -38,6 +38,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.model.Commission;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter.CareProviderConverter;
 
 @ExtendWith(MockitoExtension.class)
 class GetCareProviderListServiceTest {

@@ -37,6 +37,7 @@ import se.inera.intyg.infra.integration.hsatk.model.Commission;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
 import se.inera.intyg.infra.integration.hsatk.model.Unit;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter.CareUnitConverter;
 
 @ExtendWith(MockitoExtension.class)
 class GetCareUnitServiceTest {

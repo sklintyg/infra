@@ -27,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.UserAuthorizationInfo;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter.CommissionNameMapConverter;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter.UserCredentialListConverter;
 
 @Service
 @RequiredArgsConstructor
