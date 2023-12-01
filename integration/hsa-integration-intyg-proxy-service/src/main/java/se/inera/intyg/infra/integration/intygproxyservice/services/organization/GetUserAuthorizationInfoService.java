@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.integration.hsatk.model.Commission;
 import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.UserAuthorizationInfo;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter.CommissionNameMapConverter;
@@ -43,13 +44,21 @@ public class GetUserAuthorizationInfoService {
     public UserAuthorizationInfo get(List<CredentialInformation> credentialInformation) {
         final var commissionList = credentialInformation.stream()
             .flatMap(information -> information.getCommission().stream())
-            .filter(commission -> isActive(commission.getHealthCareProviderStartDate(), commission.getHealthCareProviderEndDate()))
-            .filter(commission -> VARD_OCH_BEHANDLING.equalsIgnoreCase(commission.getCommissionPurpose()))
+            .filter(GetUserAuthorizationInfoService::isCommissionActive)
+            .filter(GetUserAuthorizationInfoService::hasCorrectPurpose)
             .collect(Collectors.toList());
 
         final var userCredentials = userCredentialListConverter.convert(credentialInformation);
         final var commissionNameMap = commissionNameMapConverter.convert(commissionList);
         final var careProviderList = getCareProviderListService.get(commissionList);
         return new UserAuthorizationInfo(userCredentials, careProviderList, commissionNameMap);
+    }
+
+    private static boolean isCommissionActive(Commission commission) {
+        return isActive(commission.getHealthCareProviderStartDate(), commission.getHealthCareProviderEndDate());
+    }
+
+    private static boolean hasCorrectPurpose(Commission commission) {
+        return VARD_OCH_BEHANDLING.equalsIgnoreCase(commission.getCommissionPurpose());
     }
 }
