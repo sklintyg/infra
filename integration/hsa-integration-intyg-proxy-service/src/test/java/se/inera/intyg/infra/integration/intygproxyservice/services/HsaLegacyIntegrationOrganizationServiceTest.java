@@ -20,12 +20,12 @@
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 import javax.xml.ws.WebServiceException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,7 +66,7 @@ class HsaLegacyIntegrationOrganizationServiceTest {
     class VardgivareOfvardenhet {
 
         @Test
-        void shouldReturnHealthCareProviderHsaIdWhenCareUnitHsaIdIsProvided() throws HsaServiceCallException {
+        void shouldReturnHealthCareProviderHsaIdWhenCareUnitHsaIdIsProvided() {
             final var healthCareUnit = new HealthCareUnit();
             healthCareUnit.setHealthCareProviderHsaId(CARE_PROVIDER_HSA_ID);
 
@@ -79,13 +79,13 @@ class HsaLegacyIntegrationOrganizationServiceTest {
         }
 
         @Test
-        void shouldReturnNullWhenExceptionIsThrown() throws HsaServiceCallException {
+        void shouldReturnNull() {
             when(getHealthCareUnitService.get(GetHealthCareUnitRequestDTO.builder()
                 .hsaId(CARE_UNIT_HSA_ID)
-                .build())).thenThrow(HsaServiceCallException.class);
+                .build())).thenReturn(null);
 
             final var actualResult = hsaLegacyIntegrationOrganizationService.getVardgivareOfVardenhet(CARE_UNIT_HSA_ID);
-            Assertions.assertNull(actualResult);
+            assertNull(actualResult);
         }
     }
 
