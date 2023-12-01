@@ -24,7 +24,6 @@ import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIn
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.infra.integration.intygproxyservice.client.organization.HsaIntygProxyServiceHealthCareUnitClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
@@ -37,7 +36,7 @@ public class GetHealthCareUnitService {
 
     @Cacheable(cacheNames = HEALTH_CARE_UNIT_CACHE_NAME, key = "#getHealthCareUnitRequestDTO.hsaId",
         unless = "#result == null")
-    public HealthCareUnit get(GetHealthCareUnitRequestDTO getHealthCareUnitRequestDTO) throws HsaServiceCallException {
+    public HealthCareUnit get(GetHealthCareUnitRequestDTO getHealthCareUnitRequestDTO) {
         validateRequestParameters(getHealthCareUnitRequestDTO);
         final var healthCareUnit = hsaIntygProxyServiceHealthCareUnitClient.getHealthCareUnit(
             getHealthCareUnitRequestDTO);

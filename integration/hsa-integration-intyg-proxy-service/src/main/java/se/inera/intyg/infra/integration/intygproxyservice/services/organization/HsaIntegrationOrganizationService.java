@@ -19,7 +19,7 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
-import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE;
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -31,15 +31,18 @@ import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
 import se.inera.intyg.infra.integration.hsatk.model.Unit;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkOrganizationService;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE)
+@Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsaIntegrationOrganizationService implements HsatkOrganizationService {
 
     private final GetUnitService getUnitService;
+
+    private final GetHealthCareUnitService getHealthCareUnitService;
 
     @Override
     public List<HealthCareProvider> getHealthCareProvider(String healthCareProviderHsaId, String healthCareProviderOrgNo) {
@@ -48,7 +51,16 @@ public class HsaIntegrationOrganizationService implements HsatkOrganizationServi
 
     @Override
     public HealthCareUnit getHealthCareUnit(String healthCareUnitMemberHsaId) {
-        return null;
+        final var healthCareUnit = getHealthCareUnitService.get(
+            GetHealthCareUnitRequestDTO.builder()
+                .hsaId(healthCareUnitMemberHsaId)
+                .build()
+        );
+        if (healthCareUnit == null) {
+            log.warn("Failed to get HealthCareUnit from HSA with hsaId: {}", healthCareUnitMemberHsaId);
+            return null;
+        }
+        return healthCareUnit;
     }
 
     @Override
