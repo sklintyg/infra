@@ -20,10 +20,8 @@
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
-import static se.inera.intyg.infra.integration.intygproxyservice.services.organization.OrganizationUtil.isActive;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.xml.ws.WebServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,15 +44,11 @@ import se.inera.intyg.infra.integration.intygproxyservice.services.authorization
 @Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsaLegacyIntegrationOrganizationService implements HsaOrganizationsService {
 
-    private static final String VARD_OCH_BEHANDLING = "Vård och behandling";
-
     private final GetActiveHealthCareUnitMemberHsaIdService getActiveHealthCareUnitMemberHsaIdService;
     private final GetHealthCareUnitService getHealthCareUnitService;
     private final GetUnitService getUnitService;
     private final GetCredentialInformationForPersonService getCredentialInformationForPersonService;
-    private final GetCareProviderListService getCareProviderListService;
-    private final UserCredentialListConverter userCredentialListConverter;
-    private final CommissionNameMapConverter commissionNameMapConverter;
+    private final GetUserAuthorizationInfoService getUserAuthorizationInfoService;
 
     @Override
     public UserAuthorizationInfo getAuthorizedEnheterForHosPerson(String hosPersonHsaId) {
@@ -64,18 +58,7 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
                 .build()
         );
 
-        final var commissionList = credentialInformation.stream()
-            .flatMap(c -> c.getCommission().stream())
-            .filter(c -> isActive(c.getHealthCareProviderStartDate(), c.getHealthCareProviderEndDate()))
-            .filter(commission -> VARD_OCH_BEHANDLING.equalsIgnoreCase(commission.getCommissionPurpose()))
-            .collect(Collectors.toList());
-
-        log.debug("User '{}' has a total of {} medarbetaruppdrag", hosPersonHsaId, commissionList.size());
-
-        final var userCredentials = userCredentialListConverter.convert(credentialInformation);
-        final var commissionNameMap = commissionNameMapConverter.convert(commissionList);
-        final var careProviderList = getCareProviderListService.get(commissionList);
-        return new UserAuthorizationInfo(userCredentials, careProviderList, commissionNameMap);
+        return getUserAuthorizationInfoService.get(credentialInformation);
     }
 
     @Override

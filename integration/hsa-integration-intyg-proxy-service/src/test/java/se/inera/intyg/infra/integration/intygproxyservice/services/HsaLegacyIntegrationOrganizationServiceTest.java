@@ -21,27 +21,36 @@ package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 import javax.xml.ws.WebServiceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
+import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.infra.integration.hsatk.model.Unit;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.UserAuthorizationInfo;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.services.authorization.GetCredentialInformationForPersonService;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetActiveHealthCareUnitMemberHsaIdService;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetHealthCareUnitService;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetUnitService;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetUserAuthorizationInfoService;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.HsaLegacyIntegrationOrganizationService;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,6 +68,12 @@ class HsaLegacyIntegrationOrganizationServiceTest {
 
     @Mock
     private GetUnitService getUnitService;
+
+    @Mock
+    private GetCredentialInformationForPersonService getCredentialInformationForPersonService;
+
+    @Mock
+    private GetUserAuthorizationInfoService getUserAuthorizationInfoService;
 
     private static final String CARE_UNIT_HSA_ID = "careUnitHsaId";
 
@@ -165,6 +180,43 @@ class HsaLegacyIntegrationOrganizationServiceTest {
             ).thenReturn(null);
 
             assertThrows(WebServiceException.class, () -> hsaLegacyIntegrationOrganizationService.getVardgivareInfo(CARE_UNIT_ID));
+        }
+    }
+
+    @Nested
+    class TestGetAuthorizedEnheterForHosPerson {
+
+        @Test
+        void shouldGetCredentialInformationForPerson() {
+            final var captor = ArgumentCaptor.forClass(GetCredentialInformationRequestDTO.class);
+            hsaLegacyIntegrationOrganizationService.getAuthorizedEnheterForHosPerson("HSA_ID");
+
+            verify(getCredentialInformationForPersonService).get(captor.capture());
+            assertEquals("HSA_ID", captor.getValue().getPersonHsaId());
+        }
+
+        @Test
+        void shouldSendCredentialInformationToGetAuthorizedInfoService() {
+            final var expected = List.of(new CredentialInformation());
+            when(getCredentialInformationForPersonService.get(any()))
+                .thenReturn(expected);
+
+            final var captor = ArgumentCaptor.forClass(List.class);
+            hsaLegacyIntegrationOrganizationService.getAuthorizedEnheterForHosPerson("HSA_ID");
+
+            verify(getUserAuthorizationInfoService).get(captor.capture());
+            assertEquals(expected, captor.getValue());
+        }
+
+        @Test
+        void shouldReturnUserAuthenticationInfo() {
+            final var expected = new UserAuthorizationInfo(null, Collections.emptyList(), null);
+            when(getUserAuthorizationInfoService.get(any()))
+                .thenReturn(expected);
+
+            final var response = hsaLegacyIntegrationOrganizationService.getAuthorizedEnheterForHosPerson("HSA_ID");
+
+            assertEquals(expected, response);
         }
     }
 }
