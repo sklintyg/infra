@@ -17,14 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.hsatk.constants;
+package se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter;
 
-public class HsaIntegrationApiConstants {
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
+import se.inera.intyg.infra.integration.hsatk.model.Commission;
 
-    private HsaIntegrationApiConstants() {
-        throw new IllegalStateException("Utility class!");
+@Component
+public class CommissionNameMapConverter {
+
+    public Map<String, String> convert(List<Commission> commissions) {
+        return commissions.stream()
+            .distinct()
+            .collect(Collectors.toMap(Commission::getHealthCareUnitHsaId, Commission::getCommissionName));
     }
-
-    public static final String HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE = "hsa-integration-intyg-proxy-service";
-
 }

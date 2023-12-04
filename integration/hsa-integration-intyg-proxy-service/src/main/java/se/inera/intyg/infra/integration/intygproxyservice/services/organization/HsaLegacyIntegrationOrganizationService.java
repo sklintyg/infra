@@ -32,9 +32,11 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.UserAuthorizationInfo
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.services.authorization.GetCredentialInformationForPersonService;
 
 @Slf4j
 @Service
@@ -45,28 +47,29 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
     private final GetActiveHealthCareUnitMemberHsaIdService getActiveHealthCareUnitMemberHsaIdService;
     private final GetHealthCareUnitService getHealthCareUnitService;
     private final GetUnitService getUnitService;
+    private final GetCredentialInformationForPersonService getCredentialInformationForPersonService;
+    private final GetUserAuthorizationInfoService getUserAuthorizationInfoService;
     private final HsaLegacyGetCareUnitService hsaLegacyGetCareUnitService;
 
     @Override
     public UserAuthorizationInfo getAuthorizedEnheterForHosPerson(String hosPersonHsaId) {
-        log.info("work in progress");
-        return null;
+        final var credentialInformation = getCredentialInformationForPersonService.get(
+            GetCredentialInformationRequestDTO.builder()
+                .personHsaId(hosPersonHsaId)
+                .build()
+        );
+
+        return getUserAuthorizationInfoService.get(credentialInformation);
     }
 
     @Override
     public String getVardgivareOfVardenhet(String vardenhetHsaId) {
-        try {
-            final var healthCareUnit = getHealthCareUnitService.get(
-                GetHealthCareUnitRequestDTO.builder()
-                    .hsaId(vardenhetHsaId)
-                    .build()
-            );
-            return healthCareUnit.getHealthCareProviderHsaId();
-
-        } catch (HsaServiceCallException hsaServiceCallException) {
-            log.warn(String.format("Could not fetch health care unit: '%s'", vardenhetHsaId), hsaServiceCallException);
-            return null;
-        }
+        final var healthCareUnit = getHealthCareUnitService.get(
+            GetHealthCareUnitRequestDTO.builder()
+                .hsaId(vardenhetHsaId)
+                .build()
+        );
+        return healthCareUnit != null ? healthCareUnit.getHealthCareProviderHsaId() : null;
     }
 
     @Override
