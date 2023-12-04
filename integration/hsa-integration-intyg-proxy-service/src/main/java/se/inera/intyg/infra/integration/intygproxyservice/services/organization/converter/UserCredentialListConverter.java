@@ -30,7 +30,7 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
 public class UserCredentialListConverter {
 
     public UserCredentials convert(List<CredentialInformation> credentialInformation) {
-        final var firstCredential = credentialInformation.isEmpty() ? null : credentialInformation.get(0);
+        final var lastCredential = credentialInformation.isEmpty() ? null : credentialInformation.get(credentialInformation.size() - 1);
         final var userCredentials = new UserCredentials();
         final var prescriptionCodes = toList(credentialInformation, CredentialInformation::getGroupPrescriptionCode);
         final var paTitleCodes = toList(credentialInformation, CredentialInformation::getPaTitleCode);
@@ -39,7 +39,7 @@ public class UserCredentialListConverter {
         userCredentials.getGroupPrescriptionCode().addAll(prescriptionCodes);
         userCredentials.getPaTitleCode().addAll(paTitleCodes);
         userCredentials.getHsaSystemRole().addAll(hsaSystemRoles);
-        userCredentials.setPersonalPrescriptionCode(firstCredential == null ? null : firstCredential.getPersonalPrescriptionCode());
+        userCredentials.setPersonalPrescriptionCode(lastCredential == null ? null : lastCredential.getPersonalPrescriptionCode());
 
         return userCredentials;
     }

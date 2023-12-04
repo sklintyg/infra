@@ -66,17 +66,10 @@ class UserCredentialListConverterTest {
     }
 
     @Test
-    void shouldSetPersonalPrescriptionToFirstCredentialValue() {
+    void shouldSetPersonalPrescriptionCodeOfLastCredential() {
         final var response = converter.convert(CREDENTIALS);
 
-        assertEquals(P_CODE_1, response.getPersonalPrescriptionCode());
-    }
-
-    @Test
-    void shouldSetPersonalPrescriptionCodeOfFirstCredential() {
-        final var response = converter.convert(CREDENTIALS);
-
-        assertEquals(CREDENTIAL_1.getPersonalPrescriptionCode(), response.getPersonalPrescriptionCode());
+        assertEquals(CREDENTIAL_2.getPersonalPrescriptionCode(), response.getPersonalPrescriptionCode());
     }
 
     @Test
