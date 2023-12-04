@@ -19,7 +19,7 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services.authorization;
 
-import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE;
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,7 +34,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetC
 
 @Service
 @RequiredArgsConstructor
-@Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_NOT_ACTIVATED_PROFILE)
+@Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsaIntegrationAuthorizationManagementService implements HsatkAuthorizationManagementService {
 
     private final GetCredentialInformationForPersonService getCredentialInformationForPersonService;
