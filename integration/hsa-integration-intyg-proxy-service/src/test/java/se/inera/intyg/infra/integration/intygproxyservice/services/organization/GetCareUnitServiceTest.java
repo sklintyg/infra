@@ -70,7 +70,7 @@ class GetCareUnitServiceTest {
     @Test
     void shouldReturnNullIfUnitNotFoundFromHsa() {
         when(getUnitService.get(any()))
-            .thenReturn(new Unit());
+            .thenReturn(null);
 
         final var response = getCareUnitService.get(c1);
 

@@ -19,6 +19,7 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,20 +43,17 @@ public class GetCareUnitService {
     public Vardenhet get(Commission commission) {
         final var unit = getUnitFromHsa(commission.getHealthCareUnitHsaId());
         final var members = getHealthCareUnitMembersFromHsa(commission.getHealthCareUnitHsaId());
-        final var isUnitDefined = unit.getUnitHsaId() != null && !unit.getUnitHsaId().isEmpty();
 
-        if (!isUnitDefined) {
-            return null;
-        }
-
-        return careUnitConverter.convert(commission, unit, members);
+        return unit.map(unitValue -> careUnitConverter.convert(commission, unitValue, members)).orElse(null);
     }
 
-    private Unit getUnitFromHsa(String careUnitHsaId) {
-        return getUnitService.get(
-            GetUnitRequestDTO.builder()
-                .hsaId(careUnitHsaId)
-                .build()
+    private Optional<Unit> getUnitFromHsa(String careUnitHsaId) {
+        return Optional.ofNullable(
+            getUnitService.get(
+                GetUnitRequestDTO.builder()
+                    .hsaId(careUnitHsaId)
+                    .build()
+            )
         );
     }
 
