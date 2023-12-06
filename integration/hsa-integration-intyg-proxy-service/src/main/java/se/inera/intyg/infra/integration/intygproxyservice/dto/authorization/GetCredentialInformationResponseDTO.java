@@ -32,5 +32,5 @@ import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
 @AllArgsConstructor
 public class GetCredentialInformationResponseDTO {
 
-    List<CredentialInformation> credentialInformations;
+    List<CredentialInformation> credentialInformation;
 }

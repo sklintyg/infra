@@ -58,13 +58,13 @@ class GetCredentialInformationForPersonServiceTest {
             .build();
 
         final var expectedResponse = GetCredentialInformationResponseDTO.builder()
-            .credentialInformations(CREDENTIAL_INFORMATIONS)
+            .credentialInformation(CREDENTIAL_INFORMATIONS)
             .build();
 
         when(credentialInformationForPersonClient.get(request)).thenReturn(expectedResponse);
 
         final var result = getCredentialInformationForPersonService.get(request);
 
-        assertEquals(expectedResponse.getCredentialInformations(), result);
+        assertEquals(expectedResponse.getCredentialInformation(), result);
     }
 }
