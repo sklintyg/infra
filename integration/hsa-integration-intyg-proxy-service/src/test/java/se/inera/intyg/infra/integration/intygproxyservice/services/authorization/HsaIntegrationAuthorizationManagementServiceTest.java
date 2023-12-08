@@ -32,6 +32,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
+import se.inera.intyg.infra.integration.hsatk.model.HospCredentialsForPerson;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
@@ -75,6 +76,18 @@ class HsaIntegrationAuthorizationManagementServiceTest {
             when(getHospCredentialsForPersonService.get(PERSON_ID)).thenReturn(null);
             assertThrows(WebServiceException.class,
                 () -> hsaIntegrationAuthorizationManagementService.getHospCredentialsForPersonResponseType(PERSON_ID));
+        }
+
+        @Test
+        void shouldReturnCredentialsForPerson() {
+            final var expectedResult = new HospCredentialsForPerson();
+
+            when(getHospCredentialsForPersonService.get(PERSON_ID)).thenReturn(expectedResult);
+
+            final var result = hsaIntegrationAuthorizationManagementService.getHospCredentialsForPersonResponseType(
+                PERSON_ID);
+
+            assertEquals(expectedResult, result);
         }
     }
 }

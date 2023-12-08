@@ -59,7 +59,7 @@ public class HsaIntegrationAuthorizationManagementService implements HsatkAuthor
                 String.format("No hosp credentials for person found with personalIdentityNumber '%s'", personalIdentityNumber)
             );
         }
-        return null;
+        return credentialsForPerson;
     }
 
     @Override
