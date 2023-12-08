@@ -35,7 +35,7 @@ public class GetCredentialInformationForPersonService {
     public List<CredentialInformation> get(GetCredentialInformationRequestDTO credentialInformationRequestDTO) {
         validateRequest(credentialInformationRequestDTO);
         final var credentialInformationResponseDTO = credentialInformationForPersonClient.get(credentialInformationRequestDTO);
-        return credentialInformationResponseDTO.getCredentialInformations();
+        return credentialInformationResponseDTO.getCredentialInformation();
     }
 
     private void validateRequest(GetCredentialInformationRequestDTO credentialInformationRequestDTO) {

@@ -53,7 +53,7 @@ class HsaIntygProxyServiceCredentialInformationForPersonClientTest {
             .build();
 
         final var expectedResponse = GetCredentialInformationResponseDTO.builder()
-            .credentialInformations(CREDENTIAL_INFORMATIONS)
+            .credentialInformation(CREDENTIAL_INFORMATIONS)
             .build();
 
         when(restTemplate.postForObject(anyString(), eq(request), eq(GetCredentialInformationResponseDTO.class))).thenReturn(
