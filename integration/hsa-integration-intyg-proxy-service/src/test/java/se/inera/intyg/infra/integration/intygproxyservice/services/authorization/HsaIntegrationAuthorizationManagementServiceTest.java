@@ -20,9 +20,11 @@
 package se.inera.intyg.infra.integration.intygproxyservice.services.authorization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import javax.xml.ws.WebServiceException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,8 +38,12 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetC
 class HsaIntegrationAuthorizationManagementServiceTest {
 
     private static final String PERSON_HSA_ID = "personHsaId";
+    private static final String PERSON_ID = "personId";
     @Mock
     private GetCredentialInformationForPersonService credentialInformationForPersonService;
+
+    @Mock
+    private GetHospCredentialsForPersonService getHospCredentialsForPersonService;
 
     @InjectMocks
     private HsaIntegrationAuthorizationManagementService hsaIntegrationAuthorizationManagementService;
@@ -58,6 +64,17 @@ class HsaIntegrationAuthorizationManagementServiceTest {
                 PERSON_HSA_ID, null);
 
             assertEquals(expectedResponse, result);
+        }
+    }
+
+    @Nested
+    class GetHospCredentialsForPersonResponseType {
+
+        @Test
+        void shouldThrowIfCredentialsForPersonIsNull() {
+            when(getHospCredentialsForPersonService.get(PERSON_ID)).thenReturn(null);
+            assertThrows(WebServiceException.class,
+                () -> hsaIntegrationAuthorizationManagementService.getHospCredentialsForPersonResponseType(PERSON_ID));
         }
     }
 }

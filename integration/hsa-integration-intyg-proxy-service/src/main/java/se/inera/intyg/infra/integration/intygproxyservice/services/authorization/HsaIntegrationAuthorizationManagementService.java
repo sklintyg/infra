@@ -23,6 +23,7 @@ import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApi
 
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.xml.ws.WebServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetC
 public class HsaIntegrationAuthorizationManagementService implements HsatkAuthorizationManagementService {
 
     private final GetCredentialInformationForPersonService getCredentialInformationForPersonService;
+    private final GetHospCredentialsForPersonService getHospCredentialsForPersonService;
 
     @Override
     public List<CredentialInformation> getCredentialInformationForPerson(String personalIdentityNumber, String personHsaId,
@@ -51,6 +53,12 @@ public class HsaIntegrationAuthorizationManagementService implements HsatkAuthor
 
     @Override
     public HospCredentialsForPerson getHospCredentialsForPersonResponseType(String personalIdentityNumber) {
+        final var credentialsForPerson = getHospCredentialsForPersonService.get(personalIdentityNumber);
+        if (credentialsForPerson == null) {
+            throw new WebServiceException(
+                String.format("No hosp credentials for person found with personalIdentityNumber '%s'", personalIdentityNumber)
+            );
+        }
         return null;
     }
 
