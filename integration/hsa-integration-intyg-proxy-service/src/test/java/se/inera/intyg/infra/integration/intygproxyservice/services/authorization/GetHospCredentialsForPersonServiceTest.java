@@ -37,12 +37,14 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetC
 class GetHospCredentialsForPersonServiceTest {
 
     private static final String PERSON_ID = "personId";
-    private static final GetCredentialsForPersonRequestDTO GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO = GetCredentialsForPersonRequestDTO.builder()
-        .personId(PERSON_ID)
-        .build();
-    private static final GetCredentialsForPersonResponseDTO GET_CREDENTIALS_FOR_PERSON_RESPONSE_DTO = GetCredentialsForPersonResponseDTO.builder()
-        .credentials(new HospCredentialsForPerson())
-        .build();
+    private static final GetCredentialsForPersonRequestDTO GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO =
+        GetCredentialsForPersonRequestDTO.builder()
+            .personId(PERSON_ID)
+            .build();
+    private static final GetCredentialsForPersonResponseDTO GET_CREDENTIALS_FOR_PERSON_RESPONSE_DTO =
+        GetCredentialsForPersonResponseDTO.builder()
+            .credentials(new HospCredentialsForPerson())
+            .build();
     @Mock
     private HsaIntygProxyServiceHospCredentialsForPersonClient credentialsForPersonClient;
     @InjectMocks

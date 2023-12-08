@@ -39,9 +39,10 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetC
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceHospCredentialsForPersonClientTest {
 
-    private static final GetCredentialsForPersonRequestDTO GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO = GetCredentialsForPersonRequestDTO.builder()
-        .personId("personId")
-        .build();
+    private static final GetCredentialsForPersonRequestDTO GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO =
+        GetCredentialsForPersonRequestDTO.builder()
+            .personId("personId")
+            .build();
     @Mock
     private RestTemplate restTemplate;
 
