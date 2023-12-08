@@ -40,7 +40,7 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 @RequiredArgsConstructor
 public class CareUnitConverter {
 
-    private static final String PUBLIC_PERFIX = "2";
+    private static final String PUBLIC_PREFIX = "2";
 
     private final UnitAddressConverter unitAddressConverter;
     private final CareUnitMemberConverter careUnitMemberConverter;
@@ -66,7 +66,7 @@ public class CareUnitConverter {
             log.error("orgNo is null or empty, this make us unable to determine if the unit is private or not");
             return AgandeForm.OKAND;
         }
-        return orgNo.startsWith(PUBLIC_PERFIX) ? AgandeForm.OFFENTLIG : AgandeForm.PRIVAT;
+        return orgNo.startsWith(PUBLIC_PREFIX) ? AgandeForm.OFFENTLIG : AgandeForm.PRIVAT;
     }
 
     private List<Mottagning> getCareUnitMembers(Vardenhet vardenhet, HealthCareUnitMembers healthCareUnitMembers) {

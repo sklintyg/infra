@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.model.Commission;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter.CareProviderConverter;
 
@@ -38,13 +39,13 @@ public class GetCareProviderListService {
     private final GetCareUnitListService getCareUnitListService;
 
     public List<Vardgivare> get(List<Commission> commissions) {
+        final var unitList = getCareUnitListService.get(commissions);
+
         return commissions.stream()
             .map(
                 commission -> careProviderConverter.convert(
                     commission,
-                    getCareUnitListService.get(
-                        commissionsForCareProvider(commissions, commission.getHealthCareProviderHsaId())
-                    )
+                    getCareUnitsForCareProvider(unitList, commission.getHealthCareProviderHsaId())
                 )
             )
             .distinct()
@@ -53,9 +54,9 @@ public class GetCareProviderListService {
             .collect(Collectors.toList());
     }
 
-    private List<Commission> commissionsForCareProvider(List<Commission> commissions, String id) {
-        return commissions.stream()
-            .filter(commission -> commission.getHealthCareProviderHsaId().equals(id))
+    private List<Vardenhet> getCareUnitsForCareProvider(List<Vardenhet> units, String id) {
+        return units.stream()
+            .filter(unit -> unit.getVardgivareHsaId().equals(id))
             .collect(Collectors.toList());
     }
 
