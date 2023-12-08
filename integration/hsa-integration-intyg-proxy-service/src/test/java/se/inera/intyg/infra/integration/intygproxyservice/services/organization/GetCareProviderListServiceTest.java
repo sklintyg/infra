@@ -27,8 +27,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -43,11 +45,22 @@ import se.inera.intyg.infra.integration.intygproxyservice.services.organization.
 @ExtendWith(MockitoExtension.class)
 class GetCareProviderListServiceTest {
 
-    private static final List<Vardenhet> CARE_UNITS = List.of(new Vardenhet());
-    private static final String HSA_ID = "HSA_ID";
+    private static final Vardenhet UNIT_A1 = new Vardenhet();
+    private static final Vardenhet UNIT_A2 = new Vardenhet();
+    private static final Vardenhet UNIT_B1 = new Vardenhet();
 
-    private Vardgivare provider;
-    private Commission c1;
+    private static final List<Vardenhet> CARE_UNITS = List.of(
+        UNIT_A1, UNIT_B1, UNIT_A2
+    );
+
+    private static final String CARE_PROVIDER_A_ID = "A_ID";
+    private static final String CARE_PROVIDER_B_ID = "B_ID";
+
+    private Vardgivare providerA;
+    private Vardgivare providerB;
+
+    private Commission commissionA;
+    private Commission commissionB;
 
     @Mock
     GetCareUnitListService getCareUnitListService;
@@ -57,76 +70,111 @@ class GetCareProviderListServiceTest {
     @InjectMocks
     GetCareProviderListService getCareProviderListService;
 
-    @BeforeEach
-    void setup() {
-        provider = new Vardgivare();
-        provider.setId(HSA_ID);
+    @Nested
+    class CommissionsWithUnits {
 
-        c1 = new Commission();
-        c1.setHealthCareProviderHsaId(HSA_ID);
+        @BeforeEach
+        void setup() {
+            providerA = new Vardgivare();
+            providerB = new Vardgivare();
+            providerA.setId(CARE_PROVIDER_A_ID);
+            providerB.setId(CARE_PROVIDER_B_ID);
+            providerA.setNamn("A_NAME");
+            providerB.setNamn("B_NAME");
+            providerA.setVardenheter(List.of(UNIT_A1, UNIT_A2));
+            providerB.setVardenheter(List.of(UNIT_B1));
 
-        when(getCareUnitListService.get(any(List.class)))
-            .thenReturn(CARE_UNITS);
+            UNIT_A1.setId("ID_A1");
+            UNIT_A2.setId("ID_A2");
+            UNIT_B1.setId("ID_B1");
+            UNIT_A1.setVardgivareHsaId(CARE_PROVIDER_A_ID);
+            UNIT_A2.setVardgivareHsaId(CARE_PROVIDER_A_ID);
+            UNIT_B1.setVardgivareHsaId(CARE_PROVIDER_B_ID);
 
-        when(careProviderConverter.convert(any(Commission.class), any(List.class)))
-            .thenReturn(provider);
-    }
+            commissionA = new Commission();
+            commissionB = new Commission();
+            commissionA.setHealthCareProviderHsaId(CARE_PROVIDER_A_ID);
+            commissionB.setHealthCareProviderHsaId(CARE_PROVIDER_B_ID);
 
-    @Test
-    void shouldReturnCareProviderWithUnits() {
-        provider.setVardenheter(CARE_UNITS);
+            when(getCareUnitListService.get(any(List.class)))
+                .thenReturn(CARE_UNITS);
 
-        final var response = getCareProviderListService.get(List.of(c1));
+            when(careProviderConverter.convert(commissionA, List.of(UNIT_A1, UNIT_A2)))
+                .thenReturn(providerA);
+            when(careProviderConverter.convert(commissionB, List.of(UNIT_B1)))
+                .thenReturn(providerB);
+        }
 
-        assertEquals(1, response.size());
-        assertEquals(provider, response.get(0));
+        @Test
+        void shouldReturnConvertedCareProvider() {
+            final var response = getCareProviderListService.get(List.of(commissionA, commissionB));
+
+            assertEquals(2, response.size());
+            assertEquals(providerA, response.get(0));
+            assertEquals(providerB, response.get(1));
+        }
+
+        @Test
+        void shouldFilterDuplicates() {
+            final var response = getCareProviderListService.get(List.of(commissionA, commissionA, commissionB));
+
+            assertEquals(2, response.size());
+        }
+
+        @Test
+        void shouldSendCommissionToConverter() {
+            final var captor = ArgumentCaptor.forClass(Commission.class);
+
+            getCareProviderListService.get(List.of(commissionA, commissionB));
+
+            verify(careProviderConverter, times(2)).convert(captor.capture(), anyList());
+            assertTrue(captor.getAllValues().contains(commissionA));
+            assertTrue(captor.getAllValues().contains(commissionB));
+        }
+
+        @Test
+        void shouldSendUnitListToConverterWhenSeveralUnits() {
+            final var captor = ArgumentCaptor.forClass(List.class);
+
+            getCareProviderListService.get(List.of(commissionA, commissionB));
+
+            verify(careProviderConverter, times(2)).convert(any(Commission.class), captor.capture());
+            assertTrue(captor.getAllValues().contains(List.of(UNIT_A1, UNIT_A2)));
+        }
+
+        @Test
+        void shouldSendUnitListToConverter() {
+            final var captor = ArgumentCaptor.forClass(List.class);
+
+            getCareProviderListService.get(List.of(commissionA, commissionB));
+
+            verify(careProviderConverter, times(2)).convert(any(Commission.class), captor.capture());
+            assertTrue(captor.getAllValues().contains(List.of(UNIT_B1)));
+        }
+
+        @Test
+        void shouldCallGetCareUnitListServiceOnlyOnce() {
+            final var captor = ArgumentCaptor.forClass(List.class);
+
+            getCareProviderListService.get(List.of(commissionA, commissionB));
+
+            verify(getCareUnitListService, times(1)).get(captor.capture());
+            assertTrue(captor.getAllValues().contains(List.of(commissionA, commissionB)));
+        }
     }
 
     @Test
     void shouldFilterCareProviderWithoutUnits() {
-        final var response = getCareProviderListService.get(List.of(c1));
+        final var provider = new Vardgivare();
+        provider.setVardenheter(Collections.emptyList());
+        final var commissionWithoutUnits = new Commission();
+        commissionWithoutUnits.setHealthCareProviderHsaId("ID");
+
+        when(careProviderConverter.convert(any(Commission.class), anyList()))
+            .thenReturn(provider);
+
+        final var response = getCareProviderListService.get(List.of(commissionWithoutUnits));
 
         assertTrue(response.isEmpty());
-    }
-
-    @Test
-    void shouldFilterDuplicates() {
-        final var response = getCareProviderListService.get(List.of(c1, c1));
-
-        assertTrue(response.isEmpty());
-    }
-
-    @Test
-    void shouldSendCommissionToConverter() {
-        final var captor = ArgumentCaptor.forClass(Commission.class);
-
-        getCareProviderListService.get(List.of(c1));
-
-        verify(careProviderConverter).convert(captor.capture(), anyList());
-        assertEquals(c1, captor.getValue());
-    }
-
-    @Test
-    void shouldSendUnitListToConverter() {
-        final var captor = ArgumentCaptor.forClass(List.class);
-
-        getCareProviderListService.get(List.of(c1));
-
-        verify(careProviderConverter).convert(any(Commission.class), captor.capture());
-        assertEquals(CARE_UNITS, captor.getValue());
-    }
-
-    @Test
-    void shouldSendCommissionsToGetCareUnitListService() {
-        final var c2 = new Commission();
-        final var c3 = new Commission();
-        c2.setHealthCareProviderHsaId(HSA_ID);
-        c3.setHealthCareProviderHsaId("NOT_IT");
-        final var captor = ArgumentCaptor.forClass(List.class);
-
-        getCareProviderListService.get(List.of(c1, c2, c3));
-
-        verify(getCareUnitListService, times(3)).get(captor.capture());
-        assertTrue(captor.getAllValues().contains(List.of(c1, c2)));
     }
 }
