@@ -20,11 +20,9 @@
 package se.inera.intyg.infra.integration.intygproxyservice.services.authorization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import javax.xml.ws.WebServiceException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -70,13 +68,6 @@ class HsaIntegrationAuthorizationManagementServiceTest {
 
     @Nested
     class GetHospCredentialsForPersonResponseType {
-
-        @Test
-        void shouldThrowIfCredentialsForPersonIsNull() {
-            when(getHospCredentialsForPersonService.get(PERSON_ID)).thenReturn(null);
-            assertThrows(WebServiceException.class,
-                () -> hsaIntegrationAuthorizationManagementService.getHospCredentialsForPersonResponseType(PERSON_ID));
-        }
 
         @Test
         void shouldReturnCredentialsForPerson() {
