@@ -19,6 +19,7 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.client.authorization;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -53,5 +54,12 @@ class HsaIntygProxyServiceHospLastUpdateClientTest {
         final var result = hospLastUpdateClient.get();
 
         assertEquals(expectedResponse, result);
+    }
+
+    @Test
+    void shouldThrowIllegalStateException() {
+        when(restTemplate.getForObject(anyString(), eq(GetHospLastUpdateResponseDTO.class))).thenThrow(IllegalStateException.class);
+
+        assertThrows(IllegalStateException.class, () -> hospLastUpdateClient.get());
     }
 }

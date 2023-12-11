@@ -64,7 +64,7 @@ public class HsaIntegrationAuthorizationManagementService implements HsatkAuthor
             return getHospLastUpdateService.get();
 
         } catch (Exception exception) {
-            log.error(exception.getMessage());
+            log.warn(exception.getMessage());
             throw new WebServiceException(exception);
         }
     }

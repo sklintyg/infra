@@ -33,13 +33,13 @@ public class HsaIntygProxyServiceHospLastUpdateClient {
     @Qualifier("hsaIntygProxyServiceRestTemplate")
     private RestTemplate restTemplate;
     @Value("${integration.intygproxyservice.lastupdate.endpoint}")
-    private String lastUpdate;
+    private String lastUpdateEndpoint;
     @Value("${integration.intygproxyservice.baseurl}")
     private String intygProxyServiceBaseUrl;
 
     public GetHospLastUpdateResponseDTO get() {
         try {
-            final var url = intygProxyServiceBaseUrl + lastUpdate;
+            final var url = intygProxyServiceBaseUrl + lastUpdateEndpoint;
             return restTemplate.getForObject(url, GetHospLastUpdateResponseDTO.class);
         } catch (Exception exception) {
             throw new IllegalStateException("Error occured when trying to communicate with intyg-proxy-service", exception);
