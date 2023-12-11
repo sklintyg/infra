@@ -42,7 +42,9 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetH
 public class HsaIntegrationAuthorizationManagementService implements HsatkAuthorizationManagementService {
 
     private final GetCredentialInformationForPersonService getCredentialInformationForPersonService;
+
     private final GetHospCertificationPersonService getHospCertificationPersonService;
+
     private final GetHospLastUpdateService getHospLastUpdateService;
 
     @Override

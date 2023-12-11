@@ -47,6 +47,7 @@ class HsaIntegrationAuthorizationManagementServiceTest {
     public static final String REASON = "reason";
     @Mock
     private GetCredentialInformationForPersonService credentialInformationForPersonService;
+
     @Mock
     GetHospLastUpdateService hospLastUpdateService;
 
@@ -119,4 +120,5 @@ class HsaIntegrationAuthorizationManagementServiceTest {
             assertThrows(WebServiceException.class, () -> hsaIntegrationAuthorizationManagementService.getHospLastUpdate());
         }
     }
+
 }
