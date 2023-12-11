@@ -23,7 +23,9 @@ import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApi
 
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.xml.ws.WebServiceException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
@@ -33,6 +35,7 @@ import se.inera.intyg.infra.integration.hsatk.services.HsatkAuthorizationManagem
 import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetHospCertificationPersonRequestDTO;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
@@ -40,6 +43,7 @@ public class HsaIntegrationAuthorizationManagementService implements HsatkAuthor
 
     private final GetCredentialInformationForPersonService getCredentialInformationForPersonService;
     private final GetHospCertificationPersonService getHospCertificationPersonService;
+    private final GetHospLastUpdateService getHospLastUpdateService;
 
     @Override
     public List<CredentialInformation> getCredentialInformationForPerson(String personalIdentityNumber, String personHsaId,
@@ -58,7 +62,13 @@ public class HsaIntegrationAuthorizationManagementService implements HsatkAuthor
 
     @Override
     public LocalDateTime getHospLastUpdate() {
-        return null;
+        try {
+            return getHospLastUpdateService.get();
+
+        } catch (Exception exception) {
+            log.warn(exception.getMessage());
+            throw new WebServiceException(exception);
+        }
     }
 
     @Override

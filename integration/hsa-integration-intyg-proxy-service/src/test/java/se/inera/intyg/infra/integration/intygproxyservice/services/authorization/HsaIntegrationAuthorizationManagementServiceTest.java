@@ -19,10 +19,13 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services.authorization;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import javax.xml.ws.WebServiceException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,6 +47,8 @@ class HsaIntegrationAuthorizationManagementServiceTest {
     public static final String REASON = "reason";
     @Mock
     private GetCredentialInformationForPersonService credentialInformationForPersonService;
+    @Mock
+    GetHospLastUpdateService hospLastUpdateService;
 
     @Mock
     private GetHospCertificationPersonService hospCertificationPersonService;
@@ -90,6 +95,28 @@ class HsaIntegrationAuthorizationManagementServiceTest {
                 OPERATION, PERSON_ID, REASON);
 
             assertEquals(expectedResponse, result);
+        }
+    }
+
+    @Nested
+    class GetHospLastUpdate {
+
+        @Test
+        void shouldReturnHospLastUpdate() {
+            final var expectedResponse = LocalDateTime.now();
+
+            when(hospLastUpdateService.get()).thenReturn(expectedResponse);
+
+            final var result = hsaIntegrationAuthorizationManagementService.getHospLastUpdate();
+
+            assertEquals(expectedResponse, result);
+        }
+
+        @Test
+        void shouldThrowWebServiceExceptionIfIllegalStateExceptionIsCaught() {
+            when(hospLastUpdateService.get()).thenThrow(IllegalStateException.class);
+
+            assertThrows(WebServiceException.class, () -> hsaIntegrationAuthorizationManagementService.getHospLastUpdate());
         }
     }
 }
