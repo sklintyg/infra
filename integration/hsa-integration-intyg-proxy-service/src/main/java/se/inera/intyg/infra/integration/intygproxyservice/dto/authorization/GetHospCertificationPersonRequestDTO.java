@@ -28,4 +28,6 @@ public class GetHospCertificationPersonRequestDTO {
 
     String personId;
     String certificationId;
+    String operation;
+    String reason;
 }

@@ -34,13 +34,13 @@ public class HsaIntygProxyServiceHospCertificationPersonClient {
     @Qualifier("hsaIntygProxyServiceRestTemplate")
     private RestTemplate restTemplate;
     @Value("${integration.intygproxyservice.certificationperson.endpoint}")
-    private String certificationPerson;
+    private String certificationPersonEndpoint;
     @Value("${integration.intygproxyservice.baseurl}")
     private String intygProxyServiceBaseUrl;
 
     public GetHospCertificationPersonResponseDTO get(GetHospCertificationPersonRequestDTO getHospCertificationPersonRequestDTO) {
         try {
-            final var url = intygProxyServiceBaseUrl + certificationPerson;
+            final var url = intygProxyServiceBaseUrl + certificationPersonEndpoint;
             return restTemplate.postForObject(url, getHospCertificationPersonRequestDTO, GetHospCertificationPersonResponseDTO.class);
         } catch (Exception exception) {
             throw new IllegalStateException("Error occured when trying to communicate with intyg-proxy-service", exception);

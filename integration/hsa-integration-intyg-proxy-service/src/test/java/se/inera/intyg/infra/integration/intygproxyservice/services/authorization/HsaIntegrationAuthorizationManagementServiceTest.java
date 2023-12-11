@@ -80,6 +80,8 @@ class HsaIntegrationAuthorizationManagementServiceTest {
             final var request = GetHospCertificationPersonRequestDTO.builder()
                 .personId(PERSON_ID)
                 .certificationId(CERTIFICATION_ID)
+                .reason(REASON)
+                .operation(OPERATION)
                 .build();
 
             when(hospCertificationPersonService.get(request)).thenReturn(expectedResponse);

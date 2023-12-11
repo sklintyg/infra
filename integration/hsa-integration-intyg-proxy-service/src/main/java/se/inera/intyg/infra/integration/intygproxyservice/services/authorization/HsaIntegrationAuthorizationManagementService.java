@@ -68,6 +68,8 @@ public class HsaIntegrationAuthorizationManagementService implements HsatkAuthor
             GetHospCertificationPersonRequestDTO.builder()
                 .personId(personalIdentityNumber)
                 .certificationId(certificationId)
+                .operation(operation)
+                .reason(reason)
                 .build()
         );
     }

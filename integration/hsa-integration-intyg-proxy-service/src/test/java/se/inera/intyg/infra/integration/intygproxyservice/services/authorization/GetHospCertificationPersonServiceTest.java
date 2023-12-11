@@ -23,6 +23,8 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,6 +40,8 @@ class GetHospCertificationPersonServiceTest {
 
     private static final String PERSON_ID = "personId";
     private static final String CERTIFICATION_ID = "certificationId";
+    public static final String OPERATION = "operation";
+    public static final String REASON = "reason";
     private static final Result RESULT = new Result();
     private static final String RESULT_TEXT = "resultText";
     private static final String RESULT_CODE = "resultCode";
@@ -48,11 +52,10 @@ class GetHospCertificationPersonServiceTest {
     @InjectMocks
     private GetHospCertificationPersonService getHospCertificationPersonService;
 
-    @Test
-    void shouldValidateRequest() {
-        final var request = GetHospCertificationPersonRequestDTO.builder().build();
-
-        assertThrows(IllegalArgumentException.class, () -> getHospCertificationPersonService.get(request));
+    @BeforeEach
+    void setup() {
+        RESULT.setResultText(RESULT_TEXT);
+        RESULT.setResultCode(RESULT_CODE);
     }
 
     @Test
@@ -60,10 +63,9 @@ class GetHospCertificationPersonServiceTest {
         final var request = GetHospCertificationPersonRequestDTO.builder()
             .personId(PERSON_ID)
             .certificationId(CERTIFICATION_ID)
+            .operation(OPERATION)
+            .reason(REASON)
             .build();
-
-        RESULT.setResultText(RESULT_TEXT);
-        RESULT.setResultCode(RESULT_CODE);
 
         final var expectedResponse = GetHospCertificationPersonResponseDTO.builder()
             .result(RESULT)
@@ -74,5 +76,105 @@ class GetHospCertificationPersonServiceTest {
         final var result = getHospCertificationPersonService.get(request);
 
         assertEquals(expectedResponse.getResult(), result);
+    }
+
+    @Nested
+    class ShouldValidateRequest {
+
+        @Test
+        void shouldThrowIfPersonIdIsNull() {
+            final var request = GetHospCertificationPersonRequestDTO.builder()
+                .personId(null)
+                .certificationId(CERTIFICATION_ID)
+                .operation(OPERATION)
+                .reason(REASON)
+                .build();
+
+            assertThrows(IllegalArgumentException.class, () -> getHospCertificationPersonService.get(request));
+        }
+
+        @Test
+        void shouldThrowIfPersonIdIsEmpty() {
+            final var request = GetHospCertificationPersonRequestDTO.builder()
+                .personId("")
+                .certificationId(CERTIFICATION_ID)
+                .operation(OPERATION)
+                .reason(REASON)
+                .build();
+
+            assertThrows(IllegalArgumentException.class, () -> getHospCertificationPersonService.get(request));
+        }
+
+        @Test
+        void shouldThrowIfCertificationIdIsNull() {
+            final var request = GetHospCertificationPersonRequestDTO.builder()
+                .personId(PERSON_ID)
+                .certificationId(null)
+                .operation(OPERATION)
+                .reason(REASON)
+                .build();
+
+            assertThrows(IllegalArgumentException.class, () -> getHospCertificationPersonService.get(request));
+        }
+
+        @Test
+        void shouldThrowIfCertificationIdIsEmpty() {
+            final var request = GetHospCertificationPersonRequestDTO.builder()
+                .personId(PERSON_ID)
+                .certificationId("")
+                .operation(OPERATION)
+                .reason(REASON)
+                .build();
+
+            assertThrows(IllegalArgumentException.class, () -> getHospCertificationPersonService.get(request));
+        }
+
+        @Test
+        void shouldThrowIfOperationIsNull() {
+            final var request = GetHospCertificationPersonRequestDTO.builder()
+                .personId(PERSON_ID)
+                .certificationId(CERTIFICATION_ID)
+                .operation(null)
+                .reason(REASON)
+                .build();
+
+            assertThrows(IllegalArgumentException.class, () -> getHospCertificationPersonService.get(request));
+        }
+
+        @Test
+        void shouldThrowIfOperationIsEmpty() {
+            final var request = GetHospCertificationPersonRequestDTO.builder()
+                .personId(PERSON_ID)
+                .certificationId(CERTIFICATION_ID)
+                .operation("")
+                .reason(REASON)
+                .build();
+
+            assertThrows(IllegalArgumentException.class, () -> getHospCertificationPersonService.get(request));
+        }
+
+        @Test
+        void shouldThrowIfReasonIsNull() {
+            final var request = GetHospCertificationPersonRequestDTO.builder()
+                .personId(PERSON_ID)
+                .certificationId(CERTIFICATION_ID)
+                .operation(OPERATION)
+                .reason(null)
+                .build();
+
+            assertThrows(IllegalArgumentException.class, () -> getHospCertificationPersonService.get(request));
+        }
+
+        @Test
+        void shouldThrowIfReasonIsEmpty() {
+            final var request = GetHospCertificationPersonRequestDTO.builder()
+                .personId(PERSON_ID)
+                .certificationId(CERTIFICATION_ID)
+                .operation(OPERATION)
+                .reason("")
+                .build();
+
+            assertThrows(IllegalArgumentException.class, () -> getHospCertificationPersonService.get(request));
+        }
     }
 }

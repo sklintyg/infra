@@ -19,6 +19,7 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.client.authorization;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -40,6 +41,8 @@ class HsaIntygProxyServiceHospCertificationPersonClientTest {
     private static final String PERSON_ID = "personId";
     private static final String CERTIFICATION_ID = "certificationId";
     private static final Result RESULT = new Result();
+    public static final String OPERATION = "operation";
+    public static final String REASON = "reason";
 
     @Mock
     private RestTemplate restTemplate;
@@ -53,6 +56,8 @@ class HsaIntygProxyServiceHospCertificationPersonClientTest {
         final var request = GetHospCertificationPersonRequestDTO.builder()
             .personId(PERSON_ID)
             .certificationId(CERTIFICATION_ID)
+            .operation(OPERATION)
+            .reason(REASON)
             .build();
 
         final var expectedResponse = GetHospCertificationPersonResponseDTO.builder()
@@ -65,5 +70,15 @@ class HsaIntygProxyServiceHospCertificationPersonClientTest {
         final var result = hospCertificationPersonClient.get(request);
 
         assertEquals(expectedResponse, result);
+    }
+
+    @Test
+    void shouldThrowIllegalStateException() {
+        final var request = GetHospCertificationPersonRequestDTO.builder().build();
+
+        when(restTemplate.postForObject(anyString(), eq(request), eq(GetHospCertificationPersonResponseDTO.class))).thenThrow(
+            IllegalStateException.class);
+
+        assertThrows(IllegalStateException.class, () -> hospCertificationPersonClient.get(request));
     }
 }
