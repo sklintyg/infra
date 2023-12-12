@@ -46,6 +46,7 @@ public class HsaIntegrationAuthorizationManagementService implements HsatkAuthor
     private final GetHospCertificationPersonService getHospCertificationPersonService;
 
     private final GetHospLastUpdateService getHospLastUpdateService;
+    private final GetHospCredentialsForPersonService getHospCredentialsForPersonService;
 
     @Override
     public List<CredentialInformation> getCredentialInformationForPerson(String personalIdentityNumber, String personHsaId,
@@ -59,7 +60,7 @@ public class HsaIntegrationAuthorizationManagementService implements HsatkAuthor
 
     @Override
     public HospCredentialsForPerson getHospCredentialsForPersonResponseType(String personalIdentityNumber) {
-        return null;
+        return getHospCredentialsForPersonService.get(personalIdentityNumber);
     }
 
     @Override
