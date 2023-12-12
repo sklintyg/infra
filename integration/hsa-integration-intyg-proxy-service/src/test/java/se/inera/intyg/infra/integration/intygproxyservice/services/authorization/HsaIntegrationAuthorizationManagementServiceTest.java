@@ -34,20 +34,29 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.model.HospCredentialsForPerson;
+import se.inera.intyg.infra.integration.hsatk.model.Result;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetHospCertificationPersonRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
 class HsaIntegrationAuthorizationManagementServiceTest {
 
     private static final String PERSON_HSA_ID = "personHsaId";
     private static final String PERSON_ID = "personId";
+    private static final String CERTIFICATION_ID = "certificationId";
+    public static final String OPERATION = "operation";
+    public static final String REASON = "reason";
     @Mock
     private GetCredentialInformationForPersonService credentialInformationForPersonService;
+
     @Mock
     GetHospLastUpdateService hospLastUpdateService;
 
     @Mock
     private GetHospCredentialsForPersonService getHospCredentialsForPersonService;
+
+    @Mock
+    private GetHospCertificationPersonService hospCertificationPersonService;
 
     @InjectMocks
     private HsaIntegrationAuthorizationManagementService hsaIntegrationAuthorizationManagementService;
@@ -66,6 +75,29 @@ class HsaIntegrationAuthorizationManagementServiceTest {
 
             final var result = hsaIntegrationAuthorizationManagementService.getCredentialInformationForPerson(null,
                 PERSON_HSA_ID, null);
+
+            assertEquals(expectedResponse, result);
+        }
+    }
+
+    @Nested
+    class HandleHospCertificationPersonResponse {
+
+        @Test
+        void shouldReturnResultForHospCertificationPerson() {
+            final var expectedResponse = new Result();
+
+            final var request = GetHospCertificationPersonRequestDTO.builder()
+                .personId(PERSON_ID)
+                .certificationId(CERTIFICATION_ID)
+                .reason(REASON)
+                .operation(OPERATION)
+                .build();
+
+            when(hospCertificationPersonService.get(request)).thenReturn(expectedResponse);
+
+            final var result = hsaIntegrationAuthorizationManagementService.handleHospCertificationPersonResponseType(CERTIFICATION_ID,
+                OPERATION, PERSON_ID, REASON);
 
             assertEquals(expectedResponse, result);
         }
