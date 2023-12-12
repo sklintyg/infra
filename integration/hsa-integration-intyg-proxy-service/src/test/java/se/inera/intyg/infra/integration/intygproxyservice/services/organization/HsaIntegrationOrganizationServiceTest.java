@@ -31,6 +31,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
+import se.inera.intyg.infra.integration.hsatk.model.Unit;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 
@@ -40,8 +43,13 @@ class HsaIntegrationOrganizationServiceTest {
     private static final String UNIT_HSA_ID = "unitHsaId";
     @Mock
     private GetUnitService getUnitService;
+
+    @Mock
+    private GetHealthCareUnitMembersService getHealthCareUnitMembersService;
+
     @Mock
     private GetHealthCareUnitService getHealthCareUnitService;
+
     @InjectMocks
     private HsaIntegrationOrganizationService hsaIntegrationOrganizationService;
 
@@ -79,6 +87,30 @@ class HsaIntegrationOrganizationServiceTest {
             final var result = hsaIntegrationOrganizationService.getUnit(UNIT_HSA_ID, null);
 
             assertNull(result);
+        }
+
+        @Test
+        void shouldReturnResponseFromService() {
+            final var expected = new Unit();
+            when(getUnitService.get(any(GetUnitRequestDTO.class))).thenReturn(expected);
+
+            final var result = hsaIntegrationOrganizationService.getUnit(UNIT_HSA_ID, null);
+
+            assertEquals(expected, result);
+        }
+    }
+
+    @Nested
+    class GetHealthCareUnitMembers {
+
+        @Test
+        void shouldResponseFromService() {
+            final var expected = new HealthCareUnitMembers();
+            when(getHealthCareUnitMembersService.get(any(GetHealthCareUnitMembersRequestDTO.class))).thenReturn(expected);
+
+            final var result = hsaIntegrationOrganizationService.getHealthCareUnitMembers(UNIT_HSA_ID);
+
+            assertEquals(expected, result);
         }
     }
 }
