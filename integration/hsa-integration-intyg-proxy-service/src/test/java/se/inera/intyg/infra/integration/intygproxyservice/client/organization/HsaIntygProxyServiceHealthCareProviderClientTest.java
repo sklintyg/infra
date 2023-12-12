@@ -32,18 +32,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.infra.integration.hsatk.model.Unit;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareProviderRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareProviderResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceHealthCareProviderClientTest {
 
-    private static final Unit UNIT = new Unit();
-
     private static final String HSA_ID = "hsaId";
-
-    private static final String ORG_NO = "ORG_NO";
 
     @Mock
     private RestTemplate restTemplate;
