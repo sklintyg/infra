@@ -111,7 +111,7 @@ class HsaIntegrationOrganizationServiceTest {
     class GetHealthCareUnitMembers {
 
         @Test
-        void shouldResponseFromService() {
+        void shouldReturnResponseFromService() {
             final var expected = new HealthCareUnitMembers();
             when(getHealthCareUnitMembersService.get(any(GetHealthCareUnitMembersRequestDTO.class))).thenReturn(expected);
 
@@ -125,7 +125,7 @@ class HsaIntegrationOrganizationServiceTest {
     class GetHealthCareProviders {
 
         @Test
-        void shouldResponseFromService() {
+        void shouldReturnResponseFromService() {
             final var expected = List.of(new HealthCareProvider());
             when(getHealthCareProviderService.get(any(GetHealthCareProviderRequestDTO.class))).thenReturn(expected);
 

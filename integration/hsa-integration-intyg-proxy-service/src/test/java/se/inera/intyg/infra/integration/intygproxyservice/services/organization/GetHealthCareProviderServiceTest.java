@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,6 +67,42 @@ class GetHealthCareProviderServiceTest {
             .build();
 
         assertThrows(IllegalArgumentException.class, () -> getHealthCareProviderService.get(request));
+    }
+
+    @Test
+    void shouldReturnEmptyListIfNull() {
+        final var request = GetHealthCareProviderRequestDTO.builder()
+            .hsaId(HSA_ID)
+            .build();
+
+        final var result = getHealthCareProviderService.get(request);
+
+        assertEquals(Collections.emptyList(), result);
+    }
+
+    @Test
+    void shouldReturnEmptyListIfCareProvidersIsNull() {
+        final var request = GetHealthCareProviderRequestDTO.builder()
+            .hsaId(HSA_ID)
+            .build();
+        when(hsaIntygProxyServiceHealthCareProviderClient.get(request)).thenReturn(GetHealthCareProviderResponseDTO.builder().build());
+
+        final var result = getHealthCareProviderService.get(request);
+
+        assertEquals(Collections.emptyList(), result);
+    }
+
+    @Test
+    void shouldReturnEmptyListIfCareProvidersIsEmpty() {
+        final var request = GetHealthCareProviderRequestDTO.builder()
+            .hsaId(HSA_ID)
+            .build();
+        when(hsaIntygProxyServiceHealthCareProviderClient.get(request))
+            .thenReturn(GetHealthCareProviderResponseDTO.builder().healthCareProviders(Collections.emptyList()).build());
+
+        final var result = getHealthCareProviderService.get(request);
+
+        assertEquals(Collections.emptyList(), result);
     }
 
     @Test

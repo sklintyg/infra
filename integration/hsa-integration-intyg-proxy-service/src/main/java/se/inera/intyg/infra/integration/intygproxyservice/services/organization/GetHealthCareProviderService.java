@@ -42,7 +42,7 @@ public class GetHealthCareProviderService {
     public List<HealthCareProvider> get(GetHealthCareProviderRequestDTO request) {
         validateRequest(request);
         final var response = hsaIntygProxyServiceHealthCareProviderClient.get(request);
-        if (response == null) {
+        if (response == null || response.getHealthCareProviders() == null || response.getHealthCareProviders().isEmpty()) {
             log.warn("No health care providers were found for hsaId '{}' or organizationNumber '{}', returning empty list",
                 request.getHsaId(),
                 request.getOrganizationNumber()
@@ -54,11 +54,11 @@ public class GetHealthCareProviderService {
 
     private void validateRequest(GetHealthCareProviderRequestDTO request) {
         if (isParameterDefined(request.getHsaId()) && isParameterDefined(request.getOrganizationNumber())) {
-            throw new IllegalArgumentException("Both hsaId and organizationNumber cannot be defined ");
+            throw new IllegalArgumentException("Both hsaId and organizationNumber cannot be defined");
         }
 
         if (!isParameterDefined(request.getHsaId()) && !isParameterDefined(request.getOrganizationNumber())) {
-            throw new IllegalArgumentException("One of hsaId or organizationNumber has to be defined ");
+            throw new IllegalArgumentException("One of hsaId or organizationNumber has to be defined");
         }
     }
 

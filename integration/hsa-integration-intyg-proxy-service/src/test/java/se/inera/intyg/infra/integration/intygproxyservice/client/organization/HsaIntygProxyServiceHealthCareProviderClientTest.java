@@ -47,7 +47,7 @@ class HsaIntygProxyServiceHealthCareProviderClientTest {
     private HsaIntygProxyServiceHealthCareProviderClient hsaIntygProxyServiceHealthCareProviderClient;
 
     @Test
-    void shouldThrowHsaServiceCallException() {
+    void shouldThrowException() {
         final var request = GetHealthCareProviderRequestDTO.builder().build();
         when(restTemplate.postForObject(anyString(), eq(request), eq(GetHealthCareProviderRequestDTO.class)))
             .thenThrow(IllegalStateException.class);
