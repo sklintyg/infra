@@ -24,6 +24,7 @@ import static se.inera.intyg.infra.integration.intygproxyservice.services.organi
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,7 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 @RequiredArgsConstructor
 public class CareUnitConverter {
 
-    private static final String PUBLIC_PERFIX = "2";
+    private static final String PUBLIC_PREFIX = "2";
 
     private final UnitAddressConverter unitAddressConverter;
     private final CareUnitMemberConverter careUnitMemberConverter;
@@ -55,10 +56,32 @@ public class CareUnitConverter {
         unit.setArbetsplatskod(getWorkplaceCode(members.getHealthCareUnitPrescriptionCode()));
         unit.setEpost(hsaUnit.getMail());
         unit.setTelefonnummer(hsaUnit.getTelephoneNumber().isEmpty() ? null : hsaUnit.getTelephoneNumber().get(0));
-        unit.setMottagningar(getCareUnitMembers(unit, members));
+        unit.setMottagningar(getCareUnitMembers(members, unit.getId(), unit.getAgandeForm()));
         updateAddress(unit, hsaUnit.getPostalAddress(), hsaUnit.getPostalCode());
 
         return unit;
+    }
+
+    public Vardenhet convert(Unit unit, Optional<HealthCareUnitMembers> optionalUnitMembers) {
+        final var careUnit = new Vardenhet(unit.getUnitHsaId(), unit.getUnitName(), unit.getUnitStartDate(), unit.getUnitEndDate());
+        final var postalAddress = unit.getPostalAddress();
+        final var telephoneNumber = unit.getTelephoneNumber();
+
+        optionalUnitMembers.ifPresent(members -> {
+            careUnit.setMottagningar(getCareUnitMembers(members, careUnit.getId(), AgandeForm.OKAND));
+            careUnit.setArbetsplatskod(getWorkplaceCode(members.getHealthCareUnitPrescriptionCode()));
+        });
+
+        if (telephoneNumber != null && !telephoneNumber.isEmpty()) {
+            careUnit.setTelefonnummer(telephoneNumber.get(0));
+        }
+
+        if (postalAddress != null) {
+            updateAddress(careUnit, postalAddress, unit.getPostalCode());
+        }
+
+        careUnit.setEpost(unit.getMail());
+        return careUnit;
     }
 
     private AgandeForm getAgandeForm(String orgNo) {
@@ -66,17 +89,17 @@ public class CareUnitConverter {
             log.error("orgNo is null or empty, this make us unable to determine if the unit is private or not");
             return AgandeForm.OKAND;
         }
-        return orgNo.startsWith(PUBLIC_PERFIX) ? AgandeForm.OFFENTLIG : AgandeForm.PRIVAT;
+        return orgNo.startsWith(PUBLIC_PREFIX) ? AgandeForm.OFFENTLIG : AgandeForm.PRIVAT;
     }
 
-    private List<Mottagning> getCareUnitMembers(Vardenhet vardenhet, HealthCareUnitMembers healthCareUnitMembers) {
-        if (healthCareUnitMembers.getHealthCareUnitMember() == null) {
+    private List<Mottagning> getCareUnitMembers(HealthCareUnitMembers unitMembers, String unitHsaId, AgandeForm unitAagandeform) {
+        if (unitMembers.getHealthCareUnitMember() == null) {
             return Collections.emptyList();
         }
 
-        return healthCareUnitMembers.getHealthCareUnitMember().stream()
+        return unitMembers.getHealthCareUnitMember().stream()
             .filter(member -> isActive(member.getHealthCareUnitMemberStartDate(), member.getHealthCareUnitMemberEndDate()))
-            .map(member -> careUnitMemberConverter.convert(member, vardenhet.getId(), vardenhet.getAgandeForm()))
+            .map(member -> careUnitMemberConverter.convert(member, unitHsaId, unitAagandeform))
             .sorted()
             .collect(Collectors.toList());
     }

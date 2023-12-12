@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
@@ -42,6 +41,7 @@ import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.infra.integration.hsatk.model.Unit;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.UserAuthorizationInfo;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
@@ -49,18 +49,17 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHe
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.services.authorization.GetCredentialInformationForPersonService;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetActiveHealthCareUnitMemberHsaIdService;
+import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetCareUnitService;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetHealthCareUnitService;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetUnitService;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetUserAuthorizationInfoService;
-import se.inera.intyg.infra.integration.intygproxyservice.services.organization.HsaLegacyGetCareUnitService;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.HsaLegacyIntegrationOrganizationService;
 
 @ExtendWith(MockitoExtension.class)
 class HsaLegacyIntegrationOrganizationServiceTest {
 
     public static final String CARE_PROVIDER_HSA_ID = "careProviderHsaId";
-    @InjectMocks
-    private HsaLegacyIntegrationOrganizationService hsaLegacyIntegrationOrganizationService;
+    private static final String CARE_UNIT_HSA_ID = "careUnitHsaId";
 
     @Mock
     private GetHealthCareUnitService getHealthCareUnitService;
@@ -72,12 +71,16 @@ class HsaLegacyIntegrationOrganizationServiceTest {
     private GetUnitService getUnitService;
 
     @Mock
+    private GetCareUnitService getCareUnitService;
+
+    @Mock
     private GetCredentialInformationForPersonService getCredentialInformationForPersonService;
 
     @Mock
     private GetUserAuthorizationInfoService getUserAuthorizationInfoService;
 
-    private static final String CARE_UNIT_HSA_ID = "careUnitHsaId";
+    @InjectMocks
+    private HsaLegacyIntegrationOrganizationService hsaLegacyIntegrationOrganizationService;
 
     @Nested
     class VardgivareOfvardenhet {
@@ -108,11 +111,27 @@ class HsaLegacyIntegrationOrganizationServiceTest {
 
     @Nested
     class GetVardenhet {
+        final GetUnitRequestDTO unitRequest = GetUnitRequestDTO.builder().hsaId(CARE_UNIT_HSA_ID).build();
+        final GetHealthCareUnitMembersRequestDTO unitMemberRequest = GetHealthCareUnitMembersRequestDTO.builder().hsaId(CARE_UNIT_HSA_ID)
+            .build();
 
         @Test
         void shouldCallHsaLegacyGetCareUnitService() {
-            hsaLegacyIntegrationOrganizationService.getVardenhet(CARE_UNIT_HSA_ID);
-            verify(hsaLegacyGetCareUnitService).get(CARE_UNIT_HSA_ID);
+            when(getCareUnitService.get(unitRequest, unitMemberRequest))
+                .thenReturn(new Vardenhet(CARE_UNIT_HSA_ID, "CARE_UNIT_NAME"));
+
+            final var careUnit = hsaLegacyIntegrationOrganizationService.getVardenhet(CARE_UNIT_HSA_ID);
+            assertEquals(CARE_UNIT_HSA_ID, careUnit.getId());
+        }
+
+        @Test
+        void shouldThrowWebServiceExceptionOnFetchUnitFailure() {
+            when(getCareUnitService.get(unitRequest, unitMemberRequest))
+                .thenThrow(new WebServiceException("TestException"));
+
+            assertThrows(WebServiceException.class, () ->
+                hsaLegacyIntegrationOrganizationService.getVardenhet(CARE_UNIT_HSA_ID)
+            );
         }
     }
 

@@ -19,12 +19,16 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+import javax.xml.ws.WebServiceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,10 +37,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.client.RestClientException;
 import se.inera.intyg.infra.integration.hsatk.model.Commission;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
 import se.inera.intyg.infra.integration.hsatk.model.Unit;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter.CareUnitConverter;
 
 @ExtendWith(MockitoExtension.class)
@@ -132,6 +139,68 @@ class GetCareUnitServiceTest {
             final var response = getCareUnitService.get(c1);
 
             assertEquals(convertedUnit, response);
+        }
+    }
+
+    @Nested
+    class GetCareUnitWithUnitRequests {
+
+        private final GetUnitRequestDTO unitRequest = GetUnitRequestDTO.builder().hsaId(ID).build();
+        private final GetHealthCareUnitMembersRequestDTO unitMembersRequest =
+            GetHealthCareUnitMembersRequestDTO.builder().hsaId(ID).build();
+
+        private Unit unit;
+        private HealthCareUnitMembers unitMembers;
+
+        @BeforeEach
+        void init() {
+            unit = new Unit();
+            unitMembers = new HealthCareUnitMembers();
+        }
+
+        @Test
+        void shouldReturnVardenhet() {
+            final var expected = new Vardenhet(ID, "name");
+            when(getUnitService.get(unitRequest)).thenReturn(unit);
+            when(getHealthCareUnitMembersService.get(unitMembersRequest)).thenReturn(unitMembers);
+            when(careUnitConverter.convert(unit, Optional.of(unitMembers))).thenReturn(expected);
+
+            final var careUnit = getCareUnitService.get(unitRequest, unitMembersRequest);
+            assertEquals(ID, careUnit.getId());
+        }
+
+        @Test
+        void shouldThrowIfReturnValueForUnitIsNull() {
+            when(getUnitService.get(unitRequest)).thenReturn(null);
+            assertThrows(WebServiceException.class, () ->
+                getCareUnitService.get(unitRequest, unitMembersRequest)
+            );
+        }
+
+        @Test
+        void shouldThrowIfExceptionFromIntygProxyServiceCall() {
+            when(getUnitService.get(unitRequest)).thenThrow(RestClientException.class);
+            assertThrows(WebServiceException.class, () ->
+                getCareUnitService.get(unitRequest, unitMembersRequest)
+            );
+        }
+
+        @Test
+        void shouldNotThrowIfReturnValueForHealthCareUnitMembersIsNull() {
+            when(getUnitService.get(unitRequest)).thenReturn(unit);
+            when(getHealthCareUnitMembersService.get(unitMembersRequest)).thenReturn(null);
+            assertDoesNotThrow(() ->
+                getCareUnitService.get(unitRequest, unitMembersRequest)
+            );
+        }
+
+        @Test
+        void shouldNotThrowIfIntygProxyServiceCallFailure() {
+            when(getUnitService.get(unitRequest)).thenReturn(unit);
+            when(getHealthCareUnitMembersService.get(unitMembersRequest)).thenThrow(RestClientException.class);
+            assertDoesNotThrow(() ->
+                getCareUnitService.get(unitRequest, unitMembersRequest)
+            );
         }
     }
 }
