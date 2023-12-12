@@ -40,7 +40,7 @@ public class GetCareUnitListService {
 
     public List<Vardenhet> get(List<Commission> commissions) {
         return commissions.stream()
-            .filter(this::isCommissionActive)
+            .filter(this::isUnitActive)
             .map(getCareUnitService::get)
             .filter(Objects::nonNull)
             .distinct()
@@ -48,7 +48,7 @@ public class GetCareUnitListService {
             .collect(Collectors.toList());
     }
 
-    private boolean isCommissionActive(Commission commission) {
+    private boolean isUnitActive(Commission commission) {
         return isActive(commission.getHealthCareUnitStartDate(), commission.getHealthCareUnitEndDate());
     }
 }
