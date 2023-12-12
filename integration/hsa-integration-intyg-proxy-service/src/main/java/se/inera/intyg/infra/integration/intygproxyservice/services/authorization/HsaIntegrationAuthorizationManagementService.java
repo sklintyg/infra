@@ -33,6 +33,7 @@ import se.inera.intyg.infra.integration.hsatk.model.HospCredentialsForPerson;
 import se.inera.intyg.infra.integration.hsatk.model.Result;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkAuthorizationManagementService;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetHospCertificationPersonRequestDTO;
 
 @Slf4j
 @Service
@@ -41,6 +42,9 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetC
 public class HsaIntegrationAuthorizationManagementService implements HsatkAuthorizationManagementService {
 
     private final GetCredentialInformationForPersonService getCredentialInformationForPersonService;
+
+    private final GetHospCertificationPersonService getHospCertificationPersonService;
+
     private final GetHospLastUpdateService getHospLastUpdateService;
 
     @Override
@@ -72,6 +76,13 @@ public class HsaIntegrationAuthorizationManagementService implements HsatkAuthor
     @Override
     public Result handleHospCertificationPersonResponseType(String certificationId, String operation, String personalIdentityNumber,
         String reason) {
-        return null;
+        return getHospCertificationPersonService.get(
+            GetHospCertificationPersonRequestDTO.builder()
+                .personId(personalIdentityNumber)
+                .certificationId(certificationId)
+                .operation(operation)
+                .reason(reason)
+                .build()
+        );
     }
 }
