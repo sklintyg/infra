@@ -43,7 +43,7 @@ public class GetHospCredentialsForPersonService {
 
     private void validateRequest(String personId) {
         if (personId == null || personId.isEmpty()) {
-            throw new IllegalArgumentException("Missing required parameter personId");
+            throw new IllegalArgumentException("Missing required parameter 'personId'");
         }
     }
 }

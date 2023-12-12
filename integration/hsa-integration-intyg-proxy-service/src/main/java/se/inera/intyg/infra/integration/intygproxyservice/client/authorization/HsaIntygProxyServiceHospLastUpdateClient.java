@@ -24,24 +24,23 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialsForPersonRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialsForPersonResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetHospLastUpdateResponseDTO;
 
 @Service
-public class HsaIntygProxyServiceHospCredentialsForPersonClient {
+public class HsaIntygProxyServiceHospLastUpdateClient {
 
     @Autowired
     @Qualifier("hsaIntygProxyServiceRestTemplate")
     private RestTemplate restTemplate;
-    @Value("${integration.intygproxyservice.credentialsforperson.endpoint}")
-    private String credentialsForPersonEndpoint;
+    @Value("${integration.intygproxyservice.lastupdate.endpoint}")
+    private String lastUpdateEndpoint;
     @Value("${integration.intygproxyservice.baseurl}")
     private String intygProxyServiceBaseUrl;
 
-    public GetCredentialsForPersonResponseDTO get(GetCredentialsForPersonRequestDTO getCredentialsForPersonRequestDTO) {
+    public GetHospLastUpdateResponseDTO get() {
         try {
-            final var url = intygProxyServiceBaseUrl + credentialsForPersonEndpoint;
-            return restTemplate.postForObject(url, getCredentialsForPersonRequestDTO, GetCredentialsForPersonResponseDTO.class);
+            final var url = intygProxyServiceBaseUrl + lastUpdateEndpoint;
+            return restTemplate.getForObject(url, GetHospLastUpdateResponseDTO.class);
         } catch (Exception exception) {
             throw new IllegalStateException("Error occured when trying to communicate with intyg-proxy-service", exception);
         }
