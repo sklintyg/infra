@@ -24,13 +24,19 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareProvider;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
+import se.inera.intyg.infra.integration.hsatk.model.Unit;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareProviderRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 
@@ -38,10 +44,19 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUn
 class HsaIntegrationOrganizationServiceTest {
 
     private static final String UNIT_HSA_ID = "unitHsaId";
+
     @Mock
     private GetUnitService getUnitService;
+
+    @Mock
+    private GetHealthCareUnitMembersService getHealthCareUnitMembersService;
+
     @Mock
     private GetHealthCareUnitService getHealthCareUnitService;
+
+    @Mock
+    private GetHealthCareProviderService getHealthCareProviderService;
+
     @InjectMocks
     private HsaIntegrationOrganizationService hsaIntegrationOrganizationService;
 
@@ -79,6 +94,44 @@ class HsaIntegrationOrganizationServiceTest {
             final var result = hsaIntegrationOrganizationService.getUnit(UNIT_HSA_ID, null);
 
             assertNull(result);
+        }
+
+        @Test
+        void shouldReturnResponseFromService() {
+            final var expected = new Unit();
+            when(getUnitService.get(any(GetUnitRequestDTO.class))).thenReturn(expected);
+
+            final var result = hsaIntegrationOrganizationService.getUnit(UNIT_HSA_ID, null);
+
+            assertEquals(expected, result);
+        }
+    }
+
+    @Nested
+    class GetHealthCareUnitMembers {
+
+        @Test
+        void shouldReturnResponseFromService() {
+            final var expected = new HealthCareUnitMembers();
+            when(getHealthCareUnitMembersService.get(any(GetHealthCareUnitMembersRequestDTO.class))).thenReturn(expected);
+
+            final var result = hsaIntegrationOrganizationService.getHealthCareUnitMembers(UNIT_HSA_ID);
+
+            assertEquals(expected, result);
+        }
+    }
+
+    @Nested
+    class GetHealthCareProviders {
+
+        @Test
+        void shouldReturnResponseFromService() {
+            final var expected = List.of(new HealthCareProvider());
+            when(getHealthCareProviderService.get(any(GetHealthCareProviderRequestDTO.class))).thenReturn(expected);
+
+            final var result = hsaIntegrationOrganizationService.getHealthCareProvider("HSA_ID", "ORG_NO");
+
+            assertEquals(expected, result);
         }
     }
 }
