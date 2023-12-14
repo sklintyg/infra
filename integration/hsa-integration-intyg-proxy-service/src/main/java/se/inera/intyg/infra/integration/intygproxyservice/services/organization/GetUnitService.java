@@ -37,8 +37,7 @@ public class GetUnitService {
 
     private final HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
 
-    @Cacheable(cacheNames = UNIT_CACHE_NAME, key = "#getUnitRequestDTO.hsaId",
-        unless = "#result == null")
+    @Cacheable(cacheNames = UNIT_CACHE_NAME, key = "#getUnitRequestDTO.hsaId", unless = "#result == null")
     public Unit get(GetUnitRequestDTO getUnitRequestDTO) {
         validateRequest(getUnitRequestDTO);
         final var getUnitResponseDTO = hsaIntygProxyServiceUnitClient.getUnit(getUnitRequestDTO);

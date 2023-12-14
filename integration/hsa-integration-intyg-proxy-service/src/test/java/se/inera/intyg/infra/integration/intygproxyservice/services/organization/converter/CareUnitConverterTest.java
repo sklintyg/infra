@@ -22,13 +22,17 @@ package se.inera.intyg.infra.integration.intygproxyservice.services.organization
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static se.inera.intyg.infra.integration.intygproxyservice.services.organization.OrganizationUtil.DEFAULT_ARBETSPLATSKOD;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +51,7 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.AgandeForm;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 
 @ExtendWith(MockitoExtension.class)
-class CareUnitConverterTest {
+class  CareUnitConverterTest {
 
     private static final String PRIVATE = "12xyz";
     private static final String PUBLIC = "2xyz";
@@ -55,6 +59,13 @@ class CareUnitConverterTest {
     private static final String CITY = "CITY";
     private static final String ADDRESS = "ADDRESS";
     private static final Mottagning CONVERTED_MEMBER = new Mottagning();
+
+    private static final String UNIT_HSA_ID = "HSA_ID";
+    private static final String UNIT_NAME = "UNIT_NAME";
+    private static final String UNIT_EMAIL = "UNIT_EMAIL";
+    private static final String UNIT_PHONE_NUMBER_1 = "UNIT_PHONE_NUMBER_1";
+    private static final LocalDateTime ACTIVE_START_DATE = LocalDateTime.now(ZoneId.systemDefault()).minusYears(1L);
+    private static final LocalDateTime ACTIVE_END_DATE = LocalDateTime.now(ZoneId.systemDefault()).plusYears(1L);
 
     @Mock
     private UnitAddressConverter unitAddressConverter;
@@ -387,6 +398,167 @@ class CareUnitConverterTest {
         assertEquals(Collections.emptyList(), response.getMottagningar());
     }
 
+    @Nested
+    class ConvertCareUnitWithoutCommission {
+
+        private Unit unit;
+        private HealthCareUnitMembers unitMembers;
+
+        @BeforeEach
+        void init() {
+            unit = new Unit();
+            unitMembers = new HealthCareUnitMembers();
+            setBasicProperties(unit);
+        }
+
+        @Test
+        void shouldSetHsaIdOfCareUnit() {
+            final var careUnit = converter.convert(unit, unitMembers);
+            assertEquals(UNIT_HSA_ID, careUnit.getId());
+        }
+
+        @Test
+        void shouldSetNameOfCareUnit() {
+            final var careUnit = converter.convert(unit, unitMembers);
+            assertEquals(UNIT_NAME, careUnit.getNamn());
+        }
+
+        @Test
+        void shouldSetStartDateOfCareUnit() {
+            final var careUnit = converter.convert(unit, unitMembers);
+            assertEquals(ACTIVE_START_DATE, careUnit.getStart());
+        }
+
+        @Test
+        void shouldSetEndDateOfCareUnit() {
+            final var careUnit = converter.convert(unit, unitMembers);
+            assertEquals(ACTIVE_END_DATE, careUnit.getEnd());
+        }
+
+        @Nested
+        class EmailAndPhoneNumber {
+
+            @Test
+            void shouldSetEmailOfCareUnit() {
+                setEmailAndPhoneNumber(unit, List.of(UNIT_PHONE_NUMBER_1));
+
+                final var careUnit = converter.convert(unit, unitMembers);
+                assertEquals(UNIT_EMAIL, careUnit.getEpost());
+            }
+
+            @Test
+            void shouldSetFirstPhoneNumberFromList() {
+                setEmailAndPhoneNumber(unit, List.of(UNIT_PHONE_NUMBER_1, "UNIT_PHONE_NUMBER_2"));
+
+                final var careUnit = converter.convert(unit, unitMembers);
+                assertEquals(UNIT_PHONE_NUMBER_1, careUnit.getTelefonnummer());
+            }
+
+            @Test
+            void shouldSetPhoneNumberToNullIfEmptyPhoneNumberList() {
+                setEmailAndPhoneNumber(unit, List.of());
+
+                final var careUnit = converter.convert(unit, unitMembers);
+                assertNull(careUnit.getTelefonnummer());
+            }
+        }
+
+        @Nested
+        class Address {
+
+            @Test
+            void shouldUpdateAddressIfPostalAddressIsNotNull() {
+                when(unitAddressConverter.convertAddress(anyList())).thenReturn(ADDRESS);
+
+                final var careUnit = converter.convert(unit, unitMembers);
+                assertEquals(ADDRESS, careUnit.getPostadress());
+            }
+
+            @Test
+            void shouldUpdateCityIfPostalAddressIsNotNull() {
+                when(unitAddressConverter.convertCity(anyList())).thenReturn(CITY);
+
+                final var careUnit = converter.convert(unit, unitMembers);
+                assertEquals(CITY, careUnit.getPostort());
+            }
+
+            @Test
+            void shouldUpdateZipCodeIfPostalAddressIsNotNull() {
+                when(unitAddressConverter.convertZipCode(anyList(), nullable(String.class))).thenReturn(ZIP_CODE);
+
+                final var careUnit = converter.convert(unit, unitMembers);
+                assertEquals(ZIP_CODE, careUnit.getPostnummer());
+            }
+
+            @Test
+            void shouldNotUpdateAddressFieldsIfPostalAddressIsNull() {
+                setAddress(unit);
+
+                converter.convert(unit, unitMembers);
+                verifyNoInteractions(unitAddressConverter);
+            }
+        }
+
+        @Nested
+        class UnitMembers {
+
+            @Test
+            void shouldNotConvertInactiveUnitMembers() {
+                final var activeMember = new HealthCareUnitMember();
+                final var inactiveMember = new HealthCareUnitMember();
+                setBasicPropertiesUnitMember(activeMember, UNIT_HSA_ID, UNIT_NAME, ACTIVE_END_DATE);
+                setBasicPropertiesUnitMember(inactiveMember, "INACTIVE_HSA_ID", "INACTIVE_NAME",
+                    LocalDateTime.now(ZoneId.systemDefault()).minusMonths(1L));
+                unitMembers.setHealthCareUnitMember(List.of(inactiveMember, activeMember));
+
+                when(careUnitMemberConverter.convert(activeMember, unit.getUnitHsaId(), AgandeForm.OKAND)).thenReturn(new Mottagning());
+                converter.convert(unit, unitMembers);
+                verify(careUnitMemberConverter, times(1)).convert(activeMember, unit.getUnitHsaId(), AgandeForm.OKAND);
+            }
+
+            @Test
+            void shouldSetUnitMembersIfPresentAndActive() {
+                final var member = new HealthCareUnitMember();
+                setBasicPropertiesUnitMember(member, UNIT_HSA_ID, UNIT_NAME, ACTIVE_END_DATE);
+                unitMembers.setHealthCareUnitMember(List.of(member));
+
+                final var expected = new Mottagning();
+                when(careUnitMemberConverter.convert(member, unit.getUnitHsaId(), AgandeForm.OKAND)).thenReturn(expected);
+
+                final var members = converter.convert(unit, unitMembers).getMottagningar();
+                assertEquals(expected, members.get(0));
+            }
+        }
+
+        @Nested
+        class WorkplaceCode {
+
+            @Test
+            void shouldConvertToDefaultIfNoPrescriptionCode() {
+                setPrescriptionCodeUnitMembers(unitMembers, null);
+
+                final var careUnit = converter.convert(unit, unitMembers);
+                assertEquals(DEFAULT_ARBETSPLATSKOD, careUnit.getArbetsplatskod());
+            }
+
+            @Test
+            void shouldConvertToDefaultIfEmptyList() {
+                setPrescriptionCodeUnitMembers(unitMembers, List.of());
+
+                final var careUnit = converter.convert(unit, unitMembers);
+                assertEquals(DEFAULT_ARBETSPLATSKOD, careUnit.getArbetsplatskod());
+            }
+
+            @Test
+            void shouldSetValueFromMemberObject() {
+                setPrescriptionCodeUnitMembers(unitMembers, List.of("111111"));
+
+                final var careUnit = converter.convert(unit, unitMembers);
+                assertEquals("111111", careUnit.getArbetsplatskod());
+            }
+        }
+    }
+
     private Unit getUnit() {
         final var unit = new Unit();
         unit.setMail("MAIL");
@@ -428,4 +600,30 @@ class CareUnitConverterTest {
         return members;
     }
 
+    private void setBasicPropertiesUnitMember(HealthCareUnitMember unitMember, String hsaId, String name, LocalDateTime endDate) {
+        unitMember.setHealthCareUnitMemberHsaId(hsaId);
+        unitMember.setHealthCareUnitMemberName(name);
+        unitMember.setHealthCareUnitMemberStartDate(ACTIVE_START_DATE);
+        unitMember.setHealthCareUnitMemberEndDate(endDate);
+    }
+
+    private void setBasicProperties(Unit unit) {
+        unit.setUnitHsaId(UNIT_HSA_ID);
+        unit.setUnitName(UNIT_NAME);
+        unit.setUnitStartDate(ACTIVE_START_DATE);
+        unit.setUnitEndDate(ACTIVE_END_DATE);
+    }
+
+    private void setPrescriptionCodeUnitMembers(HealthCareUnitMembers unitMembers, List<String> codes) {
+        unitMembers.setHealthCareUnitPrescriptionCode(codes);
+    }
+
+    private void setEmailAndPhoneNumber(Unit unit, List<String> phoneNumber) {
+        unit.setMail(UNIT_EMAIL);
+        unit.setTelephoneNumber(phoneNumber);
+    }
+
+    private void setAddress(Unit unit) {
+        unit.setPostalAddress(null);
+    }
 }

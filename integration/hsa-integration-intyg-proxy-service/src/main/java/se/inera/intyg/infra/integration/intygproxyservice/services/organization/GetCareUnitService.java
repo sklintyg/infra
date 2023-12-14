@@ -47,6 +47,16 @@ public class GetCareUnitService {
         return unit.map(unitValue -> careUnitConverter.convert(commission, unitValue, members)).orElse(null);
     }
 
+    public Vardenhet get(String careUnitId) {
+        if (careUnitId == null || careUnitId.isEmpty()) {
+            throw new IllegalArgumentException("Missing required parameter careUnitId");
+        }
+
+        final var unit = getUnitFromHsa(careUnitId);
+        final var members = getHealthCareUnitMembersFromHsa(careUnitId);
+        return unit.map(unitValue -> careUnitConverter.convert(unitValue, members)).orElse(null);
+    }
+
     private Optional<Unit> getUnitFromHsa(String careUnitHsaId) {
         return Optional.ofNullable(
             getUnitService.get(

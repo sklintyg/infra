@@ -50,7 +50,7 @@ public class OrganizationUtil {
     }
 
     public static String getWorkplaceCode(List<String> codes) {
-        if (codes == null || codes.isEmpty()) {
+        if (codes == null || codes.isEmpty() || codes.get(0) == null) {
             return DEFAULT_ARBETSPLATSKOD;
         }
 

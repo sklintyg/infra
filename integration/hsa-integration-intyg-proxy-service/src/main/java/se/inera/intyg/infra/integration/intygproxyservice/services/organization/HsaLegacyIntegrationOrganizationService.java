@@ -49,6 +49,7 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
     private final GetUnitService getUnitService;
     private final GetCredentialInformationForPersonService getCredentialInformationForPersonService;
     private final GetUserAuthorizationInfoService getUserAuthorizationInfoService;
+    private final GetCareUnitService getCareUnitService;
 
     @Override
     public UserAuthorizationInfo getAuthorizedEnheterForHosPerson(String hosPersonHsaId) {
@@ -73,7 +74,7 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     @Override
     public Vardenhet getVardenhet(String vardenhetHsaId) {
-        return null;
+        return getCareUnitService.get(vardenhetHsaId);
     }
 
     @Override

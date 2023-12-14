@@ -55,10 +55,25 @@ public class CareUnitConverter {
         unit.setArbetsplatskod(getWorkplaceCode(members.getHealthCareUnitPrescriptionCode()));
         unit.setEpost(hsaUnit.getMail());
         unit.setTelefonnummer(hsaUnit.getTelephoneNumber().isEmpty() ? null : hsaUnit.getTelephoneNumber().get(0));
-        unit.setMottagningar(getCareUnitMembers(unit, members));
+        unit.setMottagningar(getCareUnitMembers(members, unit.getId(), unit.getAgandeForm()));
         updateAddress(unit, hsaUnit.getPostalAddress(), hsaUnit.getPostalCode());
 
         return unit;
+    }
+
+    public Vardenhet convert(Unit unit, HealthCareUnitMembers members) {
+        final var careUnit = new Vardenhet(unit.getUnitHsaId(), unit.getUnitName(), unit.getUnitStartDate(), unit.getUnitEndDate());
+        final var postalAddress = unit.getPostalAddress();
+        careUnit.setMottagningar(getCareUnitMembers(members, careUnit.getId(), AgandeForm.OKAND));
+        careUnit.setArbetsplatskod(getWorkplaceCode(members.getHealthCareUnitPrescriptionCode()));
+        careUnit.setTelefonnummer(unit.getTelephoneNumber().isEmpty() ? null : unit.getTelephoneNumber().get(0));
+        careUnit.setEpost(unit.getMail());
+
+        if (postalAddress != null) {
+            updateAddress(careUnit, postalAddress, unit.getPostalCode());
+        }
+
+        return careUnit;
     }
 
     private AgandeForm getAgandeForm(String orgNo) {
@@ -69,14 +84,14 @@ public class CareUnitConverter {
         return orgNo.startsWith(PUBLIC_PREFIX) ? AgandeForm.OFFENTLIG : AgandeForm.PRIVAT;
     }
 
-    private List<Mottagning> getCareUnitMembers(Vardenhet vardenhet, HealthCareUnitMembers healthCareUnitMembers) {
-        if (healthCareUnitMembers.getHealthCareUnitMember() == null) {
+    private List<Mottagning> getCareUnitMembers(HealthCareUnitMembers unitMembers, String unitHsaId, AgandeForm unitAagandeform) {
+        if (unitMembers.getHealthCareUnitMember() == null) {
             return Collections.emptyList();
         }
 
-        return healthCareUnitMembers.getHealthCareUnitMember().stream()
+        return unitMembers.getHealthCareUnitMember().stream()
             .filter(member -> isActive(member.getHealthCareUnitMemberStartDate(), member.getHealthCareUnitMemberEndDate()))
-            .map(member -> careUnitMemberConverter.convert(member, vardenhet.getId(), vardenhet.getAgandeForm()))
+            .map(member -> careUnitMemberConverter.convert(member, unitHsaId, unitAagandeform))
             .sorted()
             .collect(Collectors.toList());
     }
