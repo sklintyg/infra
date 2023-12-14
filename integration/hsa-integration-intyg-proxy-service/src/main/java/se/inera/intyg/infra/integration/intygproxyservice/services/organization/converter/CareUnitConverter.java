@@ -24,7 +24,6 @@ import static se.inera.intyg.infra.integration.intygproxyservice.services.organi
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,25 +61,18 @@ public class CareUnitConverter {
         return unit;
     }
 
-    public Vardenhet convert(Unit unit, Optional<HealthCareUnitMembers> optionalUnitMembers) {
+    public Vardenhet convert(Unit unit, HealthCareUnitMembers members) {
         final var careUnit = new Vardenhet(unit.getUnitHsaId(), unit.getUnitName(), unit.getUnitStartDate(), unit.getUnitEndDate());
         final var postalAddress = unit.getPostalAddress();
-        final var telephoneNumber = unit.getTelephoneNumber();
-
-        optionalUnitMembers.ifPresent(members -> {
-            careUnit.setMottagningar(getCareUnitMembers(members, careUnit.getId(), AgandeForm.OKAND));
-            careUnit.setArbetsplatskod(getWorkplaceCode(members.getHealthCareUnitPrescriptionCode()));
-        });
-
-        if (telephoneNumber != null && !telephoneNumber.isEmpty()) {
-            careUnit.setTelefonnummer(telephoneNumber.get(0));
-        }
+        careUnit.setMottagningar(getCareUnitMembers(members, careUnit.getId(), AgandeForm.OKAND));
+        careUnit.setArbetsplatskod(getWorkplaceCode(members.getHealthCareUnitPrescriptionCode()));
+        careUnit.setTelefonnummer(unit.getTelephoneNumber().isEmpty() ? null : unit.getTelephoneNumber().get(0));
+        careUnit.setEpost(unit.getMail());
 
         if (postalAddress != null) {
             updateAddress(careUnit, postalAddress, unit.getPostalCode());
         }
 
-        careUnit.setEpost(unit.getMail());
         return careUnit;
     }
 

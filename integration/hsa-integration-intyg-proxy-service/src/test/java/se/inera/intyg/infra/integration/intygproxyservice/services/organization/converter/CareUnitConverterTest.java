@@ -35,7 +35,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -414,25 +413,25 @@ class  CareUnitConverterTest {
 
         @Test
         void shouldSetHsaIdOfCareUnit() {
-            final var careUnit = converter.convert(unit, Optional.empty());
+            final var careUnit = converter.convert(unit, unitMembers);
             assertEquals(UNIT_HSA_ID, careUnit.getId());
         }
 
         @Test
         void shouldSetNameOfCareUnit() {
-            final var careUnit = converter.convert(unit, Optional.of(unitMembers));
+            final var careUnit = converter.convert(unit, unitMembers);
             assertEquals(UNIT_NAME, careUnit.getNamn());
         }
 
         @Test
         void shouldSetStartDateOfCareUnit() {
-            final var careUnit = converter.convert(unit, Optional.of(unitMembers));
+            final var careUnit = converter.convert(unit, unitMembers);
             assertEquals(ACTIVE_START_DATE, careUnit.getStart());
         }
 
         @Test
         void shouldSetEndDateOfCareUnit() {
-            final var careUnit = converter.convert(unit, Optional.of(unitMembers));
+            final var careUnit = converter.convert(unit, unitMembers);
             assertEquals(ACTIVE_END_DATE, careUnit.getEnd());
         }
 
@@ -443,7 +442,7 @@ class  CareUnitConverterTest {
             void shouldSetEmailOfCareUnit() {
                 setEmailAndPhoneNumber(unit, List.of(UNIT_PHONE_NUMBER_1));
 
-                final var careUnit = converter.convert(unit, Optional.of(unitMembers));
+                final var careUnit = converter.convert(unit, unitMembers);
                 assertEquals(UNIT_EMAIL, careUnit.getEpost());
             }
 
@@ -451,15 +450,15 @@ class  CareUnitConverterTest {
             void shouldSetFirstPhoneNumberFromList() {
                 setEmailAndPhoneNumber(unit, List.of(UNIT_PHONE_NUMBER_1, "UNIT_PHONE_NUMBER_2"));
 
-                final var careUnit = converter.convert(unit, Optional.of(unitMembers));
+                final var careUnit = converter.convert(unit, unitMembers);
                 assertEquals(UNIT_PHONE_NUMBER_1, careUnit.getTelefonnummer());
             }
 
             @Test
-            void shouldNotSetPhoneNumberIfEmptyPhoneNumberList() {
+            void shouldSetPhoneNumberToNullIfEmptyPhoneNumberList() {
                 setEmailAndPhoneNumber(unit, List.of());
 
-                final var careUnit = converter.convert(unit, Optional.of(unitMembers));
+                final var careUnit = converter.convert(unit, unitMembers);
                 assertNull(careUnit.getTelefonnummer());
             }
         }
@@ -471,7 +470,7 @@ class  CareUnitConverterTest {
             void shouldUpdateAddressIfPostalAddressIsNotNull() {
                 when(unitAddressConverter.convertAddress(anyList())).thenReturn(ADDRESS);
 
-                final var careUnit = converter.convert(unit, Optional.of(unitMembers));
+                final var careUnit = converter.convert(unit, unitMembers);
                 assertEquals(ADDRESS, careUnit.getPostadress());
             }
 
@@ -479,7 +478,7 @@ class  CareUnitConverterTest {
             void shouldUpdateCityIfPostalAddressIsNotNull() {
                 when(unitAddressConverter.convertCity(anyList())).thenReturn(CITY);
 
-                final var careUnit = converter.convert(unit, Optional.of(unitMembers));
+                final var careUnit = converter.convert(unit, unitMembers);
                 assertEquals(CITY, careUnit.getPostort());
             }
 
@@ -487,7 +486,7 @@ class  CareUnitConverterTest {
             void shouldUpdateZipCodeIfPostalAddressIsNotNull() {
                 when(unitAddressConverter.convertZipCode(anyList(), nullable(String.class))).thenReturn(ZIP_CODE);
 
-                final var careUnit = converter.convert(unit, Optional.of(unitMembers));
+                final var careUnit = converter.convert(unit, unitMembers);
                 assertEquals(ZIP_CODE, careUnit.getPostnummer());
             }
 
@@ -495,7 +494,7 @@ class  CareUnitConverterTest {
             void shouldNotUpdateAddressFieldsIfPostalAddressIsNull() {
                 setAddress(unit);
 
-                converter.convert(unit, Optional.of(unitMembers));
+                converter.convert(unit, unitMembers);
                 verifyNoInteractions(unitAddressConverter);
             }
         }
@@ -513,7 +512,7 @@ class  CareUnitConverterTest {
                 unitMembers.setHealthCareUnitMember(List.of(inactiveMember, activeMember));
 
                 when(careUnitMemberConverter.convert(activeMember, unit.getUnitHsaId(), AgandeForm.OKAND)).thenReturn(new Mottagning());
-                converter.convert(unit, Optional.of(unitMembers));
+                converter.convert(unit, unitMembers);
                 verify(careUnitMemberConverter, times(1)).convert(activeMember, unit.getUnitHsaId(), AgandeForm.OKAND);
             }
 
@@ -526,7 +525,7 @@ class  CareUnitConverterTest {
                 final var expected = new Mottagning();
                 when(careUnitMemberConverter.convert(member, unit.getUnitHsaId(), AgandeForm.OKAND)).thenReturn(expected);
 
-                final var members = converter.convert(unit, Optional.of(unitMembers)).getMottagningar();
+                final var members = converter.convert(unit, unitMembers).getMottagningar();
                 assertEquals(expected, members.get(0));
             }
         }
@@ -538,7 +537,7 @@ class  CareUnitConverterTest {
             void shouldConvertToDefaultIfNoPrescriptionCode() {
                 setPrescriptionCodeUnitMembers(unitMembers, null);
 
-                final var careUnit = converter.convert(unit, Optional.of(unitMembers));
+                final var careUnit = converter.convert(unit, unitMembers);
                 assertEquals(DEFAULT_ARBETSPLATSKOD, careUnit.getArbetsplatskod());
             }
 
@@ -546,7 +545,7 @@ class  CareUnitConverterTest {
             void shouldConvertToDefaultIfEmptyList() {
                 setPrescriptionCodeUnitMembers(unitMembers, List.of());
 
-                final var careUnit = converter.convert(unit, Optional.of(unitMembers));
+                final var careUnit = converter.convert(unit, unitMembers);
                 assertEquals(DEFAULT_ARBETSPLATSKOD, careUnit.getArbetsplatskod());
             }
 
@@ -554,7 +553,7 @@ class  CareUnitConverterTest {
             void shouldSetValueFromMemberObject() {
                 setPrescriptionCodeUnitMembers(unitMembers, List.of("111111"));
 
-                final var careUnit = converter.convert(unit, Optional.of(unitMembers));
+                final var careUnit = converter.convert(unit, unitMembers);
                 assertEquals("111111", careUnit.getArbetsplatskod());
             }
         }

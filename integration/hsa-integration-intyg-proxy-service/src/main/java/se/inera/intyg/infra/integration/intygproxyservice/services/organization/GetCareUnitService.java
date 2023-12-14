@@ -20,7 +20,6 @@
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import java.util.Optional;
-import javax.xml.ws.WebServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,10 +47,14 @@ public class GetCareUnitService {
         return unit.map(unitValue -> careUnitConverter.convert(commission, unitValue, members)).orElse(null);
     }
 
-    public Vardenhet get(GetUnitRequestDTO unitRequest, GetHealthCareUnitMembersRequestDTO unitMembersRequest) {
-        final var unit = getUnitFromHsa(unitRequest);
-        final var members = getHealthCareUnitMembersFromHsa(unitMembersRequest);
-        return careUnitConverter.convert(unit, members);
+    public Vardenhet get(String careUnitId) {
+        if (careUnitId == null || careUnitId.isEmpty()) {
+            throw new IllegalArgumentException("Missing required parameter careUnitId");
+        }
+
+        final var unit = getUnitFromHsa(careUnitId);
+        final var members = getHealthCareUnitMembersFromHsa(careUnitId);
+        return unit.map(unitValue -> careUnitConverter.convert(unitValue, members)).orElse(null);
     }
 
     private Optional<Unit> getUnitFromHsa(String careUnitHsaId) {
@@ -70,23 +73,5 @@ public class GetCareUnitService {
                 .hsaId(unitId)
                 .build()
         );
-    }
-
-    private Unit getUnitFromHsa(GetUnitRequestDTO unitRequest) {
-        try {
-            return Optional.of(getUnitService.get(unitRequest)).orElseThrow();
-        } catch (Exception e) {
-            log.error("Failure fetching unit for hsaId '{}'.", unitRequest.getHsaId(), e);
-            throw new WebServiceException(e.getMessage());
-        }
-    }
-
-    private Optional<HealthCareUnitMembers> getHealthCareUnitMembersFromHsa(GetHealthCareUnitMembersRequestDTO unitMemberRequest) {
-        try {
-            return Optional.ofNullable(getHealthCareUnitMembersService.get(unitMemberRequest));
-        } catch (Exception e) {
-            log.error("Failure fetching HealthCareUnitMembers for unit with id '{}'.", unitMemberRequest.getHsaId(), e);
-            return Optional.empty();
-        }
     }
 }

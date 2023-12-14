@@ -74,9 +74,7 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     @Override
     public Vardenhet getVardenhet(String vardenhetHsaId) {
-        final var unitRequest = GetUnitRequestDTO.builder().hsaId(vardenhetHsaId).build();
-        final var unitMemberRequest = GetHealthCareUnitMembersRequestDTO.builder().hsaId(vardenhetHsaId).build();
-        return getCareUnitService.get(unitRequest, unitMemberRequest);
+        return getCareUnitService.get(vardenhetHsaId);
     }
 
     @Override

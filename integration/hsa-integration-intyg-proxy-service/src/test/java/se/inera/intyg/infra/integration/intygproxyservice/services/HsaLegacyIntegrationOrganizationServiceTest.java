@@ -111,14 +111,10 @@ class HsaLegacyIntegrationOrganizationServiceTest {
 
     @Nested
     class GetVardenhet {
-        final GetUnitRequestDTO unitRequest = GetUnitRequestDTO.builder().hsaId(CARE_UNIT_HSA_ID).build();
-        final GetHealthCareUnitMembersRequestDTO unitMemberRequest = GetHealthCareUnitMembersRequestDTO.builder().hsaId(CARE_UNIT_HSA_ID)
-            .build();
 
         @Test
         void shouldCallHsaLegacyGetCareUnitService() {
-            when(getCareUnitService.get(unitRequest, unitMemberRequest))
-                .thenReturn(new Vardenhet(CARE_UNIT_HSA_ID, "CARE_UNIT_NAME"));
+            when(getCareUnitService.get(CARE_UNIT_HSA_ID)).thenReturn(new Vardenhet(CARE_UNIT_HSA_ID, "CARE_UNIT_NAME"));
 
             final var careUnit = hsaLegacyIntegrationOrganizationService.getVardenhet(CARE_UNIT_HSA_ID);
             assertEquals(CARE_UNIT_HSA_ID, careUnit.getId());
@@ -126,8 +122,7 @@ class HsaLegacyIntegrationOrganizationServiceTest {
 
         @Test
         void shouldThrowWebServiceExceptionOnFetchUnitFailure() {
-            when(getCareUnitService.get(unitRequest, unitMemberRequest))
-                .thenThrow(new WebServiceException("TestException"));
+            when(getCareUnitService.get(CARE_UNIT_HSA_ID)).thenThrow(new WebServiceException("TestException"));
 
             assertThrows(WebServiceException.class, () ->
                 hsaLegacyIntegrationOrganizationService.getVardenhet(CARE_UNIT_HSA_ID)
