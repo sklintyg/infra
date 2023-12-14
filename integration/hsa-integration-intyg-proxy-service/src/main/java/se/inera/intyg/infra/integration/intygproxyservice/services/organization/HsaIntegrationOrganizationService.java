@@ -31,6 +31,8 @@ import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
 import se.inera.intyg.infra.integration.hsatk.model.Unit;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkOrganizationService;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareProviderRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 
@@ -44,9 +46,18 @@ public class HsaIntegrationOrganizationService implements HsatkOrganizationServi
 
     private final GetHealthCareUnitService getHealthCareUnitService;
 
+    private final GetHealthCareUnitMembersService getHealthCareUnitMembersService;
+
+    private final GetHealthCareProviderService getHealthCareProviderService;
+
     @Override
     public List<HealthCareProvider> getHealthCareProvider(String healthCareProviderHsaId, String healthCareProviderOrgNo) {
-        return null;
+        return getHealthCareProviderService.get(
+            GetHealthCareProviderRequestDTO.builder()
+                .hsaId(healthCareProviderHsaId)
+                .organizationNumber(healthCareProviderOrgNo)
+                .build()
+        );
     }
 
     @Override
@@ -65,7 +76,11 @@ public class HsaIntegrationOrganizationService implements HsatkOrganizationServi
 
     @Override
     public HealthCareUnitMembers getHealthCareUnitMembers(String healtCareUnitHsaId) {
-        return null;
+        return getHealthCareUnitMembersService.get(
+            GetHealthCareUnitMembersRequestDTO.builder()
+                .hsaId(healtCareUnitHsaId)
+                .build()
+        );
     }
 
     @Override
