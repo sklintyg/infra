@@ -32,11 +32,13 @@ import se.inera.intyg.infra.integration.hsatk.model.Commission;
 class CommissionNameMapConverterTest {
 
     private static final Commission C1 = new Commission();
+    private static final Commission C3 = new Commission();
     private static final String C1_ID = "ID1";
     private static final String C1_NAME = "NAME1";
     private static final Commission C2 = new Commission();
     private static final String C2_ID = "ID2";
     private static final String C2_NAME = "NAME2";
+    private static final String C3_NAME = "NAME3";
 
     private final CommissionNameMapConverter converter = new CommissionNameMapConverter();
 
@@ -44,8 +46,10 @@ class CommissionNameMapConverterTest {
     void setup() {
         C1.setHealthCareUnitHsaId(C1_ID);
         C2.setHealthCareUnitHsaId(C2_ID);
+        C3.setHealthCareUnitHsaId(C1_ID);
         C1.setCommissionName(C1_NAME);
         C2.setCommissionName(C2_NAME);
+        C3.setCommissionName(C3_NAME);
     }
 
     @Test
@@ -73,6 +77,15 @@ class CommissionNameMapConverterTest {
         assertTrue(response.containsKey(C2_ID));
         assertEquals(C1_NAME, response.get(C1_ID));
         assertEquals(C2_NAME, response.get(C2_ID));
+    }
+
+    @Test
+    void shouldHandleMultipleCommissonsWithSameCareUnitHsaId() {
+        final var response = converter.convert(List.of(C1, C3));
+
+        assertEquals(1, response.size());
+        assertTrue(response.containsKey(C1_ID));
+        assertEquals(C3_NAME, response.get(C1_ID));
     }
 
     @Test
