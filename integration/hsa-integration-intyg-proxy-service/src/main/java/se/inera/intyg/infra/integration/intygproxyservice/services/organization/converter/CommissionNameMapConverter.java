@@ -31,6 +31,9 @@ public class CommissionNameMapConverter {
     public Map<String, String> convert(List<Commission> commissions) {
         return commissions.stream()
             .distinct()
-            .collect(Collectors.toMap(Commission::getHealthCareUnitHsaId, Commission::getCommissionName));
+            .collect(Collectors.toMap(
+                Commission::getHealthCareUnitHsaId,
+                Commission::getCommissionName,
+                (existingValue, newValue) -> newValue));
     }
 }
