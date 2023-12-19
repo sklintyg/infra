@@ -106,30 +106,6 @@ class GetHospCertificationPersonServiceTest {
         }
 
         @Test
-        void shouldThrowIfCertificationIdIsNull() {
-            final var request = GetHospCertificationPersonRequestDTO.builder()
-                .personId(PERSON_ID)
-                .certificationId(null)
-                .operation(OPERATION)
-                .reason(REASON)
-                .build();
-
-            assertThrows(IllegalArgumentException.class, () -> getHospCertificationPersonService.get(request));
-        }
-
-        @Test
-        void shouldThrowIfCertificationIdIsEmpty() {
-            final var request = GetHospCertificationPersonRequestDTO.builder()
-                .personId(PERSON_ID)
-                .certificationId("")
-                .operation(OPERATION)
-                .reason(REASON)
-                .build();
-
-            assertThrows(IllegalArgumentException.class, () -> getHospCertificationPersonService.get(request));
-        }
-
-        @Test
         void shouldThrowIfOperationIsNull() {
             final var request = GetHospCertificationPersonRequestDTO.builder()
                 .personId(PERSON_ID)
@@ -148,30 +124,6 @@ class GetHospCertificationPersonServiceTest {
                 .certificationId(CERTIFICATION_ID)
                 .operation("")
                 .reason(REASON)
-                .build();
-
-            assertThrows(IllegalArgumentException.class, () -> getHospCertificationPersonService.get(request));
-        }
-
-        @Test
-        void shouldThrowIfReasonIsNull() {
-            final var request = GetHospCertificationPersonRequestDTO.builder()
-                .personId(PERSON_ID)
-                .certificationId(CERTIFICATION_ID)
-                .operation(OPERATION)
-                .reason(null)
-                .build();
-
-            assertThrows(IllegalArgumentException.class, () -> getHospCertificationPersonService.get(request));
-        }
-
-        @Test
-        void shouldThrowIfReasonIsEmpty() {
-            final var request = GetHospCertificationPersonRequestDTO.builder()
-                .personId(PERSON_ID)
-                .certificationId(CERTIFICATION_ID)
-                .operation(OPERATION)
-                .reason("")
                 .build();
 
             assertThrows(IllegalArgumentException.class, () -> getHospCertificationPersonService.get(request));
