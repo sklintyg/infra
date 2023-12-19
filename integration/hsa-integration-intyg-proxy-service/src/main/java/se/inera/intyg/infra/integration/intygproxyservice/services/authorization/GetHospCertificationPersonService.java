@@ -41,17 +41,9 @@ public class GetHospCertificationPersonService {
         if (hospCertificationPersonRequestDTO.getPersonId() == null || hospCertificationPersonRequestDTO.getPersonId().isEmpty()) {
             throw new IllegalArgumentException("Missing required parameter 'personId'");
         }
-        if (hospCertificationPersonRequestDTO.getCertificationId() == null || hospCertificationPersonRequestDTO.getCertificationId()
-            .isEmpty()) {
-            throw new IllegalArgumentException("Missing required parameter 'certificationId'");
-        }
         if (hospCertificationPersonRequestDTO.getOperation() == null || hospCertificationPersonRequestDTO.getOperation()
             .isEmpty()) {
             throw new IllegalArgumentException("Missing required parameter 'operation'");
-        }
-        if (hospCertificationPersonRequestDTO.getReason() == null || hospCertificationPersonRequestDTO.getReason()
-            .isEmpty()) {
-            throw new IllegalArgumentException("Missing required parameter 'reason'");
         }
     }
 }
