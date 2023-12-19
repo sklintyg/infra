@@ -29,7 +29,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetC
 @RequiredArgsConstructor
 public class GetHospCredentialsForPersonService {
 
-    private HsaIntygProxyServiceHospCredentialsForPersonClient credentialsForPersonClient;
+    private final HsaIntygProxyServiceHospCredentialsForPersonClient credentialsForPersonClient;
 
     public HospCredentialsForPerson get(String personId) {
         validateRequest(personId);
