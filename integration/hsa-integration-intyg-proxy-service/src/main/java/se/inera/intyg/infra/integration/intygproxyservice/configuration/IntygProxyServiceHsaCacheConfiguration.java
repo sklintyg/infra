@@ -34,7 +34,7 @@ import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
 
 @Configuration
 @RequiredArgsConstructor
-public class CacheConfiguration {
+public class IntygProxyServiceHsaCacheConfiguration {
 
     private final RedisCacheOptionsSetter redisCacheOptionsSetter;
 
