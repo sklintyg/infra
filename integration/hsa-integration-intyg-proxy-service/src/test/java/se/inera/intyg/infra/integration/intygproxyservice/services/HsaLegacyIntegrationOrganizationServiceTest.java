@@ -102,7 +102,7 @@ class HsaLegacyIntegrationOrganizationServiceTest {
         void shouldReturnNull() {
             when(getHealthCareUnitService.get(GetHealthCareUnitRequestDTO.builder()
                 .hsaId(CARE_UNIT_HSA_ID)
-                .build())).thenReturn(null);
+                .build())).thenReturn(new HealthCareUnit());
 
             final var actualResult = hsaLegacyIntegrationOrganizationService.getVardgivareOfVardenhet(CARE_UNIT_HSA_ID);
             assertNull(actualResult);
@@ -155,6 +155,30 @@ class HsaLegacyIntegrationOrganizationServiceTest {
     class GetParentUnit {
 
         private static final String CARE_UNIT_ID = "careUnitId";
+
+        @Test
+        void shouldThrowHsaServiceCallExceptionIfUnitIsNull() {
+            when(getHealthCareUnitService.get(
+                    GetHealthCareUnitRequestDTO.builder()
+                        .hsaId(CARE_UNIT_ID)
+                        .build()
+                )
+            ).thenReturn(null);
+
+            assertThrows(HsaServiceCallException.class, () -> hsaLegacyIntegrationOrganizationService.getParentUnit(CARE_UNIT_ID));
+        }
+
+        @Test
+        void shouldThrowHsaServiceCallException() {
+            when(getHealthCareUnitService.get(
+                    GetHealthCareUnitRequestDTO.builder()
+                        .hsaId(CARE_UNIT_ID)
+                        .build()
+                )
+            ).thenThrow(IllegalStateException.class);
+
+            assertThrows(HsaServiceCallException.class, () -> hsaLegacyIntegrationOrganizationService.getParentUnit(CARE_UNIT_ID));
+        }
 
         @Test
         void shouldReturnParentId() throws HsaServiceCallException {

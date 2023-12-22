@@ -25,7 +25,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.intygproxyservice.client.employee.HsaIntygProxyServiceEmployeeClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
@@ -38,7 +37,7 @@ public class GetEmployeeService {
 
     @Cacheable(cacheNames = EMPLOYEE_CACHE_NAME, key = "#getEmployeeRequestDTO.personId + #getEmployeeRequestDTO.hsaId",
         unless = "#result == null")
-    public List<PersonInformation> get(GetEmployeeRequestDTO getEmployeeRequestDTO) throws HsaServiceCallException {
+    public List<PersonInformation> get(GetEmployeeRequestDTO getEmployeeRequestDTO) {
         validateRequestParameters(getEmployeeRequestDTO);
         final var employee = hsaIntygProxyServiceEmployeeClient.getEmployee(getEmployeeRequestDTO);
         return employee.getEmployee().getPersonInformation();

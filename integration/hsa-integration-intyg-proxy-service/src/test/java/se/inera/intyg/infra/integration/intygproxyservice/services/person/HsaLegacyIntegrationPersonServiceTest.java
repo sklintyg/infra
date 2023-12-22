@@ -31,7 +31,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.services.employee.GetEmployeeService;
@@ -47,15 +46,15 @@ class HsaLegacyIntegrationPersonServiceTest {
     HsaLegacyIntegrationPersonService hsaLegacyIntegrationPersonService;
 
     @Test
-    void shouldThrowError() throws HsaServiceCallException {
+    void shouldThrowError() {
         when(getEmployeeService.get(any(GetEmployeeRequestDTO.class)))
-            .thenThrow(new HsaServiceCallException());
+            .thenThrow(IllegalArgumentException.class);
 
         assertThrows(WebServiceException.class, () -> hsaLegacyIntegrationPersonService.getHsaPersonInfo("id"));
     }
 
     @Test
-    void shouldReturnPersonInformation() throws HsaServiceCallException {
+    void shouldReturnPersonInformation() {
         final var expected = Collections.singletonList(new PersonInformation());
         when(getEmployeeService.get(any(GetEmployeeRequestDTO.class)))
             .thenReturn(expected);

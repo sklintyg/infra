@@ -29,7 +29,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.services.employee.GetEmployeeService;
@@ -47,21 +46,21 @@ class HsaIntegrationEmployeeServiceTest {
     private static final String PERSON_HSA_ID = "personHsaId";
 
     @Test
-    void shouldReturnEmptyListIfClientThrowsError() throws HsaServiceCallException {
+    void shouldReturnEmptyListIfClientThrowsError() {
         when(getEmployeeService.get(
                 GetEmployeeRequestDTO.builder()
                     .hsaId(PERSON_HSA_ID)
                     .personId(PERSONAL_IDENTITY_NUMBER)
                     .build()
             )
-        ).thenThrow(HsaServiceCallException.class);
+        ).thenThrow(IllegalStateException.class);
         final var result = hsaEmployeeService.getEmployee(PERSONAL_IDENTITY_NUMBER, PERSON_HSA_ID);
 
         assertTrue(result.isEmpty());
     }
 
     @Test
-    void shouldReturnListOfPersonInformation() throws HsaServiceCallException {
+    void shouldReturnListOfPersonInformation() {
         final var expectedResult = List.of(
             new PersonInformation()
         );

@@ -27,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.services.HsatkEmployeeService;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
@@ -54,8 +53,8 @@ public class HsaIntegrationEmployeeService implements HsatkEmployeeService {
                     .hsaId(personHsaId)
                     .build()
             );
-        } catch (HsaServiceCallException exception) {
-            log.warn("HsaServiceCallException thrown: {}", exception);
+        } catch (Exception exception) {
+            log.warn("HsaServiceCallException thrown: {}", exception.getMessage());
             return new ArrayList<>();
         }
     }

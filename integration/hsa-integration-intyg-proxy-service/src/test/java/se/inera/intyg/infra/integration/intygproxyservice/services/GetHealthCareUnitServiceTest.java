@@ -19,18 +19,27 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
+import se.inera.intyg.infra.integration.intygproxyservice.client.organization.HsaIntygProxyServiceHealthCareUnitClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.HealthCareUnitResponseDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.services.organization.GetHealthCareUnitService;
 
 @ExtendWith(MockitoExtension.class)
 class GetHealthCareUnitServiceTest {
 
+    private static final String HSA_ID = "hsaId";
+    @Mock
+    private HsaIntygProxyServiceHealthCareUnitClient healthCareUnitClient;
     @InjectMocks
     private GetHealthCareUnitService getHealthCareUnitService;
 
@@ -54,4 +63,22 @@ class GetHealthCareUnitServiceTest {
             () -> getHealthCareUnitService.get(request));
     }
 
+    @Test
+    void shouldReturnHealthCareUnit() {
+        final var request = GetHealthCareUnitRequestDTO.builder()
+            .hsaId(HSA_ID)
+            .build();
+
+        final var expectedHealthCareUnit = new HealthCareUnit();
+
+        when(healthCareUnitClient.getHealthCareUnit(request)).thenReturn(
+            HealthCareUnitResponseDTO.builder()
+                .healthCareUnit(expectedHealthCareUnit)
+                .build()
+        );
+
+        final var response = getHealthCareUnitService.get(request);
+
+        assertEquals(expectedHealthCareUnit, response);
+    }
 }

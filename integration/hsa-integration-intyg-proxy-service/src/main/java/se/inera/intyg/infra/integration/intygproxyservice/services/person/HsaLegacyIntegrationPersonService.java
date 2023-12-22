@@ -50,7 +50,7 @@ public class HsaLegacyIntegrationPersonService implements HsaPersonService {
                     .hsaId(personHsaId)
                     .build()
             );
-        } catch (HsaServiceCallException e) {
+        } catch (Exception e) {
             throw new WebServiceException(e.getMessage());
         }
     }

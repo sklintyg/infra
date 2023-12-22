@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 import javax.xml.ws.WebServiceException;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.services.employee.GetEmployeeService;
@@ -52,15 +52,15 @@ class HsaLegacyIntegrationEmployeeServiceTest {
         .build();
 
     @Test
-    void shouldThrowWebServiceException() throws HsaServiceCallException {
-        when(getEmployeeService.get(GET_EMPLOYEE_REQUEST_DTO)).thenThrow(HsaServiceCallException.class);
+    void shouldThrowWebServiceException() {
+        when(getEmployeeService.get(GET_EMPLOYEE_REQUEST_DTO)).thenReturn(Collections.emptyList());
 
         assertThrows(WebServiceException.class, () -> integrationEmployeeService.getEmployee(HSA_ID, null));
         assertThrows(WebServiceException.class, () -> integrationEmployeeService.getEmployee(HSA_ID, null, null));
     }
 
     @Test
-    void shouldReturnListOfPersonInformation() throws HsaServiceCallException {
+    void shouldReturnListOfPersonInformation() {
         when(getEmployeeService.get(GET_EMPLOYEE_REQUEST_DTO)).thenReturn(EXPECTED_RESULT);
 
         final var result = integrationEmployeeService.getEmployee(HSA_ID, null);
@@ -70,7 +70,7 @@ class HsaLegacyIntegrationEmployeeServiceTest {
 
 
     @Test
-    void shouldReturnListOfPersonInformationWithSearchBase() throws HsaServiceCallException {
+    void shouldReturnListOfPersonInformationWithSearchBase() {
         when(getEmployeeService.get(GET_EMPLOYEE_REQUEST_DTO)).thenReturn(EXPECTED_RESULT);
 
         final var result = integrationEmployeeService.getEmployee(HSA_ID, null, null);
