@@ -117,7 +117,6 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
             }
             return unit.getHealthCareUnitHsaId();
         } catch (Exception exception) {
-
             throw new HsaServiceCallException(exception);
         }
     }

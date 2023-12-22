@@ -157,6 +157,30 @@ class HsaLegacyIntegrationOrganizationServiceTest {
         private static final String CARE_UNIT_ID = "careUnitId";
 
         @Test
+        void shouldThrowHsaServiceCallExceptionIfUnitIsNull() {
+            when(getHealthCareUnitService.get(
+                    GetHealthCareUnitRequestDTO.builder()
+                        .hsaId(CARE_UNIT_ID)
+                        .build()
+                )
+            ).thenReturn(null);
+
+            assertThrows(HsaServiceCallException.class, () -> hsaLegacyIntegrationOrganizationService.getParentUnit(CARE_UNIT_ID));
+        }
+
+        @Test
+        void shouldThrowHsaServiceCallException() {
+            when(getHealthCareUnitService.get(
+                    GetHealthCareUnitRequestDTO.builder()
+                        .hsaId(CARE_UNIT_ID)
+                        .build()
+                )
+            ).thenThrow(IllegalStateException.class);
+
+            assertThrows(HsaServiceCallException.class, () -> hsaLegacyIntegrationOrganizationService.getParentUnit(CARE_UNIT_ID));
+        }
+
+        @Test
         void shouldReturnParentId() throws HsaServiceCallException {
             final var unit = new HealthCareUnit();
             unit.setHealthCareUnitHsaId(CARE_UNIT_ID);
