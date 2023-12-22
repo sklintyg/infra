@@ -20,6 +20,7 @@
 package se.inera.intyg.infra.integration.intygproxyservice.client;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -43,6 +44,19 @@ class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
     private RestTemplate restTemplate;
     @InjectMocks
     private HsaIntygProxyServiceHealthCareUnitMembersClient healthCareUnitMembersClient;
+
+    @Test
+    void shouldThrowIllegalStateException() {
+        final var request = GetHealthCareUnitMembersRequestDTO.builder()
+            .hsaId(HSA_ID)
+            .build();
+
+        when(restTemplate.postForObject(anyString(), eq(request), eq(GetHealthCareUnitMembersResponseDTO.class))).thenThrow(
+            IllegalArgumentException.class
+        );
+
+        assertThrows(IllegalStateException.class, () -> healthCareUnitMembersClient.getHealthCareUnitMembers(request));
+    }
 
     @Test
     void shouldReturnGetHealthCareUnitMembers() {

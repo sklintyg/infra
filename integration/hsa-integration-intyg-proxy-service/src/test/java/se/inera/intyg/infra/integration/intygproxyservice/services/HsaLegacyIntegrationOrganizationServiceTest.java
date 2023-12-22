@@ -102,7 +102,7 @@ class HsaLegacyIntegrationOrganizationServiceTest {
         void shouldReturnNull() {
             when(getHealthCareUnitService.get(GetHealthCareUnitRequestDTO.builder()
                 .hsaId(CARE_UNIT_HSA_ID)
-                .build())).thenReturn(null);
+                .build())).thenReturn(new HealthCareUnit());
 
             final var actualResult = hsaLegacyIntegrationOrganizationService.getVardgivareOfVardenhet(CARE_UNIT_HSA_ID);
             assertNull(actualResult);

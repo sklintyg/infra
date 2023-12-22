@@ -60,7 +60,7 @@ class HsaIntygProxyServiceEmployeeClientTest {
                 eq(GetEmployeeResponseDTO.class)
             )
         ).thenThrow(RuntimeException.class);
-        assertThrows(HsaServiceCallException.class, () -> hsaIntygProxyServiceEmployeeClient.getEmployee(request));
+        assertThrows(IllegalStateException.class, () -> hsaIntygProxyServiceEmployeeClient.getEmployee(request));
     }
 
     @Test

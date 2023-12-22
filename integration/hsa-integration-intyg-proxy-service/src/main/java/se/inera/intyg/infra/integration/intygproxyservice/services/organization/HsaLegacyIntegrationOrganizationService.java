@@ -69,7 +69,7 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
                 .hsaId(vardenhetHsaId)
                 .build()
         );
-        return healthCareUnit != null ? healthCareUnit.getHealthCareProviderHsaId() : null;
+        return healthCareUnit.getHealthCareProviderHsaId();
     }
 
     @Override
@@ -103,11 +103,22 @@ public class HsaLegacyIntegrationOrganizationService implements HsaOrganizations
 
     @Override
     public String getParentUnit(String hsaId) throws HsaServiceCallException {
-        final var unit = getHealthCareUnitService.get(
-            GetHealthCareUnitRequestDTO.builder()
-                .hsaId(hsaId)
-                .build()
-        );
-        return unit.getHealthCareUnitHsaId();
+        try {
+            final var unit = getHealthCareUnitService.get(
+                GetHealthCareUnitRequestDTO.builder()
+                    .hsaId(hsaId)
+                    .build()
+            );
+
+            if (unit == null) {
+                throw new HsaServiceCallException(
+                    String.format("Unable to find unit with hsaId '%s'", hsaId)
+                );
+            }
+            return unit.getHealthCareUnitHsaId();
+        } catch (Exception exception) {
+
+            throw new HsaServiceCallException(exception);
+        }
     }
 }

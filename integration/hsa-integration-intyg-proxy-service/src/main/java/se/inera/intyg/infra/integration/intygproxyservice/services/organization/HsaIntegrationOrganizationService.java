@@ -67,7 +67,7 @@ public class HsaIntegrationOrganizationService implements HsatkOrganizationServi
                 .hsaId(healthCareUnitMemberHsaId)
                 .build()
         );
-        if (healthCareUnit == null) {
+        if (healthCareUnit.getHealthCareUnitHsaId() == null) {
             log.warn("Failed to get HealthCareUnit from HSA with hsaId: {}", healthCareUnitMemberHsaId);
             return null;
         }
@@ -75,12 +75,17 @@ public class HsaIntegrationOrganizationService implements HsatkOrganizationServi
     }
 
     @Override
-    public HealthCareUnitMembers getHealthCareUnitMembers(String healtCareUnitHsaId) {
-        return getHealthCareUnitMembersService.get(
+    public HealthCareUnitMembers getHealthCareUnitMembers(String healthCareUnitHsaId) {
+        final var healthCareUnitMembers = getHealthCareUnitMembersService.get(
             GetHealthCareUnitMembersRequestDTO.builder()
-                .hsaId(healtCareUnitHsaId)
+                .hsaId(healthCareUnitHsaId)
                 .build()
         );
+
+        if (healthCareUnitMembers.getHealthCareUnitHsaId() == null) {
+            log.warn("Unable to find healthCareUnitMembers with hsaId '{}'", healthCareUnitHsaId);
+        }
+        return healthCareUnitMembers;
     }
 
     @Override

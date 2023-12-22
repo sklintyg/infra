@@ -44,6 +44,7 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUn
 class HsaIntegrationOrganizationServiceTest {
 
     private static final String UNIT_HSA_ID = "unitHsaId";
+    private static final String HSA_ID = "hsaId";
 
     @Mock
     private GetUnitService getUnitService;
@@ -66,6 +67,7 @@ class HsaIntegrationOrganizationServiceTest {
         @Test
         void shouldReturnHealthCareUnit() {
             final var expectedUnit = new HealthCareUnit();
+            expectedUnit.setHealthCareUnitHsaId(HSA_ID);
             when(getHealthCareUnitService.get(any(GetHealthCareUnitRequestDTO.class))).thenReturn(expectedUnit);
 
             final var result = hsaIntegrationOrganizationService.getHealthCareUnit(UNIT_HSA_ID);
@@ -75,7 +77,8 @@ class HsaIntegrationOrganizationServiceTest {
 
         @Test
         void shouldReturnNullIfHealthCareUnitIsNull() {
-            when(getHealthCareUnitService.get(any(GetHealthCareUnitRequestDTO.class))).thenReturn(null);
+            final var healthCareUnit = new HealthCareUnit();
+            when(getHealthCareUnitService.get(any(GetHealthCareUnitRequestDTO.class))).thenReturn(healthCareUnit);
 
             final var result = hsaIntegrationOrganizationService.getHealthCareUnit(UNIT_HSA_ID);
 
