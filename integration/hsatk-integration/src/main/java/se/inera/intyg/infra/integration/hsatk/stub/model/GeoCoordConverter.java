@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,6 +23,7 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v3.GeoCoord
 import se.riv.infrastructure.directory.organization.getunitresponder.v3.GeoCoordSWEREF99Type;
 
 public class GeoCoordConverter {
+
     public Unit.GeoCoordRt90 toRt90(GeoCoordRt90Type geoCoordRt90Type) {
         Unit.GeoCoordRt90 geoCoordRt90 = new Unit.GeoCoordRt90();
 

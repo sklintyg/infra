@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -66,8 +66,8 @@ public class OrganizationClientTest {
     @Test
     public void testGetUnit() throws HsaServiceCallException {
         when(getUnitResponderInterface.getUnit(
-                or(isNull(), anyString()),
-                any(GetUnitType.class))
+            or(isNull(), anyString()),
+            any(GetUnitType.class))
         ).thenReturn(buildGetUnitResponse());
 
         UnitType response = organizationClient.getUnit(UNIT_HSA_ID, null);
@@ -78,8 +78,8 @@ public class OrganizationClientTest {
     @Test
     public void testGetHealthCareUnit() throws HsaServiceCallException {
         when(getHealthCareUnitResponderInterface.getHealthCareUnit(
-                or(isNull(), anyString()),
-                any(GetHealthCareUnitType.class))
+            or(isNull(), anyString()),
+            any(GetHealthCareUnitType.class))
         ).thenReturn(buildHealthCareGetUnitResponse());
 
         HealthCareUnitType response = organizationClient.getHealthCareUnit(UNIT_HSA_ID);
@@ -90,8 +90,8 @@ public class OrganizationClientTest {
     @Test
     public void testHealthCareUnitMembers() throws HsaServiceCallException {
         when(getHealthCareUnitMembersResponderInterface.getHealthCareUnitMembers(
-                or(isNull(), anyString()),
-                any(GetHealthCareUnitMembersType.class))
+            or(isNull(), anyString()),
+            any(GetHealthCareUnitMembersType.class))
         ).thenReturn(buildHealthCareUnitMembersResponse());
 
         HealthCareUnitMembersType response = organizationClient.getHealthCareUnitMembers(UNIT_HSA_ID);

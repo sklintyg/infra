@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -37,24 +37,23 @@ public interface SrsInfraService {
      * @param user user which made the request
      * @param personnummer {@link Personnummer} for the patient concerned.
      * @param certDiags List of certificateId and diagnosis code combinations (the signedDate attribute is not used/can be null).
-     *                  The first represents the current certificate and the current main diagnosis.
-     *                  If prediktion=true in utdatafilter this first entry is the one that will be used for calculating a new prediction.
-     *                  If prediktion=false in utdatafilter we will try to find an earlier prediction on this first certificate and
-     *                  diagnosis instead.
-     *                  The second entry is a cert with relation FRLNG from the first and the diagnosis to find earlier predictions for,
-     *                  if such certificate-diagnosis combination exists,
-     *                  The third entry is a cert with relation FRLNG from the second and the diagnosis to find earlier predictions for,
-     *                  if such certificate-diagnosis combination exists
+     * The first represents the current certificate and the current main diagnosis.
+     * If prediktion=true in utdatafilter this first entry is the one that will be used for calculating a new prediction.
+     * If prediktion=false in utdatafilter we will try to find an earlier prediction on this first certificate and
+     * diagnosis instead.
+     * The second entry is a cert with relation FRLNG from the first and the diagnosis to find earlier predictions for,
+     * if such certificate-diagnosis combination exists,
+     * The third entry is a cert with relation FRLNG from the second and the diagnosis to find earlier predictions for,
+     * if such certificate-diagnosis combination exists
      *
-     *                  I.e. The first certificate entry is an extension of the second which is an extension of the third.
-     *
+     * I.e. The first certificate entry is an extension of the second which is an extension of the third.
      * @param filter Utdatafilter with desired response filters.
      * @param answers Answers from the user.
      * @param daysIntoSickLeave Number of days into the sick leave, used as input for the prediction. If null is given, it defaults to 15.
      * @return {@link SrsResponse} with {@link Diagnosprediktionstatus} OK or PREDIKTIONSMODELL_SAKNAS
      */
     SrsResponse getSrs(IntygUser user, Personnummer personnummer, List<SrsCertificate> certDiags, Utdatafilter filter,
-                       List<SrsQuestionResponse> answers, Integer daysIntoSickLeave) throws InvalidPersonNummerException;
+        List<SrsQuestionResponse> answers, Integer daysIntoSickLeave) throws InvalidPersonNummerException;
 
     /**
      * Retreives the questions to be displayed in the GUI.
@@ -83,6 +82,7 @@ public interface SrsInfraService {
 
     /**
      * Fetches all the diagnosis codes which are supported by SRS.
+     *
      * @param modelVersion Prediction model version
      * @return a list containing all the supported diagnosis codes. All sub-diagnosis are also supported.
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -46,19 +46,19 @@ public class SrsPrediction {
     }
 
     public SrsPrediction(
-            String certificateId,
-            String predictionDiagnosisCode,
-            String predictionDiagnosisDescription,
-            String predictionStatusCode,
-            Integer predictionLevel,
-            String predictionDescription,
-            Double predictionProbabilityOverLimit,
-            Double predictionPrevalence,
-            List<SrsQuestionResponse> predictionQuestionsResponses,
-            String predictionPhysiciansOwnOpinionRisk,
-            LocalDateTime predictionTimestamp,
-            Integer daysIntoSickLeave,
-            String modelVersion
+        String certificateId,
+        String predictionDiagnosisCode,
+        String predictionDiagnosisDescription,
+        String predictionStatusCode,
+        Integer predictionLevel,
+        String predictionDescription,
+        Double predictionProbabilityOverLimit,
+        Double predictionPrevalence,
+        List<SrsQuestionResponse> predictionQuestionsResponses,
+        String predictionPhysiciansOwnOpinionRisk,
+        LocalDateTime predictionTimestamp,
+        Integer daysIntoSickLeave,
+        String modelVersion
     ) {
         this.certificateId = certificateId;
         this.diagnosisCode = predictionDiagnosisCode;
@@ -178,7 +178,6 @@ public class SrsPrediction {
     public void setDiagnosisCode(String diagnosisCode) {
         this.diagnosisCode = diagnosisCode;
     }
-
 
 
 }

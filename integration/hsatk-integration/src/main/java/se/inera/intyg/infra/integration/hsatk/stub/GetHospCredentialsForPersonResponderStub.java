@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,12 +31,13 @@ import se.riv.infrastructure.directory.authorizationmanagement.v2.RestrictionTyp
 import java.util.stream.Collectors;
 
 public class GetHospCredentialsForPersonResponderStub implements GetHospCredentialsForPersonResponderInterface {
+
     @Autowired
     HsaServiceStub hsaServiceStub;
 
     @Override
     public GetHospCredentialsForPersonResponseType getHospCredentialsForPerson(String logicalAddress,
-                                                                               GetHospCredentialsForPersonType parameters) {
+        GetHospCredentialsForPersonType parameters) {
 
         GetHospCredentialsForPersonResponseType response = new GetHospCredentialsForPersonResponseType();
         HsaPerson hsaPerson = hsaServiceStub.getHsaPerson(parameters.getPersonalIdentityNumber());
@@ -50,17 +51,17 @@ public class GetHospCredentialsForPersonResponderStub implements GetHospCredenti
 
             if (hsaPerson.getRestrictions() != null) {
                 response.getRestrictions().addAll(hsaPerson.getRestrictions()
-                        .stream().map(this::toRestrictionType).collect(Collectors.toList()));
+                    .stream().map(this::toRestrictionType).collect(Collectors.toList()));
             }
 
             if (hsaPerson.getSpecialities() != null) {
                 response.getHealthCareProfessionalLicenceSpeciality().addAll(hsaPerson.getSpecialities()
-                        .stream().map(this::toHCPSpecialityType).collect(Collectors.toList()));
+                    .stream().map(this::toHCPSpecialityType).collect(Collectors.toList()));
             }
 
             if (hsaPerson.getHealthCareProfessionalLicenceType() != null) {
                 response.getHealthCareProfessionalLicence().addAll(hsaPerson.getHealthCareProfessionalLicenceType()
-                        .stream().map(this::toHealthCareProfessionalLicenceType).collect(Collectors.toList()));
+                    .stream().map(this::toHealthCareProfessionalLicenceType).collect(Collectors.toList()));
             }
         }
         return response;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -51,7 +51,7 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.AgandeForm;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 
 @ExtendWith(MockitoExtension.class)
-class  CareUnitConverterTest {
+class CareUnitConverterTest {
 
     private static final String PRIVATE = "12xyz";
     private static final String PUBLIC = "2xyz";

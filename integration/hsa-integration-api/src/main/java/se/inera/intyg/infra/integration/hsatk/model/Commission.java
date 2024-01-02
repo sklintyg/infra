@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,6 +26,7 @@ import java.util.List;
 
 @Data
 public class Commission {
+
     protected String commissionPurpose;
     protected String healthCareUnitHsaId;
     protected String healthCareUnitName;
@@ -49,6 +50,7 @@ public class Commission {
 
     @Data
     public static class CommissionRight {
+
         protected String activity;
         protected String informationClass;
         protected String scope;

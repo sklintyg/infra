@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -91,7 +91,7 @@ public class AuthoritiesResolverTest {
         // when
         RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles);
         // then
-        assertNull(roleResolveResult );
+        assertNull(roleResolveResult);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class AuthoritiesResolverTest {
         // given
         List<String> befattningsKoder = Collections.singletonList("204010");
         // when
-        RoleResolveResult roleResolveResult  = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
         // then
         assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
         assertTrue(roleResolveResult.getRoleTypeName().equalsIgnoreCase("Läkare-204010"));
@@ -110,7 +110,7 @@ public class AuthoritiesResolverTest {
         // given
         List<String> befattningsKoder = Collections.singletonList("203020");
         // when
-        RoleResolveResult roleResolveResult  = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
         // then
         assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
         assertTrue(roleResolveResult.getRoleTypeName().equalsIgnoreCase("Läkare-203020"));
@@ -121,7 +121,7 @@ public class AuthoritiesResolverTest {
         // given
         List<String> befattningsKoder = Arrays.asList("203020", "204010");
         // when
-        RoleResolveResult roleResolveResult  = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
         // then
         assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
         assertTrue(roleResolveResult.getRoleTypeName().equalsIgnoreCase("Läkare-204010"));
@@ -187,7 +187,8 @@ public class AuthoritiesResolverTest {
     @Test
     public void lookupUserRoleByTitleCodeAndGroupPrescriptionCodeNoMatchReturnsNull() {
         // Act
-        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(new ArrayList<>(), new ArrayList<>());
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(new ArrayList<>(),
+            new ArrayList<>());
 
         // Assert
         assertNull(roleResolveResult);
@@ -201,7 +202,8 @@ public class AuthoritiesResolverTest {
         List<String> gruppforskrivarKoder = Arrays.asList("9300005", "9100009");
 
         // Act
-        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningsKoder, gruppforskrivarKoder);
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningsKoder,
+            gruppforskrivarKoder);
 
         // Assert
         assertEquals(AuthoritiesConstants.ROLE_LAKARE, roleResolveResult.getRole().getName());
