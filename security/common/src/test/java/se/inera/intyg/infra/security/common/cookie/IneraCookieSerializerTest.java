@@ -18,21 +18,22 @@
  */
 package se.inera.intyg.infra.security.common.cookie;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.Collection;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.mockito.ArgumentCaptor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.session.web.http.CookieSerializer;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.Collection;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
 
 @RunWith(Parameterized.class)
 public class IneraCookieSerializerTest {
@@ -48,6 +49,8 @@ public class IneraCookieSerializerTest {
         this.userAgent = userAgent;
         this.isSameSiteNone = isSameSiteNone;
     }
+
+    //CHECKSTYLE:OFF
 
     @Parameterized.Parameters
     public static Collection userAgents() {
@@ -154,4 +157,6 @@ public class IneraCookieSerializerTest {
 
         assertEquals("Erroneous samesite attribut for: " + userAgent, false, stringCaptor.getValue().contains("SameSite=none"));
     }
+
+    //CHECKSTYLE:ON
 }
