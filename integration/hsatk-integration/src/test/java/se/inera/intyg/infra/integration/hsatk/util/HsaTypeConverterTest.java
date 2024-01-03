@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -134,12 +134,10 @@ public class HsaTypeConverterTest {
     @Test
     public void testCredentialInformationOK() {
 
-
         CommissionRightType commissionRightType = new CommissionRightType();
         commissionRightType.setActivity(ACTIVITY);
         commissionRightType.setInformationClass(INFORMATION_CLASS);
         commissionRightType.setScope(SCOPE);
-
 
         CommissionType commissionType = new CommissionType();
         commissionType.getCommissionRight().add(commissionRightType);
@@ -163,7 +161,6 @@ public class HsaTypeConverterTest {
         IIType iiType = new IIType();
         iiType.setExtension(PERSONALID);
         NursePrescriptionRightType nursePrescriptionRightType = new NursePrescriptionRightType();
-
 
         CredentialInformationType credentialInformationType = new CredentialInformationType();
         credentialInformationType.setPersonalPrescriptionCode(PRESCRIPTION_CODE);
@@ -246,7 +243,7 @@ public class HsaTypeConverterTest {
     @Test
     public void testHealthCareProviderV2OK() {
         se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareProviderType healthCareProviderType
-                = new se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareProviderType();
+            = new se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareProviderType();
         healthCareProviderType.setHealthCareProviderEndDate(END_DATE);
         healthCareProviderType.setHealthCareProviderStartDate(START_DATE);
         healthCareProviderType.setHealthCareProviderHsaId(HSA_ID);
@@ -295,7 +292,7 @@ public class HsaTypeConverterTest {
         healthCareUnitMemberType.getHealthCareUnitMemberTelephoneNumber().add(TELEPHONE_NUMBER);
 
         se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareProviderType healthCareProviderType
-                = new se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareProviderType();
+            = new se.riv.infrastructure.directory.organization.gethealthcareunitmembersresponder.v2.HealthCareProviderType();
         healthCareProviderType.setHealthCareProviderEndDate(END_DATE);
         healthCareProviderType.setHealthCareProviderStartDate(START_DATE);
         healthCareProviderType.setHealthCareProviderHsaId(HSA_ID);
@@ -352,7 +349,6 @@ public class HsaTypeConverterTest {
         unitType.setUnitEndDate(START_DATE);
         unitType.setUnitHsaId(HSA_ID);
         unitType.setUnitName(NAME);
-
 
         Unit unit = hsaTypeConverter.toUnit(unitType);
         Assert.assertNotNull(unit);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -87,9 +87,10 @@ public class PersonConverter {
     /**
      * Method evaluate if the person should be considered testIndicated or not. The attribute is received in the {@link PersonRecordType}
      * but due to testing needs it can be overridden/reclassify.
-     * @param personRecord  Person Record to evaluate
-     * @param personnummer  For convencience the social security number so it doesn't have to be created within this method.
-     * @return  True or false if the person should be considered testIndicated or not.
+     *
+     * @param personRecord Person Record to evaluate
+     * @param personnummer For convencience the social security number so it doesn't have to be created within this method.
+     * @return True or false if the person should be considered testIndicated or not.
      */
     private boolean isTestIndicated(PersonRecordType personRecord, Personnummer personnummer) {
         if (reClassifyTestIndicatedPerson(personRecord, personnummer)) {

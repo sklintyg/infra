@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -41,12 +41,12 @@ public class SysselsattningMapper extends Mapper {
 
     private static Map<String, String> sysselsattningMap() {
         return Collections.unmodifiableMap(Stream.of(
-            entry("ARBETSLOSHET", "Arbetssökande"),
-            entry("ARBETSSOKANDE", "Arbetssökande"),
-            entry("FORALDRALEDIG", "Föräldraledighet för vård av barn"),
-            entry("FORALDRALEDIGHET", "Föräldraledighet för vård av barn"),
-            entry("NUVARANDE_ARBETE", "Nuvarande arbete"),
-            entry("STUDIER", "Studier"))
+                entry("ARBETSLOSHET", "Arbetssökande"),
+                entry("ARBETSSOKANDE", "Arbetssökande"),
+                entry("FORALDRALEDIG", "Föräldraledighet för vård av barn"),
+                entry("FORALDRALEDIGHET", "Föräldraledighet för vård av barn"),
+                entry("NUVARANDE_ARBETE", "Nuvarande arbete"),
+                entry("STUDIER", "Studier"))
             .collect(entriesToMap()));
     }
 

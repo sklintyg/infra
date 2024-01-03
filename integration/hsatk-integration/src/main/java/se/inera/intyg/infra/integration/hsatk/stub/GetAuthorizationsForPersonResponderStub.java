@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -36,7 +36,7 @@ import se.riv.infrastructure.directory.authorizationmanagement.v2.HsaSystemRoleT
 import se.riv.infrastructure.directory.employee.v2.PaTitleType;
 
 public class GetAuthorizationsForPersonResponderStub
-        implements GetCredentialsForPersonIncludingProtectedPersonResponderInterface {
+    implements GetCredentialsForPersonIncludingProtectedPersonResponderInterface {
 
     private static final Logger LOG = LoggerFactory.getLogger(GetHealthCareProviderResponderStub.class);
 
@@ -45,23 +45,21 @@ public class GetAuthorizationsForPersonResponderStub
 
     @Override
     public GetCredentialsForPersonIncludingProtectedPersonResponseType getCredentialsForPersonIncludingProtectedPerson(
-            String logicalAddress,
-            GetCredentialsForPersonIncludingProtectedPersonType parameters) {
+        String logicalAddress,
+        GetCredentialsForPersonIncludingProtectedPersonType parameters) {
         // CHECKSTYLE:OFF LineLength
         GetCredentialsForPersonIncludingProtectedPersonResponseType response = new GetCredentialsForPersonIncludingProtectedPersonResponseType();
         // CHECKSTYLE:ON LineLength
 
-
         response.getCredentialInformation()
-                .addAll(miuInformationTypesForEnhetsIds(
-                        hsaServiceStub.getCredentialInformation(parameters.getPersonHsaId()), parameters.getPersonHsaId()));
-
+            .addAll(miuInformationTypesForEnhetsIds(
+                hsaServiceStub.getCredentialInformation(parameters.getPersonHsaId()), parameters.getPersonHsaId()));
 
         return response;
     }
 
     private List<CredentialInformationType> miuInformationTypesForEnhetsIds(CredentialInformation credentialInformation,
-                                                                            String hsaPersonId) {
+        String hsaPersonId) {
         List<CredentialInformationType> informationTypes = new ArrayList<>();
         HsaPerson hsaPerson = hsaServiceStub.getHsaPerson(hsaPersonId);
         LOG.info("Transforming stubdata to return types for CI: {} and person: {}", credentialInformation, hsaPerson);

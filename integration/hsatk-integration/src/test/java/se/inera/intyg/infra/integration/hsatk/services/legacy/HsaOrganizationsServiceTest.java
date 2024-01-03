@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -228,7 +228,7 @@ public class HsaOrganizationsServiceTest {
         List<CredentialInformation.Commission> uppdrag = new ArrayList<>();
         for (String enhet : enhetIds) {
             CredentialInformation.Commission commission = new CredentialInformation
-                    .Commission(enhet, CredentialInformation.VARD_OCH_BEHANDLING);
+                .Commission(enhet, CredentialInformation.VARD_OCH_BEHANDLING);
             commission.setHealthCareProviderHsaId(vardgivare);
             uppdrag.add(commission);
         }
@@ -314,7 +314,7 @@ public class HsaOrganizationsServiceTest {
 
         // user has a different medarbetaruppdrag ändamål 'Animatör' in one enhet
         serviceStub.addCredentialInformation(new CredentialInformation(PERSON_HSA_ID,
-                asList(new CredentialInformation.Commission("centrum-ost", "Animatör"))));
+            asList(new CredentialInformation.Commission("centrum-ost", "Animatör"))));
 
         List<Vardgivare> vardgivareList = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
 

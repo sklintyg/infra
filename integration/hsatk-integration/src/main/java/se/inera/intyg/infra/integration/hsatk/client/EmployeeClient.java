@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -71,7 +71,7 @@ public class EmployeeClient {
 
         try {
             response = getEmployeeIncludingProtectedPersonResponderInterface
-                    .getEmployeeIncludingProtectedPerson(logicalAddress, parameters);
+                .getEmployeeIncludingProtectedPerson(logicalAddress, parameters);
         } catch (SOAPFaultException e) {
             LOG.error("GetEmployee call returned with error: {}", e.getLocalizedMessage());
             throw new HsaServiceCallException(e);

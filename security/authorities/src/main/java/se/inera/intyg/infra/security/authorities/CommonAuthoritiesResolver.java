@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -77,7 +77,7 @@ public class CommonAuthoritiesResolver {
         .orElse(null);
 
     public RoleResolveResult resolveRole(IntygUser user, List<PersonInformation> personInfo, String defaultRole,
-                                         UserCredentials userCredentials) {
+        UserCredentials userCredentials) {
         Assert.notNull(user, "Argument 'user' cannot be null");
 
         return lookupUserRole(user, personInfo, defaultRole, userCredentials);

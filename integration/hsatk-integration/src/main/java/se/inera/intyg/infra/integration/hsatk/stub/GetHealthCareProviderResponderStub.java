@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -35,7 +35,7 @@ public class GetHealthCareProviderResponderStub implements GetHealthCareProvider
         GetHealthCareProviderResponseType getHealthCareProviderResponseType = new GetHealthCareProviderResponseType();
 
         getHealthCareProviderResponseType.getHealthCareProvider()
-                .add(toHealthCareProviderType(hsaServiceStub.getCareProvider(parameters.getHealthCareProviderHsaId())));
+            .add(toHealthCareProviderType(hsaServiceStub.getCareProvider(parameters.getHealthCareProviderHsaId())));
 
         return getHealthCareProviderResponseType;
     }
