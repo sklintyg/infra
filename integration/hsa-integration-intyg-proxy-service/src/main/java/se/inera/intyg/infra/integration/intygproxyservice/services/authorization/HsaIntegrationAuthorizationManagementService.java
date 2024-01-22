@@ -63,6 +63,7 @@ public class HsaIntegrationAuthorizationManagementService implements HsatkAuthor
         final var hospCredentialsForPerson = getHospCredentialsForPersonService.get(personalIdentityNumber);
 
         if (hospCredentialsForPerson == null) {
+            log.warn("Response message did not contain proper response data.");
             throw new WebServiceException("Response message did not contain proper response data.");
         }
 
