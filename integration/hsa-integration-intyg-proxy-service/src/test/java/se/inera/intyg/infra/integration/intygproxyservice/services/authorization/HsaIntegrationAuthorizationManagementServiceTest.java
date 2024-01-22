@@ -139,5 +139,13 @@ class HsaIntegrationAuthorizationManagementServiceTest {
 
             assertEquals(expectedResult, result);
         }
+
+        @Test
+        void shouldThrowWebServiceExceptionIfHospCredentialsForPersonIsNull() {
+            when(getHospCredentialsForPersonService.get(PERSON_ID)).thenReturn(null);
+
+            assertThrows(WebServiceException.class,
+                () -> hsaIntegrationAuthorizationManagementService.getHospCredentialsForPersonResponseType(PERSON_ID));
+        }
     }
 }

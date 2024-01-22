@@ -60,7 +60,13 @@ public class HsaIntegrationAuthorizationManagementService implements HsatkAuthor
 
     @Override
     public HospCredentialsForPerson getHospCredentialsForPersonResponseType(String personalIdentityNumber) {
-        return getHospCredentialsForPersonService.get(personalIdentityNumber);
+        final var hospCredentialsForPerson = getHospCredentialsForPersonService.get(personalIdentityNumber);
+
+        if (hospCredentialsForPerson == null) {
+            throw new WebServiceException("Response message did not contain proper response data.");
+        }
+
+        return hospCredentialsForPerson;
     }
 
     @Override
