@@ -26,6 +26,9 @@ import java.util.Map;
  */
 public interface UserDetails extends Serializable {
 
+    String getFornamn();
+    String getEfternamn();
+
     /**
      * Returns the name to authenticate the user. Cannot return <code>null</code>.
      *
