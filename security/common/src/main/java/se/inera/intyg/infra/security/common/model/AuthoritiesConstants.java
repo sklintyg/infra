@@ -102,8 +102,6 @@ public final class AuthoritiesConstants {
     public static final String FEATURE_INACTIVATE_PREVIOUS_MAJOR_VERSION = "INAKTIVERA_TIDIGARE_HUVUDVERSION";
     public static final String FEATURE_USE_ANGULAR_WEBCLIENT = "ANVAND_ANGULAR_WEBKLIENT";
     public static final String FEATURE_USE_REACT_WEBCLIENT_FRISTAENDE = "ANVAND_REACT_WEBKLIENT_FRISTAENDE";
-    public static final String FEATURE_SUBSCRIPTION_ADAPTATION_PERIOD = "SUBSCRIPTION_ADAPTATION_PERIOD";
-    public static final String FEATURE_SUBSCRIPTION_REQUIRED = "SUBSCRIPTION_REQUIRED";
     public static final String FEATURE_PRINT_IN_IFRAME = "SKRIV_UT_I_IFRAME";
 
     private AuthoritiesConstants() {
