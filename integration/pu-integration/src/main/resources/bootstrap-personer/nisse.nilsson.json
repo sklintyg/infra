@@ -1,0 +1,26 @@
+{
+  "personalIdentity": {
+    "extension": "199001092387"
+  },
+  "protectedPersonIndicator": false,
+  "testIndicator": false,
+  "primaryIdentity": false,
+  "name": {
+    "givenName": {
+      "name": "Nisse"
+    },
+    "middleName": {},
+    "surname": {
+      "name": "Nilsson"
+    }
+  },
+  "addressInformation": {
+    "residentialAddress": {
+      "careOf": "",
+      "postalAddress1": "Nisse Nilsson 1",
+      "postalAddress2": "",
+      "postalCode": 54321,
+      "city": "Nilscity"
+    }
+  }
+}
