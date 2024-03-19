@@ -240,7 +240,7 @@ public class CommonAuthoritiesResolver {
      * @return a user role if valid 'yrkesgrupper', otherwise null
      */
     RoleResolveResult lookupUserRoleByLegitimeradeYrkesgrupper(List<String> legitimeradeYrkesgrupper) {
-        if (legitimeradeYrkesgrupper == null || legitimeradeYrkesgrupper.size() == 0) {
+        if (legitimeradeYrkesgrupper == null || legitimeradeYrkesgrupper.isEmpty()) {
             return null;
         }
 
@@ -250,6 +250,10 @@ public class CommonAuthoritiesResolver {
 
         if (legitimeradeYrkesgrupper.contains(AuthoritiesConstants.TITLE_TANDLAKARE)) {
             return new RoleResolveResult(fnRole.apply(AuthoritiesConstants.ROLE_TANDLAKARE), AuthoritiesConstants.TITLE_TANDLAKARE);
+        }
+
+        if (legitimeradeYrkesgrupper.contains(AuthoritiesConstants.TITLE_SJUKSKOTERSKA)) {
+            return new RoleResolveResult(fnRole.apply(AuthoritiesConstants.ROLE_SJUKSKOTERSKA), AuthoritiesConstants.TITLE_SJUKSKOTERSKA);
         }
 
         return null;

@@ -44,7 +44,7 @@ import se.inera.intyg.infra.security.authorities.FeaturesConfiguration;
 @Component("AuthoritiesConfigurationLoader")
 public class SecurityConfigurationLoader extends YamlPropertiesFactoryBean implements InitializingBean {
 
-    @Value("${max.aliases.for.collections:300}")
+    @Value("${max.aliases.for.collections:500}")
     private Integer maxAliasesForCollections;
 
     @Value("${authorities.configuration.file}")
