@@ -63,43 +63,22 @@ class AuthoritiesResolverTest {
     @Test
     void lookupUserRoleWhenTitleIsDoctor() {
         List<String> titles = Collections.singletonList("Läkare");
-        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles, DEFAULT_ROLE);
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles);
         assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
     }
 
     @Test
     void lookupUserRoleWhenMultipleTitlesAndOneIsDoctor() {
         List<String> titles = Arrays.asList("Läkare", "Barnmorska", "Sjuksköterska");
-        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles, DEFAULT_ROLE);
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles);
         assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
     }
 
-    @Test
-    void lookupUserRoleWhenTitleIsNurse() {
-        List<String> titles = List.of("Sjuksköterska");
-        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles, DEFAULT_ROLE);
-        assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_SJUKSKOTERSKA));
-    }
-
-    @Test
-    void lookupUserRoleWhenTitleIsNurseAndDefaultRoleIsRehabkoordinator() {
-        List<String> titles = List.of("Sjuksköterska");
-        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles,
-            AuthoritiesConstants.ROLE_KOORDINATOR);
-        assertNull(roleResolveResult);
-    }
-
-    @Test
-    void lookupUserRoleWhenMultipleTitlesAndOneIsNurse() {
-        List<String> titles = List.of("Vårdadministratör", "Sjuksköterska");
-        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles, DEFAULT_ROLE);
-        assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_SJUKSKOTERSKA));
-    }
 
     @Test
     void lookupUserRoleWhenMultipleTitlesAndNoneExists() {
         List<String> titles = List.of("Smed", "Notarie");
-        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles, DEFAULT_ROLE);
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles);
         assertNull(roleResolveResult);
     }
 
@@ -197,6 +176,27 @@ class AuthoritiesResolverTest {
         // Assert        assertEquals(AuthoritiesConstants.ROLE_LAKARE, roleResolveResult.getRole().getName());
         assertEquals("Läkare-203090-9300005", roleResolveResult.getRoleTypeName());
 
+    }
+
+    @Test
+    void lookupUserRoleNurseWhenTitleIsNurse() {
+        List<String> titles = List.of("Sjuksköterska");
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleNurse(titles, DEFAULT_ROLE);
+        assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_SJUKSKOTERSKA));
+    }
+
+    @Test
+    void lookupUserRoleNurseWhenTitleIsNurseAndDefaultRoleIsRehabkoordinator() {
+        List<String> titles = List.of("Sjuksköterska");
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleNurse(titles, AuthoritiesConstants.ROLE_KOORDINATOR);
+        assertNull(roleResolveResult);
+    }
+
+    @Test
+    void lookupUserRoleNurseWhenMultipleTitlesAndOneIsNurse() {
+        List<String> titles = List.of("Vårdadministratör", "Sjuksköterska");
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleNurse(titles, DEFAULT_ROLE);
+        assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_SJUKSKOTERSKA));
     }
 
     // FIX THIS or MOVE TO REHAB!!!

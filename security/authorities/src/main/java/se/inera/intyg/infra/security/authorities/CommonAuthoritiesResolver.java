@@ -187,7 +187,7 @@ public class CommonAuthoritiesResolver {
 
         // 1. Bestäm användarens roll utefter legitimerade yrkesgrupper som hämtas från HSA.
 
-        roleResolveResult = lookupUserRoleByLegitimeradeYrkesgrupper(legitimeradeYrkesgrupper, defaultRole);
+        roleResolveResult = lookupUserRoleByLegitimeradeYrkesgrupper(legitimeradeYrkesgrupper);
         if (roleResolveResult != null) {
             return roleResolveResult;
         }
@@ -207,9 +207,22 @@ public class CommonAuthoritiesResolver {
             return roleResolveResult;
         }
 
+        roleResolveResult = lookupUserRoleNurse(legitimeradeYrkesgrupper, defaultRole);
+        if (roleResolveResult != null) {
+            return roleResolveResult;
+        }
+
         // 4. Användaren skall få fallback-rollen, t.ex. en vårdadministratör eller rehabkoordinator inom landstinget.
         Role role = fnRole.apply(defaultRole);
         return new RoleResolveResult(role, defaultRole);
+    }
+
+    RoleResolveResult lookupUserRoleNurse(List<String> legitimeradeYrkesgrupper, String defaultRole) {
+        if (legitimeradeYrkesgrupper.contains(AuthoritiesConstants.TITLE_SJUKSKOTERSKA) && !defaultRole.equals(
+            AuthoritiesConstants.ROLE_KOORDINATOR)) {
+            return new RoleResolveResult(fnRole.apply(AuthoritiesConstants.ROLE_SJUKSKOTERSKA), AuthoritiesConstants.TITLE_SJUKSKOTERSKA);
+        }
+        return null;
     }
 
     private List<String> buildAllaForskrivarKoderList(IntygUser user, UserCredentials userCredentials) {
@@ -239,7 +252,7 @@ public class CommonAuthoritiesResolver {
      * @param legitimeradeYrkesgrupper string array with 'legitimerade yrkesgrupper'
      * @return a user role if valid 'yrkesgrupper', otherwise null
      */
-    RoleResolveResult lookupUserRoleByLegitimeradeYrkesgrupper(List<String> legitimeradeYrkesgrupper, String defaultRole) {
+    RoleResolveResult lookupUserRoleByLegitimeradeYrkesgrupper(List<String> legitimeradeYrkesgrupper) {
         if (legitimeradeYrkesgrupper == null || legitimeradeYrkesgrupper.isEmpty()) {
             return null;
         }
@@ -250,11 +263,6 @@ public class CommonAuthoritiesResolver {
 
         if (legitimeradeYrkesgrupper.contains(AuthoritiesConstants.TITLE_TANDLAKARE)) {
             return new RoleResolveResult(fnRole.apply(AuthoritiesConstants.ROLE_TANDLAKARE), AuthoritiesConstants.TITLE_TANDLAKARE);
-        }
-
-        if (legitimeradeYrkesgrupper.contains(AuthoritiesConstants.TITLE_SJUKSKOTERSKA) && !defaultRole.equals(
-            AuthoritiesConstants.ROLE_KOORDINATOR)) {
-            return new RoleResolveResult(fnRole.apply(AuthoritiesConstants.ROLE_SJUKSKOTERSKA), AuthoritiesConstants.TITLE_SJUKSKOTERSKA);
         }
 
         return null;
