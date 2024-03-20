@@ -187,7 +187,7 @@ public class CommonAuthoritiesResolver {
 
         // 1. Bestäm användarens roll utefter legitimerade yrkesgrupper som hämtas från HSA.
 
-        roleResolveResult = lookupUserRoleByLegitimeradeYrkesgrupper(legitimeradeYrkesgrupper);
+        roleResolveResult = lookupUserRoleByLegitimeradeYrkesgrupper(legitimeradeYrkesgrupper, defaultRole);
         if (roleResolveResult != null) {
             return roleResolveResult;
         }
@@ -239,7 +239,7 @@ public class CommonAuthoritiesResolver {
      * @param legitimeradeYrkesgrupper string array with 'legitimerade yrkesgrupper'
      * @return a user role if valid 'yrkesgrupper', otherwise null
      */
-    RoleResolveResult lookupUserRoleByLegitimeradeYrkesgrupper(List<String> legitimeradeYrkesgrupper) {
+    RoleResolveResult lookupUserRoleByLegitimeradeYrkesgrupper(List<String> legitimeradeYrkesgrupper, String defaultRole) {
         if (legitimeradeYrkesgrupper == null || legitimeradeYrkesgrupper.isEmpty()) {
             return null;
         }
@@ -252,7 +252,8 @@ public class CommonAuthoritiesResolver {
             return new RoleResolveResult(fnRole.apply(AuthoritiesConstants.ROLE_TANDLAKARE), AuthoritiesConstants.TITLE_TANDLAKARE);
         }
 
-        if (legitimeradeYrkesgrupper.contains(AuthoritiesConstants.TITLE_SJUKSKOTERSKA)) {
+        if (legitimeradeYrkesgrupper.contains(AuthoritiesConstants.TITLE_SJUKSKOTERSKA) && !defaultRole.equals(
+            AuthoritiesConstants.ROLE_KOORDINATOR)) {
             return new RoleResolveResult(fnRole.apply(AuthoritiesConstants.ROLE_SJUKSKOTERSKA), AuthoritiesConstants.TITLE_SJUKSKOTERSKA);
         }
 
