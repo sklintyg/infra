@@ -18,39 +18,35 @@
  */
 package se.inera.intyg.infra.security.authorities;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
-import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
 import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
 import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.infra.security.common.model.RoleResolveResult;
 
-@RunWith(MockitoJUnitRunner.class)
-public class AuthoritiesResolverTest {
+@ExtendWith(MockitoExtension.class)
+class AuthoritiesResolverTest {
 
+    private static final String DEFAULT_ROLE = "defaultRole";
     private final String authoritiesConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
     private final String featuresConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
     private final Integer defaultMaxAliasesForCollections = 300;
-
-    @Mock
-    private HsaPersonService hsaPersonService;
 
     @Spy
     private SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationLocation,
@@ -59,93 +55,71 @@ public class AuthoritiesResolverTest {
     @InjectMocks
     private CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();
 
-    @Before
+    @BeforeEach
     public void setup() {
         configurationLoader.afterPropertiesSet();
     }
 
     @Test
-    public void lookupUserRoleWhenTitleIsDoctor() {
-        // given
+    void lookupUserRoleWhenTitleIsDoctor() {
         List<String> titles = Collections.singletonList("Läkare");
-        // when
         RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles);
-        // then
         assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
     }
 
     @Test
-    public void lookupUserRoleWhenMultipleTitlesAndOneIsDoctor() {
-        // given
+    void lookupUserRoleWhenMultipleTitlesAndOneIsDoctor() {
         List<String> titles = Arrays.asList("Läkare", "Barnmorska", "Sjuksköterska");
-        // when
         RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles);
-        // then
         assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
     }
 
+
     @Test
-    public void lookupUserRoleWhenMultipleTitlesAndNoDoctor() {
-        // given
-        List<String> titles = Arrays.asList("Barnmorska", "Sjuksköterska");
-        // when
+    void lookupUserRoleWhenMultipleTitlesAndNoneExists() {
+        List<String> titles = List.of("Smed", "Notarie");
         RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByLegitimeradeYrkesgrupper(titles);
-        // then
         assertNull(roleResolveResult);
     }
 
     @Test
-    public void lookupUserRoleWhenTitleCodeIs204010() {
-        // given
+    void lookupUserRoleWhenTitleCodeIs204010() {
         List<String> befattningsKoder = Collections.singletonList("204010");
-        // when
         RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
-        // then
         assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
         assertTrue(roleResolveResult.getRoleTypeName().equalsIgnoreCase("Läkare-204010"));
     }
 
     @Test
-    public void lookupUserRoleWhenTitleCodeIs203020() {
-        // given
+    void lookupUserRoleWhenTitleCodeIs203020() {
         List<String> befattningsKoder = Collections.singletonList("203020");
-        // when
         RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
-        // then
         assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
         assertTrue(roleResolveResult.getRoleTypeName().equalsIgnoreCase("Läkare-203020"));
     }
 
     @Test
-    public void lookupUserRoleWhenTitleCodes204010And203020() {
-        // given
+    void lookupUserRoleWhenTitleCodes204010And203020() {
         List<String> befattningsKoder = Arrays.asList("203020", "204010");
-        // when
         RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
-        // then
         assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_LAKARE));
         assertTrue(roleResolveResult.getRoleTypeName().equalsIgnoreCase("Läkare-204010"));
     }
 
     @Test
-    public void lookupUserRoleWhenTitleCodeIsNot204010Or203020() {
-        // given
+    void lookupUserRoleWhenTitleCodeIsNot204010Or203020() {
         List<String> befattningsKoder = Arrays.asList("203090", "204090", "", null);
-        // when
         RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskod(befattningsKoder);
-        // then
         assertNull(roleResolveResult);
     }
 
     @Test
-    public void lookupUserRoleByTitleCodeAndGroupPrescriptionCode() {
-        // given
+    void lookupUserRoleByTitleCodeAndGroupPrescriptionCode() {
         List<String> befattningsKoder = Arrays.asList("204010", "203020", "203090", "204090");
         List<String> gruppforskrivarKoder = Arrays.asList("9300005", "9100009");
 
         Role[][] roleMatrix = new Role[4][2];
 
-        // when
         for (int i = 0; i < befattningsKoder.size(); i++) {
             for (int j = 0; j < gruppforskrivarKoder.size(); j++) {
                 RoleResolveResult roleResult = authoritiesResolver
@@ -153,8 +127,6 @@ public class AuthoritiesResolverTest {
                 roleMatrix[i][j] = roleResult != null ? roleResult.getRole() : null;
             }
         }
-
-        // then
 
         /* Expected matrix:
             [0,0] null
@@ -185,30 +157,46 @@ public class AuthoritiesResolverTest {
     }
 
     @Test
-    public void lookupUserRoleByTitleCodeAndGroupPrescriptionCodeNoMatchReturnsNull() {
-        // Act
+    void lookupUserRoleByTitleCodeAndGroupPrescriptionCodeNoMatchReturnsNull() {
         RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(new ArrayList<>(),
             new ArrayList<>());
 
-        // Assert
         assertNull(roleResolveResult);
 
     }
 
     @Test
-    public void lookupUserRoleByTitleCodeAndGroupPrescriptionCodeCombination() {
-        // Arrange
+    void lookupUserRoleByTitleCodeAndGroupPrescriptionCodeCombination() {
         List<String> befattningsKoder = Arrays.asList("204010", "203090", "204090");
         List<String> gruppforskrivarKoder = Arrays.asList("9300005", "9100009");
 
-        // Act
         RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningsKoder,
             gruppforskrivarKoder);
 
-        // Assert
-        assertEquals(AuthoritiesConstants.ROLE_LAKARE, roleResolveResult.getRole().getName());
+        // Assert        assertEquals(AuthoritiesConstants.ROLE_LAKARE, roleResolveResult.getRole().getName());
         assertEquals("Läkare-203090-9300005", roleResolveResult.getRoleTypeName());
 
+    }
+
+    @Test
+    void lookupUserRoleNurseWhenTitleIsNurse() {
+        List<String> titles = List.of("Sjuksköterska");
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleNurse(titles, DEFAULT_ROLE);
+        assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_SJUKSKOTERSKA));
+    }
+
+    @Test
+    void lookupUserRoleNurseWhenTitleIsNurseAndDefaultRoleIsRehabkoordinator() {
+        List<String> titles = List.of("Sjuksköterska");
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleNurse(titles, AuthoritiesConstants.ROLE_KOORDINATOR);
+        assertNull(roleResolveResult);
+    }
+
+    @Test
+    void lookupUserRoleNurseWhenMultipleTitlesAndOneIsNurse() {
+        List<String> titles = List.of("Vårdadministratör", "Sjuksköterska");
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleNurse(titles, DEFAULT_ROLE);
+        assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_SJUKSKOTERSKA));
     }
 
     // FIX THIS or MOVE TO REHAB!!!
@@ -225,7 +213,7 @@ public class AuthoritiesResolverTest {
     //    }
 
     @Test
-    public void testGetFeatures() {
+    void testGetFeatures() {
         Map<String, Feature> features = authoritiesResolver.getFeatures(new ArrayList<>());
 
         // Sanity check for features which should always be active by default
@@ -254,14 +242,14 @@ public class AuthoritiesResolverTest {
     }
 
     @Test
-    public void testGetFeaturesAdditiveFeatures() {
+    void testGetFeaturesAdditiveFeatures() {
         Map<String, Feature> features = authoritiesResolver.getFeatures(List.of("additive"));
         assertTrue(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
         assertEquals(Arrays.asList("fk7263", "lisjp"), features.get(AuthoritiesConstants.FEATURE_SRS).getIntygstyper());
     }
 
     @Test
-    public void testGetFeaturesSubtractingFeatures() {
+    void testGetFeaturesSubtractingFeatures() {
         Map<String, Feature> features = authoritiesResolver.getFeatures(List.of("subtractive"));
         assertFalse(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
         assertFalse(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getGlobal());
@@ -269,7 +257,7 @@ public class AuthoritiesResolverTest {
     }
 
     @Test
-    public void testGetFeaturesBoth() {
+    void testGetFeaturesBoth() {
         Map<String, Feature> features = authoritiesResolver.getFeatures(List.of("both"));
         assertTrue(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
         assertFalse(features.get(AuthoritiesConstants.FEATURE_SIGNERA_SKICKA_DIREKT).getGlobal());
@@ -277,7 +265,7 @@ public class AuthoritiesResolverTest {
     }
 
     @Test
-    public void testGetFeaturesBoth2() {
+    void testGetFeaturesBoth2() {
         Map<String, Feature> features = authoritiesResolver.getFeatures(List.of("both2"));
         assertFalse(features.get(AuthoritiesConstants.FEATURE_SRS).getGlobal());
         List<String> expected = Arrays.asList("lisjp", "db", "doi");

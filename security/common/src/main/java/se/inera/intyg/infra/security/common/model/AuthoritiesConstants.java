@@ -25,6 +25,7 @@ public final class AuthoritiesConstants {
     // http://www.inera.se/TJANSTER--PROJEKT/HSA/Dokument/HSA-kodverk/
     public static final String TITLE_LAKARE = "Läkare";
     public static final String TITLE_TANDLAKARE = "Tandläkare";
+    public static final String TITLE_SJUKSKOTERSKA = "Sjuksköterska";
 
     // Title codes, a.k.a 'befattningskod', has a coding system governing these codes. See:
     // HSA Innehåll Befattning
@@ -37,6 +38,8 @@ public final class AuthoritiesConstants {
     public static final String ROLE_PRIVATLAKARE = "PRIVATLAKARE";
     public static final String ROLE_TANDLAKARE = "TANDLAKARE";
     public static final String ROLE_ADMIN = "VARDADMINISTRATOR";
+    public static final String ROLE_SJUKSKOTERSKA = "SJUKSKOTERSKA";
+    public static final String ROLE_KOORDINATOR = "REHABKOORDINATOR";
 
     // Known privileges (these privileges are copied from authorities.yaml which is the master authorities
     // configuration)
