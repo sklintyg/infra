@@ -441,6 +441,10 @@ public class IntygUser implements UserDetails {
         return roles.containsKey(AuthoritiesConstants.ROLE_PRIVATLAKARE);
     }
 
+    public boolean isSjukskoterska() {
+        return roles.containsKey(AuthoritiesConstants.ROLE_SJUKSKOTERSKA);
+    }
+
     public boolean isUserTermsApprovedOrSubscriptionInUse() {
         return userTermsApprovedOrSubscriptionInUse;
     }
@@ -527,6 +531,7 @@ public class IntygUser implements UserDetails {
         }
         return (origin != null ? !origin.equals(intygUser.origin) : intygUser.origin != null);
     }
+
     @Override
     public int hashCode() {
         int result = (userTermsApprovedOrSubscriptionInUse ? 1 : 0);
