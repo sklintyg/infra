@@ -181,36 +181,38 @@ class AuthoritiesResolverTest {
     @Test
     void lookupUserRoleNurseWhenTitleIsNurse() {
         List<String> titles = List.of("Sjuksköterska");
-        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleNurse(titles, DEFAULT_ROLE);
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleNurseOrMidWife(titles, DEFAULT_ROLE);
         assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_SJUKSKOTERSKA));
+    }
+
+    @Test
+    void lookupUserRoleMidWifeWhenTitleIsMidWife() {
+        List<String> titles = List.of("Barnmorska");
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleNurseOrMidWife(titles, DEFAULT_ROLE);
+        assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_BARNMORSKA));
     }
 
     @Test
     void lookupUserRoleNurseWhenTitleIsNurseAndDefaultRoleIsRehabkoordinator() {
         List<String> titles = List.of("Sjuksköterska");
-        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleNurse(titles, AuthoritiesConstants.ROLE_KOORDINATOR);
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleNurseOrMidWife(titles,
+            AuthoritiesConstants.ROLE_KOORDINATOR);
         assertNull(roleResolveResult);
     }
 
     @Test
     void lookupUserRoleNurseWhenMultipleTitlesAndOneIsNurse() {
         List<String> titles = List.of("Vårdadministratör", "Sjuksköterska");
-        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleNurse(titles, DEFAULT_ROLE);
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleNurseOrMidWife(titles, DEFAULT_ROLE);
         assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_SJUKSKOTERSKA));
     }
 
-    // FIX THIS or MOVE TO REHAB!!!
-    //    @Test
-    //    public void testResolveRehabkoordinatorRole() {
-    //        // Arrange
-    //        BaseSakerhetstjanstAssertion sa = Mockito.mock(BaseSakerhetstjanstAssertion.class);
-    //
-    //        // Act
-    //        Role role = authoritiesResolver.lookupUserRole(sa, new ArrayList<>());
-    //
-    //        // Verify
-    //        assertEquals(AuthoritiesConstants.ROLE_KOORDINATOR, role.getName());
-    //    }
+    @Test
+    void lookupUserRoleMidWifeWhenMultipleTitlesAndOneIsNurse() {
+        List<String> titles = List.of("Barnmorska", "Sjuksköterska");
+        RoleResolveResult roleResolveResult = authoritiesResolver.lookupUserRoleNurseOrMidWife(titles, DEFAULT_ROLE);
+        assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_BARNMORSKA));
+    }
 
     @Test
     void testGetFeatures() {
