@@ -214,19 +214,6 @@ class AuthoritiesResolverTest {
         assertTrue(roleResolveResult.getRole().getName().equalsIgnoreCase(AuthoritiesConstants.ROLE_BARNMORSKA));
     }
 
-    // FIX THIS or MOVE TO REHAB!!!
-    //    @Test
-    //    public void testResolveRehabkoordinatorRole() {
-    //        // Arrange
-    //        BaseSakerhetstjanstAssertion sa = Mockito.mock(BaseSakerhetstjanstAssertion.class);
-    //
-    //        // Act
-    //        Role role = authoritiesResolver.lookupUserRole(sa, new ArrayList<>());
-    //
-    //        // Verify
-    //        assertEquals(AuthoritiesConstants.ROLE_KOORDINATOR, role.getName());
-    //    }
-
     @Test
     void testGetFeatures() {
         Map<String, Feature> features = authoritiesResolver.getFeatures(new ArrayList<>());
