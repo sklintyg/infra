@@ -207,7 +207,7 @@ public class CommonAuthoritiesResolver {
             return roleResolveResult;
         }
 
-        roleResolveResult = lookupUserRoleNurse(legitimeradeYrkesgrupper, defaultRole);
+        roleResolveResult = lookupUserRoleNurseOrMidWife(legitimeradeYrkesgrupper, defaultRole);
         if (roleResolveResult != null) {
             return roleResolveResult;
         }
@@ -217,7 +217,11 @@ public class CommonAuthoritiesResolver {
         return new RoleResolveResult(role, defaultRole);
     }
 
-    RoleResolveResult lookupUserRoleNurse(List<String> legitimeradeYrkesgrupper, String defaultRole) {
+    RoleResolveResult lookupUserRoleNurseOrMidWife(List<String> legitimeradeYrkesgrupper, String defaultRole) {
+        if (legitimeradeYrkesgrupper.contains(AuthoritiesConstants.TITLE_BARNMORSKA) && !defaultRole.equals(
+            AuthoritiesConstants.ROLE_KOORDINATOR)) {
+            return new RoleResolveResult(fnRole.apply(AuthoritiesConstants.ROLE_BARNMORSKA), AuthoritiesConstants.TITLE_BARNMORSKA);
+        }
         if (legitimeradeYrkesgrupper.contains(AuthoritiesConstants.TITLE_SJUKSKOTERSKA) && !defaultRole.equals(
             AuthoritiesConstants.ROLE_KOORDINATOR)) {
             return new RoleResolveResult(fnRole.apply(AuthoritiesConstants.ROLE_SJUKSKOTERSKA), AuthoritiesConstants.TITLE_SJUKSKOTERSKA);
