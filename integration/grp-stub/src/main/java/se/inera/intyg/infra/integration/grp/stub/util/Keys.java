@@ -23,8 +23,8 @@ import java.security.interfaces.RSAPrivateKey;
 
 public class Keys {
 
-    private RSAPrivateKey privateKey;
-    private X509Certificate x509Certificate;
+    private final RSAPrivateKey privateKey;
+    private final X509Certificate x509Certificate;
 
     public Keys(RSAPrivateKey privateKey, X509Certificate x509Certificate) {
         this.privateKey = privateKey;

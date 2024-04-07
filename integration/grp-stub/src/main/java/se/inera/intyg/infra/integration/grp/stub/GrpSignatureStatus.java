@@ -19,40 +19,24 @@
 package se.inera.intyg.infra.integration.grp.stub;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.funktionstjanster.grp.v1.ProgressStatusType;
+import com.mobilityguard.grp.service.v2.ProgressStatusType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author Magnus Ekstrand on 2017-05-18.
  */
+@Setter
+@Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GrpSignatureStatus {
 
     private String orderRef;
-
     private ProgressStatusType status;
-
-    public GrpSignatureStatus() {
-        super();
-    }
 
     public GrpSignatureStatus(String orderRef, ProgressStatusType status) {
         this.orderRef = orderRef;
         this.status = status;
     }
 
-    public String getOrderRef() {
-        return orderRef;
-    }
-
-    public void setOrderRef(String orderRef) {
-        this.orderRef = orderRef;
-    }
-
-    public ProgressStatusType getStatus() {
-        return status;
-    }
-
-    public void setStatus(ProgressStatusType status) {
-        this.status = status;
-    }
 }
