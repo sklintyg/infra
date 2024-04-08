@@ -17,7 +17,7 @@ ext {
     rivtaHsaEmployeeSchemasVersion  = "1.0.RC4.6"
     // Above three schema versions can be removed when old HSA package is retired.
 
-    funktionstjansterGrpSchemasVersion = "1.0.6.2"
+    funktionstjansterGrpSchemasVersion = "2.0.0.1"
     intygClinicalprocessSchemasVersion = "1.0.24.1"
     rivtaGetPersonsPersonSchemasVersion = "3.1.1.1"
     rivtaStoreLogSchemasVersion = "2.0.1.1"
