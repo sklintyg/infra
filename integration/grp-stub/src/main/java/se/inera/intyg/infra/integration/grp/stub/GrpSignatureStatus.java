@@ -20,23 +20,17 @@ package se.inera.intyg.infra.integration.grp.stub;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mobilityguard.grp.service.v2.ProgressStatusType;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- * @author Magnus Ekstrand on 2017-05-18.
- */
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GrpSignatureStatus {
 
     private String orderRef;
     private ProgressStatusType status;
-
-    public GrpSignatureStatus(String orderRef, ProgressStatusType status) {
-        this.orderRef = orderRef;
-        this.status = status;
-    }
 
 }

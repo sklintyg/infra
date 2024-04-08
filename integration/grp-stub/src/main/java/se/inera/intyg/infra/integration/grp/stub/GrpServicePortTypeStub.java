@@ -32,6 +32,7 @@ import com.mobilityguard.grp.service.v2.ProgressStatusType;
 import com.mobilityguard.grp.service.v2.Property;
 import com.mobilityguard.grp.service.v2.StatusRequestType;
 import com.mobilityguard.grp.service.v2.StatusResponseType;
+import com.mobilityguard.grp.service.v2.ValidationInfoType;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -114,8 +115,10 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
 
         // Sign using a make-believe private key if complete.
         if (response.getProgressStatus() == ProgressStatusType.COMPLETE) {
-            String signature = createSignature(orderRef.getBytes(StandardCharsets.UTF_8));
-            response.getValidationInfo().setSignature(signature);
+            final var signature = createSignature(orderRef.getBytes(StandardCharsets.UTF_8));
+            final var validationInfo = new ValidationInfoType();
+            validationInfo.setSignature(signature);
+            response.setValidationInfo(validationInfo);
         }
 
         Property p = new Property();
