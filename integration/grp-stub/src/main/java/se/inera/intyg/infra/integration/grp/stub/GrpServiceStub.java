@@ -20,18 +20,17 @@ package se.inera.intyg.infra.integration.grp.stub;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+import com.mobilityguard.grp.service.v2.FaultStatusType;
+import com.mobilityguard.grp.service.v2.GrpFaultType;
+import com.mobilityguard.grp.service.v2.ProgressStatusType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import se.funktionstjanster.grp.v1.FaultStatusType;
-import se.funktionstjanster.grp.v1.GrpFault;
-import se.funktionstjanster.grp.v1.GrpFaultType;
-import se.funktionstjanster.grp.v1.ProgressStatusType;
+import se.funktionstjanster.grp.v2.GrpException;
 
 /**
  * @author Magnus Ekstrand on 2017-05-16.
@@ -42,19 +41,19 @@ public class GrpServiceStub {
 
     public static final int FOUR = 4;
     // transactionId => reason for failure, will be returned to WC on next collect
-    private Map<String, FaultStatusType> failedSignings = new ConcurrentHashMap<>();
+    private final Map<String, FaultStatusType> failedSignings = new ConcurrentHashMap<>();
 
     // orderRef => status
-    private Map<String, ProgressStatusType> signatureStatus = new ConcurrentHashMap<>();
+    private final Map<String, ProgressStatusType> signatureStatus = new ConcurrentHashMap<>();
 
     // txId => orderRef
-    private Map<String, String> orderRefMapping = new ConcurrentHashMap<>();
+    private final Map<String, String> orderRefMapping = new ConcurrentHashMap<>();
 
     // txId => personalNumber
-    private Map<String, String> personalNumberMapping = new ConcurrentHashMap<>();
+    private final Map<String, String> personalNumberMapping = new ConcurrentHashMap<>();
 
     // txId => created
-    private Map<String, LocalDateTime> orderRefCreatedMapping = new ConcurrentHashMap<>();
+    private final Map<String, LocalDateTime> orderRefCreatedMapping = new ConcurrentHashMap<>();
 
     public FaultStatusType getFailureReason(String transactionId) {
         return failedSignings.get(transactionId);
@@ -81,40 +80,40 @@ public class GrpServiceStub {
         return new GrpSignatureStatus(orderRef, status);
     }
 
-    public synchronized String getOrderRef(String transactionId) throws GrpFault {
+    public synchronized String getOrderRef(String transactionId) throws GrpException {
         String orderRef = orderRefMapping.get(transactionId);
         if (isBlank(orderRef)) {
             // If transaction doesn't exist, we've already removed it since it's old (or WC got things backwards)
             GrpFaultType faultType = new GrpFaultType();
             faultType.setFaultStatus(FaultStatusType.EXPIRED_TRANSACTION);
-            throw new GrpFault("No mapping between transactionId and orderRef was found, assuming timeout", faultType);
+            throw new GrpException("No mapping between transactionId and orderRef was found, assuming timeout", faultType);
         }
         return orderRef;
     }
 
-    public synchronized void putOrderRef(String transactionId, String orderRef) throws GrpFault {
+    public synchronized void putOrderRef(String transactionId, String orderRef) throws GrpException {
         if (transactionId == null || orderRef == null) {
-            throw new GrpFault("Arguments must have values");
+            throw new GrpException("Arguments must have values");
         }
         if (orderRefMapping.containsKey(transactionId)) {
-            throw new GrpFault("The transactionId key is already associated with a value.");
+            throw new GrpException("The transactionId key is already associated with a value.");
         }
         try {
             orderRefMapping.put(transactionId, orderRef);
             orderRefCreatedMapping.put(transactionId, LocalDateTime.now());
         } catch (Exception exception) {
-            throw new GrpFault(exception.getMessage());
+            throw new GrpException(exception.getMessage());
         }
     }
 
-    public synchronized boolean updateStatus(GrpSignatureStatus status) throws GrpFault {
+    public synchronized boolean updateStatus(GrpSignatureStatus status) throws GrpException {
         if (status == null) {
             return false;
         }
         return updateStatus(status.getOrderRef(), status.getStatus());
     }
 
-    public synchronized boolean updateStatus(String orderRef, ProgressStatusType status) throws GrpFault {
+    public synchronized boolean updateStatus(String orderRef, ProgressStatusType status) throws GrpException {
         if (orderRef == null || status == null) {
             return false;
         }
@@ -122,13 +121,13 @@ public class GrpServiceStub {
         try {
             signatureStatus.put(orderRef, status);
         } catch (Exception exception) {
-            throw new GrpFault(exception.getMessage());
+            throw new GrpException(exception.getMessage());
         }
 
         return true;
     }
 
-    public synchronized void fail(String transactionId, FaultStatusType failReason) throws GrpFault {
+    public synchronized void fail(String transactionId, FaultStatusType failReason) {
         // Mark transaction as failed
         failedSignings.put(transactionId, failReason);
     }
@@ -149,17 +148,16 @@ public class GrpServiceStub {
         return personalNumberMapping.get(transactionId);
     }
 
-    // Ugliest code ever.
     private void prune() {
-        Iterator<Map.Entry<String, String>> i = orderRefMapping.entrySet().iterator();
+        final var i = orderRefMapping.entrySet().iterator();
+
         while (i.hasNext()) {
-            Map.Entry<String, String> entry = i.next();
-            String transactionId = entry.getKey();
-            String orderRef = entry.getValue();
-            // Find ongoing tx
-            LocalDateTime created = orderRefCreatedMapping.get(entry.getKey());
-            if (LocalDateTime.now().compareTo(created.plusMinutes(FOUR)) > 0) {
-                // Remove!!
+            final var entry = i.next();
+            final var transactionId = entry.getKey();
+            final var orderRef = entry.getValue();
+            final var created = orderRefCreatedMapping.get(entry.getKey());
+
+            if (LocalDateTime.now().isAfter(created.plusMinutes(FOUR))) {
                 orderRefCreatedMapping.remove(entry.getKey());
                 signatureStatus.remove(orderRef);
                 personalNumberMapping.remove(transactionId);
@@ -169,4 +167,3 @@ public class GrpServiceStub {
         }
     }
 }
-

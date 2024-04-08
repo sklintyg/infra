@@ -21,7 +21,18 @@ package se.inera.intyg.infra.integration.grp.stub;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import com.google.common.base.Joiner;
-import java.nio.charset.Charset;
+import com.mobilityguard.grp.service.v2.CancelRequestType;
+import com.mobilityguard.grp.service.v2.CancelResponseType;
+import com.mobilityguard.grp.service.v2.CollectRequestType;
+import com.mobilityguard.grp.service.v2.CollectResponseType;
+import com.mobilityguard.grp.service.v2.DisplayNameRequestType;
+import com.mobilityguard.grp.service.v2.DisplayNameResponseType;
+import com.mobilityguard.grp.service.v2.GrpFaultType;
+import com.mobilityguard.grp.service.v2.ProgressStatusType;
+import com.mobilityguard.grp.service.v2.Property;
+import com.mobilityguard.grp.service.v2.StatusRequestType;
+import com.mobilityguard.grp.service.v2.StatusResponseType;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
@@ -33,17 +44,11 @@ import java.util.List;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import se.funktionstjanster.grp.v1.AuthenticateRequestType;
-import se.funktionstjanster.grp.v1.CollectRequestType;
-import se.funktionstjanster.grp.v1.CollectResponseType;
-import se.funktionstjanster.grp.v1.GrpFault;
-import se.funktionstjanster.grp.v1.GrpFaultType;
-import se.funktionstjanster.grp.v1.GrpServicePortType;
-import se.funktionstjanster.grp.v1.OrderResponseType;
-import se.funktionstjanster.grp.v1.ProgressStatusType;
-import se.funktionstjanster.grp.v1.Property;
-import se.funktionstjanster.grp.v1.SignRequestType;
-import se.funktionstjanster.grp.v1.SignatureFileRequestType;
+import se.funktionstjanster.grp.v2.AuthenticateRequestTypeV23;
+import se.funktionstjanster.grp.v2.GrpException;
+import se.funktionstjanster.grp.v2.GrpServicePortType;
+import se.funktionstjanster.grp.v2.OrderResponseTypeV23;
+import se.funktionstjanster.grp.v2.SignRequestTypeV23;
 import se.inera.intyg.infra.integration.grp.stub.util.Keys;
 import se.inera.intyg.infra.integration.grp.stub.util.StubSignUtil;
 
@@ -52,10 +57,9 @@ import se.inera.intyg.infra.integration.grp.stub.util.StubSignUtil;
  */
 public class GrpServicePortTypeStub implements GrpServicePortType {
 
-    private static final String PERSON_ID = "19121212-1212";
-
     @Autowired
     private GrpServiceStub serviceStub;
+
     private RSAPrivateKey privKey;
 
     @PostConstruct
@@ -65,11 +69,11 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
     }
 
     @Override
-    public OrderResponseType authenticate(AuthenticateRequestType authenticateRequestType) throws GrpFault {
+    public OrderResponseTypeV23 authenticate(AuthenticateRequestTypeV23 authenticateRequestType) throws GrpException {
         validate(authenticateRequestType);
 
         // Build the response
-        OrderResponseType response = new OrderResponseType();
+        OrderResponseTypeV23 response = new OrderResponseTypeV23();
 
         String transactionId = authenticateRequestType.getTransactionId();
         if (isBlank(transactionId)) {
@@ -83,13 +87,13 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
         // Update GRP service stub
         serviceStub.putOrderRef(response.getTransactionId(), response.getOrderRef());
         serviceStub.updateStatus(response.getOrderRef(), ProgressStatusType.STARTED);
-        serviceStub.putPersonalNumber(response.getTransactionId(), authenticateRequestType.getPersonalNumber());
+        serviceStub.putPersonalNumber(response.getTransactionId(), authenticateRequestType.getSubjectIdentifier());
 
         return response;
     }
 
     @Override
-    public CollectResponseType collect(CollectRequestType collectRequestType) throws GrpFault {
+    public CollectResponseType collect(CollectRequestType collectRequestType) throws GrpException {
         validate(collectRequestType);
 
         // Build the response
@@ -101,7 +105,7 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
         } else if (serviceStub.isMarkedAsFailed(transactionId)) {
             GrpFaultType faultType = new GrpFaultType();
             faultType.setFaultStatus(serviceStub.getFailureReason(transactionId));
-            throw new GrpFault(("Marked as failed due to" + faultType + "thru stub api"), faultType);
+            throw new GrpException(("Marked as failed due to" + faultType + "thru stub api"), faultType);
         }
         response.setTransactionId(transactionId);
 
@@ -110,8 +114,8 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
 
         // Sign using a make-believe private key if complete.
         if (response.getProgressStatus() == ProgressStatusType.COMPLETE) {
-            String signature = createSignature(orderRef.getBytes(Charset.forName("UTF-8")));
-            response.setSignature(signature);
+            String signature = createSignature(orderRef.getBytes(StandardCharsets.UTF_8));
+            response.getValidationInfo().setSignature(signature);
         }
 
         Property p = new Property();
@@ -120,6 +124,26 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
         response.getAttributes().add(p);
 
         return response;
+    }
+
+    @Override
+    public StatusResponseType status(StatusRequestType statusRequestType) throws GrpException {
+        throw new GrpException("Not implemented");
+    }
+
+    @Override
+    public DisplayNameResponseType displayName(DisplayNameRequestType displayNameRequestType) throws GrpException {
+        throw new GrpException("Not implemented");
+    }
+
+    @Override
+    public OrderResponseTypeV23 sign(SignRequestTypeV23 signRequestTypeV23) throws GrpException {
+        throw new GrpException("Not implemented");
+    }
+
+    @Override
+    public CancelResponseType cancel(CancelRequestType cancelRequestType) throws GrpException {
+        throw new GrpException("Not implemented");
     }
 
     private String createSignature(byte[] digest) {
@@ -134,17 +158,7 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
         }
     }
 
-    @Override
-    public OrderResponseType sign(SignRequestType signRequestType) throws GrpFault {
-        throw new GrpFault("Not implemented");
-    }
-
-    @Override
-    public OrderResponseType fileSign(SignatureFileRequestType signatureFileRequestType) throws GrpFault {
-        throw new GrpFault("Not implemented");
-    }
-
-    private void validate(AuthenticateRequestType request) throws GrpFault {
+    private void validate(AuthenticateRequestTypeV23 request) throws GrpException {
         List<String> messages = new ArrayList<>();
 
         if (request == null) {
@@ -158,12 +172,12 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
             }
         }
 
-        if (messages.size() > 0) {
-            throw new GrpFault(Joiner.on(", ").join(messages));
+        if (!messages.isEmpty()) {
+            throw new GrpException(Joiner.on(", ").join(messages));
         }
     }
 
-    private void validate(CollectRequestType request) throws GrpFault {
+    private void validate(CollectRequestType request) throws GrpException {
         List<String> messages = new ArrayList<>();
 
         if (request == null) {
@@ -180,8 +194,8 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
             }
         }
 
-        if (messages.size() > 0) {
-            throw new GrpFault(Joiner.on(", ").join(messages));
+        if (!messages.isEmpty()) {
+            throw new GrpException(Joiner.on(", ").join(messages));
         }
     }
 

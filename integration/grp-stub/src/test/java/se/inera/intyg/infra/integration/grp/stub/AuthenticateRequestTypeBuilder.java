@@ -18,20 +18,16 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
+import com.mobilityguard.grp.service.v2.EndUserInfoType;
+import com.mobilityguard.grp.service.v2.RequirementAlternativesType;
 import java.util.List;
-import se.funktionstjanster.grp.v1.AuthenticateRequestType;
-import se.funktionstjanster.grp.v1.EndUserInfoType;
-import se.funktionstjanster.grp.v1.RequirementAlternativesType;
+import se.funktionstjanster.grp.v2.AuthenticateRequestTypeV23;
 
-/**
- * @author Magnus Ekstrand on 2017-05-17.
- */
-//Builder Class
 public class AuthenticateRequestTypeBuilder {
 
     // required parameters
-    private String policy;
-    private String provider;
+    private final String policy;
+    private final String provider;
 
     // optional parameters
     private String displayName;
@@ -70,15 +66,14 @@ public class AuthenticateRequestTypeBuilder {
         return this;
     }
 
-    public AuthenticateRequestType build() {
-        AuthenticateRequestType art = new AuthenticateRequestType();
+    public AuthenticateRequestTypeV23 build() {
+        AuthenticateRequestTypeV23 art = new AuthenticateRequestTypeV23();
         art.setPolicy(this.policy);
         art.setProvider(this.provider);
-        art.setDisplayName(this.displayName);
+        art.setRpDisplayName(this.displayName);
         art.setTransactionId(this.transactionId);
-        art.setPersonalNumber(this.personalNumber);
+        art.setSubjectIdentifier(this.personalNumber);
         art.setRequirementAlternatives(this.requirementAlternatives);
-
         return art;
     }
 

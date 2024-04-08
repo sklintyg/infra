@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  ~ Copyright (C) 2017 Inera AB (http://www.inera.se)
+  ~ Copyright (C) 2024 Inera AB (http://www.inera.se)
   ~
   ~ This file is part of sklintyg (https://github.com/sklintyg).
   ~
@@ -22,6 +22,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:jaxws="http://cxf.apache.org/jaxws"
   xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+  xmlns:soap="http://cxf.apache.org/bindings/soap"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
                            http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd"
@@ -30,7 +31,11 @@
   <bean id="grpStubRestApi" class="se.inera.intyg.infra.integration.grp.stub.GrpStubRestApi"/>
   <bean id="grpServiceStub" class="se.inera.intyg.infra.integration.grp.stub.GrpServiceStub"/>
 
-  <jaxws:endpoint address="/grp" implementor="se.inera.intyg.infra.integration.grp.stub.GrpServicePortTypeStub"/>
+  <jaxws:endpoint address="/grp" implementor="se.inera.intyg.infra.integration.grp.stub.GrpServicePortTypeStub">
+    <jaxws:binding>
+      <soap:soapBinding version="1.2"/>
+    </jaxws:binding>
+  </jaxws:endpoint>
 
   <jaxrs:server address="/grp-api">
     <jaxrs:serviceBeans>
