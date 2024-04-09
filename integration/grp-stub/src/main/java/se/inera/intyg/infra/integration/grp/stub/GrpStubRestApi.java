@@ -35,9 +35,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.funktionstjanster.grp.v2.GrpException;
 
-/**
- * @author Magnus Ekstrand on 2017-05-16.
- */
 public class GrpStubRestApi {
 
     private static final Logger LOG = LoggerFactory.getLogger(GrpStubRestApi.class);
