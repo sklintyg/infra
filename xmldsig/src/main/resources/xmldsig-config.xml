@@ -29,4 +29,8 @@
   <beans profile="!prod">
     <bean id="fakeSignatureService" class="se.inera.intyg.infra.xmldsig.service.FakeSignatureServiceImpl" />
   </beans>
+
+  <beans profile="prod">
+    <bean id="fakeSignatureService" class="se.inera.intyg.infra.xmldsig.service.FakeSignatureServiceBlocked" />
+  </beans>
 </beans>
