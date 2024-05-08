@@ -81,7 +81,11 @@ public class AuthoritiesHelper {
     }
 
     public boolean isFeatureActive(String feature) {
-        return ofNullable(authoritiesResolver.getFeatures(Collections.emptyList()).get(feature))
+        return isFeatureActive(feature, Collections.emptyList());
+    }
+
+    public boolean isFeatureActive(String feature, List<String> hsaIds) {
+        return ofNullable(authoritiesResolver.getFeatures(hsaIds).get(feature))
             .filter(Feature::getGlobal)
             .isPresent();
     }
