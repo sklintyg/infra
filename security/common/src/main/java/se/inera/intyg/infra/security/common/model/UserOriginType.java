@@ -24,6 +24,5 @@ package se.inera.intyg.infra.security.common.model;
 public enum UserOriginType {
 
     DJUPINTEGRATION,
-    UTHOPP,
     NORMAL
 }
