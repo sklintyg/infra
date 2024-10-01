@@ -18,11 +18,12 @@
  */
 package se.inera.intyg.infra.monitoring.logging;
 
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
 import java.io.ByteArrayOutputStream;
@@ -32,11 +33,11 @@ import java.io.PrintStream;
 import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -45,76 +46,57 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.common.model.Role;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {MonitoringConfiguration.class})
-public class LogbackTest {
+class LogbackTest {
 
     static Logger LOG = LoggerFactory.getLogger(LogbackTest.class);
 
     @Autowired
     LogMDCHelper logMDCHelper;
 
-    Appender mockedAppender = Mockito.mock(Appender.class);
-
-    public LogbackTest() {
-        ((ch.qos.logback.classic.Logger) LOG).addAppender(mockedAppender);
-    }
-
     @Autowired
     LogMDCServletFilter logMDCServletFilter;
 
-    // returns stdout as a string (default encoding)
-    String captureStdout(final Runnable runnable) {
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        final PrintStream old = System.out;
-        System.setOut(new PrintStream(out));
-        try {
-            runnable.run();
-        } finally {
-            System.out.flush();
-            System.setOut(old);
-        }
-        return new String(out.toByteArray());
+    private final Appender<ILoggingEvent> appender = Mockito.mock(Appender.class);
+
+    public LogbackTest() {
+        ((ch.qos.logback.classic.Logger) LOG).addAppender(appender);
     }
 
     @Test
-    public void logEventTest() {
-
+    void logEventTest() {
+        final var captureLogMessage = ArgumentCaptor.forClass(ILoggingEvent.class);
         LOG.error("Hello");
-        ArgumentCaptor<Appender> ac = ArgumentCaptor.forClass(Appender.class);
+        verify(appender).doAppend(captureLogMessage.capture());
 
-        Mockito.verify(mockedAppender).doAppend(ac.capture());
-
-        assertEquals(1, ac.getAllValues().size());
-
-        LoggingEvent le = (LoggingEvent) ac.getAllValues().get(0);
-
-        assertEquals("Hello", le.getMessage());
-        assertEquals("ERROR", le.getLevel().levelStr);
+        final var loggingEvent = (LoggingEvent) captureLogMessage.getAllValues().get(0);
+        assertEquals(1, captureLogMessage.getAllValues().size());
+        assertEquals("Hello", loggingEvent.getMessage());
+        assertEquals("ERROR", loggingEvent.getLevel().levelStr);
     }
 
     @Test
-    public void logContenContextTest() {
-        String out = captureStdout(() -> LOG.info("Hello"));
+    void logContentContextTest() {
+        final var captureLogMessage = ArgumentCaptor.forClass(ILoggingEvent.class);
+        final var out = captureStdout(() -> LOG.info("Hello"));
+        verify(appender).doAppend(captureLogMessage.capture());
 
-        ArgumentCaptor<Appender> ac = ArgumentCaptor.forClass(Appender.class);
-        Mockito.verify(mockedAppender).doAppend(ac.capture());
-        LoggingEvent le = (LoggingEvent) ac.getAllValues().get(0);
-
-        assertEquals("Process and console appender should be triggered (2 records)", 2, out.split(System.lineSeparator()).length);
+        LoggingEvent le = (LoggingEvent) captureLogMessage.getAllValues().get(0);
+        assertEquals(2, out.split(System.lineSeparator()).length, "Process and console appender should be triggered (2 records)");
         assertTrue(out.contains("[process,-,"));
         assertTrue(out.contains("[console,-,"));
         assertTrue(out.endsWith(": Hello" + System.lineSeparator()));
     }
 
     @Test
-    public void logExplicitTraceIdTest() {
+    void logExplicitTraceIdTest() {
         final String traceId = logMDCHelper.traceHeader();
         final String sessionInfo = "NO SESSION";
         Closeable trace = logMDCHelper.withSessionInfo(sessionInfo).withTraceId(traceId).openTrace();
@@ -127,7 +109,7 @@ public class LogbackTest {
     }
 
     @Test
-    public void logImplicitTraceIdTest() {
+    void logImplicitTraceIdTest() {
         logMDCHelper.run(() -> {
             String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Marker test"));
 
@@ -140,14 +122,14 @@ public class LogbackTest {
     }
 
     @Test
-    public void logMarkerTest() {
+    void logMarkerTest() {
         String out = captureStdout(() -> LOG.info(MarkerFilter.MONITORING, "Marker test"));
         assertTrue(out.contains("[monitoring,-,-,noUser]"));
-        assertEquals("Monitor appender only should be triggered (1 record)", 1, out.split(System.lineSeparator()).length);
+        assertEquals(1, out.split(System.lineSeparator()).length, "Monitor appender only should be triggered (1 record)");
     }
 
     @Test
-    public void logAuthenticatedPrincipalTest() throws IOException {
+    void logAuthenticatedPrincipalTest() throws IOException {
         Authentication authentication = Mockito.mock(Authentication.class);
         IntygUser intygUser = Mockito.mock(IntygUser.class);
         when(intygUser.getHsaId()).thenReturn("hsaId");
@@ -175,6 +157,20 @@ public class LogbackTest {
         assertTrue(out.contains("hsaId,sevId,origin,role,vgId]"));
         assertTrue(out.contains(sessionCookie.getValue()));
         c.close();
+    }
+
+    // returns stdout as a string (default encoding)
+    private String captureStdout(final Runnable runnable) {
+        final var out = new ByteArrayOutputStream();
+        final var old = System.out;
+        System.setOut(new PrintStream(out));
+        try {
+            runnable.run();
+        } finally {
+            System.out.flush();
+            System.setOut(old);
+        }
+        return out.toString();
     }
 
 }

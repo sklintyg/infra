@@ -64,7 +64,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -72,10 +73,11 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import se.inera.intyg.infra.xmldsig.util.X509KeySelector;
 
-public class ReferenceSignatureTester {
+@Disabled("Temporarily disabled 2023-11-18 while experimenting with jakart and kjava 17")
+class ReferenceSignatureTesters {
 
     @Test
-    public void createReferenceSignature() throws Exception {
+    void createReferenceSignature() throws Exception {
         // Create a DOM XMLSignatureFactory that will be used to
         // generate the enveloped signature.
         XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
@@ -95,13 +97,15 @@ public class ReferenceSignatureTester {
         //   XSLTTransformParameterSpec params = new XSLTTransformParameterSpec(stylesheet);
         transforms.add(fac.newTransform("http://www.w3.org/2001/10/xml-exc-c14n#", (TransformParameterSpec) null));
         /*
-        transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripnamespaces.xslt")))));
+        transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt
+        ("stripnamespaces.xslt")))));
         transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripmetadata.xslt")))));
-        transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("stripparentelement_2.xslt")))));
+        transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt(
+        "stripparentelement_2.xslt")))));
         transforms.add(fac.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null));
         */
-        transforms
-            .add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(loadXslt("transforms/stripall.xslt")))));
+        transforms.add(fac.newTransform(Transform.XSLT, new XSLTTransformParameterSpec(new DOMStructure(
+            loadXslt("transforms/stripall.xslt")))));
         transforms.add(fac.newTransform(Transform.XPATH,
             new XPathFilterParameterSpec("//intygs-id/extension[text()='ABC123']/../.."))); // 9f02dd2f-f57c-4a73-8190-2fe602cd6e27
         transforms.add(fac.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null));

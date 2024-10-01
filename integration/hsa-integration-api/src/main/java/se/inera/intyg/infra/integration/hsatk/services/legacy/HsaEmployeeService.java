@@ -19,7 +19,7 @@
 package se.inera.intyg.infra.integration.hsatk.services.legacy;
 
 import java.util.List;
-import javax.xml.ws.WebServiceException;
+import jakarta.xml.ws.WebServiceException;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 
 public interface HsaEmployeeService {

@@ -20,13 +20,14 @@ package se.inera.intyg.infra.xmldsig.service;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.XMLSignature;
@@ -148,7 +149,7 @@ public class XMLDSigServiceImpl implements XMLDSigService {
         dbf.setNamespaceAware(true);
 
         try {
-            Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(xmlWithSignedIntyg, Charset.forName("UTF-8")));
+            Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(xmlWithSignedIntyg, StandardCharsets.UTF_8));
             NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
             if (nl.getLength() == 0) {
                 throw new Exception("Cannot find Signature element");

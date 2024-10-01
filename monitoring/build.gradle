@@ -10,12 +10,12 @@ dependencies {
     implementation "io.prometheus:simpleclient"
     implementation "io.prometheus:simpleclient_common"
     implementation "io.prometheus:simpleclient_hotspot"
-    implementation "io.prometheus:simpleclient_servlet"
+    implementation "io.prometheus:simpleclient_servlet_jakarta"
     implementation "org.aspectj:aspectjweaver"
 
-    compileOnly project(':hsa-integration-api')
-    compileOnly project(':hsatk-integration')
     compileOnly project(':security-common')
+    compileOnly project(':hsa-integration-api')
+    compileOnly "com.fasterxml.jackson.core:jackson-annotations"
     compileOnly "commons-io:commons-io:${commonsIoVersion}"
     compileOnly "jakarta.servlet:jakarta.servlet-api"
     compileOnly "org.springframework.security:spring-security-web"

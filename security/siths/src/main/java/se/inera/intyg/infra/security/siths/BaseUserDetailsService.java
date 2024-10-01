@@ -23,7 +23,7 @@ import static se.inera.intyg.infra.security.authorities.AuthoritiesResolverUtil.
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.opensaml.saml2.core.Assertion;
 import org.slf4j.Logger;

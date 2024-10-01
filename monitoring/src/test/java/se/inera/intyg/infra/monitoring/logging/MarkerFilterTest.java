@@ -18,9 +18,9 @@
  */
 package se.inera.intyg.infra.monitoring.logging;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -29,29 +29,27 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.spi.FilterReply;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {MonitoringConfiguration.class})
-public class MarkerFilterTest {
+class MarkerFilterTest {
 
     private MarkerFilter markerFilter;
-    private FilterReply accept = FilterReply.ACCEPT;
-    private FilterReply deny = FilterReply.DENY;
+    private final FilterReply accept = FilterReply.ACCEPT;
+    private final FilterReply deny = FilterReply.DENY;
     private static final String TEST_MARKER_MONITORING = "Monitoring";
     private static final String TEST_MARKER_VALIDATION = "Validation";
 
-    @Before
+    @BeforeEach
     public void setUp() {
         markerFilter = new MarkerFilter();
         markerFilter.setName("testfilter");
@@ -60,74 +58,74 @@ public class MarkerFilterTest {
     }
 
     @Test
-    public void testSingleMarkerAcceptsMatchingEvent() {
+    void testSingleMarkerAcceptsMatchingEvent() {
         markerFilter.setMarker(TEST_MARKER_MONITORING);
         markerFilter.start();
         Marker marker = MarkerFactory.getMarker(TEST_MARKER_MONITORING);
         ILoggingEvent matchingEvent = mock(ILoggingEvent.class);
         when(matchingEvent.getMarker()).thenReturn(marker);
-        Assert.assertEquals(accept, markerFilter.decide(matchingEvent));
+        assertEquals(accept, markerFilter.decide(matchingEvent));
     }
 
     @Test
-    public void testSingleMarkerRejectsNonMatchingEvent() {
+    void testSingleMarkerRejectsNonMatchingEvent() {
         markerFilter.setMarker(TEST_MARKER_MONITORING);
         markerFilter.start();
         Marker anotherMarker = MarkerFactory.getMarker(TEST_MARKER_VALIDATION);
         ILoggingEvent nonMatchingEvent = mock(ILoggingEvent.class);
         when(nonMatchingEvent.getMarker()).thenReturn(anotherMarker);
-        Assert.assertEquals(deny, markerFilter.decide(nonMatchingEvent));
+        assertEquals(deny, markerFilter.decide(nonMatchingEvent));
     }
 
     @Test
-    public void testMultipleMarkerWithOnlyOneMarkerAcceptsMatchingEvent() {
+    void testMultipleMarkerWithOnlyOneMarkerAcceptsMatchingEvent() {
         markerFilter.setMarkers(TEST_MARKER_MONITORING);
         markerFilter.start();
         Marker marker = MarkerFactory.getMarker(TEST_MARKER_MONITORING);
         ILoggingEvent matchingEvent = mock(ILoggingEvent.class);
         when(matchingEvent.getMarker()).thenReturn(marker);
-        Assert.assertEquals(accept, markerFilter.decide(matchingEvent));
+        assertEquals(accept, markerFilter.decide(matchingEvent));
     }
 
     @Test
-    public void testMultipleMarkerAcceptsMatchingEvents() {
+    void testMultipleMarkerAcceptsMatchingEvents() {
         markerFilter.setMarkers(" Monitoring, Validation ");
         markerFilter.start();
         Marker marker1 = MarkerFactory.getMarker(TEST_MARKER_MONITORING);
         ILoggingEvent matchingEvent1 = mock(ILoggingEvent.class);
         when(matchingEvent1.getMarker()).thenReturn(marker1);
-        Assert.assertEquals(accept, markerFilter.decide(matchingEvent1));
+        assertEquals(accept, markerFilter.decide(matchingEvent1));
         Marker marker2 = MarkerFactory.getMarker(TEST_MARKER_VALIDATION);
         ILoggingEvent matchingEvent2 = mock(ILoggingEvent.class);
         when(matchingEvent2.getMarker()).thenReturn(marker2);
-        Assert.assertEquals(accept, markerFilter.decide(matchingEvent2));
+        assertEquals(accept, markerFilter.decide(matchingEvent2));
     }
 
     @Test
-    public void testMultipleMarkerRejectsNonMatchingEvent() {
+    void testMultipleMarkerRejectsNonMatchingEvent() {
         markerFilter.setMarkers(" Monitoring, Validation ");
         markerFilter.start();
         Marker anotherMarker = MarkerFactory.getMarker("anotherMarkerName");
         ILoggingEvent nonMatchingEvent = mock(ILoggingEvent.class);
         when(nonMatchingEvent.getMarker()).thenReturn(anotherMarker);
-        Assert.assertEquals(deny, markerFilter.decide(nonMatchingEvent));
+        assertEquals(deny, markerFilter.decide(nonMatchingEvent));
     }
 
     @Test
-    public void testStartWithoutMarker() {
+    void testStartWithoutMarker() {
         markerFilter.start();
         assertFalse(markerFilter.isStarted());
     }
 
     @Test
-    public void testStartWithMarker() {
+    void testStartWithMarker() {
         markerFilter.setMarker(TEST_MARKER_MONITORING);
         markerFilter.start();
         assertTrue(markerFilter.isStarted());
     }
 
     @Test
-    public void testDecide() {
+    void testDecide() {
         MarkerFilter markerFilter = new MarkerFilter();
         markerFilter.setMarker(TEST_MARKER_MONITORING);
         markerFilter.start();
@@ -139,7 +137,7 @@ public class MarkerFilterTest {
     }
 
     @Test
-    public void testDecideWithoutStarted() {
+    void testDecideWithoutStarted() {
         markerFilter.setMarkers("Monitoring,Validation");
         Logger logbackLogger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         LoggingEvent event = new LoggingEvent("fqcn", logbackLogger, Level.DEBUG, "a message", null, null);
@@ -149,38 +147,38 @@ public class MarkerFilterTest {
     }
 
     @Test
-    public void testDecideMismatchWithNonMatchingMarker() {
+    void testDecideMismatchWithNonMatchingMarker() {
         markerFilter.setMarker(TEST_MARKER_MONITORING);
         markerFilter.start();
         Logger logbackLogger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         LoggingEvent event = new LoggingEvent("fqcn", logbackLogger, Level.DEBUG, "a message", null, null);
-        event.setMarker(MarkerFactory.getMarker("unknownmarker"));
+        event.addMarker(MarkerFactory.getMarker("unknownmarker"));
 
         final FilterReply reply = markerFilter.decide(event);
         assertEquals(FilterReply.DENY, reply);
     }
 
     @Test
-    public void testDecideWithMatchingMarker() {
+    void testDecideWithMatchingMarker() {
         markerFilter.setMarker(TEST_MARKER_MONITORING);
         markerFilter.start();
         Logger logbackLogger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         LoggingEvent event = new LoggingEvent("fqcn", logbackLogger, Level.DEBUG, "a message", null, null);
-        event.setMarker(MarkerFactory.getMarker(TEST_MARKER_MONITORING));
+        event.addMarker(MarkerFactory.getMarker(TEST_MARKER_MONITORING));
 
         final FilterReply reply = markerFilter.decide(event);
         assertEquals(FilterReply.ACCEPT, reply);
     }
 
     @Test
-    public void single_marker() {
+    void single_marker() {
         markerFilter.setMarker(TEST_MARKER_MONITORING);
 
         assertTrue(markerFilter.markersToMatch.contains(MarkerFilter.MONITORING));
     }
 
     @Test
-    public void multiple_markers() {
+    void multiple_markers() {
         markerFilter.setMarkers("Monitoring, Validation");
 
         assertEquals(2, markerFilter.markersToMatch.size());
@@ -189,9 +187,9 @@ public class MarkerFilterTest {
     }
 
     @Test
-    public void event_accept() {
-        ILoggingEvent event = Mockito.mock(ILoggingEvent.class);
-        Mockito.when(event.getMarker()).thenReturn(MarkerFilter.MONITORING);
+    void event_accept() {
+        ILoggingEvent event = mock(ILoggingEvent.class);
+        when(event.getMarker()).thenReturn(MarkerFilter.MONITORING);
         markerFilter.setMarkers("Monitoring, Validation");
         markerFilter.start();
 
@@ -199,9 +197,9 @@ public class MarkerFilterTest {
     }
 
     @Test
-    public void event_deny() {
-        ILoggingEvent event = Mockito.mock(ILoggingEvent.class);
-        Mockito.when(event.getMarker()).thenReturn(MarkerFilter.VALIDATION);
+    void event_deny() {
+        ILoggingEvent event = mock(ILoggingEvent.class);
+        when(event.getMarker()).thenReturn(MarkerFilter.VALIDATION);
         markerFilter.setMarkers(TEST_MARKER_MONITORING);
         markerFilter.start();
 

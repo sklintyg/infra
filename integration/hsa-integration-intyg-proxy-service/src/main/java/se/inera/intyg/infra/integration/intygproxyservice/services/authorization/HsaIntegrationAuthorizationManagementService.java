@@ -23,7 +23,7 @@ import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApi
 
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.xml.ws.WebServiceException;
+import jakarta.xml.ws.WebServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;

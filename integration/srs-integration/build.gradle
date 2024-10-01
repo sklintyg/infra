@@ -1,6 +1,5 @@
 dependencies {
-  implementation project (":hsa-integration-api")
-  implementation project(':hsatk-integration')
+  implementation project(':hsa-integration-api')
   implementation project(':security-common')
 
   implementation "com.google.guava:guava:${guavaVersion}"
@@ -11,5 +10,6 @@ dependencies {
   implementation "se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:${srsSchemasVersion}"
   implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
 
+  compileOnly "com.fasterxml.jackson.core:jackson-annotations"
   testCompileOnly "com.fasterxml.jackson.core:jackson-annotations"
 }
