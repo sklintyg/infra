@@ -2,6 +2,9 @@ plugins {
     id "io.spring.dependency-management" version "1.1.6" apply false
     id 'test-report-aggregation'
     id 'idea'
+    id 'org.sonarqube' version '4.4.1.3373'
+    id "org.owasp.dependencycheck" version "10.0.4"
+    id 'jacoco'
 }
 
 ext {
@@ -15,7 +18,7 @@ ext {
 
     commonsIoVersion = "2.14.0"
     commonsCollectionsVersion = "4.4"
-    cxfVersion = "4.0.3"
+    cxfVersion = "4.0.5"
     cxfPluginVersion = "4.0.0"
     embeddedRedisVersion = "0.7.2"
     guavaVersion = "32.1.3-jre"
@@ -30,12 +33,17 @@ ext {
     xmlWsRtVersion = "4.0.2"
 
     springbootMavenBomVersion = "3.3.4"
+
+    nvdMirror = 'https://vulnz-nvd-mirror-devtest.intyg.nordicmedtest.se'
 }
 
 allprojects {
     apply plugin: "io.spring.dependency-management"
     apply plugin: 'maven-publish'
     apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: 'org.sonarqube'
+    apply plugin: 'org.owasp.dependencycheck'
 
     group = 'se.inera.intyg.infra'
     version = System.properties['buildVersion'] ?: '4.0.0-SNAPSHOT'
@@ -104,8 +112,73 @@ allprojects {
             }
         }
     }
+
+    jacocoTestReport {
+        dependsOn test
+
+        reports {
+            xml.required = true
+            html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+        }
+
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.collect {
+                fileTree(dir: it, exclude: [
+                        "**/testability/**",
+                        "**/integrationtest/**"
+                ])
+            }))
+        }
+    }
 }
 
 subprojects.collect {subproject -> subproject.name }.each { subprojectName ->
     dependencies { testReportAggregation project(":${subprojectName}") }
+}
+
+
+sonar {
+    properties {
+        property "sonar.projectKey", "intyg-infra"
+        property "sonar.projectName", "intyg-infra"
+        property "sonar.dependencyCheck.htmlReportPath", layout.buildDirectory.file("reports/dependency-check-report.html")
+        property "sonar.dependencyCheck.htmlReportPath", layout.buildDirectory.file("reports/dependency-check-report.json")
+    }
+}
+
+dependencyCheck {
+    formats = List.of("HTML", "JSON")
+    nvd {
+        datafeedUrl = "${nvdMirror}"
+    }
+}
+
+reporting {
+    dependencies {
+        testReportAggregation project(':common-redis-cache-core')
+        testReportAggregation project(':dynamiclink')
+        testReportAggregation project(':grp-stub')
+        testReportAggregation project(':ia-integration')
+        testReportAggregation project(':pu-integration')
+        testReportAggregation project(':srs-integration')
+        testReportAggregation project(':postnummerservice-integration')
+        testReportAggregation project(':log-messages')
+        testReportAggregation project(':loggtjanst-stub')
+        testReportAggregation project(':security-common')
+        testReportAggregation project(':security-authorities')
+        testReportAggregation project(':security-filter')
+        testReportAggregation project(':security-siths')
+        testReportAggregation project(':sjukfall-engine')
+        testReportAggregation project(':xmldsig')
+        testReportAggregation project(':monitoring')
+        testReportAggregation project(':intyginfo')
+        testReportAggregation project(':integreradeenheter')
+        testReportAggregation project(':driftbanner-dto')
+        testReportAggregation project(':testcertificate')
+        testReportAggregation project(':message')
+        testReportAggregation project(':privatepractitioner')
+        testReportAggregation project(':certificate')
+        testReportAggregation project(':hsa-integration-api')
+        testReportAggregation project(':hsa-integration-intyg-proxy-service')
+    }
 }
