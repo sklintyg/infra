@@ -1,6 +1,6 @@
 dependencies {
   implementation project(':security-common')
-  compileOnly project(':hsa-integration-api')
+  implementation project(':hsa-integration-api')
 
   implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
   implementation "com.google.guava:guava:${guavaVersion}"
