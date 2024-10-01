@@ -1,8 +1,0 @@
-{
-  "hsaId": "user6",
-  "commissionList": [
-	{
-		"healthCareUnitHsaId": "enhet4",
-		"commissionPurpose": ["STATISTIK"]
-	}]
-}

@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
-
-<xs:schema xmlns:tns="urn:riv:infrastructure:directory:employee:2.1"   xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:riv:infrastructure:directory:employee:2.1" elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.1">
-
-  <xs:element name="fromDate" type="xs:string"/>
-  <xs:element name="toDate" type="xs:string"/>
-
-</xs:schema>
