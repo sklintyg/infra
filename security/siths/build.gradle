@@ -1,8 +1,7 @@
 dependencies {
-  implementation project(":hsa-integration-api")
-  implementation project(':hsatk-integration')
   implementation project(':security-common')
   implementation project(':security-authorities')
+  implementation project(':hsa-integration-api')
 
   implementation "org.springframework.security.extensions:spring-security-saml2-core:${springSecuritySaml2CoreVersion}"
   implementation "org.apache.commons:commons-lang3"

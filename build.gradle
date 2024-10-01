@@ -5,13 +5,13 @@ plugins {
 }
 
 ext {
-    funktionstjansterGrpSchemasVersion = "2.0.0.1"
-    intygClinicalprocessSchemasVersion = "1.0.24.1"
-    rivtaGetPersonsPersonSchemasVersion = "3.1.1.1"
-    rivtaStoreLogSchemasVersion = "2.0.1.1"
-    schemasContractVersion = "2.1.8.1"
-    schemasSupportVersion = "2.1.5.1"
-    srsSchemasVersion = "0.0.16.1"
+    funktionstjansterGrpSchemasVersion = "2.0.0.2"
+    intygClinicalprocessSchemasVersion = "1.0.24.2"
+    rivtaGetPersonsPersonSchemasVersion = "3.1.1.2"
+    rivtaStoreLogSchemasVersion = "2.0.1.2"
+    schemasContractVersion = "2.1.8.2"
+    schemasSupportVersion = "2.1.5.2"
+    srsSchemasVersion = "0.0.16.2"
 
     commonsIoVersion = "2.14.0"
     commonsCollectionsVersion = "4.4"
@@ -33,7 +33,6 @@ ext {
 }
 
 allprojects {
-    apply plugin: 'se.inera.intyg.plugin.common'
     apply plugin: "io.spring.dependency-management"
     apply plugin: 'maven-publish'
     apply plugin: 'java'

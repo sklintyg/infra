@@ -1,6 +1,5 @@
 dependencies {
-  implementation project (":hsa-integration-api")
-  implementation project(':hsatk-integration')
+  implementation project(':hsa-integration-api')
   implementation project(':security-common')
 
   implementation "com.google.guava:guava:${guavaVersion}"
