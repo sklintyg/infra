@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,6 +25,7 @@ import java.util.List;
 
 @Data
 public class HospCredentialsForPerson {
+
     private String personalIdentityNumber;
     private List<HealthCareProfessionalLicence> healthCareProfessionalLicence = new ArrayList<>();
     private String personalPrescriptionCode;
@@ -37,6 +38,7 @@ public class HospCredentialsForPerson {
 
     @Data
     public static class Restriction {
+
         private String healthCareProfessionalLicenceCode;
         private String restrictionCode;
         private String restrictionName;

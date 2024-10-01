@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -100,7 +100,7 @@ public class IABannerServiceTest {
         List<Banner> banners = new ArrayList<>();
 
         mockServer.expect(ExpectedCount.once(),
-            requestTo(new URI("http://localhost:8170/actuator/banner/WEBCERT")))
+                requestTo(new URI("http://localhost:8170/actuator/banner/WEBCERT")))
             .andExpect(method(HttpMethod.GET))
             .andRespond(withStatus(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -123,7 +123,7 @@ public class IABannerServiceTest {
         banners.add(banner);
 
         mockServer.expect(ExpectedCount.once(),
-            requestTo(new URI("http://localhost:8170/actuator/banner/WEBCERT")))
+                requestTo(new URI("http://localhost:8170/actuator/banner/WEBCERT")))
             .andExpect(method(HttpMethod.GET))
             .andRespond(withStatus(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)

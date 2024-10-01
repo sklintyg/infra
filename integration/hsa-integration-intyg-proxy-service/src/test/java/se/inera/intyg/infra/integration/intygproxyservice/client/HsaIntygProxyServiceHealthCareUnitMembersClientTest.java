@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,6 +20,7 @@
 package se.inera.intyg.infra.integration.intygproxyservice.client;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -31,8 +32,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.GetHealthCareUnitMembersResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.client.organization.HsaIntygProxyServiceHealthCareUnitMembersClient;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
@@ -42,6 +44,19 @@ class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
     private RestTemplate restTemplate;
     @InjectMocks
     private HsaIntygProxyServiceHealthCareUnitMembersClient healthCareUnitMembersClient;
+
+    @Test
+    void shouldThrowIllegalStateException() {
+        final var request = GetHealthCareUnitMembersRequestDTO.builder()
+            .hsaId(HSA_ID)
+            .build();
+
+        when(restTemplate.postForObject(anyString(), eq(request), eq(GetHealthCareUnitMembersResponseDTO.class))).thenThrow(
+            IllegalArgumentException.class
+        );
+
+        assertThrows(IllegalStateException.class, () -> healthCareUnitMembersClient.getHealthCareUnitMembers(request));
+    }
 
     @Test
     void shouldReturnGetHealthCareUnitMembers() {

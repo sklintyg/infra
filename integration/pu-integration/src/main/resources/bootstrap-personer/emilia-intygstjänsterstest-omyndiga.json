@@ -1,0 +1,26 @@
+{
+  "personalIdentity": {
+    "extension": "201111042386"
+  },
+  "protectedPersonIndicator": false,
+  "testIndicator": false,
+  "primaryIdentity": false,
+  "name": {
+    "givenName": {
+      "name": "Emilia"
+    },
+    "middleName": {
+      "name": "Intygstjänsterstest"
+    },
+    "surname": {
+      "name": "Omyndiga"
+    }
+  },
+  "addressInformation": {
+    "residentialAddress": {
+      "postalAddress2": "Grekstigen 90",
+      "postalCode": 65340,
+      "city": "Karlstad"
+    }
+  }
+}

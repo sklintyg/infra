@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,13 +28,13 @@ import java.util.List;
 public interface HsatkAuthorizationManagementService {
 
     List<CredentialInformation> getCredentialInformationForPerson(
-            String personalIdentityNumber, String personHsaId, String profile);
+        String personalIdentityNumber, String personHsaId, String profile);
 
     HospCredentialsForPerson getHospCredentialsForPersonResponseType(String personalIdentityNumber);
 
     LocalDateTime getHospLastUpdate();
 
     Result handleHospCertificationPersonResponseType(
-            String certificationId, String operation, String personalIdentityNumber, String reason);
+        String certificationId, String operation, String personalIdentityNumber, String reason);
 
 }

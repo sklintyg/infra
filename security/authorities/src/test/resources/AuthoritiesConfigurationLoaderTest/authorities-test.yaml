@@ -29,6 +29,8 @@ knownRoles:
   - &kr020 PRIVATLAKARE
   - &kr030 TANDLAKARE
   - &kr040 VARDADMINISTRATOR
+  - &kr050 SJUKSKOTERSKA
+  - &kr060 BARNMORSKA
 
 # Ingångar
 requestOrigins:
@@ -110,6 +112,22 @@ roles:
       - <<: *p030 # FORNYA_INTYG
         intygstyper:
           - ts-diabetes
+  - &r050
+    name: *kr050 # SJUKSKOTERSKA
+    desc: Sjuksköterska
+    privileges:
+      - *p000 # VISA_INTYG
+      - <<: *p030 # FORNYA_INTYG
+        intygstyper:
+          - ts-diabetes
+  - &r060
+    name: *kr060 # BARNMORSKA
+    desc: Barnmorska
+    privileges:
+      - *p000 # VISA_INTYG
+      - <<: *p030 # FORNYA_INTYG
+        intygstyper:
+          - ts-diabetes
 
 # Legitimerade yrkesroller
 titles:
@@ -117,6 +135,10 @@ titles:
     role: *r010 # LAKARE
   - title: Tandläkare
     role: *r030 # TANDLAKARE
+  - title: Sjuksköterska
+    role: *r050 # SJUKSKOTERSKA
+  - title: Barnmorska
+    role: *r060 # BARNMORSKA
 
 # Kombination befattningskoder och gruppförskrivarkoder
 titleCodes:

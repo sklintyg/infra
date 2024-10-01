@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -39,7 +39,7 @@ public class BaseSakerhetstjanstAssertion {
 
     // Användarens HSA-ID, legacy.
     public static final String HSA_ID_ATTRIBUTE_LEGACY = "urn:sambi:names:attribute:employeeHsaId";
-    
+
     public static final String IDENTITY_PROVIDER_FOR_SIGN_ATTRIBUTE = "urn:identityProviderForSign";
 
     private String hsaId;

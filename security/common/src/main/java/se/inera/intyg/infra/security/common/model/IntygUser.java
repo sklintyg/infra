@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -40,6 +40,8 @@ public class IntygUser implements UserDetails {
 
     protected String personId;
     protected String hsaId;
+    protected String fornamn;
+    protected String efternamn;
     protected String namn;
     protected String titel;
     protected String forskrivarkod;
@@ -265,6 +267,24 @@ public class IntygUser implements UserDetails {
         this.namn = namn;
     }
 
+    @Override
+    public String getFornamn() {
+        return this.fornamn;
+    }
+
+    public void setFornamn(String fornamn) {
+        this.fornamn = fornamn;
+    }
+
+    @Override
+    public String getEfternamn() {
+        return efternamn;
+    }
+
+    public void setEfternamn(String efternamn) {
+        this.efternamn = efternamn;
+    }
+
     /**
      * Returns the personal identifier used to authenticate the user.
      *
@@ -428,8 +448,8 @@ public class IntygUser implements UserDetails {
     public void setUserTermsApprovedOrSubscriptionInUse(boolean userTermsApprovedOrSubscriptionInUse) {
         this.userTermsApprovedOrSubscriptionInUse = userTermsApprovedOrSubscriptionInUse;
     }
-
     // CHECKSTYLE:OFF NeedBraces
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -507,7 +527,6 @@ public class IntygUser implements UserDetails {
         }
         return (origin != null ? !origin.equals(intygUser.origin) : intygUser.origin != null);
     }
-
     @Override
     public int hashCode() {
         int result = (userTermsApprovedOrSubscriptionInUse ? 1 : 0);
@@ -534,6 +553,7 @@ public class IntygUser implements UserDetails {
         result = THIRTYONE * result + (roleTypeName != null ? roleTypeName.hashCode() : 0);
         return result;
     }
+
     // CHECKSTYLE:ON NeedBraces
 
     @JsonIgnore
@@ -541,5 +561,4 @@ public class IntygUser implements UserDetails {
     public String toString() {
         return hsaId + " [authScheme=" + authenticationScheme + ", lakare=" + isLakare() + "]";
     }
-
 }

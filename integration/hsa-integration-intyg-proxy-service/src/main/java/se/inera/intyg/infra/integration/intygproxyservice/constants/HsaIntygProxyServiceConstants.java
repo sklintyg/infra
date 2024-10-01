@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,4 +29,6 @@ public class HsaIntygProxyServiceConstants {
     public static final String HEALTH_CARE_UNIT_CACHE_NAME = "hsaIntygProxyServiceHealthCareUnitCache";
     public static final String HSA_INTYG_PROXY_SERVICE_REST_TEMPLATE = "hsaIntygProxyServiceRestTemplate";
     public static final String HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME = "hsaIntygProxyServiceHealthCareUnitMembersCache";
+    public static final String UNIT_CACHE_NAME = "hsaIntygProxyServiceUnitCache";
+    public static final String HEALTH_CARE_PROVIDER_CACHE_NAME = "hsaIntygProxyServiceHealthCareProviderCache";
 }

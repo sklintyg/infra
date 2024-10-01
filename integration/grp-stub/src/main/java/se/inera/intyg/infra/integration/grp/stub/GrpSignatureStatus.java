@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,40 +19,18 @@
 package se.inera.intyg.infra.integration.grp.stub;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.funktionstjanster.grp.v1.ProgressStatusType;
+import com.mobilityguard.grp.service.v2.ProgressStatusType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- * @author Magnus Ekstrand on 2017-05-18.
- */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GrpSignatureStatus {
 
     private String orderRef;
-
     private ProgressStatusType status;
 
-    public GrpSignatureStatus() {
-        super();
-    }
-
-    public GrpSignatureStatus(String orderRef, ProgressStatusType status) {
-        this.orderRef = orderRef;
-        this.status = status;
-    }
-
-    public String getOrderRef() {
-        return orderRef;
-    }
-
-    public void setOrderRef(String orderRef) {
-        this.orderRef = orderRef;
-    }
-
-    public ProgressStatusType getStatus() {
-        return status;
-    }
-
-    public void setStatus(ProgressStatusType status) {
-        this.status = status;
-    }
 }

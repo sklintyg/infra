@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,9 +24,10 @@ import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertifi
 import se.riv.infrastructure.directory.authorizationmanagement.handlehospcertificationpersonresponder.v1.ResultCodeEnum;
 
 public class HandleHospCertificationPersonResponderStub implements HandleHospCertificationPersonResponderInterface {
+
     @Override
     public HandleHospCertificationPersonResponseType handleHospCertificationPerson(String logicalAddress,
-                                                                                   HandleHospCertificationPersonType parameters) {
+        HandleHospCertificationPersonType parameters) {
         HandleHospCertificationPersonResponseType responseType = new HandleHospCertificationPersonResponseType();
 
         responseType.setResultCode(ResultCodeEnum.OK);

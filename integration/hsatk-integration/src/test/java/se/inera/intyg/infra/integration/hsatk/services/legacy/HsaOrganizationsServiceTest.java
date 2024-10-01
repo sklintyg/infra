@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -211,6 +211,45 @@ class HsaOrganizationsServiceTest {
         assertEquals(correct, vardgivareNames);
     }
 
+    private void addMedarbetaruppdrag(String hsaId, String vardgivare, List<String> enhetIds) {
+        List<CredentialInformation.Commission> uppdrag = new ArrayList<>();
+        for (String enhet : enhetIds) {
+            CredentialInformation.Commission commission = new CredentialInformation
+                .Commission(enhet, CredentialInformation.VARD_OCH_BEHANDLING);
+            commission.setHealthCareProviderHsaId(vardgivare);
+            uppdrag.add(commission);
+        }
+        serviceStub.updateCredentialInformation(new CredentialInformation(hsaId, uppdrag));
+    }
+
+    private void addHosPerson(String hsaId) {
+        HsaPerson hsaPerson = new HsaPerson(hsaId, FORNAMN, EFTERNAMN);
+        HsaPerson.PaTitle paTitle = new HsaPerson.PaTitle();
+        paTitle.setTitleCode(BEFATTNINGSKOD);
+        paTitle.setTitleName(BEFATTNINGSKOD);
+        hsaPerson.setPaTitle(Arrays.asList(paTitle));
+        hsaPerson.setPersonalPrescriptionCode(FORSKRIVARKOD);
+
+        serviceStub.addHsaPerson(hsaPerson);
+    }
+
+    private void addVardgivare(String file) throws IOException {
+        CareProviderStub careProviderStub = mapper.readValue(new ClassPathResource(file).getFile(), CareProviderStub.class);
+        serviceStub.addCareProvider(careProviderStub);
+    }
+
+    @Before
+    public void setupVardgivare() throws IOException {
+        addVardgivare("HsaOrganizationsServiceTest/landstinget-vastmanland.json");
+    }
+
+    @After
+    public void cleanupServiceStub() {
+        serviceStub.getCareProvider().clear();
+        serviceStub.getCredentialInformation().clear();
+        serviceStub.getHsaPerson().clear();
+    }
+
     @Test
     void testInactiveEnhetFiltering() throws IOException {
         addVardgivare("HsaOrganizationsServiceTest/landstinget-upp-och-ner.json");
@@ -261,7 +300,7 @@ class HsaOrganizationsServiceTest {
 
         // user has a different medarbetaruppdrag ändamål 'Animatör' in one enhet
         serviceStub.addCredentialInformation(new CredentialInformation(PERSON_HSA_ID,
-            List.of(new Commission("centrum-ost", "Animatör"))));
+            asList(new CredentialInformation.Commission("centrum-ost", "Animatör"))));
 
         final var vardgivareList = service.getAuthorizedEnheterForHosPerson(PERSON_HSA_ID).getVardgivare();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,7 +29,6 @@ import java.util.List;
  * A number of data fields from HSA that are related to the persons "medarbetaruppdrag" is returned on the
  * {@link se.riv.infrastructure.directory.v1.CredentialInformationType}, which we need to provide to callers of
  * the HSA services.
- *
  */
 public class UserCredentials {
 

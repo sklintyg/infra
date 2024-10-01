@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -54,12 +54,12 @@ import se.riv.infrastructure.directory.organization.getunitresponder.v3.UnitType
 public class HsaTypeConverter {
 
     public HealthCareProfessionalLicence toHealthCareProfessionalLicence(HealthCareProfessionalLicenceType
-                                                                                 healthCareProfessionalLicenceType) {
+        healthCareProfessionalLicenceType) {
         HealthCareProfessionalLicence healthCareProfessionalLicence = new HealthCareProfessionalLicence();
         healthCareProfessionalLicence
-                .setHealthCareProfessionalLicenceCode(healthCareProfessionalLicenceType.getHealthCareProfessionalLicenceCode());
+            .setHealthCareProfessionalLicenceCode(healthCareProfessionalLicenceType.getHealthCareProfessionalLicenceCode());
         healthCareProfessionalLicence
-                .setHealthCareProfessionalLicenceName(healthCareProfessionalLicenceType.getHealthCareProfessionalLicenceName());
+            .setHealthCareProfessionalLicenceName(healthCareProfessionalLicenceType.getHealthCareProfessionalLicenceName());
 
         return healthCareProfessionalLicence;
     }
@@ -76,8 +76,8 @@ public class HsaTypeConverter {
         credentialInformation.setHealthCareProfessionalLicenceCode(credentialInformationType.getHealthCareProfessionalLicenceCode());
         if (!credentialInformationType.getHealthCareProfessionalLicenceSpeciality().isEmpty()) {
             credentialInformation.setHealthCareProfessionalLicenceSpeciality(
-                    credentialInformationType.getHealthCareProfessionalLicenceSpeciality()
-                            .stream().map(this::toHCPSpecialityCodes).collect(Collectors.toList()));
+                credentialInformationType.getHealthCareProfessionalLicenceSpeciality()
+                    .stream().map(this::toHCPSpecialityCodes).collect(Collectors.toList()));
         }
         credentialInformation.setHealthcareProfessionalLicenseIdentityNumber(
             credentialInformationType.getHealthcareProfessionalLicenseIdentityNumber());
@@ -250,7 +250,7 @@ public class HsaTypeConverter {
         healthCareUnitMembers.setFeignedHealthCareUnit(healthCareUnitMembersType.isFeignedHealthCareUnit());
         if (!healthCareUnitMembersType.getHealthCareUnitMember().isEmpty()) {
             healthCareUnitMembers.setHealthCareUnitMember(healthCareUnitMembersType.getHealthCareUnitMember()
-                    .stream().map(this::toHealthCareUnitMember).collect(Collectors.toList()));
+                .stream().map(this::toHealthCareUnitMember).collect(Collectors.toList()));
         }
         healthCareUnitMembers.setHealthCareUnitHsaId(healthCareUnitMembersType.getHealthCareUnitHsaId());
         healthCareUnitMembers.setHealthCareUnitEndDate(healthCareUnitMembersType.getHealthCareUnitEndDate());

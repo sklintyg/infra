@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -77,7 +77,7 @@ public class CommonAuthoritiesResolver {
         .orElse(null);
 
     public RoleResolveResult resolveRole(IntygUser user, List<PersonInformation> personInfo, String defaultRole,
-                                         UserCredentials userCredentials) {
+        UserCredentials userCredentials) {
         Assert.notNull(user, "Argument 'user' cannot be null");
 
         return lookupUserRole(user, personInfo, defaultRole, userCredentials);
@@ -207,9 +207,26 @@ public class CommonAuthoritiesResolver {
             return roleResolveResult;
         }
 
+        roleResolveResult = lookupUserRoleNurseOrMidWife(legitimeradeYrkesgrupper, defaultRole);
+        if (roleResolveResult != null) {
+            return roleResolveResult;
+        }
+
         // 4. Användaren skall få fallback-rollen, t.ex. en vårdadministratör eller rehabkoordinator inom landstinget.
         Role role = fnRole.apply(defaultRole);
         return new RoleResolveResult(role, defaultRole);
+    }
+
+    RoleResolveResult lookupUserRoleNurseOrMidWife(List<String> legitimeradeYrkesgrupper, String defaultRole) {
+        if (legitimeradeYrkesgrupper.contains(AuthoritiesConstants.TITLE_BARNMORSKA) && !defaultRole.equals(
+            AuthoritiesConstants.ROLE_KOORDINATOR)) {
+            return new RoleResolveResult(fnRole.apply(AuthoritiesConstants.ROLE_BARNMORSKA), AuthoritiesConstants.TITLE_BARNMORSKA);
+        }
+        if (legitimeradeYrkesgrupper.contains(AuthoritiesConstants.TITLE_SJUKSKOTERSKA) && !defaultRole.equals(
+            AuthoritiesConstants.ROLE_KOORDINATOR)) {
+            return new RoleResolveResult(fnRole.apply(AuthoritiesConstants.ROLE_SJUKSKOTERSKA), AuthoritiesConstants.TITLE_SJUKSKOTERSKA);
+        }
+        return null;
     }
 
     private List<String> buildAllaForskrivarKoderList(IntygUser user, UserCredentials userCredentials) {
@@ -240,7 +257,7 @@ public class CommonAuthoritiesResolver {
      * @return a user role if valid 'yrkesgrupper', otherwise null
      */
     RoleResolveResult lookupUserRoleByLegitimeradeYrkesgrupper(List<String> legitimeradeYrkesgrupper) {
-        if (legitimeradeYrkesgrupper == null || legitimeradeYrkesgrupper.size() == 0) {
+        if (legitimeradeYrkesgrupper == null || legitimeradeYrkesgrupper.isEmpty()) {
             return null;
         }
 

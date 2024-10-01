@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -306,6 +306,8 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
     // =====================================================================================
     private void decorateIntygUserWithBasicInfo(IntygUser intygUser, UserAuthorizationInfo userAuthorizationInfo,
         List<PersonInformation> personInfo, String authenticationScheme) {
+        intygUser.setFornamn(personInfo.get(0).getGivenName());
+        intygUser.setEfternamn(personInfo.get(0).getMiddleAndSurName());
         intygUser.setNamn(compileName(personInfo.get(0).getGivenName(), personInfo.get(0).getMiddleAndSurName()));
         intygUser.setVardgivare(userAuthorizationInfo.getVardgivare());
         //INTYG-4208: If any item has protectedPerson set, consider the user sekretessMarkerad.

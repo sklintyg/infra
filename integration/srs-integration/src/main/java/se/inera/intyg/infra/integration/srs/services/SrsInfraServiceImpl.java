@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -109,7 +109,7 @@ public class SrsInfraServiceImpl implements SrsInfraService {
 
     @Override
     public SrsResponse getSrs(IntygUser user, Personnummer personnummer, List<SrsCertificate> certDiags, Utdatafilter filter,
-                              List<SrsQuestionResponse> questions, Integer daysIntoSickLeave) throws InvalidPersonNummerException {
+        List<SrsQuestionResponse> questions, Integer daysIntoSickLeave) throws InvalidPersonNummerException {
 
         if (questions == null || questions.isEmpty()) {
             throw new IllegalArgumentException("Answers are required to construct a valid request.");
@@ -146,15 +146,15 @@ public class SrsInfraServiceImpl implements SrsInfraService {
                 SrsPrediction srsPrediction = new SrsPrediction();
                 if (dp == null) {
                     srsPrediction = null;
-                }  else if (dp.getDiagnosprediktionstatus() == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
+                } else if (dp.getDiagnosprediktionstatus() == Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS) {
                     srsPrediction.setStatusCode(Diagnosprediktionstatus.PREDIKTIONSMODELL_SAKNAS.value());
                 } else {
                     // Always add prevalence if we have it regardless if the user requested prediction on a personal level
                     srsPrediction.setPrevalence(dp.getPrevalens());
                     srsPrediction.setCertificateId(dp.getIntygId().getExtension());
                     srsPrediction.setDiagnosisCode(Optional.ofNullable(dp.getDiagnos())
-                            .map(CVType::getCode)
-                            .orElse(null));
+                        .map(CVType::getCode)
+                        .orElse(null));
                     // Also check if we have a prediction
                     if (dp.getSannolikhetOvergransvarde() != null) {
                         srsPrediction.setDaysIntoSickLeave(dp.getSjukskrivningsdag());
@@ -166,9 +166,9 @@ public class SrsInfraServiceImpl implements SrsInfraService {
                         srsPrediction.setTimestamp(dp.getBerakningstidpunkt());
                         if (dp.getPrediktionsfaktorer() != null) {
                             srsPrediction.setQuestionsResponses(
-                                    ImmutableList.copyOf(dp.getPrediktionsfaktorer().getFragasvar().stream()
-                                            .map((fs) -> SrsQuestionResponse.create(fs.getFrageidSrs(), fs.getSvarsidSrs()))
-                                            .collect(Collectors.toList()))
+                                ImmutableList.copyOf(dp.getPrediktionsfaktorer().getFragasvar().stream()
+                                    .map((fs) -> SrsQuestionResponse.create(fs.getFrageidSrs(), fs.getSvarsidSrs()))
+                                    .collect(Collectors.toList()))
                             );
                         }
                         if (dp.getLakarbedomningRisk() != null) {
@@ -245,8 +245,8 @@ public class SrsInfraServiceImpl implements SrsInfraService {
                     .map((d) -> d.getIndividerAckumulerat().intValue()).collect(Collectors.toList());
         }
         return new SrsResponse(atgarderObs, atgarderRek, atgarderFrl, atgarderReh, predictions,
-                atgarderDiagnosisCode, atgarderStatusCode, statistikDiagnosisCode, statistikStatusCode,
-                statistikNationellStatistik);
+            atgarderDiagnosisCode, atgarderStatusCode, statistikDiagnosisCode, statistikStatusCode,
+            statistikNationellStatistik);
     }
 
     @Override
@@ -333,7 +333,7 @@ public class SrsInfraServiceImpl implements SrsInfraService {
 
         // filter out all OBS types sorted by priority
         final List<String> atgarderObs = atgardsrekommendation.getAtgard().stream().sorted(Comparator
-            .comparing(Atgard::getPrioritet))
+                .comparing(Atgard::getPrioritet))
             .filter(a -> a.getAtgardstyp()
                 .equals(Atgardstyp.OBS))
             .map(Atgard::getAtgardsforslag)
@@ -341,7 +341,7 @@ public class SrsInfraServiceImpl implements SrsInfraService {
 
         // filter out all REK types sorted by priority
         final List<String> atgarderRek = atgardsrekommendation.getAtgard().stream().sorted(Comparator
-            .comparing(Atgard::getPrioritet))
+                .comparing(Atgard::getPrioritet))
             .filter(a -> a.getAtgardstyp()
                 .equals(Atgardstyp.REK))
             .map(Atgard::getAtgardsforslag)
@@ -387,7 +387,7 @@ public class SrsInfraServiceImpl implements SrsInfraService {
         Individfaktorer individer = new Individfaktorer();
         Individ individ = new Individ();
         certDiags.forEach(cd -> individ.getDiagnosintyg().add(
-                        createDiagnosintyg(cd.getMainDiagnosisCode(), cd.getCertificateId(), user.getValdVardenhet().getId())));
+            createDiagnosintyg(cd.getMainDiagnosisCode(), cd.getCertificateId(), user.getValdVardenhet().getId())));
         individ.setPersonId(personnummer.getPersonnummer());
         individer.getIndivid().add(individ);
 

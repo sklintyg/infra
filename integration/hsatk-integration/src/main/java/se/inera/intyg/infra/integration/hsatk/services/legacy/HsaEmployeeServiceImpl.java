@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,12 +18,15 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services.legacy;
 
+import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import jakarta.xml.ws.WebServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.client.EmployeeClient;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
@@ -31,6 +34,7 @@ import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.util.HsaTypeConverter;
 
 @Service
+@Profile("!" + HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsaEmployeeServiceImpl implements HsaEmployeeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HsaEmployeeServiceImpl.class);

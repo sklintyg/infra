@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -81,20 +81,20 @@ public class AuthorizationManagementClientTest {
     @Test
     public void testGetCredentialInformationOk() throws HsaServiceCallException {
         when(getCredentialsForPersonIncludingProtectedPersonResponderInterface.getCredentialsForPersonIncludingProtectedPerson(
-                or(isNull(), anyString()),
-                any(GetCredentialsForPersonIncludingProtectedPersonType.class))
+            or(isNull(), anyString()),
+            any(GetCredentialsForPersonIncludingProtectedPersonType.class))
         ).thenReturn(buildCredentialInformationResponse());
 
-        List<CredentialInformationType> authorizationsForPerson = authorizationManagementClient
-            .getCredentialInformationForPerson(null, HSA_ID, null);
+        List<CredentialInformationType> authorizationsForPerson = authorizationManagementClient.getCredentialInformationForPerson(null,
+            HSA_ID, null);
         assertNotNull(authorizationsForPerson);
     }
 
     @Test
     public void testGetHospCredentialOk() throws HsaServiceCallException {
         when(getHospCredentialsForPersonResponderInterface.getHospCredentialsForPerson(
-                or(isNull(), anyString()),
-                any(GetHospCredentialsForPersonType.class))
+            or(isNull(), anyString()),
+            any(GetHospCredentialsForPersonType.class))
         ).thenReturn(buildHospCredentialResponse());
 
         GetHospCredentialsForPersonResponseType responseType = authorizationManagementClient.getHospCredentialsForPerson(null);
@@ -104,20 +104,20 @@ public class AuthorizationManagementClientTest {
     @Test
     public void testHandleHospCertificationOk() throws HsaServiceCallException {
         when(handleHospCertificationPersonResponderInterface.handleHospCertificationPerson(
-                or(isNull(), anyString()),
-                any(HandleHospCertificationPersonType.class))
+            or(isNull(), anyString()),
+            any(HandleHospCertificationPersonType.class))
         ).thenReturn(buildHandleHospCertificationResponse());
 
         HandleHospCertificationPersonResponseType responseType = authorizationManagementClient.handleHospCertificationPerson(
-                null, OperationEnum.ADD, HSA_ID, "Add");
+            null, OperationEnum.ADD, HSA_ID, "Add");
         assertEquals(responseType.getResultCode(), ResultCodeEnum.OK);
     }
 
     @Test
     public void testGetHospLastUpdateOk() throws HsaServiceCallException {
         when(getHospLastUpdateResponderInterface.getHospLastUpdate(
-                or(isNull(), anyString()),
-                any(GetHospLastUpdateType.class))
+            or(isNull(), anyString()),
+            any(GetHospLastUpdateType.class))
         ).thenReturn(buildHospLastUpdateResponse());
 
         LocalDateTime hospLastUpdate = authorizationManagementClient.getHospLastUpdate();

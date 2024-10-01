@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
+import com.mobilityguard.grp.service.v2.FaultStatusType;
 import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
@@ -32,12 +33,8 @@ import jakarta.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import se.funktionstjanster.grp.v1.FaultStatusType;
-import se.funktionstjanster.grp.v1.GrpFault;
+import se.funktionstjanster.grp.v2.GrpException;
 
-/**
- * @author Magnus Ekstrand on 2017-05-16.
- */
 public class GrpStubRestApi {
 
     private static final Logger LOG = LoggerFactory.getLogger(GrpStubRestApi.class);
@@ -49,7 +46,7 @@ public class GrpStubRestApi {
     @GET
     @Path("/statuses")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<OngoingGrpSignature> getOngoingSignatures() throws GrpFault {
+    public List<OngoingGrpSignature> getOngoingSignatures() {
         List<OngoingGrpSignature> list = serviceStub.getAll();
 
         // Let the stub do self-janitoring every time someone calls this endpoint, removing old unfinished entries.
@@ -68,7 +65,7 @@ public class GrpStubRestApi {
     @GET
     @Path("/orderref/{transactionId}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getOrderRef(@PathParam("transactionId") String transactionId) throws GrpFault {
+    public String getOrderRef(@PathParam("transactionId") String transactionId) throws GrpException {
         return serviceStub.getOrderRef(transactionId);
     }
 
@@ -92,7 +89,7 @@ public class GrpStubRestApi {
         } else {
             try {
                 serviceStub.updateStatus(status);
-            } catch (GrpFault grpFault) {
+            } catch (GrpException grpException) {
                 return Response.serverError().build();
             }
         }
@@ -102,7 +99,7 @@ public class GrpStubRestApi {
     @PUT
     @Path("/cancel/{transactionId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response cancel(@PathParam("transactionId") String transactionId) throws GrpFault {
+    public Response cancel(@PathParam("transactionId") String transactionId) {
         serviceStub.fail(transactionId, FaultStatusType.CANCELLED);
         return Response.ok().build();
     }

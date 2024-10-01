@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,14 +18,16 @@
  */
 package se.inera.intyg.infra.integration.hsatk.model;
 
-import lombok.Data;
-
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
 
 @Data
-public class Unit {
+public class Unit implements Serializable {
+
+
     protected List<String> businessType = new ArrayList<>();
     protected List<BusinessClassification> businessClassification = new ArrayList<>();
     protected List<String> careType = new ArrayList<>();
@@ -44,22 +46,29 @@ public class Unit {
     protected List<String> postalAddress = new ArrayList<>();
     protected String postalCode;
     protected String mail;
+    protected List<String> telephoneNumber = new ArrayList<>();
     protected List<String> management = new ArrayList<>();
 
     @Data
-    public static class GeoCoordRt90 {
+    public static class GeoCoordRt90 implements Serializable {
+
+
         protected String xCoordinate;
         protected String yCoordinate;
     }
 
     @Data
-    public static class GeoCoordSweref99 {
+    public static class GeoCoordSweref99 implements Serializable {
+
+
         protected String nCoordinate;
         protected String eCoordinate;
     }
 
     @Data
-    public static class BusinessClassification {
+    public static class BusinessClassification implements Serializable {
+
+
         protected String businessClassificationName;
         protected String businessClassificationCode;
     }

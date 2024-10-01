@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,49 +18,42 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 
+import com.mobilityguard.grp.service.v2.CollectRequestType;
+import com.mobilityguard.grp.service.v2.CollectResponseType;
+import com.mobilityguard.grp.service.v2.ProgressStatusType;
 import java.util.UUID;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import se.funktionstjanster.grp.v1.AuthenticateRequestType;
-import se.funktionstjanster.grp.v1.CollectRequestType;
-import se.funktionstjanster.grp.v1.CollectResponseType;
-import se.funktionstjanster.grp.v1.GrpFault;
-import se.funktionstjanster.grp.v1.GrpServicePortType;
-import se.funktionstjanster.grp.v1.OrderResponseType;
-import se.funktionstjanster.grp.v1.ProgressStatusType;
+import org.mockito.junit.jupiter.MockitoExtension;
+import se.funktionstjanster.grp.v2.AuthenticateRequestTypeV23;
+import se.funktionstjanster.grp.v2.GrpException;
+import se.funktionstjanster.grp.v2.GrpServicePortType;
+import se.funktionstjanster.grp.v2.OrderResponseTypeV23;
 
-/**
- * @author Magnus Ekstrand on 2017-05-17.
- */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GrpServicePortTypeStubTest {
 
-    private final String AUTHENTICATEREQUEST_VALIDATIONMESSAGE = "AuthenticateRequestType cannot be null";
-    private final String AUTHENTICATEREQUEST_ARGUMENTS_VALIDATIONMESSAGE = "A policy must be supplied, " +
-        "A provider must be supplied";
-
-    private final String COLLECTREQUEST_VALIDATIONMESSAGE = "CollectRequestType cannot be null";
-    private final String COLLECTREQUEST_ARGUMENTS_VALIDATIONMESSAGE = "A policy must be supplied, " +
-        "A provider must be supplied, An order reference must be supplied";
-
-    private final String GRP_BANK_ID_PROVIDER = "bankid"; // As specified in CGI GRP docs
-    private final String GRP_SERVICE_ID = "logtest007";
-    private final String GRP_DISPLAY_NAME = "Funktionstjänster Test";
+    private static final String AUTHENTICATEREQUEST_VALIDATIONMESSAGE = "AuthenticateRequestType cannot be null";
+    private static final String AUTHENTICATEREQUEST_ARGUMENTS_VALIDATIONMESSAGE = "A policy must be supplied, "
+        + "A provider must be supplied";
+    private static final String COLLECTREQUEST_VALIDATIONMESSAGE = "CollectRequestType cannot be null";
+    private static final String COLLECTREQUEST_ARGUMENTS_VALIDATIONMESSAGE = "A policy must be supplied, "
+        + "A provider must be supplied, An order reference must be supplied";
+    private static final String GRP_BANK_ID_PROVIDER = "bankid"; // As specified in CGI GRP docs
+    private static final String GRP_SERVICE_ID = "logtest007";
+    private static final String GRP_DISPLAY_NAME = "Funktionstjänster Test";
 
     @Mock
     private GrpServiceStub serviceStub;
@@ -69,80 +62,94 @@ public class GrpServicePortTypeStubTest {
     private GrpServicePortType testee = new GrpServicePortTypeStub();
 
     @Test
-    public void nullRequestTypeThrowsException() throws GrpFault {
+    public void nullRequestTypeThrowsException() {
         testAuthenticateRequestInvalidArgument(null, AUTHENTICATEREQUEST_VALIDATIONMESSAGE);
         testCollectRequestInvalidArgument(null, COLLECTREQUEST_VALIDATIONMESSAGE);
     }
 
     @Test
-    public void mandatoryNullArgumentsThrowsException() throws GrpFault {
-        AuthenticateRequestType art = new AuthenticateRequestTypeBuilder(null, null).build();
+    public void mandatoryNullArgumentsThrowsException() {
+        final var art = new AuthenticateRequestTypeBuilder(null, null).build();
         testAuthenticateRequestInvalidArgument(art, AUTHENTICATEREQUEST_ARGUMENTS_VALIDATIONMESSAGE);
 
-        CollectRequestType crt = new CollectRequestTypeBuilder(null, null, null).build();
+        final var crt = new CollectRequestTypeBuilder(null, null, null).build();
         testCollectRequestInvalidArgument(crt, COLLECTREQUEST_ARGUMENTS_VALIDATIONMESSAGE);
     }
 
     @Test
-    public void mandatoryEmptyArgumentsThrowsException() throws GrpFault {
-        AuthenticateRequestType art = new AuthenticateRequestTypeBuilder("", "").build();
+    public void mandatoryEmptyArgumentsThrowsException() {
+        final var art = new AuthenticateRequestTypeBuilder("", "").build();
         testAuthenticateRequestInvalidArgument(art, AUTHENTICATEREQUEST_ARGUMENTS_VALIDATIONMESSAGE);
 
-        CollectRequestType crt = new CollectRequestTypeBuilder("", "", "").build();
+        final var crt = new CollectRequestTypeBuilder("", "", "").build();
         testCollectRequestInvalidArgument(crt, COLLECTREQUEST_ARGUMENTS_VALIDATIONMESSAGE);
     }
 
     @Test
-    public void authenticateRequest() throws GrpFault {
-        AuthenticateRequestType art = new AuthenticateRequestTypeBuilder(GRP_SERVICE_ID, GRP_BANK_ID_PROVIDER)
+    public void authenticateRequest() throws GrpException {
+        final var art = new AuthenticateRequestTypeBuilder(GRP_SERVICE_ID, GRP_BANK_ID_PROVIDER)
             .setDisplayName(GRP_DISPLAY_NAME)
             .build();
 
         when(serviceStub.updateStatus(anyString(), any())).thenReturn(true);
 
-        OrderResponseType ort = testee.authenticate(art);
+        final var ort = testee.authenticate(art);
         assertAuthenticateResponse(ort);
     }
 
     @Test
-    public void collectRequest() throws GrpFault {
-        String orderRef = UUID.randomUUID().toString();
-        CollectRequestType crt = new CollectRequestTypeBuilder(GRP_SERVICE_ID, GRP_BANK_ID_PROVIDER, orderRef)
+    public void collectRequest() throws GrpException {
+        final var orderRef = UUID.randomUUID().toString();
+        final var crt = new CollectRequestTypeBuilder(GRP_SERVICE_ID, GRP_BANK_ID_PROVIDER, orderRef)
             .setDisplayName(GRP_DISPLAY_NAME)
             .build();
 
         when(serviceStub.getStatus(isNull())).thenReturn(buildCollectResponseType(orderRef));
 
-        CollectResponseType response = testee.collect(crt);
+        final var response = testee.collect(crt);
         assertCollectResponse(response);
     }
 
     @Test
-    public void signRequest() {
-        Exception exception = assertThrows(GrpFault.class, () -> testee.sign(null));
+    public void statusRequest() {
+        final var exception = assertThrows(GrpException.class, () -> testee.status(null));
         assertEquals("Not implemented", exception.getMessage());
     }
 
     @Test
-    public void signatureFileRequest() {
-        Exception exception = assertThrows(GrpFault.class, () -> testee.fileSign(null));
+    public void displayNameRequest() {
+        final var exception = assertThrows(GrpException.class, () -> testee.displayName(null));
         assertEquals("Not implemented", exception.getMessage());
     }
 
-    private void assertAuthenticateResponse(OrderResponseType ort) {
+    @Test
+    public void cancelRequest() {
+        final var exception = assertThrows(GrpException.class, () -> testee.cancel(null));
+        assertEquals("Not implemented", exception.getMessage());
+    }
+
+    @Test
+    public void signRequest() {
+        final var exception = assertThrows(GrpException.class, () -> testee.sign(null));
+        assertEquals("Not implemented", exception.getMessage());
+    }
+
+
+
+    private void assertAuthenticateResponse(OrderResponseTypeV23 ort) {
         assertNotNull(ort.getTransactionId());
-        assertTrue(ort.getTransactionId().length() > 0);
+        assertFalse(ort.getTransactionId().isEmpty());
 
         assertNotNull(ort.getOrderRef());
-        assertTrue(ort.getOrderRef().length() > 0);
+        assertFalse(ort.getOrderRef().isEmpty());
 
         assertNotNull(ort.getAutoStartToken());
-        assertTrue(ort.getAutoStartToken().length() > 0);
+        assertFalse(ort.getAutoStartToken().isEmpty());
     }
 
     private void assertCollectResponse(CollectResponseType crt) {
         assertNotNull(crt.getTransactionId());
-        assertTrue(crt.getTransactionId().length() > 0);
+        assertFalse(crt.getTransactionId().isEmpty());
 
         assertNotNull(crt.getProgressStatus());
         assertSame(crt.getProgressStatus(), ProgressStatusType.STARTED);
@@ -152,13 +159,13 @@ public class GrpServicePortTypeStubTest {
         return new GrpSignatureStatus(orderRef, ProgressStatusType.STARTED);
     }
 
-    private void testAuthenticateRequestInvalidArgument(AuthenticateRequestType art, String expectedMessage) {
-        Exception exception = assertThrows(GrpFault.class, () -> testee.authenticate(art));
+    private void testAuthenticateRequestInvalidArgument(AuthenticateRequestTypeV23 art, String expectedMessage) {
+        final var exception = assertThrows(GrpException.class, () -> testee.authenticate(art));
         assertEquals(expectedMessage, exception.getMessage());
     }
 
     private void testCollectRequestInvalidArgument(CollectRequestType crt, String expectedMessage) {
-        Exception exception = assertThrows(GrpFault.class, () -> testee.collect(crt));
+        final var exception = assertThrows(GrpException.class, () -> testee.collect(crt));
         assertEquals(expectedMessage, exception.getMessage());
     }
 }

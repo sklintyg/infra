@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,6 +25,8 @@ public final class AuthoritiesConstants {
     // http://www.inera.se/TJANSTER--PROJEKT/HSA/Dokument/HSA-kodverk/
     public static final String TITLE_LAKARE = "Läkare";
     public static final String TITLE_TANDLAKARE = "Tandläkare";
+    public static final String TITLE_SJUKSKOTERSKA = "Sjuksköterska";
+    public static final String TITLE_BARNMORSKA = "Barnmorska";
 
     // Title codes, a.k.a 'befattningskod', has a coding system governing these codes. See:
     // HSA Innehåll Befattning
@@ -37,6 +39,9 @@ public final class AuthoritiesConstants {
     public static final String ROLE_PRIVATLAKARE = "PRIVATLAKARE";
     public static final String ROLE_TANDLAKARE = "TANDLAKARE";
     public static final String ROLE_ADMIN = "VARDADMINISTRATOR";
+    public static final String ROLE_SJUKSKOTERSKA = "SJUKSKOTERSKA";
+    public static final String ROLE_BARNMORSKA = "BARNMORSKA";
+    public static final String ROLE_KOORDINATOR = "REHABKOORDINATOR";
 
     // Known privileges (these privileges are copied from authorities.yaml which is the master authorities
     // configuration)
@@ -99,16 +104,9 @@ public final class AuthoritiesConstants {
      * Feature to toggle if a 'DJUPINTEGRERAD' care provider should block certificate features when logging in with origin 'NORMAL'
      */
     public static final String FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL = "BLOCKERA_FRISTAENDE";
-
     public static final String FEATURE_INACTIVATE_PREVIOUS_MAJOR_VERSION = "INAKTIVERA_TIDIGARE_HUVUDVERSION";
-
-    public static final String FEATURE_USE_REACT_WEBCLIENT = "ANVAND_REACT_WEBKLIENT";
-
+    public static final String FEATURE_USE_ANGULAR_WEBCLIENT = "ANVAND_ANGULAR_WEBKLIENT";
     public static final String FEATURE_USE_REACT_WEBCLIENT_FRISTAENDE = "ANVAND_REACT_WEBKLIENT_FRISTAENDE";
-
-    public static final String FEATURE_SUBSCRIPTION_ADAPTATION_PERIOD = "SUBSCRIPTION_ADAPTATION_PERIOD";
-    public static final String FEATURE_SUBSCRIPTION_REQUIRED = "SUBSCRIPTION_REQUIRED";
-
     public static final String FEATURE_PRINT_IN_IFRAME = "SKRIV_UT_I_IFRAME";
 
     private AuthoritiesConstants() {

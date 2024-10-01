@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.infra.integration.grp.stub;
 
-import se.funktionstjanster.grp.v1.CollectRequestType;
+import com.mobilityguard.grp.service.v2.CollectRequestType;
 
 /**
  * @author Magnus Ekstrand on 2017-05-17.
@@ -27,9 +27,9 @@ import se.funktionstjanster.grp.v1.CollectRequestType;
 public class CollectRequestTypeBuilder {
 
     // required parameters
-    private String policy;
-    private String provider;
-    private String orderRef;
+    private final String policy;
+    private final String provider;
+    private final String orderRef;
 
     // optional parameters
     private String displayName;
@@ -56,9 +56,8 @@ public class CollectRequestTypeBuilder {
         crt.setPolicy(this.policy);
         crt.setProvider(this.provider);
         crt.setOrderRef(this.orderRef);
-        crt.setDisplayName(this.displayName);
+        crt.setRpDisplayName(this.displayName);
         crt.setTransactionId(this.transactionId);
-
         return crt;
     }
 

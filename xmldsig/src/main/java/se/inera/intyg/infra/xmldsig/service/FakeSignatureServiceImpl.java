@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -37,7 +37,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Profile("!prod")
-public class FakeSignatureServiceImpl {
+public class FakeSignatureServiceImpl implements FakeSignatureService {
 
 
     private KeyStore ks;
@@ -53,6 +53,7 @@ public class FakeSignatureServiceImpl {
      *
      * @param digest Base64-encoded string to sign.
      */
+    @Override
     public String createSignature(String digest) {
         try {
             KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(FAKE_KEYSTORE_ALIAS,
@@ -69,6 +70,7 @@ public class FakeSignatureServiceImpl {
         }
     }
 
+    @Override
     public X509Certificate getX509Certificate() {
         try {
             return (X509Certificate) this.ks.getCertificate("1");

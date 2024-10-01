@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,6 +25,9 @@ import java.util.Map;
  * Created by Magnus Ekstrand on 2015-08-27.
  */
 public interface UserDetails extends Serializable {
+
+    String getFornamn();
+    String getEfternamn();
 
     /**
      * Returns the name to authenticate the user. Cannot return <code>null</code>.

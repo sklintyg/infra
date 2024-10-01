@@ -4,40 +4,26 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 plugins {
-    id "se.inera.intyg.plugin.common" version "3.3.2-SNAPSHOT" apply false
+    id "se.inera.intyg.plugin.common" version "3.3.3" apply false
     id "io.spring.dependency-management" version "1.1.3" apply false
     id 'test-report-aggregation'
     id 'idea'
 }
 
 ext {
-//    // Below three schema versions can be removed when old HSA package is retired.
-//    rivtaDirectoryOrganizationSchemasVersion = "1.1.5.6.1"
-//    rivtaHsaAuthorizationmanagementSchemasVersion = "1.0.4.6.1"
-//    rivtaHsaEmployeeSchemasVersion  = "1.0.4.6.1"
-//    // Above three schema versions can be removed when old HSA package is retired.
-//
-//    funktionstjansterGrpSchemasVersion = "1.0.6.2"
-//    intygClinicalprocessSchemasVersion = "1.0.24.2"
-//    rivtaGetPersonsPersonSchemasVersion = "3.1.1.2"
-//    rivtaStoreLogSchemasVersion = "2.0.1.2"
-//    schemasContractVersion = "2.1.8.2"
-//    schemasSupportVersion = "2.1.5.2"
-//    srsSchemasVersion = "0.0.16.2"
-
     // Below three schema versions can be removed when old HSA package is retired.
-    rivtaDirectoryOrganizationSchemasVersion = "0-SNAPSHOT"
-    rivtaHsaAuthorizationmanagementSchemasVersion = "0-SNAPSHOT"
-    rivtaHsaEmployeeSchemasVersion  = "0-SNAPSHOT"
+    rivtaDirectoryOrganizationSchemasVersion = "1.1.RC5.6"
+    rivtaHsaAuthorizationmanagementSchemasVersion = "1.0.RC4.6"
+    rivtaHsaEmployeeSchemasVersion  = "1.0.RC4.6"
     // Above three schema versions can be removed when old HSA package is retired.
 
-    funktionstjansterGrpSchemasVersion = "0-SNAPSHOT"
-    intygClinicalprocessSchemasVersion = "0-SNAPSHOT"
-    rivtaGetPersonsPersonSchemasVersion = "0-SNAPSHOT"
-    rivtaStoreLogSchemasVersion = "0-SNAPSHOT"
-    schemasContractVersion = "0-SNAPSHOT"
-    schemasSupportVersion = "0-SNAPSHOT"
-    srsSchemasVersion = "0-SNAPSHOT"
+    funktionstjansterGrpSchemasVersion = "2.0.0.1"
+    intygClinicalprocessSchemasVersion = "1.0.24.1"
+    rivtaGetPersonsPersonSchemasVersion = "3.1.1.1"
+    rivtaStoreLogSchemasVersion = "2.0.1.1"
+    schemasContractVersion = "2.1.8.1"
+    schemasSupportVersion = "2.1.5.1"
+    srsSchemasVersion = "0.0.16.1"
 
     commonsIoVersion = "2.14.0"
     commonsCollectionsVersion = "4.4"

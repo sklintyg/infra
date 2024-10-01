@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -56,6 +56,8 @@ public class BasicCacheConfiguration {
     long defaultEntryExpiry;
     @Value("${redis.sentinel.master.name}")
     String redisSentinelMasterName;
+    @Value("${redis.read.timeout:PT1M}")
+    String redisReadTimeout;
 
     @Value("${redis.cluster.nodes:}")
     String redisClusterNodes;
@@ -74,9 +76,6 @@ public class BasicCacheConfiguration {
         return new PropertySourcesPlaceholderConfigurer();
     }
 
-    /**
-     * Due to complexity reasons, we do a programmatic profile check here to pick the appropriate JedisConnectionFactory.
-     */
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         final var activeProfiles = List.of(environment.getActiveProfiles());
@@ -126,12 +125,14 @@ public class BasicCacheConfiguration {
     private JedisConnectionFactory sentinelConnectionFactory() {
         RedisSentinelConfiguration sentinelConfig = new RedisSentinelConfiguration()
             .master(redisSentinelMasterName);
+        sentinelConfig.setPassword(redisPassword);
+        sentinelConfig.setSentinelPassword(redisPassword);
 
         if (Strings.isNullOrEmpty(redisHost) || Strings.isNullOrEmpty(redisPort)) {
             throw new IllegalStateException("Cannot bootstrap RedisSentinelConfiguration, redis.host or redis.port is null or empty");
         }
-        List<String> hosts = ConnectionStringUtil.parsePropertyString(redisHost);
-        List<String> ports = ConnectionStringUtil.parsePropertyString(redisPort);
+        final var hosts = ConnectionStringUtil.parsePropertyString(redisHost);
+        final var ports = ConnectionStringUtil.parsePropertyString(redisPort);
 
         if (hosts.isEmpty() || ports.isEmpty() || hosts.size() != ports.size()) {
             throw new IllegalStateException(
@@ -142,7 +143,10 @@ public class BasicCacheConfiguration {
             sentinelConfig = sentinelConfig.sentinel(hosts.get(a), Integer.parseInt(ports.get(a)));
         }
 
-        return new JedisConnectionFactory(sentinelConfig);
+        final var clientConfig = JedisClientConfiguration.builder()
+            .readTimeout(Duration.parse(redisReadTimeout)).build();
+
+        return new JedisConnectionFactory(sentinelConfig, clientConfig);
     }
 
     private JedisConnectionFactory clusterConnectionFactory() {

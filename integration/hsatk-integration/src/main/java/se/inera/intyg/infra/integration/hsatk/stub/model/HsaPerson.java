@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -88,24 +88,28 @@ public class HsaPerson {
 
     @Data
     public static class PaTitle {
+
         private String titleCode;
         private String titleName;
     }
 
     @Data
     public static class Restrictions {
+
         private String restrictionCode;
         private String restrictionName;
     }
 
     @Data
     public static class Speciality {
+
         private String specialityName;
         private String specialityCode;
     }
 
     @Data
     public static class HealthCareProfessionalLicenceType {
+
         private String healthCareProfessionalLicenceCode;
         private String healthCareProfessionalLicenceName;
     }

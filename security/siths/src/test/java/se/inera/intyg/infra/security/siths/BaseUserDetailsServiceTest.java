@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -417,26 +417,6 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
         assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, webCertUser);
     }
 
-    // Consider moving this test to WebcertUserDetailsServiceTest as it is Webcert-specific.
-    @Test
-    public void assertRoleAndPrivilegesWhenUserHasTitleDoctorAndUsesUthoppsLink() throws Exception {
-        // given
-        String requestURI = "/webcert/web/user/certificate/789YAU453999KL2JK/questions";
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest(requestURI)));
-
-        SAMLCredential samlCredential = createSamlCredential("assertion-1.xml");
-        setupCallToAuthorizedEnheterForHosPerson();
-        setupCallToGetHsaPersonInfoWithBefattningskoder();
-        when(userOrigin.resolveOrigin(any())).thenReturn(UserOriginType.UTHOPP.name());
-
-        // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
-
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
-        assertEquals(webCertUser.getOrigin(), (UserOriginType.UTHOPP.name()));
-        assertUserPrivileges(AuthoritiesConstants.ROLE_LAKARE, webCertUser);
-    }
-
     @Test
     public void assertRoleAndPrivilegesWhenUserHasTitleTandlakareAndUsesDjupintegrationsLink() throws Exception {
         // given
@@ -457,25 +437,6 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
     }
 
     @Test
-    public void assertRoleAndPrivilegesWhenUserHasTitleTandlakareAndUsesUthoppsLink() throws Exception {
-        // given
-        String requestURI = "/webcert/web/user/certificate/789YAU453999KL2JK/questions";
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest(requestURI)));
-
-        SAMLCredential samlCredential = createSamlCredential("assertion-1.xml");
-        setupCallToAuthorizedEnheterForHosPerson();
-        setupCallToGetHsaPersonInfoTandlakare();
-        when(userOrigin.resolveOrigin(any())).thenReturn(UserOriginType.UTHOPP.name());
-
-        // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
-
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_TANDLAKARE));
-        assertEquals(webCertUser.getOrigin(), UserOriginType.UTHOPP.name());
-        assertUserPrivileges(AuthoritiesConstants.ROLE_TANDLAKARE, webCertUser);
-    }
-
-    @Test
     public void assertRoleAndPrivilegesWhenUserIsNotDoctorAndUsesDjupintegrationsLink() throws Exception {
         // given
         String requestURI = "/visa/intyg/789YAU453999KL2JK/alternatePatientSSn=191212121212&responsibleHospName=ÅsaAndersson";
@@ -491,25 +452,6 @@ public class BaseUserDetailsServiceTest extends CommonAuthoritiesConfigurationTe
 
         assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_ADMIN));
         assertEquals(webCertUser.getOrigin(), UserOriginType.DJUPINTEGRATION.name());
-        assertUserPrivileges(AuthoritiesConstants.ROLE_ADMIN, webCertUser);
-    }
-
-    @Test
-    public void assertRoleAndPrivilegesWhenUserIsNotDoctorAndUsesUthoppsLink() throws Exception {
-        // given
-        String requestURI = "/webcert/web/user/certificate/789YAU453999KL2JK/questions";
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest(requestURI)));
-
-        SAMLCredential samlCredential = createSamlCredential("assertion-1.xml");
-        setupCallToAuthorizedEnheterForHosPerson();
-        setupCallToGetHsaPersonInfoNotADoctor();
-        when(userOrigin.resolveOrigin(any())).thenReturn(UserOriginType.UTHOPP.name());
-
-        // then
-        IntygUser webCertUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
-
-        assertTrue(webCertUser.getRoles().containsKey(AuthoritiesConstants.ROLE_ADMIN));
-        assertEquals(webCertUser.getOrigin(), UserOriginType.UTHOPP.name());
         assertUserPrivileges(AuthoritiesConstants.ROLE_ADMIN, webCertUser);
     }
 
