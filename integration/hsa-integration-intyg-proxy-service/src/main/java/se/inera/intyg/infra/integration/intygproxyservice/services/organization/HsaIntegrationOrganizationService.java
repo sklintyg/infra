@@ -19,12 +19,9 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
-import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
-
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareProvider;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
@@ -39,7 +36,6 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUn
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsaIntegrationOrganizationService implements HsatkOrganizationService {
 
     private final GetUnitService getUnitService;

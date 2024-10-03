@@ -19,15 +19,11 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services.person;
 
-import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
-
 import java.util.List;
 import jakarta.xml.ws.WebServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.Commission;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
@@ -36,7 +32,6 @@ import se.inera.intyg.infra.integration.intygproxyservice.services.employee.GetE
 
 @Slf4j
 @Service
-@Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 @RequiredArgsConstructor
 public class HsaLegacyIntegrationPersonService implements HsaPersonService {
 
@@ -56,7 +51,7 @@ public class HsaLegacyIntegrationPersonService implements HsaPersonService {
     }
 
     @Override
-    public List<Commission> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, String unitHsaId) throws HsaServiceCallException {
+    public List<Commission> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, String unitHsaId) {
         return null;
     }
 }
