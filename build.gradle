@@ -83,7 +83,11 @@ allprojects {
         dependsOn(publishToMavenLocal)
     }
 
-    compileJava.options.encoding = 'UTF-8'
+    compileJava {
+        compileJava.options.encoding = 'UTF-8'
+        options.compilerArgs.add("-parameters")
+    }
+
     jar.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     test { useJUnitPlatform() }
 
