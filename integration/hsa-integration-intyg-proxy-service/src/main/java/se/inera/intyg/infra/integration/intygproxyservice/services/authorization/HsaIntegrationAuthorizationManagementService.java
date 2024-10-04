@@ -19,14 +19,11 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services.authorization;
 
-import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import jakarta.xml.ws.WebServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
 import se.inera.intyg.infra.integration.hsatk.model.HospCredentialsForPerson;
@@ -38,7 +35,6 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetH
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsaIntegrationAuthorizationManagementService implements HsatkAuthorizationManagementService {
 
     private final GetCredentialInformationForPersonService getCredentialInformationForPersonService;
