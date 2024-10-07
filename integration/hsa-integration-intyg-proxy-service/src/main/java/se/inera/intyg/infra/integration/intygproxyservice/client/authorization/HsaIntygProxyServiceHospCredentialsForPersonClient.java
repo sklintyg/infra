@@ -19,11 +19,18 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.client.authorization;
 
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.SESSION_ID_KEY;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.TRACE_ID_KEY;
+
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialsForPersonRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialsForPersonResponseDTO;
 
@@ -31,19 +38,21 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetC
 public class HsaIntygProxyServiceHospCredentialsForPersonClient {
 
     @Autowired
-    @Qualifier("hsaIntygProxyServiceRestTemplate")
-    private RestTemplate restTemplate;
+    @Qualifier("hsaIntygProxyServiceRestClient")
+    private RestClient ipsRestClient;
+
     @Value("${integration.intygproxyservice.credentialsforperson.endpoint}")
     private String credentialsForPersonEndpoint;
-    @Value("${integration.intygproxyservice.baseurl}")
-    private String intygProxyServiceBaseUrl;
 
     public GetCredentialsForPersonResponseDTO get(GetCredentialsForPersonRequestDTO getCredentialsForPersonRequestDTO) {
-        try {
-            final var url = intygProxyServiceBaseUrl + credentialsForPersonEndpoint;
-            return restTemplate.postForObject(url, getCredentialsForPersonRequestDTO, GetCredentialsForPersonResponseDTO.class);
-        } catch (Exception exception) {
-            throw new IllegalStateException("Error occured when trying to communicate with intyg-proxy-service", exception);
-        }
+        return ipsRestClient
+            .post()
+            .uri(credentialsForPersonEndpoint)
+            .body(getCredentialsForPersonRequestDTO)
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .contentType(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .body(GetCredentialsForPersonResponseDTO.class);
     }
 }

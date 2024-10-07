@@ -19,11 +19,18 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.client.organization;
 
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.SESSION_ID_KEY;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.TRACE_ID_KEY;
+
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersResponseDTO;
 
@@ -31,20 +38,22 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHe
 public class HsaIntygProxyServiceHealthCareUnitMembersClient {
 
     @Autowired
-    @Qualifier("hsaIntygProxyServiceRestTemplate")
-    private RestTemplate restTemplate;
+    @Qualifier("hsaIntygProxyServiceRestClient")
+    private RestClient ipsRestClient;
+
     @Value("${integration.intygproxyservice.healthcareunitmembers.endpoint}")
     private String healthCareUnitMembersEndpoint;
-    @Value("${integration.intygproxyservice.baseurl}")
-    private String intygProxyServiceBaseUrl;
 
-    public GetHealthCareUnitMembersResponseDTO getHealthCareUnitMembers(
+    public GetHealthCareUnitMembersResponseDTO get(
         GetHealthCareUnitMembersRequestDTO getHealthCareUnitMembersRequestDTO) {
-        try {
-            final var url = intygProxyServiceBaseUrl + healthCareUnitMembersEndpoint;
-            return restTemplate.postForObject(url, getHealthCareUnitMembersRequestDTO, GetHealthCareUnitMembersResponseDTO.class);
-        } catch (Exception exception) {
-            throw new IllegalStateException("Error occured when trying to communicate with intyg-proxy-service", exception);
-        }
+        return ipsRestClient
+            .post()
+            .uri(healthCareUnitMembersEndpoint)
+            .body(getHealthCareUnitMembersRequestDTO)
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .contentType(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .body(GetHealthCareUnitMembersResponseDTO.class);
     }
 }

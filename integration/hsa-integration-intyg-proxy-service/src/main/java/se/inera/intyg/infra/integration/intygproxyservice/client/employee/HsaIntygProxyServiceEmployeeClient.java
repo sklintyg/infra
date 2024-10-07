@@ -20,11 +20,18 @@
 package se.inera.intyg.infra.integration.intygproxyservice.client.employee;
 
 
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.SESSION_ID_KEY;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.TRACE_ID_KEY;
+
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeResponseDTO;
 
@@ -32,19 +39,21 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmploy
 public class HsaIntygProxyServiceEmployeeClient {
 
     @Autowired
-    @Qualifier("hsaIntygProxyServiceRestTemplate")
-    private RestTemplate restTemplate;
+    @Qualifier("hsaIntygProxyServiceRestClient")
+    private RestClient ipsRestClient;
+
     @Value("${integration.intygproxyservice.employee.endpoint}")
     private String employeeEndpoint;
-    @Value("${integration.intygproxyservice.baseurl}")
-    private String intygProxyServiceBaseUrl;
 
     public GetEmployeeResponseDTO getEmployee(GetEmployeeRequestDTO getEmployeeRequestDTO) {
-        final var url = intygProxyServiceBaseUrl + employeeEndpoint;
-        try {
-            return restTemplate.postForObject(url, getEmployeeRequestDTO, GetEmployeeResponseDTO.class);
-        } catch (Exception exception) {
-            throw new IllegalStateException("Error occured when trying to communicate with intyg-proxy-service", exception);
-        }
+        return ipsRestClient
+            .post()
+            .uri(employeeEndpoint)
+            .body(getEmployeeRequestDTO)
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .contentType(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .body(GetEmployeeResponseDTO.class);
     }
 }

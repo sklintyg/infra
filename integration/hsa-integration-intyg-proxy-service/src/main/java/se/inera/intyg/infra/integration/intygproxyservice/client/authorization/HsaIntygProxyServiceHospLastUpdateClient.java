@@ -19,30 +19,36 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.client.authorization;
 
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.SESSION_ID_KEY;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.TRACE_ID_KEY;
+
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetHospLastUpdateResponseDTO;
 
 @Service
 public class HsaIntygProxyServiceHospLastUpdateClient {
 
     @Autowired
-    @Qualifier("hsaIntygProxyServiceRestTemplate")
-    private RestTemplate restTemplate;
+    @Qualifier("hsaIntygProxyServiceRestClient")
+    private RestClient ipsRestClient;
+
     @Value("${integration.intygproxyservice.lastupdate.endpoint}")
     private String lastUpdateEndpoint;
-    @Value("${integration.intygproxyservice.baseurl}")
-    private String intygProxyServiceBaseUrl;
 
     public GetHospLastUpdateResponseDTO get() {
-        try {
-            final var url = intygProxyServiceBaseUrl + lastUpdateEndpoint;
-            return restTemplate.getForObject(url, GetHospLastUpdateResponseDTO.class);
-        } catch (Exception exception) {
-            throw new IllegalStateException("Error occured when trying to communicate with intyg-proxy-service", exception);
-        }
+        return ipsRestClient
+            .get()
+            .uri(lastUpdateEndpoint)
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .retrieve()
+            .body(GetHospLastUpdateResponseDTO.class);
     }
 }

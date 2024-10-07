@@ -20,18 +20,28 @@
 package se.inera.intyg.infra.integration.intygproxyservice.client.organization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.SESSION_ID_KEY;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.TRACE_ID_KEY;
 
 import java.util.Collections;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.client.RestTemplate;
+import org.slf4j.MDC;
+import org.springframework.http.MediaType;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClient.RequestBodyUriSpec;
+import org.springframework.web.client.RestClient.ResponseSpec;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareProviderRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareProviderResponseDTO;
 
@@ -41,33 +51,48 @@ class HsaIntygProxyServiceHealthCareProviderClientTest {
     private static final String HSA_ID = "hsaId";
 
     @Mock
-    private RestTemplate restTemplate;
+    private RestClient restClient;
 
     @InjectMocks
     private HsaIntygProxyServiceHealthCareProviderClient hsaIntygProxyServiceHealthCareProviderClient;
 
-    @Test
-    void shouldThrowException() {
-        final var request = GetHealthCareProviderRequestDTO.builder().build();
-        when(restTemplate.postForObject(anyString(), eq(request), eq(GetHealthCareProviderRequestDTO.class)))
-            .thenThrow(IllegalStateException.class);
+    private RequestBodyUriSpec requestBodyUriSpec;
+    private ResponseSpec responseSpec;
 
-        assertThrows(IllegalStateException.class, () -> hsaIntygProxyServiceHealthCareProviderClient.get(request));
+    @BeforeEach
+    void setUp() {
+        final var uri = "/api/from/configuration";
+        ReflectionTestUtils.setField(hsaIntygProxyServiceHealthCareProviderClient, "getHealthCareProviderEndpoint", uri);
+
+        requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
+        responseSpec = mock(RestClient.ResponseSpec.class);
+
+        MDC.put(TRACE_ID_KEY, "traceId");
+        MDC.put(SESSION_ID_KEY, "sessionId");
+
+        when(restClient.post()).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.uri(uri)).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.body(any(GetHealthCareProviderRequestDTO.class))).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
     }
 
     @Test
-    void shouldReturnResponse() {
+    void shallReturnGetCitizenCertificatesResponse() {
         final var expectedResponse = GetHealthCareProviderResponseDTO.builder()
             .healthCareProviders(Collections.emptyList())
             .build();
+
         final var request = GetHealthCareProviderRequestDTO.builder()
             .hsaId(HSA_ID)
             .build();
-        when(restTemplate.postForObject(anyString(), eq(request), eq(GetHealthCareProviderResponseDTO.class)))
-            .thenReturn(expectedResponse);
 
-        final var result = hsaIntygProxyServiceHealthCareProviderClient.get(request);
+        doReturn(expectedResponse).when(responseSpec).body(GetHealthCareProviderResponseDTO.class);
 
-        assertEquals(expectedResponse, result);
+        final var actualResponse = hsaIntygProxyServiceHealthCareProviderClient.get(request);
+
+        assertEquals(expectedResponse, actualResponse);
     }
 }

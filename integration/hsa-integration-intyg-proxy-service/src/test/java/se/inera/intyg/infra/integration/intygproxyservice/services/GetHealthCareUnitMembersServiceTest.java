@@ -61,7 +61,7 @@ class GetHealthCareUnitMembersServiceTest {
     void shouldReturnHealthCareUnitMembersFromClient() {
         final var request = GetHealthCareUnitMembersRequestDTO.builder().hsaId(HSA_ID).build();
         final var expectedResponse = new HealthCareUnitMembers();
-        when(healthCareUnitMembersClient.getHealthCareUnitMembers(request)).thenReturn(
+        when(healthCareUnitMembersClient.get(request)).thenReturn(
             GetHealthCareUnitMembersResponseDTO.builder()
                 .healthCareUnitMembers(expectedResponse)
                 .build()
