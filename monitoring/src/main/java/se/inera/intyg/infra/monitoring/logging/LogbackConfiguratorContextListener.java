@@ -38,7 +38,7 @@ public class LogbackConfiguratorContextListener implements ServletContextListene
     private static final Logger LOG = LoggerFactory.getLogger(LogbackConfiguratorContextListener.class);
 
     private static final String CLASSPATH = "classpath:";
-    private static final String DEFAULTURI = CLASSPATH + "logback-ocp.xml";
+    private static final String DEFAULTURI = CLASSPATH + "logback-spring.xml";
 
     /**
      * initialize logback with external configuration file.
