@@ -38,7 +38,7 @@ public class GetHealthCareUnitMembersService {
         unless = "#result == null")
     public HealthCareUnitMembers get(GetHealthCareUnitMembersRequestDTO getHealthCareUnitMembersRequest) {
         validateRequest(getHealthCareUnitMembersRequest.getHsaId());
-        final var healthCareUnitMembersResponse = healthCareUnitMembersClient.getHealthCareUnitMembers(getHealthCareUnitMembersRequest);
+        final var healthCareUnitMembersResponse = healthCareUnitMembersClient.get(getHealthCareUnitMembersRequest);
         return healthCareUnitMembersResponse.getHealthCareUnitMembers();
     }
 

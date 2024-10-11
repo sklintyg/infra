@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.client.authorization;
+package se.inera.intyg.infra.integration.intygproxyservice.client.employee;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,22 +41,19 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.RequestBodyUriSpec;
 import org.springframework.web.client.RestClient.ResponseSpec;
-import se.inera.intyg.infra.integration.hsatk.model.HospCredentialsForPerson;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialsForPersonRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialsForPersonResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmployeeResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
-class HsaIntygProxyServiceHospCredentialsForPersonClientTest {
+class HsaIntygProxyServiceEmployeeClientTest {
 
-    private static final GetCredentialsForPersonRequestDTO GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO =
-        GetCredentialsForPersonRequestDTO.builder()
-            .personId("personId")
-            .build();
     @Mock
     private RestClient restClient;
 
     @InjectMocks
-    private HsaIntygProxyServiceHospCredentialsForPersonClient credentialsForPersonClient;
+    private HsaIntygProxyServiceEmployeeClient hsaIntygProxyServiceEmployeeClient;
+
+    private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
 
     private RequestBodyUriSpec requestBodyUriSpec;
     private ResponseSpec responseSpec;
@@ -64,7 +61,7 @@ class HsaIntygProxyServiceHospCredentialsForPersonClientTest {
     @BeforeEach
     void setUp() {
         final var uri = "/api/from/configuration";
-        ReflectionTestUtils.setField(credentialsForPersonClient, "credentialsForPersonEndpoint", uri);
+        ReflectionTestUtils.setField(hsaIntygProxyServiceEmployeeClient, "employeeEndpoint", uri);
 
         requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
         responseSpec = mock(RestClient.ResponseSpec.class);
@@ -74,7 +71,7 @@ class HsaIntygProxyServiceHospCredentialsForPersonClientTest {
 
         when(restClient.post()).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.uri(uri)).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.body(any(GetCredentialsForPersonRequestDTO.class))).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.body(any(GetEmployeeRequestDTO.class))).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
@@ -83,13 +80,15 @@ class HsaIntygProxyServiceHospCredentialsForPersonClientTest {
 
     @Test
     void shallReturnGetCitizenCertificatesResponse() {
-        final var expectedResponse = GetCredentialsForPersonResponseDTO.builder()
-            .credentials(new HospCredentialsForPerson())
+        final var request = GetEmployeeRequestDTO.builder()
+            .personId(PERSONAL_IDENTITY_NUMBER)
             .build();
 
-        doReturn(expectedResponse).when(responseSpec).body(GetCredentialsForPersonResponseDTO.class);
+        final var expectedResponse = GetEmployeeResponseDTO.builder().build();
 
-        final var actualResponse = credentialsForPersonClient.get(GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO);
+        doReturn(expectedResponse).when(responseSpec).body(GetEmployeeResponseDTO.class);
+
+        final var actualResponse = hsaIntygProxyServiceEmployeeClient.getEmployee(request);
 
         assertEquals(expectedResponse, actualResponse);
     }

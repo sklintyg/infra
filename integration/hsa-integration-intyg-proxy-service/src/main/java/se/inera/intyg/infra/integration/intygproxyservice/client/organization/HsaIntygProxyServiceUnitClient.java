@@ -19,11 +19,18 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.client.organization;
 
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.SESSION_ID_KEY;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.TRACE_ID_KEY;
+
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitResponseDTO;
 
@@ -31,19 +38,21 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUn
 public class HsaIntygProxyServiceUnitClient {
 
     @Autowired
-    @Qualifier("hsaIntygProxyServiceRestTemplate")
-    private RestTemplate restTemplate;
+    @Qualifier("hsaIntygProxyServiceRestClient")
+    private RestClient ipsRestClient;
+
     @Value("${integration.intygproxyservice.unit.endpoint}")
     private String unitEndpoint;
-    @Value("${integration.intygproxyservice.baseurl}")
-    private String intygProxyServiceBaseUrl;
 
     public GetUnitResponseDTO getUnit(GetUnitRequestDTO getUnitRequestDTO) {
-        final var url = intygProxyServiceBaseUrl + unitEndpoint;
-        try {
-            return restTemplate.postForObject(url, getUnitRequestDTO, GetUnitResponseDTO.class);
-        } catch (Exception exception) {
-            throw new IllegalStateException("Error occured when trying to communicate with intyg-proxy-service", exception);
-        }
+        return ipsRestClient
+            .post()
+            .uri(unitEndpoint)
+            .body(getUnitRequestDTO)
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .contentType(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .body(GetUnitResponseDTO.class);
     }
 }

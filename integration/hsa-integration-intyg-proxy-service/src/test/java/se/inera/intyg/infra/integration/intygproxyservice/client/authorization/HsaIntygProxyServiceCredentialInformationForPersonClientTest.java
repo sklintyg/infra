@@ -29,6 +29,7 @@ import static se.inera.intyg.infra.integration.intygproxyservice.configuration.R
 import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.SESSION_ID_KEY;
 import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.TRACE_ID_KEY;
 
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,22 +42,20 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.RequestBodyUriSpec;
 import org.springframework.web.client.RestClient.ResponseSpec;
-import se.inera.intyg.infra.integration.hsatk.model.HospCredentialsForPerson;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialsForPersonRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialsForPersonResponseDTO;
+import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialInformationResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
-class HsaIntygProxyServiceHospCredentialsForPersonClientTest {
+class HsaIntygProxyServiceCredentialInformationForPersonClientTest {
 
-    private static final GetCredentialsForPersonRequestDTO GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO =
-        GetCredentialsForPersonRequestDTO.builder()
-            .personId("personId")
-            .build();
+    private static final List<CredentialInformation> CREDENTIAL_INFORMATIONS = List.of(new CredentialInformation());
+
     @Mock
     private RestClient restClient;
 
     @InjectMocks
-    private HsaIntygProxyServiceHospCredentialsForPersonClient credentialsForPersonClient;
+    private HsaIntygProxyServiceCredentialInformationForPersonClient credentialInformationForPersonClient;
 
     private RequestBodyUriSpec requestBodyUriSpec;
     private ResponseSpec responseSpec;
@@ -64,7 +63,7 @@ class HsaIntygProxyServiceHospCredentialsForPersonClientTest {
     @BeforeEach
     void setUp() {
         final var uri = "/api/from/configuration";
-        ReflectionTestUtils.setField(credentialsForPersonClient, "credentialsForPersonEndpoint", uri);
+        ReflectionTestUtils.setField(credentialInformationForPersonClient, "credentialInformationForPerson", uri);
 
         requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
         responseSpec = mock(RestClient.ResponseSpec.class);
@@ -74,7 +73,7 @@ class HsaIntygProxyServiceHospCredentialsForPersonClientTest {
 
         when(restClient.post()).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.uri(uri)).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.body(any(GetCredentialsForPersonRequestDTO.class))).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.body(any(GetCredentialInformationRequestDTO.class))).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
@@ -83,13 +82,17 @@ class HsaIntygProxyServiceHospCredentialsForPersonClientTest {
 
     @Test
     void shallReturnGetCitizenCertificatesResponse() {
-        final var expectedResponse = GetCredentialsForPersonResponseDTO.builder()
-            .credentials(new HospCredentialsForPerson())
+        final var request = GetCredentialInformationRequestDTO.builder()
+            .personHsaId("personHsaId")
             .build();
 
-        doReturn(expectedResponse).when(responseSpec).body(GetCredentialsForPersonResponseDTO.class);
+        final var expectedResponse = GetCredentialInformationResponseDTO.builder()
+            .credentialInformation(CREDENTIAL_INFORMATIONS)
+            .build();
 
-        final var actualResponse = credentialsForPersonClient.get(GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO);
+        doReturn(expectedResponse).when(responseSpec).body(GetCredentialInformationResponseDTO.class);
+
+        final var actualResponse = credentialInformationForPersonClient.get(request);
 
         assertEquals(expectedResponse, actualResponse);
     }

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.infra.integration.intygproxyservice.client.authorization;
+package se.inera.intyg.infra.integration.intygproxyservice.client.organization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,22 +41,19 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.RequestBodyUriSpec;
 import org.springframework.web.client.RestClient.ResponseSpec;
-import se.inera.intyg.infra.integration.hsatk.model.HospCredentialsForPerson;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialsForPersonRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetCredentialsForPersonResponseDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
+import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.HealthCareUnitResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
-class HsaIntygProxyServiceHospCredentialsForPersonClientTest {
+class HsaIntygProxyServiceHealthCareUnitClientTest {
 
-    private static final GetCredentialsForPersonRequestDTO GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO =
-        GetCredentialsForPersonRequestDTO.builder()
-            .personId("personId")
-            .build();
     @Mock
     private RestClient restClient;
 
     @InjectMocks
-    private HsaIntygProxyServiceHospCredentialsForPersonClient credentialsForPersonClient;
+    private HsaIntygProxyServiceHealthCareUnitClient hsaIntygProxyServiceHealthCareUnitClient;
+
+    private static final String CARE_UNIT_HSA_ID = "careUnitHsaId";
 
     private RequestBodyUriSpec requestBodyUriSpec;
     private ResponseSpec responseSpec;
@@ -64,7 +61,7 @@ class HsaIntygProxyServiceHospCredentialsForPersonClientTest {
     @BeforeEach
     void setUp() {
         final var uri = "/api/from/configuration";
-        ReflectionTestUtils.setField(credentialsForPersonClient, "credentialsForPersonEndpoint", uri);
+        ReflectionTestUtils.setField(hsaIntygProxyServiceHealthCareUnitClient, "healthCareUnitEndpoint", uri);
 
         requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
         responseSpec = mock(RestClient.ResponseSpec.class);
@@ -74,7 +71,7 @@ class HsaIntygProxyServiceHospCredentialsForPersonClientTest {
 
         when(restClient.post()).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.uri(uri)).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.body(any(GetCredentialsForPersonRequestDTO.class))).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.body(any(GetHealthCareUnitRequestDTO.class))).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
@@ -83,13 +80,15 @@ class HsaIntygProxyServiceHospCredentialsForPersonClientTest {
 
     @Test
     void shallReturnGetCitizenCertificatesResponse() {
-        final var expectedResponse = GetCredentialsForPersonResponseDTO.builder()
-            .credentials(new HospCredentialsForPerson())
+        final var request = GetHealthCareUnitRequestDTO.builder()
+            .hsaId(CARE_UNIT_HSA_ID)
             .build();
 
-        doReturn(expectedResponse).when(responseSpec).body(GetCredentialsForPersonResponseDTO.class);
+        final var expectedResponse = HealthCareUnitResponseDTO.builder().build();
 
-        final var actualResponse = credentialsForPersonClient.get(GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO);
+        doReturn(expectedResponse).when(responseSpec).body(HealthCareUnitResponseDTO.class);
+
+        final var actualResponse = hsaIntygProxyServiceHealthCareUnitClient.getHealthCareUnit(request);
 
         assertEquals(expectedResponse, actualResponse);
     }

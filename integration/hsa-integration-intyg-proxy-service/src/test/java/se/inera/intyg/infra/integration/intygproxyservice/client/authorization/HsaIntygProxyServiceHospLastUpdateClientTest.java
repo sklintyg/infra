@@ -19,47 +19,69 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.client.authorization;
 
-import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.SESSION_ID_KEY;
+import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.TRACE_ID_KEY;
 
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.client.RestTemplate;
+import org.slf4j.MDC;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClient.RequestHeadersUriSpec;
+import org.springframework.web.client.RestClient.ResponseSpec;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetHospLastUpdateResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceHospLastUpdateClientTest {
 
     @Mock
-    private RestTemplate restTemplate;
+    private RestClient restClient;
 
     @InjectMocks
     private HsaIntygProxyServiceHospLastUpdateClient hospLastUpdateClient;
 
+    private RequestHeadersUriSpec requestBodyUriSpec;
+    private ResponseSpec responseSpec;
+
+    @BeforeEach
+    void setUp() {
+        final var uri = "/api/from/configuration";
+        ReflectionTestUtils.setField(hospLastUpdateClient, "lastUpdateEndpoint", uri);
+
+        requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
+        responseSpec = mock(RestClient.ResponseSpec.class);
+
+        MDC.put(TRACE_ID_KEY, "traceId");
+        MDC.put(SESSION_ID_KEY, "sessionId");
+
+        when(restClient.get()).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.uri(uri)).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
+    }
+
     @Test
-    void shouldReturnGetHospLastUpdateResponse() {
+    void shallReturnGetCitizenCertificatesResponse() {
         final var expectedResponse = GetHospLastUpdateResponseDTO.builder()
             .lastUpdate(LocalDateTime.now())
             .build();
 
-        when(restTemplate.getForObject(anyString(), eq(GetHospLastUpdateResponseDTO.class))).thenReturn(expectedResponse);
+        doReturn(expectedResponse).when(responseSpec).body(GetHospLastUpdateResponseDTO.class);
 
-        final var result = hospLastUpdateClient.get();
+        final var actualResponse = hospLastUpdateClient.get();
 
-        assertEquals(expectedResponse, result);
-    }
-
-    @Test
-    void shouldThrowIllegalStateException() {
-        when(restTemplate.getForObject(anyString(), eq(GetHospLastUpdateResponseDTO.class))).thenThrow(IllegalStateException.class);
-
-        assertThrows(IllegalStateException.class, () -> hospLastUpdateClient.get());
+        assertEquals(expectedResponse, actualResponse);
     }
 }

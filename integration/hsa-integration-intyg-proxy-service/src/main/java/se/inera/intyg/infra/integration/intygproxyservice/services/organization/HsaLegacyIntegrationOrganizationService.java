@@ -19,13 +19,10 @@
 
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
-import static se.inera.intyg.infra.integration.hsatk.constants.HsaIntegrationApiConstants.HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE;
-
 import java.util.List;
 import jakarta.xml.ws.WebServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.UserAuthorizationInfo;
@@ -41,7 +38,6 @@ import se.inera.intyg.infra.integration.intygproxyservice.services.authorization
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Profile(HSA_INTEGRATION_INTYG_PROXY_SERVICE_PROFILE)
 public class HsaLegacyIntegrationOrganizationService implements HsaOrganizationsService {
 
     private final GetActiveHealthCareUnitMemberHsaIdService getActiveHealthCareUnitMemberHsaIdService;
