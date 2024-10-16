@@ -53,7 +53,7 @@
 
     <bean id="loggtjanstStubRestApi" class="se.inera.intyg.infra.loggtjanststub.LoggtjanstStubRestApi" />
 
-    <bean id="jacksonJsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider">
+    <bean id="jacksonJsonProvider" class="com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider">
       <property name="mapper">
         <bean class="se.inera.intyg.infra.loggtjanststub.json.LogStoreObjectMapper" />
       </property>
