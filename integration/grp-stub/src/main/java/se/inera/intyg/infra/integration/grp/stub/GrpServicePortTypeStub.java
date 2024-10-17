@@ -63,6 +63,9 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
 
     private RSAPrivateKey privKey;
 
+    private static final String QR_START_SECRET = "c9421268-c600-4739-85f6-8bf18ad9dacd";
+    private static final String QR_START_TOKEN = "8d565ead-76f7-4d45-ba3b-99157950059d";
+
     @PostConstruct
     void init() {
         Keys keys = StubSignUtil.loadFromKeystore();
@@ -84,6 +87,8 @@ public class GrpServicePortTypeStub implements GrpServicePortType {
 
         response.setOrderRef(UUID.randomUUID().toString());
         response.setAutoStartToken("start");
+        response.setQrStartSecret(QR_START_SECRET);
+        response.setQrStartToken(QR_START_TOKEN);
 
         // Update GRP service stub
         serviceStub.putOrderRef(response.getTransactionId(), response.getOrderRef());
