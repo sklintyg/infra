@@ -26,7 +26,6 @@ ext {
     jaxb2NamespacePrefixVersion = "2.0"
     saxonVersion = "12.3"
     shedlockSpringVersion = "4.46.0"
-    springSecuritySaml2CoreVersion = "1.0.3.RELEASE" //Higher versions require opensaml 2.6.6 (not available 2020-03-23)
     uapVersion = "1.6.1"
     xmlSecVersion = "4.0.0"
     xmlWsRtVersion = "4.0.2"
@@ -133,7 +132,7 @@ allprojects {
     }
 }
 
-subprojects.collect {subproject -> subproject.name }.each { subprojectName ->
+subprojects.collect { subproject -> subproject.name }.each { subprojectName ->
     dependencies { testReportAggregation project(":${subprojectName}") }
 }
 
