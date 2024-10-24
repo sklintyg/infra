@@ -26,7 +26,6 @@ ext {
     jaxb2NamespacePrefixVersion = "2.0"
     saxonVersion = "12.3"
     shedlockSpringVersion = "4.46.0"
-    springSecuritySaml2CoreVersion = "1.0.3.RELEASE" //Higher versions require opensaml 2.6.6 (not available 2020-03-23)
     uapVersion = "1.6.1"
     xmlSecVersion = "4.0.0"
     xmlWsRtVersion = "4.0.2"
@@ -133,11 +132,6 @@ allprojects {
     }
 }
 
-subprojects.collect {subproject -> subproject.name }.each { subprojectName ->
-    dependencies { testReportAggregation project(":${subprojectName}") }
-}
-
-
 sonar {
     properties {
         property "sonar.projectKey", "intyg-infra"
@@ -154,31 +148,7 @@ dependencyCheck {
 }
 
 reporting {
-    dependencies {
-        testReportAggregation project(':common-redis-cache-core')
-        testReportAggregation project(':dynamiclink')
-        testReportAggregation project(':grp-stub')
-        testReportAggregation project(':ia-integration')
-        testReportAggregation project(':pu-integration')
-        testReportAggregation project(':srs-integration')
-        testReportAggregation project(':postnummerservice-integration')
-        testReportAggregation project(':log-messages')
-        testReportAggregation project(':loggtjanst-stub')
-        testReportAggregation project(':security-common')
-        testReportAggregation project(':security-authorities')
-        testReportAggregation project(':security-filter')
-        testReportAggregation project(':security-siths')
-        testReportAggregation project(':sjukfall-engine')
-        testReportAggregation project(':xmldsig')
-        testReportAggregation project(':monitoring')
-        testReportAggregation project(':intyginfo')
-        testReportAggregation project(':integreradeenheter')
-        testReportAggregation project(':driftbanner-dto')
-        testReportAggregation project(':testcertificate')
-        testReportAggregation project(':message')
-        testReportAggregation project(':privatepractitioner')
-        testReportAggregation project(':certificate')
-        testReportAggregation project(':hsa-integration-api')
-        testReportAggregation project(':hsa-integration-intyg-proxy-service')
+    subprojects.collect { subproject -> subproject.name }.each { subprojectName ->
+        dependencies { testReportAggregation project(":${subprojectName}") }
     }
 }

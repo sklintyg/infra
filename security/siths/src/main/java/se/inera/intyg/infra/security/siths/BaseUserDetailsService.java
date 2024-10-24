@@ -20,20 +20,13 @@ package se.inera.intyg.infra.security.siths;
 
 import static se.inera.intyg.infra.security.authorities.AuthoritiesResolverUtil.toMap;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.opensaml.saml2.core.Assertion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.saml.SAMLCredential;
-import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.UserAuthorizationInfo;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
@@ -41,7 +34,6 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
-import se.inera.intyg.infra.security.common.exception.GenericAuthenticationException;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.common.model.Privilege;
 import se.inera.intyg.infra.security.common.model.RoleResolveResult;
@@ -59,7 +51,7 @@ import se.inera.intyg.infra.security.exception.MissingMedarbetaruppdragException
  *
  * @author eriklupander
  */
-public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
+public abstract class BaseUserDetailsService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseUserDetailsService.class);
     protected CommonAuthoritiesResolver commonAuthoritiesResolver;
@@ -75,60 +67,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
     // ~ API
     // =====================================================================================
 
-    /**
-     * Entry-point method for building a user principal given a SAMLCredential.
-     * <p>
-     * Implementing subclasses may override this method, but are recommended to _not_ do so. Instead overriding
-     * {@link BaseUserDetailsService#buildUserPrincipal} and/or
-     * {@link BaseUserDetailsService#createIntygUser(String, String, UserAuthorizationInfo, List)} is the recommended
-     * way.
-     */
-    @Override
-    public Object loadUserBySAML(SAMLCredential credential) {
-
-        if (credential == null) {
-            throw new GenericAuthenticationException("SAMLCredential has not been set.");
-        }
-
-        LOG.info("Start user authentication...");
-        logCredential(credential);
-
-        try {
-            // Create the user
-            Object principal = buildUserPrincipal(credential);
-            LOG.info("End user authentication...SUCCESS");
-            return principal;
-
-        } catch (Exception e) {
-            LOG.error("End user authentication...FAIL");
-            if (e instanceof AuthenticationException) {
-                throw e;
-            }
-            LOG.error("Error building user {}, failed with stacktrace {}", getAssertion(credential).getHsaId(), e);
-            throw new GenericAuthenticationException(getAssertion(credential).getHsaId(), e);
-        }
-    }
-
-    public IntygUser loadUserByHsaId(String hsaId) {
-        return buildUserPrincipal(hsaId, "");
-    }
-
-    /**
-     * Method responsible to create the actual Principal given a SAMLCredential.
-     * <p>
-     * Note that this default implementation only uses employeeHsaId and authnMethod from a supplied SAML ticket.
-     * <p>
-     * Implementing subclasses should override this method, call super.buildUserPrincipal(..) and then dececorate their
-     * own Principal based
-     * on the {@link IntygUser} returned by this base method.
-     */
-    protected IntygUser buildUserPrincipal(SAMLCredential credential) {
-        String employeeHsaId = getAssertion(credential).getHsaId();
-        String authenticationScheme = getAssertion(credential).getAuthenticationScheme();
-        return buildUserPrincipal(employeeHsaId, authenticationScheme);
-    }
-
-    private IntygUser buildUserPrincipal(String employeeHsaId, String authenticationScheme) {
+    protected IntygUser buildUserPrincipal(String employeeHsaId, String authenticationScheme) {
         LOG.debug("Creating user object...");
 
         List<PersonInformation> personInfo = getPersonInfo(employeeHsaId);
@@ -148,13 +87,6 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
             LOG.error("Missing medarbetaruppdrag. This needs to be fixed!!!");
             throw e;
         }
-    }
-
-    // ~ Protected scope
-    // =====================================================================================
-
-    protected final BaseSakerhetstjanstAssertion getAssertion(SAMLCredential credential) {
-        return getAssertion(credential.getAuthenticationAssertion());
     }
 
     /**
@@ -276,16 +208,7 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         return defaultUserDetailsDecorator.compileName(fornamn, mellanOchEfterNamn);
     }
 
-    protected BaseSakerhetstjanstAssertion getAssertion(Assertion assertion) {
-        if (assertion == null) {
-            throw new IllegalArgumentException("Assertion parameter cannot be null");
-        }
-        return new BaseSakerhetstjanstAssertion(assertion);
-    }
-
-    protected HttpServletRequest getCurrentRequest() {
-        return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-    }
+    protected abstract HttpServletRequest getCurrentRequest();
 
     // Allow subclasses to use HSA services.
     protected HsaOrganizationsService getHsaOrganizationsService() {
@@ -346,14 +269,6 @@ public abstract class BaseUserDetailsService implements SAMLUserDetailsService {
         if (personInfo == null || personInfo.isEmpty()) {
             LOG.error("Cannot authorize user with employeeHsaId '{}', no records found for Employee in HoSP.", employeeHsaId);
             throw new MissingHsaEmployeeInformation(employeeHsaId);
-        }
-    }
-
-    private void logCredential(SAMLCredential credential) {
-        if (LOG.isDebugEnabled()) {
-            // I dont want to read this object every time.
-            String str = ToStringBuilder.reflectionToString(credential);
-            LOG.debug("SAML credential is:\n{}", str);
         }
     }
 }

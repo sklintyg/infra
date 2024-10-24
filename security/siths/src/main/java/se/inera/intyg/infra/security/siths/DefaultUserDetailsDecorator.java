@@ -18,7 +18,8 @@
  */
 package se.inera.intyg.infra.security.siths;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.inera.intyg.infra.integration.hsatk.model.HsaSystemRole;
@@ -28,9 +29,6 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.util.HsaAttributeExtractor;
 import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
 import se.inera.intyg.infra.security.common.model.IntygUser;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Provides a number of default implementations for decorating a IntygUser principal with various information extracted
@@ -84,12 +82,12 @@ public class DefaultUserDetailsDecorator {
 
         StringBuilder sb = new StringBuilder();
 
-        if (StringUtils.isNotBlank(fornamn)) {
+        if (fornamn != null && !fornamn.isEmpty()) {
             sb.append(fornamn);
         }
 
-        if (StringUtils.isNotBlank(mellanOchEfterNamn)) {
-            if (sb.length() > 0) {
+        if (mellanOchEfterNamn != null && !mellanOchEfterNamn.isEmpty()) {
+            if (!sb.isEmpty()) {
                 sb.append(SPACE);
             }
             sb.append(mellanOchEfterNamn);
