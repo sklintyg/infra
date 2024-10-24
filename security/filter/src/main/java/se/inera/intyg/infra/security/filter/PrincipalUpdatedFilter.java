@@ -23,13 +23,13 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Objects;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Objects;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.SerializationUtils;
@@ -67,7 +67,7 @@ public class PrincipalUpdatedFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
 
         // If we were authenticated and calculated a hash before invoke...
-        if (Objects.nonNull(context)) {
+        if (Objects.nonNull(context) && Objects.nonNull(context.getAuthentication())) {
             final HashCode afterHash = hashCode(context.getAuthentication().getPrincipal());
             // Check if principal hash has changed
             if (!beforeHash.equals(afterHash)) {
