@@ -24,8 +24,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.UserAuthorizationInfo;
@@ -36,25 +35,18 @@ import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.common.model.Privilege;
-import se.inera.intyg.infra.security.common.model.RoleResolveResult;
 import se.inera.intyg.infra.security.common.model.UserOrigin;
 import se.inera.intyg.infra.security.common.service.AuthenticationLogger;
 import se.inera.intyg.infra.security.exception.HsaServiceException;
 import se.inera.intyg.infra.security.exception.MissingHsaEmployeeInformation;
 import se.inera.intyg.infra.security.exception.MissingMedarbetaruppdragException;
 
-/**
- * Base class for providing authorization based on minimal SAML-tickets containing only the employeeHsaId and
- * authnMethod.
- * <p>
- * Each application must extend this base class, with the option of overriding most methods.
- *
- * @author eriklupander
- */
+@Slf4j
 public abstract class BaseUserDetailsService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BaseUserDetailsService.class);
-    protected CommonAuthoritiesResolver commonAuthoritiesResolver;
+    protected abstract String getDefaultRole();
+    protected abstract HttpServletRequest getCurrentRequest();
+
     @Autowired(required = false)
     private Optional<UserOrigin> userOrigin;
     @Autowired
@@ -63,20 +55,24 @@ public abstract class BaseUserDetailsService {
     private HsaPersonService hsaPersonService;
     @Autowired
     private AuthenticationLogger monitoringLogService;
-    private DefaultUserDetailsDecorator defaultUserDetailsDecorator = new DefaultUserDetailsDecorator();
-    // ~ API
-    // =====================================================================================
+    @Autowired
+    public void setCommonAuthoritiesResolver(CommonAuthoritiesResolver commonAuthoritiesResolver) {
+        this.commonAuthoritiesResolver = commonAuthoritiesResolver;
+    }
+
+    protected CommonAuthoritiesResolver commonAuthoritiesResolver;
+    private final DefaultUserDetailsDecorator defaultUserDetailsDecorator = new DefaultUserDetailsDecorator();
 
     protected IntygUser buildUserPrincipal(String employeeHsaId, String authenticationScheme) {
-        LOG.debug("Creating user object...");
+        log.debug("Creating user object...");
 
-        List<PersonInformation> personInfo = getPersonInfo(employeeHsaId);
-        UserAuthorizationInfo userAuthorizationInfo = getAuthorizedVardgivare(employeeHsaId);
+        final var personInfo = getPersonInfo(employeeHsaId);
+        final var  userAuthorizationInfo = getAuthorizedVardgivare(employeeHsaId);
 
         try {
             assertEmployee(employeeHsaId, personInfo);
             assertAuthorizedVardgivare(employeeHsaId, userAuthorizationInfo.getVardgivare());
-            IntygUser intygUser = createIntygUser(employeeHsaId, authenticationScheme, userAuthorizationInfo, personInfo);
+            final var intygUser = createIntygUser(employeeHsaId, authenticationScheme, userAuthorizationInfo, personInfo);
 
             // Clean out förskrivarkod
             intygUser.setForskrivarkod("0000000");
@@ -84,7 +80,7 @@ public abstract class BaseUserDetailsService {
 
         } catch (MissingMedarbetaruppdragException e) {
             monitoringLogService.logMissingMedarbetarUppdrag(employeeHsaId);
-            LOG.error("Missing medarbetaruppdrag. This needs to be fixed!!!");
+            log.error("Missing medarbetaruppdrag. This needs to be fixed!!!");
             throw e;
         }
     }
@@ -97,13 +93,13 @@ public abstract class BaseUserDetailsService {
      * Override to provide your own mechanism for fetching Vardgivare.
      */
     protected UserAuthorizationInfo getAuthorizedVardgivare(String employeeHsaId) {
-        LOG.debug("Retrieving authorized units from HSA...");
+        log.debug("Retrieving authorized units from HSA...");
 
         try {
             return hsaOrganizationsService.getAuthorizedEnheterForHosPerson(employeeHsaId);
 
         } catch (Exception e) {
-            LOG.error("Failed retrieving authorized units from HSA for user {}, error message {}", employeeHsaId, e.getMessage());
+            log.error("Failure retrieving authorized units from HSA for user {}, error message {}", employeeHsaId, e.getMessage());
             throw new HsaServiceException(employeeHsaId, e);
         }
     }
@@ -115,26 +111,25 @@ public abstract class BaseUserDetailsService {
      * Override to provide your own implementation for fetching PersonInfo.
      */
     protected List<PersonInformation> getPersonInfo(String employeeHsaId) {
-        LOG.debug("Retrieving user information from HSA...");
+        log.debug("Retrieving user information from HSA...");
 
         List<PersonInformation> hsaPersonInfo;
         try {
             hsaPersonInfo = hsaPersonService.getHsaPersonInfo(employeeHsaId);
             if (hsaPersonInfo == null || hsaPersonInfo.isEmpty()) {
-                LOG.info("Call to web service getHsaPersonInfo did not return any info for user '{}'", employeeHsaId);
+                log.info("Call to web service getHsaPersonInfo did not return any info for user '{}'", employeeHsaId);
             }
 
         } catch (Exception e) {
-            LOG.error("Failed retrieving user information from HSA for user {}, error message {}", employeeHsaId, e.getMessage());
+            log.error("Failed retrieving user information from HSA for user {}, error message {}", employeeHsaId, e.getMessage());
             throw new HsaServiceException(employeeHsaId, e);
         }
         return hsaPersonInfo;
     }
 
     protected void assertAuthorizedVardgivare(String employeeHsaId, List<Vardgivare> authorizedVardgivare) {
-        LOG.debug("Assert user has authorization to one or more 'vårdenheter'");
+        log.debug("Assert user has authorization to one or more 'vårdenheter'");
 
-        // if user does not have access to any vardgivare, we have to reject authentication
         if (authorizedVardgivare == null || authorizedVardgivare.isEmpty()) {
             throw new MissingMedarbetaruppdragException(employeeHsaId);
         }
@@ -142,8 +137,7 @@ public abstract class BaseUserDetailsService {
 
     /**
      * Creates the base {@link IntygUser} instance that implementing subclasses then can decorate on their own.
-     * Optionally,
-     * all of the decorate* methods can be individually overridden by implementing subclasses.
+     * Optionally, all the decorate* methods can be individually overridden by implementing subclasses.
      *
      * @param employeeHsaId hsaId for the authorizing user. From SAML ticket.
      * @param authenticationScheme auth scheme, i.e. what auth method used, typically :siths or :fake
@@ -155,9 +149,9 @@ public abstract class BaseUserDetailsService {
      */
     protected IntygUser createIntygUser(String employeeHsaId, String authenticationScheme, UserAuthorizationInfo userAuthorizationInfo,
         List<PersonInformation> personInfo) {
-        LOG.debug("Decorate/populate user object with additional information");
+        log.debug("Decorate/populate user object with additional information");
 
-        IntygUser intygUser = new IntygUser(employeeHsaId);
+        final var intygUser = new IntygUser(employeeHsaId);
         decorateIntygUserWithBasicInfo(intygUser, userAuthorizationInfo, personInfo, authenticationScheme);
         decorateIntygUserWithAdditionalInfo(intygUser, personInfo);
         decorateIntygUserWithAuthenticationMethod(intygUser, authenticationScheme);
@@ -167,11 +161,6 @@ public abstract class BaseUserDetailsService {
         decorateIntygUserWithAvailableFeatures(intygUser);
         return intygUser;
     }
-
-    /**
-     * Each application must override this method in order to specify it's fallback default role.
-     */
-    protected abstract String getDefaultRole();
 
     protected void decorateIntygUserWithAdditionalInfo(IntygUser intygUser, List<PersonInformation> hsaPersonInfo) {
         defaultUserDetailsDecorator.decorateIntygUserWithAdditionalInfo(intygUser, hsaPersonInfo);
@@ -189,9 +178,6 @@ public abstract class BaseUserDetailsService {
         defaultUserDetailsDecorator.decorateIntygUserWithDefaultVardenhet(intygUser);
     }
 
-    /**
-     * Note that features are optional.
-     */
     public void decorateIntygUserWithAvailableFeatures(IntygUser intygUser) {
         List<String> hsaIds = new ArrayList<>();
         if (intygUser.getValdVardenhet() != null) {
@@ -208,8 +194,6 @@ public abstract class BaseUserDetailsService {
         return defaultUserDetailsDecorator.compileName(fornamn, mellanOchEfterNamn);
     }
 
-    protected abstract HttpServletRequest getCurrentRequest();
-
     // Allow subclasses to use HSA services.
     protected HsaOrganizationsService getHsaOrganizationsService() {
         return hsaOrganizationsService;
@@ -220,34 +204,22 @@ public abstract class BaseUserDetailsService {
         return hsaPersonService;
     }
 
-    @Autowired
-    public void setCommonAuthoritiesResolver(CommonAuthoritiesResolver commonAuthoritiesResolver) {
-        this.commonAuthoritiesResolver = commonAuthoritiesResolver;
-    }
-
-    // ~ Private scope
-    // =====================================================================================
     private void decorateIntygUserWithBasicInfo(IntygUser intygUser, UserAuthorizationInfo userAuthorizationInfo,
         List<PersonInformation> personInfo, String authenticationScheme) {
-        intygUser.setFornamn(personInfo.get(0).getGivenName());
-        intygUser.setEfternamn(personInfo.get(0).getMiddleAndSurName());
-        intygUser.setNamn(compileName(personInfo.get(0).getGivenName(), personInfo.get(0).getMiddleAndSurName()));
+        intygUser.setFornamn(personInfo.getFirst().getGivenName());
+        intygUser.setEfternamn(personInfo.getFirst().getMiddleAndSurName());
+        intygUser.setNamn(compileName(personInfo.getFirst().getGivenName(), personInfo.get(0).getMiddleAndSurName()));
         intygUser.setVardgivare(userAuthorizationInfo.getVardgivare());
-        //INTYG-4208: If any item has protectedPerson set, consider the user sekretessMarkerad.
         intygUser.setSekretessMarkerad(
-            personInfo.stream().filter(pi -> pi.getProtectedPerson() != null && pi.getProtectedPerson()).findAny().isPresent());
+            personInfo.stream().anyMatch(pi -> pi.getProtectedPerson() != null && pi.getProtectedPerson()));
 
-        // Förskrivarkod is sensitive information, not allowed to store real value so make sure we overwrite this later
-        // after role resolution.
+        // Förskrivarkod is sensitive information so make sure it is overwritten after role resolution.
         intygUser.setForskrivarkod(userAuthorizationInfo.getUserCredentials().getPersonalPrescriptionCode());
 
-        // Set user's authentication scheme
         intygUser.setAuthenticationScheme(authenticationScheme);
 
-        // Set application mode / request origin if applicable
-        if (userOrigin.isPresent()) {
-            intygUser.setOrigin(commonAuthoritiesResolver.getRequestOrigin(userOrigin.get().resolveOrigin(getCurrentRequest())).getName());
-        }
+        userOrigin.ifPresent(
+            origin -> intygUser.setOrigin(commonAuthoritiesResolver.getRequestOrigin(origin.resolveOrigin(getCurrentRequest())).getName()));
 
         // Set commission names per enhetsId (required for PDL logging)
         intygUser.setMiuNamnPerEnhetsId(userAuthorizationInfo.getCommissionNamePerCareUnit());
@@ -255,11 +227,10 @@ public abstract class BaseUserDetailsService {
 
     protected void decorateIntygUserWithRoleAndAuthorities(IntygUser intygUser, List<PersonInformation> personInfo,
         UserCredentials userCredentials) {
-        RoleResolveResult roleResolveResult = commonAuthoritiesResolver
-            .resolveRole(intygUser, personInfo, getDefaultRole(), userCredentials);
-        LOG.debug("User role is set to {}", roleResolveResult.getRole());
+        final var roleResolveResult = commonAuthoritiesResolver.resolveRole(intygUser, personInfo, getDefaultRole(),
+            userCredentials);
+        log.debug("User role is set to {}", roleResolveResult.getRole());
 
-        // Set role and privileges
         intygUser.setRoles(toMap(roleResolveResult.getRole()));
         intygUser.setRoleTypeName(roleResolveResult.getRoleTypeName());
         intygUser.setAuthorities(toMap(roleResolveResult.getRole().getPrivileges(), Privilege::getName));
@@ -267,7 +238,7 @@ public abstract class BaseUserDetailsService {
 
     private void assertEmployee(String employeeHsaId, List<PersonInformation> personInfo) {
         if (personInfo == null || personInfo.isEmpty()) {
-            LOG.error("Cannot authorize user with employeeHsaId '{}', no records found for Employee in HoSP.", employeeHsaId);
+            log.error("Cannot authorize user with employeeHsaId '{}', no records found for Employee in HoSP.", employeeHsaId);
             throw new MissingHsaEmployeeInformation(employeeHsaId);
         }
     }
