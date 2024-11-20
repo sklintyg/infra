@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.integration.pu.model;
+package se.inera.intyg.infra.integration.api.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class PersonSvar implements Serializable {
 
@@ -56,5 +57,22 @@ public class PersonSvar implements Serializable {
         FOUND,
         NOT_FOUND,
         ERROR
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final PersonSvar that = (PersonSvar) o;
+        return Objects.equals(person, that.person) && status == that.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(person, status);
     }
 }

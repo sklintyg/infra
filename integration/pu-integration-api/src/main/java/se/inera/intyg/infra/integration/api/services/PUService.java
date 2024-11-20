@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.integration.pu.services;
+package se.inera.intyg.infra.integration.api.services;
 
 import com.google.common.annotations.VisibleForTesting;
 import java.util.List;
 import java.util.Map;
-import se.inera.intyg.infra.integration.pu.model.PersonSvar;
+import se.inera.intyg.infra.integration.api.model.PersonSvar;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 public interface PUService {
@@ -62,5 +62,6 @@ public interface PUService {
 
 
     @VisibleForTesting
-    void clearCache();
+    default void clearCache() {
+    }
 }

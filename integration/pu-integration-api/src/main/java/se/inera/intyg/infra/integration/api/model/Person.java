@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.integration.pu.model;
+package se.inera.intyg.infra.integration.api.model;
 
 import java.io.Serializable;
-
+import lombok.Getter;
 import se.inera.intyg.schemas.contract.Personnummer;
 
+@Getter
 public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -37,7 +38,8 @@ public class Person implements Serializable {
     private final boolean testIndicator;
 
     // CHECKSTYLE:OFF ParameterNumber
-    public Person(Personnummer personnummer, boolean sekretessmarkering, boolean avliden, String fornamn, String mellannamn,
+    public Person(Personnummer personnummer, boolean sekretessmarkering, boolean avliden,
+        String fornamn, String mellannamn,
         String efternamn, String postadress, String postnummer, String postort) {
         this.personnummer = personnummer;
         this.sekretessmarkering = sekretessmarkering;
@@ -52,8 +54,10 @@ public class Person implements Serializable {
     }
 
     // For backward compatibility a new constructor is added with the testIndicator argument.
-    public Person(Personnummer personnummer, boolean sekretessmarkering, boolean avliden, String fornamn, String mellannamn,
-        String efternamn, String postadress, String postnummer, String postort, boolean testIndicator) {
+    public Person(Personnummer personnummer, boolean sekretessmarkering, boolean avliden,
+        String fornamn, String mellannamn,
+        String efternamn, String postadress, String postnummer, String postort,
+        boolean testIndicator) {
         this.personnummer = personnummer;
         this.sekretessmarkering = sekretessmarkering;
         this.avliden = avliden;
@@ -67,43 +71,4 @@ public class Person implements Serializable {
     }
     // CHECKSTYLE:ON ParameterNumber
 
-    public Personnummer getPersonnummer() {
-        return personnummer;
-    }
-
-    public boolean isSekretessmarkering() {
-        return sekretessmarkering;
-    }
-
-    public boolean isAvliden() {
-        return avliden;
-    }
-
-    public String getFornamn() {
-        return fornamn;
-    }
-
-    public String getMellannamn() {
-        return mellannamn;
-    }
-
-    public String getEfternamn() {
-        return efternamn;
-    }
-
-    public String getPostadress() {
-        return postadress;
-    }
-
-    public String getPostnummer() {
-        return postnummer;
-    }
-
-    public String getPostort() {
-        return postort;
-    }
-
-    public boolean isTestIndicator() {
-        return testIndicator;
-    }
 }
