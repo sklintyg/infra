@@ -1,3 +1,4 @@
 dependencies {
     implementation "com.google.guava:guava:${guavaVersion}"
+    implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
 }

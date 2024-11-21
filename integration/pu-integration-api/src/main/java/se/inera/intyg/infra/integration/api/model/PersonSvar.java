@@ -18,9 +18,11 @@
  */
 package se.inera.intyg.infra.integration.api.model;
 
-import java.io.Serializable;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
+@EqualsAndHashCode
 public class PersonSvar implements Serializable {
 
     private static final long serialVersionUID = 2L;
@@ -57,22 +59,5 @@ public class PersonSvar implements Serializable {
         FOUND,
         NOT_FOUND,
         ERROR
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final PersonSvar that = (PersonSvar) o;
-        return Objects.equals(person, that.person) && status == that.status;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(person, status);
     }
 }

@@ -1,12 +1,10 @@
 dependencies {
-    implementation project(':common-redis-cache-core')
     implementation project(':pu-integration-api')
 
     implementation "com.fasterxml.jackson.core:jackson-databind"
     implementation "org.springframework:spring-web"
     implementation "org.springframework:spring-context"
     implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
-    implementation "se.riv.strategicresourcemanagement.persons.person:strategicresourcemanagement-persons-person-schemas:${rivtaGetPersonsPersonSchemasVersion}"
 
     testImplementation "org.springframework:spring-test"
 }
