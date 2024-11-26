@@ -35,11 +35,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.context.annotation.Profile;
-import se.inera.intyg.infra.integration.api.model.PersonSvar;
-import se.inera.intyg.infra.integration.api.services.PUService;
 import se.inera.intyg.infra.integration.pu.services.validator.PUResponseValidator;
 import se.inera.intyg.infra.integration.pu.util.PersonConverter;
 import se.inera.intyg.infra.integration.pu.util.PersonIdUtil;
+import se.inera.intyg.infra.pu.integration.api.model.PersonSvar;
+import se.inera.intyg.infra.pu.integration.api.services.PUService;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofile.v3.rivtabp21.GetPersonsForProfileResponderInterface;
 import se.riv.strategicresourcemanagement.persons.person.getpersonsforprofileresponder.v3.GetPersonsForProfileResponseType;
@@ -88,10 +88,10 @@ public class PUServiceImpl implements PUService {
         PersonSvar cachedPersonSvar = queryCache(personId);
         if (cachedPersonSvar != null) {
             if (!personId.getPersonnummer()
-                .equals(cachedPersonSvar.getPerson().getPersonnummer().getPersonnummer())) {
+                .equals(cachedPersonSvar.getPerson().personnummer().getPersonnummer())) {
                 LOG.info(
                     "PU-cache returned another personId {} then the argument to getPerson {}. This might be ok.",
-                    cachedPersonSvar.getPerson().getPersonnummer().getPersonnummerHash(),
+                    cachedPersonSvar.getPerson().personnummer().getPersonnummerHash(),
                     personId.getPersonnummerHash());
             }
             return cachedPersonSvar;
@@ -288,7 +288,7 @@ public class PUServiceImpl implements PUService {
     }
 
     private void storeIfAbsent(PersonSvar personSvar) {
-        puCache.putIfAbsent(personSvar.getPerson().getPersonnummer().getPersonnummerHash(), personSvar);
+        puCache.putIfAbsent(personSvar.getPerson().personnummer().getPersonnummerHash(), personSvar);
     }
 
     private PersonSvar queryCache(Personnummer personId) {

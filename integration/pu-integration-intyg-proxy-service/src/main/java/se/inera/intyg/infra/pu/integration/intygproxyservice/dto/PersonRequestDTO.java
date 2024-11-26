@@ -1,4 +1,4 @@
-package se.inera.intyg.infra.integration.intygproxyservice.dto;
+package se.inera.intyg.infra.pu.integration.intygproxyservice.dto;
 
 import lombok.Builder;
 import lombok.Value;

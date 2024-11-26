@@ -4,38 +4,46 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_SESSION_ID_HEADER;
-import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.LOG_TRACE_ID_HEADER;
-import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.SESSION_ID_KEY;
-import static se.inera.intyg.infra.integration.intygproxyservice.configuration.RestClientConfig.TRACE_ID_KEY;
+import static se.inera.intyg.infra.pu.integration.intygproxyservice.configuration.PURestClientConfig.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.infra.pu.integration.intygproxyservice.configuration.PURestClientConfig.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.infra.pu.integration.intygproxyservice.configuration.PURestClientConfig.SESSION_ID_KEY;
+import static se.inera.intyg.infra.pu.integration.intygproxyservice.configuration.PURestClientConfig.TRACE_ID_KEY;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
 import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestClient;
-import se.inera.intyg.infra.integration.api.model.Person;
-import se.inera.intyg.infra.integration.api.model.PersonSvar.Status;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.PersonResponseDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.PersonsRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.PersonsResponseDTO;
+import se.inera.intyg.infra.pu.integration.api.model.Person;
+import se.inera.intyg.infra.pu.integration.api.model.PersonSvar.Status;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.client.GetPersonsIntygProxyServiceClient;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.dto.PersonResponseDTO;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.dto.PersonsRequestDTO;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.dto.PersonsResponseDTO;
 
+@ExtendWith(MockitoExtension.class)
 class GetPersonsIntygProxyServiceClientTest {
 
     private static final String ENDPOINT = "endpoint";
     private static final String TRACE_ID = "traceId";
     private static final String SESSION_ID = "sessionId";
-    private final RestClient restClient = mock(RestClient.class);
     private final RestClient.RequestBodyUriSpec requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
     private final RestClient.RequestBodySpec requestBodySpec = mock(RestClient.RequestBodySpec.class);
     private final RestClient.ResponseSpec responseSpec = mock(RestClient.ResponseSpec.class);
+
+    @Mock
+    private RestClient restClient;
+    @InjectMocks
     private GetPersonsIntygProxyServiceClient getPersonsIntygProxyServiceClient;
 
     @BeforeEach
     void setUp() {
-        getPersonsIntygProxyServiceClient = new GetPersonsIntygProxyServiceClient(restClient);
         ReflectionTestUtils.setField(getPersonsIntygProxyServiceClient, "personsEndpoint", ENDPOINT);
         MDC.put(TRACE_ID_KEY, TRACE_ID);
         MDC.put(SESSION_ID_KEY, SESSION_ID);

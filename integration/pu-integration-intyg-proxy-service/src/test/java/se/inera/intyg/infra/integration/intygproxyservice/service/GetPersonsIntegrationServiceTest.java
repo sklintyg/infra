@@ -13,13 +13,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.api.model.Person;
-import se.inera.intyg.infra.integration.api.model.PersonSvar;
-import se.inera.intyg.infra.integration.api.model.PersonSvar.Status;
-import se.inera.intyg.infra.integration.intygproxyservice.client.GetPersonsIntygProxyServiceClient;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.PersonResponseDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.PersonsRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.PersonsResponseDTO;
+import se.inera.intyg.infra.pu.integration.api.model.Person;
+import se.inera.intyg.infra.pu.integration.api.model.PersonSvar;
+import se.inera.intyg.infra.pu.integration.api.model.PersonSvar.Status;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.client.GetPersonsIntygProxyServiceClient;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.dto.PersonResponseDTO;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.dto.PersonsRequestDTO;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.dto.PersonsResponseDTO;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.service.GetPersonsIntegrationService;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 @ExtendWith(MockitoExtension.class)
@@ -67,9 +68,9 @@ class GetPersonsIntegrationServiceTest {
             personalIdentityNumber3
         );
 
-        doReturn(personalIdentityNumber1).when(person1).getPersonnummer();
-        doReturn(personalIdentityNumber2).when(person2).getPersonnummer();
-        doReturn(personalIdentityNumber3).when(person3).getPersonnummer();
+        doReturn(personalIdentityNumber1).when(person1).personnummer();
+        doReturn(personalIdentityNumber2).when(person2).personnummer();
+        doReturn(personalIdentityNumber3).when(person3).personnummer();
 
         final var personsResponse = PersonsResponseDTO.builder()
             .persons(
@@ -123,9 +124,9 @@ class GetPersonsIntegrationServiceTest {
             personalIdentityNumber3
         );
 
-        doReturn(personalIdentityNumber1).when(person1).getPersonnummer();
-        doReturn(personalIdentityNumber2).when(person2).getPersonnummer();
-        doReturn(personalIdentityNumber3).when(person3).getPersonnummer();
+        doReturn(personalIdentityNumber1).when(person1).personnummer();
+        doReturn(personalIdentityNumber2).when(person2).personnummer();
+        doReturn(personalIdentityNumber3).when(person3).personnummer();
 
         final var personsResponse = PersonsResponseDTO.builder()
             .persons(

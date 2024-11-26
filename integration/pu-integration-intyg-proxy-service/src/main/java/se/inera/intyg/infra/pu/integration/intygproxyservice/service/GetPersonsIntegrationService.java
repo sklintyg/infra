@@ -1,4 +1,4 @@
-package se.inera.intyg.infra.integration.intygproxyservice.service;
+package se.inera.intyg.infra.pu.integration.intygproxyservice.service;
 
 import java.util.Collections;
 import java.util.List;
@@ -7,10 +7,10 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.api.model.PersonSvar;
-import se.inera.intyg.infra.integration.intygproxyservice.client.GetPersonsIntygProxyServiceClient;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.PersonResponseDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.PersonsRequestDTO;
+import se.inera.intyg.infra.pu.integration.api.model.PersonSvar;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.client.GetPersonsIntygProxyServiceClient;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.dto.PersonResponseDTO;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.dto.PersonsRequestDTO;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 @Slf4j
@@ -40,7 +40,7 @@ public class GetPersonsIntegrationService {
         return personsResponse.getPersons().stream()
             .collect(
                 Collectors.toMap(
-                    personResponse -> personResponse.getPerson().getPersonnummer(),
+                    personResponse -> personResponse.getPerson().personnummer(),
                     this::mapToPersonResponse
                 )
             );

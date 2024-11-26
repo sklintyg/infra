@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
 
 @Configuration
-public class RestClientConfig {
+public class HsaRestClientConfig {
 
     public static final String LOG_TRACE_ID_HEADER = "x-trace-id";
     public static final String LOG_SESSION_ID_HEADER = "x-session-id";

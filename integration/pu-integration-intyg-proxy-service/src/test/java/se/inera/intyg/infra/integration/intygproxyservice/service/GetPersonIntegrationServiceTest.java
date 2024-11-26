@@ -12,12 +12,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.api.model.Person;
-import se.inera.intyg.infra.integration.api.model.PersonSvar;
-import se.inera.intyg.infra.integration.api.model.PersonSvar.Status;
-import se.inera.intyg.infra.integration.intygproxyservice.client.GetPersonIntygProxyServiceClient;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.PersonRequestDTO;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.PersonResponseDTO;
+import se.inera.intyg.infra.pu.integration.api.model.Person;
+import se.inera.intyg.infra.pu.integration.api.model.PersonSvar;
+import se.inera.intyg.infra.pu.integration.api.model.PersonSvar.Status;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.client.GetPersonIntygProxyServiceClient;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.dto.PersonRequestDTO;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.dto.PersonResponseDTO;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.service.GetPersonIntegrationService;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 @ExtendWith(MockitoExtension.class)

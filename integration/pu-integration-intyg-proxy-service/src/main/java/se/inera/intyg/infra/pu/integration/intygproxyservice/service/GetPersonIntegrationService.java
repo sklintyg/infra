@@ -1,11 +1,11 @@
-package se.inera.intyg.infra.integration.intygproxyservice.service;
+package se.inera.intyg.infra.pu.integration.intygproxyservice.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.api.model.PersonSvar;
-import se.inera.intyg.infra.integration.intygproxyservice.client.GetPersonIntygProxyServiceClient;
-import se.inera.intyg.infra.integration.intygproxyservice.dto.PersonRequestDTO;
+import se.inera.intyg.infra.pu.integration.api.model.PersonSvar;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.client.GetPersonIntygProxyServiceClient;
+import se.inera.intyg.infra.pu.integration.intygproxyservice.dto.PersonRequestDTO;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 @Slf4j

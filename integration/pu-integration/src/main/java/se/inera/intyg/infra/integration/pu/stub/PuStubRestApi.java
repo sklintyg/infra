@@ -31,7 +31,7 @@ import jakarta.ws.rs.core.Response;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
-import se.inera.intyg.infra.integration.api.services.PUService;
+import se.inera.intyg.infra.pu.integration.api.services.PUService;
 import se.riv.strategicresourcemanagement.persons.person.v3.DeregistrationType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PartialDateType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
