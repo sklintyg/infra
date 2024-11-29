@@ -1,0 +1,10 @@
+dependencies {
+    implementation project(':pu-integration-api')
+
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "org.springframework:spring-web"
+    implementation "org.springframework:spring-context"
+    implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
+
+    testImplementation "org.springframework:spring-test"
+}

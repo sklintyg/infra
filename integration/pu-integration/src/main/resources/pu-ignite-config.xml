@@ -20,21 +20,21 @@
 
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:cache="http://www.springframework.org/schema/cache"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-  <beans profile="qa,prod">
-    <bean class="se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration" />
-  </beans>
+    <beans profile="!pu-integration-intyg-proxy-service">
+        <beans profile="qa,prod">
+            <bean class="se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration"/>
+        </beans>
 
-  <beans profile="!prod">
-    <beans profile="!qa">
-      <beans profile="caching-enabled">
-        <bean class="se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration"/>
-      </beans>
+        <beans profile="!prod">
+            <beans profile="!qa">
+                <beans profile="caching-enabled">
+                    <bean class="se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration"/>
+                </beans>
+            </beans>
+        </beans>
     </beans>
-  </beans>
 </beans>

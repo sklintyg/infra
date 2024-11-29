@@ -16,10 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.infra.integration.pu.model;
+package se.inera.intyg.infra.pu.integration.api.model;
 
 import java.io.Serializable;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode
 public class PersonSvar implements Serializable {
 
     private static final long serialVersionUID = 2L;

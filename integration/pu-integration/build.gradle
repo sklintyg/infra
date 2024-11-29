@@ -1,13 +1,14 @@
 dependencies {
-  implementation project(':common-redis-cache-core')
+    implementation project(':common-redis-cache-core')
+    implementation project(':pu-integration-api')
 
-  implementation "com.fasterxml.jackson.core:jackson-databind"
-  implementation "com.google.guava:guava:${guavaVersion}"
-  implementation "org.apache.commons:commons-lang3"
-  implementation "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
-  implementation "org.springframework.data:spring-data-redis"
-  implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
-  implementation "se.riv.strategicresourcemanagement.persons.person:strategicresourcemanagement-persons-person-schemas:${rivtaGetPersonsPersonSchemasVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "com.google.guava:guava:${guavaVersion}"
+    implementation "org.apache.commons:commons-lang3"
+    implementation "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+    implementation "org.springframework.data:spring-data-redis"
+    implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
+    implementation "se.riv.strategicresourcemanagement.persons.person:strategicresourcemanagement-persons-person-schemas:${rivtaGetPersonsPersonSchemasVersion}"
 
-  testImplementation "com.sun.xml.messaging.saaj:saaj-impl"
+    testImplementation "com.sun.xml.messaging.saaj:saaj-impl"
 }

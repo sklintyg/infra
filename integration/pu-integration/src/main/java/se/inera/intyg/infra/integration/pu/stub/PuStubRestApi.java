@@ -18,9 +18,6 @@
  */
 package se.inera.intyg.infra.integration.pu.stub;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -31,10 +28,10 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import se.inera.intyg.infra.integration.pu.services.PUService;
+import se.inera.intyg.infra.pu.integration.api.services.PUService;
 import se.riv.strategicresourcemanagement.persons.person.v3.DeregistrationType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PartialDateType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
@@ -92,7 +89,8 @@ public class PuStubRestApi {
 
         String xmlValue;
         if (!("false".equals(value) || "true".equalsIgnoreCase(value))) {
-            return Response.status(BAD_REQUEST).entity("Sekretessmarkering has to be set [true] or not set [false]").build();
+            return Response.status(BAD_REQUEST)
+                .entity("Sekretessmarkering has to be set [true] or not set [false]").build();
         }
 
         PersonRecordType residentType = residentStore.getResident(personId);
@@ -101,7 +99,8 @@ public class PuStubRestApi {
         }
         residentType.setProtectedPersonIndicator(Boolean.valueOf(value));
         residentStore.addResident(residentType);
-        return Response.ok().entity("Value was set to \"" + value + "\", from old value \"" + value + "\"").build();
+        return Response.ok()
+            .entity("Value was set to \"" + value + "\", from old value \"" + value + "\"").build();
     }
 
     @GET
@@ -113,7 +112,8 @@ public class PuStubRestApi {
 
         String xmlValue;
         if (!("false".equals(value) || "true".equalsIgnoreCase(value))) {
-            return Response.status(BAD_REQUEST).entity("Patient indicator has to be set [true] or not set [false]").build();
+            return Response.status(BAD_REQUEST)
+                .entity("Patient indicator has to be set [true] or not set [false]").build();
         }
 
         PersonRecordType residentType = residentStore.getResident(personId);
@@ -123,7 +123,9 @@ public class PuStubRestApi {
         final boolean oldValue = residentType.isTestIndicator();
         residentType.setTestIndicator(Boolean.valueOf(value));
         residentStore.addResident(residentType);
-        return Response.ok().entity("Test indicator was set to \"" + value + "\", from old value \"" + oldValue + "\"").build();
+        return Response.ok()
+            .entity("Test indicator was set to \"" + value + "\", from old value \"" + oldValue + "\"")
+            .build();
     }
 
     @GET
@@ -137,7 +139,8 @@ public class PuStubRestApi {
         } else if ("false".equalsIgnoreCase(value)) {
             newValue = false;
         } else {
-            return Response.status(BAD_REQUEST).entity("avliden status has to be set [true] or not set [false]").build();
+            return Response.status(BAD_REQUEST)
+                .entity("avliden status has to be set [true] or not set [false]").build();
         }
         PersonRecordType resident = residentStore.getResident(personId);
         if (resident == null) {
@@ -145,7 +148,9 @@ public class PuStubRestApi {
         }
 
         boolean oldValue = getAndSetAvliden(resident, newValue);
-        return Response.ok().entity("Value was set to \"" + newValue + "\", from old value \"" + oldValue + "\"").build();
+        return Response.ok()
+            .entity("Value was set to \"" + newValue + "\", from old value \"" + oldValue + "\"")
+            .build();
     }
 
     /**

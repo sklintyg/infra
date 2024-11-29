@@ -27,8 +27,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import se.inera.intyg.infra.integration.pu.model.PersonSvar;
+import se.inera.intyg.infra.pu.integration.api.model.PersonSvar;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.strategicresourcemanagement.persons.person.v3.AddressInformationType;
 import se.riv.strategicresourcemanagement.persons.person.v3.NamePartType;
@@ -67,9 +66,9 @@ public class PersonConverterTest {
         PersonSvar output = personConverter.toPersonSvar(PERSONNUMMER, input);
 
         // Then
-        assertEquals(FULLSTANDIG_ADRESS, output.getPerson().getPostadress());
-        assertEquals(POSTORT, output.getPerson().getPostort());
-        assertEquals(POSTNUMMER.toString(), output.getPerson().getPostnummer());
+        assertEquals(FULLSTANDIG_ADRESS, output.getPerson().postadress());
+        assertEquals(POSTORT, output.getPerson().postort());
+        assertEquals(POSTNUMMER.toString(), output.getPerson().postnummer());
     }
 
     @Test
@@ -81,9 +80,9 @@ public class PersonConverterTest {
         PersonSvar output = personConverter.toPersonSvar(PERSONNUMMER, input);
 
         // Then
-        assertEquals(FULLSTANDIG_ADRESS, output.getPerson().getPostadress());
-        assertEquals(POSTORT, output.getPerson().getPostort());
-        assertNull(output.getPerson().getPostnummer());
+        assertEquals(FULLSTANDIG_ADRESS, output.getPerson().postadress());
+        assertEquals(POSTORT, output.getPerson().postort());
+        assertNull(output.getPerson().postnummer());
     }
 
     // PU may send a '0' instead of omitting postnummer.
@@ -96,9 +95,9 @@ public class PersonConverterTest {
         PersonSvar output = personConverter.toPersonSvar(PERSONNUMMER, input);
 
         // Then
-        assertEquals(FULLSTANDIG_ADRESS, output.getPerson().getPostadress());
-        assertEquals(POSTORT, output.getPerson().getPostort());
-        assertNull(output.getPerson().getPostnummer());
+        assertEquals(FULLSTANDIG_ADRESS, output.getPerson().postadress());
+        assertEquals(POSTORT, output.getPerson().postort());
+        assertNull(output.getPerson().postnummer());
     }
 
     @Test
@@ -109,7 +108,7 @@ public class PersonConverterTest {
 
         PersonSvar output = personConverter.toPersonSvar(PERSONNUMMER, input);
 
-        assertTrue(output.getPerson().isTestIndicator());
+        assertTrue(output.getPerson().testIndicator());
     }
 
     @Test
@@ -120,7 +119,7 @@ public class PersonConverterTest {
 
         PersonSvar output = personConverter.toPersonSvar(LILLTOLVAN_PERSONNUMMER, input);
 
-        assertFalse(output.getPerson().isTestIndicator());
+        assertFalse(output.getPerson().testIndicator());
     }
 
     @Test
@@ -131,7 +130,7 @@ public class PersonConverterTest {
 
         PersonSvar output = personConverter.toPersonSvar(LILLTOLVAN_PERSONNUMMER, input);
 
-        assertTrue(output.getPerson().isTestIndicator());
+        assertTrue(output.getPerson().testIndicator());
     }
 
     @Test
@@ -142,7 +141,7 @@ public class PersonConverterTest {
 
         PersonSvar output = personConverter.toPersonSvar(LILLTOLVAN_PERSONNUMMER, input);
 
-        assertTrue(output.getPerson().isTestIndicator());
+        assertTrue(output.getPerson().testIndicator());
     }
 
     private PersonRecordType buildIncomingPuResult(Integer postalCode) {
