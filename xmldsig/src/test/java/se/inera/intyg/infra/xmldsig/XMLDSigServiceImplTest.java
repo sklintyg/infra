@@ -23,12 +23,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.Resource;
@@ -36,7 +34,6 @@ import se.inera.intyg.infra.xmldsig.model.CertificateInfo;
 import se.inera.intyg.infra.xmldsig.model.ValidationResponse;
 import se.inera.intyg.infra.xmldsig.service.XMLDSigServiceImpl;
 
-@Disabled("Temporarily disabled 2023-11-18 while experimenting with jakart and kjava 17")
 class XMLDSigServiceImplTest {
 
     private final XMLDSigServiceImpl testee = new XMLDSigServiceImpl();
@@ -45,6 +42,7 @@ class XMLDSigServiceImplTest {
     public void init() {
         testee.init();
         System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+        System.setProperty("org.jcp.xml.dsig.secureValidation", "false");
     }
 
     // Use this test to manually test signed documents.

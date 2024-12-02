@@ -64,7 +64,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
@@ -73,8 +73,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import se.inera.intyg.infra.xmldsig.util.X509KeySelector;
 
-@Disabled("Temporarily disabled 2023-11-18 while experimenting with jakart and kjava 17")
 class ReferenceSignatureTesters {
+
+    @BeforeEach
+    void setup() {
+        System.setProperty("org.jcp.xml.dsig.secureValidation", "false");
+    }
 
     @Test
     void createReferenceSignature() throws Exception {
