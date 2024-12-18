@@ -20,6 +20,8 @@ package se.inera.intyg.infra.security.authorities;
 
 import static java.util.Optional.ofNullable;
 
+import java.util.Collections;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.inera.intyg.infra.security.common.model.Feature;
@@ -40,4 +42,14 @@ public class FeaturesHelper {
             .isPresent();
     }
 
+    public boolean isFeatureActive(String feature, String certificateType) {
+        return getCertificateTypesForFeature(feature).contains(certificateType);
+    }
+
+    public List<String> getCertificateTypesForFeature(String feature) {
+        return ofNullable(featuresResolver.getFeatures().get(feature))
+            .filter(Feature::getGlobal)
+            .map(Feature::getIntygstyper)
+            .orElse(Collections.emptyList());
+    }
 }
