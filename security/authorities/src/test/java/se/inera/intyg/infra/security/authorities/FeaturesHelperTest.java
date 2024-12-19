@@ -18,18 +18,22 @@
  */
 package se.inera.intyg.infra.security.authorities;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import java.util.Collections;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.security.common.model.Feature;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class FeaturesHelperTest {
 
     @Mock
@@ -40,20 +44,73 @@ public class FeaturesHelperTest {
 
     private static final String FEATURE_NAME = "SEKRETESSMARKERING";
     private static final String SEKRETESSMARKERING_TILLATEN = "Sekretessmarkering tillåten";
+    private static final List<String> CERTIFICATE_TYPES = ImmutableList.of("type1");
 
     @Test
     public void testReadActiveFeature() {
         final ImmutableMap<String, Feature> featureMap = createActiveFeatureMap();
         doReturn(featureMap).when(commonFeaturesResolver).getFeatures();
-        final boolean featureActive = featuresHelper.isFeatureActive(FEATURE_NAME);
-        Assert.assertTrue(featureActive);
+        final var featureActive = featuresHelper.isFeatureActive(FEATURE_NAME);
+        assertTrue(featureActive);
+    }
+
+    @Test
+    public void shallReturnCertificateTypesForActiveFeature() {
+        final var featureMap = createActiveFeatureMap();
+        doReturn(featureMap).when(commonFeaturesResolver).getFeatures();
+        final var actualCertificateTypes = featuresHelper.getCertificateTypesForFeature(FEATURE_NAME);
+        assertEquals(CERTIFICATE_TYPES, actualCertificateTypes);
+    }
+
+    @Test
+    public void shallReturnEmptyCertificateTypesForInActiveFeature() {
+        final var featureMap = createActiveFeatureMap();
+        featureMap.values().forEach(feature -> feature.setGlobal(false));
+        doReturn(featureMap).when(commonFeaturesResolver).getFeatures();
+        final var actualCertificateTypes = featuresHelper.getCertificateTypesForFeature(FEATURE_NAME);
+        assertEquals(Collections.emptyList(), actualCertificateTypes);
+    }
+
+    @Test
+    public void shallReturnEmptyCertificateTypesForActiveFeatureWithoutTypes() {
+        final var featureMap = createActiveFeatureMap();
+        featureMap.values().forEach(feature -> feature.setIntygstyper(Collections.emptyList()));
+        doReturn(featureMap).when(commonFeaturesResolver).getFeatures();
+        final var actualCertificateTypes = featuresHelper.getCertificateTypesForFeature(FEATURE_NAME);
+        assertEquals(Collections.emptyList(), actualCertificateTypes);
+    }
+
+    @Test
+    public void shallReturnTrueForActiveFeatureForCertificateType() {
+        final var featureMap = createActiveFeatureMap();
+        doReturn(featureMap).when(commonFeaturesResolver).getFeatures();
+        final var actual = featuresHelper.isFeatureActive(FEATURE_NAME, "type1");
+        assertEquals(Boolean.TRUE, actual);
+    }
+
+    @Test
+    public void shallReturnFalseForActiveFeatureButMissingType() {
+        final var featureMap = createActiveFeatureMap();
+        doReturn(featureMap).when(commonFeaturesResolver).getFeatures();
+        final var actual = featuresHelper.isFeatureActive(FEATURE_NAME, "type2");
+        assertEquals(Boolean.FALSE, actual);
+    }
+
+    @Test
+    public void shallReturnFalseForInActive() {
+        final var featureMap = createActiveFeatureMap();
+        featureMap.values().forEach(feature -> feature.setGlobal(false));
+        doReturn(featureMap).when(commonFeaturesResolver).getFeatures();
+        final var actual = featuresHelper.isFeatureActive(FEATURE_NAME, "type1");
+        assertEquals(Boolean.FALSE, actual);
     }
 
     private ImmutableMap<String, Feature> createActiveFeatureMap() {
-        Feature feature = new Feature();
+        final var feature = new Feature();
         feature.setDesc(SEKRETESSMARKERING_TILLATEN);
         feature.setGlobal(true);
         feature.setName(FEATURE_NAME);
+        feature.setIntygstyper(CERTIFICATE_TYPES);
         return ImmutableMap.of(FEATURE_NAME, feature);
     }
 }
