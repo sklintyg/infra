@@ -35,6 +35,8 @@ public class WcIntygInfo extends IntygInfo {
     private int administrativaFragorReceived;
     private int administrativaFragorReceivedAnswered;
 
+    private int numberOfRecipients;
+
     public boolean isCreatedInWC() {
         return createdInWC;
     }
@@ -97,5 +99,13 @@ public class WcIntygInfo extends IntygInfo {
 
     public void setAdministrativaFragorReceivedAnswered(int administrativaFragorReceivedAnswered) {
         this.administrativaFragorReceivedAnswered = administrativaFragorReceivedAnswered;
+    }
+
+    public int getNumberOfRecipients() {
+        return numberOfRecipients;
+    }
+
+    public void setNumberOfRecipients(int numberOfRecipients) {
+        this.numberOfRecipients = numberOfRecipients;
     }
 }
