@@ -95,8 +95,8 @@ public class PostnummerRepositoryFactory {
 
         String[] elements = line.split(";", -1);
         // CHECKSTYLE:OFF MagicNumber
-        if (elements.length != 7) {
-            LOG.error("Unexpected line in postnummer file. Expected 7 elements separated by semicolon");
+        if (elements.length != 6) {
+            LOG.error("Unexpected line in postnummer file. Expected 6 elements separated by semicolon");
             return null;
         }
 

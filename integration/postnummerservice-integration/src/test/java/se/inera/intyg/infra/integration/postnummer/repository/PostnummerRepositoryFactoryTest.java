@@ -32,7 +32,7 @@ public class PostnummerRepositoryFactoryTest {
 
     private PostnummerRepositoryFactory factory = new PostnummerRepositoryFactory();
 
-    private static final String LINE_1 = "13100;NACKA;01;STOCKHOLM;0182;NACKA;01";
+    private static final String LINE_1 = "13100;NACKA;01;STOCKHOLM;0182;NACKA";
     private static final String LINE_1_POSTNUMMER = "13100";
     private static final String LINE_1_POSTORT = "NACKA";
     private static final String LINE_1_LAN = "STOCKHOLM";

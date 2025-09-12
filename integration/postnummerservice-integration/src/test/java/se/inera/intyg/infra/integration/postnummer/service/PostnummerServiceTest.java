@@ -65,8 +65,7 @@ public class PostnummerServiceTest {
 
         List<Omrade> omrade13061 = Arrays.asList(new Omrade("13061", "HÅRSFJÄRDEN", "HANINGE", "STOCKHOLM"));
         List<Omrade> omrade13100 = Arrays.asList(new Omrade("13100", "NACKA", "NACKA", "STOCKHOLM"));
-        List<Omrade> omrade13155 = Arrays.asList(new Omrade("13155", "NACKA", "STOCKHOLM", "STOCKHOLM"),
-            new Omrade("13155", "NACKA", "NACKA", "STOCKHOLM"));
+        List<Omrade> omrade13155 = Arrays.asList(new Omrade("13155", "NACKA", "NACKA", "STOCKHOLM"));
 
         assertNull(postnummerService.getOmradeByPostnummer(null));
         assertNull(postnummerService.getOmradeByPostnummer(""));
