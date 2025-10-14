@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.inera.intyg.infra.integration.hsatk.model.HsaSystemRole;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation.PaTitle;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.util.HsaAttributeExtractor;
@@ -48,11 +49,13 @@ public class DefaultUserDetailsDecorator {
         List<String> specialiseringar = hsaAttributeExtractor.extractSpecialiseringar(hsaPersonInfo);
         List<String> legitimeradeYrkesgrupper = hsaAttributeExtractor.extractLegitimeradeYrkesgrupper(hsaPersonInfo);
         List<String> befattningar = hsaAttributeExtractor.extractBefattningar(hsaPersonInfo);
+        List<PaTitle> befattningskoder = hsaAttributeExtractor.extractBefattningsKoder(hsaPersonInfo);
         String titel = hsaAttributeExtractor.extractTitel(hsaPersonInfo);
 
         intygUser.setSpecialiseringar(specialiseringar);
         intygUser.setLegitimeradeYrkesgrupper(legitimeradeYrkesgrupper);
         intygUser.setBefattningar(befattningar);
+        intygUser.setBefattningsKoder(befattningskoder);
         intygUser.setTitel(titel);
     }
 
