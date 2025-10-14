@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.integration.hsatk.util;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +27,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation.PaTitle;
 
 /**
  * Helper class for extracting certain HoSP attributes.
@@ -59,6 +61,16 @@ public class HsaAttributeExtractor {
             }
         }
         return new ArrayList<>(befattningar);
+    }
+
+    public List<PaTitle> extractBefattningsKoder(List<PersonInformation> hsaPersonInfo) {
+        return hsaPersonInfo.stream()
+            .filter(pi -> pi.getPaTitle() != null)
+            .flatMap(pi -> pi.getPaTitle().stream())
+            .filter(pt -> pt.getPaTitleCode() != null)
+            .distinct()
+            .sorted(Comparator.comparing(PaTitle::getPaTitleCode))
+            .collect(Collectors.toList());
     }
 
     public List<String> extractLegitimeradeYrkesgrupper(List<PersonInformation> hsaUserTypes) {
