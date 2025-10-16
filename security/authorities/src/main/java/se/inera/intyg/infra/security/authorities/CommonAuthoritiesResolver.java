@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation.PaTitle;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
 import se.inera.intyg.infra.integration.hsatk.util.HsaAttributeExtractor;
 import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
@@ -193,7 +194,7 @@ public class CommonAuthoritiesResolver {
         }
 
         // 2. Bestäm användarens roll utefter enbart befattningskod som kommer från SAML.
-        roleResolveResult = lookupUserRoleByBefattningskod(user.getBefattningar());
+        roleResolveResult = lookupUserRoleByBefattningskod(getBefattningsKoder(user));
         if (roleResolveResult != null) {
             return roleResolveResult;
         }
@@ -240,9 +241,18 @@ public class CommonAuthoritiesResolver {
 
     private List<String> buildAllaBefattningarList(IntygUser user, UserCredentials userCredentials) {
         List<String> allaBefattningar = new ArrayList<>();
-        allaBefattningar.addAll(user.getBefattningar());
+        allaBefattningar.addAll(getBefattningsKoder(user));
         allaBefattningar.addAll(userCredentials.getPaTitleCode());
         return allaBefattningar;
+    }
+
+    private List<String> getBefattningsKoder(IntygUser user) {
+        if (user.getBefattningsKoder().isEmpty()) {
+            return user.getBefattningar();
+        }
+        return user.getBefattningsKoder().stream()
+            .map(PaTitle::getPaTitleCode)
+            .toList();
     }
 
     /**
