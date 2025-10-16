@@ -54,8 +54,8 @@ public class HsaAttributeExtractor {
                 List<String> hsaTitles = userType.getPaTitle().stream()
                     .map(PersonInformation.PaTitle::getPaTitleCode)
                     .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-                if (hsaTitles.size() > 0) {
+                    .toList();
+                if (!hsaTitles.isEmpty()) {
                     befattningar.addAll(hsaTitles);
                 }
             }
@@ -70,7 +70,7 @@ public class HsaAttributeExtractor {
             .filter(pt -> pt.getPaTitleCode() != null)
             .distinct()
             .sorted(Comparator.comparing(PaTitle::getPaTitleCode))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     public List<String> extractLegitimeradeYrkesgrupper(List<PersonInformation> hsaUserTypes) {
@@ -90,7 +90,7 @@ public class HsaAttributeExtractor {
     public String extractTitel(List<PersonInformation> hsaPersonInfo) {
         Set<String> titleSet = new HashSet<>();
         for (PersonInformation pit : hsaPersonInfo) {
-            if (pit.getTitle() != null && pit.getTitle().trim().length() > 0) {
+            if (pit.getTitle() != null && pit.getTitle().trim().isEmpty()) {
                 titleSet.add(pit.getTitle());
             }
 //            else if (pit.getHealthCareProfessionalLicence() != null && pit.getHealthCareProfessionalLicence().size() > 0) {
