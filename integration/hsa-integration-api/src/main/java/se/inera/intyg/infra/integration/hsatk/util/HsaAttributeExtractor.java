@@ -90,7 +90,7 @@ public class HsaAttributeExtractor {
     public String extractTitel(List<PersonInformation> hsaPersonInfo) {
         Set<String> titleSet = new HashSet<>();
         for (PersonInformation pit : hsaPersonInfo) {
-            if (pit.getTitle() != null && pit.getTitle().trim().isEmpty()) {
+            if (pit.getTitle() != null && !pit.getTitle().trim().isEmpty()) {
                 titleSet.add(pit.getTitle());
             }
 //            else if (pit.getHealthCareProfessionalLicence() != null && pit.getHealthCareProfessionalLicence().size() > 0) {
