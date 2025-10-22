@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation.PaTitle;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
@@ -51,6 +52,7 @@ public class IntygUser implements UserDetails {
     protected List<Vardgivare> vardgivare;
     protected Map<String, String> miuNamnPerEnhetsId = new HashMap<>();
     protected List<String> befattningar;
+    protected List<PaTitle> befattningsKoder;
     protected List<String> specialiseringar;
     protected List<String> legitimeradeYrkesgrupper;
     protected List<String> systemRoles;
@@ -336,8 +338,19 @@ public class IntygUser implements UserDetails {
         return befattningar;
     }
 
+    public List<PaTitle> getBefattningsKoder() {
+        if (befattningsKoder == null) {
+            befattningsKoder = Collections.emptyList();
+        }
+        return befattningsKoder;
+    }
+
     public void setBefattningar(List<String> befattningar) {
         this.befattningar = befattningar;
+    }
+
+    public void setBefattningsKoder(List<PaTitle> befattningsKoder) {
+        this.befattningsKoder = befattningsKoder;
     }
 
     public String getTitel() {

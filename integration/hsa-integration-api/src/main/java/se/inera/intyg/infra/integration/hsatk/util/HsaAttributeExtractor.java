@@ -19,6 +19,7 @@
 package se.inera.intyg.infra.integration.hsatk.util;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +27,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation.PaTitle;
 
 /**
  * Helper class for extracting certain HoSP attributes.
@@ -52,13 +54,23 @@ public class HsaAttributeExtractor {
                 List<String> hsaTitles = userType.getPaTitle().stream()
                     .map(PersonInformation.PaTitle::getPaTitleCode)
                     .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-                if (hsaTitles.size() > 0) {
+                    .toList();
+                if (!hsaTitles.isEmpty()) {
                     befattningar.addAll(hsaTitles);
                 }
             }
         }
         return new ArrayList<>(befattningar);
+    }
+
+    public List<PaTitle> extractBefattningsKoder(List<PersonInformation> hsaPersonInfo) {
+        return hsaPersonInfo.stream()
+            .filter(pi -> pi.getPaTitle() != null)
+            .flatMap(pi -> pi.getPaTitle().stream())
+            .filter(pt -> pt.getPaTitleCode() != null)
+            .distinct()
+            .sorted(Comparator.comparing(PaTitle::getPaTitleCode))
+            .toList();
     }
 
     public List<String> extractLegitimeradeYrkesgrupper(List<PersonInformation> hsaUserTypes) {
@@ -78,7 +90,7 @@ public class HsaAttributeExtractor {
     public String extractTitel(List<PersonInformation> hsaPersonInfo) {
         Set<String> titleSet = new HashSet<>();
         for (PersonInformation pit : hsaPersonInfo) {
-            if (pit.getTitle() != null && pit.getTitle().trim().length() > 0) {
+            if (pit.getTitle() != null && !pit.getTitle().trim().isEmpty()) {
                 titleSet.add(pit.getTitle());
             }
 //            else if (pit.getHealthCareProfessionalLicence() != null && pit.getHealthCareProfessionalLicence().size() > 0) {
