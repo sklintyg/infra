@@ -25,6 +25,7 @@ public class SrsCertificate {
     private String certificateId;
     private String mainDiagnosisCode;
     private LocalDate signedDate;
+    private String extendsCertificateId;
 
     public SrsCertificate() {
     }
