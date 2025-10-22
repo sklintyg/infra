@@ -40,6 +40,13 @@ public class SrsCertificate {
         this.signedDate = signedDate;
     }
 
+    public SrsCertificate(String certificateId, String mainDiagnosisCode, LocalDate signedDate, String extendsCertificateId) {
+        this.certificateId = certificateId;
+        this.mainDiagnosisCode = mainDiagnosisCode;
+        this.signedDate = signedDate;
+        this.extendsCertificateId = extendsCertificateId;
+    }
+
     public String getCertificateId() {
         return certificateId;
     }
@@ -62,6 +69,14 @@ public class SrsCertificate {
 
     public void setSignedDate(LocalDate signedDate) {
         this.signedDate = signedDate;
+    }
+
+    public String getExtendsCertificateId() {
+      return extendsCertificateId;
+    }
+
+    public void setExtendsCertificateId(String extendsCertificateId) {
+      this.extendsCertificateId = extendsCertificateId;
     }
 
 }
