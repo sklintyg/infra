@@ -19,12 +19,15 @@
 package se.inera.intyg.infra.integration.srs.model;
 
 import java.time.LocalDate;
+import lombok.Data;
 
+@Data
 public class SrsCertificate {
 
     private String certificateId;
     private String mainDiagnosisCode;
     private LocalDate signedDate;
+    private String extendsCertificateId;
 
     public SrsCertificate() {
     }
@@ -39,28 +42,11 @@ public class SrsCertificate {
         this.signedDate = signedDate;
     }
 
-    public String getCertificateId() {
-        return certificateId;
-    }
-
-    public void setCertificateId(String certificateId) {
+    public SrsCertificate(String certificateId, String mainDiagnosisCode, LocalDate signedDate, String extendsCertificateId) {
         this.certificateId = certificateId;
-    }
-
-    public String getMainDiagnosisCode() {
-        return mainDiagnosisCode;
-    }
-
-    public void setMainDiagnosisCode(String mainDiagnosisCode) {
         this.mainDiagnosisCode = mainDiagnosisCode;
-    }
-
-    public LocalDate getSignedDate() {
-        return signedDate;
-    }
-
-    public void setSignedDate(LocalDate signedDate) {
         this.signedDate = signedDate;
+        this.extendsCertificateId = extendsCertificateId;
     }
 
 }

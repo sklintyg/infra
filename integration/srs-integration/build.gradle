@@ -1,15 +1,18 @@
 dependencies {
-  implementation project(':hsa-integration-api')
-  implementation project(':security-common')
+    implementation project(':hsa-integration-api')
+    implementation project(':security-common')
 
-  implementation "com.google.guava:guava:${guavaVersion}"
-  implementation "org.apache.commons:commons-lang3"
-  implementation "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
-  implementation "org.springframework:spring-context-support"
-  implementation "org.springframework:spring-web"
-  implementation "se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:${srsSchemasVersion}"
-  implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
+    implementation "com.google.guava:guava:${guavaVersion}"
+    implementation "org.apache.commons:commons-lang3"
+    implementation "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+    implementation "org.springframework:spring-context-support"
+    implementation "org.springframework:spring-web"
+    implementation "se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:${srsSchemasVersion}"
+    implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
 
-  compileOnly "com.fasterxml.jackson.core:jackson-annotations"
-  testCompileOnly "com.fasterxml.jackson.core:jackson-annotations"
+    compileOnly "com.fasterxml.jackson.core:jackson-annotations"
+    compileOnly 'org.projectlombok:lombok'
+
+    testCompileOnly "com.fasterxml.jackson.core:jackson-annotations"
+    annotationProcessor 'org.projectlombok:lombok'
 }
