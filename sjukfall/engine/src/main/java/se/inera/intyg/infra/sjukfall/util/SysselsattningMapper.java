@@ -31,7 +31,7 @@ public class SysselsattningMapper extends Mapper {
 
     public static List<String> mapSysselsattning(List<String> values) {
         return values.stream()
-            .map(value -> mapSysselsattning(value))
+            .map(SysselsattningMapper::mapSysselsattning)
             .collect(Collectors.toList());
     }
 
@@ -43,8 +43,8 @@ public class SysselsattningMapper extends Mapper {
         return Collections.unmodifiableMap(Stream.of(
                 entry("ARBETSLOSHET", "Arbetssökande"),
                 entry("ARBETSSOKANDE", "Arbetssökande"),
-                entry("FORALDRALEDIG", "Föräldraledighet för vård av barn"),
-                entry("FORALDRALEDIGHET", "Föräldraledighet för vård av barn"),
+                entry("FORALDRALEDIG", "Föräldraledighet"),
+                entry("FORALDRALEDIGHET", "Föräldraledighet"),
                 entry("NUVARANDE_ARBETE", "Nuvarande arbete"),
                 entry("STUDIER", "Studier"))
             .collect(entriesToMap()));
