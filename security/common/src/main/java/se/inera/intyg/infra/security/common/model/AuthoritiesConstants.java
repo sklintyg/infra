@@ -42,6 +42,7 @@ public final class AuthoritiesConstants {
     public static final String ROLE_SJUKSKOTERSKA = "SJUKSKOTERSKA";
     public static final String ROLE_BARNMORSKA = "BARNMORSKA";
     public static final String ROLE_KOORDINATOR = "REHABKOORDINATOR";
+    public static final String ROLE_PRIVATLAKARE_OBEHORIG = "PRIVATLAKARE_OBEHORIG";
 
     // Known privileges (these privileges are copied from authorities.yaml which is the master authorities
     // configuration)
@@ -96,12 +97,14 @@ public final class AuthoritiesConstants {
     public static final String FEATURE_ALLOW_TEST_INDICATED_PERSON = "TILLAT_VALIDERINGSPERSON";
 
     /**
-     * Feature to toggle if a u'DJUPINTEGRERAD' care provider should recieve a warning when logging in with origin 'NORMAL'
+     * Feature to toggle if a u'DJUPINTEGRERAD' care provider should recieve a warning when logging in
+     * with origin 'NORMAL'
      */
     public static final String FEATURE_ENABLE_WARNING_ORIGIN_NORMAL = "VARNING_FRISTAENDE";
 
     /**
-     * Feature to toggle if a 'DJUPINTEGRERAD' care provider should block certificate features when logging in with origin 'NORMAL'
+     * Feature to toggle if a 'DJUPINTEGRERAD' care provider should block certificate features when
+     * logging in with origin 'NORMAL'
      */
     public static final String FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL = "BLOCKERA_FRISTAENDE";
     public static final String FEATURE_INACTIVATE_PREVIOUS_MAJOR_VERSION = "INAKTIVERA_TIDIGARE_HUVUDVERSION";
