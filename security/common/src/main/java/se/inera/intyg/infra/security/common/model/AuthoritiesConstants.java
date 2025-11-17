@@ -43,6 +43,7 @@ public final class AuthoritiesConstants {
     public static final String ROLE_BARNMORSKA = "BARNMORSKA";
     public static final String ROLE_KOORDINATOR = "REHABKOORDINATOR";
     public static final String ROLE_PRIVATLAKARE_OBEHORIG = "PRIVATLAKARE_OBEHORIG";
+    public static final String ROLE_PRIVATLAKARE_OREGISTRARAD = "PRIVATLAKARE_OREGISTRERAD";
 
     // Known privileges (these privileges are copied from authorities.yaml which is the master authorities
     // configuration)
