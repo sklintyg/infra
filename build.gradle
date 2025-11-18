@@ -5,6 +5,7 @@ plugins {
     id 'org.sonarqube' version '6.3.1.5724'
     id "org.owasp.dependencycheck" version "12.1.6"
     id 'jacoco'
+    id 'org.cyclonedx.bom' version '3.0.2'
 }
 
 ext {
