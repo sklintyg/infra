@@ -67,7 +67,10 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardstyp;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Diagnosstatistik;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.EgenBedomningRiskType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.srs.model.SrsCertificate;
 import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsPrediction;
@@ -397,10 +400,32 @@ public class SrsInfraServiceImpl implements SrsInfraService {
         return request;
     }
 
-    private String getPostnummer(IntygUser user) {
-        String postnummer;
+    protected String getPostnummer(IntygUser user) {
+        String postnummer = null;
         if (user.getValdVardenhet() instanceof Vardenhet) {
             postnummer = ((Vardenhet) user.getValdVardenhet()).getPostnummer();
+        } else if (user.getValdVardenhet() instanceof Mottagning) {
+            Mottagning valdMottagning = ((Mottagning) user.getValdVardenhet());
+            postnummer = valdMottagning.getPostnummer();
+            // If the mottagning didn't have a postnummer, climb up the organization tree
+            if (Strings.isNullOrEmpty(postnummer)) {
+                final int maxClimb = 5; // restrict climbing to make sure we never get stuck in the while-loop
+                int climbedLevels = 0;
+                String parentHsaId = valdMottagning.getParentHsaId();
+                Vardgivare valdVardgivare = ((Vardgivare) user.getValdVardgivare());
+                SelectableVardenhet parent = valdVardgivare.findVardenhet(parentHsaId);
+                while (parent instanceof Mottagning && Strings.isNullOrEmpty(postnummer) && climbedLevels < maxClimb) {
+                    postnummer = ((Mottagning) parent).getPostnummer();
+                    parentHsaId = ((Mottagning) parent).getParentHsaId();
+                    parent = valdVardgivare.findVardenhet(parentHsaId);
+                    climbedLevels++;
+                }
+                if (parent instanceof Vardenhet && Strings.isNullOrEmpty(postnummer)) {
+                    postnummer = ((Vardenhet) parent).getPostnummer();
+                } else {
+                    return "";
+                }
+            }
         } else {
             return ""; // What is default?
         }

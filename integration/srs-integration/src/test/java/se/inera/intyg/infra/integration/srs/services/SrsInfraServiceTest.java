@@ -26,6 +26,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Before;
@@ -44,6 +45,8 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.G
 import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Utdatafilter;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.srs.model.SrsCertificate;
@@ -277,7 +280,34 @@ public class SrsInfraServiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void testGetSRSForDiagnosisCodeInvalidRequest() {
         service.getSrsForDiagnose(null);
+    }
 
+    @Test
+    public void testGetPostNummerVardenhetVald() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        String postnummer = svc.getPostnummer(createUser());
+        assertEquals("11111", postnummer);
+    }
+
+    @Test
+    public void testGetPostNummerMottagningVald() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        String postnummer = svc.getPostnummer(createUserMottagning());
+        assertEquals("22222", postnummer);
+    }
+
+    @Test
+    public void testGetPostNummerMottagningUnderMottagningVald() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        String postnummer = svc.getPostnummer(createUserMottagningUnderMottagning());
+        assertEquals("33333", postnummer);
+    }
+
+    @Test
+    public void testGetPostNummerMottagningUnderMottagningVald() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        String postnummer = svc.getPostnummer(createUserMottagningUnderMottagning());
+        assertEquals("33333", postnummer);
     }
 
     private Personnummer createPnr(String pnr) {
@@ -286,12 +316,70 @@ public class SrsInfraServiceTest {
 
     private IntygUser createUser() {
         IntygUser user = new IntygUser("hsaId");
-        Vardgivare vg = new Vardgivare();
-        vg.setId("vgId");
-        user.setValdVardgivare(vg);
         Vardenhet ve = new Vardenhet();
         ve.setId("veId");
+        ve.setPostnummer("111 11");
         user.setValdVardenhet(ve);
+        Vardgivare vg = new Vardgivare();
+        vg.setId("vgId");
+        vg.setVardenheter(Lists.newArrayList(ve));
+        user.setValdVardgivare(vg);
+        return user;
+    }
+
+    private IntygUser createUserMottagning() {
+        IntygUser user = new IntygUser("hsaId");
+
+        Mottagning mt = new Mottagning();
+        mt.setId("mtId");
+        mt.setPostnummer("222 22");
+        mt.setParentHsaId("veId");
+
+        user.setValdVardenhet(mt);
+
+        Vardenhet ve = new Vardenhet();
+        ve.setId("veId");
+        ve.setPostnummer("111 11");
+        ve.setMottagningar(Lists.newArrayList(mt));
+
+        Vardgivare vg = new Vardgivare();
+        vg.setId("vgId");
+        vg.setVardenheter(Lists.newArrayList(ve));
+
+        user.setValdVardgivare(vg);
+        return user;
+    }
+
+    /**
+     * Creates a mottagning under a mottagning (mottagning -> mottagning -> vardenhet -> vardgivare)
+     * A little bit unsure if this structure can occur in the HSA catalog
+     * @return
+     */
+    private IntygUser createUserMottagningUnderMottagning() {
+        IntygUser user = new IntygUser("hsaId");
+
+        Mottagning mtChild = new Mottagning();
+        mtChild.setId("mtChildId");
+        mtChild.setPostnummer("333 33");
+        mtChild.setParentHsaId("mtParentId");
+
+        user.setValdVardenhet(mtChild);
+
+        Mottagning mtParent = new Mottagning();
+        mtParent.setId("mtParentId");
+        mtParent.setPostnummer("222 22");
+        mtParent.setParentHsaId("veId");
+
+        Vardenhet ve = new Vardenhet();
+        ve.setId("veId");
+        ve.setPostnummer("111 11");
+        ve.setMottagningar(Lists.newArrayList(mtChild, mtParent));
+
+        Vardgivare vg = new Vardgivare();
+        vg.setId("vgId");
+        vg.setVardenheter(Lists.newArrayList(ve));
+
+        user.setValdVardgivare(vg);
         return user;
     }
 }
