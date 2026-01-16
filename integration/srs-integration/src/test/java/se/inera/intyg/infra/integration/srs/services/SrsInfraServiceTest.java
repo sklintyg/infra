@@ -285,29 +285,103 @@ public class SrsInfraServiceTest {
     @Test
     public void testGetPostNummerVardenhetVald() {
         SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
-        String postnummer = svc.getPostnummer(createUser());
+        String postnummer = svc.getPostnummer(createUserVardenhetVald("111 11", null));
         assertEquals("11111", postnummer);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetPostNummerVardenhetValdNoPostnummerAtVardenhet() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        svc.getPostnummer(createUserVardenhetVald(null, "222 22"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetPostNummerVardenhetValdNoPostnummer() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        svc.getPostnummer(createUserVardenhetVald(null, null));
     }
 
     @Test
     public void testGetPostNummerMottagningVald() {
         SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
-        String postnummer = svc.getPostnummer(createUserMottagning());
+        String postnummer = svc.getPostnummer(createUserMottagningVald("111 11", "222 22"));
         assertEquals("22222", postnummer);
     }
 
     @Test
-    public void testGetPostNummerMottagningUnderMottagningVald() {
+    public void testGetPostNummerFromParentMottagningVald() {
         SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
-        String postnummer = svc.getPostnummer(createUserMottagningUnderMottagning());
-        assertEquals("33333", postnummer);
+        String postnummer = svc.getPostnummer(createUserMottagningVald("111 11", null));
+        assertEquals("11111", postnummer);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetPostNummerMottagningValdNoPostnummer() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        svc.getPostnummer(createUserMottagningVald(null, null));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetPostnummerVardenhetValdIncorrecLength() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        svc.getPostnummer(createUserVardenhetVald("111 11111", null));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetPostnummerFromParentMottagningValdIncorrectLength() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        svc.getPostnummer(createUserMottagningVald("111 11111", null));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetPostnummerMottagningValdIncorrectLength() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        svc.getPostnummer(createUserMottagningVald("111 11", "222 22222"));
     }
 
     @Test
-    public void testGetPostNummerMottagningUnderMottagningVald() {
+    public void formatPostnummer() {
         SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
-        String postnummer = svc.getPostnummer(createUserMottagningUnderMottagning());
-        assertEquals("33333", postnummer);
+        assertEquals("11111", svc.formatPostnummer("111 11"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void formatPostnummerIncorrectLength() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        svc.formatPostnummer("1111");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void formatPostnummerNull() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        svc.formatPostnummer(null);
+    }
+
+    @Test
+    public void getPostnummerMottagning() {
+        Mottagning mt = createMottagning("mtId", "veId", "222 22");
+        Vardenhet ve = createVardenhet("veId", Lists.newArrayList(mt), "111 11");
+        Vardgivare vg = createVardgivare("vgId", Lists.newArrayList(ve));
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        assertEquals("222 22", svc.getPostnummer(mt, vg));
+    }
+
+    @Test
+    public void getPostnummerFromParent() {
+        Mottagning mt = createMottagning("mtId", "veId", null);
+        Vardenhet ve = createVardenhet("veId", Lists.newArrayList(mt), "111 11");
+        Vardgivare vg = createVardgivare("vgId", Lists.newArrayList(ve));
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        assertEquals("111 11", svc.getPostnummer(mt, vg));
+    }
+
+    @Test
+    public void getPostnummerNoPostnummer() {
+        Mottagning mt = createMottagning("mtId", "veId", null);
+        Vardenhet ve = createVardenhet("veId", Lists.newArrayList(mt), null);
+        Vardgivare vg = createVardgivare("vgId", Lists.newArrayList(ve));
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        assertNull(svc.getPostnummer(mt, vg));
     }
 
     private Personnummer createPnr(String pnr) {
@@ -315,71 +389,54 @@ public class SrsInfraServiceTest {
     }
 
     private IntygUser createUser() {
-        IntygUser user = new IntygUser("hsaId");
-        Vardenhet ve = new Vardenhet();
-        ve.setId("veId");
-        ve.setPostnummer("111 11");
-        user.setValdVardenhet(ve);
-        Vardgivare vg = new Vardgivare();
-        vg.setId("vgId");
-        vg.setVardenheter(Lists.newArrayList(ve));
-        user.setValdVardgivare(vg);
-        return user;
+        return createUserMottagningVald("111 11", null);
     }
 
-    private IntygUser createUserMottagning() {
+    private IntygUser createUserMottagningVald(String postnummerVardenhet, String postnummerMottagning) {
         IntygUser user = new IntygUser("hsaId");
 
-        Mottagning mt = new Mottagning();
-        mt.setId("mtId");
-        mt.setPostnummer("222 22");
-        mt.setParentHsaId("veId");
+        Mottagning mt = createMottagning("mtId", "veId", postnummerMottagning);
+        Vardenhet ve = createVardenhet("veId", Lists.newArrayList(mt), postnummerVardenhet);
+        Vardgivare vg = createVardgivare("vgId", Lists.newArrayList(ve));
 
         user.setValdVardenhet(mt);
-
-        Vardenhet ve = new Vardenhet();
-        ve.setId("veId");
-        ve.setPostnummer("111 11");
-        ve.setMottagningar(Lists.newArrayList(mt));
-
-        Vardgivare vg = new Vardgivare();
-        vg.setId("vgId");
-        vg.setVardenheter(Lists.newArrayList(ve));
-
         user.setValdVardgivare(vg);
         return user;
     }
 
-    /**
-     * Creates a mottagning under a mottagning (mottagning -> mottagning -> vardenhet -> vardgivare)
-     * A little bit unsure if this structure can occur in the HSA catalog
-     * @return
-     */
-    private IntygUser createUserMottagningUnderMottagning() {
+    private IntygUser createUserVardenhetVald(String postnummerVardenhet, String postnummerMottagning) {
         IntygUser user = new IntygUser("hsaId");
 
-        Mottagning mtChild = new Mottagning();
-        mtChild.setId("mtChildId");
-        mtChild.setPostnummer("333 33");
-        mtChild.setParentHsaId("mtParentId");
+        Mottagning mt = createMottagning("mtId", "veId", postnummerMottagning);
+        Vardenhet ve = createVardenhet("veId", Lists.newArrayList(mt), postnummerVardenhet);
+        Vardgivare vg = createVardgivare("vgId", Lists.newArrayList(ve));
 
-        user.setValdVardenhet(mtChild);
-
-        Mottagning mtParent = new Mottagning();
-        mtParent.setId("mtParentId");
-        mtParent.setPostnummer("222 22");
-        mtParent.setParentHsaId("veId");
-
-        Vardenhet ve = new Vardenhet();
-        ve.setId("veId");
-        ve.setPostnummer("111 11");
-        ve.setMottagningar(Lists.newArrayList(mtChild, mtParent));
-
-        Vardgivare vg = new Vardgivare();
-        vg.setId("vgId");
-        vg.setVardenheter(Lists.newArrayList(ve));
-
+        user.setValdVardenhet(ve);
         user.setValdVardgivare(vg);
         return user;
     }
+
+    private Mottagning createMottagning(String id, String parentId, String postnummer) {
+        Mottagning mt = new Mottagning();
+        mt.setId(id);
+        mt.setParentHsaId(parentId);
+        mt.setPostnummer(postnummer);
+        return mt;
+    }
+
+    private Vardenhet createVardenhet(String id, List<Mottagning> mottagningar, String postnummer) {
+        Vardenhet ve = new Vardenhet();
+        ve.setId(id);
+        ve.setMottagningar(mottagningar);
+        ve.setPostnummer(postnummer);
+        return ve;
+    }
+
+    private Vardgivare createVardgivare(String id, List<Vardenhet> vardenheter) {
+        Vardgivare vg = new Vardgivare();
+        vg.setId(id);
+        vg.setVardenheter(vardenheter);
+        return vg;
+    }
+
 }

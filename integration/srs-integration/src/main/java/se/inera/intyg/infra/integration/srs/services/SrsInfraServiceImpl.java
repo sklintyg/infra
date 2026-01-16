@@ -400,45 +400,45 @@ public class SrsInfraServiceImpl implements SrsInfraService {
         return request;
     }
 
-    protected String getPostnummer(IntygUser user) {
-        String postnummer = null;
-        if (user.getValdVardenhet() instanceof Vardenhet) {
-            postnummer = ((Vardenhet) user.getValdVardenhet()).getPostnummer();
-        } else if (user.getValdVardenhet() instanceof Mottagning) {
-            Mottagning valdMottagning = ((Mottagning) user.getValdVardenhet());
-            postnummer = valdMottagning.getPostnummer();
-            // If the mottagning didn't have a postnummer, climb up the organization tree
-            if (Strings.isNullOrEmpty(postnummer)) {
-                final int maxClimb = 5; // restrict climbing to make sure we never get stuck in the while-loop
-                int climbedLevels = 0;
-                String parentHsaId = valdMottagning.getParentHsaId();
-                Vardgivare valdVardgivare = ((Vardgivare) user.getValdVardgivare());
-                SelectableVardenhet parent = valdVardgivare.findVardenhet(parentHsaId);
-                while (parent instanceof Mottagning && Strings.isNullOrEmpty(postnummer) && climbedLevels < maxClimb) {
-                    postnummer = ((Mottagning) parent).getPostnummer();
-                    parentHsaId = ((Mottagning) parent).getParentHsaId();
-                    parent = valdVardgivare.findVardenhet(parentHsaId);
-                    climbedLevels++;
-                }
-                if (parent instanceof Vardenhet && Strings.isNullOrEmpty(postnummer)) {
-                    postnummer = ((Vardenhet) parent).getPostnummer();
-                } else {
-                    return "";
-                }
-            }
-        } else {
-            return ""; // What is default?
-        }
-
+    protected String formatPostnummer(String postnummer) {
         if (Strings.isNullOrEmpty(postnummer)) {
-            return ""; // What is default?
+            throw new IllegalArgumentException("Postnummer was null or empty");
         }
         String trimmed = postnummer.replace(" ", "");
         if (trimmed.length() != POSTNUMMER_LENGTH) {
-            return ""; // What is default?
-
+            throw new IllegalArgumentException("The trimmed postnummer has incorrect length");
         }
         return trimmed;
+    }
+
+    private String getPostnummer(Vardenhet vardenhet) {
+        return vardenhet.getPostnummer();
+    }
+
+    protected String getPostnummer(Mottagning mottagning, Vardgivare vardgivare) {
+        if (!Strings.isNullOrEmpty(mottagning.getPostnummer())) {
+            return mottagning.getPostnummer();
+        } else {
+            String parentHsaId = mottagning.getParentHsaId();
+            SelectableVardenhet parent = vardgivare.findVardenhet(parentHsaId);
+            if (parent instanceof Vardenhet) {
+                return getPostnummer((Vardenhet) parent);
+            } else {
+                throw new IllegalArgumentException("Parent of Mottagning was not of type Vardenhet");
+            }
+        }
+    }
+
+    protected String getPostnummer(IntygUser user) {
+        if (user.getValdVardenhet() instanceof Vardenhet) {
+            final String postnummer = getPostnummer((Vardenhet) user.getValdVardenhet());
+            return formatPostnummer(postnummer);
+        } else if (user.getValdVardenhet() instanceof Mottagning) {
+            final String postnummer = getPostnummer((Mottagning) user.getValdVardenhet(), (Vardgivare) user.getValdVardgivare());
+            return formatPostnummer(postnummer);
+        } else {
+            throw new IllegalStateException("Unexpected problem with organization structure while trying to get postnummer from selected unit");
+        }
     }
 
     private HsaId createHsaId(String hsaIdCode) {
