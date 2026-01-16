@@ -437,7 +437,7 @@ public class SrsInfraServiceImpl implements SrsInfraService {
             final String postnummer = getPostnummer((Mottagning) user.getValdVardenhet(), (Vardgivare) user.getValdVardgivare());
             return formatPostnummer(postnummer);
         } else {
-            throw new IllegalStateException("Unexpected problem with organization structure while trying to get postnummer from selected unit");
+            throw new IllegalStateException("Selected unit was neither of type Vardenhet nor Mottagning while trying to get postnummer");
         }
     }
 
