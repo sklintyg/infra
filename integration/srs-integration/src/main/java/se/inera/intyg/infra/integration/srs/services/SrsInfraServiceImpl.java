@@ -67,7 +67,10 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardstyp;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Diagnosstatistik;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.EgenBedomningRiskType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.srs.model.SrsCertificate;
 import se.inera.intyg.infra.integration.srs.model.SrsForDiagnosisResponse;
 import se.inera.intyg.infra.integration.srs.model.SrsPrediction;
@@ -397,23 +400,45 @@ public class SrsInfraServiceImpl implements SrsInfraService {
         return request;
     }
 
-    private String getPostnummer(IntygUser user) {
-        String postnummer;
-        if (user.getValdVardenhet() instanceof Vardenhet) {
-            postnummer = ((Vardenhet) user.getValdVardenhet()).getPostnummer();
-        } else {
-            return ""; // What is default?
-        }
-
+    protected String formatPostnummer(String postnummer) {
         if (Strings.isNullOrEmpty(postnummer)) {
-            return ""; // What is default?
+            throw new IllegalArgumentException("Postnummer was null or empty");
         }
         String trimmed = postnummer.replace(" ", "");
         if (trimmed.length() != POSTNUMMER_LENGTH) {
-            return ""; // What is default?
-
+            throw new IllegalArgumentException("The trimmed postnummer has incorrect length");
         }
         return trimmed;
+    }
+
+    private String getPostnummer(Vardenhet vardenhet) {
+        return vardenhet.getPostnummer();
+    }
+
+    protected String getPostnummer(Mottagning mottagning, Vardgivare vardgivare) {
+        if (!Strings.isNullOrEmpty(mottagning.getPostnummer())) {
+            return mottagning.getPostnummer();
+        } else {
+            String parentHsaId = mottagning.getParentHsaId();
+            SelectableVardenhet parent = vardgivare.findVardenhet(parentHsaId);
+            if (parent instanceof Vardenhet) {
+                return getPostnummer((Vardenhet) parent);
+            } else {
+                throw new IllegalArgumentException("Parent of Mottagning was not of type Vardenhet");
+            }
+        }
+    }
+
+    protected String getPostnummer(IntygUser user) {
+        if (user.getValdVardenhet() instanceof Vardenhet) {
+            final String postnummer = getPostnummer((Vardenhet) user.getValdVardenhet());
+            return formatPostnummer(postnummer);
+        } else if (user.getValdVardenhet() instanceof Mottagning) {
+            final String postnummer = getPostnummer((Mottagning) user.getValdVardenhet(), (Vardgivare) user.getValdVardgivare());
+            return formatPostnummer(postnummer);
+        } else {
+            throw new IllegalStateException("Selected unit was neither of type Vardenhet nor Mottagning while trying to get postnummer");
+        }
     }
 
     private HsaId createHsaId(String hsaIdCode) {
