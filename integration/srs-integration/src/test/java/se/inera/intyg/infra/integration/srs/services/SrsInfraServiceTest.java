@@ -46,7 +46,6 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.Utdata
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Atgardsrekommendationstatus;
 import se.inera.intyg.clinicalprocess.healthcond.srs.types.v1.Statistikstatus;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.srs.model.SrsCertificate;
