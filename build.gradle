@@ -16,11 +16,7 @@ ext {
 
     commonsIoVersion = "2.21.0"
     cxfVersion = "4.1.4"
-    cxfPluginVersion = "4.1.2"
     guavaVersion = '33.5.0-jre'
-    jakartaJwsApiVersion = "3.0.0"
-    jaxb2Version = "3.0.0"
-    jaxb2NamespacePrefixVersion = "2.0"
     saxonVersion = "12.9"
     shedlockSpringVersion = "6.10.0"
     uapVersion = "1.6.1"
@@ -52,7 +48,6 @@ allprojects {
 
         implementation "ch.qos.logback:logback-classic"
         implementation "jakarta.annotation:jakarta.annotation-api"
-        implementation "jakarta.jws:jakarta.jws-api:${jakartaJwsApiVersion}"
         implementation "jakarta.xml.ws:jakarta.xml.ws-api"
 
         compileOnly 'org.projectlombok:lombok'
