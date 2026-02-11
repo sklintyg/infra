@@ -9,9 +9,7 @@ pluginManagement {
 rootProject.name = 'infra'
 
 include ':common-redis-cache-core'
-include ':grp-stub'
 include ':ia-integration'
-include ':pu-integration'
 include ':pu-integration-api'
 include ':pu-integration-intyg-proxy-service'
 include ':srs-integration'
@@ -38,9 +36,7 @@ include ':hsa-integration-intyg-proxy-service'
 
 project(':common-redis-cache-core').projectDir = "$rootDir/redis-cache/core" as File
 project(':dynamiclink').projectDir = "$rootDir/dynamiclink" as File
-project(':grp-stub').projectDir = "$rootDir/integration/grp-stub" as File
 project(':ia-integration').projectDir = "$rootDir/integration/ia-integration" as File
-project(':pu-integration').projectDir = "$rootDir/integration/pu-integration" as File
 project(':pu-integration-api').projectDir = "$rootDir/integration/pu-integration-api" as File
 project(':pu-integration-intyg-proxy-service').projectDir = "$rootDir/integration/pu-integration-intyg-proxy-service" as File
 project(':srs-integration').projectDir = "$rootDir/integration/srs-integration" as File
