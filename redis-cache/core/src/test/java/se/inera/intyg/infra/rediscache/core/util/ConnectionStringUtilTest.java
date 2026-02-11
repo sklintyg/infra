@@ -18,34 +18,33 @@
  */
 package se.inera.intyg.infra.rediscache.core.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-
-public class ConnectionStringUtilTest {
+class ConnectionStringUtilTest {
 
     @Test
-    public void testThreeElements() {
+    void testThreeElements() {
         List<String> elements = ConnectionStringUtil.parsePropertyString("one;two;three");
         assertEquals(3, elements.size());
     }
 
     @Test
-    public void testThreeElementsWithTrailingSemicolon() {
+    void testThreeElementsWithTrailingSemicolon() {
         List<String> elements = ConnectionStringUtil.parsePropertyString("one;two;three;");
         assertEquals(3, elements.size());
     }
 
     @Test
-    public void testSingle() {
+    void testSingle() {
         List<String> elements = ConnectionStringUtil.parsePropertyString("one");
         assertEquals(1, elements.size());
     }
 
     @Test
-    public void testSingleWithTrailingSemicolon() {
+    void testSingleWithTrailingSemicolon() {
         List<String> elements = ConnectionStringUtil.parsePropertyString("one;");
         assertEquals(1, elements.size());
     }

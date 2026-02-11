@@ -8,29 +8,25 @@ plugins {
 }
 
 ext {
-    funktionstjansterGrpSchemasVersion = "2.0.0.2"
-    intygClinicalprocessSchemasVersion = "1.0.24.2"
-    rivtaGetPersonsPersonSchemasVersion = "3.1.1.2"
-    rivtaStoreLogSchemasVersion = "2.0.1.2"
+    intygClinicalprocessSchemasVersion = "1.1.0.1"
+    rivtaStoreLogSchemasVersion = "2.0.1.3"
     schemasContractVersion = "2.1.8.2"
-    schemasSupportVersion = "2.1.5.2"
-    srsSchemasVersion = "0.0.16.2"
+    schemasSupportVersion = "2.2.0.1"
+    srsSchemasVersion = "1.0.0.1"
 
-    commonsIoVersion = "2.14.0"
-    commonsCollectionsVersion = "4.4"
-    cxfVersion = "4.0.5"
-    cxfPluginVersion = "4.0.0"
-    guavaVersion = "32.1.3-jre"
+    commonsIoVersion = "2.21.0"
+    cxfVersion = "4.1.4"
+    cxfPluginVersion = "4.1.2"
+    guavaVersion = '33.5.0-jre'
     jakartaJwsApiVersion = "3.0.0"
     jaxb2Version = "3.0.0"
     jaxb2NamespacePrefixVersion = "2.0"
-    saxonVersion = "12.3"
-    shedlockSpringVersion = "4.46.0"
+    saxonVersion = "12.9"
+    shedlockSpringVersion = "6.10.0"
     uapVersion = "1.6.1"
-    xmlSecVersion = "4.0.0"
-    xmlWsRtVersion = "4.0.2"
+    xmlSecVersion = "4.0.4"
 
-    springbootMavenBomVersion = "3.3.4"
+    springbootMavenBomVersion = "3.5.10"
 
     nvdMirror = 'https://vulnz-nvd-mirror-devtest.intyg.nordicmedtest.se'
 }
@@ -62,7 +58,6 @@ allprojects {
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
 
-        testImplementation "junit:junit"
         testImplementation "org.glassfish.jaxb:jaxb-runtime"
         testImplementation "org.junit.jupiter:junit-jupiter-api"
         testImplementation "org.junit.jupiter:junit-jupiter-params"
@@ -73,7 +68,6 @@ allprojects {
         testCompileOnly "org.projectlombok:lombok"
         testAnnotationProcessor "org.projectlombok:lombok"
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
-        testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
     }
 
     tasks.register("install") {
@@ -87,7 +81,6 @@ allprojects {
     }
 
     jar.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    test { useJUnitPlatform() }
 
     repositories {
         mavenLocal()

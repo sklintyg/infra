@@ -18,19 +18,19 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * Created by marced on 19/02/16.
  */
-public class LocalDateIntervalTest {
+class LocalDateIntervalTest {
 
     @Test
-    public void testGetDurationInDays() throws Exception {
+    void testGetDurationInDays() {
         assertEquals(1, new LocalDateInterval(LocalDate.parse("2016-01-01"), LocalDate.parse("2016-01-01")).getDurationInDays());
         assertEquals(31, new LocalDateInterval(LocalDate.parse("2016-01-01"), LocalDate.parse("2016-01-31")).getDurationInDays());
         assertEquals(3, new LocalDateInterval(LocalDate.parse("2016-02-28"), LocalDate.parse("2016-03-01")).getDurationInDays());

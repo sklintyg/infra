@@ -21,28 +21,29 @@ package se.inera.intyg.infra.security.filter;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static se.inera.intyg.infra.security.filter.SessionTimeoutFilter.TIME_TO_INVALIDATE_ATTRIBUTE_NAME;
 
-import java.time.Instant;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import java.time.Instant;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * Created by marced on 10/03/16.
  */
-@RunWith(MockitoJUnitRunner.class)
-public class SessionTimeoutFilterTest {
+@ExtendWith(MockitoExtension.class)
+class SessionTimeoutFilterTest {
 
     private static final String SKIP_RENEW_URL = "/test";
     private static final String OTHER_URL = "/any.html";
@@ -64,15 +65,15 @@ public class SessionTimeoutFilterTest {
     @Mock
     HttpSession session;
 
-    @Before
-    public void setupFilter() throws Exception {
+    @BeforeEach
+    void setupFilter() throws Exception {
         filter = new SessionTimeoutFilter();
         filter.setSkipRenewSessionUrls(SKIP_RENEW_URL);
         filter.initFilterBean();
     }
 
     @Test
-    public void testDoFilterInvalidSession() throws Exception {
+    void testDoFilterInvalidSession() throws Exception {
         // Arrange
         setupMocks(ONE_SECOND, OTHER_URL);
 
@@ -87,7 +88,7 @@ public class SessionTimeoutFilterTest {
     }
 
     @Test
-    public void testDoFilterInvalidSessionWithSkipUrl() throws Exception {
+    void testDoFilterInvalidSessionWithSkipUrl() throws Exception {
         // Arrange
         setupMocks(ONE_SECOND, SKIP_RENEW_URL);
 
@@ -102,7 +103,7 @@ public class SessionTimeoutFilterTest {
     }
 
     @Test
-    public void testDoFilterValidSession() throws Exception {
+    void testDoFilterValidSession() throws Exception {
         // Arrange
         setupMocks(HALF_AN_HOUR, OTHER_URL);
 
@@ -117,7 +118,7 @@ public class SessionTimeoutFilterTest {
     }
 
     @Test
-    public void testDoFilterValidSessionWithSkipUrl() throws Exception {
+    void testDoFilterValidSessionWithSkipUrl() throws Exception {
         // Arrange
         setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL);
 
@@ -132,7 +133,7 @@ public class SessionTimeoutFilterTest {
     }
 
     @Test
-    public void testInvalidateSessionIfTimeToInvalidateHasPassed() throws Exception {
+    void testInvalidateSessionIfTimeToInvalidateHasPassed() throws Exception {
         // Arrange
         setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL, Instant.now().minusSeconds(1).toEpochMilli());
 
@@ -146,7 +147,7 @@ public class SessionTimeoutFilterTest {
     }
 
     @Test
-    public void testDontInvalidateSessionIfTimeToInvalidateHasNotPassed() throws Exception {
+    void testDontInvalidateSessionIfTimeToInvalidateHasNotPassed() throws Exception {
         // Arrange
         setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL, Instant.now().plusSeconds(2).toEpochMilli());
 
@@ -160,7 +161,7 @@ public class SessionTimeoutFilterTest {
     }
 
     @Test
-    public void testDontInvalidateSessionIfTimeToInvalidateIsNull() throws Exception {
+    void testDontInvalidateSessionIfTimeToInvalidateIsNull() throws Exception {
         // Arrange
         setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL, null);
 
@@ -182,9 +183,8 @@ public class SessionTimeoutFilterTest {
 
         when(request.getSession(false)).thenReturn(session);
         when(request.getRequestURI()).thenReturn(reportedRequestURI);
-        when(session.getAttribute(eq(SessionTimeoutFilter.LAST_ACCESS_TIME_ATTRIBUTE_NAME)))
+        when(session.getAttribute(SessionTimeoutFilter.LAST_ACCESS_TIME_ATTRIBUTE_NAME))
             .thenReturn(System.currentTimeMillis() - FIVE_SECONDS_AGO);
-        when(session.getMaxInactiveInterval()).thenReturn(sessionLengthInSeconds);
-
+        lenient().when(session.getMaxInactiveInterval()).thenReturn(sessionLengthInSeconds);
     }
 }

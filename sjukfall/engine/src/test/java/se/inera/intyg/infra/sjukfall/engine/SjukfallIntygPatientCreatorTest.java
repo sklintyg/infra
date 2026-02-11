@@ -18,17 +18,17 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
@@ -36,9 +36,8 @@ import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 /**
  * @author Magnus Ekstrand on 2017-08-31.
  */
-@RunWith(MockitoJUnitRunner.class)
-
-public class SjukfallIntygPatientCreatorTest {
+@ExtendWith(MockitoExtension.class)
+class SjukfallIntygPatientCreatorTest {
 
     private static final String LOCATION_INTYGSDATA = "classpath:Sjukfall/Patient/intygsdata-patient.csv";
 
@@ -48,58 +47,58 @@ public class SjukfallIntygPatientCreatorTest {
 
     private LocalDate activeDate = LocalDate.parse("2016-02-16");
 
-    @BeforeClass
-    public static void initTestData() throws IOException {
+    @BeforeAll
+    static void initTestData() throws IOException {
         SjukfallIntygGenerator generator = new SjukfallIntygGenerator(LOCATION_INTYGSDATA);
         intygDataList = generator.generate().get();
 
-        assertTrue("Expected 5 but was " + intygDataList.size(), intygDataList.size() == 5);
+        assertEquals(5, intygDataList.size(), "Expected 5 but was " + intygDataList.size());
     }
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         testee = new SjukfallIntygPatientCreator();
     }
 
     @Test
-    public void testCreatingMapWithMaxGlappZeroDays() {
+    void testCreatingMapWithMaxGlappZeroDays() {
         Map<Integer, List<SjukfallIntyg>> map = testee.createMap(intygDataList, 0, activeDate);
-        assertTrue("Expected 4 but was " + map.size(), map.size() == 4);
+        assertEquals(4, map.size(), "Expected 4 but was " + map.size());
     }
 
     @Test
-    public void testCreatingMapWithMaxGlappOneDays() {
+    void testCreatingMapWithMaxGlappOneDays() {
         Map<Integer, List<SjukfallIntyg>> map = testee.createMap(intygDataList, 1, activeDate);
-        assertTrue("Expected 3 but was " + map.size(), map.size() == 3);
+        assertEquals(3, map.size(), "Expected 3 but was " + map.size());
     }
 
     @Test
-    public void testCreatingMapWithMaxGlappTwoDays() {
+    void testCreatingMapWithMaxGlappTwoDays() {
         Map<Integer, List<SjukfallIntyg>> map = testee.createMap(intygDataList, 2, activeDate);
-        assertTrue("Expected 3 but was " + map.size(), map.size() == 2);
+        assertEquals(2, map.size(), "Expected 3 but was " + map.size());
     }
 
     @Test
-    public void testCreatingMapWithMaxGlappThreeDays() {
+    void testCreatingMapWithMaxGlappThreeDays() {
         Map<Integer, List<SjukfallIntyg>> map = testee.createMap(intygDataList, 3, activeDate);
-        assertTrue("Expected 2 but was " + map.size(), map.size() == 2);
+        assertEquals(2, map.size(), "Expected 2 but was " + map.size());
     }
 
     @Test
-    public void testCreatingMapWithMaxGlappNineDays() {
+    void testCreatingMapWithMaxGlappNineDays() {
         Map<Integer, List<SjukfallIntyg>> map = testee.createMap(intygDataList, 9, activeDate);
-        assertTrue("Expected 2 but was " + map.size(), map.size() == 2);
+        assertEquals(2, map.size(), "Expected 2 but was " + map.size());
     }
 
     @Test
-    public void testCreatingMapWithMaxGlappTenDays() {
+    void testCreatingMapWithMaxGlappTenDays() {
         Map<Integer, List<SjukfallIntyg>> map = testee.createMap(intygDataList, 10, activeDate);
-        assertTrue("Expected 2 but was " + map.size(), map.size() == 1);
+        assertEquals(1, map.size(), "Expected 2 but was " + map.size());
     }
 
     @Test
-    public void testCreatingMapWithMaxGlappElevenDays() {
+    void testCreatingMapWithMaxGlappElevenDays() {
         Map<Integer, List<SjukfallIntyg>> map = testee.createMap(intygDataList, 11, activeDate);
-        assertTrue("Expected 4 but was " + map.size(), map.size() == 1);
+        assertEquals(1, map.size(), "Expected 4 but was " + map.size());
     }
 }

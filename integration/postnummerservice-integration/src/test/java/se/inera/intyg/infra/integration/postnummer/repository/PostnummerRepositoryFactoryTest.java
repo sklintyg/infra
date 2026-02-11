@@ -18,17 +18,17 @@
  */
 package se.inera.intyg.infra.integration.postnummer.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.postnummer.model.Omrade;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PostnummerRepositoryFactoryTest {
+@ExtendWith(MockitoExtension.class)
+class PostnummerRepositoryFactoryTest {
 
     private PostnummerRepositoryFactory factory = new PostnummerRepositoryFactory();
 
@@ -39,7 +39,7 @@ public class PostnummerRepositoryFactoryTest {
     private static final String LINE_1_KOMMUN = "NACKA";
 
     @Test
-    public void testCreateOmradeFromString() {
+    void testCreateOmradeFromString() {
 
         Omrade res = factory.createOmradeFromString(LINE_1);
 
@@ -51,7 +51,7 @@ public class PostnummerRepositoryFactoryTest {
     }
 
     @Test
-    public void testCreateOmradeWithSetters() {
+    void testCreateOmradeWithSetters() {
         Omrade control = factory.createOmradeFromString(LINE_1);
         Omrade test = new Omrade(null, null, null, null);
         test.setKommun(LINE_1_KOMMUN);

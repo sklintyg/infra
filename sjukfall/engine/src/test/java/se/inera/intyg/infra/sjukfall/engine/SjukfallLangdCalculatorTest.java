@@ -18,14 +18,14 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import se.inera.intyg.infra.sjukfall.dto.Formaga;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
@@ -34,13 +34,13 @@ import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 /**
  * Created by marced on 19/02/16.
  */
-public class SjukfallLangdCalculatorTest {
+class SjukfallLangdCalculatorTest {
 
-    private final static LocalDate AKTIVT_DATUM = LocalDate.parse("2016-02-16");
-    private final static LocalDateTime SIGNERINGSTIDPUNKT = LocalDateTime.parse("2016-02-01T12:00:00");
+    private static final LocalDate AKTIVT_DATUM = LocalDate.parse("2016-02-16");
+    private static final LocalDateTime SIGNERINGSTIDPUNKT = LocalDateTime.parse("2016-02-01T12:00:00");
 
     @Test
-    public void testGetEffectiveNumberOfSickDaysNointervals() throws Exception {
+    void testGetEffectiveNumberOfSickDaysNointervals() {
 
         assertEquals(0, SjukfallLangdCalculator.getEffectiveNumberOfSickDaysByIntyg(null));
 
@@ -52,7 +52,7 @@ public class SjukfallLangdCalculatorTest {
      * Test FALL1 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      */
     @Test
-    public void testGetEffectiveNumberOfSickDaysFall1() throws Exception {
+    void testGetEffectiveNumberOfSickDaysFall1() {
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
@@ -66,7 +66,7 @@ public class SjukfallLangdCalculatorTest {
      * Test FALL2 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      */
     @Test
-    public void testGetEffectiveNumberOfSickDaysFall2() throws Exception {
+    void testGetEffectiveNumberOfSickDaysFall2() {
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
@@ -80,7 +80,7 @@ public class SjukfallLangdCalculatorTest {
      * Test FALL3 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      */
     @Test
-    public void testGetEffectiveNumberOfSickDaysFall3() throws Exception {
+    void testGetEffectiveNumberOfSickDaysFall3() {
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
@@ -95,7 +95,7 @@ public class SjukfallLangdCalculatorTest {
      * Test FALL3 from confluence document /Krav/Rehabstod/Berakning av sjukfall. But with 11 days GAP allowed.
      */
     @Test
-    public void testGetEffectiveNumberOfSickDaysFall3WithElevenDaysGap() throws Exception {
+    void testGetEffectiveNumberOfSickDaysFall3WithElevenDaysGap() {
         final var gapBetweenIntyg = 11;
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
@@ -111,7 +111,7 @@ public class SjukfallLangdCalculatorTest {
      * Test FALL4 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      */
     @Test
-    public void testGetEffectiveNumberOfSickDaysFall4() throws Exception {
+    void testGetEffectiveNumberOfSickDaysFall4() {
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
@@ -126,7 +126,7 @@ public class SjukfallLangdCalculatorTest {
      * Test FALL5 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      */
     @Test
-    public void testGetEffectiveNumberOfSickDaysFall5() throws Exception {
+    void testGetEffectiveNumberOfSickDaysFall5() {
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
@@ -141,7 +141,7 @@ public class SjukfallLangdCalculatorTest {
      * Test FALL6 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      */
     @Test
-    public void testGetEffectiveNumberOfSickDaysFall6() throws Exception {
+    void testGetEffectiveNumberOfSickDaysFall6() {
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
@@ -155,7 +155,7 @@ public class SjukfallLangdCalculatorTest {
      * Test FALL6 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      */
     @Test
-    public void testGetEffectiveNumberOfSickDaysFall7() throws Exception {
+    void testGetEffectiveNumberOfSickDaysFall7() {
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
@@ -170,7 +170,7 @@ public class SjukfallLangdCalculatorTest {
      * Test FALL8 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      */
     @Test
-    public void testGetEffectiveNumberOfSickDaysFall8() throws Exception {
+    void testGetEffectiveNumberOfSickDaysFall8() {
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
@@ -185,7 +185,7 @@ public class SjukfallLangdCalculatorTest {
      * Test FALL9 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      */
     @Test
-    public void testGetEffectiveNumberOfSickDaysFall9() throws Exception {
+    void testGetEffectiveNumberOfSickDaysFall9() {
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
@@ -200,7 +200,7 @@ public class SjukfallLangdCalculatorTest {
      * Test FALL10 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      */
     @Test
-    public void testGetEffectiveNumberOfSickDaysFall10() throws Exception {
+    void testGetEffectiveNumberOfSickDaysFall10() {
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
@@ -215,7 +215,7 @@ public class SjukfallLangdCalculatorTest {
      * Test FALL11 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      */
     @Test
-    public void testGetEffectiveNumberOfSickDaysFall11() throws Exception {
+    void testGetEffectiveNumberOfSickDaysFall11() {
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
@@ -231,7 +231,7 @@ public class SjukfallLangdCalculatorTest {
      * Test FALL12 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      */
     @Test
-    public void testGetEffectiveNumberOfSickDaysFall12() throws Exception {
+    void testGetEffectiveNumberOfSickDaysFall12() {
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
@@ -247,7 +247,7 @@ public class SjukfallLangdCalculatorTest {
      * Test that intervals that are abut are counted equals as spanning the entire period.
      */
     @Test
-    public void testGetEffectiveNumberOfSickDaysAbutIntervals() throws Exception {
+    void testGetEffectiveNumberOfSickDaysAbutIntervals() {
 
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
         intygsUnderlag
@@ -262,7 +262,7 @@ public class SjukfallLangdCalculatorTest {
     }
 
     @Test
-    public void testGetEffectiveNumberOfSickDays() throws Exception {
+    void testGetEffectiveNumberOfSickDays() {
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
 
         // First add a simple intyg with a simple interval
@@ -286,7 +286,7 @@ public class SjukfallLangdCalculatorTest {
     }
 
     @Test
-    public void testMergeIntervalsSimple() throws Exception {
+    void testMergeIntervalsSimple() {
 
         List<LocalDateInterval> intervals = new ArrayList<>();
         final LocalDateInterval a = createInterval("2016-01-01", "2016-01-20");
@@ -303,7 +303,7 @@ public class SjukfallLangdCalculatorTest {
     }
 
     @Test
-    public void testMergeIntervalsDontMergeDiscreteIntervals() throws Exception {
+    void testMergeIntervalsDontMergeDiscreteIntervals() {
 
         List<LocalDateInterval> intervals = new ArrayList<>();
         final LocalDateInterval a = createInterval("2016-01-01", "2016-01-20");
@@ -320,7 +320,7 @@ public class SjukfallLangdCalculatorTest {
     }
 
     @Test
-    public void testMergeIntervalsComplex() throws Exception {
+    void testMergeIntervalsComplex() {
 
         // First add a simple intyg with a simple interval
         LocalDateInterval a = createInterval("2016-01-20", "2016-02-10");
@@ -350,7 +350,7 @@ public class SjukfallLangdCalculatorTest {
     }
 
     @Test
-    public void testProperReturnValuesWhenZeroDayGapBetweenSjukfall() {
+    void testProperReturnValuesWhenZeroDayGapBetweenSjukfall() {
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
         intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-01T12:00:00"), createInterval("2016-02-01", "2016-02-10")));
         intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-11T12:00:00"), createInterval("2016-02-11", "2016-02-20")));
@@ -365,7 +365,7 @@ public class SjukfallLangdCalculatorTest {
     }
 
     @Test
-    public void testProperReturnValuesWhenOneDayGapBetweenSjukfall() {
+    void testProperReturnValuesWhenOneDayGapBetweenSjukfall() {
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
         intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-01T12:00:00"), createInterval("2016-02-01", "2016-02-10")));
         intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-12T12:00:00"), createInterval("2016-02-12", "2016-02-20")));
@@ -380,7 +380,7 @@ public class SjukfallLangdCalculatorTest {
     }
 
     @Test
-    public void testProperReturnValuesWhenFiveDayGapBetweenSjukfall() {
+    void testProperReturnValuesWhenFiveDayGapBetweenSjukfall() {
         List<SjukfallIntyg> intygsUnderlag = new ArrayList<>();
         intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-01T12:00:00"), createInterval("2016-02-01", "2016-02-10")));
         intygsUnderlag.add(createIntyg(LocalDateTime.parse("2016-02-16T12:00:00"), createInterval("2016-02-16", "2016-02-20")));

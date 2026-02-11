@@ -18,19 +18,20 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
@@ -40,8 +41,8 @@ import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 /**
  * Created by Magnus Ekstrand on 2016-02-16.
  */
-@RunWith(MockitoJUnitRunner.class)
-public class SjukfallIntygEnhetCreatorTest {
+@ExtendWith(MockitoExtension.class)
+class SjukfallIntygEnhetCreatorTest {
 
     private static final String LOCATION_INTYGSDATA = "classpath:Sjukfall/Enhet/intygsdata-creator.csv";
 
@@ -51,42 +52,42 @@ public class SjukfallIntygEnhetCreatorTest {
 
     private IntygParametrar parameters;
 
-    @BeforeClass
-    public static void initTestData() throws IOException {
+    @BeforeAll
+    static void initTestData() throws IOException {
         SjukfallIntygGenerator generator = new SjukfallIntygGenerator(LOCATION_INTYGSDATA);
         intygDataList = generator.generate().get();
-        assertTrue("Expected 16 but was " + intygDataList.size(), intygDataList.size() == 16);
+        assertEquals(16, intygDataList.size(), "Expected 16 but was " + intygDataList.size());
     }
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         creator = new SjukfallIntygEnhetCreator();
         parameters = new IntygParametrar(5, LocalDate.parse("2016-02-16"));
     }
 
     @Test
-    public void testCreatingMap() {
+    void testCreatingMap() {
         Map<String, List<SjukfallIntyg>> map = creator.createMap(intygDataList, parameters);
-        assertTrue("Expected 7 but was " + map.size(), map.size() == 7);
+        assertEquals(7, map.size(), "Expected 7 but was " + map.size());
     }
 
     @Test
-    public void testReducedMap() {
+    void testReducedMap() {
         Map<String, List<SjukfallIntyg>> map = creator.createMap(intygDataList, parameters);
         Map<String, List<SjukfallIntyg>> reducedMap = creator.reduceMap(map);
 
         // Map should be reduced with one entry
-        assertTrue("Expected 6 but was " + reducedMap.size(), reducedMap.size() == 6);
+        assertEquals(6, reducedMap.size(), "Expected 6 but was " + reducedMap.size());
     }
 
     @Test
-    public void testSortedMap() {
+    void testSortedMap() {
         Map<String, List<SjukfallIntyg>> map = creator.createMap(intygDataList, parameters);
         Map<String, List<SjukfallIntyg>> sortedMap = creator.sortValues(map);
 
         for (Map.Entry<String, List<SjukfallIntyg>> entry : sortedMap.entrySet()) {
             if (entry.getValue().size() > 1) {
-                SjukfallIntyg[] arr = entry.getValue().toArray(new SjukfallIntyg[entry.getValue().size()]);
+                SjukfallIntyg[] arr = entry.getValue().toArray(new SjukfallIntyg[0]);
                 // Check sort order when list size is greater than one
                 for (int i = 0; i < arr.length - 1; i++) {
                     assertTrue(arr[i].getSlutDatum().isBefore(arr[i + 1].getSlutDatum()));
@@ -96,14 +97,14 @@ public class SjukfallIntygEnhetCreatorTest {
     }
 
     @Test
-    public void testSetActiveCertificate() {
+    void testSetActiveCertificate() {
         Map<String, List<SjukfallIntyg>> map = creator.createMap(intygDataList, parameters);
         Map<String, List<SjukfallIntyg>> activeMap = creator.setActive(map);
 
         // It can only be zero or one active object
         assertTrue(activeMap.entrySet().stream()
             .allMatch(e -> e.getValue().stream()
-                .filter(o -> o.isAktivtIntyg()).count() < 2));
+                .filter(SjukfallIntyg::isAktivtIntyg).count() < 2));
 
     }
 
@@ -113,65 +114,65 @@ public class SjukfallIntygEnhetCreatorTest {
      */
 
     @Test
-    public void testFall1() {
+    void testFall1() {
         String key = "19791110-9291";
         Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, parameters);
 
         List<SjukfallIntyg> list = map.get(key);
 
-        assertTrue("Expected 2 but was " + list.size(), list.size() == 2);
+        assertEquals(2, list.size(), "Expected 2 but was " + list.size());
         assertStartDate(list.get(0), "2016-02-01");
         assertEndDate(list.get(1), "2016-02-20");
         assertTrue(list.get(1).isAktivtIntyg());
     }
 
     @Test
-    public void testFall2() {
+    void testFall2() {
         String key = "19791123-9262";
         Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, parameters);
 
         List<SjukfallIntyg> list = map.get(key);
 
-        assertTrue("Expected 2 but was " + list.size(), list.size() == 2);
+        assertEquals(2, list.size(), "Expected 2 but was " + list.size());
         assertStartDate(list.get(0), "2016-02-01");
         assertEndDate(list.get(1), "2016-02-20");
         assertTrue(list.get(1).isAktivtIntyg());
     }
 
     @Test
-    public void testFall3() {
+    void testFall3() {
         String key = "19791212-9280";
         Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, parameters);
 
         List<SjukfallIntyg> list = map.get(key);
 
-        assertTrue("Expected 3 but was " + list.size(), list.size() == 3);
+        assertEquals(3, list.size(), "Expected 3 but was " + list.size());
         assertStartDate(list.get(0), "2016-02-01");
         assertEndDate(list.get(2), "2016-02-25");
         assertTrue(list.get(1).isAktivtIntyg());
     }
 
     @Test
-    public void testFall4() {
+    void testFall4() {
         String key = "19800113-9297";
         Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, parameters);
 
         List<SjukfallIntyg> list = map.get(key);
 
-        assertTrue("Expected 3 but was " + list.size(), list.size() == 3);
+        assertEquals(3, list.size(), "Expected 3 but was " + list.size());
         assertStartDate(list.get(0), "2016-02-01");
         assertEndDate(list.get(2), "2016-02-25");
         assertTrue(list.get(1).isAktivtIntyg());
     }
 
     @Test
-    public void testFall5() {
+    void testFall5() {
         String key = "19800124-9286";
         Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, parameters);
 
         List<SjukfallIntyg> list = map.get(key);
 
-        assertTrue("Expected 2 but was " + list.size(), list.size() == 2);
+        assertEquals(2, list.size(), "Expected 2 but was " + list.size());
         assertStartDate(list.get(0), "2016-02-12");
         assertEndDate(list.get(1), "2016-02-25");
         assertTrue(list.get(0).isAktivtIntyg());
@@ -179,13 +180,13 @@ public class SjukfallIntygEnhetCreatorTest {
     }
 
     @Test
-    public void testFall6() {
+    void testFall6() {
         String key = "19800207-9294";
         Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, parameters);
 
         List<SjukfallIntyg> list = map.get(key);
 
-        assertTrue("Expected 2 but was " + list.size(), list.size() == 2);
+        assertEquals(2, list.size(), "Expected 2 but was " + list.size());
         assertStartDate(list.get(0), "2016-02-12");
         assertEndDate(list.get(1), "2016-02-25");
         assertFalse(list.get(0).isAktivtIntyg());
@@ -193,19 +194,18 @@ public class SjukfallIntygEnhetCreatorTest {
     }
 
     @Test
-    public void testFall7() {
+    void testFall7() {
         String key = "19800228-9224";
         Map<String, List<SjukfallIntyg>> map = creator.create(intygDataList, parameters);
 
         assertNull(map.get(key));
     }
 
-
     private static void assertStartDate(SjukfallIntyg intygsData, String datum) {
-        assertTrue(intygsData.getStartDatum().equals(LocalDate.parse(datum)));
+        assertEquals(intygsData.getStartDatum(), LocalDate.parse(datum));
     }
 
     private static void assertEndDate(SjukfallIntyg intygsData, String datum) {
-        assertTrue(intygsData.getSlutDatum().equals(LocalDate.parse(datum)));
+        assertEquals(intygsData.getSlutDatum(), LocalDate.parse(datum));
     }
 }

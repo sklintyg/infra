@@ -18,18 +18,17 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
@@ -39,8 +38,8 @@ import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 /**
  * Created by Magnus Ekstrand on 10/02/16.
  */
-@RunWith(MockitoJUnitRunner.class)
-public class SjukfallIntygEnhetResolverReduceLeftTest {
+@ExtendWith(MockitoExtension.class)
+class SjukfallIntygEnhetResolverReduceLeftTest {
 
     private static final String LOCATION_INTYGSDATA = "classpath:Sjukfall/Enhet/intygsdata-resolver-left.csv";
 
@@ -49,50 +48,50 @@ public class SjukfallIntygEnhetResolverReduceLeftTest {
     private SjukfallIntygEnhetResolver resolver;
 
 
-    @BeforeClass
-    public static void initTestData() throws IOException {
+    @BeforeAll
+    static void initTestData() throws IOException {
         SjukfallIntygGenerator generator = new SjukfallIntygGenerator(LOCATION_INTYGSDATA);
         intygDataList = generator.generate().get();
     }
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         resolver = new SjukfallIntygEnhetResolver(new SjukfallIntygEnhetCreator());
     }
 
     @Test
-    public void testFall1() {
+    void testFall1() {
         List<SjukfallIntyg> result = getTestData("fall-1-left", "2016-01-27", 5, "2016-02-08");
-        assertTrue("Expected 3 but was " + result.size(), result.size() == 3);
+        assertEquals(3, result.size(), "Expected 3 but was " + result.size());
     }
 
     @Test
-    public void testFall2() {
+    void testFall2() {
         List<SjukfallIntyg> result = getTestData("fall-2-left", "2016-01-27", 5, "2016-02-08");
-        assertTrue("Expected 2 but was " + result.size(), result.size() == 2);
+        assertEquals(2, result.size(), "Expected 2 but was " + result.size());
         assertEquals("fall-2-intyg-2", result.get(0).getIntygId());
         assertEquals("fall-2-intyg-3", result.get(1).getIntygId());
     }
 
     @Test
-    public void testFall3() {
+    void testFall3() {
         List<SjukfallIntyg> result = getTestData("fall-3-left", "2016-01-27", 5, "2016-02-08");
-        assertTrue("Expected 0 but was " + result.size(), result.size() == 0);
+        assertEquals(0, result.size(), "Expected 0 but was " + result.size());
     }
 
     @Test
-    public void testFall4() {
+    void testFall4() {
         List<SjukfallIntyg> result = getTestData("fall-4-left", "2016-01-27", 5, "2016-02-08");
-        assertTrue("Expected 3 but was " + result.size(), result.size() == 3);
+        assertEquals(3, result.size(), "Expected 3 but was " + result.size());
         assertEquals("fall-4-intyg-1", result.get(0).getIntygId());
         assertEquals("fall-4-intyg-3", result.get(1).getIntygId());
         assertEquals("fall-4-intyg-2", result.get(2).getIntygId());
     }
 
     @Test
-    public void testFall5() {
+    void testFall5() {
         List<SjukfallIntyg> result = getTestData("fall-5-left", "2016-01-27", 5, "2016-02-08");
-        assertTrue("Expected 4 but was " + result.size(), result.size() == 4);
+        assertEquals(4, result.size(), "Expected 4 but was " + result.size());
         assertEquals("fall-5-intyg-1", result.get(0).getIntygId());
         assertEquals("fall-5-intyg-2", result.get(1).getIntygId());
         assertEquals("fall-5-intyg-3", result.get(2).getIntygId());
@@ -100,17 +99,17 @@ public class SjukfallIntygEnhetResolverReduceLeftTest {
     }
 
     @Test
-    public void testFall6() {
+    void testFall6() {
         List<SjukfallIntyg> result = getTestData("fall-6-left", "2016-01-27", 5, "2016-02-08");
-        assertTrue("Expected 2 but was " + result.size(), result.size() == 2);
+        assertEquals(2, result.size(), "Expected 2 but was " + result.size());
         assertEquals("fall-6-intyg-2", result.get(0).getIntygId());
         assertEquals("fall-6-intyg-1", result.get(1).getIntygId());
     }
 
     @Test
-    public void testFall7() {
+    void testFall7() {
         List<SjukfallIntyg> result = getTestData("fall-7-left", "2016-01-27", 5, "2016-02-08");
-        assertTrue("Expected 5 but was " + result.size(), result.size() == 5);
+        assertEquals(5, result.size(), "Expected 5 but was " + result.size());
         assertEquals("fall-7-intyg-1", result.get(0).getIntygId());
         assertEquals("fall-7-intyg-2", result.get(1).getIntygId());
         assertEquals("fall-7-intyg-3", result.get(2).getIntygId());
@@ -125,9 +124,5 @@ public class SjukfallIntygEnhetResolverReduceLeftTest {
 
     private Map<String, List<SjukfallIntyg>> getTestData(String aktivtDatum) {
         return resolver.createMap(intygDataList, new IntygParametrar(5, LocalDate.parse(aktivtDatum)));
-    }
-
-    private Map<String, List<SjukfallIntyg>> getTestData(LocalDate aktivtDatum) {
-        return resolver.createMap(intygDataList, new IntygParametrar(5, aktivtDatum));
     }
 }

@@ -5,3 +5,7 @@ dependencies {
     implementation "org.springframework:spring-context"
     implementation "redis.clients:jedis"
 }
+
+testing.suites {
+    test { useJUnitJupiter() }
+}

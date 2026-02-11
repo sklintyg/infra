@@ -18,41 +18,41 @@
  */
 package se.inera.intyg.infra.monitoring.annotation;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.prometheus.client.Collector;
 import io.prometheus.client.CollectorRegistry;
 import java.util.Collections;
 import java.util.Optional;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.infra.monitoring.TestController;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {MonitoringConfiguration.class, TestController.class})
-public class TimeMethodTest {
+class TimeMethodTest {
 
     CollectorRegistry registry = CollectorRegistry.defaultRegistry;
 
     @Autowired
     TestController testController;
 
-    @Before
-    public void before() throws InterruptedException {
+    @BeforeEach
+    void before() throws InterruptedException {
         this.testController.named();
         this.testController.named2();
         this.testController.unnamed("", Collections.EMPTY_LIST);
     }
 
     @Test
-    public void instrumented_named_method() throws InterruptedException {
+    void instrumented_named_method() {
 
         final Optional<Collector.MetricFamilySamples> sample = Collections.list(registry.metricFamilySamples()).stream()
             .filter(s -> TestController.SAMPLE_NAME.equals(s.name))
@@ -64,7 +64,7 @@ public class TimeMethodTest {
     }
 
     @Test
-    public void instrumented_duplicate_named_method() throws InterruptedException {
+    void instrumented_duplicate_named_method() {
 
         final Optional<Collector.MetricFamilySamples> sample = Collections.list(registry.metricFamilySamples()).stream()
             .filter(s -> s.name.equalsIgnoreCase(TestController.SAMPLE_NAME + "_1"))
@@ -76,7 +76,7 @@ public class TimeMethodTest {
     }
 
     @Test
-    public void instrumented_unnamed_method() throws InterruptedException {
+    void instrumented_unnamed_method() {
         final Optional<Collector.MetricFamilySamples> sample = Collections.list(registry.metricFamilySamples()).stream()
             .filter(s -> s.name.startsWith("api_"))
             .findFirst();
@@ -85,5 +85,4 @@ public class TimeMethodTest {
         assertFalse(sample.get().samples.isEmpty());
         assertNotNull(sample.get().help);
     }
-
 }
