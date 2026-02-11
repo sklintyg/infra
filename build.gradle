@@ -10,7 +10,7 @@ plugins {
 ext {
     intygClinicalprocessSchemasVersion = "1.1.0.1"
     rivtaStoreLogSchemasVersion = "2.0.1.3"
-    schemasContractVersion = "2.1.8.2"
+    schemasContractVersion = "2.2.0.1"
     schemasSupportVersion = "2.2.0.1"
     srsSchemasVersion = "1.0.0.1"
 
