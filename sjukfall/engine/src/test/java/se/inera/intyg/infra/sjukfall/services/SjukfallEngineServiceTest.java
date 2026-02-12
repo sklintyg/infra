@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.infra.sjukfall.services;
 
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.time.Clock;
@@ -32,13 +32,12 @@ import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.sjukfall.dto.Formaga;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
@@ -56,8 +55,8 @@ import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 /**
  * Created by martin on 11/02/16.
  */
-@RunWith(MockitoJUnitRunner.class)
-public class SjukfallEngineServiceTest {
+@ExtendWith(MockitoExtension.class)
+class SjukfallEngineServiceTest {
 
     private static final String LOCATION_INTYGSDATA = "classpath:SjukfallServiceTest/intygsdata-engine.csv";
 
@@ -66,7 +65,6 @@ public class SjukfallEngineServiceTest {
     private static List<SjukfallPatient> sjukfallListPatient;
 
     private LocalDate activeDate = LocalDate.parse("2016-02-16");
-    private LocalDate tolvanBirthdate = LocalDate.parse("1912-12-12");
 
     @Spy
     SjukfallIntygEnhetCreator creator = new SjukfallIntygEnhetCreator();
@@ -77,8 +75,8 @@ public class SjukfallEngineServiceTest {
     @InjectMocks
     private SjukfallEngineServiceImplTest testee = new SjukfallEngineServiceImplTest();
 
-    @Before
-    public void init() throws IOException {
+    @BeforeEach
+    void init() throws IOException {
         // Load test data
         SjukfallIntygGenerator generator = new SjukfallIntygGenerator(LOCATION_INTYGSDATA);
         intygDataList = generator.generate().get();
@@ -88,7 +86,7 @@ public class SjukfallEngineServiceTest {
         assertInit(sjukfallListUnit, 11);
 
         List<IntygData> intygDataListPatient
-            = intygDataList.stream().filter(o -> o.getPatientId().equals("19710301-1032")).collect(Collectors.toList());
+            = intygDataList.stream().filter(o -> o.getPatientId().equals("19710301-1032")).toList();
 
         sjukfallListPatient = testee.beraknaSjukfallForPatient(intygDataListPatient, getIntygParametrar(5, activeDate));
         assertInit(sjukfallListPatient, 2);
@@ -100,69 +98,69 @@ public class SjukfallEngineServiceTest {
     // ~ ======================================================================================================== ~
 
     @Test
-    public void testCalculateSjukfallEnhet1() {
+    void testCalculateSjukfallEnhet1() {
         assertSjukfallEnhet("19791110-9291", "2016-02-01", "2016-02-20", 2, 19);
     }
 
     @Test
-    public void testCalculateSjukfallEnhet2() {
+    void testCalculateSjukfallEnhet2() {
         assertSjukfallEnhet("19791123-9262", "2016-02-01", "2016-02-20", 2, 19);
     }
 
     @Test
-    public void testCalculateSjukfallEnhet3() {
+    void testCalculateSjukfallEnhet3() {
         assertSjukfallEnhet("19791212-9280", "2016-02-01", "2016-02-25", 3, 24);
     }
 
     @Test
-    public void testCalculateSjukfallEnhet4() {
+    void testCalculateSjukfallEnhet4() {
         assertSjukfallEnhet("19800113-9297", "2016-02-01", "2016-02-25", 3, 24);
     }
 
     @Test
-    public void testCalculateSjukfallEnhet5() {
+    void testCalculateSjukfallEnhet5() {
         assertSjukfallEnhet("19800124-9286", "2016-02-12", "2016-02-25", 2, 14);
     }
 
     @Test
-    public void testCalculateSjukfallEnhet6() {
+    void testCalculateSjukfallEnhet6() {
         assertSjukfallEnhet("19800207-9294", "2016-02-12", "2016-02-25", 2, 14);
     }
 
     @Test
-    public void testCalculateSjukfallEnhet7() {
+    void testCalculateSjukfallEnhet7() {
         assertSjukfallEnhet("19800228-9224", "2016-02-01", "2016-02-25", 0, 0);
     }
 
     @Test
-    public void testCalculateSjukfallEnhet8() {
+    void testCalculateSjukfallEnhet8() {
         assertSjukfallEnhet("19961110-2394", "2016-02-01", "2016-02-19", 3, 15);
     }
 
     @Test
-    public void testCalculateSjukfallEnhet9() {
+    void testCalculateSjukfallEnhet9() {
         assertSjukfallEnhet("19961111-2385", "2016-02-15", "2016-03-04", 3, 15);
     }
 
     @Test
-    public void testCalculateSjukfallEnhet10() {
+    void testCalculateSjukfallEnhet10() {
         assertSjukfallEnhet("19571109-2642", "2016-02-15", "2016-02-19", 1, 5);
     }
 
     @Test
-    public void testCalculateSjukfallEnhet11() {
+    void testCalculateSjukfallEnhet11() {
         assertSjukfallEnhet("19630206-2846", "2016-02-01", "2016-03-04", 4, 29,
             Arrays.asList("fall-11-intyg-1", "fall-11-intyg-2", "fall-11-intyg-3", "fall-11-intyg-4"));
     }
 
     @Test
-    public void testCalculateSjukfallEnhet12() {
+    void testCalculateSjukfallEnhet12() {
         assertSjukfallEnhet("19710301-1032", "2016-02-15", "2016-03-04", 3, 19,
             Arrays.asList("fall-12-intyg-2", "fall-12-intyg-3", "fall-12-intyg-4"));
     }
 
     @Test
-    public void testCalculateSjukfallPatient() {
+    void testCalculateSjukfallPatient() {
 
         // Säkerställ att listan är rätt sorterad
         List<SjukfallPatient> subList = sjukfallListPatient.subList(1, sjukfallListPatient.size());
@@ -173,14 +171,14 @@ public class SjukfallEngineServiceTest {
     }
 
     @Test
-    public void shouldContainSysselsattning() {
+    void shouldContainSysselsattning() {
         assertNotNull(sjukfallListUnit.get(0).getSysselsattning());
     }
 
     // - - -  Private scope  - - -
 
     private static void assertInit(List<?> list, int expectedListSize) {
-        assertTrue("Expected " + expectedListSize + " but was " + list.size(), list.size() == expectedListSize);
+        assertEquals(list.size(), expectedListSize, "Expected " + expectedListSize + " but was " + list.size());
     }
 
     private static void assertSjukfallEnhet(String patientId, String startDatum, String slutDatum, int antalIntyg,
@@ -200,8 +198,8 @@ public class SjukfallEngineServiceTest {
 
         assertTrue(sjukfallEnhet.getStart().isEqual(LocalDate.parse(startDatum)));
         assertTrue(sjukfallEnhet.getSlut().isEqual(LocalDate.parse(slutDatum)));
-        assertTrue(sjukfallEnhet.getIntyg() == antalIntyg);
-        assertTrue(sjukfallEnhet.getDagar() == effektivSjukskrivningslangd);
+        assertEquals(sjukfallEnhet.getIntyg(), antalIntyg);
+        assertEquals(sjukfallEnhet.getDagar(), effektivSjukskrivningslangd);
         if (expectedIntygsIds != null) {
             assertEquals(expectedIntygsIds.size(), sjukfallEnhet.getIntygLista().size());
             assertTrue(sjukfallEnhet.getIntygLista().containsAll(expectedIntygsIds));
@@ -214,8 +212,8 @@ public class SjukfallEngineServiceTest {
 
         assertTrue(sjukfallPatient.getStart().isEqual(LocalDate.parse(startDatum)));
         assertTrue(sjukfallPatient.getSlut().isEqual(LocalDate.parse(slutDatum)));
-        assertTrue(sjukfallPatient.getDagar() == effektivSjukskrivningslangd);
-        assertTrue(sjukfallPatient.getSjukfallIntygList().size() == antalIntyg);
+        assertEquals((int) sjukfallPatient.getDagar(), effektivSjukskrivningslangd);
+        assertEquals(sjukfallPatient.getSjukfallIntygList().size(), antalIntyg);
 
         // Kolla av att intygen är i fallande ordning gällande signeringstidpunkt
         SjukfallIntyg intyg = sjukfallPatient.getSjukfallIntygList().get(0);
@@ -254,18 +252,17 @@ public class SjukfallEngineServiceTest {
     private static void assertGrader(String intygId, List<Integer> grader) {
         IntygData data = intygDataList.stream().filter(obj -> obj.getIntygId().equalsIgnoreCase(intygId)).findFirst().get();
         List<Formaga> formagor =
-            data.getFormagor().stream().sorted(Comparator.comparing(Formaga::getStartdatum)).collect(Collectors.toList());
+            data.getFormagor().stream().sorted(Comparator.comparing(Formaga::getStartdatum)).toList();
 
-        assertTrue(grader.size() == formagor.size());
+        assertEquals(grader.size(), formagor.size());
 
         for (int i = 0; i < grader.size(); i++) {
-            assertTrue(grader.get(i).intValue() == formagor.get(i).getNedsattning());
+            assertEquals(grader.get(i).intValue(), formagor.get(i).getNedsattning());
         }
     }
 
     private IntygParametrar getIntygParametrar(int maxIntygsGlapp, LocalDate aktivtDatum) {
-        IntygParametrar parametrar = new IntygParametrar(maxIntygsGlapp, aktivtDatum);
-        return parametrar;
+        return new IntygParametrar(maxIntygsGlapp, aktivtDatum);
     }
 
     private class SjukfallEngineServiceImplTest extends SjukfallEngineServiceImpl {

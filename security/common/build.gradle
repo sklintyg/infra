@@ -13,3 +13,7 @@ dependencies {
     compileOnly "jakarta.servlet:jakarta.servlet-api"
     testImplementation "jakarta.servlet:jakarta.servlet-api"
 }
+
+testing.suites {
+    test { useJUnitJupiter() }
+}

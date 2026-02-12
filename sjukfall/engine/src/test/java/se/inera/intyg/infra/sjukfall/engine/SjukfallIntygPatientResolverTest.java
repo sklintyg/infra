@@ -18,21 +18,20 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
@@ -40,9 +39,8 @@ import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 /**
  * @author Magnus Ekstrand on 2017-08-31.
  */
-@RunWith(MockitoJUnitRunner.class)
-
-public class SjukfallIntygPatientResolverTest {
+@ExtendWith(MockitoExtension.class)
+class SjukfallIntygPatientResolverTest {
 
     private static final String LOCATION_INTYGSDATA = "classpath:Sjukfall/Patient/intygsdata-patient.csv";
 
@@ -55,43 +53,42 @@ public class SjukfallIntygPatientResolverTest {
 
     private SjukfallIntygPatientResolver testee;
 
-
-    @BeforeClass
-    public static void initTestData() throws IOException {
+    @BeforeAll
+    static void initTestData() throws IOException {
         SjukfallIntygGenerator generator = new SjukfallIntygGenerator(LOCATION_INTYGSDATA);
         intygDataList = generator.generate().get();
 
-        assertTrue("Expected 5 but was " + intygDataList.size(), intygDataList.size() == 5);
+        assertEquals(5, intygDataList.size(), "Expected 5 but was " + intygDataList.size());
     }
 
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         testee = new SjukfallIntygPatientResolver(creatorSpy);
     }
 
     @Test
-    public void testHappyDays() {
+    void testHappyDays() {
         Map<Integer, List<SjukfallIntyg>> mockedInstance = Mockito.mock(Map.class);
         Mockito.doReturn(mockedInstance).when(creatorSpy).create(intygDataList, 0, activeDate);
 
         // invoke testing method
         Map<Integer, List<SjukfallIntyg>> actualInstance = testee.resolve(intygDataList, 0, activeDate);
 
-        Assert.assertEquals(actualInstance, mockedInstance);
+        assertEquals(actualInstance, mockedInstance);
         Mockito.verify(creatorSpy, Mockito.times(1)).create(intygDataList, 0, activeDate);
     }
 
     @Test
-    public void testInvalidArgumentIntygsData() {
+    void testInvalidArgumentIntygsData() {
         Map<Integer, List<SjukfallIntyg>> map = testee.resolve(new ArrayList<>(), 0, activeDate);
-        assertTrue("Expected 0 but was " + map.size(), map.size() == 0);
+        assertEquals(0, map.size(), "Expected 0 but was " + map.size());
     }
 
     @Test
-    public void testInvalidArgumentIntygsGlapp() {
+    void testInvalidArgumentIntygsGlapp() {
         Map<Integer, List<SjukfallIntyg>> map = testee.resolve(intygDataList, -1, activeDate);
-        assertTrue("Expected 0 but was " + map.size(), map.size() == 0);
+        assertEquals(0, map.size(), "Expected 0 but was " + map.size());
     }
 
 

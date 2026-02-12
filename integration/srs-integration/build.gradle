@@ -16,3 +16,7 @@ dependencies {
     testCompileOnly "com.fasterxml.jackson.core:jackson-annotations"
     annotationProcessor 'org.projectlombok:lombok'
 }
+
+testing.suites {
+    test { useJUnitJupiter() }
+}

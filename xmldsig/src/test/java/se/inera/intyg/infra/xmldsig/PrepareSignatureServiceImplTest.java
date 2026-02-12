@@ -31,9 +31,9 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -44,20 +44,18 @@ import se.inera.intyg.infra.xmldsig.model.IntygXMLDSignature;
 import se.inera.intyg.infra.xmldsig.service.PrepareSignatureServiceImpl;
 import se.inera.intyg.infra.xmldsig.service.XMLDSigServiceImpl;
 
-public class PrepareSignatureServiceImplTest {
+class PrepareSignatureServiceImplTest {
 
-    private String certAtString = "MIIB+zCCAWQCCQCUxqAHHrhg+jANBgkqhkiG9w0BAQsFADBCMQswCQYDVQQGEwJTRTELMAkGA1UECAwCVkcxEzARBgNVBAcMCkdvdGhlbmJ1cmcxETAPBgNVBAoMCENhbGxpc3RhMB4XDTE4MDMxMDIwMDY0MFoXDTIxMTIwNDIwMDY0MFowQjELMAkGA1UEBhMCU0UxCzAJBgNVBAgMAlZHMRMwEQYDVQQHDApHb3RoZW5idXJnMREwDwYDVQQKDAhDYWxsaXN0YTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEA4cB6VC0f9ne0UKC/XzsoP5ocv7WyGt5378f/DGnVAF3aWzderzLnXMqSdGbLOuEzUUdbjYgQkqQSs6wy872KLf0RzQzllxwpBQJ/2r+CrW6tROJa0FYEIhgWDdRGlS+9+hd3E9Ilz2PTZDF4c1C+4l/xq149OCgiAGfadeBZA5MCAwEAATANBgkqhkiG9w0BAQsFAAOBgQDU+Mrw98Qm8K0U8A208Ee01PZeIpqC9CIRIXJd0PFwXJjTlGIWckwrdsgbGtwOAlA2rzAx/FUhQD4/1F4G5mo/DrtOzzx9fKE0+MQreTC/HOm61ja3cWm4yI5G0W7bLTBBhsEoOzclycNK/QjeP+wYO+k11mtPM4SP4kCj3gh97g==";
+    private final PrepareSignatureServiceImpl testee = new PrepareSignatureServiceImpl();
 
-    private PrepareSignatureServiceImpl testee = new PrepareSignatureServiceImpl();
-
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         org.apache.xml.security.Init.init();
         System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
     }
 
     @Test
-    public void testBuildPreparedSignature() throws IOException {
+    void testBuildPreparedSignature() throws IOException {
         InputStream xmlResource = getXmlResource("classpath:/unsigned/unsigned-lisjp-i18n.xml");
         String xml = IOUtils.toString(xmlResource, StandardCharsets.UTF_8);
         IntygXMLDSignature intygXMLDSignature = testee.prepareSignature(xml, "9f02dd2f-f57c-4a73-8190-2fe602cd6e27",
@@ -81,7 +79,7 @@ public class PrepareSignatureServiceImplTest {
         try {
             String resXml = testee.encodeSignatureIntoSignedXml(intygXMLDSignature.getSignatureType(), xml);
             System.out.println(resXml);
-            Assert.assertTrue(new XMLDSigServiceImpl().validateSignatureValidity(resXml, true).isValid());
+            Assertions.assertTrue(new XMLDSigServiceImpl().validateSignatureValidity(resXml, true).isValid());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,8 +107,7 @@ public class PrepareSignatureServiceImplTest {
             Signature rsa = Signature.getInstance("SHA256withRSA");
             rsa.initSign(keyEntry.getPrivateKey());
             rsa.update(digest);
-            byte[] signatureBytes = rsa.sign();
-            return signatureBytes;
+            return rsa.sign();
         } catch (Exception e) {
             throw new IllegalStateException("Not possible to sign digest: " + e.getMessage());
         }

@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.infra.security.siths;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collections;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import se.inera.intyg.infra.integration.hsatk.model.HsaSystemRole;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
@@ -34,20 +34,20 @@ import se.inera.intyg.infra.security.common.model.IntygUser;
 /**
  * Created by eriklupander on 2016-05-19.
  */
-public class DefaultUserDetailsDecoratorTest {
+class DefaultUserDetailsDecoratorTest {
 
     private static final String HSA_ID = "hsa-123";
     private DefaultUserDetailsDecorator testee = new DefaultUserDetailsDecorator();
 
     @Test
-    public void testDecorate() {
+    void testDecorate() {
         IntygUser intygUser = new IntygUser(HSA_ID);
         testee.decorateIntygUserWithAuthenticationMethod(intygUser, AuthConstants.FAKE_AUTHENTICATION_SITHS_CONTEXT_REF);
-        assertEquals(intygUser.getAuthenticationMethod(), AuthenticationMethod.FAKE);
+        assertEquals(AuthenticationMethod.FAKE, intygUser.getAuthenticationMethod());
     }
 
     @Test
-    public void testSetFirstVardenhetOnFirstVardgivareAsDefault() throws Exception {
+    void testSetFirstVardenhetOnFirstVardgivareAsDefault() {
         // Arrange
         Vardgivare vardgivare = new Vardgivare("vg-1", "IFV Testlandsting");
         Vardenhet enhet1 = new Vardenhet("ve-1", "VårdEnhet2A");
@@ -67,7 +67,7 @@ public class DefaultUserDetailsDecoratorTest {
     }
 
     @Test
-    public void testDecorateIntygUserWithDefaultVardenhetEmptyVardgivare() throws Exception {
+    void testDecorateIntygUserWithDefaultVardenhetEmptyVardgivare() {
         Vardgivare vardgivareWithoutEnhet = new Vardgivare("vg-1", "Tom vardgivare");
 
         Vardgivare vardgivare = new Vardgivare("vg-2", "IFV Testlandsting");
@@ -86,7 +86,7 @@ public class DefaultUserDetailsDecoratorTest {
     }
 
     @Test
-    public void testRehabSystemRoleInRoleOnly() {
+    void testRehabSystemRoleInRoleOnly() {
         IntygUser user = new IntygUser(HSA_ID);
         UserCredentials userCredentials = new UserCredentials();
         userCredentials.getHsaSystemRole().add(hsaSystemRole(null, "INTYG;Rehab-1234"));
@@ -96,7 +96,7 @@ public class DefaultUserDetailsDecoratorTest {
     }
 
     @Test
-    public void testRehabSystemRoleInRoleOnlyWithSpacedStringAsSystemId() {
+    void testRehabSystemRoleInRoleOnlyWithSpacedStringAsSystemId() {
         IntygUser user = new IntygUser(HSA_ID);
         UserCredentials userCredentials = new UserCredentials();
         userCredentials.getHsaSystemRole().add(hsaSystemRole(" ", "INTYG;Rehab-1234"));
@@ -106,7 +106,7 @@ public class DefaultUserDetailsDecoratorTest {
     }
 
     @Test
-    public void testRehabSystemRoleFromSystemAndRole() {
+    void testRehabSystemRoleFromSystemAndRole() {
         IntygUser user = new IntygUser(HSA_ID);
         UserCredentials userCredentials = new UserCredentials();
         userCredentials.getHsaSystemRole().add(hsaSystemRole("INTYG", "Rehab-1234"));

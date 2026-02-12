@@ -18,18 +18,19 @@
  */
 package se.inera.intyg.infra.sjukfall.dto;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Magnus Ekstrand on 2017-02-20.
  */
-public class DiagnosKodTest {
+class DiagnosKodTest {
 
     @Test
-    public void testCleanDignosKod() {
+    void testCleanDignosKod() {
         assertEquals("M80-", DiagnosKod.cleanKod("M80-   "));
         assertEquals("M80-P", DiagnosKod.cleanKod("M80-P  "));
         assertEquals("M80", DiagnosKod.cleanKod("M80.   "));
@@ -39,7 +40,7 @@ public class DiagnosKodTest {
     }
 
     @Test
-    public void testSplitNormalDignosKod() {
+    void testSplitNormalDignosKod() {
         DiagnosKod kod = DiagnosKod.create("M123   Palindrom reumatism");
 
         assertEquals("M123", kod.getCleanedCode());
@@ -47,21 +48,21 @@ public class DiagnosKodTest {
     }
 
     @Test
-    public void testSplitToShortDiagnosKod() {
+    void testSplitToShortDiagnosKod() {
         DiagnosKod kod = DiagnosKod.create("M123");
 
         assertEquals("M123", kod.getCleanedCode());
         assertNull(kod.getName());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testEmptyDiagnosKod() {
-        DiagnosKod kod = DiagnosKod.create("");
+    @Test
+    void testEmptyDiagnosKod() {
+        assertThrows(IllegalArgumentException.class, () -> DiagnosKod.create(""));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullDiagnosKod() {
-        DiagnosKod kod = DiagnosKod.create(null);
+    @Test
+    void testNullDiagnosKod() {
+        assertThrows(IllegalArgumentException.class, () -> DiagnosKod.create(null));
     }
 
 }

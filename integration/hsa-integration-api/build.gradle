@@ -2,3 +2,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     implementation "com.fasterxml.jackson.core:jackson-databind"
 }
+
+testing.suites {
+    test { useJUnitJupiter() }
+}

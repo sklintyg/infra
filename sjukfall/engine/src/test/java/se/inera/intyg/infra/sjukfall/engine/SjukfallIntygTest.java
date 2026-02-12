@@ -18,16 +18,15 @@
  */
 package se.inera.intyg.infra.sjukfall.engine;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
@@ -36,29 +35,25 @@ import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 /**
  * Created by Magnus Ekstrand on 2016-02-16.
  */
-@RunWith(MockitoJUnitRunner.class)
-public class SjukfallIntygTest {
+@ExtendWith(MockitoExtension.class)
+class SjukfallIntygTest {
 
     private static final String LOCATION_INTYGSDATA = "classpath:Sjukfall/Enhet/intygsdata.csv";
 
     private static List<IntygData> intygDataList;
 
-    private LocalDate activeDate = LocalDate.parse("2016-02-16");
+    private final LocalDate activeDate = LocalDate.parse("2016-02-16");
 
-    @BeforeClass
-    public static void initTestData() throws IOException {
+    @BeforeAll
+    static void initTestData() throws IOException {
         SjukfallIntygGenerator generator = new SjukfallIntygGenerator(LOCATION_INTYGSDATA);
         intygDataList = generator.generate().get();
 
-        assertTrue("Expected 6 but was " + intygDataList.size(), intygDataList.size() == 6);
-    }
-
-    @Before
-    public void setup() {
+        assertEquals(6, intygDataList.size(), "Expected 6 but was " + intygDataList.size());
     }
 
     @Test
-    public void testIntyg1() {
+    void testIntyg1() {
         IntygData intygData = getIntygsData("intyg-1");
         SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
 
@@ -66,7 +61,7 @@ public class SjukfallIntygTest {
     }
 
     @Test
-    public void testIntyg2() {
+    void testIntyg2() {
         IntygData intygData = getIntygsData("intyg-2");
         SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
 
@@ -74,7 +69,7 @@ public class SjukfallIntygTest {
     }
 
     @Test
-    public void testIntyg3() {
+    void testIntyg3() {
         IntygData intygData = getIntygsData("intyg-3");
         SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
 
@@ -82,7 +77,7 @@ public class SjukfallIntygTest {
     }
 
     @Test
-    public void testIntyg4() {
+    void testIntyg4() {
         IntygData intygData = getIntygsData("intyg-4");
         SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
 
@@ -90,7 +85,7 @@ public class SjukfallIntygTest {
     }
 
     @Test
-    public void testIntyg5() {
+    void testIntyg5() {
         IntygData intygData = getIntygsData("intyg-5");
         SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
 
@@ -98,7 +93,7 @@ public class SjukfallIntygTest {
     }
 
     @Test
-    public void testIntyg6() {
+    void testIntyg6() {
         IntygData intygData = getIntygsData("intyg-6");
         SjukfallIntyg testee1 = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
         SjukfallIntyg testee2 = new SjukfallIntyg.SjukfallIntygBuilder(intygData, LocalDate.parse("2016-02-22"), 0).build();
@@ -113,13 +108,13 @@ public class SjukfallIntygTest {
         return intygDataList.stream()
             .filter(e -> e.getIntygId().equalsIgnoreCase(intygsId))
             .findAny()
-            .get();
+            .orElseThrow();
     }
 
     private static void assertIntygsData(SjukfallIntyg obj, String startDatum, String slutDatum, boolean aktivtIntyg) {
-        assertTrue(obj.getStartDatum().equals(LocalDate.parse(startDatum)));
-        assertTrue(obj.getSlutDatum().equals(LocalDate.parse(slutDatum)));
-        assertTrue(obj.isAktivtIntyg() == aktivtIntyg);
+        assertEquals(obj.getStartDatum(), LocalDate.parse(startDatum));
+        assertEquals(obj.getSlutDatum(), LocalDate.parse(slutDatum));
+        assertEquals(obj.isAktivtIntyg(), aktivtIntyg);
     }
 
 }

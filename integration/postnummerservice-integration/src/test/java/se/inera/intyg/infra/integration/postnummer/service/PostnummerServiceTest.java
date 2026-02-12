@@ -18,41 +18,35 @@
  */
 package se.inera.intyg.infra.integration.postnummer.service;
 
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
-
-import org.hamcrest.Matcher;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import se.inera.intyg.infra.integration.postnummer.model.Omrade;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = PostnummerServiceTest.TestConfiguration.class)
-public class PostnummerServiceTest {
+@SpringJUnitConfig(classes = PostnummerServiceTest.TestConfiguration.class)
+class PostnummerServiceTest {
 
     @Configuration
     @ComponentScan("se.inera.intyg.infra.integration.postnummer")
     @PropertySource(
         value = {"classpath:/test.properties"},
         ignoreResourceNotFound = false)
-    public static class TestConfiguration {
+    static class TestConfiguration {
 
         @Bean
-        public static PropertySourcesPlaceholderConfigurer propertiesResolver() {
+        static PropertySourcesPlaceholderConfigurer propertiesResolver() {
             return new PropertySourcesPlaceholderConfigurer();
         }
     }
@@ -61,7 +55,7 @@ public class PostnummerServiceTest {
     PostnummerService postnummerService;
 
     @Test
-    public void testGetPostnummer() {
+    void testGetPostnummer() {
 
         List<Omrade> omrade13061 = Arrays.asList(new Omrade("13061", "HÅRSFJÄRDEN", "HANINGE", "STOCKHOLM"));
         List<Omrade> omrade13100 = Arrays.asList(new Omrade("13100", "NACKA", "NACKA", "STOCKHOLM"));
@@ -70,16 +64,16 @@ public class PostnummerServiceTest {
         assertNull(postnummerService.getOmradeByPostnummer(null));
         assertNull(postnummerService.getOmradeByPostnummer(""));
         assertNull(postnummerService.getOmradeByPostnummer("xxyy"));
-        assertThat(postnummerService.getOmradeByPostnummer("13061"), is(omrade13061));
-        assertThat(postnummerService.getOmradeByPostnummer("13100"), is(omrade13100));
-        assertThat(postnummerService.getOmradeByPostnummer("13155"), is(omrade13155));
-        assertThat(postnummerService.getOmradeByPostnummer("13155"), not(omrade13061));
+        assertEquals(omrade13061, postnummerService.getOmradeByPostnummer("13061"));
+        assertEquals(omrade13100, postnummerService.getOmradeByPostnummer("13100"));
+        assertEquals(omrade13155, postnummerService.getOmradeByPostnummer("13155"));
+        assertNotEquals(omrade13061, postnummerService.getOmradeByPostnummer("13155"));
     }
 
     @Test
-    public void testGetKommunList() {
+    void testGetKommunList() {
         String[] verify = {"HANINGE", "NACKA", "STOCKHOLM", "VÄSTERVIK", "LINKÖPING"};
 
-        assertThat(postnummerService.getKommunList(), hasItems(verify));
+        assertTrue(postnummerService.getKommunList().containsAll(Arrays.asList(verify)));
     }
 }

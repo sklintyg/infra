@@ -1,9 +1,13 @@
 dependencies {
-  implementation project(':security-common')
-  implementation project(':hsa-integration-api')
+    implementation project(':security-common')
+    implementation project(':hsa-integration-api')
 
-  implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
-  implementation "com.google.guava:guava:${guavaVersion}"
-  implementation "org.springframework:spring-context-support"
-  implementation "org.springframework.security:spring-security-core"
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
+    implementation "com.google.guava:guava:${guavaVersion}"
+    implementation "org.springframework:spring-context-support"
+    implementation "org.springframework.security:spring-security-core"
+}
+
+testing.suites {
+    test { useJUnitJupiter() }
 }

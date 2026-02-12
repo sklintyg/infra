@@ -18,18 +18,18 @@
  */
 package se.inera.intyg.infra.xmldsig;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class DigestTest {
+class DigestTest {
 
     @Test
-    public void digestTest() {
+    void digestTest() {
         String data = "Data To Be Signed";
         String base64Digest = sha256AsBase64(data);
         assertEquals("PXLVCJ1DFmrG6OQa4RZ6dMd+0Z4=", base64Digest);
@@ -41,8 +41,7 @@ public class DigestTest {
             sha.update(signingData.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(sha.digest());
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            throw new IllegalArgumentException("Unable to digest signingData", e);
         }
-        throw new IllegalArgumentException("Unable to digest signingData");
     }
 }

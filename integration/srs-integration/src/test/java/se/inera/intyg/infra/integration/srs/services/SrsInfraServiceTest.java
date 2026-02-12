@@ -18,25 +18,24 @@
  */
 package se.inera.intyg.infra.integration.srs.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.CollectionUtils;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getconsent.v1.Samtyckesstatus;
@@ -60,9 +59,8 @@ import se.inera.intyg.schemas.contract.InvalidPersonNummerException;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:SrsServiceTest/test-context.xml")
-public class SrsInfraServiceTest {
+@SpringJUnitConfig(locations = "classpath:SrsServiceTest/test-context.xml")
+class SrsInfraServiceTest {
 
     private static final String PNR_VALID = "191212121212";
     private static final String PNR_INVALID = "1912121212";
@@ -75,8 +73,8 @@ public class SrsInfraServiceTest {
 
     private Utdatafilter utdatafilter;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         consentRepository.clear();
         utdatafilter = new Utdatafilter();
         utdatafilter.setPrediktion(false);
@@ -85,7 +83,7 @@ public class SrsInfraServiceTest {
     }
 
     @Test
-    public void testNoneWithSRSDiagnosis() throws Exception {
+    void testNoneWithSRSDiagnosis() throws Exception {
         SrsResponse response = service.getSrs(createUser(), createPnr(PNR_VALID),
             Arrays.asList(new SrsCertificate("intygId", "M18", null)), utdatafilter,
             Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")), null);
@@ -100,7 +98,7 @@ public class SrsInfraServiceTest {
     }
 
     @Test
-    public void testNoneWithUnknownDiagnosis() throws Exception {
+    void testNoneWithUnknownDiagnosis() throws Exception {
         SrsResponse response = service.getSrs(createUser(), createPnr(PNR_VALID),
             Arrays.asList(new SrsCertificate("intygId", "X99", null)), utdatafilter,
             Arrays.asList(SrsQuestionResponse.create("questionId", "answerId")), 15);
@@ -115,7 +113,7 @@ public class SrsInfraServiceTest {
     }
 
     @Test
-    public void testSrsPrediktion() throws Exception {
+    void testSrsPrediktion() throws Exception {
         utdatafilter.setPrediktion(true);
         SrsResponse response = service.getSrs(createUser(), createPnr(PNR_VALID),
             Arrays.asList(new SrsCertificate("intygId", "M18", null)), utdatafilter,
@@ -130,7 +128,7 @@ public class SrsInfraServiceTest {
     }
 
     @Test
-    public void testSrsStatistik() throws Exception {
+    void testSrsStatistik() throws Exception {
         utdatafilter.setStatistik(true);
         SrsResponse response = service.getSrs(createUser(), createPnr(PNR_VALID),
             Arrays.asList(new SrsCertificate("intygId", "M18", null)), utdatafilter,
@@ -145,7 +143,7 @@ public class SrsInfraServiceTest {
     }
 
     @Test
-    public void testSrsPrediktionAndAtgardRekommendation() throws Exception {
+    void testSrsPrediktionAndAtgardRekommendation() throws Exception {
         utdatafilter.setPrediktion(true);
         utdatafilter.setAtgardsrekommendation(true);
         SrsResponse response = service.getSrs(createUser(), createPnr(PNR_VALID),
@@ -162,7 +160,7 @@ public class SrsInfraServiceTest {
     }
 
     @Test
-    public void testSrsAll() throws Exception {
+    void testSrsAll() throws Exception {
         utdatafilter.setAtgardsrekommendation(true);
         utdatafilter.setPrediktion(true);
         utdatafilter.setStatistik(true);
@@ -190,7 +188,7 @@ public class SrsInfraServiceTest {
     }
 
     @Test
-    public void testGetQuestions() {
+    void testGetQuestions() {
         // Use reflection to spy on the stub to make sure we are using the correct request
         GetPredictionQuestionsResponderInterface spy = Mockito.spy(new GetPredictionQuestionsStub());
         ReflectionTestUtils.setField(service, "getPrediction", spy);
@@ -210,7 +208,7 @@ public class SrsInfraServiceTest {
     }
 
     @Test
-    public void testGetConsent() throws InvalidPersonNummerException {
+    void testGetConsent() throws InvalidPersonNummerException {
         // Use reflection to spy on the stub to make sure we are using the correct request
         final String hsaId = "hsa";
         final Personnummer persNr = createPnr(PNR_INVALID);
@@ -220,7 +218,7 @@ public class SrsInfraServiceTest {
     }
 
     @Test
-    public void testSetConsent() throws Exception {
+    void testSetConsent() throws Exception {
         final String hsaId = "hsa";
         final Personnummer persNr = createPnr(PNR_VALID);
         ResultCodeEnum response = service.setConsent(hsaId, persNr, true);
@@ -229,7 +227,7 @@ public class SrsInfraServiceTest {
     }
 
     @Test
-    public void testGetDiagnosisCodes() {
+    void testGetDiagnosisCodes() {
         List<String> response = service.getAllDiagnosisCodes(null);
         assertNotNull(response);
         assertEquals(3, response.size());
@@ -239,7 +237,7 @@ public class SrsInfraServiceTest {
     }
 
     @Test
-    public void testGetSRSForDiagnosisCode() {
+    void testGetSRSForDiagnosisCode() {
         final SrsForDiagnosisResponse response = service.getSrsForDiagnose("M18");
         assertNotNull(response);
         assertNotNull(response.getDiagnosisCode());
@@ -251,7 +249,7 @@ public class SrsInfraServiceTest {
     }
 
     @Test
-    public void testGetSRSForHigherDiagnosisCode() {
+    void testGetSRSForHigherDiagnosisCode() {
         final SrsForDiagnosisResponse response = service.getSrsForDiagnose("M18.1");
         assertNotNull(response);
         assertNotNull(response.getDiagnosisCode());
@@ -265,7 +263,7 @@ public class SrsInfraServiceTest {
     }
 
     @Test
-    public void testGetSRSForUnknownDiagnosisCode() {
+    void testGetSRSForUnknownDiagnosisCode() {
         final SrsForDiagnosisResponse response = service.getSrsForDiagnose("XX18");
         assertNotNull(response);
         assertNull(response.getDiagnosisCode());
@@ -276,88 +274,94 @@ public class SrsInfraServiceTest {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetSRSForDiagnosisCodeInvalidRequest() {
-        service.getSrsForDiagnose(null);
+    @Test
+    void testGetSRSForDiagnosisCodeInvalidRequest() {
+        assertThrows(IllegalArgumentException.class, () -> service.getSrsForDiagnose(null));
     }
 
     @Test
-    public void testGetPostNummerVardenhetVald() {
+    void testGetPostNummerVardenhetVald() {
         SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
         String postnummer = svc.getPostnummer(createUserVardenhetVald("111 11", null));
         assertEquals("11111", postnummer);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetPostNummerVardenhetValdNoPostnummerAtVardenhet() {
+    @Test
+    void testGetPostNummerVardenhetValdNoPostnummerAtVardenhet() {
         SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
-        svc.getPostnummer(createUserVardenhetVald(null, "222 22"));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetPostNummerVardenhetValdNoPostnummer() {
-        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
-        svc.getPostnummer(createUserVardenhetVald(null, null));
+        IntygUser user = createUserVardenhetVald(null, "222 22");
+        assertThrows(IllegalArgumentException.class, () -> svc.getPostnummer(user));
     }
 
     @Test
-    public void testGetPostNummerMottagningVald() {
+    void testGetPostNummerVardenhetValdNoPostnummer() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        IntygUser user = createUserVardenhetVald(null, null);
+        assertThrows(IllegalArgumentException.class, () -> svc.getPostnummer(user));
+    }
+
+    @Test
+    void testGetPostNummerMottagningVald() {
         SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
         String postnummer = svc.getPostnummer(createUserMottagningVald("111 11", "222 22"));
         assertEquals("22222", postnummer);
     }
 
     @Test
-    public void testGetPostNummerFromParentMottagningVald() {
+    void testGetPostNummerFromParentMottagningVald() {
         SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
         String postnummer = svc.getPostnummer(createUserMottagningVald("111 11", null));
         assertEquals("11111", postnummer);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetPostNummerMottagningValdNoPostnummer() {
+    @Test
+    void testGetPostNummerMottagningValdNoPostnummer() {
         SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
-        svc.getPostnummer(createUserMottagningVald(null, null));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetPostnummerVardenhetValdIncorrecLength() {
-        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
-        svc.getPostnummer(createUserVardenhetVald("111 11111", null));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetPostnummerFromParentMottagningValdIncorrectLength() {
-        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
-        svc.getPostnummer(createUserMottagningVald("111 11111", null));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetPostnummerMottagningValdIncorrectLength() {
-        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
-        svc.getPostnummer(createUserMottagningVald("111 11", "222 22222"));
+        IntygUser user = createUserMottagningVald(null, null);
+        assertThrows(IllegalArgumentException.class, () -> svc.getPostnummer(user));
     }
 
     @Test
-    public void formatPostnummer() {
+    void testGetPostnummerVardenhetValdIncorrecLength() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        IntygUser user = createUserVardenhetVald("111 11111", null);
+        assertThrows(IllegalArgumentException.class, () -> svc.getPostnummer(user));
+    }
+
+    @Test
+    void testGetPostnummerFromParentMottagningValdIncorrectLength() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        IntygUser user = createUserMottagningVald("111 11111", null);
+        assertThrows(IllegalArgumentException.class, () -> svc.getPostnummer(user));
+    }
+
+    @Test
+    void testGetPostnummerMottagningValdIncorrectLength() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        IntygUser user = createUserMottagningVald("111 11", "222 22222");
+        assertThrows(IllegalArgumentException.class, () -> svc.getPostnummer(user));
+    }
+
+    @Test
+    void formatPostnummer() {
         SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
         assertEquals("11111", svc.formatPostnummer("111 11"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void formatPostnummerIncorrectLength() {
+    @Test
+    void formatPostnummerIncorrectLength() {
         SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
-        svc.formatPostnummer("1111");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void formatPostnummerNull() {
-        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
-        svc.formatPostnummer(null);
+        assertThrows(IllegalArgumentException.class, () -> svc.formatPostnummer("1111"));
     }
 
     @Test
-    public void getPostnummerMottagning() {
+    void formatPostnummerNull() {
+        SrsInfraServiceImpl svc = new SrsInfraServiceImpl();
+        assertThrows(IllegalArgumentException.class, () -> svc.formatPostnummer(null));
+    }
+
+    @Test
+    void getPostnummerMottagning() {
         Mottagning mt = createMottagning("mtId", "veId", "222 22");
         Vardenhet ve = createVardenhet("veId", Lists.newArrayList(mt), "111 11");
         Vardgivare vg = createVardgivare("vgId", Lists.newArrayList(ve));
@@ -366,7 +370,7 @@ public class SrsInfraServiceTest {
     }
 
     @Test
-    public void getPostnummerFromParent() {
+    void getPostnummerFromParent() {
         Mottagning mt = createMottagning("mtId", "veId", null);
         Vardenhet ve = createVardenhet("veId", Lists.newArrayList(mt), "111 11");
         Vardgivare vg = createVardgivare("vgId", Lists.newArrayList(ve));
@@ -375,7 +379,7 @@ public class SrsInfraServiceTest {
     }
 
     @Test
-    public void getPostnummerNoPostnummer() {
+    void getPostnummerNoPostnummer() {
         Mottagning mt = createMottagning("mtId", "veId", null);
         Vardenhet ve = createVardenhet("veId", Lists.newArrayList(mt), null);
         Vardgivare vg = createVardgivare("vgId", Lists.newArrayList(ve));

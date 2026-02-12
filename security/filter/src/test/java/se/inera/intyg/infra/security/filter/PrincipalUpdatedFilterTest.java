@@ -18,28 +18,27 @@
  */
 package se.inera.intyg.infra.security.filter;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.google.common.hash.HashCode;
-import java.io.Serializable;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import java.io.Serializable;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -52,8 +51,8 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
  *
  * @author eriklupander
  */
-@RunWith(MockitoJUnitRunner.class)
-public class PrincipalUpdatedFilterTest {
+@ExtendWith(MockitoExtension.class)
+class PrincipalUpdatedFilterTest {
 
     private static final String HSA_ID = "user-1";
 
@@ -74,16 +73,15 @@ public class PrincipalUpdatedFilterTest {
     private Authentication auth1;
     private Authentication auth2;
 
-
-    @Before
-    public void setup() {
-        when(request.getSession(false)).thenReturn(session);
+    @BeforeEach
+    void setup() {
+        lenient().when(request.getSession(false)).thenReturn(session);
         auth1 = buildAuthentication("state 1");
         auth2 = buildAuthentication("state 2");
     }
 
     @Test
-    public void testIsUpdatedWhenPrincipalHasChanged() throws Exception {
+    void testIsUpdatedWhenPrincipalHasChanged() throws Exception {
         // Arrange
         SecurityContextHolder.getContext().setAuthentication(auth1);
 
@@ -105,7 +103,7 @@ public class PrincipalUpdatedFilterTest {
     }
 
     @Test
-    public void testIsNotUpdatedWhenPrincipalHasChanged() throws Exception {
+    void testIsNotUpdatedWhenPrincipalHasChanged() throws Exception {
         // Arrange
         SecurityContextHolder.getContext().setAuthentication(auth1);
         Answer<Void> ans = invocation -> null;
@@ -121,22 +119,22 @@ public class PrincipalUpdatedFilterTest {
     }
 
     @Test
-    public void hashFunctionEqualsTest() {
+    void hashFunctionEqualsTest() {
         SomeUser u1 = new SomeUser("1", "x");
         SomeUser u2 = new SomeUser("1", "x");
 
-        assertThat(testee.hashCode(u1), is(testee.hashCode(u2)));
+        assertEquals(testee.hashCode(u2), testee.hashCode(u1));
     }
 
     @Test
-    public void hashFunctionNotEqualsTest() {
+    void hashFunctionNotEqualsTest() {
         SomeUser someUser = new SomeUser("1", "x");
 
         HashCode hb = testee.hashCode(someUser);
         someUser.mutableThing = "y";
         HashCode ha = testee.hashCode(someUser);
 
-        assertThat(hb, not(ha));
+        assertNotEquals(ha, hb);
     }
 
     private Authentication buildAuthentication(String state) {

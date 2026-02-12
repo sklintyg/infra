@@ -3,3 +3,7 @@ dependencies {
     implementation "jakarta.servlet:jakarta.servlet-api"
     implementation "org.springframework.security:spring-security-web"
 }
+
+testing.suites {
+    test { useJUnitJupiter() }
+}

@@ -8,3 +8,7 @@ dependencies {
 
     testImplementation "org.springframework:spring-test"
 }
+
+testing.suites {
+    test { useJUnitJupiter() }
+}

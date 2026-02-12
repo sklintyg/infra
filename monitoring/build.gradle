@@ -23,3 +23,7 @@ dependencies {
 
     testCompileOnly "com.fasterxml.jackson.core:jackson-annotations"
 }
+
+testing.suites {
+    test { useJUnitJupiter() }
+}

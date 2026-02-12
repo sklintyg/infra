@@ -6,3 +6,7 @@ dependencies {
     implementation "org.springframework:spring-context"
     implementation "se.inera.intyg.clinicalprocess.healthcond.certificate:intyg-clinicalprocess-healthcond-certificate-schemas:${intygClinicalprocessSchemasVersion}"
 }
+
+testing.suites {
+    test { useJUnitJupiter() }
+}

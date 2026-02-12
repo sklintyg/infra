@@ -18,25 +18,22 @@
  */
 package se.inera.intyg.infra.monitoring.logging;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static se.inera.intyg.infra.monitoring.logging.UserAgentParser.NO_USER_AGENT_STRING;
 import static se.inera.intyg.infra.monitoring.logging.UserAgentParser.UNKNOWN_OS;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = UserAgentParser.class)
-public class UserAgentParserTest {
+@SpringJUnitConfig(classes = UserAgentParser.class)
+class UserAgentParserTest {
 
     @Autowired
     private UserAgentParser parser = new UserAgentParser();
 
     @Test
-    public void testParserNullInput() {
+    void testParserNullInput() {
         final UserAgentInfo userAgentInfo = parser
             .parse(null);
         assertEquals(NO_USER_AGENT_STRING, userAgentInfo.getBrowserName());
@@ -45,7 +42,7 @@ public class UserAgentParserTest {
     }
 
     @Test
-    public void testParserEmptyInput() {
+    void testParserEmptyInput() {
         final UserAgentInfo userAgentInfo = parser
             .parse("");
         assertEquals("Other", userAgentInfo.getBrowserName());
@@ -54,7 +51,7 @@ public class UserAgentParserTest {
     }
 
     @Test
-    public void testParserUnknownInput() {
+    void testParserUnknownInput() {
         final UserAgentInfo userAgentInfo = parser
             .parse("this is not a known browser");
         assertEquals("Other", userAgentInfo.getBrowserName());
@@ -63,7 +60,7 @@ public class UserAgentParserTest {
     }
 
     @Test
-    public void testParserWin7IE11() {
+    void testParserWin7IE11() {
         //User agent string taken from Virtualbox running IE11 on win7 image
         final UserAgentInfo userAgentInfo = parser
             .parse("Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko");
@@ -74,7 +71,7 @@ public class UserAgentParserTest {
     }
 
     @Test
-    public void testParserWin10Edge() {
+    void testParserWin10Edge() {
         //User agent string taken from Virtualbox running Edge on win10 image
         final UserAgentInfo userAgentInfo = parser
             .parse(
@@ -86,7 +83,7 @@ public class UserAgentParserTest {
     }
 
     @Test
-    public void testParserChrome() {
+    void testParserChrome() {
         //User agent string taken from my local MBP laptop with latest chrome installed
         final UserAgentInfo userAgentInfo = parser
             .parse(

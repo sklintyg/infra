@@ -18,8 +18,8 @@
  */
 package se.inera.intyg.infra.security.authorities;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,13 +27,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
 import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
 import se.inera.intyg.infra.security.common.model.IntygUser;
@@ -43,8 +42,8 @@ import se.inera.intyg.infra.security.common.model.RequestOrigin;
 /**
  * @author Magnus Ekstrand on 2016-05-13.
  */
-@RunWith(MockitoJUnitRunner.class)
-public class AuthoritiesHelperTest {
+@ExtendWith(MockitoExtension.class)
+class AuthoritiesHelperTest {
 
     // Privilege
     public static final String SKRIVA_INTYG = "SKRIVA_INTYG";
@@ -68,8 +67,8 @@ public class AuthoritiesHelperTest {
     @InjectMocks
     private AuthoritiesHelper authoritiesHelper = new AuthoritiesHelper(authoritiesResolver);
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         configurationLoader.afterPropertiesSet();
         authoritiesResolver.setConfigurationLoader(configurationLoader);
     }
@@ -78,7 +77,7 @@ public class AuthoritiesHelperTest {
     private final List<String> knownIntygstyper = Arrays.asList("fk7263", "ts-bas", "ts-diabetes");
 
     @Test
-    public void whenPrivilegeHasNoIntygstyperAndNoRequestOrigins() {
+    void whenPrivilegeHasNoIntygstyperAndNoRequestOrigins() {
         Privilege privilege = createPrivilege(SKRIVA_INTYG, new ArrayList<>(), new ArrayList<>());
         Set<String> intygstyper = authoritiesHelper.getIntygstyperForPrivilege(createWebCertUser(NORMAL, toMap(privilege)), SKRIVA_INTYG);
 
@@ -87,8 +86,8 @@ public class AuthoritiesHelperTest {
     }
 
     @Test
-    public void whenPrivilegeHasIntygstyperButNoRequestOrigins() {
-        List<String> typer = knownIntygstyper.stream().limit(2).collect(Collectors.toList());
+    void whenPrivilegeHasIntygstyperButNoRequestOrigins() {
+        List<String> typer = knownIntygstyper.stream().limit(2).toList();
         Privilege privilege = createPrivilege(SKRIVA_INTYG, typer, new ArrayList<>());
 
         Set<String> intygstyper = authoritiesHelper.getIntygstyperForPrivilege(createWebCertUser(NORMAL, toMap(privilege)), SKRIVA_INTYG);
@@ -98,7 +97,7 @@ public class AuthoritiesHelperTest {
     }
 
     @Test
-    public void whenPrivilegeHasNoIntygstyperButRequestOrigins() {
+    void whenPrivilegeHasNoIntygstyperButRequestOrigins() {
         Set<String> intygstyper;
 
         Map<String, List<String>> intygstyperOrigins = new HashMap<>();
@@ -127,11 +126,11 @@ public class AuthoritiesHelperTest {
     }
 
     @Test
-    public void whenPrivilegeHasIntygstyperAndRequestOrigins() {
+    void whenPrivilegeHasIntygstyperAndRequestOrigins() {
         Set<String> intygstyper;
 
         List<String> intygstyperPrivilege = knownIntygstyper.stream().filter(typ -> typ.equals("fk7263") || typ.equals("ts-bas"))
-            .collect(Collectors.toList());
+            .toList();
 
         Map<String, List<String>> intygstyperOrigins = new HashMap<>();
         intygstyperOrigins.put(NORMAL, knownIntygstyper);
@@ -157,7 +156,7 @@ public class AuthoritiesHelperTest {
     }
 
     @Test
-    public void whenPrivilegeHasNoIntygstyperButRequestOriginsAndWhereNormalImplicitlyAllowsAll() {
+    void whenPrivilegeHasNoIntygstyperButRequestOriginsAndWhereNormalImplicitlyAllowsAll() {
         Set<String> intygstyper;
 
         Map<String, List<String>> intygstyperOrigins = new HashMap<>();
@@ -203,7 +202,7 @@ public class AuthoritiesHelperTest {
 
     private List<RequestOrigin> createRequestOrigins(Map<String, List<String>> requestOrigins) {
         List<RequestOrigin> list = new ArrayList<>();
-        requestOrigins.entrySet().stream().forEach(e -> list.add(createRequestOrigin(e.getKey(), e.getValue())));
+        requestOrigins.entrySet().forEach(e -> list.add(createRequestOrigin(e.getKey(), e.getValue())));
 
         return list;
     }
@@ -218,18 +217,13 @@ public class AuthoritiesHelperTest {
 
     private List<String> getIntygstyper(String... intygstyper) {
         List<String> list = Arrays.asList(intygstyper);
-        return knownIntygstyper.stream().filter(list::contains).collect(Collectors.toList());
+        return knownIntygstyper.stream().filter(list::contains).toList();
     }
 
     private Map<String, Privilege> toMap(Privilege privilege) {
         HashMap<String, Privilege> map = new HashMap<>();
         map.put(privilege.getName(), privilege);
         return map;
-
-        // Temp commented out, does not compile...
-//        return Collections.unmodifiableMap(Stream
-//                .of(new AbstractMap.SimpleEntry<>(privilege.getName(), privilege))
-//                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue())));
     }
 
 }
