@@ -33,7 +33,7 @@ allprojects {
     apply plugin: 'jacoco'
 
     group = 'se.inera.intyg.infra'
-    version = System.properties['buildVersion'] ?: '4.0.0-SNAPSHOT'
+    version = System.properties['buildVersion'] ?: '4.1.0-SNAPSHOT'
 
     java {
         toolchain {
@@ -45,6 +45,7 @@ allprojects {
         implementation platform("org.springframework.boot:spring-boot-dependencies:${springbootMavenBomVersion}")
         annotationProcessor platform("org.springframework.boot:spring-boot-dependencies:${springbootMavenBomVersion}")
         testAnnotationProcessor platform("org.springframework.boot:spring-boot-dependencies:${springbootMavenBomVersion}")
+        testFixtures platform("org.springframework.boot:spring-boot-dependencies:${springbootMavenBomVersion}")
 
         implementation "ch.qos.logback:logback-classic"
         implementation "jakarta.annotation:jakarta.annotation-api"
