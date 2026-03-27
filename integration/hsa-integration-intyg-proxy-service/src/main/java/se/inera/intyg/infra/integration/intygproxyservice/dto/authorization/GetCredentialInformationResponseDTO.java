@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.dto.authorization;
 
 import java.util.List;
@@ -32,5 +31,5 @@ import se.inera.intyg.infra.integration.hsatk.model.CredentialInformation;
 @AllArgsConstructor
 public class GetCredentialInformationResponseDTO {
 
-    List<CredentialInformation> credentialInformation;
+  List<CredentialInformation> credentialInformation;
 }

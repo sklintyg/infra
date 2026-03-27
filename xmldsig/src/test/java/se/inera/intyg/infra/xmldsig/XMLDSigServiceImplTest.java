@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import org.apache.commons.io.IOUtils;
@@ -39,80 +38,86 @@ import se.inera.intyg.infra.xmldsig.service.XMLDSigServiceImpl;
 @Disabled("Temporarily disabled 2023-11-18 while experimenting with jakart and kjava 17")
 class XMLDSigServiceImplTest {
 
-    private final XMLDSigServiceImpl testee = new XMLDSigServiceImpl();
+  private final XMLDSigServiceImpl testee = new XMLDSigServiceImpl();
 
-    @BeforeEach
-    public void init() {
-        testee.init();
-        System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+  @BeforeEach
+  public void init() {
+    testee.init();
+    System.setProperty(
+        "javax.xml.transform.TransformerFactory",
+        "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+  }
+
+  // Use this test to manually test signed documents.
+  @Test
+  void testValidateSignature() throws IOException {
+
+    InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-lisjp-i18n.xml");
+    String xml = IOUtils.toString(xmlResourceInputStream, StandardCharsets.UTF_8);
+
+    ValidationResponse response = testee.validateSignatureValidity(xml, true);
+    assertTrue(response.isValid());
+  }
+
+  @Test
+  void testValidateSignatureAfterStoreInIT() throws IOException {
+
+    InputStream xmlResourceInputStream =
+        getXmlResource("classpath:/signed/signed-after-store-in-intygstjansten.xml");
+    String xml = IOUtils.toString(xmlResourceInputStream, StandardCharsets.UTF_8);
+
+    ValidationResponse response = testee.validateSignatureValidity(xml, true);
+    assertTrue(response.isValid());
+  }
+
+  @Test
+  void testValidateSignatureAfterStoreInITI18n() throws IOException {
+
+    InputStream xmlResourceInputStream =
+        getXmlResource("classpath:/signed/signed-after-store-i18n.xml");
+    String xml = IOUtils.toString(xmlResourceInputStream, StandardCharsets.UTF_8);
+
+    ValidationResponse response = testee.validateSignatureValidity(xml, true);
+    assertTrue(response.isValid());
+  }
+
+  @Test
+  void testValidateSignatureInListCertificatesForCare() throws IOException {
+
+    InputStream xmlResourceInputStream =
+        getXmlResource("classpath:/signed/list-certificates-for-care-response.xml");
+    String xml = IOUtils.toString(xmlResourceInputStream, StandardCharsets.UTF_8);
+
+    ValidationResponse response = testee.validateSignatureValidity(xml, true);
+    assertTrue(response.isValid());
+  }
+
+  @Test
+  void testFromIntygstjanstenNewSchema() throws IOException {
+
+    InputStream xmlResourceInputStream =
+        getXmlResource("classpath:/signed/signed-after-new-schema.xml");
+    String xml = IOUtils.toString(xmlResourceInputStream, StandardCharsets.UTF_8);
+
+    ValidationResponse response = testee.validateSignatureValidity(xml, true);
+    assertTrue(response.isValid());
+  }
+
+  @Test
+  void testExtractCertificateInfo() throws IOException {
+    InputStream xmlResourceInputStream =
+        getXmlResource("classpath:/signed/signed-after-store-i18n.xml");
+    String xml = IOUtils.toString(xmlResourceInputStream, StandardCharsets.UTF_8);
+    Map<String, CertificateInfo> map = testee.extractCertificateInfo(xml);
+    assertNotNull(map);
+  }
+
+  private InputStream getXmlResource(String location) {
+    try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext()) {
+      Resource resource = context.getResource(location);
+      return resource.getInputStream();
+    } catch (IOException e) {
+      throw new IllegalArgumentException(e.getMessage());
     }
-
-    // Use this test to manually test signed documents.
-    @Test
-    void testValidateSignature() throws IOException {
-
-        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-lisjp-i18n.xml");
-        String xml = IOUtils.toString(xmlResourceInputStream, StandardCharsets.UTF_8);
-
-        ValidationResponse response = testee.validateSignatureValidity(xml, true);
-        assertTrue(response.isValid());
-    }
-
-    @Test
-    void testValidateSignatureAfterStoreInIT() throws IOException {
-
-        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-after-store-in-intygstjansten.xml");
-        String xml = IOUtils.toString(xmlResourceInputStream, StandardCharsets.UTF_8);
-
-        ValidationResponse response = testee.validateSignatureValidity(xml, true);
-        assertTrue(response.isValid());
-    }
-
-    @Test
-    void testValidateSignatureAfterStoreInITI18n() throws IOException {
-
-        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-after-store-i18n.xml");
-        String xml = IOUtils.toString(xmlResourceInputStream, StandardCharsets.UTF_8);
-
-        ValidationResponse response = testee.validateSignatureValidity(xml, true);
-        assertTrue(response.isValid());
-    }
-
-
-    @Test
-    void testValidateSignatureInListCertificatesForCare() throws IOException {
-
-        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/list-certificates-for-care-response.xml");
-        String xml = IOUtils.toString(xmlResourceInputStream, StandardCharsets.UTF_8);
-
-        ValidationResponse response = testee.validateSignatureValidity(xml, true);
-        assertTrue(response.isValid());
-    }
-
-    @Test
-    void testFromIntygstjanstenNewSchema() throws IOException {
-
-        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-after-new-schema.xml");
-        String xml = IOUtils.toString(xmlResourceInputStream, StandardCharsets.UTF_8);
-
-        ValidationResponse response = testee.validateSignatureValidity(xml, true);
-        assertTrue(response.isValid());
-    }
-
-    @Test
-    void testExtractCertificateInfo() throws IOException {
-        InputStream xmlResourceInputStream = getXmlResource("classpath:/signed/signed-after-store-i18n.xml");
-        String xml = IOUtils.toString(xmlResourceInputStream, StandardCharsets.UTF_8);
-        Map<String, CertificateInfo> map = testee.extractCertificateInfo(xml);
-        assertNotNull(map);
-    }
-
-    private InputStream getXmlResource(String location) {
-        try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext()) {
-            Resource resource = context.getResource(location);
-            return resource.getInputStream();
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        }
-    }
+  }
 }

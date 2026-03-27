@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,61 +20,59 @@ package se.inera.intyg.infra.security.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Created by Magnus Ekstrand on 19/11/15.
- */
+/** Created by Magnus Ekstrand on 19/11/15. */
 public class TitleCode {
 
-    @JsonProperty
-    private String titleCode;
-    @JsonProperty
-    private String groupPrescriptionCode;
-    @JsonProperty
-    private Role role;
-    @JsonProperty
-    private String roleTypeName;
+  @JsonProperty private String titleCode;
+  @JsonProperty private String groupPrescriptionCode;
+  @JsonProperty private Role role;
+  @JsonProperty private String roleTypeName;
 
+  public String getTitleCode() {
+    return titleCode;
+  }
 
-    public String getTitleCode() {
-        return titleCode;
-    }
+  public void setTitleCode(String titleCode) {
+    this.titleCode = titleCode;
+  }
 
-    public void setTitleCode(String titleCode) {
-        this.titleCode = titleCode;
-    }
+  public String getGroupPrescriptionCode() {
+    return groupPrescriptionCode;
+  }
 
-    public String getGroupPrescriptionCode() {
-        return groupPrescriptionCode;
-    }
+  public void setGroupPrescriptionCode(String groupPrescriptionCode) {
+    this.groupPrescriptionCode = groupPrescriptionCode;
+  }
 
-    public void setGroupPrescriptionCode(String groupPrescriptionCode) {
-        this.groupPrescriptionCode = groupPrescriptionCode;
-    }
+  public Role getRole() {
+    return role;
+  }
 
-    public Role getRole() {
-        return role;
-    }
+  public void setRole(Role role) {
+    this.role = role;
+  }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
+  public String getRoleTypeName() {
+    return roleTypeName;
+  }
 
+  public void setRoleTypeName(String roleTypeName) {
+    this.roleTypeName = roleTypeName;
+  }
 
-    public String getRoleTypeName() {
-        return roleTypeName;
-    }
-
-    public void setRoleTypeName(String roleTypeName) {
-        this.roleTypeName = roleTypeName;
-    }
-
-    @Override
-    public String toString() {
-        return "\nTitleCode {"
-            + " titleCode='" + titleCode + '\''
-            + ", groupPrescriptionCode='" + groupPrescriptionCode + '\''
-            + ", role=" + role
-            + ", roleTypeName=" + roleTypeName
-            + "}";
-    }
+  @Override
+  public String toString() {
+    return "\nTitleCode {"
+        + " titleCode='"
+        + titleCode
+        + '\''
+        + ", groupPrescriptionCode='"
+        + groupPrescriptionCode
+        + '\''
+        + ", role="
+        + role
+        + ", roleTypeName="
+        + roleTypeName
+        + "}";
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,165 +19,162 @@
 package se.inera.intyg.infra.integration.srs.model;
 
 import com.google.common.collect.ImmutableList;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class SrsPrediction {
 
-    private String certificateId;
-    private String diagnosisCode;
-    private String diagnosisDescription;
-    private String statusCode;
-    private Integer level;
-    private String description;
-    private Double probabilityOverLimit;
-    private Double prevalence;
-    private ImmutableList<SrsQuestionResponse> questionsResponses;
-    private String physiciansOwnOpinionRisk;
-    private Integer daysIntoSickLeave;
-    private String modelVersion;
-    /**
-     * When this prediction was calculated
-     */
-    private LocalDateTime timestamp;
+  private String certificateId;
+  private String diagnosisCode;
+  private String diagnosisDescription;
+  private String statusCode;
+  private Integer level;
+  private String description;
+  private Double probabilityOverLimit;
+  private Double prevalence;
+  private ImmutableList<SrsQuestionResponse> questionsResponses;
+  private String physiciansOwnOpinionRisk;
+  private Integer daysIntoSickLeave;
+  private String modelVersion;
 
-    public SrsPrediction() {
-    }
+  /** When this prediction was calculated */
+  private LocalDateTime timestamp;
 
-    public SrsPrediction(
-        String certificateId,
-        String predictionDiagnosisCode,
-        String predictionDiagnosisDescription,
-        String predictionStatusCode,
-        Integer predictionLevel,
-        String predictionDescription,
-        Double predictionProbabilityOverLimit,
-        Double predictionPrevalence,
-        List<SrsQuestionResponse> predictionQuestionsResponses,
-        String predictionPhysiciansOwnOpinionRisk,
-        LocalDateTime predictionTimestamp,
-        Integer daysIntoSickLeave,
-        String modelVersion
-    ) {
-        this.certificateId = certificateId;
-        this.diagnosisCode = predictionDiagnosisCode;
-        this.diagnosisDescription = predictionDiagnosisDescription;
-        this.statusCode = predictionStatusCode;
-        this.level = predictionLevel;
-        this.description = predictionDescription;
-        this.probabilityOverLimit = predictionProbabilityOverLimit;
-        this.prevalence = predictionPrevalence;
-        this.questionsResponses = predictionQuestionsResponses != null ? ImmutableList.copyOf(predictionQuestionsResponses) : null;
-        this.physiciansOwnOpinionRisk = predictionPhysiciansOwnOpinionRisk;
-        this.timestamp = predictionTimestamp;
-        this.daysIntoSickLeave = daysIntoSickLeave;
-        this.modelVersion = modelVersion;
-    }
+  public SrsPrediction() {}
 
-    public String getModelVersion() {
-        return modelVersion;
-    }
+  public SrsPrediction(
+      String certificateId,
+      String predictionDiagnosisCode,
+      String predictionDiagnosisDescription,
+      String predictionStatusCode,
+      Integer predictionLevel,
+      String predictionDescription,
+      Double predictionProbabilityOverLimit,
+      Double predictionPrevalence,
+      List<SrsQuestionResponse> predictionQuestionsResponses,
+      String predictionPhysiciansOwnOpinionRisk,
+      LocalDateTime predictionTimestamp,
+      Integer daysIntoSickLeave,
+      String modelVersion) {
+    this.certificateId = certificateId;
+    this.diagnosisCode = predictionDiagnosisCode;
+    this.diagnosisDescription = predictionDiagnosisDescription;
+    this.statusCode = predictionStatusCode;
+    this.level = predictionLevel;
+    this.description = predictionDescription;
+    this.probabilityOverLimit = predictionProbabilityOverLimit;
+    this.prevalence = predictionPrevalence;
+    this.questionsResponses =
+        predictionQuestionsResponses != null
+            ? ImmutableList.copyOf(predictionQuestionsResponses)
+            : null;
+    this.physiciansOwnOpinionRisk = predictionPhysiciansOwnOpinionRisk;
+    this.timestamp = predictionTimestamp;
+    this.daysIntoSickLeave = daysIntoSickLeave;
+    this.modelVersion = modelVersion;
+  }
 
-    public void setModelVersion(String modelVersion) {
-        this.modelVersion = modelVersion;
-    }
+  public String getModelVersion() {
+    return modelVersion;
+  }
 
-    public Integer getDaysIntoSickLeave() {
-        return daysIntoSickLeave;
-    }
+  public void setModelVersion(String modelVersion) {
+    this.modelVersion = modelVersion;
+  }
 
-    public void setDaysIntoSickLeave(Integer daysIntoSickLeave) {
-        this.daysIntoSickLeave = daysIntoSickLeave;
-    }
+  public Integer getDaysIntoSickLeave() {
+    return daysIntoSickLeave;
+  }
 
-    public String getCertificateId() {
-        return certificateId;
-    }
+  public void setDaysIntoSickLeave(Integer daysIntoSickLeave) {
+    this.daysIntoSickLeave = daysIntoSickLeave;
+  }
 
-    public void setCertificateId(String certificateId) {
-        this.certificateId = certificateId;
-    }
+  public String getCertificateId() {
+    return certificateId;
+  }
 
-    public String getDiagnosisDescription() {
-        return diagnosisDescription;
-    }
+  public void setCertificateId(String certificateId) {
+    this.certificateId = certificateId;
+  }
 
-    public void setDiagnosisDescription(String diagnosisDescription) {
-        this.diagnosisDescription = diagnosisDescription;
-    }
+  public String getDiagnosisDescription() {
+    return diagnosisDescription;
+  }
 
-    public String getStatusCode() {
-        return statusCode;
-    }
+  public void setDiagnosisDescription(String diagnosisDescription) {
+    this.diagnosisDescription = diagnosisDescription;
+  }
 
-    public void setStatusCode(String statusCode) {
-        this.statusCode = statusCode;
-    }
+  public String getStatusCode() {
+    return statusCode;
+  }
 
-    public Integer getLevel() {
-        return level;
-    }
+  public void setStatusCode(String statusCode) {
+    this.statusCode = statusCode;
+  }
 
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
+  public Integer getLevel() {
+    return level;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public void setLevel(Integer level) {
+    this.level = level;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public Double getProbabilityOverLimit() {
-        return probabilityOverLimit;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setProbabilityOverLimit(Double probabilityOverLimit) {
-        this.probabilityOverLimit = probabilityOverLimit;
-    }
+  public Double getProbabilityOverLimit() {
+    return probabilityOverLimit;
+  }
 
-    public Double getPrevalence() {
-        return prevalence;
-    }
+  public void setProbabilityOverLimit(Double probabilityOverLimit) {
+    this.probabilityOverLimit = probabilityOverLimit;
+  }
 
-    public void setPrevalence(Double prevalence) {
-        this.prevalence = prevalence;
-    }
+  public Double getPrevalence() {
+    return prevalence;
+  }
 
-    public ImmutableList<SrsQuestionResponse> getQuestionsResponses() {
-        return questionsResponses;
-    }
+  public void setPrevalence(Double prevalence) {
+    this.prevalence = prevalence;
+  }
 
-    public void setQuestionsResponses(ImmutableList<SrsQuestionResponse> questionsResponses) {
-        this.questionsResponses = questionsResponses;
-    }
+  public ImmutableList<SrsQuestionResponse> getQuestionsResponses() {
+    return questionsResponses;
+  }
 
-    public String getPhysiciansOwnOpinionRisk() {
-        return physiciansOwnOpinionRisk;
-    }
+  public void setQuestionsResponses(ImmutableList<SrsQuestionResponse> questionsResponses) {
+    this.questionsResponses = questionsResponses;
+  }
 
-    public void setPhysiciansOwnOpinionRisk(String physiciansOwnOpinionRisk) {
-        this.physiciansOwnOpinionRisk = physiciansOwnOpinionRisk;
-    }
+  public String getPhysiciansOwnOpinionRisk() {
+    return physiciansOwnOpinionRisk;
+  }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
+  public void setPhysiciansOwnOpinionRisk(String physiciansOwnOpinionRisk) {
+    this.physiciansOwnOpinionRisk = physiciansOwnOpinionRisk;
+  }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
+  public LocalDateTime getTimestamp() {
+    return timestamp;
+  }
 
-    public String getDiagnosisCode() {
-        return diagnosisCode;
-    }
+  public void setTimestamp(LocalDateTime timestamp) {
+    this.timestamp = timestamp;
+  }
 
-    public void setDiagnosisCode(String diagnosisCode) {
-        this.diagnosisCode = diagnosisCode;
-    }
+  public String getDiagnosisCode() {
+    return diagnosisCode;
+  }
 
-
+  public void setDiagnosisCode(String diagnosisCode) {
+    this.diagnosisCode = diagnosisCode;
+  }
 }

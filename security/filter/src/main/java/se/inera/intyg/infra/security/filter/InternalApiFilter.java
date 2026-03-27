@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,29 +18,30 @@
  */
 package se.inera.intyg.infra.security.filter;
 
-import java.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public class InternalApiFilter extends OncePerRequestFilter {
 
-    private static final int FORBIDDEN = 403;
+  private static final int FORBIDDEN = 403;
 
-    @Value("${internal.api.port}")
-    private int internalApiPort;
+  @Value("${internal.api.port}")
+  private int internalApiPort;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-        throws ServletException, IOException {
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
 
-        if (request.getLocalPort() == internalApiPort) {
-            filterChain.doFilter(request, response);
-        } else {
-            response.sendError(FORBIDDEN);
-        }
+    if (request.getLocalPort() == internalApiPort) {
+      filterChain.doFilter(request, response);
+    } else {
+      response.sendError(FORBIDDEN);
     }
+  }
 }

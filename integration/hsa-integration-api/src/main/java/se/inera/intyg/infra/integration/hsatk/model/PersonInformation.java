@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,27 +27,27 @@ import lombok.Data;
 @Data
 public class PersonInformation implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    protected String personHsaId;
-    protected String givenName;
-    protected String middleAndSurName;
-    protected List<String> healthCareProfessionalLicence = new ArrayList<>();
-    protected List<PaTitle> paTitle = new ArrayList<>();
-    protected List<String> specialityName = new ArrayList<>();
-    protected List<String> specialityCode = new ArrayList<>();
-    protected Boolean protectedPerson;
-    protected LocalDateTime personStartDate;
-    protected LocalDateTime personEndDate;
-    protected Boolean feignedPerson;
-    protected List<HCPSpecialityCodes> healthCareProfessionalLicenceSpeciality = new ArrayList<>();
-    protected String age;
-    protected String gender;
-    protected String title;
+  private static final long serialVersionUID = 1L;
+  protected String personHsaId;
+  protected String givenName;
+  protected String middleAndSurName;
+  protected List<String> healthCareProfessionalLicence = new ArrayList<>();
+  protected List<PaTitle> paTitle = new ArrayList<>();
+  protected List<String> specialityName = new ArrayList<>();
+  protected List<String> specialityCode = new ArrayList<>();
+  protected Boolean protectedPerson;
+  protected LocalDateTime personStartDate;
+  protected LocalDateTime personEndDate;
+  protected Boolean feignedPerson;
+  protected List<HCPSpecialityCodes> healthCareProfessionalLicenceSpeciality = new ArrayList<>();
+  protected String age;
+  protected String gender;
+  protected String title;
 
-    @Data
-    public static class PaTitle implements Serializable {
+  @Data
+  public static class PaTitle implements Serializable {
 
-        private String paTitleName;
-        private String paTitleCode;
-    }
+    private String paTitleName;
+    private String paTitleCode;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,140 +19,145 @@
 package se.inera.intyg.infra.integration.srs.model;
 
 import com.google.common.collect.ImmutableList;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 // CHECKSTYLE:OFF ParameterNumber
 public class SrsResponse {
 
-    private ImmutableList<SrsRecommendation> atgarderObs;
-    private ImmutableList<SrsRecommendation> atgarderRek;
-    private ImmutableList<SrsRecommendation> atgarderFrl;
-    private ImmutableList<SrsRecommendation> atgarderReh;
-    private ImmutableList<SrsPrediction> predictions;
-    private String atgarderDiagnosisCode;
-    private String atgarderDiagnosisDescription;
-    private String atgarderStatusCode;
-    private ImmutableList<Integer> statistikNationellStatistik;
-    private String statistikDiagnosisCode;
-    private String statistikDiagnosisDescription;
-    private String statistikStatusCode;
-    private List<SrsCertificate> extensionChain; // TODO: replace with startingPoint/active view etc enum
+  private ImmutableList<SrsRecommendation> atgarderObs;
+  private ImmutableList<SrsRecommendation> atgarderRek;
+  private ImmutableList<SrsRecommendation> atgarderFrl;
+  private ImmutableList<SrsRecommendation> atgarderReh;
+  private ImmutableList<SrsPrediction> predictions;
+  private String atgarderDiagnosisCode;
+  private String atgarderDiagnosisDescription;
+  private String atgarderStatusCode;
+  private ImmutableList<Integer> statistikNationellStatistik;
+  private String statistikDiagnosisCode;
+  private String statistikDiagnosisDescription;
+  private String statistikStatusCode;
+  private List<SrsCertificate>
+      extensionChain; // TODO: replace with startingPoint/active view etc enum
 
-    public SrsResponse(List<SrsRecommendation> atgarderObs, List<SrsRecommendation> atgarderRek,
-        List<SrsRecommendation> atgarderFrl, List<SrsRecommendation> atgarderReh,
-        List<SrsPrediction> predictions,
-        String atgarderDiagnosisCode, String atgarderStatusCode,
-        String statistikDiagnosisCode, String statistikStatusCode, List<Integer> statistikNationellStatistikData) {
+  public SrsResponse(
+      List<SrsRecommendation> atgarderObs,
+      List<SrsRecommendation> atgarderRek,
+      List<SrsRecommendation> atgarderFrl,
+      List<SrsRecommendation> atgarderReh,
+      List<SrsPrediction> predictions,
+      String atgarderDiagnosisCode,
+      String atgarderStatusCode,
+      String statistikDiagnosisCode,
+      String statistikStatusCode,
+      List<Integer> statistikNationellStatistikData) {
 
-        if (atgarderObs == null) {
-            this.atgarderObs = null;
-        } else {
-            this.atgarderObs = ImmutableList.copyOf(atgarderObs);
-        }
-        if (atgarderRek == null) {
-            this.atgarderRek = null;
-        } else {
-            this.atgarderRek = ImmutableList.copyOf(atgarderRek);
-        }
-        if (atgarderFrl == null) {
-            this.atgarderFrl = null;
-        } else {
-            this.atgarderFrl = ImmutableList.copyOf(atgarderFrl);
-        }
-        if (atgarderReh == null) {
-            this.atgarderReh = null;
-        } else {
-            this.atgarderReh = ImmutableList.copyOf(atgarderReh);
-        }
-
-        if (statistikNationellStatistikData == null) {
-            this.statistikNationellStatistik = null;
-        } else {
-            this.statistikNationellStatistik = ImmutableList.copyOf(statistikNationellStatistikData);
-        }
-
-        if (predictions == null) {
-            this.predictions = null;
-        } else {
-            this.predictions = ImmutableList.copyOf(predictions);
-        }
-
-        this.atgarderDiagnosisCode = atgarderDiagnosisCode;
-        this.atgarderStatusCode = atgarderStatusCode;
-
-        this.statistikDiagnosisCode = statistikDiagnosisCode;
-        this.statistikStatusCode = statistikStatusCode;
+    if (atgarderObs == null) {
+      this.atgarderObs = null;
+    } else {
+      this.atgarderObs = ImmutableList.copyOf(atgarderObs);
+    }
+    if (atgarderRek == null) {
+      this.atgarderRek = null;
+    } else {
+      this.atgarderRek = ImmutableList.copyOf(atgarderRek);
+    }
+    if (atgarderFrl == null) {
+      this.atgarderFrl = null;
+    } else {
+      this.atgarderFrl = ImmutableList.copyOf(atgarderFrl);
+    }
+    if (atgarderReh == null) {
+      this.atgarderReh = null;
+    } else {
+      this.atgarderReh = ImmutableList.copyOf(atgarderReh);
     }
 
-    public ImmutableList<SrsRecommendation> getAtgarderObs() {
-        return atgarderObs;
+    if (statistikNationellStatistikData == null) {
+      this.statistikNationellStatistik = null;
+    } else {
+      this.statistikNationellStatistik = ImmutableList.copyOf(statistikNationellStatistikData);
     }
 
-    public ImmutableList<SrsRecommendation> getAtgarderRek() {
-        return atgarderRek;
+    if (predictions == null) {
+      this.predictions = null;
+    } else {
+      this.predictions = ImmutableList.copyOf(predictions);
     }
 
-    public ImmutableList<SrsRecommendation> getAtgarderFrl() {
-        return atgarderFrl;
-    }
+    this.atgarderDiagnosisCode = atgarderDiagnosisCode;
+    this.atgarderStatusCode = atgarderStatusCode;
 
-    public ImmutableList<SrsRecommendation> getAtgarderReh() {
-        return atgarderReh;
-    }
+    this.statistikDiagnosisCode = statistikDiagnosisCode;
+    this.statistikStatusCode = statistikStatusCode;
+  }
 
-    public String getAtgarderStatusCode() {
-        return atgarderStatusCode;
-    }
+  public ImmutableList<SrsRecommendation> getAtgarderObs() {
+    return atgarderObs;
+  }
 
-    public String getStatistikStatusCode() {
-        return statistikStatusCode;
-    }
+  public ImmutableList<SrsRecommendation> getAtgarderRek() {
+    return atgarderRek;
+  }
 
-    public String getAtgarderDiagnosisCode() {
-        return atgarderDiagnosisCode;
-    }
+  public ImmutableList<SrsRecommendation> getAtgarderFrl() {
+    return atgarderFrl;
+  }
 
-    public String getAtgarderDiagnosisDescription() {
-        return atgarderDiagnosisDescription;
-    }
+  public ImmutableList<SrsRecommendation> getAtgarderReh() {
+    return atgarderReh;
+  }
 
-    public String getStatistikDiagnosisCode() {
-        return statistikDiagnosisCode;
-    }
+  public String getAtgarderStatusCode() {
+    return atgarderStatusCode;
+  }
 
-    public String getStatistikDiagnosisDescription() {
-        return statistikDiagnosisDescription;
-    }
+  public String getStatistikStatusCode() {
+    return statistikStatusCode;
+  }
 
-    public List<Integer> getStatistikNationellStatistik() {
-        return statistikNationellStatistik;
-    }
+  public String getAtgarderDiagnosisCode() {
+    return atgarderDiagnosisCode;
+  }
 
-    public ImmutableList<SrsPrediction> getPredictions() {
-        return predictions;
-    }
+  public String getAtgarderDiagnosisDescription() {
+    return atgarderDiagnosisDescription;
+  }
 
-    public void setPredictions(ImmutableList<SrsPrediction> predictions) {
-        this.predictions = predictions;
-    }
+  public String getStatistikDiagnosisCode() {
+    return statistikDiagnosisCode;
+  }
 
-    public List<SrsCertificate> getExtensionChain() {
-        return this.extensionChain;
-    }
+  public String getStatistikDiagnosisDescription() {
+    return statistikDiagnosisDescription;
+  }
 
-    // Not a setter since we set a copy of the list
-    public void replaceExtensionChain(List<SrsCertificate> chain) {
-        this.extensionChain = ImmutableList.copyOf(chain);
-    }
+  public List<Integer> getStatistikNationellStatistik() {
+    return statistikNationellStatistik;
+  }
 
-    public void setAtgarderDiagnosisDescription(String atgarderDiagnosisDescription) {
-        this.atgarderDiagnosisDescription = atgarderDiagnosisDescription;
-    }
+  public ImmutableList<SrsPrediction> getPredictions() {
+    return predictions;
+  }
 
-    public void setStatistikDiagnosisDescription(String statistikDiagnosisDescription) {
-        this.statistikDiagnosisDescription = statistikDiagnosisDescription;
-    }
+  public void setPredictions(ImmutableList<SrsPrediction> predictions) {
+    this.predictions = predictions;
+  }
+
+  public List<SrsCertificate> getExtensionChain() {
+    return this.extensionChain;
+  }
+
+  // Not a setter since we set a copy of the list
+  public void replaceExtensionChain(List<SrsCertificate> chain) {
+    this.extensionChain = ImmutableList.copyOf(chain);
+  }
+
+  public void setAtgarderDiagnosisDescription(String atgarderDiagnosisDescription) {
+    this.atgarderDiagnosisDescription = atgarderDiagnosisDescription;
+  }
+
+  public void setStatistikDiagnosisDescription(String statistikDiagnosisDescription) {
+    this.statistikDiagnosisDescription = statistikDiagnosisDescription;
+  }
 }
 // CHECKSTYLE:ON ParameterNumber

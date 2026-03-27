@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,13 +20,13 @@ package se.inera.intyg.infra.dynamiclink.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,45 +36,45 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 
-/**
- * Created by eriklupander on 2017-05-03.
- */
+/** Created by eriklupander on 2017-05-03. */
 @Service
 public class DynamicLinkRepositoryImpl implements DynamicLinkRepository {
 
-    static final Logger LOG = LoggerFactory.getLogger(DynamicLinkRepositoryImpl.class);
+  static final Logger LOG = LoggerFactory.getLogger(DynamicLinkRepositoryImpl.class);
 
-    @Value("${dynamic.links.file}")
-    String location;
+  @Value("${dynamic.links.file}")
+  String location;
 
-    @Autowired
-    ResourceLoader resourceLoader;
+  @Autowired ResourceLoader resourceLoader;
 
-    Map<String, DynamicLink> linkMap;
+  Map<String, DynamicLink> linkMap;
 
-    @PostConstruct
-    void initialize() {
-        // FIXME: Legacy support, can be removed when local config has been substituted by refdata (INTYG-7701)
-        if (!ResourceUtils.isUrl(location)) {
-            location = "file:" + location;
-        }
-
-        try {
-            List<DynamicLink> dynamicLinks =
-                new ObjectMapper().readValue(resourceLoader.getResource(location).getInputStream(),
-                    new TypeReference<List<DynamicLink>>() {
-                    });
-            this.linkMap = Collections.unmodifiableMap(
-                dynamicLinks.stream().collect(Collectors.toMap(DynamicLink::getKey, Function.identity()))
-            );
-        } catch (IOException e) {
-            LOG.error("Error loading dynamic links from: " + location);
-            throw new IllegalStateException(e);
-        }
+  @PostConstruct
+  void initialize() {
+    // FIXME: Legacy support, can be removed when local config has been substituted by refdata
+    // (INTYG-7701)
+    if (!ResourceUtils.isUrl(location)) {
+      location = "file:" + location;
     }
 
-    @Override
-    public Map<String, DynamicLink> getAll() {
-        return this.linkMap;
+    try {
+      List<DynamicLink> dynamicLinks =
+          new ObjectMapper()
+              .readValue(
+                  resourceLoader.getResource(location).getInputStream(),
+                  new TypeReference<List<DynamicLink>>() {});
+      this.linkMap =
+          Collections.unmodifiableMap(
+              dynamicLinks.stream()
+                  .collect(Collectors.toMap(DynamicLink::getKey, Function.identity())));
+    } catch (IOException e) {
+      LOG.error("Error loading dynamic links from: " + location);
+      throw new IllegalStateException(e);
     }
+  }
+
+  @Override
+  public Map<String, DynamicLink> getAll() {
+    return this.linkMap;
+  }
 }

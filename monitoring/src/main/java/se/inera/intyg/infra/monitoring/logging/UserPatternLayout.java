@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,12 +22,12 @@ import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 
 /**
- * Logback {@link PatternLayout} PatternLayout implementation that exposes
- * user and session information.
+ * Logback {@link PatternLayout} PatternLayout implementation that exposes user and session
+ * information.
  */
 public class UserPatternLayout extends PatternLayoutEncoder {
 
-    static {
-        PatternLayout.defaultConverterMap.put("user", UserConverter.class.getName());
-    }
+  static {
+    PatternLayout.defaultConverterMap.put("user", UserConverter.class.getName());
+  }
 }

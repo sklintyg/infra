@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.client.employee;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,49 +46,46 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmploy
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceEmployeeClientTest {
 
-    @Mock
-    private RestClient restClient;
+  @Mock private RestClient restClient;
 
-    @InjectMocks
-    private HsaIntygProxyServiceEmployeeClient hsaIntygProxyServiceEmployeeClient;
+  @InjectMocks private HsaIntygProxyServiceEmployeeClient hsaIntygProxyServiceEmployeeClient;
 
-    private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
+  private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
 
-    private RequestBodyUriSpec requestBodyUriSpec;
-    private ResponseSpec responseSpec;
+  private RequestBodyUriSpec requestBodyUriSpec;
+  private ResponseSpec responseSpec;
 
-    @BeforeEach
-    void setUp() {
-        final var uri = "/api/from/configuration";
-        ReflectionTestUtils.setField(hsaIntygProxyServiceEmployeeClient, "employeeEndpoint", uri);
+  @BeforeEach
+  void setUp() {
+    final var uri = "/api/from/configuration";
+    ReflectionTestUtils.setField(hsaIntygProxyServiceEmployeeClient, "employeeEndpoint", uri);
 
-        requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
-        responseSpec = mock(RestClient.ResponseSpec.class);
+    requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
+    responseSpec = mock(RestClient.ResponseSpec.class);
 
-        MDC.put(TRACE_ID_KEY, "traceId");
-        MDC.put(SESSION_ID_KEY, "sessionId");
+    MDC.put(TRACE_ID_KEY, "traceId");
+    MDC.put(SESSION_ID_KEY, "sessionId");
 
-        when(restClient.post()).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.uri(uri)).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.body(any(GetEmployeeRequestDTO.class))).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
-    }
+    when(restClient.post()).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.uri(uri)).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.body(any(GetEmployeeRequestDTO.class))).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId"))
+        .thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
+  }
 
-    @Test
-    void shallReturnGetCitizenCertificatesResponse() {
-        final var request = GetEmployeeRequestDTO.builder()
-            .personId(PERSONAL_IDENTITY_NUMBER)
-            .build();
+  @Test
+  void shallReturnGetCitizenCertificatesResponse() {
+    final var request = GetEmployeeRequestDTO.builder().personId(PERSONAL_IDENTITY_NUMBER).build();
 
-        final var expectedResponse = GetEmployeeResponseDTO.builder().build();
+    final var expectedResponse = GetEmployeeResponseDTO.builder().build();
 
-        doReturn(expectedResponse).when(responseSpec).body(GetEmployeeResponseDTO.class);
+    doReturn(expectedResponse).when(responseSpec).body(GetEmployeeResponseDTO.class);
 
-        final var actualResponse = hsaIntygProxyServiceEmployeeClient.getEmployee(request);
+    final var actualResponse = hsaIntygProxyServiceEmployeeClient.getEmployee(request);
 
-        assertEquals(expectedResponse, actualResponse);
-    }
+    assertEquals(expectedResponse, actualResponse);
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.client.authorization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,49 +47,50 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetC
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceHospCredentialsForPersonClientTest {
 
-    private static final GetCredentialsForPersonRequestDTO GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO =
-        GetCredentialsForPersonRequestDTO.builder()
-            .personId("personId")
-            .build();
-    @Mock
-    private RestClient restClient;
+  private static final GetCredentialsForPersonRequestDTO GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO =
+      GetCredentialsForPersonRequestDTO.builder().personId("personId").build();
+  @Mock private RestClient restClient;
 
-    @InjectMocks
-    private HsaIntygProxyServiceHospCredentialsForPersonClient credentialsForPersonClient;
+  @InjectMocks
+  private HsaIntygProxyServiceHospCredentialsForPersonClient credentialsForPersonClient;
 
-    private RequestBodyUriSpec requestBodyUriSpec;
-    private ResponseSpec responseSpec;
+  private RequestBodyUriSpec requestBodyUriSpec;
+  private ResponseSpec responseSpec;
 
-    @BeforeEach
-    void setUp() {
-        final var uri = "/api/from/configuration";
-        ReflectionTestUtils.setField(credentialsForPersonClient, "credentialsForPersonEndpoint", uri);
+  @BeforeEach
+  void setUp() {
+    final var uri = "/api/from/configuration";
+    ReflectionTestUtils.setField(credentialsForPersonClient, "credentialsForPersonEndpoint", uri);
 
-        requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
-        responseSpec = mock(RestClient.ResponseSpec.class);
+    requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
+    responseSpec = mock(RestClient.ResponseSpec.class);
 
-        MDC.put(TRACE_ID_KEY, "traceId");
-        MDC.put(SESSION_ID_KEY, "sessionId");
+    MDC.put(TRACE_ID_KEY, "traceId");
+    MDC.put(SESSION_ID_KEY, "sessionId");
 
-        when(restClient.post()).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.uri(uri)).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.body(any(GetCredentialsForPersonRequestDTO.class))).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
-    }
+    when(restClient.post()).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.uri(uri)).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.body(any(GetCredentialsForPersonRequestDTO.class)))
+        .thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId"))
+        .thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
+  }
 
-    @Test
-    void shallReturnGetCitizenCertificatesResponse() {
-        final var expectedResponse = GetCredentialsForPersonResponseDTO.builder()
+  @Test
+  void shallReturnGetCitizenCertificatesResponse() {
+    final var expectedResponse =
+        GetCredentialsForPersonResponseDTO.builder()
             .credentials(new HospCredentialsForPerson())
             .build();
 
-        doReturn(expectedResponse).when(responseSpec).body(GetCredentialsForPersonResponseDTO.class);
+    doReturn(expectedResponse).when(responseSpec).body(GetCredentialsForPersonResponseDTO.class);
 
-        final var actualResponse = credentialsForPersonClient.get(GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO);
+    final var actualResponse =
+        credentialsForPersonClient.get(GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO);
 
-        assertEquals(expectedResponse, actualResponse);
-    }
+    assertEquals(expectedResponse, actualResponse);
+  }
 }

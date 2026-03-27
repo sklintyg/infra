@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,16 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import jakarta.xml.ws.WebServiceException;
 import java.util.Collections;
 import java.util.List;
-import jakarta.xml.ws.WebServiceException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,42 +38,41 @@ import se.inera.intyg.infra.integration.intygproxyservice.services.employee.HsaL
 @ExtendWith(MockitoExtension.class)
 class HsaLegacyIntegrationEmployeeServiceTest {
 
-    private static final List<PersonInformation> EXPECTED_RESULT = List.of(new PersonInformation());
-    @Mock
-    private GetEmployeeService getEmployeeService;
+  private static final List<PersonInformation> EXPECTED_RESULT = List.of(new PersonInformation());
+  @Mock private GetEmployeeService getEmployeeService;
 
-    @InjectMocks
-    private HsaLegacyIntegrationEmployeeService integrationEmployeeService;
+  @InjectMocks private HsaLegacyIntegrationEmployeeService integrationEmployeeService;
 
-    private static final String HSA_ID = "hsaId";
-    private static final GetEmployeeRequestDTO GET_EMPLOYEE_REQUEST_DTO = GetEmployeeRequestDTO.builder()
-        .hsaId(HSA_ID)
-        .build();
+  private static final String HSA_ID = "hsaId";
+  private static final GetEmployeeRequestDTO GET_EMPLOYEE_REQUEST_DTO =
+      GetEmployeeRequestDTO.builder().hsaId(HSA_ID).build();
 
-    @Test
-    void shouldThrowWebServiceException() {
-        when(getEmployeeService.get(GET_EMPLOYEE_REQUEST_DTO)).thenReturn(Collections.emptyList());
+  @Test
+  void shouldThrowWebServiceException() {
+    when(getEmployeeService.get(GET_EMPLOYEE_REQUEST_DTO)).thenReturn(Collections.emptyList());
 
-        assertThrows(WebServiceException.class, () -> integrationEmployeeService.getEmployee(HSA_ID, null));
-        assertThrows(WebServiceException.class, () -> integrationEmployeeService.getEmployee(HSA_ID, null, null));
-    }
+    assertThrows(
+        WebServiceException.class, () -> integrationEmployeeService.getEmployee(HSA_ID, null));
+    assertThrows(
+        WebServiceException.class,
+        () -> integrationEmployeeService.getEmployee(HSA_ID, null, null));
+  }
 
-    @Test
-    void shouldReturnListOfPersonInformation() {
-        when(getEmployeeService.get(GET_EMPLOYEE_REQUEST_DTO)).thenReturn(EXPECTED_RESULT);
+  @Test
+  void shouldReturnListOfPersonInformation() {
+    when(getEmployeeService.get(GET_EMPLOYEE_REQUEST_DTO)).thenReturn(EXPECTED_RESULT);
 
-        final var result = integrationEmployeeService.getEmployee(HSA_ID, null);
+    final var result = integrationEmployeeService.getEmployee(HSA_ID, null);
 
-        assertEquals(EXPECTED_RESULT, result);
-    }
+    assertEquals(EXPECTED_RESULT, result);
+  }
 
+  @Test
+  void shouldReturnListOfPersonInformationWithSearchBase() {
+    when(getEmployeeService.get(GET_EMPLOYEE_REQUEST_DTO)).thenReturn(EXPECTED_RESULT);
 
-    @Test
-    void shouldReturnListOfPersonInformationWithSearchBase() {
-        when(getEmployeeService.get(GET_EMPLOYEE_REQUEST_DTO)).thenReturn(EXPECTED_RESULT);
+    final var result = integrationEmployeeService.getEmployee(HSA_ID, null, null);
 
-        final var result = integrationEmployeeService.getEmployee(HSA_ID, null, null);
-
-        assertEquals(EXPECTED_RESULT, result);
-    }
+    assertEquals(EXPECTED_RESULT, result);
+  }
 }

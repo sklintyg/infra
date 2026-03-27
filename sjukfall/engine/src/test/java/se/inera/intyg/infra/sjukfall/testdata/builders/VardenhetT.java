@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,36 +20,32 @@ package se.inera.intyg.infra.sjukfall.testdata.builders;
 
 import se.inera.intyg.infra.sjukfall.dto.Vardenhet;
 
-/**
- * Created by Magnus Ekstrand on 2016-02-10.
- */
+/** Created by Magnus Ekstrand on 2016-02-10. */
 public final class VardenhetT {
 
-    public VardenhetT() {
+  public VardenhetT() {}
+
+  public static class VardenhetBuilder implements Builder<Vardenhet> {
+
+    private String enhetsId;
+    private String enhetsnamn;
+
+    public VardenhetBuilder() {}
+
+    public VardenhetBuilder enhetsId(String enhetsId) {
+      this.enhetsId = enhetsId;
+      return this;
     }
 
-    public static class VardenhetBuilder implements Builder<Vardenhet> {
-
-        private String enhetsId;
-        private String enhetsnamn;
-
-        public VardenhetBuilder() {
-        }
-
-        public VardenhetBuilder enhetsId(String enhetsId) {
-            this.enhetsId = enhetsId;
-            return this;
-        }
-
-        public VardenhetBuilder enhetsnamn(String enhetsnamn) {
-            this.enhetsnamn = enhetsnamn;
-            return this;
-        }
-
-        @Override
-        public Vardenhet build() {
-            Vardenhet enhet = Vardenhet.create(enhetsId, enhetsnamn);
-            return enhet;
-        }
+    public VardenhetBuilder enhetsnamn(String enhetsnamn) {
+      this.enhetsnamn = enhetsnamn;
+      return this;
     }
+
+    @Override
+    public Vardenhet build() {
+      Vardenhet enhet = Vardenhet.create(enhetsId, enhetsnamn);
+      return enhet;
+    }
+  }
 }

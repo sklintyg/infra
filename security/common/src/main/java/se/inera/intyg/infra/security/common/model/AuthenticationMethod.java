@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.infra.security.common.model;
 
-/**
- * Created by eriklupander on 2015-08-21.
- */
+/** Created by eriklupander on 2015-08-21. */
 public enum AuthenticationMethod {
-
-    NET_ID, BANK_ID, MOBILT_BANK_ID, SITHS, FAKE
-
+  NET_ID,
+  BANK_ID,
+  MOBILT_BANK_ID,
+  SITHS,
+  FAKE
 }

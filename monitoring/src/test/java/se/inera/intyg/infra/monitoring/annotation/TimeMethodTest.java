@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -39,50 +39,52 @@ import se.inera.intyg.infra.monitoring.TestController;
 @ContextConfiguration(classes = {MonitoringConfiguration.class, TestController.class})
 class TimeMethodTest {
 
-    CollectorRegistry registry = CollectorRegistry.defaultRegistry;
+  CollectorRegistry registry = CollectorRegistry.defaultRegistry;
 
-    @Autowired
-    TestController testController;
+  @Autowired TestController testController;
 
-    @BeforeEach
-    void before() throws InterruptedException {
-        this.testController.named();
-        this.testController.named2();
-        this.testController.unnamed("", Collections.EMPTY_LIST);
-    }
+  @BeforeEach
+  void before() throws InterruptedException {
+    this.testController.named();
+    this.testController.named2();
+    this.testController.unnamed("", Collections.EMPTY_LIST);
+  }
 
-    @Test
-    void instrumented_named_method() {
+  @Test
+  void instrumented_named_method() {
 
-        final Optional<Collector.MetricFamilySamples> sample = Collections.list(registry.metricFamilySamples()).stream()
+    final Optional<Collector.MetricFamilySamples> sample =
+        Collections.list(registry.metricFamilySamples()).stream()
             .filter(s -> TestController.SAMPLE_NAME.equals(s.name))
             .findFirst();
 
-        assertTrue(sample.isPresent());
-        assertFalse(sample.get().samples.isEmpty());
-        assertNotNull(sample.get().help);
-    }
+    assertTrue(sample.isPresent());
+    assertFalse(sample.get().samples.isEmpty());
+    assertNotNull(sample.get().help);
+  }
 
-    @Test
-    void instrumented_duplicate_named_method() {
+  @Test
+  void instrumented_duplicate_named_method() {
 
-        final Optional<Collector.MetricFamilySamples> sample = Collections.list(registry.metricFamilySamples()).stream()
+    final Optional<Collector.MetricFamilySamples> sample =
+        Collections.list(registry.metricFamilySamples()).stream()
             .filter(s -> s.name.equalsIgnoreCase(TestController.SAMPLE_NAME + "_1"))
             .findFirst();
 
-        assertTrue(sample.isPresent());
-        assertFalse(sample.get().samples.isEmpty());
-        assertNotNull(sample.get().help);
-    }
+    assertTrue(sample.isPresent());
+    assertFalse(sample.get().samples.isEmpty());
+    assertNotNull(sample.get().help);
+  }
 
-    @Test
-    void instrumented_unnamed_method() {
-        final Optional<Collector.MetricFamilySamples> sample = Collections.list(registry.metricFamilySamples()).stream()
+  @Test
+  void instrumented_unnamed_method() {
+    final Optional<Collector.MetricFamilySamples> sample =
+        Collections.list(registry.metricFamilySamples()).stream()
             .filter(s -> s.name.startsWith("api_"))
             .findFirst();
 
-        assertTrue(sample.isPresent());
-        assertFalse(sample.get().samples.isEmpty());
-        assertNotNull(sample.get().help);
-    }
+    assertTrue(sample.isPresent());
+    assertFalse(sample.get().samples.isEmpty());
+    assertNotNull(sample.get().help);
+  }
 }

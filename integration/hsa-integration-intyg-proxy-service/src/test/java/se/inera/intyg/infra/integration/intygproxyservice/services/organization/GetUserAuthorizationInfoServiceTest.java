@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,113 +45,109 @@ import se.inera.intyg.infra.integration.intygproxyservice.services.organization.
 @ExtendWith(MockitoExtension.class)
 class GetUserAuthorizationInfoServiceTest {
 
-    @Mock
-    private GetCareProviderListService getCareProviderListService;
+  @Mock private GetCareProviderListService getCareProviderListService;
 
-    @Mock
-    private UserCredentialListConverter userCredentialListConverter;
+  @Mock private UserCredentialListConverter userCredentialListConverter;
 
-    @Mock
-    private CommissionNameMapConverter commissionNameMapConverter;
+  @Mock private CommissionNameMapConverter commissionNameMapConverter;
 
-    @InjectMocks
-    GetUserAuthorizationInfoService getUserAuthorizationInfoService;
+  @InjectMocks GetUserAuthorizationInfoService getUserAuthorizationInfoService;
 
-    private Commission active;
-    private List<CredentialInformation> credentials;
+  private Commission active;
+  private List<CredentialInformation> credentials;
 
-    @BeforeEach
-    void setup() {
-        credentials = new ArrayList<>();
-        active = new Commission();
-        final var inactive = new Commission();
-        final var notCare = new Commission();
-        inactive.setHealthCareProviderStartDate(LocalDateTime.now().plusDays(1));
-        active.setCommissionPurpose("Vård och behandling");
-        inactive.setCommissionPurpose("Vård och behandling");
-        notCare.setCommissionPurpose("NOT_IT");
+  @BeforeEach
+  void setup() {
+    credentials = new ArrayList<>();
+    active = new Commission();
+    final var inactive = new Commission();
+    final var notCare = new Commission();
+    inactive.setHealthCareProviderStartDate(LocalDateTime.now().plusDays(1));
+    active.setCommissionPurpose("Vård och behandling");
+    inactive.setCommissionPurpose("Vård och behandling");
+    notCare.setCommissionPurpose("NOT_IT");
 
-        final var withActive = new CredentialInformation();
-        final var withInactive = new CredentialInformation();
+    final var withActive = new CredentialInformation();
+    final var withInactive = new CredentialInformation();
 
-        withActive.setCommission(List.of(active, notCare));
-        withInactive.setCommission(List.of(inactive));
+    withActive.setCommission(List.of(active, notCare));
+    withInactive.setCommission(List.of(inactive));
 
-        credentials.add(withActive);
-        credentials.add(withInactive);
+    credentials.add(withActive);
+    credentials.add(withInactive);
+  }
+
+  @Nested
+  class UserCredentialsTest {
+
+    @Test
+    void shouldSendCredentials() {
+      final var captor = ArgumentCaptor.forClass(List.class);
+
+      getUserAuthorizationInfoService.get(credentials);
+      verify(userCredentialListConverter).convert(captor.capture());
+
+      assertEquals(credentials, captor.getValue());
     }
 
-    @Nested
-    class UserCredentialsTest {
+    @Test
+    void shouldReturnValueInUserAuthorization() {
+      final var expected = new UserCredentials();
+      when(userCredentialListConverter.convert(anyList())).thenReturn(expected);
 
-        @Test
-        void shouldSendCredentials() {
-            final var captor = ArgumentCaptor.forClass(List.class);
+      final var response = getUserAuthorizationInfoService.get(credentials);
 
-            getUserAuthorizationInfoService.get(credentials);
-            verify(userCredentialListConverter).convert(captor.capture());
+      assertEquals(expected, response.getUserCredentials());
+    }
+  }
 
-            assertEquals(credentials, captor.getValue());
-        }
+  @Nested
+  class CareProviderList {
 
-        @Test
-        void shouldReturnValueInUserAuthorization() {
-            final var expected = new UserCredentials();
-            when(userCredentialListConverter.convert(anyList())).thenReturn(expected);
+    @Test
+    void shouldFilterCommissions() {
+      final var captor = ArgumentCaptor.forClass(List.class);
 
-            final var response = getUserAuthorizationInfoService.get(credentials);
+      getUserAuthorizationInfoService.get(credentials);
+      verify(getCareProviderListService).get(captor.capture());
 
-            assertEquals(expected, response.getUserCredentials());
-        }
+      assertEquals(1, captor.getValue().size());
+      assertEquals(active, captor.getValue().get(0));
     }
 
-    @Nested
-    class CareProviderList {
+    @Test
+    void shouldReturnValueInUserAuthorization() {
+      final var expected = List.of(new Vardgivare());
+      when(getCareProviderListService.get(anyList())).thenReturn(expected);
 
-        @Test
-        void shouldFilterCommissions() {
-            final var captor = ArgumentCaptor.forClass(List.class);
+      final var response = getUserAuthorizationInfoService.get(credentials);
 
-            getUserAuthorizationInfoService.get(credentials);
-            verify(getCareProviderListService).get(captor.capture());
+      assertEquals(expected, response.getVardgivare());
+    }
+  }
 
-            assertEquals(1, captor.getValue().size());
-            assertEquals(active, captor.getValue().get(0));
-        }
+  @Nested
+  class CommissionNameMap {
 
-        @Test
-        void shouldReturnValueInUserAuthorization() {
-            final var expected = List.of(new Vardgivare());
-            when(getCareProviderListService.get(anyList())).thenReturn(expected);
+    @Test
+    void shouldFilterInactiveCommissions() {
+      final var captor = ArgumentCaptor.forClass(List.class);
 
-            final var response = getUserAuthorizationInfoService.get(credentials);
+      getUserAuthorizationInfoService.get(credentials);
+      verify(commissionNameMapConverter).convert(captor.capture());
 
-            assertEquals(expected, response.getVardgivare());
-        }
+      assertEquals(1, captor.getValue().size());
+      assertEquals(active, captor.getValue().get(0));
     }
 
-    @Nested
-    class CommissionNameMap {
+    @Test
+    void shouldReturnValueInUserAuthorization() {
+      final var expected = new HashMap<String, String>();
+      when(commissionNameMapConverter.convert(anyList())).thenReturn(expected);
 
-        @Test
-        void shouldFilterInactiveCommissions() {
-            final var captor = ArgumentCaptor.forClass(List.class);
+      final var response = getUserAuthorizationInfoService.get(credentials);
 
-            getUserAuthorizationInfoService.get(credentials);
-            verify(commissionNameMapConverter).convert(captor.capture());
-
-            assertEquals(1, captor.getValue().size());
-            assertEquals(active, captor.getValue().get(0));
-        }
-
-        @Test
-        void shouldReturnValueInUserAuthorization() {
-            final var expected = new HashMap<String, String>();
-            when(commissionNameMapConverter.convert(anyList())).thenReturn(expected);
-
-            final var response = getUserAuthorizationInfoService.get(credentials);
-
-            assertEquals(expected, response.getCommissionNamePerCareUnit());
-        }
+      assertEquals(expected, response.getCommissionNamePerCareUnit());
     }
+  }
 }

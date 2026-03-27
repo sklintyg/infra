@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,74 +29,72 @@ import java.util.stream.Collectors;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation.PaTitle;
 
-/**
- * Helper class for extracting certain HoSP attributes.
- */
+/** Helper class for extracting certain HoSP attributes. */
 public class HsaAttributeExtractor {
 
-    public List<String> extractSpecialiseringar(List<PersonInformation> hsaUserTypes) {
-        Set<String> specSet = new TreeSet<>();
+  public List<String> extractSpecialiseringar(List<PersonInformation> hsaUserTypes) {
+    Set<String> specSet = new TreeSet<>();
 
-        for (PersonInformation userType : hsaUserTypes) {
-            if (userType.getSpecialityName() != null) {
-                specSet.addAll(userType.getSpecialityName());
-            }
+    for (PersonInformation userType : hsaUserTypes) {
+      if (userType.getSpecialityName() != null) {
+        specSet.addAll(userType.getSpecialityName());
+      }
+    }
+
+    return new ArrayList<>(specSet);
+  }
+
+  public List<String> extractBefattningar(List<PersonInformation> hsaPersonInfo) {
+    Set<String> befattningar = new TreeSet<>();
+
+    for (PersonInformation userType : hsaPersonInfo) {
+      if (userType.getPaTitle() != null) {
+        List<String> hsaTitles =
+            userType.getPaTitle().stream()
+                .map(PersonInformation.PaTitle::getPaTitleCode)
+                .filter(Objects::nonNull)
+                .toList();
+        if (!hsaTitles.isEmpty()) {
+          befattningar.addAll(hsaTitles);
         }
-
-        return new ArrayList<>(specSet);
+      }
     }
+    return new ArrayList<>(befattningar);
+  }
 
-    public List<String> extractBefattningar(List<PersonInformation> hsaPersonInfo) {
-        Set<String> befattningar = new TreeSet<>();
+  public List<PaTitle> extractBefattningsKoder(List<PersonInformation> hsaPersonInfo) {
+    return hsaPersonInfo.stream()
+        .filter(pi -> pi.getPaTitle() != null)
+        .flatMap(pi -> pi.getPaTitle().stream())
+        .filter(pt -> pt.getPaTitleCode() != null)
+        .distinct()
+        .sorted(Comparator.comparing(PaTitle::getPaTitleCode))
+        .toList();
+  }
 
-        for (PersonInformation userType : hsaPersonInfo) {
-            if (userType.getPaTitle() != null) {
-                List<String> hsaTitles = userType.getPaTitle().stream()
-                    .map(PersonInformation.PaTitle::getPaTitleCode)
-                    .filter(Objects::nonNull)
-                    .toList();
-                if (!hsaTitles.isEmpty()) {
-                    befattningar.addAll(hsaTitles);
-                }
-            }
-        }
-        return new ArrayList<>(befattningar);
+  public List<String> extractLegitimeradeYrkesgrupper(List<PersonInformation> hsaUserTypes) {
+    Set<String> lygSet = new TreeSet<>();
+
+    for (PersonInformation userType : hsaUserTypes) {
+      if (userType.getHealthCareProfessionalLicence() != null) {
+        lygSet.addAll(userType.getHealthCareProfessionalLicence());
+      }
     }
+    return new ArrayList<>(lygSet);
+  }
 
-    public List<PaTitle> extractBefattningsKoder(List<PersonInformation> hsaPersonInfo) {
-        return hsaPersonInfo.stream()
-            .filter(pi -> pi.getPaTitle() != null)
-            .flatMap(pi -> pi.getPaTitle().stream())
-            .filter(pt -> pt.getPaTitleCode() != null)
-            .distinct()
-            .sorted(Comparator.comparing(PaTitle::getPaTitleCode))
-            .toList();
+  /** Tries to use title attribute, otherwise resorts to healthcareProfessionalLicenses. */
+  public String extractTitel(List<PersonInformation> hsaPersonInfo) {
+    Set<String> titleSet = new HashSet<>();
+    for (PersonInformation pit : hsaPersonInfo) {
+      if (pit.getTitle() != null && !pit.getTitle().trim().isEmpty()) {
+        titleSet.add(pit.getTitle());
+      }
+      //            else if (pit.getHealthCareProfessionalLicence() != null &&
+      // pit.getHealthCareProfessionalLicence().size() > 0) {
+      //                titleSet.addAll(pit.getHealthCareProfessionalLicence());
+      //            }
     }
-
-    public List<String> extractLegitimeradeYrkesgrupper(List<PersonInformation> hsaUserTypes) {
-        Set<String> lygSet = new TreeSet<>();
-
-        for (PersonInformation userType : hsaUserTypes) {
-            if (userType.getHealthCareProfessionalLicence() != null) {
-                lygSet.addAll(userType.getHealthCareProfessionalLicence());
-            }
-        }
-        return new ArrayList<>(lygSet);
-    }
-
-    /**
-     * Tries to use title attribute, otherwise resorts to healthcareProfessionalLicenses.
-     */
-    public String extractTitel(List<PersonInformation> hsaPersonInfo) {
-        Set<String> titleSet = new HashSet<>();
-        for (PersonInformation pit : hsaPersonInfo) {
-            if (pit.getTitle() != null && !pit.getTitle().trim().isEmpty()) {
-                titleSet.add(pit.getTitle());
-            }
-//            else if (pit.getHealthCareProfessionalLicence() != null && pit.getHealthCareProfessionalLicence().size() > 0) {
-//                titleSet.addAll(pit.getHealthCareProfessionalLicence());
-//            }
-        }
-        return titleSet.stream().sorted().collect(Collectors.joining(", "));
-    }
+    return titleSet.stream().sorted().collect(Collectors.joining(", "));
+  }
 }

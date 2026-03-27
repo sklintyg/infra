@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,19 +22,19 @@ import java.time.LocalDateTime;
 
 public final class Consent {
 
-    private final boolean consent;
-    private final LocalDateTime timestamp;
+  private final boolean consent;
+  private final LocalDateTime timestamp;
 
-    public Consent(Boolean consent, LocalDateTime timestamp) {
-        this.consent = consent;
-        this.timestamp = timestamp;
-    }
+  public Consent(Boolean consent, LocalDateTime timestamp) {
+    this.consent = consent;
+    this.timestamp = timestamp;
+  }
 
-    public boolean isConsent() {
-        return consent;
-    }
+  public boolean isConsent() {
+    return consent;
+  }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
+  public LocalDateTime getTimestamp() {
+    return timestamp;
+  }
 }

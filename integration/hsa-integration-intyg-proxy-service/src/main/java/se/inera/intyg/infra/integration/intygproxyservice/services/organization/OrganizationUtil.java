@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import java.time.LocalDateTime;
@@ -24,36 +23,34 @@ import java.util.List;
 
 public class OrganizationUtil {
 
-    public static final String DEFAULT_ARBETSPLATSKOD = "0000000";
+  public static final String DEFAULT_ARBETSPLATSKOD = "0000000";
 
-    private OrganizationUtil() {
+  private OrganizationUtil() {}
 
+  public static boolean isActive(LocalDateTime fromDate, LocalDateTime toDate) {
+    final var now = LocalDateTime.now();
+    final var alwaysActive = fromDate == null && toDate == null;
+
+    if (alwaysActive) {
+      return true;
     }
 
-    public static boolean isActive(LocalDateTime fromDate, LocalDateTime toDate) {
-        final var now = LocalDateTime.now();
-        final var alwaysActive = fromDate == null && toDate == null;
-
-        if (alwaysActive) {
-            return true;
-        }
-
-        if (fromDate == null) {
-            return toDate.isAfter(now);
-        }
-
-        if (toDate == null) {
-            return fromDate.isBefore(now);
-        }
-
-        return fromDate.isBefore(now) && toDate.isAfter(now);
+    if (fromDate == null) {
+      return toDate.isAfter(now);
     }
 
-    public static String getWorkplaceCode(List<String> codes) {
-        if (codes == null || codes.isEmpty() || codes.get(0) == null) {
-            return DEFAULT_ARBETSPLATSKOD;
-        }
-
-        return codes.get(0);
+    if (toDate == null) {
+      return fromDate.isBefore(now);
     }
+
+    return fromDate.isBefore(now) && toDate.isAfter(now);
+  }
+
+  public static String getWorkplaceCode(List<String> codes) {
+    if (codes == null || codes.isEmpty() || codes.get(0) == null) {
+      return DEFAULT_ARBETSPLATSKOD;
+    }
+
+    return codes.get(0);
+  }
 }

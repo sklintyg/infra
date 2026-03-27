@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,27 +25,27 @@ import org.junit.jupiter.api.Test;
 
 class ConnectionStringUtilTest {
 
-    @Test
-    void testThreeElements() {
-        List<String> elements = ConnectionStringUtil.parsePropertyString("one;two;three");
-        assertEquals(3, elements.size());
-    }
+  @Test
+  void testThreeElements() {
+    List<String> elements = ConnectionStringUtil.parsePropertyString("one;two;three");
+    assertEquals(3, elements.size());
+  }
 
-    @Test
-    void testThreeElementsWithTrailingSemicolon() {
-        List<String> elements = ConnectionStringUtil.parsePropertyString("one;two;three;");
-        assertEquals(3, elements.size());
-    }
+  @Test
+  void testThreeElementsWithTrailingSemicolon() {
+    List<String> elements = ConnectionStringUtil.parsePropertyString("one;two;three;");
+    assertEquals(3, elements.size());
+  }
 
-    @Test
-    void testSingle() {
-        List<String> elements = ConnectionStringUtil.parsePropertyString("one");
-        assertEquals(1, elements.size());
-    }
+  @Test
+  void testSingle() {
+    List<String> elements = ConnectionStringUtil.parsePropertyString("one");
+    assertEquals(1, elements.size());
+  }
 
-    @Test
-    void testSingleWithTrailingSemicolon() {
-        List<String> elements = ConnectionStringUtil.parsePropertyString("one;");
-        assertEquals(1, elements.size());
-    }
+  @Test
+  void testSingleWithTrailingSemicolon() {
+    List<String> elements = ConnectionStringUtil.parsePropertyString("one;");
+    assertEquals(1, elements.size());
+  }
 }

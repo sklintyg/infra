@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -36,25 +36,24 @@ import se.inera.intyg.infra.security.common.model.Feature;
 @Service
 public class CommonFeaturesResolver {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CommonFeaturesResolver.class);
+  private static final Logger LOG = LoggerFactory.getLogger(CommonFeaturesResolver.class);
 
-    @Autowired
-    private SecurityConfigurationLoader configurationLoader;
+  @Autowired private SecurityConfigurationLoader configurationLoader;
 
-    public Map<String, Feature> getFeatures() {
-        List<Feature> featureList = configurationLoader.getFeaturesConfiguration().getFeatures().stream()
+  public Map<String, Feature> getFeatures() {
+    List<Feature> featureList =
+        configurationLoader.getFeaturesConfiguration().getFeatures().stream()
             .map(Feature::new)
             .collect(Collectors.toList());
 
-        return toMap(featureList, Feature::getName);
-    }
+    return toMap(featureList, Feature::getName);
+  }
 
-    public SecurityConfigurationLoader getConfigurationLoader() {
-        return configurationLoader;
-    }
+  public SecurityConfigurationLoader getConfigurationLoader() {
+    return configurationLoader;
+  }
 
-    public void setConfigurationLoader(SecurityConfigurationLoader configurationLoader) {
-        this.configurationLoader = configurationLoader;
-    }
-
+  public void setConfigurationLoader(SecurityConfigurationLoader configurationLoader) {
+    this.configurationLoader = configurationLoader;
+  }
 }

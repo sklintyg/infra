@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,89 +18,88 @@
  */
 package se.inera.intyg.infra.integration.hsatk.model.legacy;
 
+import java.io.Serializable;
 import lombok.Data;
 
-import java.io.Serializable;
-
 @Data
-public abstract class AbstractVardenhet implements SelectableVardenhet, Comparable<AbstractVardenhet>, Serializable {
+public abstract class AbstractVardenhet
+    implements SelectableVardenhet, Comparable<AbstractVardenhet>, Serializable {
 
-    private static final long serialVersionUID = 304219756695002501L;
+  private static final long serialVersionUID = 304219756695002501L;
 
-    private String id;
+  private String id;
 
-    private String namn;
+  private String namn;
 
-    private String epost;
+  private String epost;
 
-    private String postadress;
+  private String postadress;
 
-    private String postnummer;
+  private String postnummer;
 
-    private String postort;
+  private String postort;
 
-    private String telefonnummer;
+  private String telefonnummer;
 
-    private String arbetsplatskod;
+  private String arbetsplatskod;
 
-    // Store vardgivareOrgnr here instead of Vardgivare to match structure from HSA
-    // If vardgivareOrgnr begins with 2 agandeFrom will be set to OFFENTLIG
-    private String vardgivareOrgnr;
+  // Store vardgivareOrgnr here instead of Vardgivare to match structure from HSA
+  // If vardgivareOrgnr begins with 2 agandeFrom will be set to OFFENTLIG
+  private String vardgivareOrgnr;
 
-    private AgandeForm agandeForm;
+  private AgandeForm agandeForm;
 
-    public AbstractVardenhet() {
-        // Needed for deserialization
+  public AbstractVardenhet() {
+    // Needed for deserialization
+  }
+
+  public AbstractVardenhet(String id, String namn) {
+    this.id = id;
+    this.namn = namn;
+  }
+
+  public AbstractVardenhet(String id, String namn, String vardgivareOrgnr) {
+    this.id = id;
+    this.namn = namn;
+    this.vardgivareOrgnr = vardgivareOrgnr;
+  }
+
+  @Override
+  public int compareTo(AbstractVardenhet annanVardenhet) {
+    return getNamn().compareTo(annanVardenhet.getNamn());
+  }
+
+  @Override
+  public String toString() {
+    return new StringBuilder(getNamn()).append(":").append(getId()).toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof AbstractVardenhet)) {
+      return false;
     }
 
-    public AbstractVardenhet(String id, String namn) {
-        this.id = id;
-        this.namn = namn;
-    }
+    AbstractVardenhet that = (AbstractVardenhet) o;
 
-    public AbstractVardenhet(String id, String namn, String vardgivareOrgnr) {
-        this.id = id;
-        this.namn = namn;
-        this.vardgivareOrgnr = vardgivareOrgnr;
-    }
+    return id.equals(that.id);
+  }
 
-    @Override
-    public int compareTo(AbstractVardenhet annanVardenhet) {
-        return getNamn().compareTo(annanVardenhet.getNamn());
-    }
+  @Override
+  public int hashCode() {
+    return id.hashCode();
+  }
 
-    @Override
-    public String toString() {
-        return new StringBuilder(getNamn()).append(":").append(getId()).toString();
-    }
+  @Override
+  public String getId() {
+    return id;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof AbstractVardenhet)) {
-            return false;
-        }
-
-        AbstractVardenhet that = (AbstractVardenhet) o;
-
-        return id.equals(that.id);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public String getNamn() {
-        return namn;
-    }
+  @Override
+  public String getNamn() {
+    return namn;
+  }
 }

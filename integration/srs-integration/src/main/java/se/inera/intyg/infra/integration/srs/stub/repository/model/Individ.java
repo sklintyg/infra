@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,36 +23,36 @@ import se.inera.intyg.schemas.contract.Personnummer;
 
 public final class Individ {
 
-    private final Personnummer personnummer;
-    private final String caregiverId;
+  private final Personnummer personnummer;
+  private final String caregiverId;
 
-    public Individ(Personnummer personnummer, String caregiverId) {
-        this.personnummer = personnummer;
-        this.caregiverId = caregiverId;
-    }
+  public Individ(Personnummer personnummer, String caregiverId) {
+    this.personnummer = personnummer;
+    this.caregiverId = caregiverId;
+  }
 
-    public Personnummer getPersonnummer() {
-        return personnummer;
-    }
+  public Personnummer getPersonnummer() {
+    return personnummer;
+  }
 
-    public String getCaregiverId() {
-        return caregiverId;
-    }
+  public String getCaregiverId() {
+    return caregiverId;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof Individ) {
-            return Objects.equals(this.personnummer, ((Individ) o).getPersonnummer())
-                && Objects.equals(this.caregiverId, ((Individ) o).getCaregiverId());
-        }
-        return false;
+  @Override
+  public boolean equals(Object o) {
+    if (o instanceof Individ) {
+      return Objects.equals(this.personnummer, ((Individ) o).getPersonnummer())
+          && Objects.equals(this.caregiverId, ((Individ) o).getCaregiverId());
     }
+    return false;
+  }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = personnummer.hashCode();
-        result = prime * result + caregiverId.hashCode();
-        return result;
-    }
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = personnummer.hashCode();
+    result = prime * result + caregiverId.hashCode();
+    return result;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,16 +18,13 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services;
 
-import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
-
 import java.util.List;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 
 public interface HsatkEmployeeService {
 
-    List<PersonInformation> getEmployee(
-        String personalIdentityNumber, String personHsaId);
+  List<PersonInformation> getEmployee(String personalIdentityNumber, String personHsaId);
 
-    List<PersonInformation> getEmployee(
-        String personalIdentityNumber, String personHsaId, String profile);
-
+  List<PersonInformation> getEmployee(
+      String personalIdentityNumber, String personHsaId, String profile);
 }

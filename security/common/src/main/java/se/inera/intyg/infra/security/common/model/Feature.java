@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,67 +26,62 @@ import java.util.Optional;
 
 public class Feature implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    @JsonProperty
-    private String name;
-    @JsonProperty
-    private String desc;
-    @JsonProperty
-    private Boolean global;
-    @JsonProperty
-    private List<String> intygstyper;
+  @JsonProperty private String name;
+  @JsonProperty private String desc;
+  @JsonProperty private Boolean global;
+  @JsonProperty private List<String> intygstyper;
 
-    public Feature() {
+  public Feature() {}
+
+  public Feature(Feature template) {
+    this.name = template.name;
+    this.desc = template.desc;
+    this.global = template.global;
+    if (template.intygstyper != null) {
+      this.intygstyper = new ArrayList<>(template.intygstyper);
+    } else {
+      this.intygstyper = new ArrayList<>();
     }
+  }
 
-    public Feature(Feature template) {
-        this.name = template.name;
-        this.desc = template.desc;
-        this.global = template.global;
-        if (template.intygstyper != null) {
-            this.intygstyper = new ArrayList<>(template.intygstyper);
-        } else {
-            this.intygstyper = new ArrayList<>();
-        }
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getDesc() {
+    return desc;
+  }
 
-    public String getDesc() {
-        return desc;
-    }
+  public void setDesc(String desc) {
+    this.desc = desc;
+  }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
+  public Boolean getGlobal() {
+    return Optional.ofNullable(global).orElse(false);
+  }
 
-    public Boolean getGlobal() {
-        return Optional.ofNullable(global).orElse(false);
-    }
+  public void setGlobal(Boolean global) {
+    this.global = global;
+  }
 
-    public void setGlobal(Boolean global) {
-        this.global = global;
+  public List<String> getIntygstyper() {
+    if (intygstyper == null) {
+      return new ArrayList<>();
     }
+    return intygstyper;
+  }
 
-    public List<String> getIntygstyper() {
-        if (intygstyper == null) {
-            return new ArrayList<>();
-        }
-        return intygstyper;
+  public void setIntygstyper(List<String> intygstyper) {
+    if (intygstyper == null) {
+      this.intygstyper = new ArrayList<>();
+    } else {
+      this.intygstyper = new ArrayList<>(intygstyper);
     }
-
-    public void setIntygstyper(List<String> intygstyper) {
-        if (intygstyper == null) {
-            this.intygstyper = new ArrayList<>();
-        } else {
-            this.intygstyper = new ArrayList<>(intygstyper);
-        }
-    }
+  }
 }

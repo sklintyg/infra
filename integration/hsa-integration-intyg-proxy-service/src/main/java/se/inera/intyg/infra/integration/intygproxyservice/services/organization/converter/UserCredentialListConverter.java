@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter;
 
 import java.util.List;
@@ -29,24 +28,32 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
 @Component
 public class UserCredentialListConverter {
 
-    public UserCredentials convert(List<CredentialInformation> credentialInformation) {
-        final var lastCredential = credentialInformation.isEmpty() ? null : credentialInformation.get(credentialInformation.size() - 1);
-        final var userCredentials = new UserCredentials();
-        final var prescriptionCodes = toList(credentialInformation, CredentialInformation::getGroupPrescriptionCode);
-        final var paTitleCodes = toList(credentialInformation, CredentialInformation::getPaTitleCode);
-        final var hsaSystemRoles = toList(credentialInformation, CredentialInformation::getHsaSystemRole);
+  public UserCredentials convert(List<CredentialInformation> credentialInformation) {
+    final var lastCredential =
+        credentialInformation.isEmpty()
+            ? null
+            : credentialInformation.get(credentialInformation.size() - 1);
+    final var userCredentials = new UserCredentials();
+    final var prescriptionCodes =
+        toList(credentialInformation, CredentialInformation::getGroupPrescriptionCode);
+    final var paTitleCodes = toList(credentialInformation, CredentialInformation::getPaTitleCode);
+    final var hsaSystemRoles =
+        toList(credentialInformation, CredentialInformation::getHsaSystemRole);
 
-        userCredentials.getGroupPrescriptionCode().addAll(prescriptionCodes);
-        userCredentials.getPaTitleCode().addAll(paTitleCodes);
-        userCredentials.getHsaSystemRole().addAll(hsaSystemRoles);
-        userCredentials.setPersonalPrescriptionCode(lastCredential == null ? null : lastCredential.getPersonalPrescriptionCode());
+    userCredentials.getGroupPrescriptionCode().addAll(prescriptionCodes);
+    userCredentials.getPaTitleCode().addAll(paTitleCodes);
+    userCredentials.getHsaSystemRole().addAll(hsaSystemRoles);
+    userCredentials.setPersonalPrescriptionCode(
+        lastCredential == null ? null : lastCredential.getPersonalPrescriptionCode());
 
-        return userCredentials;
-    }
+    return userCredentials;
+  }
 
-    private static <T> List<T> toList(List<CredentialInformation> credentialInformation, Function<CredentialInformation, List<T>> mapper) {
-        return credentialInformation.stream()
-            .flatMap(c -> mapper.apply(c).stream())
-            .collect(Collectors.toList());
-    }
+  private static <T> List<T> toList(
+      List<CredentialInformation> credentialInformation,
+      Function<CredentialInformation, List<T>> mapper) {
+    return credentialInformation.stream()
+        .flatMap(c -> mapper.apply(c).stream())
+        .collect(Collectors.toList());
+  }
 }

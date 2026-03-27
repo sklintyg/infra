@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,100 +18,98 @@
  */
 package se.inera.intyg.infra.xmldsig.model;
 
-
 import org.w3._2000._09.xmldsig_.SignatureType;
 
 public class IntygXMLDSignature implements IntygSignature {
+
+  private SignatureType signatureType;
+  private String canonicalizedIntygXml;
+  private String signedInfoForSigning;
+  private String intygJson;
+
+  public SignatureType getSignatureType() {
+    return signatureType;
+  }
+
+  @Override
+  public String getCanonicalizedIntyg() {
+    return canonicalizedIntygXml;
+  }
+
+  @Override
+  public String getSigningData() {
+    return signedInfoForSigning;
+  }
+
+  @Override
+  public String getIntygJson() {
+    return intygJson;
+  }
+
+  public void setSignatureType(SignatureType signatureType) {
+    this.signatureType = signatureType;
+  }
+
+  public String getCanonicalizedIntygXml() {
+    return canonicalizedIntygXml;
+  }
+
+  public void setCanonicalizedIntygXml(String canonicalizedIntygXml) {
+    this.canonicalizedIntygXml = canonicalizedIntygXml;
+  }
+
+  public String getSignedInfoForSigning() {
+    return signedInfoForSigning;
+  }
+
+  public void setSignedInfoForSigning(String signedInfoForSigning) {
+    this.signedInfoForSigning = signedInfoForSigning;
+  }
+
+  public void setIntygJson(String intygJson) {
+    this.intygJson = intygJson;
+  }
+
+  public static final class IntygXMLDSignatureBuilder {
 
     private SignatureType signatureType;
     private String canonicalizedIntygXml;
     private String signedInfoForSigning;
     private String intygJson;
 
-    public SignatureType getSignatureType() {
-        return signatureType;
+    private IntygXMLDSignatureBuilder() {}
+
+    public static IntygXMLDSignatureBuilder anIntygXMLDSignature() {
+      return new IntygXMLDSignatureBuilder();
     }
 
-    @Override
-    public String getCanonicalizedIntyg() {
-        return canonicalizedIntygXml;
+    public IntygXMLDSignatureBuilder withSignatureType(SignatureType signatureType) {
+      this.signatureType = signatureType;
+      return this;
     }
 
-    @Override
-    public String getSigningData() {
-        return signedInfoForSigning;
+    public IntygXMLDSignatureBuilder withCanonicalizedIntygXml(String canonicalizedIntygXml) {
+      this.canonicalizedIntygXml = canonicalizedIntygXml;
+      return this;
     }
 
-    @Override
-    public String getIntygJson() {
-        return intygJson;
+    public IntygXMLDSignatureBuilder withSignedInfoForSigning(String signedInfoForSigning) {
+      this.signedInfoForSigning = signedInfoForSigning;
+      return this;
     }
 
-    public void setSignatureType(SignatureType signatureType) {
-        this.signatureType = signatureType;
+    public IntygXMLDSignatureBuilder withIntygJson(String intygJson) {
+      this.intygJson = intygJson;
+      return this;
     }
 
-    public String getCanonicalizedIntygXml() {
-        return canonicalizedIntygXml;
+    public IntygXMLDSignature build() {
+      IntygXMLDSignature intygXMLDSignature = new IntygXMLDSignature();
+      intygXMLDSignature.intygJson = this.intygJson;
+      intygXMLDSignature.canonicalizedIntygXml = this.canonicalizedIntygXml;
+      intygXMLDSignature.signedInfoForSigning = this.signedInfoForSigning;
+      intygXMLDSignature.signatureType = this.signatureType;
+      return intygXMLDSignature;
     }
-
-    public void setCanonicalizedIntygXml(String canonicalizedIntygXml) {
-        this.canonicalizedIntygXml = canonicalizedIntygXml;
-    }
-
-    public String getSignedInfoForSigning() {
-        return signedInfoForSigning;
-    }
-
-    public void setSignedInfoForSigning(String signedInfoForSigning) {
-        this.signedInfoForSigning = signedInfoForSigning;
-    }
-
-    public void setIntygJson(String intygJson) {
-        this.intygJson = intygJson;
-    }
-
-    public static final class IntygXMLDSignatureBuilder {
-
-        private SignatureType signatureType;
-        private String canonicalizedIntygXml;
-        private String signedInfoForSigning;
-        private String intygJson;
-
-        private IntygXMLDSignatureBuilder() {
-        }
-
-        public static IntygXMLDSignatureBuilder anIntygXMLDSignature() {
-            return new IntygXMLDSignatureBuilder();
-        }
-
-        public IntygXMLDSignatureBuilder withSignatureType(SignatureType signatureType) {
-            this.signatureType = signatureType;
-            return this;
-        }
-
-        public IntygXMLDSignatureBuilder withCanonicalizedIntygXml(String canonicalizedIntygXml) {
-            this.canonicalizedIntygXml = canonicalizedIntygXml;
-            return this;
-        }
-
-        public IntygXMLDSignatureBuilder withSignedInfoForSigning(String signedInfoForSigning) {
-            this.signedInfoForSigning = signedInfoForSigning;
-            return this;
-        }
-
-        public IntygXMLDSignatureBuilder withIntygJson(String intygJson) {
-            this.intygJson = intygJson;
-            return this;
-        }
-
-        public IntygXMLDSignature build() {
-            IntygXMLDSignature intygXMLDSignature = new IntygXMLDSignature();
-            intygXMLDSignature.intygJson = this.intygJson;
-            intygXMLDSignature.canonicalizedIntygXml = this.canonicalizedIntygXml;
-            intygXMLDSignature.signedInfoForSigning = this.signedInfoForSigning;
-            intygXMLDSignature.signatureType = this.signatureType;
-            return intygXMLDSignature;
-        }
-    }
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,54 +33,43 @@ import se.inera.intyg.infra.integration.intygproxyservice.client.organization.Hs
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUnitResponseDTO;
 
-
 @ExtendWith(MockitoExtension.class)
 class GetUnitServiceTest {
 
-    private static final String HSA_ID = "hsaId";
-    @Mock
-    HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
-    @InjectMocks
-    private GetUnitService getUnitService;
+  private static final String HSA_ID = "hsaId";
+  @Mock HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
+  @InjectMocks private GetUnitService getUnitService;
 
-    @Test
-    void shouldValidateRequest() {
-        final var request = GetUnitRequestDTO.builder().build();
-        assertThrows(IllegalArgumentException.class, () -> getUnitService.get(request));
-    }
+  @Test
+  void shouldValidateRequest() {
+    final var request = GetUnitRequestDTO.builder().build();
+    assertThrows(IllegalArgumentException.class, () -> getUnitService.get(request));
+  }
 
-    @Test
-    void shouldReturnNullIfNoUnitWasFound() {
-        final var request = GetUnitRequestDTO.builder()
-            .hsaId(HSA_ID)
-            .build();
+  @Test
+  void shouldReturnNullIfNoUnitWasFound() {
+    final var request = GetUnitRequestDTO.builder().hsaId(HSA_ID).build();
 
-        final var response = GetUnitResponseDTO.builder()
-            .unit(null)
-            .build();
+    final var response = GetUnitResponseDTO.builder().unit(null).build();
 
-        when(hsaIntygProxyServiceUnitClient.getUnit(request)).thenReturn(response);
+    when(hsaIntygProxyServiceUnitClient.getUnit(request)).thenReturn(response);
 
-        final var result = getUnitService.get(request);
-        assertNull(result);
-    }
+    final var result = getUnitService.get(request);
+    assertNull(result);
+  }
 
-    @Test
-    void shouldReturnUnit() {
-        final var expectedUnit = new Unit();
+  @Test
+  void shouldReturnUnit() {
+    final var expectedUnit = new Unit();
 
-        final var request = GetUnitRequestDTO.builder()
-            .hsaId(HSA_ID)
-            .build();
+    final var request = GetUnitRequestDTO.builder().hsaId(HSA_ID).build();
 
-        final var response = GetUnitResponseDTO.builder()
-            .unit(expectedUnit)
-            .build();
+    final var response = GetUnitResponseDTO.builder().unit(expectedUnit).build();
 
-        when(hsaIntygProxyServiceUnitClient.getUnit(request)).thenReturn(response);
+    when(hsaIntygProxyServiceUnitClient.getUnit(request)).thenReturn(response);
 
-        final var result = getUnitService.get(request);
+    final var result = getUnitService.get(request);
 
-        assertEquals(expectedUnit, result);
-    }
+    assertEquals(expectedUnit, result);
+  }
 }

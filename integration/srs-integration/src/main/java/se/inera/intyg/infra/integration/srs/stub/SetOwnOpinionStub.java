@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,17 +29,20 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.BOTH)
 public class SetOwnOpinionStub implements SetOwnOpinionResponderInterface {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SetOwnOpinionStub.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SetOwnOpinionStub.class);
 
-    @Override
-    public SetOwnOpinionResponseType setOwnOpinion(SetOwnOpinionRequestType setOwnOpinionRequestType) {
-        LOG.info("Stub received SetOwnOpinion-request for vardgivare: {}, intyg-id: {}, opinion: {}.",
-            setOwnOpinionRequestType.getVardgivareId(), setOwnOpinionRequestType.getIntygId(),
-            setOwnOpinionRequestType.getEgenBedomningRisk());
+  @Override
+  public SetOwnOpinionResponseType setOwnOpinion(
+      SetOwnOpinionRequestType setOwnOpinionRequestType) {
+    LOG.info(
+        "Stub received SetOwnOpinion-request for vardgivare: {}, intyg-id: {}, opinion: {}.",
+        setOwnOpinionRequestType.getVardgivareId(),
+        setOwnOpinionRequestType.getIntygId(),
+        setOwnOpinionRequestType.getEgenBedomningRisk());
 
-        SetOwnOpinionResponseType response = new SetOwnOpinionResponseType();
-        response.setResultCode(ResultCodeEnum.OK);
+    SetOwnOpinionResponseType response = new SetOwnOpinionResponseType();
+    response.setResultCode(ResultCodeEnum.OK);
 
-        return response;
-    }
+    return response;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,11 +21,8 @@ package se.inera.intyg.infra.dynamiclink.repository;
 import java.util.Map;
 import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 
-/**
- * Created by eriklupander on 2017-05-03.
- */
+/** Created by eriklupander on 2017-05-03. */
 public interface DynamicLinkRepository {
 
-    Map<String, DynamicLink> getAll();
-
+  Map<String, DynamicLink> getAll();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,26 +31,25 @@ import se.inera.intyg.infra.monitoring.logging.LogMDCHelper;
 
 public abstract class BannerJob {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BannerJob.class);
-    private static final String JOB_NAME = "BannerJob.run";
-    private static final String LOCK_AT_MOST = "PT10M"; // 10 * 60 * 1000
-    private static final String LOCK_AT_LEAST = "PT30S"; // 30 * 1000;
+  private static final Logger LOG = LoggerFactory.getLogger(BannerJob.class);
+  private static final String JOB_NAME = "BannerJob.run";
+  private static final String LOCK_AT_MOST = "PT10M"; // 10 * 60 * 1000
+  private static final String LOCK_AT_LEAST = "PT30S"; // 30 * 1000;
 
-    @Autowired
-    private IABannerService iaBannerService;
+  @Autowired private IABannerService iaBannerService;
 
-    @Autowired
-    private LogMDCHelper logMDCHelper;
+  @Autowired private LogMDCHelper logMDCHelper;
 
-    @Scheduled(cron = "${intygsadmin.cron}")
-    @SchedulerLock(name = JOB_NAME, lockAtLeastFor = LOCK_AT_LEAST, lockAtMostFor = LOCK_AT_MOST)
-    public void run() {
-        logMDCHelper.run(() -> {
-            List<Banner> banners = iaBannerService.loadBanners(getApplication());
+  @Scheduled(cron = "${intygsadmin.cron}")
+  @SchedulerLock(name = JOB_NAME, lockAtLeastFor = LOCK_AT_LEAST, lockAtMostFor = LOCK_AT_MOST)
+  public void run() {
+    logMDCHelper.run(
+        () -> {
+          List<Banner> banners = iaBannerService.loadBanners(getApplication());
 
-            LOG.debug("Loaded banners from IA, found {} banners", banners.size());
+          LOG.debug("Loaded banners from IA, found {} banners", banners.size());
         });
-    }
+  }
 
-    protected abstract Application getApplication();
+  protected abstract Application getApplication();
 }

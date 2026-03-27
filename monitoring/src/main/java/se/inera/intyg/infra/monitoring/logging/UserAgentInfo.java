@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,32 +20,32 @@ package se.inera.intyg.infra.monitoring.logging;
 
 public final class UserAgentInfo {
 
-    private String browserName;
-    private String browserVersion;
-    private String osFamily;
-    private String osVersion;
+  private String browserName;
+  private String browserVersion;
+  private String osFamily;
+  private String osVersion;
 
+  public UserAgentInfo(
+      String browserName, String browserVersion, String osFamily, String osVersion) {
+    this.browserName = browserName;
+    this.browserVersion = browserVersion;
+    this.osFamily = osFamily;
+    this.osVersion = osVersion;
+  }
 
-    public UserAgentInfo(String browserName, String browserVersion, String osFamily, String osVersion) {
-        this.browserName = browserName;
-        this.browserVersion = browserVersion;
-        this.osFamily = osFamily;
-        this.osVersion = osVersion;
-    }
+  public String getBrowserName() {
+    return browserName;
+  }
 
-    public String getBrowserName() {
-        return browserName;
-    }
+  public String getBrowserVersion() {
+    return browserVersion;
+  }
 
-    public String getBrowserVersion() {
-        return browserVersion;
-    }
+  public String getOsFamily() {
+    return osFamily;
+  }
 
-    public String getOsFamily() {
-        return osFamily;
-    }
-
-    public String getOsVersion() {
-        return osVersion;
-    }
+  public String getOsVersion() {
+    return osVersion;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,8 +18,8 @@
  */
 package se.inera.intyg.infra.monitoring.logging;
 
-import java.io.IOException;
 import jakarta.annotation.PostConstruct;
+import java.io.IOException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import ua_parser.Client;
@@ -30,48 +30,46 @@ import ua_parser.UserAgent;
 @Component
 public class UserAgentParser {
 
-    protected static final String NO_USER_AGENT_STRING = "NO-USER-AGENT-STRING";
-    protected static final String UNKNOWN_OS = "UNKNOWN-OS";
-    // Constructing the parser is relatively expensive.
-    // Since 1.4.2 it's threadsafe, so we initialize it just once.
-    private Parser uaParser;
+  protected static final String NO_USER_AGENT_STRING = "NO-USER-AGENT-STRING";
+  protected static final String UNKNOWN_OS = "UNKNOWN-OS";
+  // Constructing the parser is relatively expensive.
+  // Since 1.4.2 it's threadsafe, so we initialize it just once.
+  private Parser uaParser;
 
-    @PostConstruct
-    public void init() throws IOException {
-        uaParser = new Parser();
+  @PostConstruct
+  public void init() throws IOException {
+    uaParser = new Parser();
+  }
+
+  public UserAgentInfo parse(String userAgentString) {
+
+    Client c = uaParser.parse(userAgentString);
+    UserAgent userAgent = c.userAgent;
+    OS os = c.os;
+
+    // Make sure we have values for userAgent and os
+    if (userAgent == null) {
+      userAgent = new UserAgent(NO_USER_AGENT_STRING, null, null, null);
+    }
+    if (os == null) {
+      os = new OS(UNKNOWN_OS, null, null, null, null);
     }
 
-    public UserAgentInfo parse(String userAgentString) {
+    return new UserAgentInfo(
+        userAgent.family,
+        String.join(".", getVersionOrZero(userAgent.major), getVersionOrZero(userAgent.minor)),
+        getOSFamily(os),
+        String.join(".", getVersionOrZero(os.major), getVersionOrZero(os.minor)));
+  }
 
-        Client c = uaParser.parse(userAgentString);
-        UserAgent userAgent = c.userAgent;
-        OS os = c.os;
-
-        //Make sure we have values for userAgent and os
-        if (userAgent == null) {
-            userAgent = new UserAgent(NO_USER_AGENT_STRING, null, null, null);
-        }
-        if (os == null) {
-            os = new OS(UNKNOWN_OS, null, null, null, null);
-        }
-
-        return new UserAgentInfo(
-            userAgent.family,
-            String.join(".", getVersionOrZero(userAgent.major), getVersionOrZero(userAgent.minor)),
-            getOSFamily(os),
-            String.join(".", getVersionOrZero(os.major), getVersionOrZero(os.minor)));
+  private String getOSFamily(OS os) {
+    if (os != null && !StringUtils.isEmpty(os.family)) {
+      return os.family;
     }
+    return UNKNOWN_OS;
+  }
 
-    private String getOSFamily(OS os) {
-        if (os != null && !StringUtils.isEmpty(os.family)) {
-            return os.family;
-        }
-        return UNKNOWN_OS;
-    }
-
-    private String getVersionOrZero(String version) {
-        return StringUtils.isEmpty(version) ? "0" : version;
-    }
-
-
+  private String getVersionOrZero(String version) {
+    return StringUtils.isEmpty(version) ? "0" : version;
+  }
 }

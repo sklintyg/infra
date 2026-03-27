@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,70 +20,70 @@ package se.inera.intyg.infra.integration.postnummer.model;
 
 public class Omrade {
 
-    String postnummer;
-    String postort;
-    String kommun;
-    String lan;
+  String postnummer;
+  String postort;
+  String kommun;
+  String lan;
 
-    public Omrade(String postnummer, String postort, String kommun, String lan) {
-        this.postnummer = postnummer;
-        this.postort = postort;
-        this.kommun = kommun;
-        this.lan = lan;
-    }
+  public Omrade(String postnummer, String postort, String kommun, String lan) {
+    this.postnummer = postnummer;
+    this.postort = postort;
+    this.kommun = kommun;
+    this.lan = lan;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof Omrade)) {
-            return false;
-        }
-        Omrade other = (Omrade) o;
-        return postnummer.equals(other.postnummer)
-            && postort.equals(other.postort)
-            && kommun.equals(other.kommun)
-            && lan.equals(other.lan);
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof Omrade)) {
+      return false;
     }
+    Omrade other = (Omrade) o;
+    return postnummer.equals(other.postnummer)
+        && postort.equals(other.postort)
+        && kommun.equals(other.kommun)
+        && lan.equals(other.lan);
+  }
 
-    @Override
-    public int hashCode() {
-        // CHECKSTYLE:OFF MagicNumber
-        int result = postnummer.hashCode();
-        result = 31 * result + postort.hashCode();
-        result = 31 * result + kommun.hashCode();
-        result = 31 * result + lan.hashCode();
-        return result;
-        // CHECKSTYLE:ON MagicNumber
-    }
+  @Override
+  public int hashCode() {
+    // CHECKSTYLE:OFF MagicNumber
+    int result = postnummer.hashCode();
+    result = 31 * result + postort.hashCode();
+    result = 31 * result + kommun.hashCode();
+    result = 31 * result + lan.hashCode();
+    return result;
+    // CHECKSTYLE:ON MagicNumber
+  }
 
-    public String getPostnummer() {
-        return postnummer;
-    }
+  public String getPostnummer() {
+    return postnummer;
+  }
 
-    public void setPostnummer(String postnummer) {
-        this.postnummer = postnummer;
-    }
+  public void setPostnummer(String postnummer) {
+    this.postnummer = postnummer;
+  }
 
-    public String getPostort() {
-        return postort;
-    }
+  public String getPostort() {
+    return postort;
+  }
 
-    public void setPostort(String postort) {
-        this.postort = postort;
-    }
+  public void setPostort(String postort) {
+    this.postort = postort;
+  }
 
-    public String getKommun() {
-        return kommun;
-    }
+  public String getKommun() {
+    return kommun;
+  }
 
-    public void setKommun(String kommun) {
-        this.kommun = kommun;
-    }
+  public void setKommun(String kommun) {
+    this.kommun = kommun;
+  }
 
-    public String getLan() {
-        return lan;
-    }
+  public String getLan() {
+    return lan;
+  }
 
-    public void setLan(String lan) {
-        this.lan = lan;
-    }
+  public void setLan(String lan) {
+    this.lan = lan;
+  }
 }

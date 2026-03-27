@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,44 +20,43 @@ package se.inera.intyg.infra.integration.hsatk.exception;
 
 public class HsaServiceCallException extends Exception {
 
-    private static final long serialVersionUID = 4316452926850518463L;
+  private static final long serialVersionUID = 4316452926850518463L;
 
-    private final ErrorIdEnum erroIdEnum;
+  private final ErrorIdEnum erroIdEnum;
 
-    public HsaServiceCallException() {
-        super();
-        this.erroIdEnum = ErrorIdEnum.APPLICATION_ERROR;
-    }
+  public HsaServiceCallException() {
+    super();
+    this.erroIdEnum = ErrorIdEnum.APPLICATION_ERROR;
+  }
 
-    public HsaServiceCallException(String message, Throwable cause) {
-        super(message, cause);
-        this.erroIdEnum = ErrorIdEnum.APPLICATION_ERROR;
-    }
+  public HsaServiceCallException(String message, Throwable cause) {
+    super(message, cause);
+    this.erroIdEnum = ErrorIdEnum.APPLICATION_ERROR;
+  }
 
-    public HsaServiceCallException(String message) {
-        super(message);
-        this.erroIdEnum = ErrorIdEnum.APPLICATION_ERROR;
-    }
+  public HsaServiceCallException(String message) {
+    super(message);
+    this.erroIdEnum = ErrorIdEnum.APPLICATION_ERROR;
+  }
 
-    public HsaServiceCallException(Throwable cause) {
-        super(cause);
-        this.erroIdEnum = ErrorIdEnum.APPLICATION_ERROR;
-    }
+  public HsaServiceCallException(Throwable cause) {
+    super(cause);
+    this.erroIdEnum = ErrorIdEnum.APPLICATION_ERROR;
+  }
 
-    public HsaServiceCallException(String message, ErrorIdEnum errorIdEnum) {
-        super(message);
-        this.erroIdEnum = errorIdEnum;
-    }
+  public HsaServiceCallException(String message, ErrorIdEnum errorIdEnum) {
+    super(message);
+    this.erroIdEnum = errorIdEnum;
+  }
 
-    public ErrorIdEnum getErroIdEnum() {
-        return this.erroIdEnum;
-    }
+  public ErrorIdEnum getErroIdEnum() {
+    return this.erroIdEnum;
+  }
 
-    public enum ErrorIdEnum {
-        VALIDATION_ERROR,
-        TRANSFORMATION_ERROR,
-        APPLICATION_ERROR,
-        TECHNICAL_ERROR
-    }
-
+  public enum ErrorIdEnum {
+    VALIDATION_ERROR,
+    TRANSFORMATION_ERROR,
+    APPLICATION_ERROR,
+    TECHNICAL_ERROR
+  }
 }

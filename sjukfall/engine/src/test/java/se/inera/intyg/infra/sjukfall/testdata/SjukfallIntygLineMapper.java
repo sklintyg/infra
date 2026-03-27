@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,119 +31,119 @@ import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.testdata.builders.FormagaT;
 import se.inera.intyg.infra.sjukfall.testdata.builders.IntygDataT;
 
-
-/**
- * Created by Magnus Ekstrand on 2016-02-11.
- */
+/** Created by Magnus Ekstrand on 2016-02-11. */
 public class SjukfallIntygLineMapper {
 
-    Set<String[]> fields;
+  Set<String[]> fields;
 
+  public SjukfallIntygLineMapper() {
+    fields = new HashSet<>();
+  }
 
-    public SjukfallIntygLineMapper() {
-        fields = new HashSet<>();
+  public static List<IntygData> map(List<String> lines) {
+    SjukfallIntygLineMapper mapper = new SjukfallIntygLineMapper();
+
+    for (String line : lines) {
+      String[] splitData = mapper.toArray(line);
+      if (splitData != null) {
+        mapper.fields.add(splitData);
+      }
     }
 
-    public static List<IntygData> map(List<String> lines) {
-        SjukfallIntygLineMapper mapper = new SjukfallIntygLineMapper();
+    return mapper.map(mapper.fields);
+  }
 
-        for (String line : lines) {
-            String[] splitData = mapper.toArray(line);
-            if (splitData != null) {
-                mapper.fields.add(splitData);
-            }
-        }
+  private List<IntygData> map(Set<String[]> fields) {
+    List<IntygData> intygData = new ArrayList<>();
 
-        return mapper.map(mapper.fields);
+    Iterator<String[]> iter = fields.iterator();
+    while (iter.hasNext()) {
+      intygData.add(intygData(iter.next()));
     }
 
-    private List<IntygData> map(Set<String[]> fields) {
-        List<IntygData> intygData = new ArrayList<>();
+    return intygData;
+  }
 
-        Iterator<String[]> iter = fields.iterator();
-        while (iter.hasNext()) {
-            intygData.add(intygData(iter.next()));
-        }
+  private IntygData intygData(String[] data) {
+    StringListMapper slm = new StringListMapper();
+    FormagaFieldMapper ffm = new FormagaFieldMapper();
 
-        return intygData;
+    // CHECKSTYLE:OFF MagicNumber
+    return new IntygDataT.IntygDataBuilder()
+        .intygsId(data[0])
+        .diagnoskod(data[5])
+        .biDiagnoser(slm.map(data[6]))
+        .patientId(data[1])
+        .patientNamn(patientNamn(data[2], data[3], data[4]))
+        .lakareId(data[9])
+        .lakareNamn(data[10])
+        .vardenhetId(data[7])
+        .vardenhetNamn(data[8])
+        .formagor(ffm.map(data[11]))
+        .sysselsattning(slm.map(data[12]))
+        .enkeltIntyg(Boolean.valueOf(data[13]))
+        .signeringsTidpunkt(LocalDateTime.parse(data[14]))
+        .build();
+    // CHECKSTYLE:ON MagicNumber
+  }
+
+  private String patientNamn(String fnamn, String mnamn, String enamn) {
+    String pnamn = "";
+
+    if (fnamn != null) {
+      pnamn = fnamn;
+    }
+    if (mnamn != null) {
+      pnamn = pnamn.isEmpty() ? mnamn : pnamn + " " + mnamn;
+    }
+    if (enamn != null) {
+      pnamn = pnamn.isEmpty() ? enamn : pnamn + " " + enamn;
     }
 
-    private IntygData intygData(String[] data) {
-        StringListMapper slm = new StringListMapper();
-        FormagaFieldMapper ffm = new FormagaFieldMapper();
+    return pnamn;
+  }
 
-        // CHECKSTYLE:OFF MagicNumber
-        return new IntygDataT.IntygDataBuilder()
-            .intygsId(data[0])
-            .diagnoskod(data[5])
-            .biDiagnoser(slm.map(data[6]))
-            .patientId(data[1])
-            .patientNamn(patientNamn(data[2], data[3], data[4]))
-            .lakareId(data[9])
-            .lakareNamn(data[10])
-            .vardenhetId(data[7])
-            .vardenhetNamn(data[8])
-            .formagor(ffm.map(data[11]))
-            .sysselsattning(slm.map(data[12]))
-            .enkeltIntyg(Boolean.valueOf(data[13]))
-            .signeringsTidpunkt(LocalDateTime.parse(data[14]))
-            .build();
-        // CHECKSTYLE:ON MagicNumber
+  private String[] toArray(String csv) {
+    if (csv != null) {
+      return csv.split("\\s*,\\s*");
     }
 
-    private String patientNamn(String fnamn, String mnamn, String enamn) {
-        String pnamn = "";
+    return null;
+  }
 
-        if (fnamn != null) {
-            pnamn = fnamn;
-        }
-        if (mnamn != null) {
-            pnamn = pnamn.isEmpty() ? mnamn : pnamn + " " + mnamn;
-        }
-        if (enamn != null) {
-            pnamn = pnamn.isEmpty() ? enamn : pnamn + " " + enamn;
-        }
+  class FormagaFieldMapper {
 
-        return pnamn;
+    public List<Formaga> map(String arbetsformaga) {
+      List<Formaga> formagaList = new ArrayList<>();
+      String[] formagor = arbetsformaga.replace("[", "").replace("]", "").split("\\|");
+
+      for (String formaga : formagor) {
+        String[] arr = formaga.split(";");
+        formagaList.add(
+            formaga(LocalDate.parse(arr[0]), LocalDate.parse(arr[1]), Integer.parseInt(arr[2])));
+      }
+
+      return formagaList;
     }
 
-    private String[] toArray(String csv) {
-        if (csv != null) {
-            return csv.split("\\s*,\\s*");
-        }
-
-        return null;
+    private Formaga formaga(LocalDate start, LocalDate slut, int nedsatthet) {
+      return new FormagaT.FormagaBuilder()
+          .startdatum(start)
+          .slutdatum(slut)
+          .nedsattning(nedsatthet)
+          .build();
     }
+  }
 
-    class FormagaFieldMapper {
+  class StringListMapper {
 
-        public List<Formaga> map(String arbetsformaga) {
-            List<Formaga> formagaList = new ArrayList<>();
-            String[] formagor = arbetsformaga.replace("[", "").replace("]", "").split("\\|");
+    public List<String> map(String str) {
+      if (str == null || str.length() == 0) {
+        return new ArrayList<>();
+      }
 
-            for (String formaga : formagor) {
-                String[] arr = formaga.split(";");
-                formagaList.add(formaga(LocalDate.parse(arr[0]), LocalDate.parse(arr[1]), Integer.parseInt(arr[2])));
-            }
-
-            return formagaList;
-        }
-
-        private Formaga formaga(LocalDate start, LocalDate slut, int nedsatthet) {
-            return new FormagaT.FormagaBuilder().startdatum(start).slutdatum(slut).nedsattning(nedsatthet).build();
-        }
+      String[] arr = str.replace("[", "").replace("]", "").split(";");
+      return Arrays.asList(arr);
     }
-
-    class StringListMapper {
-
-        public List<String> map(String str) {
-            if (str == null || str.length() == 0) {
-                return new ArrayList<>();
-            }
-
-            String[] arr = str.replace("[", "").replace("]", "").split(";");
-            return Arrays.asList(arr);
-        }
-    }
-
+  }
 }

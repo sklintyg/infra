@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,29 +20,29 @@ package se.inera.intyg.infra.integration.srs.model;
 
 public class SrsRecommendation {
 
-    private String recommendationTitle;
-    private String recommendationText;
+  private String recommendationTitle;
+  private String recommendationText;
 
-    public static SrsRecommendation create(String recommendationTitle, String recommendationText) {
-        SrsRecommendation recommendation = new SrsRecommendation();
-        recommendation.setRecommendationTitle(recommendationTitle);
-        recommendation.setRecommendationText(recommendationText);
-        return recommendation;
-    }
+  public static SrsRecommendation create(String recommendationTitle, String recommendationText) {
+    SrsRecommendation recommendation = new SrsRecommendation();
+    recommendation.setRecommendationTitle(recommendationTitle);
+    recommendation.setRecommendationText(recommendationText);
+    return recommendation;
+  }
 
-    public String getRecommendationText() {
-        return this.recommendationText;
-    }
+  public String getRecommendationText() {
+    return this.recommendationText;
+  }
 
-    public void setRecommendationText(String recommendationText) {
-        this.recommendationText = recommendationText;
-    }
+  public void setRecommendationText(String recommendationText) {
+    this.recommendationText = recommendationText;
+  }
 
-    public String getRecommendationTitle() {
-        return recommendationTitle;
-    }
+  public String getRecommendationTitle() {
+    return recommendationTitle;
+  }
 
-    public void setRecommendationTitle(String recommendationTitle) {
-        this.recommendationTitle = recommendationTitle;
-    }
+  public void setRecommendationTitle(String recommendationTitle) {
+    this.recommendationTitle = recommendationTitle;
+  }
 }

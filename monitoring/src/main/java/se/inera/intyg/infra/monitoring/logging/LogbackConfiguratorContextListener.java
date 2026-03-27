@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,10 +23,10 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.classic.util.ContextInitializer;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
-import java.io.IOException;
-import java.io.InputStream;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
+import java.io.IOException;
+import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -35,70 +35,76 @@ import org.springframework.core.io.Resource;
 
 public class LogbackConfiguratorContextListener implements ServletContextListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LogbackConfiguratorContextListener.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(LogbackConfiguratorContextListener.class);
 
-    private static final String CLASSPATH = "classpath:";
-    private static final String DEFAULTURI = CLASSPATH + "logback-spring.xml";
+  private static final String CLASSPATH = "classpath:";
+  private static final String DEFAULTURI = CLASSPATH + "logback-spring.xml";
 
-    /**
-     * initialize logback with external configuration file.
-     */
-    @Override
-    public void contextInitialized(final ServletContextEvent servletContextEvent) {
-        final Resource resource = getConfigurationResource(getConfigurationUri(servletContextEvent));
+  /** initialize logback with external configuration file. */
+  @Override
+  public void contextInitialized(final ServletContextEvent servletContextEvent) {
+    final Resource resource = getConfigurationResource(getConfigurationUri(servletContextEvent));
 
-        if (!resource.exists()) {
-            LOG.error("Can't read logback configuration from "
-                + resource.getDescription() + " - Keep default configuration");
-            return;
-        }
+    if (!resource.exists()) {
+      LOG.error(
+          "Can't read logback configuration from "
+              + resource.getDescription()
+              + " - Keep default configuration");
+      return;
+    }
 
-        LOG.info("Found logback configuration " + resource.getDescription()
+    LOG.info(
+        "Found logback configuration "
+            + resource.getDescription()
             + " - Overriding default configuration");
-        final LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+    final LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 
-        try {
-            configure(loggerContext, resource);
-        } catch (Exception ex) {
-            try {
-                new ContextInitializer(loggerContext).autoConfig();
-            } catch (JoranException e) {
-                LOG.error("Can't fallback to default (auto) configuration", e);
-            }
-            LOG.error(
-                "Can't configure logback from " + resource.getDescription()
-                    + " - Keep default configuration", ex);
-        }
+    try {
+      configure(loggerContext, resource);
+    } catch (Exception ex) {
+      try {
+        new ContextInitializer(loggerContext).autoConfig();
+      } catch (JoranException e) {
+        LOG.error("Can't fallback to default (auto) configuration", e);
+      }
+      LOG.error(
+          "Can't configure logback from "
+              + resource.getDescription()
+              + " - Keep default configuration",
+          ex);
     }
+  }
 
-    private Resource getConfigurationResource(final String uri) {
-        return uri.startsWith(CLASSPATH)
-            ? new ClassPathResource(uri.substring(CLASSPATH.length()))
-            : new FileSystemResource(uri);
-    }
+  private Resource getConfigurationResource(final String uri) {
+    return uri.startsWith(CLASSPATH)
+        ? new ClassPathResource(uri.substring(CLASSPATH.length()))
+        : new FileSystemResource(uri);
+  }
 
-    //
-    private void configure(final LoggerContext ctx, final Resource config) throws IOException, JoranException {
-        final JoranConfigurator jc = new JoranConfigurator();
-        jc.setContext(ctx);
-        ctx.reset();
-        final InputStream in = config.getInputStream();
-        try {
-            jc.doConfigure(in);
-        } finally {
-            in.close();
-        }
-        StatusPrinter.printIfErrorsOccured(ctx);
-        ctx.start();
+  //
+  private void configure(final LoggerContext ctx, final Resource config)
+      throws IOException, JoranException {
+    final JoranConfigurator jc = new JoranConfigurator();
+    jc.setContext(ctx);
+    ctx.reset();
+    final InputStream in = config.getInputStream();
+    try {
+      jc.doConfigure(in);
+    } finally {
+      in.close();
     }
+    StatusPrinter.printIfErrorsOccured(ctx);
+    ctx.start();
+  }
 
-    private String getConfigurationUri(final ServletContextEvent ctx) {
-        final String name = ctx.getServletContext().getInitParameter("logbackConfigParameter");
-        return (name == null || name.isEmpty()) ? DEFAULTURI : System.getProperty(name, DEFAULTURI);
-    }
+  private String getConfigurationUri(final ServletContextEvent ctx) {
+    final String name = ctx.getServletContext().getInitParameter("logbackConfigParameter");
+    return (name == null || name.isEmpty()) ? DEFAULTURI : System.getProperty(name, DEFAULTURI);
+  }
 
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        // Do nothing
-    }
+  @Override
+  public void contextDestroyed(ServletContextEvent sce) {
+    // Do nothing
+  }
 }

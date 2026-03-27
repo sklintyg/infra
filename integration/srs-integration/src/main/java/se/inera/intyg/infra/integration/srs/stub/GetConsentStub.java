@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -34,29 +34,30 @@ import se.inera.intyg.schemas.contract.Personnummer;
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.BOTH)
 public class GetConsentStub implements GetConsentResponderInterface {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GetConsentStub.class);
+  private static final Logger LOG = LoggerFactory.getLogger(GetConsentStub.class);
 
-    @Autowired
-    private ConsentRepository consentRepository;
+  @Autowired private ConsentRepository consentRepository;
 
-    @Override
-    public GetConsentResponseType getConsent(GetConsentRequestType getConsentRequestType) {
-        LOG.info("Stub received GetConsent-request for {}.", getConsentRequestType.getPersonId());
+  @Override
+  public GetConsentResponseType getConsent(GetConsentRequestType getConsentRequestType) {
+    LOG.info("Stub received GetConsent-request for {}.", getConsentRequestType.getPersonId());
 
-        GetConsentResponseType response = new GetConsentResponseType();
+    GetConsentResponseType response = new GetConsentResponseType();
 
-        Optional<Personnummer> personnummer = Personnummer.createPersonnummer(getConsentRequestType.getPersonId());
-        Optional<Consent> consent = consentRepository
-            .getConsent(personnummer.get(), getConsentRequestType.getVardenhetId().getExtension());
+    Optional<Personnummer> personnummer =
+        Personnummer.createPersonnummer(getConsentRequestType.getPersonId());
+    Optional<Consent> consent =
+        consentRepository.getConsent(
+            personnummer.get(), getConsentRequestType.getVardenhetId().getExtension());
 
-        if (consent.isPresent()) {
-            response.setSamtycke(true);
-            response.setSamtyckesstatus(Samtyckesstatus.JA);
-            response.setSparattidpunkt(consent.get().getTimestamp());
-        } else {
-            response.setSamtyckesstatus(Samtyckesstatus.INGET);
-        }
-
-        return response;
+    if (consent.isPresent()) {
+      response.setSamtycke(true);
+      response.setSamtyckesstatus(Samtyckesstatus.JA);
+      response.setSparattidpunkt(consent.get().getTimestamp());
+    } else {
+      response.setSamtyckesstatus(Samtyckesstatus.INGET);
     }
+
+    return response;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,18 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.constants;
 
 public class HsaIntygProxyServiceConstants {
 
-    private HsaIntygProxyServiceConstants() {
-        throw new IllegalStateException("Utility class!");
-    }
+  private HsaIntygProxyServiceConstants() {
+    throw new IllegalStateException("Utility class!");
+  }
 
-    public static final String EMPLOYEE_CACHE_NAME = "hsaIntygProxyServiceEmployeeCache";
-    public static final String HEALTH_CARE_UNIT_CACHE_NAME = "hsaIntygProxyServiceHealthCareUnitCache";
-    public static final String HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME = "hsaIntygProxyServiceHealthCareUnitMembersCache";
-    public static final String UNIT_CACHE_NAME = "hsaIntygProxyServiceUnitCache";
-    public static final String HEALTH_CARE_PROVIDER_CACHE_NAME = "hsaIntygProxyServiceHealthCareProviderCache";
+  public static final String EMPLOYEE_CACHE_NAME = "hsaIntygProxyServiceEmployeeCache";
+  public static final String HEALTH_CARE_UNIT_CACHE_NAME =
+      "hsaIntygProxyServiceHealthCareUnitCache";
+  public static final String HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME =
+      "hsaIntygProxyServiceHealthCareUnitMembersCache";
+  public static final String UNIT_CACHE_NAME = "hsaIntygProxyServiceUnitCache";
+  public static final String HEALTH_CARE_PROVIDER_CACHE_NAME =
+      "hsaIntygProxyServiceHealthCareProviderCache";
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter;
 
 import static se.inera.intyg.infra.integration.intygproxyservice.services.organization.OrganizationUtil.getWorkplaceCode;
@@ -40,66 +39,79 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 @RequiredArgsConstructor
 public class CareUnitConverter {
 
-    private static final String PUBLIC_PREFIX = "2";
+  private static final String PUBLIC_PREFIX = "2";
 
-    private final UnitAddressConverter unitAddressConverter;
-    private final CareUnitMemberConverter careUnitMemberConverter;
+  private final UnitAddressConverter unitAddressConverter;
+  private final CareUnitMemberConverter careUnitMemberConverter;
 
-    public Vardenhet convert(Commission commission, Unit hsaUnit, HealthCareUnitMembers members) {
-        final var unit = new Vardenhet(commission.getHealthCareUnitHsaId(), commission.getHealthCareUnitName());
-        unit.setStart(commission.getHealthCareUnitStartDate());
-        unit.setEnd(commission.getHealthCareUnitEndDate());
-        unit.setVardgivareHsaId(commission.getHealthCareProviderHsaId());
-        unit.setVardgivareOrgnr(commission.getHealthCareProviderOrgNo());
-        unit.setAgandeForm(getAgandeForm(commission.getHealthCareProviderOrgNo()));
-        unit.setArbetsplatskod(getWorkplaceCode(members.getHealthCareUnitPrescriptionCode()));
-        unit.setEpost(hsaUnit.getMail());
-        unit.setTelefonnummer(hsaUnit.getTelephoneNumber().isEmpty() ? null : hsaUnit.getTelephoneNumber().get(0));
-        unit.setMottagningar(getCareUnitMembers(members, unit.getId(), unit.getAgandeForm()));
-        updateAddress(unit, hsaUnit.getPostalAddress(), hsaUnit.getPostalCode());
+  public Vardenhet convert(Commission commission, Unit hsaUnit, HealthCareUnitMembers members) {
+    final var unit =
+        new Vardenhet(commission.getHealthCareUnitHsaId(), commission.getHealthCareUnitName());
+    unit.setStart(commission.getHealthCareUnitStartDate());
+    unit.setEnd(commission.getHealthCareUnitEndDate());
+    unit.setVardgivareHsaId(commission.getHealthCareProviderHsaId());
+    unit.setVardgivareOrgnr(commission.getHealthCareProviderOrgNo());
+    unit.setAgandeForm(getAgandeForm(commission.getHealthCareProviderOrgNo()));
+    unit.setArbetsplatskod(getWorkplaceCode(members.getHealthCareUnitPrescriptionCode()));
+    unit.setEpost(hsaUnit.getMail());
+    unit.setTelefonnummer(
+        hsaUnit.getTelephoneNumber().isEmpty() ? null : hsaUnit.getTelephoneNumber().get(0));
+    unit.setMottagningar(getCareUnitMembers(members, unit.getId(), unit.getAgandeForm()));
+    updateAddress(unit, hsaUnit.getPostalAddress(), hsaUnit.getPostalCode());
 
-        return unit;
+    return unit;
+  }
+
+  public Vardenhet convert(Unit unit, HealthCareUnitMembers members) {
+    final var careUnit =
+        new Vardenhet(
+            unit.getUnitHsaId(),
+            unit.getUnitName(),
+            unit.getUnitStartDate(),
+            unit.getUnitEndDate());
+    final var postalAddress = unit.getPostalAddress();
+    careUnit.setMottagningar(getCareUnitMembers(members, careUnit.getId(), AgandeForm.OKAND));
+    careUnit.setArbetsplatskod(getWorkplaceCode(members.getHealthCareUnitPrescriptionCode()));
+    careUnit.setTelefonnummer(
+        unit.getTelephoneNumber().isEmpty() ? null : unit.getTelephoneNumber().get(0));
+    careUnit.setEpost(unit.getMail());
+
+    if (postalAddress != null) {
+      updateAddress(careUnit, postalAddress, unit.getPostalCode());
     }
 
-    public Vardenhet convert(Unit unit, HealthCareUnitMembers members) {
-        final var careUnit = new Vardenhet(unit.getUnitHsaId(), unit.getUnitName(), unit.getUnitStartDate(), unit.getUnitEndDate());
-        final var postalAddress = unit.getPostalAddress();
-        careUnit.setMottagningar(getCareUnitMembers(members, careUnit.getId(), AgandeForm.OKAND));
-        careUnit.setArbetsplatskod(getWorkplaceCode(members.getHealthCareUnitPrescriptionCode()));
-        careUnit.setTelefonnummer(unit.getTelephoneNumber().isEmpty() ? null : unit.getTelephoneNumber().get(0));
-        careUnit.setEpost(unit.getMail());
+    return careUnit;
+  }
 
-        if (postalAddress != null) {
-            updateAddress(careUnit, postalAddress, unit.getPostalCode());
-        }
+  private AgandeForm getAgandeForm(String orgNo) {
+    if (orgNo == null || orgNo.isEmpty()) {
+      log.error(
+          "orgNo is null or empty, this make us unable to determine if the unit is private or not");
+      return AgandeForm.OKAND;
+    }
+    return orgNo.startsWith(PUBLIC_PREFIX) ? AgandeForm.OFFENTLIG : AgandeForm.PRIVAT;
+  }
 
-        return careUnit;
+  private List<Mottagning> getCareUnitMembers(
+      HealthCareUnitMembers unitMembers, String unitHsaId, AgandeForm unitAagandeform) {
+    if (unitMembers.getHealthCareUnitMember() == null) {
+      return Collections.emptyList();
     }
 
-    private AgandeForm getAgandeForm(String orgNo) {
-        if (orgNo == null || orgNo.isEmpty()) {
-            log.error("orgNo is null or empty, this make us unable to determine if the unit is private or not");
-            return AgandeForm.OKAND;
-        }
-        return orgNo.startsWith(PUBLIC_PREFIX) ? AgandeForm.OFFENTLIG : AgandeForm.PRIVAT;
-    }
+    return unitMembers.getHealthCareUnitMember().stream()
+        .filter(
+            member ->
+                isActive(
+                    member.getHealthCareUnitMemberStartDate(),
+                    member.getHealthCareUnitMemberEndDate()))
+        .map(member -> careUnitMemberConverter.convert(member, unitHsaId, unitAagandeform))
+        .sorted()
+        .collect(Collectors.toList());
+  }
 
-    private List<Mottagning> getCareUnitMembers(HealthCareUnitMembers unitMembers, String unitHsaId, AgandeForm unitAagandeform) {
-        if (unitMembers.getHealthCareUnitMember() == null) {
-            return Collections.emptyList();
-        }
-
-        return unitMembers.getHealthCareUnitMember().stream()
-            .filter(member -> isActive(member.getHealthCareUnitMemberStartDate(), member.getHealthCareUnitMemberEndDate()))
-            .map(member -> careUnitMemberConverter.convert(member, unitHsaId, unitAagandeform))
-            .sorted()
-            .collect(Collectors.toList());
-    }
-
-    private void updateAddress(Vardenhet unit, List<String> address, String postalCode) {
-        unit.setPostadress(unitAddressConverter.convertAddress(address));
-        unit.setPostnummer(unitAddressConverter.convertZipCode(address, postalCode));
-        unit.setPostort(unitAddressConverter.convertCity(address));
-    }
-
+  private void updateAddress(Vardenhet unit, List<String> address, String postalCode) {
+    unit.setPostadress(unitAddressConverter.convertAddress(address));
+    unit.setPostnummer(unitAddressConverter.convertZipCode(address, postalCode));
+    unit.setPostort(unitAddressConverter.convertCity(address));
+  }
 }

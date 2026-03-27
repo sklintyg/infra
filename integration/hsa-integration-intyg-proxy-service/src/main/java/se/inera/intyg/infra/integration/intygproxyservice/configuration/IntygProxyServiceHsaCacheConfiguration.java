@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.configuration;
 
 import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.EMPLOYEE_CACHE_NAME;
@@ -36,46 +35,48 @@ import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
 @RequiredArgsConstructor
 public class IntygProxyServiceHsaCacheConfiguration {
 
-    private final RedisCacheOptionsSetter redisCacheOptionsSetter;
+  private final RedisCacheOptionsSetter redisCacheOptionsSetter;
 
-    @Value("${hsa.intygproxyservice.getemployee.cache.expiry:60}")
-    private String hsaEmployeeCacheExpirySeconds;
+  @Value("${hsa.intygproxyservice.getemployee.cache.expiry:60}")
+  private String hsaEmployeeCacheExpirySeconds;
 
-    @Value("${hsa.intygproxyservice.gethealthcareunit.cache.expiry:60}")
-    private String hsaHealthCareUnitCacheExpirySeconds;
+  @Value("${hsa.intygproxyservice.gethealthcareunit.cache.expiry:60}")
+  private String hsaHealthCareUnitCacheExpirySeconds;
 
-    @Value("${hsa.intygproxyservice.gethealthcareunitmembers.cache.expiry:60}")
-    private String hsaHealthCareUnitMembersCacheExpirySeconds;
+  @Value("${hsa.intygproxyservice.gethealthcareunitmembers.cache.expiry:60}")
+  private String hsaHealthCareUnitMembersCacheExpirySeconds;
 
-    @Value("${hsa.intygproxyservice.getunit.cache.expiry:60}")
-    private String hsaUnitCacheExpirySeconds;
+  @Value("${hsa.intygproxyservice.getunit.cache.expiry:60}")
+  private String hsaUnitCacheExpirySeconds;
 
-    @Value("${hsa.intygproxyservice.gethealthcareprovider.cache.expiry:60}")
-    private String hsaHealthCareProviderCacheExpirySeconds;
+  @Value("${hsa.intygproxyservice.gethealthcareprovider.cache.expiry:60}")
+  private String hsaHealthCareProviderCacheExpirySeconds;
 
+  @Bean(name = EMPLOYEE_CACHE_NAME)
+  public Cache hsaIntygProxyServiceEmployeeCache() {
+    return redisCacheOptionsSetter.createCache(EMPLOYEE_CACHE_NAME, hsaEmployeeCacheExpirySeconds);
+  }
 
-    @Bean(name = EMPLOYEE_CACHE_NAME)
-    public Cache hsaIntygProxyServiceEmployeeCache() {
-        return redisCacheOptionsSetter.createCache(EMPLOYEE_CACHE_NAME, hsaEmployeeCacheExpirySeconds);
-    }
+  @Bean(name = HEALTH_CARE_UNIT_CACHE_NAME)
+  public Cache hsaIntygProxyServiceHealthCareUnitCache() {
+    return redisCacheOptionsSetter.createCache(
+        HEALTH_CARE_UNIT_CACHE_NAME, hsaHealthCareUnitCacheExpirySeconds);
+  }
 
-    @Bean(name = HEALTH_CARE_UNIT_CACHE_NAME)
-    public Cache hsaIntygProxyServiceHealthCareUnitCache() {
-        return redisCacheOptionsSetter.createCache(HEALTH_CARE_UNIT_CACHE_NAME, hsaHealthCareUnitCacheExpirySeconds);
-    }
+  @Bean(name = HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME)
+  public Cache hsaIntygProxyServiceHealthCareUnitMembersCache() {
+    return redisCacheOptionsSetter.createCache(
+        HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME, hsaHealthCareUnitMembersCacheExpirySeconds);
+  }
 
-    @Bean(name = HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME)
-    public Cache hsaIntygProxyServiceHealthCareUnitMembersCache() {
-        return redisCacheOptionsSetter.createCache(HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME, hsaHealthCareUnitMembersCacheExpirySeconds);
-    }
+  @Bean(name = UNIT_CACHE_NAME)
+  public Cache hsaIntygProxyServiceUnitCache() {
+    return redisCacheOptionsSetter.createCache(UNIT_CACHE_NAME, hsaUnitCacheExpirySeconds);
+  }
 
-    @Bean(name = UNIT_CACHE_NAME)
-    public Cache hsaIntygProxyServiceUnitCache() {
-        return redisCacheOptionsSetter.createCache(UNIT_CACHE_NAME, hsaUnitCacheExpirySeconds);
-    }
-
-    @Bean(name = HEALTH_CARE_PROVIDER_CACHE_NAME)
-    public Cache hsaHealthCareProviderCache() {
-        return redisCacheOptionsSetter.createCache(HEALTH_CARE_PROVIDER_CACHE_NAME, hsaHealthCareProviderCacheExpirySeconds);
-    }
+  @Bean(name = HEALTH_CARE_PROVIDER_CACHE_NAME)
+  public Cache hsaHealthCareProviderCache() {
+    return redisCacheOptionsSetter.createCache(
+        HEALTH_CARE_PROVIDER_CACHE_NAME, hsaHealthCareProviderCacheExpirySeconds);
+  }
 }

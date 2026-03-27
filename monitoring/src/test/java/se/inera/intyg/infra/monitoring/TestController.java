@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,19 +25,18 @@ import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 @Controller
 public class TestController {
 
-    public static final String SAMPLE_NAME = "service_method_duration_seconds";
+  public static final String SAMPLE_NAME = "service_method_duration_seconds";
 
-    @PrometheusTimeMethod(name = SAMPLE_NAME, help = "API endpoint for test")
-    public void named() throws InterruptedException {
-        Thread.currentThread().sleep(10);
-    }
+  @PrometheusTimeMethod(name = SAMPLE_NAME, help = "API endpoint for test")
+  public void named() throws InterruptedException {
+    Thread.currentThread().sleep(10);
+  }
 
-    @PrometheusTimeMethod(name = SAMPLE_NAME, help = "API endpoint for test")
-    public void named2() throws InterruptedException {
-        Thread.currentThread().sleep(10);
-    }
+  @PrometheusTimeMethod(name = SAMPLE_NAME, help = "API endpoint for test")
+  public void named2() throws InterruptedException {
+    Thread.currentThread().sleep(10);
+  }
 
-    @PrometheusTimeMethod
-    public void unnamed(String s, List<?> l) throws InterruptedException {
-    }
+  @PrometheusTimeMethod
+  public void unnamed(String s, List<?> l) throws InterruptedException {}
 }

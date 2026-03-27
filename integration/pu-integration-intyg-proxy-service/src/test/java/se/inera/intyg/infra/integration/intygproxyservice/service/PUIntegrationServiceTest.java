@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.infra.integration.intygproxyservice.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,41 +39,38 @@ import se.inera.intyg.schemas.contract.Personnummer;
 @ExtendWith(MockitoExtension.class)
 class PUIntegrationServiceTest {
 
-    @Mock
-    GetPersonIntegrationService getPersonIntegrationService;
-    @Mock
-    GetPersonsIntegrationService getPersonsIntegrationService;
-    @InjectMocks
-    PUIntegrationService puIntegrationService;
+  @Mock GetPersonIntegrationService getPersonIntegrationService;
+  @Mock GetPersonsIntegrationService getPersonsIntegrationService;
+  @InjectMocks PUIntegrationService puIntegrationService;
 
-    @Nested
-    class GetPersonTests {
+  @Nested
+  class GetPersonTests {
 
-        @Test
-        void shallReturnPersonSvar() {
-            final var expectedPersonSvar = mock(PersonSvar.class);
-            final var personnummer = mock(Personnummer.class);
+    @Test
+    void shallReturnPersonSvar() {
+      final var expectedPersonSvar = mock(PersonSvar.class);
+      final var personnummer = mock(Personnummer.class);
 
-            doReturn(expectedPersonSvar).when(getPersonIntegrationService).get(personnummer);
+      doReturn(expectedPersonSvar).when(getPersonIntegrationService).get(personnummer);
 
-            final var actualPersonSvar = puIntegrationService.getPerson(personnummer);
-            assertEquals(expectedPersonSvar, actualPersonSvar);
-        }
+      final var actualPersonSvar = puIntegrationService.getPerson(personnummer);
+      assertEquals(expectedPersonSvar, actualPersonSvar);
     }
+  }
 
-    @Nested
-    class GetPersonsTests {
+  @Nested
+  class GetPersonsTests {
 
-        @Test
-        void shallReturnMapOfPersonnummerAndPersonSvar() {
-            final var personSvar = mock(PersonSvar.class);
-            final var personnummer = mock(Personnummer.class);
-            final var expectedResult = Map.of(personnummer, personSvar);
+    @Test
+    void shallReturnMapOfPersonnummerAndPersonSvar() {
+      final var personSvar = mock(PersonSvar.class);
+      final var personnummer = mock(Personnummer.class);
+      final var expectedResult = Map.of(personnummer, personSvar);
 
-            doReturn(expectedResult).when(getPersonsIntegrationService).get(List.of(personnummer));
+      doReturn(expectedResult).when(getPersonsIntegrationService).get(List.of(personnummer));
 
-            final var actualResult = puIntegrationService.getPersons(List.of(personnummer));
-            assertEquals(expectedResult, actualResult);
-        }
+      final var actualResult = puIntegrationService.getPersons(List.of(personnummer));
+      assertEquals(expectedResult, actualResult);
     }
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,28 +26,24 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 import se.inera.intyg.infra.dynamiclink.repository.DynamicLinkRepository;
 
-/**
- * Created by eriklupander on 2017-05-03.
- */
+/** Created by eriklupander on 2017-05-03. */
 @Service
 public class DynamicLinkServiceImpl implements DynamicLinkService {
 
-    @Autowired
-    private DynamicLinkRepository dynamicLinkRepository;
+  @Autowired private DynamicLinkRepository dynamicLinkRepository;
 
-    @Override
-    public Map<String, DynamicLink> getAllAsMap() {
-        return dynamicLinkRepository.getAll();
-    }
+  @Override
+  public Map<String, DynamicLink> getAllAsMap() {
+    return dynamicLinkRepository.getAll();
+  }
 
-    @Override
-    public List<DynamicLink> getAllAsList() {
-        return new ArrayList<>(dynamicLinkRepository.getAll().values());
-    }
+  @Override
+  public List<DynamicLink> getAllAsList() {
+    return new ArrayList<>(dynamicLinkRepository.getAll().values());
+  }
 
-    @Override
-    public DynamicLink get(String key) {
-        return dynamicLinkRepository.getAll().get(key);
-    }
-
+  @Override
+  public DynamicLink get(String key) {
+    return dynamicLinkRepository.getAll().get(key);
+  }
 }

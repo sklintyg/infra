@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,18 +18,17 @@
  */
 package se.inera.intyg.infra.security.common.service;
 
-/**
- * Created by eriklupander on 2016-05-18.
- */
+/** Created by eriklupander on 2016-05-18. */
 public interface AuthenticationLogger {
 
-    void logUserLogin(String userHsaId, String role, String roleTypeName, String authScheme, String origin);
+  void logUserLogin(
+      String userHsaId, String role, String roleTypeName, String authScheme, String origin);
 
-    void logUserLogout(String userHsaId, String authScheme);
+  void logUserLogout(String userHsaId, String authScheme);
 
-    void logUserSessionExpired(String userHsaId, String authScheme);
+  void logUserSessionExpired(String userHsaId, String authScheme);
 
-    void logMissingMedarbetarUppdrag(String userHsaId);
+  void logMissingMedarbetarUppdrag(String userHsaId);
 
-    void logMissingMedarbetarUppdrag(String userHsaId, String enhetsId);
+  void logMissingMedarbetarUppdrag(String userHsaId, String enhetsId);
 }

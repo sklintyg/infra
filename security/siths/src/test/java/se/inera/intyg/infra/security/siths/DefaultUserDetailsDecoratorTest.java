@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,96 +31,93 @@ import se.inera.intyg.infra.security.common.model.AuthConstants;
 import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 
-/**
- * Created by eriklupander on 2016-05-19.
- */
+/** Created by eriklupander on 2016-05-19. */
 class DefaultUserDetailsDecoratorTest {
 
-    private static final String HSA_ID = "hsa-123";
-    private DefaultUserDetailsDecorator testee = new DefaultUserDetailsDecorator();
+  private static final String HSA_ID = "hsa-123";
+  private DefaultUserDetailsDecorator testee = new DefaultUserDetailsDecorator();
 
-    @Test
-    void testDecorate() {
-        IntygUser intygUser = new IntygUser(HSA_ID);
-        testee.decorateIntygUserWithAuthenticationMethod(intygUser, AuthConstants.FAKE_AUTHENTICATION_SITHS_CONTEXT_REF);
-        assertEquals(AuthenticationMethod.FAKE, intygUser.getAuthenticationMethod());
-    }
+  @Test
+  void testDecorate() {
+    IntygUser intygUser = new IntygUser(HSA_ID);
+    testee.decorateIntygUserWithAuthenticationMethod(
+        intygUser, AuthConstants.FAKE_AUTHENTICATION_SITHS_CONTEXT_REF);
+    assertEquals(AuthenticationMethod.FAKE, intygUser.getAuthenticationMethod());
+  }
 
-    @Test
-    void testSetFirstVardenhetOnFirstVardgivareAsDefault() {
-        // Arrange
-        Vardgivare vardgivare = new Vardgivare("vg-1", "IFV Testlandsting");
-        Vardenhet enhet1 = new Vardenhet("ve-1", "VårdEnhet2A");
-        vardgivare.getVardenheter().add(enhet1);
-        Vardenhet enhet2 = new Vardenhet("ve-2", "Vårdcentralen");
-        vardgivare.getVardenheter().add(enhet2);
+  @Test
+  void testSetFirstVardenhetOnFirstVardgivareAsDefault() {
+    // Arrange
+    Vardgivare vardgivare = new Vardgivare("vg-1", "IFV Testlandsting");
+    Vardenhet enhet1 = new Vardenhet("ve-1", "VårdEnhet2A");
+    vardgivare.getVardenheter().add(enhet1);
+    Vardenhet enhet2 = new Vardenhet("ve-2", "Vårdcentralen");
+    vardgivare.getVardenheter().add(enhet2);
 
-        IntygUser user = new IntygUser(HSA_ID);
-        user.setVardgivare(Collections.singletonList(vardgivare));
+    IntygUser user = new IntygUser(HSA_ID);
+    user.setVardgivare(Collections.singletonList(vardgivare));
 
-        // Test
-        testee.decorateIntygUserWithDefaultVardenhet(user);
+    // Test
+    testee.decorateIntygUserWithDefaultVardenhet(user);
 
-        // Verify
-        assertEquals(vardgivare, user.getValdVardgivare());
-        assertEquals(enhet1, user.getValdVardenhet());
-    }
+    // Verify
+    assertEquals(vardgivare, user.getValdVardgivare());
+    assertEquals(enhet1, user.getValdVardenhet());
+  }
 
-    @Test
-    void testDecorateIntygUserWithDefaultVardenhetEmptyVardgivare() {
-        Vardgivare vardgivareWithoutEnhet = new Vardgivare("vg-1", "Tom vardgivare");
+  @Test
+  void testDecorateIntygUserWithDefaultVardenhetEmptyVardgivare() {
+    Vardgivare vardgivareWithoutEnhet = new Vardgivare("vg-1", "Tom vardgivare");
 
-        Vardgivare vardgivare = new Vardgivare("vg-2", "IFV Testlandsting");
-        Vardenhet enhet1 = new Vardenhet("ve-1", "VårdEnhet2A");
-        vardgivare.getVardenheter().add(enhet1);
-        Vardenhet enhet2 = new Vardenhet("ve-2", "Vårdcentralen");
-        vardgivare.getVardenheter().add(enhet2);
+    Vardgivare vardgivare = new Vardgivare("vg-2", "IFV Testlandsting");
+    Vardenhet enhet1 = new Vardenhet("ve-1", "VårdEnhet2A");
+    vardgivare.getVardenheter().add(enhet1);
+    Vardenhet enhet2 = new Vardenhet("ve-2", "Vårdcentralen");
+    vardgivare.getVardenheter().add(enhet2);
 
-        IntygUser user = new IntygUser(HSA_ID);
-        user.setVardgivare(Arrays.asList(vardgivareWithoutEnhet, vardgivare));
+    IntygUser user = new IntygUser(HSA_ID);
+    user.setVardgivare(Arrays.asList(vardgivareWithoutEnhet, vardgivare));
 
-        testee.decorateIntygUserWithDefaultVardenhet(user);
+    testee.decorateIntygUserWithDefaultVardenhet(user);
 
-        assertEquals(vardgivare, user.getValdVardgivare());
-        assertEquals(enhet1, user.getValdVardenhet());
-    }
+    assertEquals(vardgivare, user.getValdVardgivare());
+    assertEquals(enhet1, user.getValdVardenhet());
+  }
 
-    @Test
-    void testRehabSystemRoleInRoleOnly() {
-        IntygUser user = new IntygUser(HSA_ID);
-        UserCredentials userCredentials = new UserCredentials();
-        userCredentials.getHsaSystemRole().add(hsaSystemRole(null, "INTYG;Rehab-1234"));
+  @Test
+  void testRehabSystemRoleInRoleOnly() {
+    IntygUser user = new IntygUser(HSA_ID);
+    UserCredentials userCredentials = new UserCredentials();
+    userCredentials.getHsaSystemRole().add(hsaSystemRole(null, "INTYG;Rehab-1234"));
 
-        testee.decorateIntygUserWithSystemRoles(user, userCredentials);
-        assertEquals("INTYG;Rehab-1234", user.getSystemRoles().get(0));
-    }
+    testee.decorateIntygUserWithSystemRoles(user, userCredentials);
+    assertEquals("INTYG;Rehab-1234", user.getSystemRoles().get(0));
+  }
 
-    @Test
-    void testRehabSystemRoleInRoleOnlyWithSpacedStringAsSystemId() {
-        IntygUser user = new IntygUser(HSA_ID);
-        UserCredentials userCredentials = new UserCredentials();
-        userCredentials.getHsaSystemRole().add(hsaSystemRole(" ", "INTYG;Rehab-1234"));
+  @Test
+  void testRehabSystemRoleInRoleOnlyWithSpacedStringAsSystemId() {
+    IntygUser user = new IntygUser(HSA_ID);
+    UserCredentials userCredentials = new UserCredentials();
+    userCredentials.getHsaSystemRole().add(hsaSystemRole(" ", "INTYG;Rehab-1234"));
 
-        testee.decorateIntygUserWithSystemRoles(user, userCredentials);
-        assertEquals("INTYG;Rehab-1234", user.getSystemRoles().get(0));
-    }
+    testee.decorateIntygUserWithSystemRoles(user, userCredentials);
+    assertEquals("INTYG;Rehab-1234", user.getSystemRoles().get(0));
+  }
 
-    @Test
-    void testRehabSystemRoleFromSystemAndRole() {
-        IntygUser user = new IntygUser(HSA_ID);
-        UserCredentials userCredentials = new UserCredentials();
-        userCredentials.getHsaSystemRole().add(hsaSystemRole("INTYG", "Rehab-1234"));
+  @Test
+  void testRehabSystemRoleFromSystemAndRole() {
+    IntygUser user = new IntygUser(HSA_ID);
+    UserCredentials userCredentials = new UserCredentials();
+    userCredentials.getHsaSystemRole().add(hsaSystemRole("INTYG", "Rehab-1234"));
 
-        testee.decorateIntygUserWithSystemRoles(user, userCredentials);
-        assertEquals("INTYG;Rehab-1234", user.getSystemRoles().get(0));
-    }
+    testee.decorateIntygUserWithSystemRoles(user, userCredentials);
+    assertEquals("INTYG;Rehab-1234", user.getSystemRoles().get(0));
+  }
 
-
-    private HsaSystemRole hsaSystemRole(String systemId, String role) {
-        HsaSystemRole hsaSystemRole = new HsaSystemRole();
-        hsaSystemRole.setSystemId(systemId);
-        hsaSystemRole.setRole(role);
-        return hsaSystemRole;
-    }
-
+  private HsaSystemRole hsaSystemRole(String systemId, String role) {
+    HsaSystemRole hsaSystemRole = new HsaSystemRole();
+    hsaSystemRole.setSystemId(systemId);
+    hsaSystemRole.setRole(role);
+    return hsaSystemRole;
+  }
 }

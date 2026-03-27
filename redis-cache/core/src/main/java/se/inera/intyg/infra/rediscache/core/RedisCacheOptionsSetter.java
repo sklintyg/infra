@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,24 +19,22 @@
 package se.inera.intyg.infra.rediscache.core;
 
 import java.time.Duration;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
-
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 
 public class RedisCacheOptionsSetter {
 
-    @Autowired
-    private CacheFactory redisCacheFactory;
+  @Autowired private CacheFactory redisCacheFactory;
 
-    public Cache createCache(String cacheName, String expiryTimeInSeconds) {
-        try {
-            return redisCacheFactory.createCache(cacheName,
-                RedisCacheConfiguration.defaultCacheConfig()
-                    .entryTtl(Duration.ofSeconds(Long.parseLong(expiryTimeInSeconds))));
-        } catch (NumberFormatException e) {
-            return redisCacheFactory.createCache(cacheName);
-        }
+  public Cache createCache(String cacheName, String expiryTimeInSeconds) {
+    try {
+      return redisCacheFactory.createCache(
+          cacheName,
+          RedisCacheConfiguration.defaultCacheConfig()
+              .entryTtl(Duration.ofSeconds(Long.parseLong(expiryTimeInSeconds))));
+    } catch (NumberFormatException e) {
+      return redisCacheFactory.createCache(cacheName);
     }
+  }
 }

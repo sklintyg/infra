@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.person;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,8 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
 import jakarta.xml.ws.WebServiceException;
+import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,30 +37,26 @@ import se.inera.intyg.infra.integration.intygproxyservice.services.employee.GetE
 @ExtendWith(MockitoExtension.class)
 class HsaLegacyIntegrationPersonServiceTest {
 
+  @Mock GetEmployeeService getEmployeeService;
 
-    @Mock
-    GetEmployeeService getEmployeeService;
+  @InjectMocks HsaLegacyIntegrationPersonService hsaLegacyIntegrationPersonService;
 
-    @InjectMocks
-    HsaLegacyIntegrationPersonService hsaLegacyIntegrationPersonService;
+  @Test
+  void shouldThrowError() {
+    when(getEmployeeService.get(any(GetEmployeeRequestDTO.class)))
+        .thenThrow(IllegalArgumentException.class);
 
-    @Test
-    void shouldThrowError() {
-        when(getEmployeeService.get(any(GetEmployeeRequestDTO.class)))
-            .thenThrow(IllegalArgumentException.class);
+    assertThrows(
+        WebServiceException.class, () -> hsaLegacyIntegrationPersonService.getHsaPersonInfo("id"));
+  }
 
-        assertThrows(WebServiceException.class, () -> hsaLegacyIntegrationPersonService.getHsaPersonInfo("id"));
-    }
+  @Test
+  void shouldReturnPersonInformation() {
+    final var expected = Collections.singletonList(new PersonInformation());
+    when(getEmployeeService.get(any(GetEmployeeRequestDTO.class))).thenReturn(expected);
 
-    @Test
-    void shouldReturnPersonInformation() {
-        final var expected = Collections.singletonList(new PersonInformation());
-        when(getEmployeeService.get(any(GetEmployeeRequestDTO.class)))
-            .thenReturn(expected);
+    final var response = hsaLegacyIntegrationPersonService.getHsaPersonInfo("id");
 
-        final var response = hsaLegacyIntegrationPersonService.getHsaPersonInfo("id");
-
-        assertEquals(expected, response);
-    }
-
+    assertEquals(expected, response);
+  }
 }

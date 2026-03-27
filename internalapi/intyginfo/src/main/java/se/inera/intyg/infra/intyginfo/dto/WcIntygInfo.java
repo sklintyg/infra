@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,90 +22,90 @@ import java.time.LocalDateTime;
 
 public class WcIntygInfo extends IntygInfo {
 
-    private boolean createdInWC;
+  private boolean createdInWC;
 
-    private LocalDateTime draftCreated;
+  private LocalDateTime draftCreated;
 
-    private int kompletteringar;
-    private int kompletteringarAnswered;
+  private int kompletteringar;
+  private int kompletteringarAnswered;
 
-    private int administrativaFragorSent;
-    private int administrativaFragorSentAnswered;
+  private int administrativaFragorSent;
+  private int administrativaFragorSentAnswered;
 
-    private int administrativaFragorReceived;
-    private int administrativaFragorReceivedAnswered;
+  private int administrativaFragorReceived;
+  private int administrativaFragorReceivedAnswered;
 
-    private int numberOfRecipients;
+  private int numberOfRecipients;
 
-    public boolean isCreatedInWC() {
-        return createdInWC;
-    }
+  public boolean isCreatedInWC() {
+    return createdInWC;
+  }
 
-    public void setCreatedInWC(boolean createdInWC) {
-        this.createdInWC = createdInWC;
-    }
+  public void setCreatedInWC(boolean createdInWC) {
+    this.createdInWC = createdInWC;
+  }
 
-    public LocalDateTime getDraftCreated() {
-        return draftCreated;
-    }
+  public LocalDateTime getDraftCreated() {
+    return draftCreated;
+  }
 
-    public void setDraftCreated(LocalDateTime draftCreated) {
-        this.draftCreated = draftCreated;
-    }
+  public void setDraftCreated(LocalDateTime draftCreated) {
+    this.draftCreated = draftCreated;
+  }
 
-    public int getKompletteringar() {
-        return kompletteringar;
-    }
+  public int getKompletteringar() {
+    return kompletteringar;
+  }
 
-    public void setKompletteringar(int kompletteringar) {
-        this.kompletteringar = kompletteringar;
-    }
+  public void setKompletteringar(int kompletteringar) {
+    this.kompletteringar = kompletteringar;
+  }
 
-    public int getKompletteringarAnswered() {
-        return kompletteringarAnswered;
-    }
+  public int getKompletteringarAnswered() {
+    return kompletteringarAnswered;
+  }
 
-    public void setKompletteringarAnswered(int kompletteringarAnswered) {
-        this.kompletteringarAnswered = kompletteringarAnswered;
-    }
+  public void setKompletteringarAnswered(int kompletteringarAnswered) {
+    this.kompletteringarAnswered = kompletteringarAnswered;
+  }
 
-    public int getAdministrativaFragorSent() {
-        return administrativaFragorSent;
-    }
+  public int getAdministrativaFragorSent() {
+    return administrativaFragorSent;
+  }
 
-    public void setAdministrativaFragorSent(int administrativaFragorSent) {
-        this.administrativaFragorSent = administrativaFragorSent;
-    }
+  public void setAdministrativaFragorSent(int administrativaFragorSent) {
+    this.administrativaFragorSent = administrativaFragorSent;
+  }
 
-    public int getAdministrativaFragorSentAnswered() {
-        return administrativaFragorSentAnswered;
-    }
+  public int getAdministrativaFragorSentAnswered() {
+    return administrativaFragorSentAnswered;
+  }
 
-    public void setAdministrativaFragorSentAnswered(int administrativaFragorSentAnswered) {
-        this.administrativaFragorSentAnswered = administrativaFragorSentAnswered;
-    }
+  public void setAdministrativaFragorSentAnswered(int administrativaFragorSentAnswered) {
+    this.administrativaFragorSentAnswered = administrativaFragorSentAnswered;
+  }
 
-    public int getAdministrativaFragorReceived() {
-        return administrativaFragorReceived;
-    }
+  public int getAdministrativaFragorReceived() {
+    return administrativaFragorReceived;
+  }
 
-    public void setAdministrativaFragorReceived(int administrativaFragorReceived) {
-        this.administrativaFragorReceived = administrativaFragorReceived;
-    }
+  public void setAdministrativaFragorReceived(int administrativaFragorReceived) {
+    this.administrativaFragorReceived = administrativaFragorReceived;
+  }
 
-    public int getAdministrativaFragorReceivedAnswered() {
-        return administrativaFragorReceivedAnswered;
-    }
+  public int getAdministrativaFragorReceivedAnswered() {
+    return administrativaFragorReceivedAnswered;
+  }
 
-    public void setAdministrativaFragorReceivedAnswered(int administrativaFragorReceivedAnswered) {
-        this.administrativaFragorReceivedAnswered = administrativaFragorReceivedAnswered;
-    }
+  public void setAdministrativaFragorReceivedAnswered(int administrativaFragorReceivedAnswered) {
+    this.administrativaFragorReceivedAnswered = administrativaFragorReceivedAnswered;
+  }
 
-    public int getNumberOfRecipients() {
-        return numberOfRecipients;
-    }
+  public int getNumberOfRecipients() {
+    return numberOfRecipients;
+  }
 
-    public void setNumberOfRecipients(int numberOfRecipients) {
-        this.numberOfRecipients = numberOfRecipients;
-    }
+  public void setNumberOfRecipients(int numberOfRecipients) {
+    this.numberOfRecipients = numberOfRecipients;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,27 +29,27 @@ import se.inera.intyg.infra.security.common.model.Feature;
 @Component
 public class FeaturesHelper {
 
-    private CommonFeaturesResolver featuresResolver;
+  private CommonFeaturesResolver featuresResolver;
 
-    @Autowired
-    public FeaturesHelper(CommonFeaturesResolver featuresResolver) {
-        this.featuresResolver = featuresResolver;
-    }
+  @Autowired
+  public FeaturesHelper(CommonFeaturesResolver featuresResolver) {
+    this.featuresResolver = featuresResolver;
+  }
 
-    public boolean isFeatureActive(String feature) {
-        return ofNullable(featuresResolver.getFeatures().get(feature))
-            .filter(Feature::getGlobal)
-            .isPresent();
-    }
+  public boolean isFeatureActive(String feature) {
+    return ofNullable(featuresResolver.getFeatures().get(feature))
+        .filter(Feature::getGlobal)
+        .isPresent();
+  }
 
-    public boolean isFeatureActive(String feature, String certificateType) {
-        return getCertificateTypesForFeature(feature).contains(certificateType);
-    }
+  public boolean isFeatureActive(String feature, String certificateType) {
+    return getCertificateTypesForFeature(feature).contains(certificateType);
+  }
 
-    public List<String> getCertificateTypesForFeature(String feature) {
-        return ofNullable(featuresResolver.getFeatures().get(feature))
-            .filter(Feature::getGlobal)
-            .map(Feature::getIntygstyper)
-            .orElse(Collections.emptyList());
-    }
+  public List<String> getCertificateTypesForFeature(String feature) {
+    return ofNullable(featuresResolver.getFeatures().get(feature))
+        .filter(Feature::getGlobal)
+        .map(Feature::getIntygstyper)
+        .orElse(Collections.emptyList());
+  }
 }

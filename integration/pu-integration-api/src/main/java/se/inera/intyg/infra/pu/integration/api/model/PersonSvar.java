@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,39 +24,39 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode
 public class PersonSvar implements Serializable {
 
-    private static final long serialVersionUID = 2L;
+  private static final long serialVersionUID = 2L;
 
-    public static PersonSvar found(final Person person) {
-        return new PersonSvar(person, Status.FOUND);
-    }
+  public static PersonSvar found(final Person person) {
+    return new PersonSvar(person, Status.FOUND);
+  }
 
-    public static PersonSvar notFound() {
-        return new PersonSvar(null, Status.NOT_FOUND);
-    }
+  public static PersonSvar notFound() {
+    return new PersonSvar(null, Status.NOT_FOUND);
+  }
 
-    public static PersonSvar error() {
-        return new PersonSvar(null, Status.ERROR);
-    }
+  public static PersonSvar error() {
+    return new PersonSvar(null, Status.ERROR);
+  }
 
-    private final Person person;
-    private final Status status;
+  private final Person person;
+  private final Status status;
 
-    protected PersonSvar(Person person, Status status) {
-        this.person = person;
-        this.status = status;
-    }
+  protected PersonSvar(Person person, Status status) {
+    this.person = person;
+    this.status = status;
+  }
 
-    public Person getPerson() {
-        return person;
-    }
+  public Person getPerson() {
+    return person;
+  }
 
-    public Status getStatus() {
-        return status;
-    }
+  public Status getStatus() {
+    return status;
+  }
 
-    public enum Status {
-        FOUND,
-        NOT_FOUND,
-        ERROR
-    }
+  public enum Status {
+    FOUND,
+    NOT_FOUND,
+    ERROR
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.dto.organization;
 
 import lombok.AllArgsConstructor;
@@ -31,5 +30,5 @@ import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
 @AllArgsConstructor
 public class GetHealthCareUnitMembersResponseDTO {
 
-    HealthCareUnitMembers healthCareUnitMembers;
+  HealthCareUnitMembers healthCareUnitMembers;
 }

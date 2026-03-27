@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,93 +29,103 @@ import java.util.UUID;
 
 public class Banner implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    public static final String FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+  private static final long serialVersionUID = 1L;
+  public static final String FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
-    private UUID id;
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(pattern = FORMAT)
-    private LocalDateTime createdAt;
-    private Application application;
-    private String message;
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(pattern = FORMAT)
-    private LocalDateTime displayFrom;
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(pattern = FORMAT)
-    private LocalDateTime displayTo;
-    private BannerPriority priority;
+  private UUID id;
 
-    public Banner() {
-    }
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
+  @JsonFormat(pattern = FORMAT)
+  private LocalDateTime createdAt;
 
-    public Banner(UUID id, LocalDateTime createdAt, Application application, String message, LocalDateTime displayFrom,
-        LocalDateTime displayTo, BannerPriority priority) {
-        this.id = id;
-        this.createdAt = createdAt;
-        this.application = application;
-        this.message = message;
-        this.displayFrom = displayFrom;
-        this.displayTo = displayTo;
-        this.priority = priority;
-    }
+  private Application application;
+  private String message;
 
-    public UUID getId() {
-        return id;
-    }
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
+  @JsonFormat(pattern = FORMAT)
+  private LocalDateTime displayFrom;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
+  @JsonFormat(pattern = FORMAT)
+  private LocalDateTime displayTo;
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+  private BannerPriority priority;
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+  public Banner() {}
 
-    public Application getApplication() {
-        return application;
-    }
+  public Banner(
+      UUID id,
+      LocalDateTime createdAt,
+      Application application,
+      String message,
+      LocalDateTime displayFrom,
+      LocalDateTime displayTo,
+      BannerPriority priority) {
+    this.id = id;
+    this.createdAt = createdAt;
+    this.application = application;
+    this.message = message;
+    this.displayFrom = displayFrom;
+    this.displayTo = displayTo;
+    this.priority = priority;
+  }
 
-    public void setApplication(Application application) {
-        this.application = application;
-    }
+  public UUID getId() {
+    return id;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
 
-    public LocalDateTime getDisplayFrom() {
-        return displayFrom;
-    }
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
 
-    public void setDisplayFrom(LocalDateTime displayFrom) {
-        this.displayFrom = displayFrom;
-    }
+  public Application getApplication() {
+    return application;
+  }
 
-    public LocalDateTime getDisplayTo() {
-        return displayTo;
-    }
+  public void setApplication(Application application) {
+    this.application = application;
+  }
 
-    public void setDisplayTo(LocalDateTime displayTo) {
-        this.displayTo = displayTo;
-    }
+  public String getMessage() {
+    return message;
+  }
 
-    public BannerPriority getPriority() {
-        return priority;
-    }
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-    public void setPriority(BannerPriority priority) {
-        this.priority = priority;
-    }
+  public LocalDateTime getDisplayFrom() {
+    return displayFrom;
+  }
+
+  public void setDisplayFrom(LocalDateTime displayFrom) {
+    this.displayFrom = displayFrom;
+  }
+
+  public LocalDateTime getDisplayTo() {
+    return displayTo;
+  }
+
+  public void setDisplayTo(LocalDateTime displayTo) {
+    this.displayTo = displayTo;
+  }
+
+  public BannerPriority getPriority() {
+    return priority;
+  }
+
+  public void setPriority(BannerPriority priority) {
+    this.priority = priority;
+  }
 }

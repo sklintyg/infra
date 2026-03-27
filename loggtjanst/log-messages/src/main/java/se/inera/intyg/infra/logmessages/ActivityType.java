@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,24 +19,23 @@
 package se.inera.intyg.infra.logmessages;
 
 public enum ActivityType {
+  READ("Läsa"),
+  CREATE("Skriva"),
+  UPDATE("Skriva"),
+  SIGN("Signera"),
+  DELETE("Radera"),
+  PRINT("Utskrift"),
+  REVOKE("Radera"),
+  SEND("Utskrift"),
+  EMERGENCY_ACCESS("Nödöppning");
 
-    READ("Läsa"),
-    CREATE("Skriva"),
-    UPDATE("Skriva"),
-    SIGN("Signera"),
-    DELETE("Radera"),
-    PRINT("Utskrift"),
-    REVOKE("Radera"),
-    SEND("Utskrift"),
-    EMERGENCY_ACCESS("Nödöppning");
+  private final String type;
 
-    private final String type;
+  ActivityType(String type) {
+    this.type = type;
+  }
 
-    ActivityType(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
-    }
+  public String getType() {
+    return type;
+  }
 }

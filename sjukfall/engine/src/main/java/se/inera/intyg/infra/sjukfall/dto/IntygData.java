@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,146 +26,146 @@ import java.util.List;
  */
 public class IntygData {
 
-    private String intygId;
-    private String patientId;
-    private String patientNamn;
-    private String lakareId;
-    private String lakareNamn;
-    private String vardenhetId;
-    private String vardenhetNamn;
-    private String vardgivareId;
-    private String vardgivareNamn;
+  private String intygId;
+  private String patientId;
+  private String patientNamn;
+  private String lakareId;
+  private String lakareNamn;
+  private String vardenhetId;
+  private String vardenhetNamn;
+  private String vardgivareId;
+  private String vardgivareNamn;
 
-    private LocalDateTime signeringsTidpunkt;
+  private LocalDateTime signeringsTidpunkt;
 
-    private List<Formaga> formagor;
+  private List<Formaga> formagor;
 
-    private DiagnosKod diagnosKod;
-    private List<DiagnosKod> biDiagnoser;
+  private DiagnosKod diagnosKod;
+  private List<DiagnosKod> biDiagnoser;
 
-    private List<String> sysselsattning;
+  private List<String> sysselsattning;
 
-    private boolean enkeltIntyg;
+  private boolean enkeltIntyg;
 
-    // getter and setters
+  // getter and setters
 
-    public String getIntygId() {
-        return intygId;
-    }
+  public String getIntygId() {
+    return intygId;
+  }
 
-    public void setIntygId(String intygId) {
-        this.intygId = intygId;
-    }
+  public void setIntygId(String intygId) {
+    this.intygId = intygId;
+  }
 
-    public String getPatientId() {
-        return patientId;
-    }
+  public String getPatientId() {
+    return patientId;
+  }
 
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
+  public void setPatientId(String patientId) {
+    this.patientId = patientId;
+  }
 
-    public String getPatientNamn() {
-        return patientNamn;
-    }
+  public String getPatientNamn() {
+    return patientNamn;
+  }
 
-    public void setPatientNamn(String patientNamn) {
-        this.patientNamn = patientNamn;
-    }
+  public void setPatientNamn(String patientNamn) {
+    this.patientNamn = patientNamn;
+  }
 
-    public String getLakareId() {
-        return lakareId;
-    }
+  public String getLakareId() {
+    return lakareId;
+  }
 
-    public void setLakareId(String lakareId) {
-        this.lakareId = lakareId;
-    }
+  public void setLakareId(String lakareId) {
+    this.lakareId = lakareId;
+  }
 
-    public String getLakareNamn() {
-        return lakareNamn;
-    }
+  public String getLakareNamn() {
+    return lakareNamn;
+  }
 
-    public void setLakareNamn(String lakareNamn) {
-        this.lakareNamn = lakareNamn;
-    }
+  public void setLakareNamn(String lakareNamn) {
+    this.lakareNamn = lakareNamn;
+  }
 
-    public String getVardenhetId() {
-        return vardenhetId;
-    }
+  public String getVardenhetId() {
+    return vardenhetId;
+  }
 
-    public void setVardenhetId(String vardenhetId) {
-        this.vardenhetId = vardenhetId;
-    }
+  public void setVardenhetId(String vardenhetId) {
+    this.vardenhetId = vardenhetId;
+  }
 
-    public String getVardenhetNamn() {
-        return vardenhetNamn;
-    }
+  public String getVardenhetNamn() {
+    return vardenhetNamn;
+  }
 
-    public void setVardenhetNamn(String vardenhetNamn) {
-        this.vardenhetNamn = vardenhetNamn;
-    }
+  public void setVardenhetNamn(String vardenhetNamn) {
+    this.vardenhetNamn = vardenhetNamn;
+  }
 
-    public String getVardgivareId() {
-        return vardgivareId;
-    }
+  public String getVardgivareId() {
+    return vardgivareId;
+  }
 
-    public void setVardgivareId(String vardgivareId) {
-        this.vardgivareId = vardgivareId;
-    }
+  public void setVardgivareId(String vardgivareId) {
+    this.vardgivareId = vardgivareId;
+  }
 
-    public String getVardgivareNamn() {
-        return vardgivareNamn;
-    }
+  public String getVardgivareNamn() {
+    return vardgivareNamn;
+  }
 
-    public void setVardgivareNamn(String vardgivareNamn) {
-        this.vardgivareNamn = vardgivareNamn;
-    }
+  public void setVardgivareNamn(String vardgivareNamn) {
+    this.vardgivareNamn = vardgivareNamn;
+  }
 
-    public LocalDateTime getSigneringsTidpunkt() {
-        return signeringsTidpunkt;
-    }
+  public LocalDateTime getSigneringsTidpunkt() {
+    return signeringsTidpunkt;
+  }
 
-    public void setSigneringsTidpunkt(LocalDateTime signeringsTidpunkt) {
-        this.signeringsTidpunkt = signeringsTidpunkt;
-    }
+  public void setSigneringsTidpunkt(LocalDateTime signeringsTidpunkt) {
+    this.signeringsTidpunkt = signeringsTidpunkt;
+  }
 
-    public List<Formaga> getFormagor() {
-        return formagor;
-    }
+  public List<Formaga> getFormagor() {
+    return formagor;
+  }
 
-    public void setFormagor(List<Formaga> formagor) {
-        this.formagor = formagor;
-    }
+  public void setFormagor(List<Formaga> formagor) {
+    this.formagor = formagor;
+  }
 
-    public boolean isEnkeltIntyg() {
-        return enkeltIntyg;
-    }
+  public boolean isEnkeltIntyg() {
+    return enkeltIntyg;
+  }
 
-    public void setEnkeltIntyg(boolean enkeltIntyg) {
-        this.enkeltIntyg = enkeltIntyg;
-    }
+  public void setEnkeltIntyg(boolean enkeltIntyg) {
+    this.enkeltIntyg = enkeltIntyg;
+  }
 
-    public DiagnosKod getDiagnosKod() {
-        return diagnosKod;
-    }
+  public DiagnosKod getDiagnosKod() {
+    return diagnosKod;
+  }
 
-    public void setDiagnosKod(DiagnosKod diagnosKod) {
-        this.diagnosKod = diagnosKod;
-    }
+  public void setDiagnosKod(DiagnosKod diagnosKod) {
+    this.diagnosKod = diagnosKod;
+  }
 
-    public List<DiagnosKod> getBiDiagnoser() {
-        return biDiagnoser;
-    }
+  public List<DiagnosKod> getBiDiagnoser() {
+    return biDiagnoser;
+  }
 
-    public void setBiDiagnoser(List<DiagnosKod> biDiagnoser) {
-        this.biDiagnoser = biDiagnoser;
-    }
+  public void setBiDiagnoser(List<DiagnosKod> biDiagnoser) {
+    this.biDiagnoser = biDiagnoser;
+  }
 
-    public List<String> getSysselsattning() {
-        return sysselsattning;
-    }
+  public List<String> getSysselsattning() {
+    return sysselsattning;
+  }
 
-    public void setSysselsattning(List<String> sysselsattning) {
-        this.sysselsattning = sysselsattning;
-    }
+  public void setSysselsattning(List<String> sysselsattning) {
+    this.sysselsattning = sysselsattning;
+  }
 }

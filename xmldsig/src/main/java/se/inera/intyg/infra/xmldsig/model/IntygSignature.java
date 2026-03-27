@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,20 +22,17 @@ import java.io.Serializable;
 
 public interface IntygSignature extends Serializable {
 
-    /**
-     * Typically the canonicalized intyg XML element or plain JSON.
-     */
-    String getCanonicalizedIntyg();
+  /** Typically the canonicalized intyg XML element or plain JSON. */
+  String getCanonicalizedIntyg();
 
-    /**
-     * This should be what goes into any signing function (in NetiD plugin, NetiD Access or GRP).
-     *
-     * Note that the SignedInfo XML goes undigested into NetiD plugin sign(..), just Base64-encoded.
-     */
-    String getSigningData();
+  /**
+   * This should be what goes into any signing function (in NetiD plugin, NetiD Access or GRP).
+   *
+   * <p>Note that the SignedInfo XML goes undigested into NetiD plugin sign(..), just
+   * Base64-encoded.
+   */
+  String getSigningData();
 
-    /**
-     * The JSON representation before adding signature. Used for digests etc.
-     */
-    String getIntygJson();
+  /** The JSON representation before adding signature. Used for digests etc. */
+  String getIntygJson();
 }

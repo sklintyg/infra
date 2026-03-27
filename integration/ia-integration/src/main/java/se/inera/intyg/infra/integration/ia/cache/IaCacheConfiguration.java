@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,24 +29,23 @@ import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
 @Configuration
 public class IaCacheConfiguration {
 
-    public static final String CACHE_KEY = "BANNER";
+  public static final String CACHE_KEY = "BANNER";
 
-    @Value("${app.name:noname}")
-    private String appName;
+  @Value("${app.name:noname}")
+  private String appName;
 
-    @Value("${intygsadmin.cache.expiry}")
-    private String iaCacheExpirySeconds;
+  @Value("${intygsadmin.cache.expiry}")
+  private String iaCacheExpirySeconds;
 
-    @Autowired
-    private RedisCacheOptionsSetter redisCacheOptionsSetter;
+  @Autowired private RedisCacheOptionsSetter redisCacheOptionsSetter;
 
-    @Bean
-    public Cache iaCache() {
-        return redisCacheOptionsSetter.createCache("iaCache:" + appName, iaCacheExpirySeconds);
-    }
+  @Bean
+  public Cache iaCache() {
+    return redisCacheOptionsSetter.createCache("iaCache:" + appName, iaCacheExpirySeconds);
+  }
 
-    @Bean("iaRestTemplate")
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
+  @Bean("iaRestTemplate")
+  public RestTemplate restTemplate() {
+    return new RestTemplate();
+  }
 }

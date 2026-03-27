@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.client.organization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,52 +47,47 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUn
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceUnitClientTest {
 
-    private static final Unit UNIT = new Unit();
-    private static final String HSA_ID = "hsaId";
+  private static final Unit UNIT = new Unit();
+  private static final String HSA_ID = "hsaId";
 
-    @Mock
-    private RestClient restClient;
+  @Mock private RestClient restClient;
 
-    @InjectMocks
-    private HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
+  @InjectMocks private HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
 
-    private RequestBodyUriSpec requestBodyUriSpec;
-    private ResponseSpec responseSpec;
+  private RequestBodyUriSpec requestBodyUriSpec;
+  private ResponseSpec responseSpec;
 
-    @BeforeEach
-    void setUp() {
-        final var uri = "/api/from/configuration";
-        ReflectionTestUtils.setField(hsaIntygProxyServiceUnitClient, "unitEndpoint", uri);
+  @BeforeEach
+  void setUp() {
+    final var uri = "/api/from/configuration";
+    ReflectionTestUtils.setField(hsaIntygProxyServiceUnitClient, "unitEndpoint", uri);
 
-        requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
-        responseSpec = mock(RestClient.ResponseSpec.class);
+    requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
+    responseSpec = mock(RestClient.ResponseSpec.class);
 
-        MDC.put(TRACE_ID_KEY, "traceId");
-        MDC.put(SESSION_ID_KEY, "sessionId");
+    MDC.put(TRACE_ID_KEY, "traceId");
+    MDC.put(SESSION_ID_KEY, "sessionId");
 
-        when(restClient.post()).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.uri(uri)).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.body(any(GetUnitRequestDTO.class))).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
-    }
+    when(restClient.post()).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.uri(uri)).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.body(any(GetUnitRequestDTO.class))).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId"))
+        .thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
+  }
 
-    @Test
-    void shallReturnGetCitizenCertificatesResponse() {
-        final var expectedResponse = GetUnitResponseDTO.builder()
-            .unit(UNIT)
-            .build();
+  @Test
+  void shallReturnGetCitizenCertificatesResponse() {
+    final var expectedResponse = GetUnitResponseDTO.builder().unit(UNIT).build();
 
-        final var request = GetUnitRequestDTO.builder()
-            .hsaId(HSA_ID)
-            .build();
+    final var request = GetUnitRequestDTO.builder().hsaId(HSA_ID).build();
 
-        doReturn(expectedResponse).when(responseSpec).body(GetUnitResponseDTO.class);
+    doReturn(expectedResponse).when(responseSpec).body(GetUnitResponseDTO.class);
 
-        final var actualResponse = hsaIntygProxyServiceUnitClient.getUnit(request);
+    final var actualResponse = hsaIntygProxyServiceUnitClient.getUnit(request);
 
-        assertEquals(expectedResponse, actualResponse);
-    }
+    assertEquals(expectedResponse, actualResponse);
+  }
 }

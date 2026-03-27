@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,72 +26,71 @@ import java.util.List;
  */
 public class SjukfallPatient {
 
-    // Patientuppgifter
-    private Patient patient;
+  // Patientuppgifter
+  private Patient patient;
 
-    // Huvuddiagnos
-    private DiagnosKod diagnosKod;
+  // Huvuddiagnos
+  private DiagnosKod diagnosKod;
 
-    // Sjukfallets startdatum
-    private LocalDate start;
+  // Sjukfallets startdatum
+  private LocalDate start;
 
-    // Sjukfallets slutdatum
-    private LocalDate slut;
+  // Sjukfallets slutdatum
+  private LocalDate slut;
 
-    // Totalt antal sjukskrivningsdagar för sjukfallet
-    private Integer dagar;
+  // Totalt antal sjukskrivningsdagar för sjukfallet
+  private Integer dagar;
 
-    // De intyg som ingår i sjukfallet
-    private List<SjukfallIntyg> sjukfallIntygList;
+  // De intyg som ingår i sjukfallet
+  private List<SjukfallIntyg> sjukfallIntygList;
 
-    // getters and setters
+  // getters and setters
 
-    public Patient getPatient() {
-        return patient;
-    }
+  public Patient getPatient() {
+    return patient;
+  }
 
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
+  public void setPatient(Patient patient) {
+    this.patient = patient;
+  }
 
-    public DiagnosKod getDiagnosKod() {
-        return diagnosKod;
-    }
+  public DiagnosKod getDiagnosKod() {
+    return diagnosKod;
+  }
 
-    public void setDiagnosKod(DiagnosKod diagnosKod) {
-        this.diagnosKod = diagnosKod;
-    }
+  public void setDiagnosKod(DiagnosKod diagnosKod) {
+    this.diagnosKod = diagnosKod;
+  }
 
-    public LocalDate getStart() {
-        return start;
-    }
+  public LocalDate getStart() {
+    return start;
+  }
 
-    public void setStart(LocalDate start) {
-        this.start = start;
-    }
+  public void setStart(LocalDate start) {
+    this.start = start;
+  }
 
-    public LocalDate getSlut() {
-        return slut;
-    }
+  public LocalDate getSlut() {
+    return slut;
+  }
 
-    public void setSlut(LocalDate slut) {
-        this.slut = slut;
-    }
+  public void setSlut(LocalDate slut) {
+    this.slut = slut;
+  }
 
-    public Integer getDagar() {
-        return dagar;
-    }
+  public Integer getDagar() {
+    return dagar;
+  }
 
-    public void setDagar(Integer dagar) {
-        this.dagar = dagar;
-    }
+  public void setDagar(Integer dagar) {
+    this.dagar = dagar;
+  }
 
-    public List<SjukfallIntyg> getSjukfallIntygList() {
-        return sjukfallIntygList;
-    }
+  public List<SjukfallIntyg> getSjukfallIntygList() {
+    return sjukfallIntygList;
+  }
 
-    public void setSjukfallIntygList(List<SjukfallIntyg> sjukfallIntygList) {
-        this.sjukfallIntygList = sjukfallIntygList;
-    }
-
+  public void setSjukfallIntygList(List<SjukfallIntyg> sjukfallIntygList) {
+    this.sjukfallIntygList = sjukfallIntygList;
+  }
 }

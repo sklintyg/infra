@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,57 +20,57 @@ package se.inera.intyg.infra.xmldsig.model;
 
 public class ValidationResponse {
 
+  private ValidationResult signatureValid = ValidationResult.NOT_CHCEKED;
+  private ValidationResult referencesValid = ValidationResult.NOT_CHCEKED;
+
+  public ValidationResult getSignatureValid() {
+    return signatureValid;
+  }
+
+  public void setSignatureValid(ValidationResult signatureValid) {
+    this.signatureValid = signatureValid;
+  }
+
+  public ValidationResult getReferencesValid() {
+    return referencesValid;
+  }
+
+  public void setReferencesValid(ValidationResult referencesValid) {
+    this.referencesValid = referencesValid;
+  }
+
+  public boolean isValid() {
+    return this.signatureValid == ValidationResult.OK
+        && (this.referencesValid == ValidationResult.OK
+            || this.referencesValid == ValidationResult.NOT_CHCEKED);
+  }
+
+  public static final class ValidationResponseBuilder {
+
     private ValidationResult signatureValid = ValidationResult.NOT_CHCEKED;
     private ValidationResult referencesValid = ValidationResult.NOT_CHCEKED;
 
-    public ValidationResult getSignatureValid() {
-        return signatureValid;
+    private ValidationResponseBuilder() {}
+
+    public static ValidationResponseBuilder aValidationResponse() {
+      return new ValidationResponseBuilder();
     }
 
-    public void setSignatureValid(ValidationResult signatureValid) {
-        this.signatureValid = signatureValid;
+    public ValidationResponseBuilder withSignatureValid(ValidationResult signatureValid) {
+      this.signatureValid = signatureValid;
+      return this;
     }
 
-    public ValidationResult getReferencesValid() {
-        return referencesValid;
+    public ValidationResponseBuilder withReferencesValid(ValidationResult referencesValid) {
+      this.referencesValid = referencesValid;
+      return this;
     }
 
-    public void setReferencesValid(ValidationResult referencesValid) {
-        this.referencesValid = referencesValid;
+    public ValidationResponse build() {
+      ValidationResponse validationResponse = new ValidationResponse();
+      validationResponse.setSignatureValid(signatureValid);
+      validationResponse.setReferencesValid(referencesValid);
+      return validationResponse;
     }
-
-    public boolean isValid() {
-        return this.signatureValid == ValidationResult.OK
-            && (this.referencesValid == ValidationResult.OK || this.referencesValid == ValidationResult.NOT_CHCEKED);
-    }
-
-    public static final class ValidationResponseBuilder {
-
-        private ValidationResult signatureValid = ValidationResult.NOT_CHCEKED;
-        private ValidationResult referencesValid = ValidationResult.NOT_CHCEKED;
-
-        private ValidationResponseBuilder() {
-        }
-
-        public static ValidationResponseBuilder aValidationResponse() {
-            return new ValidationResponseBuilder();
-        }
-
-        public ValidationResponseBuilder withSignatureValid(ValidationResult signatureValid) {
-            this.signatureValid = signatureValid;
-            return this;
-        }
-
-        public ValidationResponseBuilder withReferencesValid(ValidationResult referencesValid) {
-            this.referencesValid = referencesValid;
-            return this;
-        }
-
-        public ValidationResponse build() {
-            ValidationResponse validationResponse = new ValidationResponse();
-            validationResponse.setSignatureValid(signatureValid);
-            validationResponse.setReferencesValid(referencesValid);
-            return validationResponse;
-        }
-    }
+  }
 }

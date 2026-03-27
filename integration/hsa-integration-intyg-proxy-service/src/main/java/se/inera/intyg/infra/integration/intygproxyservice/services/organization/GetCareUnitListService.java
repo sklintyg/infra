@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import static se.inera.intyg.infra.integration.intygproxyservice.services.organization.OrganizationUtil.isActive;
@@ -36,19 +35,19 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 @RequiredArgsConstructor
 public class GetCareUnitListService {
 
-    private final GetCareUnitService getCareUnitService;
+  private final GetCareUnitService getCareUnitService;
 
-    public List<Vardenhet> get(List<Commission> commissions) {
-        return commissions.stream()
-            .filter(this::isUnitActive)
-            .map(getCareUnitService::get)
-            .filter(Objects::nonNull)
-            .distinct()
-            .sorted(Comparator.comparing(Vardenhet::getNamn))
-            .collect(Collectors.toList());
-    }
+  public List<Vardenhet> get(List<Commission> commissions) {
+    return commissions.stream()
+        .filter(this::isUnitActive)
+        .map(getCareUnitService::get)
+        .filter(Objects::nonNull)
+        .distinct()
+        .sorted(Comparator.comparing(Vardenhet::getNamn))
+        .collect(Collectors.toList());
+  }
 
-    private boolean isUnitActive(Commission commission) {
-        return isActive(commission.getHealthCareUnitStartDate(), commission.getHealthCareUnitEndDate());
-    }
+  private boolean isUnitActive(Commission commission) {
+    return isActive(commission.getHealthCareUnitStartDate(), commission.getHealthCareUnitEndDate());
+  }
 }

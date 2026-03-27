@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -32,43 +32,47 @@ import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
  */
 public class SjukfallIntygPatientResolver {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygPatientResolver.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygPatientResolver.class);
 
-    private SjukfallIntygPatientCreator creator;
+  private SjukfallIntygPatientCreator creator;
 
-    // constructor
+  // constructor
 
-    public SjukfallIntygPatientResolver(SjukfallIntygPatientCreator creator) {
-        this.creator = creator;
+  public SjukfallIntygPatientResolver(SjukfallIntygPatientCreator creator) {
+    this.creator = creator;
+  }
+
+  // api
+
+  /**
+   * Method is resolving sjukfall for a health care unit based on the unit's certificate
+   * information. A map with patient id as key and a list of certificates associated with a sjukfall
+   * as value, will be returned.
+   */
+  public Map<Integer, List<SjukfallIntyg>> resolve(
+      final List<IntygData> intygsData, final int maxIntygsGlapp, final LocalDate aktivtDatum) {
+
+    LOG.debug("Start resolving certificate information...");
+    LOG.debug(
+        "  - max days between certificates: {}, active date: {}", maxIntygsGlapp, aktivtDatum);
+
+    if (intygsData == null || intygsData.isEmpty()) {
+      LOG.info("There was no in-data! Returning empty list");
+      return new HashMap<>();
     }
 
-    // api
-
-    /**
-     * Method is resolving sjukfall for a health care unit based on the unit's certificate information.
-     * A map with patient id as key and a list of certificates associated with a sjukfall as value, will be returned.
-     */
-    public Map<Integer, List<SjukfallIntyg>> resolve(final List<IntygData> intygsData,
-        final int maxIntygsGlapp, final LocalDate aktivtDatum) {
-
-        LOG.debug("Start resolving certificate information...");
-        LOG.debug("  - max days between certificates: {}, active date: {}", maxIntygsGlapp, aktivtDatum);
-
-        if (intygsData == null || intygsData.isEmpty()) {
-            LOG.info("There was no in-data! Returning empty list");
-            return new HashMap<>();
-        }
-
-        if (maxIntygsGlapp < 0) {
-            LOG.info("Maximal days between certificates was {}. Value must be equal or greater than zero", maxIntygsGlapp);
-            return new HashMap<>();
-        }
-
-        // Create a map of sjukfall
-        Map<Integer, List<SjukfallIntyg>> sjukfall = creator.create(intygsData, maxIntygsGlapp, aktivtDatum);
-
-        LOG.debug("...stop resolving certificate information.");
-        return sjukfall;
+    if (maxIntygsGlapp < 0) {
+      LOG.info(
+          "Maximal days between certificates was {}. Value must be equal or greater than zero",
+          maxIntygsGlapp);
+      return new HashMap<>();
     }
 
+    // Create a map of sjukfall
+    Map<Integer, List<SjukfallIntyg>> sjukfall =
+        creator.create(intygsData, maxIntygsGlapp, aktivtDatum);
+
+    LOG.debug("...stop resolving certificate information.");
+    return sjukfall;
+  }
 }

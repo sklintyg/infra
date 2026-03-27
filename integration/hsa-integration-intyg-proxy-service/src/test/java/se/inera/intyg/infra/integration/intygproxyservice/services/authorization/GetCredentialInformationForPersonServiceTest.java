@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.authorization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,34 +36,40 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetC
 @ExtendWith(MockitoExtension.class)
 class GetCredentialInformationForPersonServiceTest {
 
-    private static final String PERSON_HSA_ID = "personHsaId";
-    private static final List<CredentialInformation> CREDENTIAL_INFORMATIONS = List.of(new CredentialInformation());
-    @Mock
-    private HsaIntygProxyServiceCredentialInformationForPersonClient credentialInformationForPersonClient;
-    @InjectMocks
-    private GetCredentialInformationForPersonService getCredentialInformationForPersonService;
+  private static final String PERSON_HSA_ID = "personHsaId";
+  private static final List<CredentialInformation> CREDENTIAL_INFORMATIONS =
+      List.of(new CredentialInformation());
 
-    @Test
-    void shouldValidateRequest() {
-        final var request = GetCredentialInformationRequestDTO.builder().build();
+  @Mock
+  private HsaIntygProxyServiceCredentialInformationForPersonClient
+      credentialInformationForPersonClient;
 
-        assertThrows(IllegalArgumentException.class, () -> getCredentialInformationForPersonService.get(request));
-    }
+  @InjectMocks
+  private GetCredentialInformationForPersonService getCredentialInformationForPersonService;
 
-    @Test
-    void shouldReturnListOfCredentialInformationForPerson() {
-        final var request = GetCredentialInformationRequestDTO.builder()
-            .personHsaId(PERSON_HSA_ID)
-            .build();
+  @Test
+  void shouldValidateRequest() {
+    final var request = GetCredentialInformationRequestDTO.builder().build();
 
-        final var expectedResponse = GetCredentialInformationResponseDTO.builder()
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> getCredentialInformationForPersonService.get(request));
+  }
+
+  @Test
+  void shouldReturnListOfCredentialInformationForPerson() {
+    final var request =
+        GetCredentialInformationRequestDTO.builder().personHsaId(PERSON_HSA_ID).build();
+
+    final var expectedResponse =
+        GetCredentialInformationResponseDTO.builder()
             .credentialInformation(CREDENTIAL_INFORMATIONS)
             .build();
 
-        when(credentialInformationForPersonClient.get(request)).thenReturn(expectedResponse);
+    when(credentialInformationForPersonClient.get(request)).thenReturn(expectedResponse);
 
-        final var result = getCredentialInformationForPersonService.get(request);
+    final var result = getCredentialInformationForPersonService.get(request);
 
-        assertEquals(expectedResponse.getCredentialInformation(), result);
-    }
+    assertEquals(expectedResponse.getCredentialInformation(), result);
+  }
 }

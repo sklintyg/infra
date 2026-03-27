@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,14 +24,14 @@ import lombok.Data;
 @Data
 public class CertificateListEntry {
 
-    private String certificateId;
-    private String civicRegistrationNumber;
-    private String certificateType;
-    private String certificateTypeVersion;
-    private String certificateTypeName;
-    private LocalDateTime signedDate;
-    private boolean isSent;
-    private boolean isProtectedIdentity;
-    private boolean isTestIndicator;
-    private boolean isDeceased;
+  private String certificateId;
+  private String civicRegistrationNumber;
+  private String certificateType;
+  private String certificateTypeVersion;
+  private String certificateTypeName;
+  private LocalDateTime signedDate;
+  private boolean isSent;
+  private boolean isProtectedIdentity;
+  private boolean isTestIndicator;
+  private boolean isDeceased;
 }

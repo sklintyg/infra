@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,60 +26,56 @@ import se.inera.intyg.infra.security.common.model.Pilot;
 
 public final class FeaturesConfiguration {
 
-    @JsonProperty
-    private List<String> knownIntygstyper;
-    @JsonProperty
-    private List<String> knownFeatures;
-    @JsonProperty
-    private List<Feature> features;
-    @JsonProperty
-    private List<Pilot> pilots;
+  @JsonProperty private List<String> knownIntygstyper;
+  @JsonProperty private List<String> knownFeatures;
+  @JsonProperty private List<Feature> features;
+  @JsonProperty private List<Pilot> pilots;
 
-    public List<String> getKnownIntygstyper() {
-        return knownIntygstyper;
-    }
+  public List<String> getKnownIntygstyper() {
+    return knownIntygstyper;
+  }
 
-    public void setKnownIntygstyper(List<String> knownIntygstyper) {
-        if (knownIntygstyper == null) {
-            this.knownIntygstyper = Collections.emptyList();
-        } else {
-            this.knownIntygstyper = knownIntygstyper;
-        }
+  public void setKnownIntygstyper(List<String> knownIntygstyper) {
+    if (knownIntygstyper == null) {
+      this.knownIntygstyper = Collections.emptyList();
+    } else {
+      this.knownIntygstyper = knownIntygstyper;
     }
+  }
 
-    public List<String> getKnownFeatures() {
-        return knownFeatures;
-    }
+  public List<String> getKnownFeatures() {
+    return knownFeatures;
+  }
 
-    public void setKnownFeatures(List<String> knownFeatures) {
-        if (knownFeatures == null) {
-            this.knownFeatures = Collections.emptyList();
-        } else {
-            this.knownFeatures = knownFeatures;
-        }
+  public void setKnownFeatures(List<String> knownFeatures) {
+    if (knownFeatures == null) {
+      this.knownFeatures = Collections.emptyList();
+    } else {
+      this.knownFeatures = knownFeatures;
     }
+  }
 
-    public List<Feature> getFeatures() {
-        return features;
-    }
+  public List<Feature> getFeatures() {
+    return features;
+  }
 
-    public void setFeatures(List<Feature> features) {
-        if (features == null) {
-            this.features = Collections.emptyList();
-        } else {
-            this.features = features;
-        }
+  public void setFeatures(List<Feature> features) {
+    if (features == null) {
+      this.features = Collections.emptyList();
+    } else {
+      this.features = features;
     }
+  }
 
-    public List<Pilot> getPilots() {
-        return pilots;
-    }
+  public List<Pilot> getPilots() {
+    return pilots;
+  }
 
-    public void setPilots(List<Pilot> pilots) {
-        if (pilots == null) {
-            this.pilots = Collections.emptyList();
-        } else {
-            this.pilots = pilots;
-        }
+  public void setPilots(List<Pilot> pilots) {
+    if (pilots == null) {
+      this.pilots = Collections.emptyList();
+    } else {
+      this.pilots = pilots;
     }
+  }
 }

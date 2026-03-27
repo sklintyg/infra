@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,19 +28,22 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDia
 
 public class GetDiagnosisCodesStub implements GetDiagnosisCodesResponderInterface {
 
-    public static List<String> allValidDiagnosis = ImmutableList.of("M18", "J20", "Q10");
+  public static List<String> allValidDiagnosis = ImmutableList.of("M18", "J20", "Q10");
 
-    @Override
-    public GetDiagnosisCodesResponseType getDiagnosisCodes(GetDiagnosisCodesRequestType getDiagnosisCodesRequestType) {
-        GetDiagnosisCodesResponseType response = new GetDiagnosisCodesResponseType();
-        response.getDiagnos().addAll(allValidDiagnosis.stream().map(this::createDiagnos).collect(Collectors.toList()));
-        return response;
-    }
+  @Override
+  public GetDiagnosisCodesResponseType getDiagnosisCodes(
+      GetDiagnosisCodesRequestType getDiagnosisCodesRequestType) {
+    GetDiagnosisCodesResponseType response = new GetDiagnosisCodesResponseType();
+    response
+        .getDiagnos()
+        .addAll(allValidDiagnosis.stream().map(this::createDiagnos).collect(Collectors.toList()));
+    return response;
+  }
 
-    private Diagnos createDiagnos(String diagnosisCode) {
-        Diagnos diagnos = new Diagnos();
-        diagnos.setCode(diagnosisCode);
-        diagnos.setCodeSystem("1.2.752.116.1.1.1.1.3");
-        return diagnos;
-    }
+  private Diagnos createDiagnos(String diagnosisCode) {
+    Diagnos diagnos = new Diagnos();
+    diagnos.setCode(diagnosisCode);
+    diagnos.setCodeSystem("1.2.752.116.1.1.1.1.3");
+    return diagnos;
+  }
 }

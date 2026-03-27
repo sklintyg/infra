@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,42 +26,35 @@ import se.inera.intyg.schemas.contract.Personnummer;
 
 public interface PUService {
 
-    /**
-     * Retrieves a person object from the PU-service.
-     *
-     * If person is not found method will return a PersonSvar
-     * object with a null Person object and status NOT_FOUND.
-     *
-     * If an error occur when calling the PU-service method will
-     * return a PersonSvar object a null Person object and with
-     * status ERROR.
-     *
-     * @param personId a Personnummer
-     * @return a PersonSvar object with a non-null Person object
-     * and status FOUND, otherwise a null Person object and status
-     * NOT_FOUND or ERROR.
-     */
-    PersonSvar getPerson(Personnummer personId);
+  /**
+   * Retrieves a person object from the PU-service.
+   *
+   * <p>If person is not found method will return a PersonSvar object with a null Person object and
+   * status NOT_FOUND.
+   *
+   * <p>If an error occur when calling the PU-service method will return a PersonSvar object a null
+   * Person object and with status ERROR.
+   *
+   * @param personId a Personnummer
+   * @return a PersonSvar object with a non-null Person object and status FOUND, otherwise a null
+   *     Person object and status NOT_FOUND or ERROR.
+   */
+  PersonSvar getPerson(Personnummer personId);
 
-    /**
-     * Retrieves person objects from the PU-service.
-     *
-     * For persons found the map will hold a PersonSvar with a
-     * non-null Person object and status FOUND. If a person is
-     * not found, the map will hold a PersonSvar object with a
-     * null Person object and status NOT_FOUND.
-     *
-     * If an error occur when calling the PU-service method will
-     * return an empty map.
-     *
-     * @param personIds a list of Personnummer
-     * @return a map with PersonSvar if call to PU-service was successful,
-     * otherwise an empty map.
-     */
-    Map<Personnummer, PersonSvar> getPersons(List<Personnummer> personIds);
+  /**
+   * Retrieves person objects from the PU-service.
+   *
+   * <p>For persons found the map will hold a PersonSvar with a non-null Person object and status
+   * FOUND. If a person is not found, the map will hold a PersonSvar object with a null Person
+   * object and status NOT_FOUND.
+   *
+   * <p>If an error occur when calling the PU-service method will return an empty map.
+   *
+   * @param personIds a list of Personnummer
+   * @return a map with PersonSvar if call to PU-service was successful, otherwise an empty map.
+   */
+  Map<Personnummer, PersonSvar> getPersons(List<Personnummer> personIds);
 
-
-    @VisibleForTesting
-    default void clearCache() {
-    }
+  @VisibleForTesting
+  default void clearCache() {}
 }

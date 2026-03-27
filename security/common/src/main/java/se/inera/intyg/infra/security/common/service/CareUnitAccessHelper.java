@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,50 +29,51 @@ import se.inera.intyg.infra.security.common.model.IntygUser;
 /**
  * Helper class for checking whether a {@link IntygUser} has access to a given vardenhet/mottagning.
  *
- * Remember that having medarbetaruppdrag on a Vardenhet implicitly gives full access to all its mottagninar.
+ * <p>Remember that having medarbetaruppdrag on a Vardenhet implicitly gives full access to all its
+ * mottagninar.
  *
- * Created by eriklupander on 2017-09-18.
+ * <p>Created by eriklupander on 2017-09-18.
  */
 public final class CareUnitAccessHelper {
 
-    private CareUnitAccessHelper() {
-    }
+  private CareUnitAccessHelper() {}
 
-    /**
-     * Since the WebCertUser#getValdVardenhet may either return a
-     * {@link se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet} or a
-     * {@link se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning}, this method can be used to determine if:
-     *
-     * <ul>
-     * <li>If the selectedVardenhet is a Vardenhet: The supplied enhetsId is for the Vardenhet or one of its
-     * Mottagningar.</li>
-     * <li>If the selcetedVardenhet is a Mottagning: The supplied enhetsId is the Mottagning,
-     * its parent Vardenhet or one of the sibling Mottagningar.</li>
-     * </ul>
-     *
-     * @param enhetsId HSA-id of a vardenhet or mottagning.
-     * @return true if match is found.
-     */
-    public static boolean userIsLoggedInOnEnhetOrUnderenhet(IntygUser user, String enhetsId) {
+  /**
+   * Since the WebCertUser#getValdVardenhet may either return a {@link
+   * se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet} or a {@link
+   * se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning}, this method can be used to
+   * determine if:
+   *
+   * <ul>
+   *   <li>If the selectedVardenhet is a Vardenhet: The supplied enhetsId is for the Vardenhet or
+   *       one of its Mottagningar.
+   *   <li>If the selcetedVardenhet is a Mottagning: The supplied enhetsId is the Mottagning, its
+   *       parent Vardenhet or one of the sibling Mottagningar.
+   * </ul>
+   *
+   * @param enhetsId HSA-id of a vardenhet or mottagning.
+   * @return true if match is found.
+   */
+  public static boolean userIsLoggedInOnEnhetOrUnderenhet(IntygUser user, String enhetsId) {
 
-        SelectableVardenhet valdVardenhet = user.getValdVardenhet();
-        Set<String> allowedEnhetsId = new HashSet<>();
-        if (valdVardenhet instanceof Vardenhet) {
-            Vardenhet vardenhet = (Vardenhet) valdVardenhet;
-            allowedEnhetsId.add(vardenhet.getId());
-            vardenhet.getMottagningar().stream().forEach(m -> allowedEnhetsId.add(m.getId()));
-        } else if (valdVardenhet instanceof Mottagning) {
-            Mottagning mottagning = (Mottagning) valdVardenhet;
+    SelectableVardenhet valdVardenhet = user.getValdVardenhet();
+    Set<String> allowedEnhetsId = new HashSet<>();
+    if (valdVardenhet instanceof Vardenhet) {
+      Vardenhet vardenhet = (Vardenhet) valdVardenhet;
+      allowedEnhetsId.add(vardenhet.getId());
+      vardenhet.getMottagningar().stream().forEach(m -> allowedEnhetsId.add(m.getId()));
+    } else if (valdVardenhet instanceof Mottagning) {
+      Mottagning mottagning = (Mottagning) valdVardenhet;
 
-            for (Vardgivare vg : user.getVardgivare()) {
-                for (Vardenhet ve : vg.getVardenheter()) {
-                    if (ve.getId().equals(mottagning.getParentHsaId())) {
-                        allowedEnhetsId.add(ve.getId());
-                        ve.getMottagningar().stream().forEach(m -> allowedEnhetsId.add(m.getId()));
-                    }
-                }
-            }
+      for (Vardgivare vg : user.getVardgivare()) {
+        for (Vardenhet ve : vg.getVardenheter()) {
+          if (ve.getId().equals(mottagning.getParentHsaId())) {
+            allowedEnhetsId.add(ve.getId());
+            ve.getMottagningar().stream().forEach(m -> allowedEnhetsId.add(m.getId()));
+          }
         }
-        return allowedEnhetsId.contains(enhetsId);
+      }
     }
+    return allowedEnhetsId.contains(enhetsId);
+  }
 }

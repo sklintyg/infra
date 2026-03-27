@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import static se.inera.intyg.infra.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants.UNIT_CACHE_NAME;
@@ -35,26 +34,29 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUn
 @RequiredArgsConstructor
 public class GetUnitService {
 
-    private final HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
+  private final HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
 
-    @Cacheable(cacheNames = UNIT_CACHE_NAME, key = "#getUnitRequestDTO.hsaId", unless = "#result == null")
-    public Unit get(GetUnitRequestDTO getUnitRequestDTO) {
-        validateRequest(getUnitRequestDTO);
-        final var getUnitResponseDTO = hsaIntygProxyServiceUnitClient.getUnit(getUnitRequestDTO);
-        if (invalidResponseOrNoUnitFound(getUnitResponseDTO)) {
-            log.warn("No unit was found with hsaId '{}', returning null", getUnitRequestDTO.getHsaId());
-            return null;
-        }
-        return getUnitResponseDTO.getUnit();
+  @Cacheable(
+      cacheNames = UNIT_CACHE_NAME,
+      key = "#getUnitRequestDTO.hsaId",
+      unless = "#result == null")
+  public Unit get(GetUnitRequestDTO getUnitRequestDTO) {
+    validateRequest(getUnitRequestDTO);
+    final var getUnitResponseDTO = hsaIntygProxyServiceUnitClient.getUnit(getUnitRequestDTO);
+    if (invalidResponseOrNoUnitFound(getUnitResponseDTO)) {
+      log.warn("No unit was found with hsaId '{}', returning null", getUnitRequestDTO.getHsaId());
+      return null;
     }
+    return getUnitResponseDTO.getUnit();
+  }
 
-    private void validateRequest(GetUnitRequestDTO getUnitRequestDTO) {
-        if (getUnitRequestDTO.getHsaId() == null || getUnitRequestDTO.getHsaId().isEmpty()) {
-            throw new IllegalArgumentException("hsaId is a required field");
-        }
+  private void validateRequest(GetUnitRequestDTO getUnitRequestDTO) {
+    if (getUnitRequestDTO.getHsaId() == null || getUnitRequestDTO.getHsaId().isEmpty()) {
+      throw new IllegalArgumentException("hsaId is a required field");
     }
+  }
 
-    private boolean invalidResponseOrNoUnitFound(GetUnitResponseDTO getUnitResponseDTO) {
-        return getUnitResponseDTO == null || getUnitResponseDTO.getUnit() == null;
-    }
+  private boolean invalidResponseOrNoUnitFound(GetUnitResponseDTO getUnitResponseDTO) {
+    return getUnitResponseDTO == null || getUnitResponseDTO.getUnit() == null;
+  }
 }

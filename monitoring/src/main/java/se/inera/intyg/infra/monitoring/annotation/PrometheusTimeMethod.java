@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,17 +27,17 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 public @interface PrometheusTimeMethod {
 
-    /**
-     * The metric name to use for recording latencies.
-     *
-     * @return A metric name specific to your use case.
-     */
-    String name() default "";
+  /**
+   * The metric name to use for recording latencies.
+   *
+   * @return A metric name specific to your use case.
+   */
+  String name() default "";
 
-    /**
-     * The help message to show in metrics.
-     *
-     * @return A help string
-     */
-    String help() default "Timed Method";
+  /**
+   * The help message to show in metrics.
+   *
+   * @return A help string
+   */
+  String help() default "Timed Method";
 }

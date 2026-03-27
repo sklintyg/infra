@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,36 +28,30 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import se.inera.intyg.infra.security.common.model.Role;
 
-/**
- * Created by Magnus Ekstrand on 25/11/15.
- */
+/** Created by Magnus Ekstrand on 25/11/15. */
 public final class AuthoritiesResolverUtil {
 
-    private AuthoritiesResolverUtil() {
-    }
+  private AuthoritiesResolverUtil() {}
 
-    public static Map<String, Role> toMap(Role role) {
-        Map<String, Role> map = new HashMap<>();
-        map.put(role.getName(), role);
-        return map;
-    }
+  public static Map<String, Role> toMap(Role role) {
+    Map<String, Role> map = new HashMap<>();
+    map.put(role.getName(), role);
+    return map;
+  }
 
-    public static <T> Map<String, T> toMap(Collection<T> iterables, Function<T, String> keyFunction) {
-        return iterables.stream()
-            .filter(Objects::nonNull)
-            .collect(Collectors.toMap(keyFunction, Function.identity()));
-    }
+  public static <T> Map<String, T> toMap(Collection<T> iterables, Function<T, String> keyFunction) {
+    return iterables.stream()
+        .filter(Objects::nonNull)
+        .collect(Collectors.toMap(keyFunction, Function.identity()));
+  }
 
-    public static <V> List<V> toList(Map<String, V> map) {
-        return new ArrayList<>(map.values());
-    }
+  public static <V> List<V> toList(Map<String, V> map) {
+    return new ArrayList<>(map.values());
+  }
 
-    public static <V> String[] toArray(Map<String, V> map) {
-        List<?> list = map.entrySet().stream()
-            .map(Map.Entry::getKey)
-            .collect(Collectors.toList());
+  public static <V> String[] toArray(Map<String, V> map) {
+    List<?> list = map.entrySet().stream().map(Map.Entry::getKey).collect(Collectors.toList());
 
-        return list.toArray(new String[list.size()]);
-    }
-
+    return list.toArray(new String[list.size()]);
+  }
 }

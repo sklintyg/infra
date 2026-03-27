@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.authorization;
 
 import java.util.List;
@@ -30,18 +29,21 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetC
 @RequiredArgsConstructor
 public class GetCredentialInformationForPersonService {
 
-    private final HsaIntygProxyServiceCredentialInformationForPersonClient credentialInformationForPersonClient;
+  private final HsaIntygProxyServiceCredentialInformationForPersonClient
+      credentialInformationForPersonClient;
 
-    public List<CredentialInformation> get(GetCredentialInformationRequestDTO credentialInformationRequestDTO) {
-        validateRequest(credentialInformationRequestDTO);
-        final var credentialInformationResponseDTO = credentialInformationForPersonClient.get(credentialInformationRequestDTO);
-        return credentialInformationResponseDTO.getCredentialInformation();
+  public List<CredentialInformation> get(
+      GetCredentialInformationRequestDTO credentialInformationRequestDTO) {
+    validateRequest(credentialInformationRequestDTO);
+    final var credentialInformationResponseDTO =
+        credentialInformationForPersonClient.get(credentialInformationRequestDTO);
+    return credentialInformationResponseDTO.getCredentialInformation();
+  }
+
+  private void validateRequest(GetCredentialInformationRequestDTO credentialInformationRequestDTO) {
+    if (credentialInformationRequestDTO.getPersonHsaId() == null
+        || credentialInformationRequestDTO.getPersonHsaId().isEmpty()) {
+      throw new IllegalArgumentException("PersonHsaId is a required field");
     }
-
-    private void validateRequest(GetCredentialInformationRequestDTO credentialInformationRequestDTO) {
-        if (credentialInformationRequestDTO.getPersonHsaId() == null || credentialInformationRequestDTO.getPersonHsaId().isEmpty()) {
-            throw new IllegalArgumentException("PersonHsaId is a required field");
-        }
-    }
-
+  }
 }

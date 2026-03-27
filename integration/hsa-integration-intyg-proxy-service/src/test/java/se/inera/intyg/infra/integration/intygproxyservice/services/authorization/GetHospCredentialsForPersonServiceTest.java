@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.authorization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,36 +35,34 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetC
 @ExtendWith(MockitoExtension.class)
 class GetHospCredentialsForPersonServiceTest {
 
-    private static final String PERSON_ID = "personId";
-    private static final GetCredentialsForPersonRequestDTO GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO =
-        GetCredentialsForPersonRequestDTO.builder()
-            .personId(PERSON_ID)
-            .build();
-    private static final GetCredentialsForPersonResponseDTO GET_CREDENTIALS_FOR_PERSON_RESPONSE_DTO =
-        GetCredentialsForPersonResponseDTO.builder()
-            .credentials(new HospCredentialsForPerson())
-            .build();
-    @Mock
-    private HsaIntygProxyServiceHospCredentialsForPersonClient credentialsForPersonClient;
-    @InjectMocks
-    private GetHospCredentialsForPersonService getHospCredentialsForPersonService;
+  private static final String PERSON_ID = "personId";
+  private static final GetCredentialsForPersonRequestDTO GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO =
+      GetCredentialsForPersonRequestDTO.builder().personId(PERSON_ID).build();
+  private static final GetCredentialsForPersonResponseDTO GET_CREDENTIALS_FOR_PERSON_RESPONSE_DTO =
+      GetCredentialsForPersonResponseDTO.builder()
+          .credentials(new HospCredentialsForPerson())
+          .build();
+  @Mock private HsaIntygProxyServiceHospCredentialsForPersonClient credentialsForPersonClient;
+  @InjectMocks private GetHospCredentialsForPersonService getHospCredentialsForPersonService;
 
-    @Test
-    void shouldThrowIfPersonIdIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> getHospCredentialsForPersonService.get(null));
-    }
+  @Test
+  void shouldThrowIfPersonIdIsNull() {
+    assertThrows(
+        IllegalArgumentException.class, () -> getHospCredentialsForPersonService.get(null));
+  }
 
-    @Test
-    void shouldThrowIfPersonIdIsEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> getHospCredentialsForPersonService.get(""));
-    }
+  @Test
+  void shouldThrowIfPersonIdIsEmpty() {
+    assertThrows(IllegalArgumentException.class, () -> getHospCredentialsForPersonService.get(""));
+  }
 
-    @Test
-    void shouldReturnHospCredentialsForPerson() {
-        when(credentialsForPersonClient.get(GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO)).thenReturn(GET_CREDENTIALS_FOR_PERSON_RESPONSE_DTO);
+  @Test
+  void shouldReturnHospCredentialsForPerson() {
+    when(credentialsForPersonClient.get(GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO))
+        .thenReturn(GET_CREDENTIALS_FOR_PERSON_RESPONSE_DTO);
 
-        final var result = getHospCredentialsForPersonService.get(PERSON_ID);
+    final var result = getHospCredentialsForPersonService.get(PERSON_ID);
 
-        assertEquals(GET_CREDENTIALS_FOR_PERSON_RESPONSE_DTO.getCredentials(), result);
-    }
+    assertEquals(GET_CREDENTIALS_FOR_PERSON_RESPONSE_DTO.getCredentials(), result);
+  }
 }

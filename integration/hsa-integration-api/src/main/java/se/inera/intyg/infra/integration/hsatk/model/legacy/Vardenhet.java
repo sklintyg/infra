@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,60 +28,61 @@ import lombok.EqualsAndHashCode;
 @Data
 public class Vardenhet extends AbstractVardenhet {
 
-    private static final long serialVersionUID = 460424685142490104L;
+  private static final long serialVersionUID = 460424685142490104L;
 
-    private LocalDateTime start;
-    private LocalDateTime end;
+  private LocalDateTime start;
+  private LocalDateTime end;
 
-    private String vardgivareHsaId;
+  private String vardgivareHsaId;
 
-    private List<Mottagning> mottagningar = new ArrayList<>();
+  private List<Mottagning> mottagningar = new ArrayList<>();
 
-    public Vardenhet() {
-        // Needed for deserialization
+  public Vardenhet() {
+    // Needed for deserialization
+  }
+
+  public Vardenhet(String id, String namn) {
+    super(id, namn);
+  }
+
+  public Vardenhet(String id, String namn, LocalDateTime start, LocalDateTime end) {
+    super(id, namn);
+    this.start = start;
+    this.end = end;
+  }
+
+  public Vardenhet(
+      String id, String namn, LocalDateTime start, LocalDateTime end, String vardgivareHsaId) {
+    this(id, namn, start, end);
+    this.vardgivareHsaId = vardgivareHsaId;
+  }
+
+  public void setMottagningar(List<Mottagning> mottagningar) {
+    this.mottagningar = mottagningar;
+  }
+
+  @Override
+  public List<String> getHsaIds() {
+    List<String> ids = new ArrayList<>();
+    ids.add(getId());
+    for (Mottagning mottagning : getMottagningar()) {
+      ids.add(mottagning.getId());
+    }
+    return ids;
+  }
+
+  public SelectableVardenhet findSelectableVardenhet(String id) {
+
+    if (id.equals(getId())) {
+      return this;
     }
 
-    public Vardenhet(String id, String namn) {
-        super(id, namn);
+    for (Mottagning m : getMottagningar()) {
+      if (id.equals(m.getId())) {
+        return m;
+      }
     }
 
-    public Vardenhet(String id, String namn, LocalDateTime start, LocalDateTime end) {
-        super(id, namn);
-        this.start = start;
-        this.end = end;
-    }
-
-    public Vardenhet(String id, String namn, LocalDateTime start, LocalDateTime end, String vardgivareHsaId) {
-        this(id, namn, start, end);
-        this.vardgivareHsaId = vardgivareHsaId;
-    }
-
-    public void setMottagningar(List<Mottagning> mottagningar) {
-        this.mottagningar = mottagningar;
-    }
-
-    @Override
-    public List<String> getHsaIds() {
-        List<String> ids = new ArrayList<>();
-        ids.add(getId());
-        for (Mottagning mottagning : getMottagningar()) {
-            ids.add(mottagning.getId());
-        }
-        return ids;
-    }
-
-    public SelectableVardenhet findSelectableVardenhet(String id) {
-
-        if (id.equals(getId())) {
-            return this;
-        }
-
-        for (Mottagning m : getMottagningar()) {
-            if (id.equals(m.getId())) {
-                return m;
-            }
-        }
-
-        return null;
-    }
+    return null;
+  }
 }

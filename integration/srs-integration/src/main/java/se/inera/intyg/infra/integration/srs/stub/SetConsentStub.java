@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -32,21 +32,22 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.ResultCodeEnum;
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.BOTH)
 public class SetConsentStub implements SetConsentResponderInterface {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SetConsentStub.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SetConsentStub.class);
 
-    @Autowired
-    private ConsentRepository consentRepository;
+  @Autowired private ConsentRepository consentRepository;
 
-    @Override
-    public SetConsentResponseType setConsent(SetConsentRequestType setConsentRequestType) {
-        LOG.info("Stub received SetConsent-request for {}.", setConsentRequestType.getPersonId());
+  @Override
+  public SetConsentResponseType setConsent(SetConsentRequestType setConsentRequestType) {
+    LOG.info("Stub received SetConsent-request for {}.", setConsentRequestType.getPersonId());
 
-        Personnummer personnummer = Personnummer.createPersonnummer(setConsentRequestType.getPersonId()).get();
-        consentRepository
-            .setConsent(personnummer, setConsentRequestType.getVardenhetId().getExtension(),
-                setConsentRequestType.isSamtycke());
-        SetConsentResponseType response = new SetConsentResponseType();
-        response.setResultCode(ResultCodeEnum.OK);
-        return response;
-    }
+    Personnummer personnummer =
+        Personnummer.createPersonnummer(setConsentRequestType.getPersonId()).get();
+    consentRepository.setConsent(
+        personnummer,
+        setConsentRequestType.getVardenhetId().getExtension(),
+        setConsentRequestType.isSamtycke());
+    SetConsentResponseType response = new SetConsentResponseType();
+    response.setResultCode(ResultCodeEnum.OK);
+    return response;
+  }
 }

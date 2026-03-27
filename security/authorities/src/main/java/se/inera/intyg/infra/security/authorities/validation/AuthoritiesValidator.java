@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,8 +22,8 @@ import java.util.Optional;
 import se.inera.intyg.infra.security.common.model.UserDetails;
 
 /**
- * Utility class that makes it easy to express and enforce authority constraint rules in backend code.
- * Example usage could be:
+ * Utility class that makes it easy to express and enforce authority constraint rules in backend
+ * code. Example usage could be:
  *
  * <pre>
  * authoritiesValidator.given(user, &quot;fk7263&quot;).
@@ -37,18 +37,16 @@ import se.inera.intyg.infra.security.common.model.UserDetails;
  */
 public final class AuthoritiesValidator {
 
-    /**
-     * Create an expectation context with both user and intyp.
-     */
-    public AuthExpectationSpecification given(UserDetails user, String intygstyp) {
-        return new AuthExpectationSpecImpl(user, Optional.of(intygstyp));
-    }
+  /** Create an expectation context with both user and intyp. */
+  public AuthExpectationSpecification given(UserDetails user, String intygstyp) {
+    return new AuthExpectationSpecImpl(user, Optional.of(intygstyp));
+  }
 
-    /**
-     * Create a expectation context with just a user and no intygstyp, i.e intygstyp doesnt' matter in validations.
-     */
-    public AuthExpectationSpecification given(UserDetails user) {
-        return new AuthExpectationSpecImpl(user, Optional.empty());
-    }
-
+  /**
+   * Create a expectation context with just a user and no intygstyp, i.e intygstyp doesnt' matter in
+   * validations.
+   */
+  public AuthExpectationSpecification given(UserDetails user) {
+    return new AuthExpectationSpecImpl(user, Optional.empty());
+  }
 }

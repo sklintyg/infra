@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,56 +27,53 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
-/**
- * Created by Magnus Ekstrand on 2016-02-11.
- */
+/** Created by Magnus Ekstrand on 2016-02-11. */
 public class SjukfallIntygReader {
 
-    private List<String> lines = new ArrayList<>();
+  private List<String> lines = new ArrayList<>();
 
-    private String location;
-    private int linesToSkip;
+  private String location;
+  private int linesToSkip;
 
-    public SjukfallIntygReader(String location, int linesToSkip) {
-        this.location = location;
-        this.linesToSkip = linesToSkip;
-    }
+  public SjukfallIntygReader(String location, int linesToSkip) {
+    this.location = location;
+    this.linesToSkip = linesToSkip;
+  }
 
-    public List<String> read() throws IOException {
-        loadData();
-        return lines;
-    }
+  public List<String> read() throws IOException {
+    loadData();
+    return lines;
+  }
 
-    private void loadData() throws IOException {
-        // Read data
-        ResourceLoader resourceLoader = new PathMatchingResourcePatternResolver();
-        Resource resource = resourceLoader.getResource(location);
+  private void loadData() throws IOException {
+    // Read data
+    ResourceLoader resourceLoader = new PathMatchingResourcePatternResolver();
+    Resource resource = resourceLoader.getResource(location);
 
-        // Parse data
-        chunkifyData(resource);
-    }
+    // Parse data
+    chunkifyData(resource);
+  }
 
-    private void chunkifyData(Resource resource) throws IOException {
-        InputStream inputStream = resource.getInputStream();
-        Scanner scanner = null;
-        try {
-            scanner = new Scanner(inputStream);
-            int counter = 0;
-            while (scanner.hasNext()) {
-                String line = scanner.nextLine();
-                if (!(counter < linesToSkip)) {
-                    lines.add(line);
-                }
-                counter++;
-            }
-        } finally {
-            if (null != inputStream) {
-                inputStream.close();
-            }
-            if (null != scanner) {
-                scanner.close();
-            }
+  private void chunkifyData(Resource resource) throws IOException {
+    InputStream inputStream = resource.getInputStream();
+    Scanner scanner = null;
+    try {
+      scanner = new Scanner(inputStream);
+      int counter = 0;
+      while (scanner.hasNext()) {
+        String line = scanner.nextLine();
+        if (!(counter < linesToSkip)) {
+          lines.add(line);
         }
+        counter++;
+      }
+    } finally {
+      if (null != inputStream) {
+        inputStream.close();
+      }
+      if (null != scanner) {
+        scanner.close();
+      }
     }
-
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,19 +18,15 @@
  */
 package se.inera.intyg.infra.sjukfall.services;
 
-/**
- * Created by Magnus Ekstrand on 2016-02-22.
- */
+/** Created by Magnus Ekstrand on 2016-02-22. */
 public class SjukfallEngineServiceException extends RuntimeException {
 
-    /**
-     * Constructs an exception with the specified message and no
-     * root cause.
-     *
-     * @param msg the detail message
-     */
-    public SjukfallEngineServiceException(String msg) {
-        super(msg);
-    }
-
+  /**
+   * Constructs an exception with the specified message and no root cause.
+   *
+   * @param msg the detail message
+   */
+  public SjukfallEngineServiceException(String msg) {
+    super(msg);
+  }
 }

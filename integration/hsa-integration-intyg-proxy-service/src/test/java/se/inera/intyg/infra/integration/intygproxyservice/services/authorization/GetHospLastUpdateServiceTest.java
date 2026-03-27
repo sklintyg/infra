@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.authorization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,22 +33,19 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetH
 @ExtendWith(MockitoExtension.class)
 class GetHospLastUpdateServiceTest {
 
-    @Mock
-    private HsaIntygProxyServiceHospLastUpdateClient hospLastUpdateClient;
+  @Mock private HsaIntygProxyServiceHospLastUpdateClient hospLastUpdateClient;
 
-    @InjectMocks
-    private GetHospLastUpdateService getHospLastUpdateService;
+  @InjectMocks private GetHospLastUpdateService getHospLastUpdateService;
 
-    @Test
-    void shouldReturnHospLastUpdate() {
-        final var expectedResponse = GetHospLastUpdateResponseDTO.builder()
-            .lastUpdate(LocalDateTime.now())
-            .build();
+  @Test
+  void shouldReturnHospLastUpdate() {
+    final var expectedResponse =
+        GetHospLastUpdateResponseDTO.builder().lastUpdate(LocalDateTime.now()).build();
 
-        when(hospLastUpdateClient.get()).thenReturn(expectedResponse);
+    when(hospLastUpdateClient.get()).thenReturn(expectedResponse);
 
-        final var result = getHospLastUpdateService.get();
+    final var result = getHospLastUpdateService.get();
 
-        assertEquals(expectedResponse.getLastUpdate(), result);
-    }
+    assertEquals(expectedResponse.getLastUpdate(), result);
+  }
 }

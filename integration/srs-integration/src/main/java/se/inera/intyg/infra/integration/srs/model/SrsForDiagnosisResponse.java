@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,58 +21,60 @@ package se.inera.intyg.infra.integration.srs.model;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 
-/**
- * Created by marced on 2017-11-06.
- */
+/** Created by marced on 2017-11-06. */
 public final class SrsForDiagnosisResponse {
 
-    private final String diagnosisCode;
-    private final String atgarderStatusCode;
-    private final ImmutableList<String> atgarderObs;
-    private final ImmutableList<String> atgarderRek;
-    private final String statistikStatusCode;
-    private final String statistikDiagnosisCode;
+  private final String diagnosisCode;
+  private final String atgarderStatusCode;
+  private final ImmutableList<String> atgarderObs;
+  private final ImmutableList<String> atgarderRek;
+  private final String statistikStatusCode;
+  private final String statistikDiagnosisCode;
 
-    public SrsForDiagnosisResponse(List<String> atgarderObs, List<String> atgarderRek,
-        String diagnosisCode, String atgarderStatusCode, String statistikStatusCode,
-        String statistikDiagnosisCode) {
-        if (atgarderObs == null) {
-            this.atgarderObs = null;
-        } else {
-            this.atgarderObs = ImmutableList.copyOf(atgarderObs);
-        }
-        if (atgarderRek == null) {
-            this.atgarderRek = null;
-        } else {
-            this.atgarderRek = ImmutableList.copyOf(atgarderRek);
-        }
-        this.diagnosisCode = diagnosisCode;
-        this.atgarderStatusCode = atgarderStatusCode;
-        this.statistikStatusCode = statistikStatusCode;
-        this.statistikDiagnosisCode = statistikDiagnosisCode;
+  public SrsForDiagnosisResponse(
+      List<String> atgarderObs,
+      List<String> atgarderRek,
+      String diagnosisCode,
+      String atgarderStatusCode,
+      String statistikStatusCode,
+      String statistikDiagnosisCode) {
+    if (atgarderObs == null) {
+      this.atgarderObs = null;
+    } else {
+      this.atgarderObs = ImmutableList.copyOf(atgarderObs);
     }
+    if (atgarderRek == null) {
+      this.atgarderRek = null;
+    } else {
+      this.atgarderRek = ImmutableList.copyOf(atgarderRek);
+    }
+    this.diagnosisCode = diagnosisCode;
+    this.atgarderStatusCode = atgarderStatusCode;
+    this.statistikStatusCode = statistikStatusCode;
+    this.statistikDiagnosisCode = statistikDiagnosisCode;
+  }
 
-    public ImmutableList<String> getAtgarderObs() {
-        return atgarderObs;
-    }
+  public ImmutableList<String> getAtgarderObs() {
+    return atgarderObs;
+  }
 
-    public ImmutableList<String> getAtgarderRek() {
-        return atgarderRek;
-    }
+  public ImmutableList<String> getAtgarderRek() {
+    return atgarderRek;
+  }
 
-    public String getDiagnosisCode() {
-        return diagnosisCode;
-    }
+  public String getDiagnosisCode() {
+    return diagnosisCode;
+  }
 
-    public String getAtgarderStatusCode() {
-        return atgarderStatusCode;
-    }
+  public String getAtgarderStatusCode() {
+    return atgarderStatusCode;
+  }
 
-    public String getStatistikStatusCode() {
-        return statistikStatusCode;
-    }
+  public String getStatistikStatusCode() {
+    return statistikStatusCode;
+  }
 
-    public String getStatistikDiagnosisCode() {
-        return statistikDiagnosisCode;
-    }
+  public String getStatistikDiagnosisCode() {
+    return statistikDiagnosisCode;
+  }
 }

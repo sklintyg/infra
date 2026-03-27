@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -38,49 +38,47 @@ import org.springframework.core.io.ClassPathResource;
 
 public final class XsltUtil {
 
-    private XsltUtil() {
+  private XsltUtil() {}
 
+  private static final Logger LOG = LoggerFactory.getLogger(XsltUtil.class);
+
+  public static void transform(InputStream inXml, OutputStream outXml, String xsltFile) {
+    // CHECKSTYLE:OFF EmptyCatchBlock
+    try {
+      ClassPathResource cpr = new ClassPathResource(xsltFile);
+
+      // Create transformer factory
+      TransformerFactory factory = TransformerFactory.newInstance();
+
+      // Use the factory to create a template containing the xsl file
+      Templates template = factory.newTemplates(new StreamSource(cpr.getInputStream()));
+
+      // Use the template to create a transformer
+      Transformer xformer = template.newTransformer();
+
+      // Prepare the input and output files
+      Source source = new StreamSource(inXml);
+      Result result = new StreamResult(outXml);
+
+      // Apply the xsl file to the source file and write the result
+      // to the output file
+      xformer.transform(source, result);
+    } catch (FileNotFoundException | TransformerConfigurationException e) {
+    } catch (IOException e) {
+      LOG.error("XSLT transformer IOException: {}", e.getMessage());
+    } catch (TransformerException e) {
+      // An error occurred while applying the XSL file
+      // Get location of error in input file
+      SourceLocator locator = e.getLocator();
+      int col = locator.getColumnNumber();
+      int line = locator.getLineNumber();
+      String publicId = locator.getPublicId();
+      String systemId = locator.getSystemId();
+
+      LOG.error("XSLT transformer exception: {}", e.getMessage());
+      LOG.error(
+          "Details: line: {} col: {} publicId: {} systemId: {}", line, col, publicId, systemId);
     }
-
-    private static final Logger LOG = LoggerFactory.getLogger(XsltUtil.class);
-
-    public static void transform(InputStream inXml, OutputStream outXml, String xsltFile) {
-        // CHECKSTYLE:OFF EmptyCatchBlock
-        try {
-            ClassPathResource cpr = new ClassPathResource(xsltFile);
-
-            // Create transformer factory
-            TransformerFactory factory = TransformerFactory.newInstance();
-
-            // Use the factory to create a template containing the xsl file
-            Templates template = factory.newTemplates(new StreamSource(
-                cpr.getInputStream()));
-
-            // Use the template to create a transformer
-            Transformer xformer = template.newTransformer();
-
-            // Prepare the input and output files
-            Source source = new StreamSource(inXml);
-            Result result = new StreamResult(outXml);
-
-            // Apply the xsl file to the source file and write the result
-            // to the output file
-            xformer.transform(source, result);
-        } catch (FileNotFoundException | TransformerConfigurationException e) {
-        } catch (IOException e) {
-            LOG.error("XSLT transformer IOException: {}", e.getMessage());
-        } catch (TransformerException e) {
-            // An error occurred while applying the XSL file
-            // Get location of error in input file
-            SourceLocator locator = e.getLocator();
-            int col = locator.getColumnNumber();
-            int line = locator.getLineNumber();
-            String publicId = locator.getPublicId();
-            String systemId = locator.getSystemId();
-
-            LOG.error("XSLT transformer exception: {}", e.getMessage());
-            LOG.error("Details: line: {} col: {} publicId: {} systemId: {}", line, col, publicId, systemId);
-        }
-        // CHECKSTYLE:ON EmptyCatchBlock
-    }
+    // CHECKSTYLE:ON EmptyCatchBlock
+  }
 }

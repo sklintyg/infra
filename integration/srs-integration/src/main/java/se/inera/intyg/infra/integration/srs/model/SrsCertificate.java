@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,29 +24,31 @@ import lombok.Data;
 @Data
 public class SrsCertificate {
 
-    private String certificateId;
-    private String mainDiagnosisCode;
-    private LocalDate signedDate;
-    private String extendsCertificateId;
+  private String certificateId;
+  private String mainDiagnosisCode;
+  private LocalDate signedDate;
+  private String extendsCertificateId;
 
-    public SrsCertificate() {
-    }
+  public SrsCertificate() {}
 
-    public SrsCertificate(String certificateId) {
-        this.certificateId = certificateId;
-    }
+  public SrsCertificate(String certificateId) {
+    this.certificateId = certificateId;
+  }
 
-    public SrsCertificate(String certificateId, String mainDiagnosisCode, LocalDate signedDate) {
-        this.certificateId = certificateId;
-        this.mainDiagnosisCode = mainDiagnosisCode;
-        this.signedDate = signedDate;
-    }
+  public SrsCertificate(String certificateId, String mainDiagnosisCode, LocalDate signedDate) {
+    this.certificateId = certificateId;
+    this.mainDiagnosisCode = mainDiagnosisCode;
+    this.signedDate = signedDate;
+  }
 
-    public SrsCertificate(String certificateId, String mainDiagnosisCode, LocalDate signedDate, String extendsCertificateId) {
-        this.certificateId = certificateId;
-        this.mainDiagnosisCode = mainDiagnosisCode;
-        this.signedDate = signedDate;
-        this.extendsCertificateId = extendsCertificateId;
-    }
-
+  public SrsCertificate(
+      String certificateId,
+      String mainDiagnosisCode,
+      LocalDate signedDate,
+      String extendsCertificateId) {
+    this.certificateId = certificateId;
+    this.mainDiagnosisCode = mainDiagnosisCode;
+    this.signedDate = signedDate;
+    this.extendsCertificateId = extendsCertificateId;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,31 +28,31 @@ import lombok.EqualsAndHashCode;
 @Data
 public class Mottagning extends AbstractVardenhet {
 
-    private static final long serialVersionUID = 6427228467181041893L;
+  private static final long serialVersionUID = 6427228467181041893L;
 
-    private LocalDateTime start;
-    private LocalDateTime end;
-    private String parentHsaId;
+  private LocalDateTime start;
+  private LocalDateTime end;
+  private String parentHsaId;
 
-    public Mottagning() {
-        // Needed for deserialization
-        super();
-    }
+  public Mottagning() {
+    // Needed for deserialization
+    super();
+  }
 
-    public Mottagning(String id, String namn) {
-        super(id, namn);
-    }
+  public Mottagning(String id, String namn) {
+    super(id, namn);
+  }
 
-    public Mottagning(String id, String namn, LocalDateTime start, LocalDateTime end) {
-        super(id, namn);
-        this.start = start;
-        this.end = end;
-    }
+  public Mottagning(String id, String namn, LocalDateTime start, LocalDateTime end) {
+    super(id, namn);
+    this.start = start;
+    this.end = end;
+  }
 
-    @Override
-    public List<String> getHsaIds() {
-        List<String> ids = new ArrayList<>();
-        ids.add(getId());
-        return ids;
-    }
+  @Override
+  public List<String> getHsaIds() {
+    List<String> ids = new ArrayList<>();
+    ids.add(getId());
+    return ids;
+  }
 }

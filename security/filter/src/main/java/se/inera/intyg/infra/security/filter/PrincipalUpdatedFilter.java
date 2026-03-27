@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -36,66 +36,67 @@ import org.springframework.util.SerializationUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
- * This filter checks if the user Principal has changed (new vald vardenhet, some consent given etc). If true,
- * the wrapped RedisSession is "touched" using session.setAttribute("SPRING_SECURITY_CONTEXT", context) which
- * then will trigger a diff in the springSessionRepositoryFilter forcing an update of the Principal in the redis store.
+ * This filter checks if the user Principal has changed (new vald vardenhet, some consent given
+ * etc). If true, the wrapped RedisSession is "touched" using
+ * session.setAttribute("SPRING_SECURITY_CONTEXT", context) which then will trigger a diff in the
+ * springSessionRepositoryFilter forcing an update of the Principal in the redis store.
  *
- * ONLY use this filter if you're using Spring Session with Redis!
+ * <p>ONLY use this filter if you're using Spring Session with Redis!
  *
- * This filter should run directly AFTER the spring security filters so it has access to the Spring Security
- * SecurityContextHolder.getContext().
+ * <p>This filter should run directly AFTER the spring security filters so it has access to the
+ * Spring Security SecurityContextHolder.getContext().
  *
  * @author eriklupander
  */
 public class PrincipalUpdatedFilter extends OncePerRequestFilter {
 
-    static final int HF_BITS = 128;
+  static final int HF_BITS = 128;
 
-    HashFunction hf = Hashing.goodFastHash(HF_BITS);
+  HashFunction hf = Hashing.goodFastHash(HF_BITS);
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-        throws ServletException, IOException {
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
 
-        final SecurityContext context = authContext();
+    final SecurityContext context = authContext();
 
-        final HashCode beforeHash = Objects.nonNull(context)
-            ? hashCode(context.getAuthentication().getPrincipal())
-            : null;
+    final HashCode beforeHash =
+        Objects.nonNull(context) ? hashCode(context.getAuthentication().getPrincipal()) : null;
 
-        // Invoke next filter in chain.
-        filterChain.doFilter(request, response);
+    // Invoke next filter in chain.
+    filterChain.doFilter(request, response);
 
-        // If we were authenticated and calculated a hash before invoke...
-        if (Objects.nonNull(context) && Objects.nonNull(context.getAuthentication())) {
-            final HashCode afterHash = hashCode(context.getAuthentication().getPrincipal());
-            // Check if principal hash has changed
-            if (!beforeHash.equals(afterHash)) {
-                request.getSession(false)
-                    .setAttribute(SPRING_SECURITY_CONTEXT_KEY, context);
-            }
-        }
+    // If we were authenticated and calculated a hash before invoke...
+    if (Objects.nonNull(context) && Objects.nonNull(context.getAuthentication())) {
+      final HashCode afterHash = hashCode(context.getAuthentication().getPrincipal());
+      // Check if principal hash has changed
+      if (!beforeHash.equals(afterHash)) {
+        request.getSession(false).setAttribute(SPRING_SECURITY_CONTEXT_KEY, context);
+      }
     }
+  }
 
-    /**
-     * Returns context if authentication exists.
-     *
-     * @return context if context and it's authentication exists, otherwise null.
-     */
-    private SecurityContext authContext() {
-        final SecurityContext sc = SecurityContextHolder.getContext();
-        return Objects.nonNull(sc.getAuthentication()) ? sc : null;
-    }
+  /**
+   * Returns context if authentication exists.
+   *
+   * @return context if context and it's authentication exists, otherwise null.
+   */
+  private SecurityContext authContext() {
+    final SecurityContext sc = SecurityContextHolder.getContext();
+    return Objects.nonNull(sc.getAuthentication()) ? sc : null;
+  }
 
-    /**
-     * Returns a 128 bit hash code of the object if it's a Serializable (which is strongly recommended).
-     *
-     * @param object the object.
-     * @return the hash code for the objects state if it's serializable, otherwise is hashCode() used.
-     */
-    HashCode hashCode(final Object object) {
-        return (object instanceof Serializable)
-            ? hf.hashBytes(SerializationUtils.serialize(object))
-            : hf.hashInt(object.hashCode());
-    }
+  /**
+   * Returns a 128 bit hash code of the object if it's a Serializable (which is strongly
+   * recommended).
+   *
+   * @param object the object.
+   * @return the hash code for the objects state if it's serializable, otherwise is hashCode() used.
+   */
+  HashCode hashCode(final Object object) {
+    return (object instanceof Serializable)
+        ? hf.hashBytes(SerializationUtils.serialize(object))
+        : hf.hashInt(object.hashCode());
+  }
 }

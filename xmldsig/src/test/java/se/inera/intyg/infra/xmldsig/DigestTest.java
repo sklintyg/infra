@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,20 +28,20 @@ import org.junit.jupiter.api.Test;
 
 class DigestTest {
 
-    @Test
-    void digestTest() {
-        String data = "Data To Be Signed";
-        String base64Digest = sha256AsBase64(data);
-        assertEquals("PXLVCJ1DFmrG6OQa4RZ6dMd+0Z4=", base64Digest);
-    }
+  @Test
+  void digestTest() {
+    String data = "Data To Be Signed";
+    String base64Digest = sha256AsBase64(data);
+    assertEquals("PXLVCJ1DFmrG6OQa4RZ6dMd+0Z4=", base64Digest);
+  }
 
-    private String sha256AsBase64(String signingData) {
-        try {
-            MessageDigest sha = MessageDigest.getInstance("SHA-1");
-            sha.update(signingData.getBytes(StandardCharsets.UTF_8));
-            return Base64.getEncoder().encodeToString(sha.digest());
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException("Unable to digest signingData", e);
-        }
+  private String sha256AsBase64(String signingData) {
+    try {
+      MessageDigest sha = MessageDigest.getInstance("SHA-1");
+      sha.update(signingData.getBytes(StandardCharsets.UTF_8));
+      return Base64.getEncoder().encodeToString(sha.digest());
+    } catch (NoSuchAlgorithmException e) {
+      throw new IllegalArgumentException("Unable to digest signingData", e);
     }
+  }
 }

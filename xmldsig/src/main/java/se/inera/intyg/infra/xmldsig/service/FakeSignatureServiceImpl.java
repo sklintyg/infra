@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,6 +22,7 @@ import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEY
 import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_NAME;
 import static se.inera.intyg.infra.xmldsig.model.FakeSignatureConstants.FAKE_KEYSTORE_PASSWORD;
 
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -30,7 +31,6 @@ import java.security.Signature;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
-import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -39,43 +39,48 @@ import org.springframework.stereotype.Service;
 @Profile("!prod")
 public class FakeSignatureServiceImpl implements FakeSignatureService {
 
+  private KeyStore ks;
 
-    private KeyStore ks;
+  @PostConstruct
+  public void init()
+      throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
+    this.ks = KeyStore.getInstance("JKS");
+    this.ks.load(
+        new ClassPathResource(FAKE_KEYSTORE_NAME).getInputStream(),
+        FAKE_KEYSTORE_PASSWORD.toCharArray());
+  }
 
-    @PostConstruct
-    public void init() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
-        this.ks = KeyStore.getInstance("JKS");
-        this.ks.load(new ClassPathResource(FAKE_KEYSTORE_NAME).getInputStream(), FAKE_KEYSTORE_PASSWORD.toCharArray());
+  /**
+   * Signs the supplied digest using a self-signed cert. Only for fake purposes!!
+   *
+   * @param digest Base64-encoded string to sign.
+   */
+  @Override
+  public String createSignature(String digest) {
+    try {
+      KeyStore.PrivateKeyEntry keyEntry =
+          (KeyStore.PrivateKeyEntry)
+              ks.getEntry(
+                  FAKE_KEYSTORE_ALIAS,
+                  new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
+
+      Signature rsa = Signature.getInstance("SHA256withRSA");
+      rsa.initSign(keyEntry.getPrivateKey());
+      rsa.update(Base64.getDecoder().decode(digest));
+      byte[] signatureBytes = rsa.sign();
+
+      return Base64.getEncoder().encodeToString(signatureBytes);
+    } catch (Exception e) {
+      throw new IllegalStateException("Not possible to sign digest: " + e.getMessage());
     }
+  }
 
-    /**
-     * Signs the supplied digest using a self-signed cert. Only for fake purposes!!
-     *
-     * @param digest Base64-encoded string to sign.
-     */
-    @Override
-    public String createSignature(String digest) {
-        try {
-            KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(FAKE_KEYSTORE_ALIAS,
-                new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
-
-            Signature rsa = Signature.getInstance("SHA256withRSA");
-            rsa.initSign(keyEntry.getPrivateKey());
-            rsa.update(Base64.getDecoder().decode(digest));
-            byte[] signatureBytes = rsa.sign();
-
-            return Base64.getEncoder().encodeToString(signatureBytes);
-        } catch (Exception e) {
-            throw new IllegalStateException("Not possible to sign digest: " + e.getMessage());
-        }
+  @Override
+  public X509Certificate getX509Certificate() {
+    try {
+      return (X509Certificate) this.ks.getCertificate("1");
+    } catch (KeyStoreException e) {
+      throw new RuntimeException(e);
     }
-
-    @Override
-    public X509Certificate getX509Certificate() {
-        try {
-            return (X509Certificate) this.ks.getCertificate("1");
-        } catch (KeyStoreException e) {
-            throw new RuntimeException(e);
-        }
-    }
+  }
 }

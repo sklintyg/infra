@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,14 +25,14 @@ import lombok.Data;
 @Data
 public class CertificateListRequest {
 
-    private String civicRegistrationNumber;
-    private String hsaId;
-    private String[] unitIds;
-    private LocalDateTime fromDate;
-    private LocalDateTime toDate;
-    private int startFrom;
-    private int pageSize;
-    private String orderBy;
-    private boolean orderAscending;
-    private Set<String> types;
+  private String civicRegistrationNumber;
+  private String hsaId;
+  private String[] unitIds;
+  private LocalDateTime fromDate;
+  private LocalDateTime toDate;
+  private int startFrom;
+  private int pageSize;
+  private String orderBy;
+  private boolean orderAscending;
+  private Set<String> types;
 }

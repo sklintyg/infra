@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,35 +27,38 @@ import se.inera.intyg.infra.security.common.model.IntygUser;
 
 public class UserConverter extends ClassicConverter {
 
-    @Override
-    public String convert(ILoggingEvent iLoggingEvent) {
-        return userInfo();
+  @Override
+  public String convert(ILoggingEvent iLoggingEvent) {
+    return userInfo();
+  }
+
+  String userInfo() {
+    final IntygUser u = intygUser();
+    if (Objects.isNull(u)) {
+      return "noUser";
     }
 
-    String userInfo() {
-        final IntygUser u = intygUser();
-        if (Objects.isNull(u)) {
-            return "noUser";
-        }
+    return u.getHsaId()
+        + ","
+        + (Objects.nonNull(u.getValdVardenhet()) ? u.getValdVardenhet().getId() : "noUnit")
+        + ","
+        + (Objects.nonNull(u.getOrigin()) ? u.getOrigin() : "noOrigin")
+        + ","
+        + ((u.getRoles().size() == 1) ? u.getRoles().keySet().iterator().next() : "noRole")
+        + ","
+        + (Objects.nonNull(u.getValdVardgivare()) ? u.getValdVardgivare().getId() : "noVg");
+  }
 
-        return u.getHsaId()
-            + "," + (Objects.nonNull(u.getValdVardenhet()) ? u.getValdVardenhet().getId() : "noUnit")
-            + "," + (Objects.nonNull(u.getOrigin()) ? u.getOrigin() : "noOrigin")
-            + "," + ((u.getRoles().size() == 1) ? u.getRoles().keySet().iterator().next() : "noRole")
-            + "," + (Objects.nonNull(u.getValdVardgivare()) ? u.getValdVardgivare().getId() : "noVg");
+  //
+  IntygUser intygUser() {
+    final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+    if (Objects.isNull(auth)) {
+      return null;
     }
 
-    //
-    IntygUser intygUser() {
-        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    final Object principal = auth.getPrincipal();
 
-        if (Objects.isNull(auth)) {
-            return null;
-        }
-
-        final Object principal = auth.getPrincipal();
-
-        return (principal instanceof IntygUser) ? (IntygUser) principal : null;
-    }
-
+    return (principal instanceof IntygUser) ? (IntygUser) principal : null;
+  }
 }

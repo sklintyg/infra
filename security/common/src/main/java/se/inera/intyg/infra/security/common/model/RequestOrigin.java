@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,49 +23,41 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by Magnus Ekstrand on 19/11/15.
- */
+/** Created by Magnus Ekstrand on 19/11/15. */
 public class RequestOrigin implements Serializable {
 
-    @JsonProperty
-    private String name;
+  @JsonProperty private String name;
 
-    @JsonProperty
-    private List<String> intygstyper;
+  @JsonProperty private List<String> intygstyper;
 
-    // ~ Getter and setter
-    // =======================================================================
+  // ~ Getter and setter
+  // =======================================================================
 
-    public String getName() {
-        return name;
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public List<String> getIntygstyper() {
+    return intygstyper;
+  }
+
+  public void setIntygstyper(List<String> intygstyper) {
+    if (intygstyper == null) {
+      this.intygstyper = Collections.emptyList();
+    } else {
+      this.intygstyper = intygstyper;
     }
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  // ~ API
+  // =======================================================================
 
-    public List<String> getIntygstyper() {
-        return intygstyper;
-    }
-
-    public void setIntygstyper(List<String> intygstyper) {
-        if (intygstyper == null) {
-            this.intygstyper = Collections.emptyList();
-        } else {
-            this.intygstyper = intygstyper;
-        }
-    }
-
-    // ~ API
-    // =======================================================================
-
-    @Override
-    public String toString() {
-        return "\nRequestOrigin {"
-            + " name='" + name + '\''
-            + ", intygstyper= " + intygstyper
-            + "}";
-    }
-
+  @Override
+  public String toString() {
+    return "\nRequestOrigin {" + " name='" + name + '\'' + ", intygstyper= " + intygstyper + "}";
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,98 +42,97 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.organization.GetUn
 @ExtendWith(MockitoExtension.class)
 class HsaIntegrationOrganizationServiceTest {
 
-    private static final String UNIT_HSA_ID = "unitHsaId";
-    private static final String HSA_ID = "hsaId";
+  private static final String UNIT_HSA_ID = "unitHsaId";
+  private static final String HSA_ID = "hsaId";
 
-    @Mock
-    private GetUnitService getUnitService;
+  @Mock private GetUnitService getUnitService;
 
-    @Mock
-    private GetHealthCareUnitMembersService getHealthCareUnitMembersService;
+  @Mock private GetHealthCareUnitMembersService getHealthCareUnitMembersService;
 
-    @Mock
-    private GetHealthCareUnitService getHealthCareUnitService;
+  @Mock private GetHealthCareUnitService getHealthCareUnitService;
 
-    @Mock
-    private GetHealthCareProviderService getHealthCareProviderService;
+  @Mock private GetHealthCareProviderService getHealthCareProviderService;
 
-    @InjectMocks
-    private HsaIntegrationOrganizationService hsaIntegrationOrganizationService;
+  @InjectMocks private HsaIntegrationOrganizationService hsaIntegrationOrganizationService;
 
-    @Nested
-    class GetHealthCareUnit {
+  @Nested
+  class GetHealthCareUnit {
 
-        @Test
-        void shouldReturnHealthCareUnit() {
-            final var expectedUnit = new HealthCareUnit();
-            expectedUnit.setHealthCareUnitHsaId(HSA_ID);
-            when(getHealthCareUnitService.get(any(GetHealthCareUnitRequestDTO.class))).thenReturn(expectedUnit);
+    @Test
+    void shouldReturnHealthCareUnit() {
+      final var expectedUnit = new HealthCareUnit();
+      expectedUnit.setHealthCareUnitHsaId(HSA_ID);
+      when(getHealthCareUnitService.get(any(GetHealthCareUnitRequestDTO.class)))
+          .thenReturn(expectedUnit);
 
-            final var result = hsaIntegrationOrganizationService.getHealthCareUnit(UNIT_HSA_ID);
+      final var result = hsaIntegrationOrganizationService.getHealthCareUnit(UNIT_HSA_ID);
 
-            assertEquals(expectedUnit, result);
-        }
-
-        @Test
-        void shouldReturnNullIfHealthCareUnitIsNull() {
-            final var healthCareUnit = new HealthCareUnit();
-            when(getHealthCareUnitService.get(any(GetHealthCareUnitRequestDTO.class))).thenReturn(healthCareUnit);
-
-            final var result = hsaIntegrationOrganizationService.getHealthCareUnit(UNIT_HSA_ID);
-
-            assertNull(result);
-        }
+      assertEquals(expectedUnit, result);
     }
 
+    @Test
+    void shouldReturnNullIfHealthCareUnitIsNull() {
+      final var healthCareUnit = new HealthCareUnit();
+      when(getHealthCareUnitService.get(any(GetHealthCareUnitRequestDTO.class)))
+          .thenReturn(healthCareUnit);
 
-    @Nested
-    class GetUnit {
+      final var result = hsaIntegrationOrganizationService.getHealthCareUnit(UNIT_HSA_ID);
 
-        @Test
-        void shouldReturnNullIfUnitIsNull() {
-            when(getUnitService.get(any(GetUnitRequestDTO.class))).thenReturn(null);
+      assertNull(result);
+    }
+  }
 
-            final var result = hsaIntegrationOrganizationService.getUnit(UNIT_HSA_ID, null);
+  @Nested
+  class GetUnit {
 
-            assertNull(result);
-        }
+    @Test
+    void shouldReturnNullIfUnitIsNull() {
+      when(getUnitService.get(any(GetUnitRequestDTO.class))).thenReturn(null);
 
-        @Test
-        void shouldReturnResponseFromService() {
-            final var expected = new Unit();
-            when(getUnitService.get(any(GetUnitRequestDTO.class))).thenReturn(expected);
+      final var result = hsaIntegrationOrganizationService.getUnit(UNIT_HSA_ID, null);
 
-            final var result = hsaIntegrationOrganizationService.getUnit(UNIT_HSA_ID, null);
-
-            assertEquals(expected, result);
-        }
+      assertNull(result);
     }
 
-    @Nested
-    class GetHealthCareUnitMembers {
+    @Test
+    void shouldReturnResponseFromService() {
+      final var expected = new Unit();
+      when(getUnitService.get(any(GetUnitRequestDTO.class))).thenReturn(expected);
 
-        @Test
-        void shouldReturnResponseFromService() {
-            final var expected = new HealthCareUnitMembers();
-            when(getHealthCareUnitMembersService.get(any(GetHealthCareUnitMembersRequestDTO.class))).thenReturn(expected);
+      final var result = hsaIntegrationOrganizationService.getUnit(UNIT_HSA_ID, null);
 
-            final var result = hsaIntegrationOrganizationService.getHealthCareUnitMembers(UNIT_HSA_ID);
-
-            assertEquals(expected, result);
-        }
+      assertEquals(expected, result);
     }
+  }
 
-    @Nested
-    class GetHealthCareProviders {
+  @Nested
+  class GetHealthCareUnitMembers {
 
-        @Test
-        void shouldReturnResponseFromService() {
-            final var expected = List.of(new HealthCareProvider());
-            when(getHealthCareProviderService.get(any(GetHealthCareProviderRequestDTO.class))).thenReturn(expected);
+    @Test
+    void shouldReturnResponseFromService() {
+      final var expected = new HealthCareUnitMembers();
+      when(getHealthCareUnitMembersService.get(any(GetHealthCareUnitMembersRequestDTO.class)))
+          .thenReturn(expected);
 
-            final var result = hsaIntegrationOrganizationService.getHealthCareProvider("HSA_ID", "ORG_NO");
+      final var result = hsaIntegrationOrganizationService.getHealthCareUnitMembers(UNIT_HSA_ID);
 
-            assertEquals(expected, result);
-        }
+      assertEquals(expected, result);
     }
+  }
+
+  @Nested
+  class GetHealthCareProviders {
+
+    @Test
+    void shouldReturnResponseFromService() {
+      final var expected = List.of(new HealthCareProvider());
+      when(getHealthCareProviderService.get(any(GetHealthCareProviderRequestDTO.class)))
+          .thenReturn(expected);
+
+      final var result =
+          hsaIntegrationOrganizationService.getHealthCareProvider("HSA_ID", "ORG_NO");
+
+      assertEquals(expected, result);
+    }
+  }
 }

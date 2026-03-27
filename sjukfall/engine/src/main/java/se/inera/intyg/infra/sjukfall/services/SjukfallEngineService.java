@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,25 +29,26 @@ import se.inera.intyg.infra.sjukfall.dto.SjukfallPatient;
  */
 public interface SjukfallEngineService {
 
-    /**
-     * This method is the entry point when calculating 'sjukfall' for a health care untit. Provided data are
-     * certificate information and request parameters set by the client. Each compiled 'sjukfall' corresponds to one
-     * patient.
-     *
-     * @param intygData the certificate information (base data) for the health care unit
-     * @param parameters client request parameters
-     * @return a list of compiled 'sjukfall'.
-     */
-    List<SjukfallEnhet> beraknaSjukfallForEnhet(List<IntygData> intygData, IntygParametrar parameters);
+  /**
+   * This method is the entry point when calculating 'sjukfall' for a health care untit. Provided
+   * data are certificate information and request parameters set by the client. Each compiled
+   * 'sjukfall' corresponds to one patient.
+   *
+   * @param intygData the certificate information (base data) for the health care unit
+   * @param parameters client request parameters
+   * @return a list of compiled 'sjukfall'.
+   */
+  List<SjukfallEnhet> beraknaSjukfallForEnhet(
+      List<IntygData> intygData, IntygParametrar parameters);
 
-    /**
-     * This method is the entry point when calculating 'sjukfall' for one patient. Provied data are
-     * certificate information and request parameters set by the client.
-     *
-     * @param intygData the certificate information (base data) for one patient
-     * @param parameters client request parameters
-     * @return a list of compiled 'sjukfall'.
-     */
-    List<SjukfallPatient> beraknaSjukfallForPatient(List<IntygData> intygData, IntygParametrar parameters);
-
+  /**
+   * This method is the entry point when calculating 'sjukfall' for one patient. Provied data are
+   * certificate information and request parameters set by the client.
+   *
+   * @param intygData the certificate information (base data) for one patient
+   * @param parameters client request parameters
+   * @return a list of compiled 'sjukfall'.
+   */
+  List<SjukfallPatient> beraknaSjukfallForPatient(
+      List<IntygData> intygData, IntygParametrar parameters);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,48 +39,39 @@ import se.inera.intyg.infra.integration.intygproxyservice.services.employee.GetE
 @ExtendWith(MockitoExtension.class)
 class GetEmployeeServiceTest {
 
-    @Mock
-    private HsaIntygProxyServiceEmployeeClient employeeClient;
+  @Mock private HsaIntygProxyServiceEmployeeClient employeeClient;
 
-    @InjectMocks
-    private GetEmployeeService getEmployeeService;
+  @InjectMocks private GetEmployeeService getEmployeeService;
 
-    private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
-    private static final String PERSON_HSA_ID = "personHsaId";
+  private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
+  private static final String PERSON_HSA_ID = "personHsaId";
 
-    @Test
-    void shouldThrowIfMissingPersonalIdentityNumberAndPersonHsaId() {
-        final var request = GetEmployeeRequestDTO.builder()
-            .personId(null)
-            .hsaId(null)
-            .build();
-        assertThrows(IllegalArgumentException.class, () -> getEmployeeService.get(request));
-    }
+  @Test
+  void shouldThrowIfMissingPersonalIdentityNumberAndPersonHsaId() {
+    final var request = GetEmployeeRequestDTO.builder().personId(null).hsaId(null).build();
+    assertThrows(IllegalArgumentException.class, () -> getEmployeeService.get(request));
+  }
 
-    @Test
-    void shouldThrowIfBothPersonalIdentityNumberAndPersonHsaIdIsProvided() {
-        final var request = GetEmployeeRequestDTO.builder()
+  @Test
+  void shouldThrowIfBothPersonalIdentityNumberAndPersonHsaIdIsProvided() {
+    final var request =
+        GetEmployeeRequestDTO.builder()
             .personId(PERSONAL_IDENTITY_NUMBER)
             .hsaId(PERSON_HSA_ID)
             .build();
-        assertThrows(IllegalArgumentException.class, () -> getEmployeeService.get(request));
-    }
+    assertThrows(IllegalArgumentException.class, () -> getEmployeeService.get(request));
+  }
 
-    @Test
-    void shouldReturnListOfPersonalInformation() throws HsaServiceCallException {
-        final var request = GetEmployeeRequestDTO.builder()
-            .personId(PERSONAL_IDENTITY_NUMBER)
-            .build();
-        final var expectedResult = List.of(new PersonInformation());
-        when(employeeClient.getEmployee(request)).thenReturn(
+  @Test
+  void shouldReturnListOfPersonalInformation() throws HsaServiceCallException {
+    final var request = GetEmployeeRequestDTO.builder().personId(PERSONAL_IDENTITY_NUMBER).build();
+    final var expectedResult = List.of(new PersonInformation());
+    when(employeeClient.getEmployee(request))
+        .thenReturn(
             GetEmployeeResponseDTO.builder()
-                .employee(
-                    EmployeeDTO.builder()
-                        .personInformation(expectedResult)
-                        .build()
-                )
+                .employee(EmployeeDTO.builder().personInformation(expectedResult).build())
                 .build());
-        final var result = getEmployeeService.get(request);
-        assertEquals(expectedResult, result);
-    }
+    final var result = getEmployeeService.get(request);
+    assertEquals(expectedResult, result);
+  }
 }

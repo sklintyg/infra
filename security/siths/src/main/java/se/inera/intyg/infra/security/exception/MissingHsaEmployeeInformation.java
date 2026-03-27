@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,12 +20,10 @@ package se.inera.intyg.infra.security.exception;
 
 import org.springframework.security.core.AuthenticationException;
 
-/**
- * Created by eriklupander on 2016-05-11.
- */
+/** Created by eriklupander on 2016-05-11. */
 public class MissingHsaEmployeeInformation extends AuthenticationException {
 
-    public MissingHsaEmployeeInformation(String msg) {
-        super(msg);
-    }
+  public MissingHsaEmployeeInformation(String msg) {
+    super(msg);
+  }
 }

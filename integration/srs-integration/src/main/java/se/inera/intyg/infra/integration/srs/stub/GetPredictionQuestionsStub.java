@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,41 +30,42 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getpredictionquestions.v1.S
 @SchemaValidation(type = SchemaValidation.SchemaValidationType.BOTH)
 public class GetPredictionQuestionsStub implements GetPredictionQuestionsResponderInterface {
 
-    private static final double MAX_PRIORITY = 10;
+  private static final double MAX_PRIORITY = 10;
 
-    @Override
-    public GetPredictionQuestionsResponseType getPredictionQuestions(GetPredictionQuestionsRequestType getPredictionQuestionsRequestType) {
-        GetPredictionQuestionsResponseType response = new GetPredictionQuestionsResponseType();
-        AtomicInteger i = new AtomicInteger(1);
-        response.getPrediktionsfraga().add(createPrediktionsFraga(i.getAndIncrement()));
-        response.getPrediktionsfraga().add(createPrediktionsFraga(i.getAndIncrement()));
-        response.getPrediktionsfraga().add(createPrediktionsFraga(i.getAndIncrement()));
-        return response;
-    }
+  @Override
+  public GetPredictionQuestionsResponseType getPredictionQuestions(
+      GetPredictionQuestionsRequestType getPredictionQuestionsRequestType) {
+    GetPredictionQuestionsResponseType response = new GetPredictionQuestionsResponseType();
+    AtomicInteger i = new AtomicInteger(1);
+    response.getPrediktionsfraga().add(createPrediktionsFraga(i.getAndIncrement()));
+    response.getPrediktionsfraga().add(createPrediktionsFraga(i.getAndIncrement()));
+    response.getPrediktionsfraga().add(createPrediktionsFraga(i.getAndIncrement()));
+    return response;
+  }
 
-    private Prediktionsfraga createPrediktionsFraga(int id) {
-        Prediktionsfraga question = new Prediktionsfraga();
-        AtomicInteger i = new AtomicInteger(1);
-        question.getSvarsalternativ().add(createAnswer(i.getAndIncrement()));
-        question.getSvarsalternativ().add(createAnswer(i.getAndIncrement()));
-        question.getSvarsalternativ().add(createAnswer(i.getAndIncrement()));
-        question.getSvarsalternativ().add(createAnswer(i.getAndIncrement()));
+  private Prediktionsfraga createPrediktionsFraga(int id) {
+    Prediktionsfraga question = new Prediktionsfraga();
+    AtomicInteger i = new AtomicInteger(1);
+    question.getSvarsalternativ().add(createAnswer(i.getAndIncrement()));
+    question.getSvarsalternativ().add(createAnswer(i.getAndIncrement()));
+    question.getSvarsalternativ().add(createAnswer(i.getAndIncrement()));
+    question.getSvarsalternativ().add(createAnswer(i.getAndIncrement()));
 
-        question.setFrageid(BigInteger.valueOf(id));
-        question.setFrageidSrs(String.valueOf(id));
-        question.setFragetext("Fragetext " + id);
-        question.setHjalptext("Hjälptext " + id);
-        question.setPrioritet(BigInteger.valueOf((int) (Math.random() * MAX_PRIORITY) + 1));
-        return question;
-    }
+    question.setFrageid(BigInteger.valueOf(id));
+    question.setFrageidSrs(String.valueOf(id));
+    question.setFragetext("Fragetext " + id);
+    question.setHjalptext("Hjälptext " + id);
+    question.setPrioritet(BigInteger.valueOf((int) (Math.random() * MAX_PRIORITY) + 1));
+    return question;
+  }
 
-    private Svarsalternativ createAnswer(int id) {
-        Svarsalternativ answer = new Svarsalternativ();
-        answer.setDefault(id == 1);
-        answer.setPrioritet(BigInteger.valueOf((int) (Math.random() * MAX_PRIORITY) + 1));
-        answer.setSvarsid(BigInteger.valueOf(id));
-        answer.setSvarsidSrs("stud");
-        answer.setSvarstext("Svarsalternativ " + id);
-        return answer;
-    }
+  private Svarsalternativ createAnswer(int id) {
+    Svarsalternativ answer = new Svarsalternativ();
+    answer.setDefault(id == 1);
+    answer.setPrioritet(BigInteger.valueOf((int) (Math.random() * MAX_PRIORITY) + 1));
+    answer.setSvarsid(BigInteger.valueOf(id));
+    answer.setSvarsidSrs("stud");
+    answer.setSvarstext("Svarsalternativ " + id);
+    return answer;
+  }
 }

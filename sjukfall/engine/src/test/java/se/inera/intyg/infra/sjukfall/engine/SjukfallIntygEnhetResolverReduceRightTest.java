@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -34,80 +34,79 @@ import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 
-/**
- * Created by Magnus Ekstrand on 10/02/16.
- */
+/** Created by Magnus Ekstrand on 10/02/16. */
 @ExtendWith(MockitoExtension.class)
 class SjukfallIntygEnhetResolverReduceRightTest {
 
-    private static final String LOCATION_INTYGSDATA = "classpath:Sjukfall/Enhet/intygsdata-resolver-right.csv";
+  private static final String LOCATION_INTYGSDATA =
+      "classpath:Sjukfall/Enhet/intygsdata-resolver-right.csv";
 
-    private static List<IntygData> intygDataList;
+  private static List<IntygData> intygDataList;
 
-    private SjukfallIntygEnhetResolver resolver;
+  private SjukfallIntygEnhetResolver resolver;
 
-    @BeforeAll
-    static void initTestData() throws IOException {
-        SjukfallIntygGenerator generator = new SjukfallIntygGenerator(LOCATION_INTYGSDATA);
-        intygDataList = generator.generate().get();
-    }
+  @BeforeAll
+  static void initTestData() throws IOException {
+    SjukfallIntygGenerator generator = new SjukfallIntygGenerator(LOCATION_INTYGSDATA);
+    intygDataList = generator.generate().get();
+  }
 
-    @BeforeEach
-    void setup() {
-        resolver = new SjukfallIntygEnhetResolver(new SjukfallIntygEnhetCreator());
-    }
+  @BeforeEach
+  void setup() {
+    resolver = new SjukfallIntygEnhetResolver(new SjukfallIntygEnhetCreator());
+  }
 
-    @Test
-    void testFall1() {
-        List<SjukfallIntyg> result = getTestData("fall-1-right", "2016-02-10", 5, "2016-01-31");
-        assertEquals(3, result.size(), "Expected 3 but was " + result.size());
-    }
+  @Test
+  void testFall1() {
+    List<SjukfallIntyg> result = getTestData("fall-1-right", "2016-02-10", 5, "2016-01-31");
+    assertEquals(3, result.size(), "Expected 3 but was " + result.size());
+  }
 
-    @Test
-    void testFall2() {
-        List<SjukfallIntyg> result = getTestData("fall-2-right", "2016-02-10", 5, "2016-01-31");
-        assertEquals(2, result.size(), "Expected 2 but was " + result.size());
-        assertEquals("fall-2-intyg-1", result.get(0).getIntygId());
-        assertEquals("fall-2-intyg-2", result.get(1).getIntygId());
-    }
+  @Test
+  void testFall2() {
+    List<SjukfallIntyg> result = getTestData("fall-2-right", "2016-02-10", 5, "2016-01-31");
+    assertEquals(2, result.size(), "Expected 2 but was " + result.size());
+    assertEquals("fall-2-intyg-1", result.get(0).getIntygId());
+    assertEquals("fall-2-intyg-2", result.get(1).getIntygId());
+  }
 
-    @Test
-    void testFall3() {
-        List<SjukfallIntyg> result = getTestData("fall-3-right", "2016-02-10", 5, "2016-01-31");
-        assertEquals(0, result.size(), "Expected 0 but was " + result.size());
-    }
+  @Test
+  void testFall3() {
+    List<SjukfallIntyg> result = getTestData("fall-3-right", "2016-02-10", 5, "2016-01-31");
+    assertEquals(0, result.size(), "Expected 0 but was " + result.size());
+  }
 
-    @Test
-    void testFall4() {
-        List<SjukfallIntyg> result = getTestData("fall-4-right", "2016-02-10", 5, "2016-01-31");
-        assertEquals(3, result.size(), "Expected 3 but was " + result.size());
-        assertEquals("fall-4-intyg-1", result.get(0).getIntygId());
-        assertEquals("fall-4-intyg-2", result.get(1).getIntygId());
-        assertEquals("fall-4-intyg-3", result.get(2).getIntygId());
-    }
+  @Test
+  void testFall4() {
+    List<SjukfallIntyg> result = getTestData("fall-4-right", "2016-02-10", 5, "2016-01-31");
+    assertEquals(3, result.size(), "Expected 3 but was " + result.size());
+    assertEquals("fall-4-intyg-1", result.get(0).getIntygId());
+    assertEquals("fall-4-intyg-2", result.get(1).getIntygId());
+    assertEquals("fall-4-intyg-3", result.get(2).getIntygId());
+  }
 
-    @Test
-    void testFall5() {
-        List<SjukfallIntyg> result = getTestData("fall-5-right", "2016-02-10", 5, "2016-01-31");
-        assertEquals(3, result.size(), "Expected 3 but was " + result.size());
-        assertEquals("fall-5-intyg-4", result.get(0).getIntygId());
-        assertEquals("fall-5-intyg-1", result.get(1).getIntygId());
-        assertEquals("fall-5-intyg-2", result.get(2).getIntygId());
-    }
+  @Test
+  void testFall5() {
+    List<SjukfallIntyg> result = getTestData("fall-5-right", "2016-02-10", 5, "2016-01-31");
+    assertEquals(3, result.size(), "Expected 3 but was " + result.size());
+    assertEquals("fall-5-intyg-4", result.get(0).getIntygId());
+    assertEquals("fall-5-intyg-1", result.get(1).getIntygId());
+    assertEquals("fall-5-intyg-2", result.get(2).getIntygId());
+  }
 
-    @Test
-    void testFall6() {
-        List<SjukfallIntyg> result = getTestData("fall-6-right", "2016-02-10", 5, "2016-01-31");
-        assertEquals(2, result.size(), "Expected 2 but was " + result.size());
-    }
+  @Test
+  void testFall6() {
+    List<SjukfallIntyg> result = getTestData("fall-6-right", "2016-02-10", 5, "2016-01-31");
+    assertEquals(2, result.size(), "Expected 2 but was " + result.size());
+  }
 
-    private List<SjukfallIntyg> getTestData(String key, String aktivtDatum, int maxIntygsGlapp, String initialtDatum) {
-        Map<String, List<SjukfallIntyg>> data = getTestData(aktivtDatum);
-        return resolver.reduceRight(data.get(key), maxIntygsGlapp, LocalDate.parse(initialtDatum));
-    }
+  private List<SjukfallIntyg> getTestData(
+      String key, String aktivtDatum, int maxIntygsGlapp, String initialtDatum) {
+    Map<String, List<SjukfallIntyg>> data = getTestData(aktivtDatum);
+    return resolver.reduceRight(data.get(key), maxIntygsGlapp, LocalDate.parse(initialtDatum));
+  }
 
-    private Map<String, List<SjukfallIntyg>> getTestData(String aktivtDatum) {
-        return resolver.createMap(intygDataList, new IntygParametrar(5, LocalDate.parse(aktivtDatum)));
-    }
-
+  private Map<String, List<SjukfallIntyg>> getTestData(String aktivtDatum) {
+    return resolver.createMap(intygDataList, new IntygParametrar(5, LocalDate.parse(aktivtDatum)));
+  }
 }

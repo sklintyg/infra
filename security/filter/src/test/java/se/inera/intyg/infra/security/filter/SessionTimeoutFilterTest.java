@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -39,152 +39,143 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-/**
- * Created by marced on 10/03/16.
- */
+/** Created by marced on 10/03/16. */
 @ExtendWith(MockitoExtension.class)
 class SessionTimeoutFilterTest {
 
-    private static final String SKIP_RENEW_URL = "/test";
-    private static final String OTHER_URL = "/any.html";
-    private static final int FIVE_SECONDS_AGO = 5000;
-    private static final int ONE_SECOND = 1;
-    private static final int HALF_AN_HOUR = 1800;
+  private static final String SKIP_RENEW_URL = "/test";
+  private static final String OTHER_URL = "/any.html";
+  private static final int FIVE_SECONDS_AGO = 5000;
+  private static final int ONE_SECOND = 1;
+  private static final int HALF_AN_HOUR = 1800;
 
-    private SessionTimeoutFilter filter;
+  private SessionTimeoutFilter filter;
 
-    @Mock
-    HttpServletRequest request;
+  @Mock HttpServletRequest request;
 
-    @Mock
-    HttpServletResponse response;
+  @Mock HttpServletResponse response;
 
-    @Mock
-    FilterChain filterChain;
+  @Mock FilterChain filterChain;
 
-    @Mock
-    HttpSession session;
+  @Mock HttpSession session;
 
-    @BeforeEach
-    void setupFilter() throws Exception {
-        filter = new SessionTimeoutFilter();
-        filter.setSkipRenewSessionUrls(SKIP_RENEW_URL);
-        filter.initFilterBean();
-    }
+  @BeforeEach
+  void setupFilter() throws Exception {
+    filter = new SessionTimeoutFilter();
+    filter.setSkipRenewSessionUrls(SKIP_RENEW_URL);
+    filter.initFilterBean();
+  }
 
-    @Test
-    void testDoFilterInvalidSession() throws Exception {
-        // Arrange
-        setupMocks(ONE_SECOND, OTHER_URL);
+  @Test
+  void testDoFilterInvalidSession() throws Exception {
+    // Arrange
+    setupMocks(ONE_SECOND, OTHER_URL);
 
-        // Act
-        filter.doFilterInternal(request, response, filterChain);
+    // Act
+    filter.doFilterInternal(request, response, filterChain);
 
-        // Assert
-        verify(filterChain).doFilter(request, response);
-        verify(session).invalidate();
-        verify(session, never()).setAttribute(any(), any());
+    // Assert
+    verify(filterChain).doFilter(request, response);
+    verify(session).invalidate();
+    verify(session, never()).setAttribute(any(), any());
+  }
 
-    }
+  @Test
+  void testDoFilterInvalidSessionWithSkipUrl() throws Exception {
+    // Arrange
+    setupMocks(ONE_SECOND, SKIP_RENEW_URL);
 
-    @Test
-    void testDoFilterInvalidSessionWithSkipUrl() throws Exception {
-        // Arrange
-        setupMocks(ONE_SECOND, SKIP_RENEW_URL);
+    // Act
+    filter.doFilterInternal(request, response, filterChain);
 
-        // Act
-        filter.doFilterInternal(request, response, filterChain);
+    // Assert
+    verify(filterChain).doFilter(request, response);
+    verify(session).invalidate();
+    verify(session, never()).setAttribute(any(), any());
+  }
 
-        // Assert
-        verify(filterChain).doFilter(request, response);
-        verify(session).invalidate();
-        verify(session, never()).setAttribute(any(), any());
+  @Test
+  void testDoFilterValidSession() throws Exception {
+    // Arrange
+    setupMocks(HALF_AN_HOUR, OTHER_URL);
 
-    }
+    // Act
+    filter.doFilterInternal(request, response, filterChain);
 
-    @Test
-    void testDoFilterValidSession() throws Exception {
-        // Arrange
-        setupMocks(HALF_AN_HOUR, OTHER_URL);
+    // Assert
+    verify(filterChain).doFilter(request, response);
+    verify(session, never()).invalidate();
+    verify(session).setAttribute(eq(SessionTimeoutFilter.LAST_ACCESS_TIME_ATTRIBUTE_NAME), any());
+  }
 
-        // Act
-        filter.doFilterInternal(request, response, filterChain);
+  @Test
+  void testDoFilterValidSessionWithSkipUrl() throws Exception {
+    // Arrange
+    setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL);
 
-        // Assert
-        verify(filterChain).doFilter(request, response);
-        verify(session, never()).invalidate();
-        verify(session).setAttribute(eq(SessionTimeoutFilter.LAST_ACCESS_TIME_ATTRIBUTE_NAME), any());
+    // Act
+    filter.doFilterInternal(request, response, filterChain);
 
-    }
+    // Assert
+    verify(filterChain).doFilter(request, response);
+    verify(session, never()).invalidate();
+    verify(session, never()).setAttribute(any(), any());
+  }
 
-    @Test
-    void testDoFilterValidSessionWithSkipUrl() throws Exception {
-        // Arrange
-        setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL);
+  @Test
+  void testInvalidateSessionIfTimeToInvalidateHasPassed() throws Exception {
+    // Arrange
+    setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL, Instant.now().minusSeconds(1).toEpochMilli());
 
-        // Act
-        filter.doFilterInternal(request, response, filterChain);
+    // Act
+    filter.doFilterInternal(request, response, filterChain);
 
-        // Assert
-        verify(filterChain).doFilter(request, response);
-        verify(session, never()).invalidate();
-        verify(session, never()).setAttribute(any(), any());
+    // Assert
+    verify(filterChain).doFilter(request, response);
+    verify(session, times(1)).invalidate();
+    verify(session, never()).setAttribute(any(), any());
+  }
 
-    }
+  @Test
+  void testDontInvalidateSessionIfTimeToInvalidateHasNotPassed() throws Exception {
+    // Arrange
+    setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL, Instant.now().plusSeconds(2).toEpochMilli());
 
-    @Test
-    void testInvalidateSessionIfTimeToInvalidateHasPassed() throws Exception {
-        // Arrange
-        setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL, Instant.now().minusSeconds(1).toEpochMilli());
+    // Act
+    filter.doFilterInternal(request, response, filterChain);
 
-        // Act
-        filter.doFilterInternal(request, response, filterChain);
+    // Assert
+    verify(filterChain).doFilter(request, response);
+    verify(session, never()).invalidate();
+    verify(session, never()).setAttribute(any(), any());
+  }
 
-        // Assert
-        verify(filterChain).doFilter(request, response);
-        verify(session, times(1)).invalidate();
-        verify(session, never()).setAttribute(any(), any());
-    }
+  @Test
+  void testDontInvalidateSessionIfTimeToInvalidateIsNull() throws Exception {
+    // Arrange
+    setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL, null);
 
-    @Test
-    void testDontInvalidateSessionIfTimeToInvalidateHasNotPassed() throws Exception {
-        // Arrange
-        setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL, Instant.now().plusSeconds(2).toEpochMilli());
+    // Act
+    filter.doFilterInternal(request, response, filterChain);
 
-        // Act
-        filter.doFilterInternal(request, response, filterChain);
+    // Assert
+    verify(filterChain).doFilter(request, response);
+    verify(session, never()).invalidate();
+    verify(session, never()).setAttribute(any(), any());
+  }
 
-        // Assert
-        verify(filterChain).doFilter(request, response);
-        verify(session, never()).invalidate();
-        verify(session, never()).setAttribute(any(), any());
-    }
+  private void setupMocks(
+      int sessionLengthInSeconds, String reportedRequestURI, Long timeToInvalidate) {
+    setupMocks(sessionLengthInSeconds, reportedRequestURI);
+    doReturn(timeToInvalidate).when(session).getAttribute(TIME_TO_INVALIDATE_ATTRIBUTE_NAME);
+  }
 
-    @Test
-    void testDontInvalidateSessionIfTimeToInvalidateIsNull() throws Exception {
-        // Arrange
-        setupMocks(HALF_AN_HOUR, SKIP_RENEW_URL, null);
+  private void setupMocks(int sessionLengthInSeconds, String reportedRequestURI) {
 
-        // Act
-        filter.doFilterInternal(request, response, filterChain);
-
-        // Assert
-        verify(filterChain).doFilter(request, response);
-        verify(session, never()).invalidate();
-        verify(session, never()).setAttribute(any(), any());
-    }
-
-    private void setupMocks(int sessionLengthInSeconds, String reportedRequestURI, Long timeToInvalidate) {
-        setupMocks(sessionLengthInSeconds, reportedRequestURI);
-        doReturn(timeToInvalidate).when(session).getAttribute(TIME_TO_INVALIDATE_ATTRIBUTE_NAME);
-    }
-
-    private void setupMocks(int sessionLengthInSeconds, String reportedRequestURI) {
-
-        when(request.getSession(false)).thenReturn(session);
-        when(request.getRequestURI()).thenReturn(reportedRequestURI);
-        when(session.getAttribute(SessionTimeoutFilter.LAST_ACCESS_TIME_ATTRIBUTE_NAME))
-            .thenReturn(System.currentTimeMillis() - FIVE_SECONDS_AGO);
-        lenient().when(session.getMaxInactiveInterval()).thenReturn(sessionLengthInSeconds);
-    }
+    when(request.getSession(false)).thenReturn(session);
+    when(request.getRequestURI()).thenReturn(reportedRequestURI);
+    when(session.getAttribute(SessionTimeoutFilter.LAST_ACCESS_TIME_ATTRIBUTE_NAME))
+        .thenReturn(System.currentTimeMillis() - FIVE_SECONDS_AGO);
+    lenient().when(session.getMaxInactiveInterval()).thenReturn(sessionLengthInSeconds);
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,37 +20,32 @@ package se.inera.intyg.infra.sjukfall.testdata.builders;
 
 import se.inera.intyg.infra.sjukfall.dto.Patient;
 
-/**
- * Created by Magnus Ekstrand on 2016-02-10.
- */
+/** Created by Magnus Ekstrand on 2016-02-10. */
 public final class PatientT {
 
-    private PatientT() {
+  private PatientT() {}
+
+  public static class PatientBuilder implements Builder<Patient> {
+
+    private String patientId;
+    private String patientNamn;
+
+    public PatientBuilder() {}
+
+    public PatientBuilder patientId(String patientId) {
+      this.patientId = patientId;
+      return this;
     }
 
-    public static class PatientBuilder implements Builder<Patient> {
-
-        private String patientId;
-        private String patientNamn;
-
-        public PatientBuilder() {
-        }
-
-        public PatientBuilder patientId(String patientId) {
-            this.patientId = patientId;
-            return this;
-        }
-
-        public PatientBuilder patientNamn(String patientNamn) {
-            this.patientNamn = patientNamn;
-            return this;
-        }
-
-        @Override
-        public Patient build() {
-            Patient patient = Patient.create(patientId, patientNamn);
-            return patient;
-        }
+    public PatientBuilder patientNamn(String patientNamn) {
+      this.patientNamn = patientNamn;
+      return this;
     }
 
+    @Override
+    public Patient build() {
+      Patient patient = Patient.create(patientId, patientNamn);
+      return patient;
+    }
+  }
 }

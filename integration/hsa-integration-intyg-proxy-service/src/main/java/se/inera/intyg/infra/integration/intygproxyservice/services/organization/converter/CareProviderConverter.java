@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter;
 
 import java.util.List;
@@ -32,12 +31,12 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 @RequiredArgsConstructor
 public class CareProviderConverter {
 
-    public Vardgivare convert(Commission commission, List<Vardenhet> careUnits) {
-        final var careProvider = new Vardgivare();
-        careProvider.setId(commission.getHealthCareProviderHsaId());
-        careProvider.setNamn(commission.getHealthCareProviderName());
-        careProvider.setVardenheter(careUnits);
+  public Vardgivare convert(Commission commission, List<Vardenhet> careUnits) {
+    final var careProvider = new Vardgivare();
+    careProvider.setId(commission.getHealthCareProviderHsaId());
+    careProvider.setNamn(commission.getHealthCareProviderName());
+    careProvider.setVardenheter(careUnits);
 
-        return careProvider;
-    }
+    return careProvider;
+  }
 }

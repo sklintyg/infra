@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter;
 
 import java.util.List;
@@ -27,55 +26,55 @@ import org.springframework.stereotype.Component;
 @Component
 public class UnitAddressConverter {
 
-    private static final int CITY_START_INDEX = 6;
+  private static final int CITY_START_INDEX = 6;
 
-    public String convertAddress(List<String> addressLines) {
-        if (addressLines == null) {
-            return null;
-        }
-
-        if (addressLines.isEmpty()) {
-            return "";
-        }
-
-        final var includedAddressLines = addressLines.subList(0, addressLines.size() - 1);
-
-        return includedAddressLines.stream()
-            .filter(Objects::nonNull)
-            .collect(Collectors.joining(" "));
+  public String convertAddress(List<String> addressLines) {
+    if (addressLines == null) {
+      return null;
     }
 
-    public String convertZipCode(List<String> addressLines, String zipCode) {
-        if (zipCode != null && !zipCode.trim().isEmpty()) {
-            return zipCode;
-        }
-
-        final var lastLine = getLastLine(addressLines);
-        final boolean shouldIncludeCity = hasMoreInfoThanAddress(lastLine);
-
-        if (shouldIncludeCity) {
-            return lastLine.substring(0, CITY_START_INDEX).trim();
-        }
-
-        return "";
+    if (addressLines.isEmpty()) {
+      return "";
     }
 
-    public String convertCity(List<String> addressLines) {
-        final var lastLine = getLastLine(addressLines);
-        final var shouldIncludeCity = hasMoreInfoThanAddress(lastLine);
+    final var includedAddressLines = addressLines.subList(0, addressLines.size() - 1);
 
-        if (shouldIncludeCity) {
-            return lastLine.substring(CITY_START_INDEX).trim();
-        }
+    return includedAddressLines.stream().filter(Objects::nonNull).collect(Collectors.joining(" "));
+  }
 
-        return lastLine != null ? lastLine.trim() : "";
+  public String convertZipCode(List<String> addressLines, String zipCode) {
+    if (zipCode != null && !zipCode.trim().isEmpty()) {
+      return zipCode;
     }
 
-    private static boolean hasMoreInfoThanAddress(String lastLine) {
-        return lastLine != null && lastLine.length() > CITY_START_INDEX + 1 && Character.isDigit(lastLine.charAt(0));
+    final var lastLine = getLastLine(addressLines);
+    final boolean shouldIncludeCity = hasMoreInfoThanAddress(lastLine);
+
+    if (shouldIncludeCity) {
+      return lastLine.substring(0, CITY_START_INDEX).trim();
     }
 
-    private static String getLastLine(List<String> addressLines) {
-        return !addressLines.isEmpty() ? addressLines.get(addressLines.size() - 1) : null;
+    return "";
+  }
+
+  public String convertCity(List<String> addressLines) {
+    final var lastLine = getLastLine(addressLines);
+    final var shouldIncludeCity = hasMoreInfoThanAddress(lastLine);
+
+    if (shouldIncludeCity) {
+      return lastLine.substring(CITY_START_INDEX).trim();
     }
+
+    return lastLine != null ? lastLine.trim() : "";
+  }
+
+  private static boolean hasMoreInfoThanAddress(String lastLine) {
+    return lastLine != null
+        && lastLine.length() > CITY_START_INDEX + 1
+        && Character.isDigit(lastLine.charAt(0));
+  }
+
+  private static String getLastLine(List<String> addressLines) {
+    return !addressLines.isEmpty() ? addressLines.get(addressLines.size() - 1) : null;
+  }
 }

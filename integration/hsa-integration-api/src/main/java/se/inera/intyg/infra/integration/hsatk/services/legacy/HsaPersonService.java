@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,15 +18,15 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services.legacy;
 
+import java.util.List;
 import se.inera.intyg.infra.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsatk.model.Commission;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 
-import java.util.List;
-
 public interface HsaPersonService {
 
-    List<PersonInformation> getHsaPersonInfo(String personHsaId);
+  List<PersonInformation> getHsaPersonInfo(String personHsaId);
 
-    List<Commission> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, String unitHsaId) throws HsaServiceCallException;
+  List<Commission> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, String unitHsaId)
+      throws HsaServiceCallException;
 }
