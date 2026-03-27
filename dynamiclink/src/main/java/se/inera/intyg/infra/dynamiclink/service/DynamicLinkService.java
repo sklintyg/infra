@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,20 +18,16 @@
  */
 package se.inera.intyg.infra.dynamiclink.service;
 
-
 import java.util.List;
 import java.util.Map;
 import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 
-/**
- * Created by eriklupander on 2017-05-03.
- */
+/** Created by eriklupander on 2017-05-03. */
 public interface DynamicLinkService {
 
-    Map<String, DynamicLink> getAllAsMap();
+  Map<String, DynamicLink> getAllAsMap();
 
-    List<DynamicLink> getAllAsList();
+  List<DynamicLink> getAllAsList();
 
-    DynamicLink get(String key);
-
+  DynamicLink get(String key);
 }

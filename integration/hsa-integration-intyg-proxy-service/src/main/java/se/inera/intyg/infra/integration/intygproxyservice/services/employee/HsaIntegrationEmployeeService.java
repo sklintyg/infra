@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.employee;
 
 import java.util.ArrayList;
@@ -33,25 +32,21 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.employee.GetEmploy
 @RequiredArgsConstructor
 public class HsaIntegrationEmployeeService implements HsatkEmployeeService {
 
-    private final GetEmployeeService getEmployeeService;
+  private final GetEmployeeService getEmployeeService;
 
-    @Override
-    public List<PersonInformation> getEmployee(String personalIdentityNumber, String personHsaId) {
-        return getEmployee(personalIdentityNumber, personHsaId, null);
-    }
+  @Override
+  public List<PersonInformation> getEmployee(String personalIdentityNumber, String personHsaId) {
+    return getEmployee(personalIdentityNumber, personHsaId, null);
+  }
 
-    @Override
-    public List<PersonInformation> getEmployee(String personId, String personHsaId, String profile) {
-        try {
-            return getEmployeeService.get(
-                GetEmployeeRequestDTO.builder()
-                    .personId(personId)
-                    .hsaId(personHsaId)
-                    .build()
-            );
-        } catch (Exception exception) {
-            log.warn("HsaServiceCallException thrown: {}", exception.getMessage());
-            return new ArrayList<>();
-        }
+  @Override
+  public List<PersonInformation> getEmployee(String personId, String personHsaId, String profile) {
+    try {
+      return getEmployeeService.get(
+          GetEmployeeRequestDTO.builder().personId(personId).hsaId(personHsaId).build());
+    } catch (Exception exception) {
+      log.warn("HsaServiceCallException thrown: {}", exception.getMessage());
+      return new ArrayList<>();
     }
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,20 +29,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 import se.inera.intyg.infra.dynamiclink.service.DynamicLinkService;
 
-/**
- * Created by eriklupander on 2017-05-03.
- */
-
+/** Created by eriklupander on 2017-05-03. */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestConfig.class)
 class LinksServiceTest {
 
-    @Autowired
-    private DynamicLinkService dynamicLinkService;
+  @Autowired private DynamicLinkService dynamicLinkService;
 
-    @Test
-    void testLoadAndGetLink() {
-        List<DynamicLink> allAsList = dynamicLinkService.getAllAsList();
-        assertEquals(1, allAsList.size());
-    }
+  @Test
+  void testLoadAndGetLink() {
+    List<DynamicLink> allAsList = dynamicLinkService.getAllAsList();
+    assertEquals(1, allAsList.size());
+  }
 }

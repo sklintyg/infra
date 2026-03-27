@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,34 +30,34 @@ import se.inera.intyg.infra.integration.postnummer.model.Omrade;
 @ExtendWith(MockitoExtension.class)
 class PostnummerRepositoryFactoryTest {
 
-    private PostnummerRepositoryFactory factory = new PostnummerRepositoryFactory();
+  private PostnummerRepositoryFactory factory = new PostnummerRepositoryFactory();
 
-    private static final String LINE_1 = "13100;NACKA;01;STOCKHOLM;0182;NACKA";
-    private static final String LINE_1_POSTNUMMER = "13100";
-    private static final String LINE_1_POSTORT = "NACKA";
-    private static final String LINE_1_LAN = "STOCKHOLM";
-    private static final String LINE_1_KOMMUN = "NACKA";
+  private static final String LINE_1 = "13100;NACKA;01;STOCKHOLM;0182;NACKA";
+  private static final String LINE_1_POSTNUMMER = "13100";
+  private static final String LINE_1_POSTORT = "NACKA";
+  private static final String LINE_1_LAN = "STOCKHOLM";
+  private static final String LINE_1_KOMMUN = "NACKA";
 
-    @Test
-    void testCreateOmradeFromString() {
+  @Test
+  void testCreateOmradeFromString() {
 
-        Omrade res = factory.createOmradeFromString(LINE_1);
+    Omrade res = factory.createOmradeFromString(LINE_1);
 
-        assertNotNull(res);
-        assertEquals(LINE_1_POSTNUMMER, res.getPostnummer());
-        assertEquals(LINE_1_POSTORT, res.getPostort());
-        assertEquals(LINE_1_KOMMUN, res.getKommun());
-        assertEquals(LINE_1_LAN, res.getLan());
-    }
+    assertNotNull(res);
+    assertEquals(LINE_1_POSTNUMMER, res.getPostnummer());
+    assertEquals(LINE_1_POSTORT, res.getPostort());
+    assertEquals(LINE_1_KOMMUN, res.getKommun());
+    assertEquals(LINE_1_LAN, res.getLan());
+  }
 
-    @Test
-    void testCreateOmradeWithSetters() {
-        Omrade control = factory.createOmradeFromString(LINE_1);
-        Omrade test = new Omrade(null, null, null, null);
-        test.setKommun(LINE_1_KOMMUN);
-        test.setLan(LINE_1_LAN);
-        test.setPostnummer(LINE_1_POSTNUMMER);
-        test.setPostort(LINE_1_POSTORT);
-        assertTrue(control.hashCode() == test.hashCode());
-    }
+  @Test
+  void testCreateOmradeWithSetters() {
+    Omrade control = factory.createOmradeFromString(LINE_1);
+    Omrade test = new Omrade(null, null, null, null);
+    test.setKommun(LINE_1_KOMMUN);
+    test.setLan(LINE_1_LAN);
+    test.setPostnummer(LINE_1_POSTNUMMER);
+    test.setPostort(LINE_1_POSTORT);
+    assertTrue(control.hashCode() == test.hashCode());
+  }
 }

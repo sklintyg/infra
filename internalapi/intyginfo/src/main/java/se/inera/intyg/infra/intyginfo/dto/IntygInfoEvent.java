@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,97 +25,100 @@ import java.util.Objects;
 
 public class IntygInfoEvent {
 
-    private Source source;
-    private LocalDateTime date;
-    private IntygInfoEventType type;
-    private Map<String, Object> data;
+  private Source source;
+  private LocalDateTime date;
+  private IntygInfoEventType type;
+  private Map<String, Object> data;
 
-    // For deserialize
-    IntygInfoEvent() {
+  // For deserialize
+  IntygInfoEvent() {}
 
+  public IntygInfoEvent(Source source) {
+    this.source = source;
+  }
+
+  public IntygInfoEvent(Source source, LocalDateTime date, IntygInfoEventType type) {
+    this.source = source;
+    this.date = date;
+    this.type = type;
+  }
+
+  public Source getSource() {
+    return source;
+  }
+
+  public void setSource(Source source) {
+    this.source = source;
+  }
+
+  public LocalDateTime getDate() {
+    return date;
+  }
+
+  public void setDate(LocalDateTime date) {
+    this.date = date;
+  }
+
+  public IntygInfoEventType getType() {
+    return type;
+  }
+
+  public void setType(IntygInfoEventType type) {
+    this.type = type;
+  }
+
+  public void addData(String key, Object value) {
+    if (data == null) {
+      data = new HashMap<>();
     }
 
-    public IntygInfoEvent(Source source) {
-        this.source = source;
-    }
+    data.put(key, value);
+  }
 
-    public IntygInfoEvent(Source source, LocalDateTime date, IntygInfoEventType type) {
-        this.source = source;
-        this.date = date;
-        this.type = type;
-    }
+  public Map<String, Object> getData() {
+    return data;
+  }
 
-    public Source getSource() {
-        return source;
-    }
+  public void setData(Map<String, Object> data) {
+    this.data = data;
+  }
 
-    public void setSource(Source source) {
-        this.source = source;
-    }
+  public enum Source {
+    WEBCERT,
+    INTYGSTJANSTEN
+  }
 
-    public LocalDateTime getDate() {
-        return date;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    if (!(o instanceof IntygInfoEvent)) {
+      return false;
     }
+    IntygInfoEvent that = (IntygInfoEvent) o;
+    return source == that.source
+        && Objects.equals(date, that.date)
+        && type == that.type
+        && Objects.equals(data, that.data);
+  }
 
-    public IntygInfoEventType getType() {
-        return type;
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(source, date, type, data);
+  }
 
-    public void setType(IntygInfoEventType type) {
-        this.type = type;
-    }
-
-    public void addData(String key, Object value) {
-        if (data == null) {
-            data = new HashMap<>();
-        }
-
-        data.put(key, value);
-    }
-
-    public Map<String, Object> getData() {
-        return data;
-    }
-
-    public void setData(Map<String, Object> data) {
-        this.data = data;
-    }
-
-    public enum Source {
-        WEBCERT, INTYGSTJANSTEN
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof IntygInfoEvent)) {
-            return false;
-        }
-        IntygInfoEvent that = (IntygInfoEvent) o;
-        return source == that.source
-            && Objects.equals(date, that.date)
-            && type == that.type
-            && Objects.equals(data, that.data);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(source, date, type, data);
-    }
-
-    @Override
-    public String toString() {
-        return "IntygInfoEvent{"
-            + "source=" + source
-            + ", date=" + date
-            + ", type=" + type
-            + ", data=" + data
-            + '}';
-    }
+  @Override
+  public String toString() {
+    return "IntygInfoEvent{"
+        + "source="
+        + source
+        + ", date="
+        + date
+        + ", type="
+        + type
+        + ", data="
+        + data
+        + '}';
+  }
 }

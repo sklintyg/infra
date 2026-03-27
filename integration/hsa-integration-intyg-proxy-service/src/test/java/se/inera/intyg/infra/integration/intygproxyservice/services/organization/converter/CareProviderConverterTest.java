@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,41 +28,41 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 
 class CareProviderConverterTest {
 
-    private final CareProviderConverter converter = new CareProviderConverter();
+  private final CareProviderConverter converter = new CareProviderConverter();
 
-    @Test
-    void shouldConvertId() {
-        final var commission = getCommission();
+  @Test
+  void shouldConvertId() {
+    final var commission = getCommission();
 
-        final var response = converter.convert(commission, Collections.emptyList());
+    final var response = converter.convert(commission, Collections.emptyList());
 
-        assertEquals(commission.getHealthCareProviderHsaId(), response.getId());
-    }
+    assertEquals(commission.getHealthCareProviderHsaId(), response.getId());
+  }
 
-    @Test
-    void shouldConvertName() {
-        final var commission = getCommission();
+  @Test
+  void shouldConvertName() {
+    final var commission = getCommission();
 
-        final var response = converter.convert(commission, Collections.emptyList());
+    final var response = converter.convert(commission, Collections.emptyList());
 
-        assertEquals(commission.getHealthCareProviderName(), response.getNamn());
-    }
+    assertEquals(commission.getHealthCareProviderName(), response.getNamn());
+  }
 
-    @Test
-    void shouldConvertVardenheter() {
-        final var expected = List.of(new Vardenhet());
-        final var commission = getCommission();
+  @Test
+  void shouldConvertVardenheter() {
+    final var expected = List.of(new Vardenhet());
+    final var commission = getCommission();
 
-        final var response = converter.convert(commission, expected);
+    final var response = converter.convert(commission, expected);
 
-        assertEquals(expected, response.getVardenheter());
-    }
+    assertEquals(expected, response.getVardenheter());
+  }
 
-    private Commission getCommission() {
-        final var commission = new Commission();
+  private Commission getCommission() {
+    final var commission = new Commission();
 
-        commission.setHealthCareProviderHsaId("HSA_ID");
+    commission.setHealthCareProviderHsaId("HSA_ID");
 
-        return commission;
-    }
+    return commission;
+  }
 }

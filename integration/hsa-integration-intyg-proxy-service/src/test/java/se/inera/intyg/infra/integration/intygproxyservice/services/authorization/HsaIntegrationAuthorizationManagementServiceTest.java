@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,16 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.authorization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import jakarta.xml.ws.WebServiceException;
 import java.time.LocalDateTime;
 import java.util.List;
-import jakarta.xml.ws.WebServiceException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,111 +40,115 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetH
 @ExtendWith(MockitoExtension.class)
 class HsaIntegrationAuthorizationManagementServiceTest {
 
-    private static final String PERSON_HSA_ID = "personHsaId";
-    private static final String PERSON_ID = "personId";
-    private static final String CERTIFICATION_ID = "certificationId";
-    public static final String OPERATION = "operation";
-    public static final String REASON = "reason";
-    @Mock
-    private GetCredentialInformationForPersonService credentialInformationForPersonService;
+  private static final String PERSON_HSA_ID = "personHsaId";
+  private static final String PERSON_ID = "personId";
+  private static final String CERTIFICATION_ID = "certificationId";
+  public static final String OPERATION = "operation";
+  public static final String REASON = "reason";
+  @Mock private GetCredentialInformationForPersonService credentialInformationForPersonService;
 
-    @Mock
-    GetHospLastUpdateService hospLastUpdateService;
+  @Mock GetHospLastUpdateService hospLastUpdateService;
 
-    @Mock
-    private GetHospCredentialsForPersonService getHospCredentialsForPersonService;
+  @Mock private GetHospCredentialsForPersonService getHospCredentialsForPersonService;
 
-    @Mock
-    private GetHospCertificationPersonService hospCertificationPersonService;
+  @Mock private GetHospCertificationPersonService hospCertificationPersonService;
 
-    @InjectMocks
-    private HsaIntegrationAuthorizationManagementService hsaIntegrationAuthorizationManagementService;
+  @InjectMocks
+  private HsaIntegrationAuthorizationManagementService hsaIntegrationAuthorizationManagementService;
 
-    @Nested
-    class GetCredentialInformationForPerson {
+  @Nested
+  class GetCredentialInformationForPerson {
 
-        @Test
-        void shouldReturnListOfCredentialInformation() {
-            final var expectedResponse = List.of(new CredentialInformation());
+    @Test
+    void shouldReturnListOfCredentialInformation() {
+      final var expectedResponse = List.of(new CredentialInformation());
 
-            final var request = GetCredentialInformationRequestDTO.builder()
-                .personHsaId(PERSON_HSA_ID)
-                .build();
-            when(credentialInformationForPersonService.get(request)).thenReturn(expectedResponse);
+      final var request =
+          GetCredentialInformationRequestDTO.builder().personHsaId(PERSON_HSA_ID).build();
+      when(credentialInformationForPersonService.get(request)).thenReturn(expectedResponse);
 
-            final var result = hsaIntegrationAuthorizationManagementService.getCredentialInformationForPerson(null,
-                PERSON_HSA_ID, null);
+      final var result =
+          hsaIntegrationAuthorizationManagementService.getCredentialInformationForPerson(
+              null, PERSON_HSA_ID, null);
 
-            assertEquals(expectedResponse, result);
-        }
+      assertEquals(expectedResponse, result);
+    }
+  }
+
+  @Nested
+  class HandleHospCertificationPersonResponse {
+
+    @Test
+    void shouldReturnResultForHospCertificationPerson() {
+      final var expectedResponse = new Result();
+
+      final var request =
+          GetHospCertificationPersonRequestDTO.builder()
+              .personId(PERSON_ID)
+              .certificationId(CERTIFICATION_ID)
+              .reason(REASON)
+              .operation(OPERATION)
+              .build();
+
+      when(hospCertificationPersonService.get(request)).thenReturn(expectedResponse);
+
+      final var result =
+          hsaIntegrationAuthorizationManagementService.handleHospCertificationPersonResponseType(
+              CERTIFICATION_ID, OPERATION, PERSON_ID, REASON);
+
+      assertEquals(expectedResponse, result);
+    }
+  }
+
+  @Nested
+  class GetHospLastUpdate {
+
+    @Test
+    void shouldReturnHospLastUpdate() {
+      final var expectedResponse = LocalDateTime.now();
+
+      when(hospLastUpdateService.get()).thenReturn(expectedResponse);
+
+      final var result = hsaIntegrationAuthorizationManagementService.getHospLastUpdate();
+
+      assertEquals(expectedResponse, result);
     }
 
-    @Nested
-    class HandleHospCertificationPersonResponse {
+    @Test
+    void shouldThrowWebServiceExceptionIfIllegalStateExceptionIsCaught() {
+      when(hospLastUpdateService.get()).thenThrow(IllegalStateException.class);
 
-        @Test
-        void shouldReturnResultForHospCertificationPerson() {
-            final var expectedResponse = new Result();
+      assertThrows(
+          WebServiceException.class,
+          () -> hsaIntegrationAuthorizationManagementService.getHospLastUpdate());
+    }
+  }
 
-            final var request = GetHospCertificationPersonRequestDTO.builder()
-                .personId(PERSON_ID)
-                .certificationId(CERTIFICATION_ID)
-                .reason(REASON)
-                .operation(OPERATION)
-                .build();
+  @Nested
+  class GetHospCredentialsForPersonResponseType {
 
-            when(hospCertificationPersonService.get(request)).thenReturn(expectedResponse);
+    @Test
+    void shouldReturnCredentialsForPerson() {
+      final var expectedResult = new HospCredentialsForPerson();
 
-            final var result = hsaIntegrationAuthorizationManagementService.handleHospCertificationPersonResponseType(CERTIFICATION_ID,
-                OPERATION, PERSON_ID, REASON);
+      when(getHospCredentialsForPersonService.get(PERSON_ID)).thenReturn(expectedResult);
 
-            assertEquals(expectedResponse, result);
-        }
+      final var result =
+          hsaIntegrationAuthorizationManagementService.getHospCredentialsForPersonResponseType(
+              PERSON_ID);
+
+      assertEquals(expectedResult, result);
     }
 
-    @Nested
-    class GetHospLastUpdate {
+    @Test
+    void shouldThrowWebServiceExceptionIfHospCredentialsForPersonIsNull() {
+      when(getHospCredentialsForPersonService.get(PERSON_ID)).thenReturn(null);
 
-        @Test
-        void shouldReturnHospLastUpdate() {
-            final var expectedResponse = LocalDateTime.now();
-
-            when(hospLastUpdateService.get()).thenReturn(expectedResponse);
-
-            final var result = hsaIntegrationAuthorizationManagementService.getHospLastUpdate();
-
-            assertEquals(expectedResponse, result);
-        }
-
-        @Test
-        void shouldThrowWebServiceExceptionIfIllegalStateExceptionIsCaught() {
-            when(hospLastUpdateService.get()).thenThrow(IllegalStateException.class);
-
-            assertThrows(WebServiceException.class, () -> hsaIntegrationAuthorizationManagementService.getHospLastUpdate());
-        }
+      assertThrows(
+          WebServiceException.class,
+          () ->
+              hsaIntegrationAuthorizationManagementService.getHospCredentialsForPersonResponseType(
+                  PERSON_ID));
     }
-
-    @Nested
-    class GetHospCredentialsForPersonResponseType {
-
-        @Test
-        void shouldReturnCredentialsForPerson() {
-            final var expectedResult = new HospCredentialsForPerson();
-
-            when(getHospCredentialsForPersonService.get(PERSON_ID)).thenReturn(expectedResult);
-
-            final var result = hsaIntegrationAuthorizationManagementService.getHospCredentialsForPersonResponseType(
-                PERSON_ID);
-
-            assertEquals(expectedResult, result);
-        }
-
-        @Test
-        void shouldThrowWebServiceExceptionIfHospCredentialsForPersonIsNull() {
-            when(getHospCredentialsForPersonService.get(PERSON_ID)).thenReturn(null);
-
-            assertThrows(WebServiceException.class,
-                () -> hsaIntegrationAuthorizationManagementService.getHospCredentialsForPersonResponseType(PERSON_ID));
-        }
-    }
+  }
 }

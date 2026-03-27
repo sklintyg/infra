@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,12 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.authorization;
 
+import jakarta.xml.ws.WebServiceException;
 import java.time.LocalDateTime;
 import java.util.List;
-import jakarta.xml.ws.WebServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,58 +34,57 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetH
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class HsaIntegrationAuthorizationManagementService implements HsatkAuthorizationManagementService {
+public class HsaIntegrationAuthorizationManagementService
+    implements HsatkAuthorizationManagementService {
 
-    private final GetCredentialInformationForPersonService getCredentialInformationForPersonService;
+  private final GetCredentialInformationForPersonService getCredentialInformationForPersonService;
 
-    private final GetHospCertificationPersonService getHospCertificationPersonService;
+  private final GetHospCertificationPersonService getHospCertificationPersonService;
 
-    private final GetHospLastUpdateService getHospLastUpdateService;
-    private final GetHospCredentialsForPersonService getHospCredentialsForPersonService;
+  private final GetHospLastUpdateService getHospLastUpdateService;
+  private final GetHospCredentialsForPersonService getHospCredentialsForPersonService;
 
-    @Override
-    public List<CredentialInformation> getCredentialInformationForPerson(String personalIdentityNumber, String personHsaId,
-        String profile) {
-        return getCredentialInformationForPersonService.get(
-            GetCredentialInformationRequestDTO.builder()
-                .personHsaId(personHsaId)
-                .build()
-        );
+  @Override
+  public List<CredentialInformation> getCredentialInformationForPerson(
+      String personalIdentityNumber, String personHsaId, String profile) {
+    return getCredentialInformationForPersonService.get(
+        GetCredentialInformationRequestDTO.builder().personHsaId(personHsaId).build());
+  }
+
+  @Override
+  public HospCredentialsForPerson getHospCredentialsForPersonResponseType(
+      String personalIdentityNumber) {
+    final var hospCredentialsForPerson =
+        getHospCredentialsForPersonService.get(personalIdentityNumber);
+
+    if (hospCredentialsForPerson == null) {
+      log.warn("Response message did not contain proper response data.");
+      throw new WebServiceException("Response message did not contain proper response data.");
     }
 
-    @Override
-    public HospCredentialsForPerson getHospCredentialsForPersonResponseType(String personalIdentityNumber) {
-        final var hospCredentialsForPerson = getHospCredentialsForPersonService.get(personalIdentityNumber);
+    return hospCredentialsForPerson;
+  }
 
-        if (hospCredentialsForPerson == null) {
-            log.warn("Response message did not contain proper response data.");
-            throw new WebServiceException("Response message did not contain proper response data.");
-        }
+  @Override
+  public LocalDateTime getHospLastUpdate() {
+    try {
+      return getHospLastUpdateService.get();
 
-        return hospCredentialsForPerson;
+    } catch (Exception exception) {
+      log.warn(exception.getMessage());
+      throw new WebServiceException(exception);
     }
+  }
 
-    @Override
-    public LocalDateTime getHospLastUpdate() {
-        try {
-            return getHospLastUpdateService.get();
-
-        } catch (Exception exception) {
-            log.warn(exception.getMessage());
-            throw new WebServiceException(exception);
-        }
-    }
-
-    @Override
-    public Result handleHospCertificationPersonResponseType(String certificationId, String operation, String personalIdentityNumber,
-        String reason) {
-        return getHospCertificationPersonService.get(
-            GetHospCertificationPersonRequestDTO.builder()
-                .personId(personalIdentityNumber)
-                .certificationId(certificationId)
-                .operation(operation)
-                .reason(reason)
-                .build()
-        );
-    }
+  @Override
+  public Result handleHospCertificationPersonResponseType(
+      String certificationId, String operation, String personalIdentityNumber, String reason) {
+    return getHospCertificationPersonService.get(
+        GetHospCertificationPersonRequestDTO.builder()
+            .personId(personalIdentityNumber)
+            .certificationId(certificationId)
+            .operation(operation)
+            .reason(reason)
+            .build());
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -38,42 +38,42 @@ import se.inera.intyg.infra.integration.postnummer.model.Omrade;
 @SpringJUnitConfig(classes = PostnummerServiceTest.TestConfiguration.class)
 class PostnummerServiceTest {
 
-    @Configuration
-    @ComponentScan("se.inera.intyg.infra.integration.postnummer")
-    @PropertySource(
-        value = {"classpath:/test.properties"},
-        ignoreResourceNotFound = false)
-    static class TestConfiguration {
+  @Configuration
+  @ComponentScan("se.inera.intyg.infra.integration.postnummer")
+  @PropertySource(
+      value = {"classpath:/test.properties"},
+      ignoreResourceNotFound = false)
+  static class TestConfiguration {
 
-        @Bean
-        static PropertySourcesPlaceholderConfigurer propertiesResolver() {
-            return new PropertySourcesPlaceholderConfigurer();
-        }
+    @Bean
+    static PropertySourcesPlaceholderConfigurer propertiesResolver() {
+      return new PropertySourcesPlaceholderConfigurer();
     }
+  }
 
-    @Autowired
-    PostnummerService postnummerService;
+  @Autowired PostnummerService postnummerService;
 
-    @Test
-    void testGetPostnummer() {
+  @Test
+  void testGetPostnummer() {
 
-        List<Omrade> omrade13061 = Arrays.asList(new Omrade("13061", "HÅRSFJÄRDEN", "HANINGE", "STOCKHOLM"));
-        List<Omrade> omrade13100 = Arrays.asList(new Omrade("13100", "NACKA", "NACKA", "STOCKHOLM"));
-        List<Omrade> omrade13155 = Arrays.asList(new Omrade("13155", "NACKA", "NACKA", "STOCKHOLM"));
+    List<Omrade> omrade13061 =
+        Arrays.asList(new Omrade("13061", "HÅRSFJÄRDEN", "HANINGE", "STOCKHOLM"));
+    List<Omrade> omrade13100 = Arrays.asList(new Omrade("13100", "NACKA", "NACKA", "STOCKHOLM"));
+    List<Omrade> omrade13155 = Arrays.asList(new Omrade("13155", "NACKA", "NACKA", "STOCKHOLM"));
 
-        assertNull(postnummerService.getOmradeByPostnummer(null));
-        assertNull(postnummerService.getOmradeByPostnummer(""));
-        assertNull(postnummerService.getOmradeByPostnummer("xxyy"));
-        assertEquals(omrade13061, postnummerService.getOmradeByPostnummer("13061"));
-        assertEquals(omrade13100, postnummerService.getOmradeByPostnummer("13100"));
-        assertEquals(omrade13155, postnummerService.getOmradeByPostnummer("13155"));
-        assertNotEquals(omrade13061, postnummerService.getOmradeByPostnummer("13155"));
-    }
+    assertNull(postnummerService.getOmradeByPostnummer(null));
+    assertNull(postnummerService.getOmradeByPostnummer(""));
+    assertNull(postnummerService.getOmradeByPostnummer("xxyy"));
+    assertEquals(omrade13061, postnummerService.getOmradeByPostnummer("13061"));
+    assertEquals(omrade13100, postnummerService.getOmradeByPostnummer("13100"));
+    assertEquals(omrade13155, postnummerService.getOmradeByPostnummer("13155"));
+    assertNotEquals(omrade13061, postnummerService.getOmradeByPostnummer("13155"));
+  }
 
-    @Test
-    void testGetKommunList() {
-        String[] verify = {"HANINGE", "NACKA", "STOCKHOLM", "VÄSTERVIK", "LINKÖPING"};
+  @Test
+  void testGetKommunList() {
+    String[] verify = {"HANINGE", "NACKA", "STOCKHOLM", "VÄSTERVIK", "LINKÖPING"};
 
-        assertTrue(postnummerService.getKommunList().containsAll(Arrays.asList(verify)));
-    }
+    assertTrue(postnummerService.getKommunList().containsAll(Arrays.asList(verify)));
+  }
 }

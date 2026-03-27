@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,87 +30,84 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class LogMDCHelper {
 
-    static final String TRACEID = "req.traceId";
-    static final String SESSIONINFO = "req.sessionInfo";
-    static final int IDLEN = 8;
-    static final char[] BASE62CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
+  static final String TRACEID = "req.traceId";
+  static final String SESSIONINFO = "req.sessionInfo";
+  static final int IDLEN = 8;
+  static final char[] BASE62CHARS =
+      "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
 
-    @Value("${log.trace.header:x-trace-id}")
-    String header;
+  @Value("${log.trace.header:x-trace-id}")
+  String header;
 
-    /**
-     * Returns the trace HTTP header name.
-     */
-    public String traceHeader() {
-        return this.header;
+  /** Returns the trace HTTP header name. */
+  public String traceHeader() {
+    return this.header;
+  }
+
+  /**
+   * Sets traceId for a request and returns the helper.
+   *
+   * @param traceId the trace id to use. If no trace id is defined a value is generated.
+   * @return this helper.
+   */
+  public LogMDCHelper withTraceId(final String traceId) {
+    MDC.put(TRACEID, traceId);
+    return this;
+  }
+
+  /**
+   * Sets session if for the request and returns the helper.
+   *
+   * @param sessionInfo the trace id to use. If no trace id is defined a value is generated.
+   * @return this helper.
+   */
+  public LogMDCHelper withSessionInfo(final String sessionInfo) {
+    if (Objects.nonNull(sessionInfo)) {
+      MDC.put(SESSIONINFO, sessionInfo);
     }
+    return this;
+  }
 
-    /**
-     * Sets traceId for a request and returns the helper.
-     *
-     * @param traceId the trace id to use. If no trace id is defined a value is generated.
-     * @return this helper.
-     */
-    public LogMDCHelper withTraceId(final String traceId) {
-        MDC.put(TRACEID, traceId);
-        return this;
+  /**
+   * Opens a trace.
+   *
+   * @return the trace to close when done.
+   */
+  public Closeable openTrace() {
+    final String traceId = MDC.get(TRACEID);
+    if (Strings.isNullOrEmpty(traceId)) {
+      MDC.put(TRACEID, traceId(IDLEN));
     }
+    return () -> closeTrace();
+  }
 
-    /**
-     * Sets session if for the request and returns the helper.
-     *
-     * @param sessionInfo the trace id to use. If no trace id is defined a value is generated.
-     * @return this helper.
-     */
-    public LogMDCHelper withSessionInfo(final String sessionInfo) {
-        if (Objects.nonNull(sessionInfo)) {
-            MDC.put(SESSIONINFO, sessionInfo);
-        }
-        return this;
+  /** Runs a code block with an unique trace. */
+  public void run(final Runnable runnable) {
+    final Closeable trace = openTrace();
+    try {
+      runnable.run();
+    } finally {
+      IOUtils.closeQuietly(trace);
     }
+  }
 
-    /**
-     * Opens a trace.
-     *
-     * @return the trace to close when done.
-     */
-    public Closeable openTrace() {
-        final String traceId = MDC.get(TRACEID);
-        if (Strings.isNullOrEmpty(traceId)) {
-            MDC.put(TRACEID, traceId(IDLEN));
-        }
-        return () -> closeTrace();
-    }
+  // Clean-up.
+  void closeTrace() {
+    MDC.remove(TRACEID);
+    MDC.remove(SESSIONINFO);
+  }
 
-    /**
-     * Runs a code block with an unique trace.
-     */
-    public void run(final Runnable runnable) {
-        final Closeable trace = openTrace();
-        try {
-            runnable.run();
-        } finally {
-            IOUtils.closeQuietly(trace);
-        }
-    }
-
-    // Clean-up.
-    void closeTrace() {
-        MDC.remove(TRACEID);
-        MDC.remove(SESSIONINFO);
-    }
-
-    /**
-     * Returns a trace id.
-     *
-     * @param len the length to generate.
-     * @return the trace id.
-     */
-    static final String traceId(final int len) {
-        final CharBuffer charBuffer = CharBuffer.allocate(len);
-        IntStream.generate(() -> ThreadLocalRandom.current().nextInt(BASE62CHARS.length))
-            .limit(len)
-            .forEach(value -> charBuffer.append(BASE62CHARS[value]));
-        return charBuffer.rewind().toString();
-    }
+  /**
+   * Returns a trace id.
+   *
+   * @param len the length to generate.
+   * @return the trace id.
+   */
+  static final String traceId(final int len) {
+    final CharBuffer charBuffer = CharBuffer.allocate(len);
+    IntStream.generate(() -> ThreadLocalRandom.current().nextInt(BASE62CHARS.length))
+        .limit(len)
+        .forEach(value -> charBuffer.append(BASE62CHARS[value]));
+    return charBuffer.rewind().toString();
+  }
 }

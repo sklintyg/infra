@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -46,70 +46,83 @@ import se.inera.intyg.infra.xmldsig.service.XMLDSigServiceImpl;
 
 class PrepareSignatureServiceImplTest {
 
-    private final PrepareSignatureServiceImpl testee = new PrepareSignatureServiceImpl();
+  private final PrepareSignatureServiceImpl testee = new PrepareSignatureServiceImpl();
 
-    @BeforeEach
-    void init() {
-        org.apache.xml.security.Init.init();
-        System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
-    }
+  @BeforeEach
+  void init() {
+    org.apache.xml.security.Init.init();
+    System.setProperty(
+        "javax.xml.transform.TransformerFactory",
+        "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+  }
 
-    @Test
-    void testBuildPreparedSignature() throws IOException {
-        InputStream xmlResource = getXmlResource("classpath:/unsigned/unsigned-lisjp-i18n.xml");
-        String xml = IOUtils.toString(xmlResource, StandardCharsets.UTF_8);
-        IntygXMLDSignature intygXMLDSignature = testee.prepareSignature(xml, "9f02dd2f-f57c-4a73-8190-2fe602cd6e27",
+  @Test
+  void testBuildPreparedSignature() throws IOException {
+    InputStream xmlResource = getXmlResource("classpath:/unsigned/unsigned-lisjp-i18n.xml");
+    String xml = IOUtils.toString(xmlResource, StandardCharsets.UTF_8);
+    IntygXMLDSignature intygXMLDSignature =
+        testee.prepareSignature(
+            xml,
+            "9f02dd2f-f57c-4a73-8190-2fe602cd6e27",
             PartialSignatureFactory.DEFAULT_SIGNATURE_ALGORITHM);
 
-        byte[] signature = createSignature(intygXMLDSignature.getSigningData().getBytes(StandardCharsets.UTF_8));
-        SignatureValueType svt = new SignatureValueType();
-        svt.setValue(signature);
-        intygXMLDSignature.getSignatureType().setSignatureValue(svt);
+    byte[] signature =
+        createSignature(intygXMLDSignature.getSigningData().getBytes(StandardCharsets.UTF_8));
+    SignatureValueType svt = new SignatureValueType();
+    svt.setValue(signature);
+    intygXMLDSignature.getSignatureType().setSignatureValue(svt);
 
-        // Stuff KeyInfo
-        String pubStr = null;
-        try {
-            pubStr = Base64.getEncoder().encodeToString(this.publicKey.getEncoded());
-        } catch (CertificateEncodingException e) {
-            e.printStackTrace();
-        }
-        KeyInfoType keyInfo = new XMLDSigServiceImpl().buildKeyInfoForCertificate(pubStr);
-        intygXMLDSignature.getSignatureType().setKeyInfo(keyInfo);
-
-        try {
-            String resXml = testee.encodeSignatureIntoSignedXml(intygXMLDSignature.getSignatureType(), xml);
-            System.out.println(resXml);
-            Assertions.assertTrue(new XMLDSigServiceImpl().validateSignatureValidity(resXml, true).isValid());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    // Stuff KeyInfo
+    String pubStr = null;
+    try {
+      pubStr = Base64.getEncoder().encodeToString(this.publicKey.getEncoded());
+    } catch (CertificateEncodingException e) {
+      e.printStackTrace();
     }
+    KeyInfoType keyInfo = new XMLDSigServiceImpl().buildKeyInfoForCertificate(pubStr);
+    intygXMLDSignature.getSignatureType().setKeyInfo(keyInfo);
 
-    private InputStream getXmlResource(String source) {
-        try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext()) {
-            Resource resource = context.getResource(source);
-            return resource.getInputStream();
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        }
+    try {
+      String resXml =
+          testee.encodeSignatureIntoSignedXml(intygXMLDSignature.getSignatureType(), xml);
+      System.out.println(resXml);
+      Assertions.assertTrue(
+          new XMLDSigServiceImpl().validateSignatureValidity(resXml, true).isValid());
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+  }
 
-    private X509Certificate publicKey;
-
-    private byte[] createSignature(byte[] digest) {
-        try {
-            KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load(new ClassPathResource(FAKE_KEYSTORE_NAME).getInputStream(), FAKE_KEYSTORE_PASSWORD.toCharArray());
-
-            KeyStore.PrivateKeyEntry keyEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(FAKE_KEYSTORE_ALIAS,
-                new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
-            this.publicKey = (X509Certificate) ks.getCertificate(FAKE_KEYSTORE_ALIAS);
-            Signature rsa = Signature.getInstance("SHA256withRSA");
-            rsa.initSign(keyEntry.getPrivateKey());
-            rsa.update(digest);
-            return rsa.sign();
-        } catch (Exception e) {
-            throw new IllegalStateException("Not possible to sign digest: " + e.getMessage());
-        }
+  private InputStream getXmlResource(String source) {
+    try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext()) {
+      Resource resource = context.getResource(source);
+      return resource.getInputStream();
+    } catch (IOException e) {
+      throw new IllegalArgumentException(e.getMessage());
     }
+  }
+
+  private X509Certificate publicKey;
+
+  private byte[] createSignature(byte[] digest) {
+    try {
+      KeyStore ks = KeyStore.getInstance("JKS");
+      ks.load(
+          new ClassPathResource(FAKE_KEYSTORE_NAME).getInputStream(),
+          FAKE_KEYSTORE_PASSWORD.toCharArray());
+
+      KeyStore.PrivateKeyEntry keyEntry =
+          (KeyStore.PrivateKeyEntry)
+              ks.getEntry(
+                  FAKE_KEYSTORE_ALIAS,
+                  new KeyStore.PasswordProtection(FAKE_KEYSTORE_PASSWORD.toCharArray()));
+      this.publicKey = (X509Certificate) ks.getCertificate(FAKE_KEYSTORE_ALIAS);
+      Signature rsa = Signature.getInstance("SHA256withRSA");
+      rsa.initSign(keyEntry.getPrivateKey());
+      rsa.update(digest);
+      return rsa.sign();
+    } catch (Exception e) {
+      throw new IllegalStateException("Not possible to sign digest: " + e.getMessage());
+    }
+  }
 }

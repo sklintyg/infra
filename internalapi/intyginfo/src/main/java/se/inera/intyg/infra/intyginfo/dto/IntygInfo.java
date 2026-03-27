@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,137 +24,136 @@ import java.util.List;
 
 public abstract class IntygInfo {
 
-    private String intygId;
-    private String intygType;
-    private String intygVersion;
+  private String intygId;
+  private String intygType;
+  private String intygVersion;
 
-    private LocalDateTime signedDate;
-    private LocalDateTime sentToRecipient;
+  private LocalDateTime signedDate;
+  private LocalDateTime sentToRecipient;
 
-    private List<IntygInfoEvent> events = new ArrayList<>();
+  private List<IntygInfoEvent> events = new ArrayList<>();
 
-    private String signedByName;
-    private String signedByHsaId;
-    private String signedByEmail;
+  private String signedByName;
+  private String signedByHsaId;
+  private String signedByEmail;
 
-    private String careUnitName;
-    private String careUnitHsaId;
+  private String careUnitName;
+  private String careUnitHsaId;
 
-    private String careGiverName;
-    private String careGiverHsaId;
+  private String careGiverName;
+  private String careGiverHsaId;
 
-    private boolean testCertificate;
+  private boolean testCertificate;
 
+  public String getIntygId() {
+    return intygId;
+  }
 
-    public String getIntygId() {
-        return intygId;
-    }
+  public void setIntygId(String intygId) {
+    this.intygId = intygId;
+  }
 
-    public void setIntygId(String intygId) {
-        this.intygId = intygId;
-    }
+  public String getIntygType() {
+    return intygType;
+  }
 
-    public String getIntygType() {
-        return intygType;
-    }
+  public void setIntygType(String intygType) {
+    this.intygType = intygType;
+  }
 
-    public void setIntygType(String intygType) {
-        this.intygType = intygType;
-    }
+  public String getIntygVersion() {
+    return intygVersion;
+  }
 
-    public String getIntygVersion() {
-        return intygVersion;
-    }
+  public void setIntygVersion(String intygVersion) {
+    this.intygVersion = intygVersion;
+  }
 
-    public void setIntygVersion(String intygVersion) {
-        this.intygVersion = intygVersion;
-    }
+  public LocalDateTime getSignedDate() {
+    return signedDate;
+  }
 
-    public LocalDateTime getSignedDate() {
-        return signedDate;
-    }
+  public void setSignedDate(LocalDateTime signedDate) {
+    this.signedDate = signedDate;
+  }
 
-    public void setSignedDate(LocalDateTime signedDate) {
-        this.signedDate = signedDate;
-    }
+  public LocalDateTime getSentToRecipient() {
+    return sentToRecipient;
+  }
 
-    public LocalDateTime getSentToRecipient() {
-        return sentToRecipient;
-    }
+  public void setSentToRecipient(LocalDateTime sentToRecipient) {
+    this.sentToRecipient = sentToRecipient;
+  }
 
-    public void setSentToRecipient(LocalDateTime sentToRecipient) {
-        this.sentToRecipient = sentToRecipient;
-    }
+  public List<IntygInfoEvent> getEvents() {
+    return events;
+  }
 
-    public List<IntygInfoEvent> getEvents() {
-        return events;
-    }
+  public void setEvents(List<IntygInfoEvent> events) {
+    this.events = events;
+  }
 
-    public void setEvents(List<IntygInfoEvent> events) {
-        this.events = events;
-    }
+  public String getSignedByName() {
+    return signedByName;
+  }
 
-    public String getSignedByName() {
-        return signedByName;
-    }
+  public void setSignedByName(String signedByName) {
+    this.signedByName = signedByName;
+  }
 
-    public void setSignedByName(String signedByName) {
-        this.signedByName = signedByName;
-    }
+  public String getSignedByHsaId() {
+    return signedByHsaId;
+  }
 
-    public String getSignedByHsaId() {
-        return signedByHsaId;
-    }
+  public void setSignedByHsaId(String signedByHsaId) {
+    this.signedByHsaId = signedByHsaId;
+  }
 
-    public void setSignedByHsaId(String signedByHsaId) {
-        this.signedByHsaId = signedByHsaId;
-    }
+  public String getSignedByEmail() {
+    return signedByEmail;
+  }
 
-    public String getSignedByEmail() {
-        return signedByEmail;
-    }
+  public void setSignedByEmail(String signedByEmail) {
+    this.signedByEmail = signedByEmail;
+  }
 
-    public void setSignedByEmail(String signedByEmail) {
-        this.signedByEmail = signedByEmail;
-    }
+  public String getCareUnitName() {
+    return careUnitName;
+  }
 
-    public String getCareUnitName() {
-        return careUnitName;
-    }
+  public void setCareUnitName(String careUnitName) {
+    this.careUnitName = careUnitName;
+  }
 
-    public void setCareUnitName(String careUnitName) {
-        this.careUnitName = careUnitName;
-    }
+  public String getCareUnitHsaId() {
+    return careUnitHsaId;
+  }
 
-    public String getCareUnitHsaId() {
-        return careUnitHsaId;
-    }
+  public void setCareUnitHsaId(String careUnitHsaId) {
+    this.careUnitHsaId = careUnitHsaId;
+  }
 
-    public void setCareUnitHsaId(String careUnitHsaId) {
-        this.careUnitHsaId = careUnitHsaId;
-    }
+  public String getCareGiverName() {
+    return careGiverName;
+  }
 
-    public String getCareGiverName() {
-        return careGiverName;
-    }
+  public void setCareGiverName(String careGiverName) {
+    this.careGiverName = careGiverName;
+  }
 
-    public void setCareGiverName(String careGiverName) {
-        this.careGiverName = careGiverName;
-    }
+  public String getCareGiverHsaId() {
+    return careGiverHsaId;
+  }
 
-    public String getCareGiverHsaId() {
-        return careGiverHsaId;
-    }
+  public void setCareGiverHsaId(String careGiverHsaId) {
+    this.careGiverHsaId = careGiverHsaId;
+  }
 
-    public void setCareGiverHsaId(String careGiverHsaId) {
-        this.careGiverHsaId = careGiverHsaId;
-    }
+  public boolean isTestCertificate() {
+    return testCertificate;
+  }
 
-    public boolean isTestCertificate() {
-        return testCertificate;
-    }
-
-    public void setTestCertificate(boolean isTestCertificate) {
-        this.testCertificate = isTestCertificate;
-    }
+  public void setTestCertificate(boolean isTestCertificate) {
+    this.testCertificate = isTestCertificate;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.infra.xmldsig.service;
 
+import jakarta.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -27,7 +28,6 @@ import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-import jakarta.annotation.PostConstruct;
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.XMLSignature;
@@ -60,173 +60,203 @@ import se.inera.intyg.infra.xmldsig.util.X509KeySelector;
 @Service
 public class XMLDSigServiceImpl implements XMLDSigService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XMLDSigServiceImpl.class);
-    private static final String CANONICALIZER_ALGORITHM = CanonicalizationMethod.EXCLUSIVE;
-    private static final String DIGEST_ALGORITHM = "SHA-256";
-    public static final String BEGIN_CERTIFICATE_STRING = "-----BEGIN CERTIFICATE-----\n";
-    public static final String END_CERTIFICATE_STRING = "-----END CERTIFICATE-----";
+  private static final Logger LOG = LoggerFactory.getLogger(XMLDSigServiceImpl.class);
+  private static final String CANONICALIZER_ALGORITHM = CanonicalizationMethod.EXCLUSIVE;
+  private static final String DIGEST_ALGORITHM = "SHA-256";
+  public static final String BEGIN_CERTIFICATE_STRING = "-----BEGIN CERTIFICATE-----\n";
+  public static final String END_CERTIFICATE_STRING = "-----END CERTIFICATE-----";
 
-    @PostConstruct
-    public void init() {
-        org.apache.xml.security.Init.init();
+  @PostConstruct
+  public void init() {
+    org.apache.xml.security.Init.init();
+  }
+
+  /**
+   * Builds a <KeyInfo/> element with the supplied certificate put into a child X509Certificate
+   * element.
+   */
+  @Override
+  public KeyInfoType buildKeyInfoForCertificate(String certificate) {
+    return PartialSignatureFactory.buildKeyInfo(certificate);
+  }
+
+  @Override
+  public ValidationResponse validateSignatureValidity(
+      String xmlWithSignedIntyg, boolean checkReferences) {
+    XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
+
+    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    dbf.setNamespaceAware(true);
+
+    try {
+      Document doc =
+          dbf.newDocumentBuilder()
+              .parse(IOUtils.toInputStream(xmlWithSignedIntyg, Charset.forName("UTF-8")));
+      NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
+      if (nl.getLength() != 1) {
+        throw new Exception("Cannot find exactly one Signature element");
+      }
+      return verifySignature(checkReferences, fac, nl.item(0));
+    } catch (Exception e) {
+      LOG.error("Caught {} validating signature. Msg: {}", e.getClass().getName(), e.getMessage());
+      throw new IllegalArgumentException(e);
     }
+  }
 
-    /**
-     * Builds a <KeyInfo/> element with the supplied certificate put into a child X509Certificate element.
-     */
-    @Override
-    public KeyInfoType buildKeyInfoForCertificate(String certificate) {
-        return PartialSignatureFactory.buildKeyInfo(certificate);
+  @Override
+  public Map<String, ValidationResponse> validateSignatureValidityMulti(
+      String xml, boolean checkReferences) {
+    Map<String, ValidationResponse> map = new HashMap<>();
+    XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
+
+    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    dbf.setNamespaceAware(true);
+
+    try {
+      Document doc =
+          dbf.newDocumentBuilder().parse(IOUtils.toInputStream(xml, Charset.forName("UTF-8")));
+      NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
+      if (nl.getLength() == 0) {
+        return new HashMap<>();
+      }
+
+      for (int index = 0; index < nl.getLength(); index++) {
+        Node node = nl.item(index);
+        String intygsId = extractIntygsId(node);
+
+        ValidationResponse validationResponse = verifySignature(checkReferences, fac, node);
+        map.put(intygsId, validationResponse);
+      }
+      return map;
+    } catch (Exception e) {
+      LOG.error(
+          "Caught {} validating signature(s). Msg: {}", e.getClass().getName(), e.getMessage());
     }
+    return map;
+  }
 
-    @Override
-    public ValidationResponse validateSignatureValidity(String xmlWithSignedIntyg, boolean checkReferences) {
-        XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
-
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware(true);
-
-        try {
-            Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(xmlWithSignedIntyg, Charset.forName("UTF-8")));
-            NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
-            if (nl.getLength() != 1) {
-                throw new Exception("Cannot find exactly one Signature element");
-            }
-            return verifySignature(checkReferences, fac, nl.item(0));
-        } catch (Exception e) {
-            LOG.error("Caught {} validating signature. Msg: {}", e.getClass().getName(), e.getMessage());
-            throw new IllegalArgumentException(e);
-        }
+  private String extractIntygsId(Node node) {
+    // Find intygs-id
+    XPathFactory xpathFactory = XPathFactory.newInstance();
+    XPath xpath = xpathFactory.newXPath();
+    try {
+      Node intygsIdNode =
+          (Node)
+              xpath
+                  .compile("//*[local-name() = 'intygs-id']/*[local-name() = 'extension']")
+                  .evaluate(node, XPathConstants.NODE);
+      return intygsIdNode.getTextContent();
+    } catch (Exception e) {
+      LOG.error("Error extracting intygs-id/extension from XML: " + e.getMessage());
+      throw new IllegalArgumentException(e);
     }
+  }
 
-    @Override
-    public Map<String, ValidationResponse> validateSignatureValidityMulti(String xml, boolean checkReferences) {
-        Map<String, ValidationResponse> map = new HashMap<>();
-        XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
+  @Override
+  public Map<String, CertificateInfo> extractCertificateInfo(String xmlWithSignedIntyg) {
+    HashMap<String, CertificateInfo> map = new HashMap<>();
+    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    dbf.setNamespaceAware(true);
 
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware(true);
+    try {
+      Document doc =
+          dbf.newDocumentBuilder()
+              .parse(IOUtils.toInputStream(xmlWithSignedIntyg, StandardCharsets.UTF_8));
+      NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
+      if (nl.getLength() == 0) {
+        throw new Exception("Cannot find Signature element");
+      }
 
-        try {
-            Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(xml, Charset.forName("UTF-8")));
-            NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
-            if (nl.getLength() == 0) {
-                return new HashMap<>();
-            }
-
-            for (int index = 0; index < nl.getLength(); index++) {
-                Node node = nl.item(index);
-                String intygsId = extractIntygsId(node);
-
-                ValidationResponse validationResponse = verifySignature(checkReferences, fac, node);
-                map.put(intygsId, validationResponse);
-            }
-            return map;
-        } catch (Exception e) {
-            LOG.error("Caught {} validating signature(s). Msg: {}", e.getClass().getName(), e.getMessage());
-        }
-        return map;
-    }
-
-    private String extractIntygsId(Node node) {
-        // Find intygs-id
+      for (int index = 0; index < nl.getLength(); index++) {
         XPathFactory xpathFactory = XPathFactory.newInstance();
         XPath xpath = xpathFactory.newXPath();
         try {
-            Node intygsIdNode = (Node) xpath.compile("//*[local-name() = 'intygs-id']/*[local-name() = 'extension']")
-                .evaluate(node, XPathConstants.NODE);
-            return intygsIdNode.getTextContent();
-        } catch (Exception e) {
-            LOG.error("Error extracting intygs-id/extension from XML: " + e.getMessage());
-            throw new IllegalArgumentException(e);
-        }
-    }
+          Node intygsIdNode =
+              (Node)
+                  xpath
+                      .compile("//*[local-name() = 'intygs-id']/*[local-name() = 'extension']")
+                      .evaluate(nl.item(index), XPathConstants.NODE);
+          String intygsId = intygsIdNode.getTextContent();
 
-    @Override
-    public Map<String, CertificateInfo> extractCertificateInfo(String xmlWithSignedIntyg) {
-        HashMap<String, CertificateInfo> map = new HashMap<>();
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware(true);
-
-        try {
-            Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(xmlWithSignedIntyg, StandardCharsets.UTF_8));
-            NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
-            if (nl.getLength() == 0) {
-                throw new Exception("Cannot find Signature element");
-            }
-
-            for (int index = 0; index < nl.getLength(); index++) {
-                XPathFactory xpathFactory = XPathFactory.newInstance();
-                XPath xpath = xpathFactory.newXPath();
-                try {
-                    Node intygsIdNode = (Node) xpath.compile("//*[local-name() = 'intygs-id']/*[local-name() = 'extension']")
-                        .evaluate(nl.item(index), XPathConstants.NODE);
-                    String intygsId = intygsIdNode.getTextContent();
-
-                    Node certificateNode = (Node) xpath.compile("//*[local-name() = 'X509Certificate']").evaluate(nl.item(index),
-                        XPathConstants.NODE);
-                    X509Certificate x509Certificate = convertToX509Cert(certificateNode.getTextContent());
-                    if (x509Certificate == null) {
-                        continue;
-                    }
-                    map.put(intygsId, CertificateInfo.CertificateInfoBuilder.aCertificateInfo()
-                        .withSubject(x509Certificate.getSubjectDN().getName())
-                        .withIssuer(x509Certificate.getIssuerDN().getName())
-                        .withAlg(x509Certificate.getSigAlgName())
-                        .withCertificateType(x509Certificate.getType())
-                        .build());
-
-                } catch (Exception e) {
-                    throw new IllegalArgumentException("Unable to process X509Certificate from Signature: " + e.getMessage());
-                }
-            }
+          Node certificateNode =
+              (Node)
+                  xpath
+                      .compile("//*[local-name() = 'X509Certificate']")
+                      .evaluate(nl.item(index), XPathConstants.NODE);
+          X509Certificate x509Certificate = convertToX509Cert(certificateNode.getTextContent());
+          if (x509Certificate == null) {
+            continue;
+          }
+          map.put(
+              intygsId,
+              CertificateInfo.CertificateInfoBuilder.aCertificateInfo()
+                  .withSubject(x509Certificate.getSubjectDN().getName())
+                  .withIssuer(x509Certificate.getIssuerDN().getName())
+                  .withAlg(x509Certificate.getSigAlgName())
+                  .withCertificateType(x509Certificate.getType())
+                  .build());
 
         } catch (Exception e) {
-            LOG.error("Caught {} extracting signature from from signed intyg. Msg: {}", e.getClass().getName(), e.getMessage());
-            throw new IllegalArgumentException("Unable to process Signature from document: " + e.getMessage());
+          throw new IllegalArgumentException(
+              "Unable to process X509Certificate from Signature: " + e.getMessage());
         }
-        return map;
+      }
+
+    } catch (Exception e) {
+      LOG.error(
+          "Caught {} extracting signature from from signed intyg. Msg: {}",
+          e.getClass().getName(),
+          e.getMessage());
+      throw new IllegalArgumentException(
+          "Unable to process Signature from document: " + e.getMessage());
     }
+    return map;
+  }
 
-    private X509Certificate convertToX509Cert(final String certificateString) throws CertificateException {
-        try {
-            if (certificateString != null && !certificateString.trim().isEmpty()) {
+  private X509Certificate convertToX509Cert(final String certificateString)
+      throws CertificateException {
+    try {
+      if (certificateString != null && !certificateString.trim().isEmpty()) {
 
-                // Remove
-                String cleanedString = certificateString
-                    .replace(BEGIN_CERTIFICATE_STRING, "")
-                    .replace(END_CERTIFICATE_STRING, "");
-                CertificateFactory cf = CertificateFactory.getInstance("X509");
-                return (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(Base64.getDecoder().decode(cleanedString)));
-            }
-        } catch (CertificateException e) {
-            LOG.error("Unable to extract X509Certificat from string representation: {}", e.getMessage());
-            throw new CertificateException(e);
-        }
-        return null;
+        // Remove
+        String cleanedString =
+            certificateString
+                .replace(BEGIN_CERTIFICATE_STRING, "")
+                .replace(END_CERTIFICATE_STRING, "");
+        CertificateFactory cf = CertificateFactory.getInstance("X509");
+        return (X509Certificate)
+            cf.generateCertificate(
+                new ByteArrayInputStream(Base64.getDecoder().decode(cleanedString)));
+      }
+    } catch (CertificateException e) {
+      LOG.error("Unable to extract X509Certificat from string representation: {}", e.getMessage());
+      throw new CertificateException(e);
     }
+    return null;
+  }
 
-    private ValidationResponse verifySignature(boolean checkReferences, XMLSignatureFactory fac, Node node)
-        throws MarshalException, XMLSignatureException {
-        // Create a DOMValidateContext and specify a KeySelector
-        // and document context.
-        DOMValidateContext valContext = new DOMValidateContext(new X509KeySelector(), node);
+  private ValidationResponse verifySignature(
+      boolean checkReferences, XMLSignatureFactory fac, Node node)
+      throws MarshalException, XMLSignatureException {
+    // Create a DOMValidateContext and specify a KeySelector
+    // and document context.
+    DOMValidateContext valContext = new DOMValidateContext(new X509KeySelector(), node);
 
-        // Unmarshal the XMLSignature.
-        XMLSignature sig = fac.unmarshalXMLSignature(valContext);
+    // Unmarshal the XMLSignature.
+    XMLSignature sig = fac.unmarshalXMLSignature(valContext);
 
-        if (checkReferences) {
-            boolean result = sig.validate(valContext);
-            return ValidationResponse.ValidationResponseBuilder.aValidationResponse()
-                .withSignatureValid(result ? ValidationResult.OK : ValidationResult.INVALID)
-                .withReferencesValid(result ? ValidationResult.OK : ValidationResult.INVALID)
-                .build();
-        } else {
-            boolean result = sig.getSignatureValue().validate(valContext);
-            return ValidationResponse.ValidationResponseBuilder.aValidationResponse()
-                .withSignatureValid(result ? ValidationResult.OK : ValidationResult.INVALID)
-                .withReferencesValid(ValidationResult.NOT_CHCEKED)
-                .build();
-        }
+    if (checkReferences) {
+      boolean result = sig.validate(valContext);
+      return ValidationResponse.ValidationResponseBuilder.aValidationResponse()
+          .withSignatureValid(result ? ValidationResult.OK : ValidationResult.INVALID)
+          .withReferencesValid(result ? ValidationResult.OK : ValidationResult.INVALID)
+          .build();
+    } else {
+      boolean result = sig.getSignatureValue().validate(valContext);
+      return ValidationResponse.ValidationResponseBuilder.aValidationResponse()
+          .withSignatureValid(result ? ValidationResult.OK : ValidationResult.INVALID)
+          .withReferencesValid(ValidationResult.NOT_CHCEKED)
+          .build();
     }
+  }
 }

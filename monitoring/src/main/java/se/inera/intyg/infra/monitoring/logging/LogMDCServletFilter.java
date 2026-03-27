@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,10 +18,6 @@
  */
 package se.inera.intyg.infra.monitoring.logging;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.Objects;
-import java.util.stream.Stream;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -30,56 +26,60 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.Objects;
+import java.util.stream.Stream;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-/**
- * Tags log records with trace id and session id.
- */
+/** Tags log records with trace id and session id. */
 public class LogMDCServletFilter implements Filter {
 
-    @Autowired
-    private LogMDCHelper mdcHelper;
+  @Autowired private LogMDCHelper mdcHelper;
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        final Closeable trace = open(request);
-        try {
-            chain.doFilter(request, response);
-        } finally {
-            IOUtils.closeQuietly(trace);
-        }
+  @Override
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+      throws IOException, ServletException {
+    final Closeable trace = open(request);
+    try {
+      chain.doFilter(request, response);
+    } finally {
+      IOUtils.closeQuietly(trace);
     }
+  }
 
-    @Override
-    public void init(FilterConfig filterConfig) {
-        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
-            filterConfig.getServletContext());
+  @Override
+  public void init(FilterConfig filterConfig) {
+    SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(
+        this, filterConfig.getServletContext());
+  }
+
+  @Override
+  public void destroy() {}
+
+  Closeable open(final ServletRequest request) {
+    if (request instanceof HttpServletRequest) {
+      final HttpServletRequest http = ((HttpServletRequest) request);
+      mdcHelper
+          .withTraceId(http.getHeader(mdcHelper.traceHeader()))
+          .withSessionInfo(sessionId(http));
     }
+    return mdcHelper.openTrace();
+  }
 
-    @Override
-    public void destroy() {
-    }
+  // check cookie instead of http session, since this filer shall not create or use
+  // sessions
+  String sessionId(HttpServletRequest http) {
+    final Cookie[] cookies = http.getCookies();
 
-    Closeable open(final ServletRequest request) {
-        if (request instanceof HttpServletRequest) {
-            final HttpServletRequest http = ((HttpServletRequest) request);
-            mdcHelper.withTraceId(http.getHeader(mdcHelper.traceHeader()))
-                .withSessionInfo(sessionId(http));
-        }
-        return mdcHelper.openTrace();
-    }
-
-    // check cookie instead of http session, since this filer shall not create or use
-    // sessions
-    String sessionId(HttpServletRequest http) {
-        final Cookie[] cookies = http.getCookies();
-
-        return Objects.isNull(cookies) ? null
-            : Stream.of(cookies)
-                .filter(c -> "SESSION".equals(c.getName()))
-                .map(Cookie::getValue)
-                .findFirst().orElse(null);
-    }
+    return Objects.isNull(cookies)
+        ? null
+        : Stream.of(cookies)
+            .filter(c -> "SESSION".equals(c.getName()))
+            .map(Cookie::getValue)
+            .findFirst()
+            .orElse(null);
+  }
 }

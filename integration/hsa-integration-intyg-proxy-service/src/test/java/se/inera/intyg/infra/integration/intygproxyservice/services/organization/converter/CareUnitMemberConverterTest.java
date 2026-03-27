@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization.converter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,175 +41,172 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.AgandeForm;
 @ExtendWith(MockitoExtension.class)
 class CareUnitMemberConverterTest {
 
-    private static final String ZIP_CODE = "ZIP_CODE";
-    private static final String CITY = "CITY";
-    private static final String ADDRESS = "ADDRESS";
-    private static final String PARENT_ID = "PARENT_ID";
-    private static final AgandeForm PARENT_AGANDE_FORM = AgandeForm.OFFENTLIG;
+  private static final String ZIP_CODE = "ZIP_CODE";
+  private static final String CITY = "CITY";
+  private static final String ADDRESS = "ADDRESS";
+  private static final String PARENT_ID = "PARENT_ID";
+  private static final AgandeForm PARENT_AGANDE_FORM = AgandeForm.OFFENTLIG;
 
-    @Mock
-    private UnitAddressConverter unitAddressConverter;
+  @Mock private UnitAddressConverter unitAddressConverter;
 
-    @InjectMocks
-    private CareUnitMemberConverter converter;
+  @InjectMocks private CareUnitMemberConverter converter;
+
+  @Test
+  void shouldConvertParentId() {
+    final var member = getMember();
+
+    final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+
+    assertEquals(PARENT_ID, response.getParentHsaId());
+  }
+
+  @Test
+  void shouldConvertAgandeForm() {
+    final var member = getMember();
+
+    final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+
+    assertEquals(PARENT_AGANDE_FORM, response.getAgandeForm());
+  }
+
+  @Test
+  void shouldConvertStart() {
+    final var member = getMember();
+
+    final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+
+    assertEquals(member.getHealthCareUnitMemberStartDate(), response.getStart());
+  }
+
+  @Test
+  void shouldConvertEnd() {
+    final var member = getMember();
+
+    final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+
+    assertEquals(member.getHealthCareUnitMemberEndDate(), response.getEnd());
+  }
+
+  @Test
+  void shouldConvertHsaId() {
+    final var member = getMember();
+
+    final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+
+    assertEquals(member.getHealthCareUnitMemberHsaId(), response.getId());
+  }
+
+  @Test
+  void shouldConvertName() {
+    final var member = getMember();
+
+    final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+
+    assertEquals(member.getHealthCareUnitMemberName(), response.getNamn());
+  }
+
+  @Test
+  void shouldConvertPhoneNumber() {
+    final var member = getMember();
+
+    final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+
+    assertEquals("1, 2", response.getTelefonnummer());
+  }
+
+  @Nested
+  class WorkPlaceCodeTest {
 
     @Test
-    void shouldConvertParentId() {
-        final var member = getMember();
+    void shouldConvertToDefaultIfNoPrescriptionCode() {
+      final var member = getMember();
 
-        final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+      member.setHealthCareUnitMemberPrescriptionCode(Collections.emptyList());
 
-        assertEquals(PARENT_ID, response.getParentHsaId());
+      final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+
+      assertEquals(DEFAULT_ARBETSPLATSKOD, response.getArbetsplatskod());
     }
 
     @Test
-    void shouldConvertAgandeForm() {
-        final var member = getMember();
+    void shouldConvertToDefaultIfNullPrescriptionCode() {
+      final var member = getMember();
 
-        final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+      member.setHealthCareUnitMemberPrescriptionCode(null);
 
-        assertEquals(PARENT_AGANDE_FORM, response.getAgandeForm());
+      final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+
+      assertEquals(DEFAULT_ARBETSPLATSKOD, response.getArbetsplatskod());
     }
 
     @Test
-    void shouldConvertStart() {
-        final var member = getMember();
+    void shouldConvertToFirstPrescriptionCode() {
+      final var member = getMember();
 
-        final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+      member.setHealthCareUnitMemberPrescriptionCode(List.of("CODE", "CODE2"));
 
-        assertEquals(member.getHealthCareUnitMemberStartDate(), response.getStart());
+      final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+
+      assertEquals("CODE", response.getArbetsplatskod());
+    }
+  }
+
+  @Nested
+  class AddressTest {
+
+    @BeforeEach
+    void setup() {
+      when(unitAddressConverter.convertAddress(any(List.class))).thenReturn(ADDRESS);
+
+      when(unitAddressConverter.convertCity(any(List.class))).thenReturn(CITY);
+
+      when(unitAddressConverter.convertZipCode(any(List.class), anyString())).thenReturn(ZIP_CODE);
     }
 
     @Test
-    void shouldConvertEnd() {
-        final var member = getMember();
+    void shouldConvertAddress() {
+      final var member = getMember();
 
-        final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+      final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
 
-        assertEquals(member.getHealthCareUnitMemberEndDate(), response.getEnd());
+      verify(unitAddressConverter).convertAddress(member.getHealthCareUnitMemberpostalAddress());
+      assertEquals(ADDRESS, response.getPostadress());
     }
 
     @Test
-    void shouldConvertHsaId() {
-        final var member = getMember();
+    void shouldConvertCity() {
+      final var member = getMember();
 
-        final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+      final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
 
-        assertEquals(member.getHealthCareUnitMemberHsaId(), response.getId());
+      verify(unitAddressConverter).convertCity(member.getHealthCareUnitMemberpostalAddress());
+      assertEquals(CITY, response.getPostort());
     }
 
     @Test
-    void shouldConvertName() {
-        final var member = getMember();
+    void shouldConvertZipCode() {
+      final var member = getMember();
 
-        final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
+      final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
 
-        assertEquals(member.getHealthCareUnitMemberName(), response.getNamn());
+      verify(unitAddressConverter)
+          .convertZipCode(
+              member.getHealthCareUnitMemberpostalAddress(),
+              member.getHealthCareUnitMemberpostalCode());
+      assertEquals(ZIP_CODE, response.getPostnummer());
     }
+  }
 
-    @Test
-    void shouldConvertPhoneNumber() {
-        final var member = getMember();
+  private HealthCareUnitMember getMember() {
+    final var member = new HealthCareUnitMember();
+    member.setHealthCareUnitMemberHsaId("ID");
+    member.setHealthCareUnitMemberName("NAME");
+    member.setHealthCareUnitMemberStartDate(LocalDateTime.now());
+    member.setHealthCareUnitMemberEndDate(LocalDateTime.now().plusDays(5));
+    member.setHealthCareUnitMemberTelephoneNumber(List.of("1", "2"));
+    member.setHealthCareUnitMemberpostalAddress(Collections.emptyList());
+    member.setHealthCareUnitMemberpostalCode("ZIP");
 
-        final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
-
-        assertEquals("1, 2", response.getTelefonnummer());
-    }
-
-    @Nested
-    class WorkPlaceCodeTest {
-
-        @Test
-        void shouldConvertToDefaultIfNoPrescriptionCode() {
-            final var member = getMember();
-
-            member.setHealthCareUnitMemberPrescriptionCode(Collections.emptyList());
-
-            final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
-
-            assertEquals(DEFAULT_ARBETSPLATSKOD, response.getArbetsplatskod());
-        }
-
-        @Test
-        void shouldConvertToDefaultIfNullPrescriptionCode() {
-            final var member = getMember();
-
-            member.setHealthCareUnitMemberPrescriptionCode(null);
-
-            final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
-
-            assertEquals(DEFAULT_ARBETSPLATSKOD, response.getArbetsplatskod());
-        }
-
-        @Test
-        void shouldConvertToFirstPrescriptionCode() {
-            final var member = getMember();
-
-            member.setHealthCareUnitMemberPrescriptionCode(List.of("CODE", "CODE2"));
-
-            final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
-
-            assertEquals("CODE", response.getArbetsplatskod());
-        }
-    }
-
-    @Nested
-    class AddressTest {
-
-        @BeforeEach
-        void setup() {
-            when(unitAddressConverter.convertAddress(any(List.class)))
-                .thenReturn(ADDRESS);
-
-            when(unitAddressConverter.convertCity(any(List.class)))
-                .thenReturn(CITY);
-
-            when(unitAddressConverter.convertZipCode(any(List.class), anyString()))
-                .thenReturn(ZIP_CODE);
-        }
-
-        @Test
-        void shouldConvertAddress() {
-            final var member = getMember();
-
-            final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
-
-            verify(unitAddressConverter).convertAddress(member.getHealthCareUnitMemberpostalAddress());
-            assertEquals(ADDRESS, response.getPostadress());
-        }
-
-        @Test
-        void shouldConvertCity() {
-            final var member = getMember();
-
-            final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
-
-            verify(unitAddressConverter).convertCity(member.getHealthCareUnitMemberpostalAddress());
-            assertEquals(CITY, response.getPostort());
-        }
-
-        @Test
-        void shouldConvertZipCode() {
-            final var member = getMember();
-
-            final var response = converter.convert(member, PARENT_ID, PARENT_AGANDE_FORM);
-
-            verify(unitAddressConverter).convertZipCode(member.getHealthCareUnitMemberpostalAddress(),
-                member.getHealthCareUnitMemberpostalCode());
-            assertEquals(ZIP_CODE, response.getPostnummer());
-        }
-    }
-
-    private HealthCareUnitMember getMember() {
-        final var member = new HealthCareUnitMember();
-        member.setHealthCareUnitMemberHsaId("ID");
-        member.setHealthCareUnitMemberName("NAME");
-        member.setHealthCareUnitMemberStartDate(LocalDateTime.now());
-        member.setHealthCareUnitMemberEndDate(LocalDateTime.now().plusDays(5));
-        member.setHealthCareUnitMemberTelephoneNumber(List.of("1", "2"));
-        member.setHealthCareUnitMemberpostalAddress(Collections.emptyList());
-        member.setHealthCareUnitMemberpostalCode("ZIP");
-
-        return member;
-    }
+    return member;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,42 +36,36 @@ import se.inera.intyg.infra.integration.intygproxyservice.services.employee.HsaI
 @ExtendWith(MockitoExtension.class)
 class HsaIntegrationEmployeeServiceTest {
 
-    @Mock
-    private GetEmployeeService getEmployeeService;
-    @InjectMocks
-    private HsaIntegrationEmployeeService hsaEmployeeService;
+  @Mock private GetEmployeeService getEmployeeService;
+  @InjectMocks private HsaIntegrationEmployeeService hsaEmployeeService;
 
-    private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
-    private static final String PERSON_HSA_ID = "personHsaId";
+  private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
+  private static final String PERSON_HSA_ID = "personHsaId";
 
-    @Test
-    void shouldReturnEmptyListIfClientThrowsError() {
-        when(getEmployeeService.get(
-                GetEmployeeRequestDTO.builder()
-                    .hsaId(PERSON_HSA_ID)
-                    .personId(PERSONAL_IDENTITY_NUMBER)
-                    .build()
-            )
-        ).thenThrow(IllegalStateException.class);
-        final var result = hsaEmployeeService.getEmployee(PERSONAL_IDENTITY_NUMBER, PERSON_HSA_ID);
+  @Test
+  void shouldReturnEmptyListIfClientThrowsError() {
+    when(getEmployeeService.get(
+            GetEmployeeRequestDTO.builder()
+                .hsaId(PERSON_HSA_ID)
+                .personId(PERSONAL_IDENTITY_NUMBER)
+                .build()))
+        .thenThrow(IllegalStateException.class);
+    final var result = hsaEmployeeService.getEmployee(PERSONAL_IDENTITY_NUMBER, PERSON_HSA_ID);
 
-        assertTrue(result.isEmpty());
-    }
+    assertTrue(result.isEmpty());
+  }
 
-    @Test
-    void shouldReturnListOfPersonInformation() {
-        final var expectedResult = List.of(
-            new PersonInformation()
-        );
-        when(getEmployeeService.get(
-                GetEmployeeRequestDTO.builder()
-                    .hsaId(PERSON_HSA_ID)
-                    .personId(PERSONAL_IDENTITY_NUMBER)
-                    .build()
-            )
-        ).thenReturn(expectedResult);
-        final var result = hsaEmployeeService.getEmployee(PERSONAL_IDENTITY_NUMBER, PERSON_HSA_ID);
+  @Test
+  void shouldReturnListOfPersonInformation() {
+    final var expectedResult = List.of(new PersonInformation());
+    when(getEmployeeService.get(
+            GetEmployeeRequestDTO.builder()
+                .hsaId(PERSON_HSA_ID)
+                .personId(PERSONAL_IDENTITY_NUMBER)
+                .build()))
+        .thenReturn(expectedResult);
+    final var result = hsaEmployeeService.getEmployee(PERSONAL_IDENTITY_NUMBER, PERSON_HSA_ID);
 
-        assertEquals(expectedResult, result);
-    }
+    assertEquals(expectedResult, result);
+  }
 }

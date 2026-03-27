@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,11 +25,12 @@ import se.inera.intyg.infra.xmldsig.model.ValidationResponse;
 
 public interface XMLDSigService {
 
-    KeyInfoType buildKeyInfoForCertificate(String certificate);
+  KeyInfoType buildKeyInfoForCertificate(String certificate);
 
-    ValidationResponse validateSignatureValidity(String signatureXml, boolean checkReferences);
+  ValidationResponse validateSignatureValidity(String signatureXml, boolean checkReferences);
 
-    Map<String, ValidationResponse> validateSignatureValidityMulti(String signatureXml, boolean checkReferences);
+  Map<String, ValidationResponse> validateSignatureValidityMulti(
+      String signatureXml, boolean checkReferences);
 
-    Map<String, CertificateInfo> extractCertificateInfo(String signatureXml);
+  Map<String, CertificateInfo> extractCertificateInfo(String signatureXml);
 }

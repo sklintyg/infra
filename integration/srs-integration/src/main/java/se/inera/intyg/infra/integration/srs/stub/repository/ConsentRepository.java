@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,22 +27,22 @@ import se.inera.intyg.schemas.contract.Personnummer;
 
 public class ConsentRepository {
 
-    private ConcurrentHashMap<Individ, Consent> consentRepo = new ConcurrentHashMap<>();
+  private ConcurrentHashMap<Individ, Consent> consentRepo = new ConcurrentHashMap<>();
 
-    public Optional<Consent> getConsent(Personnummer personnummer, String vardgivarId) {
-        return Optional.ofNullable(consentRepo.get(new Individ(personnummer, vardgivarId)));
-    }
+  public Optional<Consent> getConsent(Personnummer personnummer, String vardgivarId) {
+    return Optional.ofNullable(consentRepo.get(new Individ(personnummer, vardgivarId)));
+  }
 
-    public void setConsent(Personnummer personnummer, String vardgivarId, boolean consent) {
-        Individ individ = new Individ(personnummer, vardgivarId);
-        if (consent) {
-            consentRepo.put(individ, new Consent(true, LocalDateTime.now()));
-        } else {
-            consentRepo.remove(individ);
-        }
+  public void setConsent(Personnummer personnummer, String vardgivarId, boolean consent) {
+    Individ individ = new Individ(personnummer, vardgivarId);
+    if (consent) {
+      consentRepo.put(individ, new Consent(true, LocalDateTime.now()));
+    } else {
+      consentRepo.remove(individ);
     }
+  }
 
-    public void clear() {
-        consentRepo.clear();
-    }
+  public void clear() {
+    consentRepo.clear();
+  }
 }

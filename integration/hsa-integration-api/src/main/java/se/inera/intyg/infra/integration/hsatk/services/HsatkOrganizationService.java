@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,22 +18,20 @@
  */
 package se.inera.intyg.infra.integration.hsatk.services;
 
+import java.util.List;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareProvider;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.infra.integration.hsatk.model.HealthCareUnitMembers;
 import se.inera.intyg.infra.integration.hsatk.model.Unit;
 
-import java.util.List;
-
 public interface HsatkOrganizationService {
 
-    List<HealthCareProvider> getHealthCareProvider(String healthCareProviderHsaId, String healthCareProviderOrgNo);
+  List<HealthCareProvider> getHealthCareProvider(
+      String healthCareProviderHsaId, String healthCareProviderOrgNo);
 
-    HealthCareUnit getHealthCareUnit(String healthCareUnitMemberHsaId);
+  HealthCareUnit getHealthCareUnit(String healthCareUnitMemberHsaId);
 
-    HealthCareUnitMembers getHealthCareUnitMembers(String healtCareUnitHsaId);
+  HealthCareUnitMembers getHealthCareUnitMembers(String healtCareUnitHsaId);
 
-    Unit getUnit(String unitHsaId, String profile);
-
-
+  Unit getUnit(String unitHsaId, String profile);
 }

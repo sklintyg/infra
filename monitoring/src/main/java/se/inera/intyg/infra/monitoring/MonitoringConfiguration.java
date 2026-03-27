@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -32,22 +32,22 @@ import se.inera.intyg.infra.monitoring.logging.LogMDCServletFilter;
 @EnableAspectJAutoProxy
 public class MonitoringConfiguration {
 
-    public MonitoringConfiguration() {
-        DefaultExports.initialize();
-    }
+  public MonitoringConfiguration() {
+    DefaultExports.initialize();
+  }
 
-    @Bean
-    public MetricsServlet metricsServlet() {
-        return new MetricsServlet();
-    }
+  @Bean
+  public MetricsServlet metricsServlet() {
+    return new MetricsServlet();
+  }
 
-    @Bean
-    public LogMDCServletFilter logMDCServletFilter() {
-        return new LogMDCServletFilter();
-    }
+  @Bean
+  public LogMDCServletFilter logMDCServletFilter() {
+    return new LogMDCServletFilter();
+  }
 
-    @Bean
-    public LogMDCHelper logMDCHelper() {
-        return new LogMDCHelper();
-    }
+  @Bean
+  public LogMDCHelper logMDCHelper() {
+    return new LogMDCHelper();
+  }
 }

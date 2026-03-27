@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import java.util.Comparator;
@@ -35,32 +34,31 @@ import se.inera.intyg.infra.integration.intygproxyservice.services.organization.
 @RequiredArgsConstructor
 public class GetCareProviderListService {
 
-    private final CareProviderConverter careProviderConverter;
-    private final GetCareUnitListService getCareUnitListService;
+  private final CareProviderConverter careProviderConverter;
+  private final GetCareUnitListService getCareUnitListService;
 
-    public List<Vardgivare> get(List<Commission> commissions) {
-        final var unitList = getCareUnitListService.get(commissions);
+  public List<Vardgivare> get(List<Commission> commissions) {
+    final var unitList = getCareUnitListService.get(commissions);
 
-        return commissions.stream()
-            .map(
-                commission -> careProviderConverter.convert(
+    return commissions.stream()
+        .map(
+            commission ->
+                careProviderConverter.convert(
                     commission,
-                    getCareUnitsForCareProvider(unitList, commission.getHealthCareProviderHsaId())
-                )
-            )
-            .distinct()
-            .filter(GetCareProviderListService::hasUnits)
-            .sorted(Comparator.nullsLast(Comparator.comparing(Vardgivare::getNamn)))
-            .collect(Collectors.toList());
-    }
+                    getCareUnitsForCareProvider(unitList, commission.getHealthCareProviderHsaId())))
+        .distinct()
+        .filter(GetCareProviderListService::hasUnits)
+        .sorted(Comparator.nullsLast(Comparator.comparing(Vardgivare::getNamn)))
+        .collect(Collectors.toList());
+  }
 
-    private List<Vardenhet> getCareUnitsForCareProvider(List<Vardenhet> units, String id) {
-        return units.stream()
-            .filter(unit -> unit.getVardgivareHsaId().equals(id))
-            .collect(Collectors.toList());
-    }
+  private List<Vardenhet> getCareUnitsForCareProvider(List<Vardenhet> units, String id) {
+    return units.stream()
+        .filter(unit -> unit.getVardgivareHsaId().equals(id))
+        .collect(Collectors.toList());
+  }
 
-    private static boolean hasUnits(Vardgivare careProvider) {
-        return !careProvider.getVardenheter().isEmpty();
-    }
+  private static boolean hasUnits(Vardgivare careProvider) {
+    return !careProvider.getVardenheter().isEmpty();
+  }
 }

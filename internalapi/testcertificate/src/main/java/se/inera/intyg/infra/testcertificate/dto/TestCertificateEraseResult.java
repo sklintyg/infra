@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,34 +18,32 @@
  */
 package se.inera.intyg.infra.testcertificate.dto;
 
-/**
- * DTO to use when returning result for erase test certificate API.
- */
+/** DTO to use when returning result for erase test certificate API. */
 public class TestCertificateEraseResult {
 
-    private int erasedCount;
-    private int failedCount;
+  private int erasedCount;
+  private int failedCount;
 
-    public static TestCertificateEraseResult create(int eraseCount, int failedCount) {
-        final TestCertificateEraseResult eraseResult = new TestCertificateEraseResult();
-        eraseResult.erasedCount = eraseCount;
-        eraseResult.failedCount = failedCount;
-        return eraseResult;
-    }
+  public static TestCertificateEraseResult create(int eraseCount, int failedCount) {
+    final TestCertificateEraseResult eraseResult = new TestCertificateEraseResult();
+    eraseResult.erasedCount = eraseCount;
+    eraseResult.failedCount = failedCount;
+    return eraseResult;
+  }
 
-    public int getErasedCount() {
-        return erasedCount;
-    }
+  public int getErasedCount() {
+    return erasedCount;
+  }
 
-    public void setErasedCount(int erasedCount) {
-        this.erasedCount = erasedCount;
-    }
+  public void setErasedCount(int erasedCount) {
+    this.erasedCount = erasedCount;
+  }
 
-    public int getFailedCount() {
-        return failedCount;
-    }
+  public int getFailedCount() {
+    return failedCount;
+  }
 
-    public void setFailedCount(int failedCount) {
-        this.failedCount = failedCount;
-    }
+  public void setFailedCount(int failedCount) {
+    this.failedCount = failedCount;
+  }
 }

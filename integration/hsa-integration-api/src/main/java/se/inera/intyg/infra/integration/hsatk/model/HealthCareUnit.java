@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,27 +25,27 @@ import lombok.Data;
 @Data
 public class HealthCareUnit implements Serializable {
 
-    protected Boolean unitIsHealthCareUnit;
-    protected String healthCareUnitMemberHsaId;
-    protected String healthCareUnitMemberName;
-    protected String healthCareUnitMemberPublicName;
-    protected LocalDateTime healthCareUnitMemberStartDate;
-    protected LocalDateTime healthCareUnitMemberEndDate;
-    protected String healthCareUnitHsaId;
-    protected String healthCareUnitName;
-    protected String healthCareUnitPublicName;
-    protected LocalDateTime healthCareUnitStartDate;
-    protected LocalDateTime healthCareUnitEndDate;
-    protected String healthCareProviderHsaId;
-    protected String healthCareProviderName;
-    protected String healthCareProviderPublicName;
-    protected String healthCareProviderOrgNo;
-    protected LocalDateTime healthCareProviderStartDate;
-    protected LocalDateTime healthCareProviderEndDate;
-    protected Boolean feignedHealthCareUnitMember;
-    protected Boolean feignedHealthCareUnit;
-    protected Boolean feignedHealthCareProvider;
-    protected Boolean archivedHealthCareUnitMember;
-    protected Boolean archivedHealthCareUnit;
-    protected Boolean archivedHealthCareProvider;
+  protected Boolean unitIsHealthCareUnit;
+  protected String healthCareUnitMemberHsaId;
+  protected String healthCareUnitMemberName;
+  protected String healthCareUnitMemberPublicName;
+  protected LocalDateTime healthCareUnitMemberStartDate;
+  protected LocalDateTime healthCareUnitMemberEndDate;
+  protected String healthCareUnitHsaId;
+  protected String healthCareUnitName;
+  protected String healthCareUnitPublicName;
+  protected LocalDateTime healthCareUnitStartDate;
+  protected LocalDateTime healthCareUnitEndDate;
+  protected String healthCareProviderHsaId;
+  protected String healthCareProviderName;
+  protected String healthCareProviderPublicName;
+  protected String healthCareProviderOrgNo;
+  protected LocalDateTime healthCareProviderStartDate;
+  protected LocalDateTime healthCareProviderEndDate;
+  protected Boolean feignedHealthCareUnitMember;
+  protected Boolean feignedHealthCareUnit;
+  protected Boolean feignedHealthCareProvider;
+  protected Boolean archivedHealthCareUnitMember;
+  protected Boolean archivedHealthCareUnit;
+  protected Boolean archivedHealthCareProvider;
 }

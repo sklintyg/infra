@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,19 +20,19 @@ package se.inera.intyg.infra.xmldsig.model;
 
 public class TransformAndDigestResponse {
 
-    private String transformedXml;
-    private byte[] digest;
+  private String transformedXml;
+  private byte[] digest;
 
-    public TransformAndDigestResponse(String transformedXml, byte[] digest) {
-        this.transformedXml = transformedXml;
-        this.digest = digest;
-    }
+  public TransformAndDigestResponse(String transformedXml, byte[] digest) {
+    this.transformedXml = transformedXml;
+    this.digest = digest;
+  }
 
-    public String getTransformedXml() {
-        return transformedXml;
-    }
+  public String getTransformedXml() {
+    return transformedXml;
+  }
 
-    public byte[] getDigest() {
-        return digest;
-    }
+  public byte[] getDigest() {
+    return digest;
+  }
 }

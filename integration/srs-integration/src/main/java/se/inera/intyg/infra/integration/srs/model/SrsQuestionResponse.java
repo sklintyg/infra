@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,37 +22,37 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getsrsinformation.v3.FragaS
 
 public class SrsQuestionResponse {
 
-    private String questionId;
-    private String answerId;
+  private String questionId;
+  private String answerId;
 
-    public static FragaSvar convert(SrsQuestionResponse srsQuestionResponse) {
-        FragaSvar fragaSvar = new FragaSvar();
-        fragaSvar.setFrageidSrs(srsQuestionResponse.getQuestionId());
+  public static FragaSvar convert(SrsQuestionResponse srsQuestionResponse) {
+    FragaSvar fragaSvar = new FragaSvar();
+    fragaSvar.setFrageidSrs(srsQuestionResponse.getQuestionId());
 
-        fragaSvar.setSvarsidSrs(srsQuestionResponse.getAnswerId());
-        return fragaSvar;
-    }
+    fragaSvar.setSvarsidSrs(srsQuestionResponse.getAnswerId());
+    return fragaSvar;
+  }
 
-    public static SrsQuestionResponse create(String questionId, String answerId) {
-        SrsQuestionResponse sqr = new SrsQuestionResponse();
-        sqr.setQuestionId(questionId);
-        sqr.setAnswerId(answerId);
-        return sqr;
-    }
+  public static SrsQuestionResponse create(String questionId, String answerId) {
+    SrsQuestionResponse sqr = new SrsQuestionResponse();
+    sqr.setQuestionId(questionId);
+    sqr.setAnswerId(answerId);
+    return sqr;
+  }
 
-    public String getQuestionId() {
-        return questionId;
-    }
+  public String getQuestionId() {
+    return questionId;
+  }
 
-    public void setQuestionId(String questionId) {
-        this.questionId = questionId;
-    }
+  public void setQuestionId(String questionId) {
+    this.questionId = questionId;
+  }
 
-    public String getAnswerId() {
-        return answerId;
-    }
+  public String getAnswerId() {
+    return answerId;
+  }
 
-    public void setAnswerId(String answerId) {
-        this.answerId = answerId;
-    }
+  public void setAnswerId(String answerId) {
+    this.answerId = answerId;
+  }
 }

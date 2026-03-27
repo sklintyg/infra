@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,56 +30,56 @@ import javax.xml.crypto.dsig.keyinfo.KeyInfo;
 import javax.xml.crypto.dsig.keyinfo.X509Data;
 
 /**
- * A <code>KeySelector</code> that returns {@link PublicKey}s of trusted
- * {@link X509Certificate}s.
+ * A <code>KeySelector</code> that returns {@link PublicKey}s of trusted {@link X509Certificate}s.
  *
- * Will only handle X509Certificates passed from a XMLDSig structure.
+ * <p>Will only handle X509Certificates passed from a XMLDSig structure.
  *
  * @author eriklupander
  */
 public class X509KeySelector extends KeySelector {
 
-    @Override
-    public KeySelectorResult select(KeyInfo keyInfo,
-        KeySelector.Purpose purpose,
-        AlgorithmMethod method,
-        XMLCryptoContext context)
-        throws KeySelectorException {
-        for (Object o1 : keyInfo.getContent()) {
-            XMLStructure info = (XMLStructure) o1;
-            if (!(info instanceof X509Data)) {
-                continue;
-            }
+  @Override
+  public KeySelectorResult select(
+      KeyInfo keyInfo,
+      KeySelector.Purpose purpose,
+      AlgorithmMethod method,
+      XMLCryptoContext context)
+      throws KeySelectorException {
+    for (Object o1 : keyInfo.getContent()) {
+      XMLStructure info = (XMLStructure) o1;
+      if (!(info instanceof X509Data)) {
+        continue;
+      }
 
-            X509Data x509Data = (X509Data) info;
+      X509Data x509Data = (X509Data) info;
 
-            for (Object o : x509Data.getContent()) {
-                if (!(o instanceof X509Certificate)) {
-                    continue;
-                }
-
-                final PublicKey key = ((X509Certificate) o).getPublicKey();
-                // Make sure the algorithm is compatible
-                // with the method.
-                if (algEquals(method.getAlgorithm(), key.getAlgorithm())) {
-                    return () -> key;
-                }
-            }
+      for (Object o : x509Data.getContent()) {
+        if (!(o instanceof X509Certificate)) {
+          continue;
         }
-        throw new KeySelectorException("No key found!");
-    }
 
-    private static boolean algEquals(String algURI, String algName) {
-        var lastSignMethodPart = algURI.substring(algURI.lastIndexOf("#") + 1);
-
-        if ("EC".equalsIgnoreCase(algName) && lastSignMethodPart.startsWith("ecdsa")) {
-            return true;
-        } else if ("RSA".equalsIgnoreCase(algName) && lastSignMethodPart.startsWith("rsa")) {
-            return true;
-        } else if ("DSA".equalsIgnoreCase(algName) && lastSignMethodPart.startsWith("dsa")) {
-            return true;
-        } else {
-            return false;
+        final PublicKey key = ((X509Certificate) o).getPublicKey();
+        // Make sure the algorithm is compatible
+        // with the method.
+        if (algEquals(method.getAlgorithm(), key.getAlgorithm())) {
+          return () -> key;
         }
+      }
     }
+    throw new KeySelectorException("No key found!");
+  }
+
+  private static boolean algEquals(String algURI, String algName) {
+    var lastSignMethodPart = algURI.substring(algURI.lastIndexOf("#") + 1);
+
+    if ("EC".equalsIgnoreCase(algName) && lastSignMethodPart.startsWith("ecdsa")) {
+      return true;
+    } else if ("RSA".equalsIgnoreCase(algName) && lastSignMethodPart.startsWith("rsa")) {
+      return true;
+    } else if ("DSA".equalsIgnoreCase(algName) && lastSignMethodPart.startsWith("dsa")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

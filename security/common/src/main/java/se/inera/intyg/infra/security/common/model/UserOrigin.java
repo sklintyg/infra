@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,10 +20,8 @@ package se.inera.intyg.infra.security.common.model;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-/**
- * Created by eriklupander on 2016-05-13.
- */
+/** Created by eriklupander on 2016-05-13. */
 public interface UserOrigin {
 
-    String resolveOrigin(HttpServletRequest request);
+  String resolveOrigin(HttpServletRequest request);
 }

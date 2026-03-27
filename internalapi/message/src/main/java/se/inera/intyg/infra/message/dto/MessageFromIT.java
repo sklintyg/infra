@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,75 +20,78 @@ package se.inera.intyg.infra.message.dto;
 
 import java.time.LocalDateTime;
 
-/**
- * DTO to use when retrieving/returning messages through the internal API.
- */
+/** DTO to use when retrieving/returning messages through the internal API. */
 public class MessageFromIT {
 
-    private String certificateId;
-    private String messageId;
-    private String messageContent;
-    private String subject;
-    private String logicalAddress;
-    private LocalDateTime timestamp;
+  private String certificateId;
+  private String messageId;
+  private String messageContent;
+  private String subject;
+  private String logicalAddress;
+  private LocalDateTime timestamp;
 
-    public static MessageFromIT create(String certificateId, String messageId, String messageContent, String subject, String logicalAddress,
-        LocalDateTime timestamp) {
-        final var message = new MessageFromIT();
-        message.certificateId = certificateId;
-        message.messageId = messageId;
-        message.messageContent = messageContent;
-        message.subject = subject;
-        message.logicalAddress = logicalAddress;
-        message.timestamp = timestamp;
-        return message;
-    }
+  public static MessageFromIT create(
+      String certificateId,
+      String messageId,
+      String messageContent,
+      String subject,
+      String logicalAddress,
+      LocalDateTime timestamp) {
+    final var message = new MessageFromIT();
+    message.certificateId = certificateId;
+    message.messageId = messageId;
+    message.messageContent = messageContent;
+    message.subject = subject;
+    message.logicalAddress = logicalAddress;
+    message.timestamp = timestamp;
+    return message;
+  }
 
-    public String getCertificateId() {
-        return certificateId;
-    }
+  public String getCertificateId() {
+    return certificateId;
+  }
 
-    public void setCertificateId(String certificateId) {
-        this.certificateId = certificateId;
-    }
+  public void setCertificateId(String certificateId) {
+    this.certificateId = certificateId;
+  }
 
-    public String getMessageId() {
-        return messageId;
-    }
+  public String getMessageId() {
+    return messageId;
+  }
 
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
-    }
+  public void setMessageId(String messageId) {
+    this.messageId = messageId;
+  }
 
-    public String getMessageContent() {
-        return messageContent;
-    }
+  public String getMessageContent() {
+    return messageContent;
+  }
 
-    public void setMessageContent(String messageContent) {
-        this.messageContent = messageContent;
-    }
+  public void setMessageContent(String messageContent) {
+    this.messageContent = messageContent;
+  }
 
-    public String getSubject() {
-        return subject;
-    }
+  public String getSubject() {
+    return subject;
+  }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
+  public void setSubject(String subject) {
+    this.subject = subject;
+  }
 
-    public String getLogicalAddress() {
-        return logicalAddress;
-    }
+  public String getLogicalAddress() {
+    return logicalAddress;
+  }
 
-    public void setLogicalAddress(String logicalAddress) {
-        this.logicalAddress = logicalAddress;
-    }
+  public void setLogicalAddress(String logicalAddress) {
+    this.logicalAddress = logicalAddress;
+  }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
+  public LocalDateTime getTimestamp() {
+    return timestamp;
+  }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
+  public void setTimestamp(LocalDateTime timestamp) {
+    this.timestamp = timestamp;
+  }
 }

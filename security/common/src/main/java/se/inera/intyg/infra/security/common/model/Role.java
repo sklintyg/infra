@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,58 +23,56 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by mango on 19/11/15.
- */
+/** Created by mango on 19/11/15. */
 public class Role implements Serializable {
 
-    private static final long serialVersionUID = -2028438321609037955L;
+  private static final long serialVersionUID = -2028438321609037955L;
 
-    @JsonProperty
-    private String name;
+  @JsonProperty private String name;
 
-    @JsonProperty
-    private String desc;
+  @JsonProperty private String desc;
 
-    @JsonProperty
-    private List<Privilege> privileges;
+  @JsonProperty private List<Privilege> privileges;
 
+  public String getName() {
+    return name;
+  }
 
-    public String getName() {
-        return name;
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getDesc() {
+    return desc;
+  }
+
+  public void setDesc(String desc) {
+    this.desc = desc;
+  }
+
+  public List<Privilege> getPrivileges() {
+    return privileges;
+  }
+
+  public void setPrivileges(List<Privilege> privileges) {
+    if (privileges == null) {
+      this.privileges = Collections.emptyList();
+    } else {
+      this.privileges = privileges;
     }
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public List<Privilege> getPrivileges() {
-        return privileges;
-    }
-
-    public void setPrivileges(List<Privilege> privileges) {
-        if (privileges == null) {
-            this.privileges = Collections.emptyList();
-        } else {
-            this.privileges = privileges;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "\nRole {"
-            + " name='" + name + '\''
-            + ", desc='" + desc + '\''
-            + ", privileges= " + privileges
-            + "}";
-    }
-
+  @Override
+  public String toString() {
+    return "\nRole {"
+        + " name='"
+        + name
+        + '\''
+        + ", desc='"
+        + desc
+        + '\''
+        + ", privileges= "
+        + privileges
+        + "}";
+  }
 }

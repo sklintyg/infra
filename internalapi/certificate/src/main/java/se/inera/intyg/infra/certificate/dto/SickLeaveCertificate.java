@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,15 +28,15 @@ import lombok.EqualsAndHashCode;
 @Data
 public class SickLeaveCertificate extends DiagnosedCertificate {
 
-    private List<WorkCapacity> workCapacityList;
+  private List<WorkCapacity> workCapacityList;
 
-    private String occupation;
+  private String occupation;
 
-    @Data
-    public static class WorkCapacity {
+  @Data
+  public static class WorkCapacity {
 
-        private LocalDate startDate;
-        private LocalDate endDate;
-        private int reduction;
-    }
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private int reduction;
+  }
 }

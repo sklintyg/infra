@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,23 +22,23 @@ import java.time.LocalDateTime;
 
 public class ItIntygInfo extends IntygInfo {
 
-    private LocalDateTime receivedDate;
+  private LocalDateTime receivedDate;
 
-    private int numberOfRecipients;
+  private int numberOfRecipients;
 
-    public LocalDateTime getReceivedDate() {
-        return receivedDate;
-    }
+  public LocalDateTime getReceivedDate() {
+    return receivedDate;
+  }
 
-    public void setReceivedDate(LocalDateTime receivedDate) {
-        this.receivedDate = receivedDate;
-    }
+  public void setReceivedDate(LocalDateTime receivedDate) {
+    this.receivedDate = receivedDate;
+  }
 
-    public int getNumberOfRecipients() {
-        return numberOfRecipients;
-    }
+  public int getNumberOfRecipients() {
+    return numberOfRecipients;
+  }
 
-    public void setNumberOfRecipients(int numberOfRecipients) {
-        this.numberOfRecipients = numberOfRecipients;
-    }
+  public void setNumberOfRecipients(int numberOfRecipients) {
+    this.numberOfRecipients = numberOfRecipients;
+  }
 }

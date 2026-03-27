@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,34 +20,32 @@ package se.inera.intyg.infra.testcertificate.dto;
 
 import java.time.LocalDateTime;
 
-/**
- * DTO to use when calling internal erase test certificate API.
- */
+/** DTO to use when calling internal erase test certificate API. */
 public class TestCertificateEraseRequest {
 
-    private LocalDateTime from;
-    private LocalDateTime to;
+  private LocalDateTime from;
+  private LocalDateTime to;
 
-    public static TestCertificateEraseRequest create(LocalDateTime from, LocalDateTime to) {
-        final TestCertificateEraseRequest eraseRequest = new TestCertificateEraseRequest();
-        eraseRequest.from = from;
-        eraseRequest.to = from;
-        return eraseRequest;
-    }
+  public static TestCertificateEraseRequest create(LocalDateTime from, LocalDateTime to) {
+    final TestCertificateEraseRequest eraseRequest = new TestCertificateEraseRequest();
+    eraseRequest.from = from;
+    eraseRequest.to = from;
+    return eraseRequest;
+  }
 
-    public LocalDateTime getFrom() {
-        return from;
-    }
+  public LocalDateTime getFrom() {
+    return from;
+  }
 
-    public void setFrom(LocalDateTime from) {
-        this.from = from;
-    }
+  public void setFrom(LocalDateTime from) {
+    this.from = from;
+  }
 
-    public LocalDateTime getTo() {
-        return to;
-    }
+  public LocalDateTime getTo() {
+    return to;
+  }
 
-    public void setTo(LocalDateTime to) {
-        this.to = to;
-    }
+  public void setTo(LocalDateTime to) {
+    this.to = to;
+  }
 }

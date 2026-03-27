@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,71 +22,75 @@ import java.time.LocalDateTime;
 
 public class IntegratedUnitDTO {
 
-    private String enhetsId;
-    private String enhetsNamn;
-    private String vardgivarId;
-    private String vardgivarNamn;
-    private LocalDateTime skapadDatum;
-    private LocalDateTime senasteKontrollDatum;
+  private String enhetsId;
+  private String enhetsNamn;
+  private String vardgivarId;
+  private String vardgivarNamn;
+  private LocalDateTime skapadDatum;
+  private LocalDateTime senasteKontrollDatum;
 
-    public IntegratedUnitDTO() {
-    }
+  public IntegratedUnitDTO() {}
 
-    public IntegratedUnitDTO(String enhetsId, String enhetsNamn, String vardgivarId, String vardgivarNamn, LocalDateTime skapadDatum,
-        LocalDateTime senasteKontrollDatum) {
-        this.enhetsId = enhetsId;
-        this.enhetsNamn = enhetsNamn;
-        this.vardgivarId = vardgivarId;
-        this.vardgivarNamn = vardgivarNamn;
-        this.skapadDatum = skapadDatum;
-        this.senasteKontrollDatum = senasteKontrollDatum;
-    }
+  public IntegratedUnitDTO(
+      String enhetsId,
+      String enhetsNamn,
+      String vardgivarId,
+      String vardgivarNamn,
+      LocalDateTime skapadDatum,
+      LocalDateTime senasteKontrollDatum) {
+    this.enhetsId = enhetsId;
+    this.enhetsNamn = enhetsNamn;
+    this.vardgivarId = vardgivarId;
+    this.vardgivarNamn = vardgivarNamn;
+    this.skapadDatum = skapadDatum;
+    this.senasteKontrollDatum = senasteKontrollDatum;
+  }
 
-    public String getEnhetsId() {
-        return enhetsId;
-    }
+  public String getEnhetsId() {
+    return enhetsId;
+  }
 
-    public void setEnhetsId(String enhetsId) {
-        this.enhetsId = enhetsId;
-    }
+  public void setEnhetsId(String enhetsId) {
+    this.enhetsId = enhetsId;
+  }
 
-    public String getEnhetsNamn() {
-        return enhetsNamn;
-    }
+  public String getEnhetsNamn() {
+    return enhetsNamn;
+  }
 
-    public void setEnhetsNamn(String enhetsNamn) {
-        this.enhetsNamn = enhetsNamn;
-    }
+  public void setEnhetsNamn(String enhetsNamn) {
+    this.enhetsNamn = enhetsNamn;
+  }
 
-    public String getVardgivarId() {
-        return vardgivarId;
-    }
+  public String getVardgivarId() {
+    return vardgivarId;
+  }
 
-    public void setVardgivarId(String vardgivarId) {
-        this.vardgivarId = vardgivarId;
-    }
+  public void setVardgivarId(String vardgivarId) {
+    this.vardgivarId = vardgivarId;
+  }
 
-    public String getVardgivarNamn() {
-        return vardgivarNamn;
-    }
+  public String getVardgivarNamn() {
+    return vardgivarNamn;
+  }
 
-    public void setVardgivarNamn(String vardgivarNamn) {
-        this.vardgivarNamn = vardgivarNamn;
-    }
+  public void setVardgivarNamn(String vardgivarNamn) {
+    this.vardgivarNamn = vardgivarNamn;
+  }
 
-    public LocalDateTime getSkapadDatum() {
-        return skapadDatum;
-    }
+  public LocalDateTime getSkapadDatum() {
+    return skapadDatum;
+  }
 
-    public void setSkapadDatum(LocalDateTime skapadDatum) {
-        this.skapadDatum = skapadDatum;
-    }
+  public void setSkapadDatum(LocalDateTime skapadDatum) {
+    this.skapadDatum = skapadDatum;
+  }
 
-    public LocalDateTime getSenasteKontrollDatum() {
-        return senasteKontrollDatum;
-    }
+  public LocalDateTime getSenasteKontrollDatum() {
+    return senasteKontrollDatum;
+  }
 
-    public void setSenasteKontrollDatum(LocalDateTime senasteKontrollDatum) {
-        this.senasteKontrollDatum = senasteKontrollDatum;
-    }
+  public void setSenasteKontrollDatum(LocalDateTime senasteKontrollDatum) {
+    this.senasteKontrollDatum = senasteKontrollDatum;
+  }
 }

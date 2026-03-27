@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,70 +39,64 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 @ExtendWith(MockitoExtension.class)
 class GetCareUnitListServiceTest {
 
-    private static final Vardenhet EXPECTED_UNIT = new Vardenhet();
+  private static final Vardenhet EXPECTED_UNIT = new Vardenhet();
 
-    @Mock
-    private GetCareUnitService getCareUnitService;
+  @Mock private GetCareUnitService getCareUnitService;
 
-    @InjectMocks
-    private GetCareUnitListService getCareUnitListService;
+  @InjectMocks private GetCareUnitListService getCareUnitListService;
 
-    private Commission active;
-    private Commission inactive;
+  private Commission active;
+  private Commission inactive;
 
-    @BeforeEach
-    void setup() {
-        active = new Commission();
-        inactive = new Commission();
+  @BeforeEach
+  void setup() {
+    active = new Commission();
+    inactive = new Commission();
 
-        EXPECTED_UNIT.setId("ID");
-        EXPECTED_UNIT.setNamn("NAMN");
+    EXPECTED_UNIT.setId("ID");
+    EXPECTED_UNIT.setNamn("NAMN");
 
-        active.setHealthCareUnitStartDate(LocalDateTime.now().minusDays(1));
-        active.setHealthCareUnitEndDate(LocalDateTime.now().plusDays(5));
+    active.setHealthCareUnitStartDate(LocalDateTime.now().minusDays(1));
+    active.setHealthCareUnitEndDate(LocalDateTime.now().plusDays(5));
 
-        inactive.setHealthCareUnitStartDate(LocalDateTime.now().plusDays(1));
-        inactive.setHealthCareUnitEndDate(LocalDateTime.now().plusDays(5));
-    }
+    inactive.setHealthCareUnitStartDate(LocalDateTime.now().plusDays(1));
+    inactive.setHealthCareUnitEndDate(LocalDateTime.now().plusDays(5));
+  }
 
-    @Test
-    void shouldFilterInactiveCommissions() {
-        when(getCareUnitService.get(any(Commission.class)))
-            .thenReturn(EXPECTED_UNIT);
-        final var response = getCareUnitListService.get(List.of(active, inactive));
+  @Test
+  void shouldFilterInactiveCommissions() {
+    when(getCareUnitService.get(any(Commission.class))).thenReturn(EXPECTED_UNIT);
+    final var response = getCareUnitListService.get(List.of(active, inactive));
 
-        assertEquals(1, response.size());
-        assertEquals(EXPECTED_UNIT, response.get(0));
-    }
+    assertEquals(1, response.size());
+    assertEquals(EXPECTED_UNIT, response.get(0));
+  }
 
-    @Test
-    void shouldFilterNullUnits() {
-        when(getCareUnitService.get(any(Commission.class)))
-            .thenReturn(null);
-        final var response = getCareUnitListService.get(List.of(active, inactive));
+  @Test
+  void shouldFilterNullUnits() {
+    when(getCareUnitService.get(any(Commission.class))).thenReturn(null);
+    final var response = getCareUnitListService.get(List.of(active, inactive));
 
-        assertTrue(response.isEmpty());
-    }
+    assertTrue(response.isEmpty());
+  }
 
-    @Test
-    void shouldFilterDuplicatedCommissions() {
-        when(getCareUnitService.get(any(Commission.class)))
-            .thenReturn(EXPECTED_UNIT);
-        final var response = getCareUnitListService.get(List.of(active, active));
+  @Test
+  void shouldFilterDuplicatedCommissions() {
+    when(getCareUnitService.get(any(Commission.class))).thenReturn(EXPECTED_UNIT);
+    final var response = getCareUnitListService.get(List.of(active, active));
 
-        assertEquals(1, response.size());
-        assertEquals(EXPECTED_UNIT, response.get(0));
-    }
+    assertEquals(1, response.size());
+    assertEquals(EXPECTED_UNIT, response.get(0));
+  }
 
-    @Test
-    void shouldSendActiveCommissionToConverter() {
-        when(getCareUnitService.get(any(Commission.class)))
-            .thenReturn(EXPECTED_UNIT);
-        final var captor = ArgumentCaptor.forClass(Commission.class);
+  @Test
+  void shouldSendActiveCommissionToConverter() {
+    when(getCareUnitService.get(any(Commission.class))).thenReturn(EXPECTED_UNIT);
+    final var captor = ArgumentCaptor.forClass(Commission.class);
 
-        getCareUnitListService.get(List.of(active, inactive));
+    getCareUnitListService.get(List.of(active, inactive));
 
-        verify(getCareUnitService).get(captor.capture());
-        assertEquals(active, captor.getValue());
-    }
+    verify(getCareUnitService).get(captor.capture());
+    assertEquals(active, captor.getValue());
+  }
 }

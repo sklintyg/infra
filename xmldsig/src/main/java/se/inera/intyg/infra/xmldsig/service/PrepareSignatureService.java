@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,37 +24,39 @@ import se.inera.intyg.infra.xmldsig.model.TransformAndDigestResponse;
 
 public interface PrepareSignatureService {
 
-    /**
-     * Prepares an XMLDSig signature, a canonicalized SignedInfo and the canonicalized XML that the digest is based on.
-     *
-     * Given the supplied XML, the XML is canonicalized and a SHA-256 digest is created and Base64-encoded into the
-     * DigestValue field.
-     *
-     * Also, relevant algorithms for digest, signature and canonicalization method are specified on the body of the
-     * returned {@link SignatureType}.
-     *
-     * @param intygXml XML document to be canonicalized and digested.
-     * @param intygsId The ID of the intyg is required for the XPath expression selecting the content to be digested.
-     * @param signatureAlgorithm specifies the signature algorithm to be used.
-     * @return IntygXMLDSignature
-     */
-    IntygXMLDSignature prepareSignature(String intygXml, String intygsId, String signatureAlgorithm);
+  /**
+   * Prepares an XMLDSig signature, a canonicalized SignedInfo and the canonicalized XML that the
+   * digest is based on.
+   *
+   * <p>Given the supplied XML, the XML is canonicalized and a SHA-256 digest is created and
+   * Base64-encoded into the DigestValue field.
+   *
+   * <p>Also, relevant algorithms for digest, signature and canonicalization method are specified on
+   * the body of the returned {@link SignatureType}.
+   *
+   * @param intygXml XML document to be canonicalized and digested.
+   * @param intygsId The ID of the intyg is required for the XPath expression selecting the content
+   *     to be digested.
+   * @param signatureAlgorithm specifies the signature algorithm to be used.
+   * @return IntygXMLDSignature
+   */
+  IntygXMLDSignature prepareSignature(String intygXml, String intygsId, String signatureAlgorithm);
 
-    /**
-     * Writes the <SignatureValue> element into the Signature.
-     *
-     * @param signatureType which will be appended to xml
-     * @param xml for Signature to be appended to
-     * @return The signed XML
-     */
-    String encodeSignatureIntoSignedXml(SignatureType signatureType, String xml);
+  /**
+   * Writes the <SignatureValue> element into the Signature.
+   *
+   * @param signatureType which will be appended to xml
+   * @param xml for Signature to be appended to
+   * @return The signed XML
+   */
+  String encodeSignatureIntoSignedXml(SignatureType signatureType, String xml);
 
-    /**
-     * Performs intygs specific transform and calculates digest on the transformed data.
-     *
-     * @param intygXml Untransformed data
-     * @param intygsId IntygsId
-     * @return the Digest of the transformed intyg as Base64 encoded, and the transformed intygsXml
-     */
-    TransformAndDigestResponse transformAndGenerateDigest(String intygXml, String intygsId);
+  /**
+   * Performs intygs specific transform and calculates digest on the transformed data.
+   *
+   * @param intygXml Untransformed data
+   * @param intygsId IntygsId
+   * @return the Digest of the transformed intyg as Base64 encoded, and the transformed intygsXml
+   */
+  TransformAndDigestResponse transformAndGenerateDigest(String intygXml, String intygsId);
 }

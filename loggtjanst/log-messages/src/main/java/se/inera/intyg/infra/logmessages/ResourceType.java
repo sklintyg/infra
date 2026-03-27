@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,37 +19,36 @@
 package se.inera.intyg.infra.logmessages;
 
 /**
- * Kan vara kemlabbsvar, journaltext, remiss, översikt, samtycke, patientrelation, sätta spärr, rapport,
- * Översikt sjukskrivning osv.
+ * Kan vara kemlabbsvar, journaltext, remiss, översikt, samtycke, patientrelation, sätta spärr,
+ * rapport, Översikt sjukskrivning osv.
  *
- * Created by eriklupander on 2016-03-02.
+ * <p>Created by eriklupander on 2016-03-02.
  */
 public enum ResourceType {
+  RESOURCE_TYPE_INTYG("Intyg"),
 
-    RESOURCE_TYPE_INTYG("Intyg"),
+  RESOURCE_TYPE_SJUKFALL("Sjukfall"),
 
-    RESOURCE_TYPE_SJUKFALL("Sjukfall"),
+  RESOURCE_TYPE_SAMTYCKE("Samtycke"),
 
-    RESOURCE_TYPE_SAMTYCKE("Samtycke"),
+  RESOURCE_TYPE_PREDIKTION_SRS("Prediktion från SRS av risk för lång sjukskrivning"),
 
-    RESOURCE_TYPE_PREDIKTION_SRS("Prediktion från SRS av risk för lång sjukskrivning"),
+  RESOURCE_TYPE_FMU_OVERSIKT("Översikt försäkringsmedicinska utredningar"),
+  RESOURCE_TYPE_FMU("Försäkringsmedicinsk utredning"),
+  RESOURCE_TYPE_FMU_BESOK("Besök i försäkringsmedicinsk utredning"),
+  RESOURCE_TYPE_FMU_AVVIKELSE("Avvikelse i försäkringsmedicinsk utredning"),
+  RESOURCE_TYPE_FMU_TOLK("Användning av tolk i försäkringsmedicinsk utredning"),
+  RESOURCE_TYPE_FMU_ANTECKNING("Anteckning i försäkringsmedicinsk utredning"),
 
-    RESOURCE_TYPE_FMU_OVERSIKT("Översikt försäkringsmedicinska utredningar"),
-    RESOURCE_TYPE_FMU("Försäkringsmedicinsk utredning"),
-    RESOURCE_TYPE_FMU_BESOK("Besök i försäkringsmedicinsk utredning"),
-    RESOURCE_TYPE_FMU_AVVIKELSE("Avvikelse i försäkringsmedicinsk utredning"),
-    RESOURCE_TYPE_FMU_TOLK("Användning av tolk i försäkringsmedicinsk utredning"),
-    RESOURCE_TYPE_FMU_ANTECKNING("Anteckning i försäkringsmedicinsk utredning"),
+  RESOURCE_TYPE_BESTALLNING("Beställning");
 
-    RESOURCE_TYPE_BESTALLNING("Beställning");
+  private final String resourceTypeName;
 
-    private final String resourceTypeName;
+  ResourceType(String resourceTypeName) {
+    this.resourceTypeName = resourceTypeName;
+  }
 
-    ResourceType(String resourceTypeName) {
-        this.resourceTypeName = resourceTypeName;
-    }
-
-    public String getResourceTypeName() {
-        return resourceTypeName;
-    }
+  public String getResourceTypeName() {
+    return resourceTypeName;
+  }
 }

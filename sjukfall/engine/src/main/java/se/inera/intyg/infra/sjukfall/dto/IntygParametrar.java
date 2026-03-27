@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,32 +25,32 @@ import java.time.LocalDate;
  */
 public class IntygParametrar {
 
-    private int maxIntygsGlapp;
-    private int maxAntalDagarSedanSjukfallAvslut;
-    private LocalDate aktivtDatum;
+  private int maxIntygsGlapp;
+  private int maxAntalDagarSedanSjukfallAvslut;
+  private LocalDate aktivtDatum;
 
-    public IntygParametrar(int maxIntygsGlapp, LocalDate aktivtDatum) {
-        this(maxIntygsGlapp, 0, aktivtDatum);
-    }
+  public IntygParametrar(int maxIntygsGlapp, LocalDate aktivtDatum) {
+    this(maxIntygsGlapp, 0, aktivtDatum);
+  }
 
-    public IntygParametrar(int maxIntygsGlapp, int maxAntalDagarSedanSjukfallAvslut, LocalDate aktivtDatum) {
-        this.maxIntygsGlapp = maxIntygsGlapp;
-        this.maxAntalDagarSedanSjukfallAvslut = maxAntalDagarSedanSjukfallAvslut;
-        this.aktivtDatum = aktivtDatum;
-    }
+  public IntygParametrar(
+      int maxIntygsGlapp, int maxAntalDagarSedanSjukfallAvslut, LocalDate aktivtDatum) {
+    this.maxIntygsGlapp = maxIntygsGlapp;
+    this.maxAntalDagarSedanSjukfallAvslut = maxAntalDagarSedanSjukfallAvslut;
+    this.aktivtDatum = aktivtDatum;
+  }
 
-    // getters
+  // getters
 
-    public int getMaxIntygsGlapp() {
-        return maxIntygsGlapp;
-    }
+  public int getMaxIntygsGlapp() {
+    return maxIntygsGlapp;
+  }
 
-    public int getMaxAntalDagarSedanSjukfallAvslut() {
-        return maxAntalDagarSedanSjukfallAvslut;
-    }
+  public int getMaxAntalDagarSedanSjukfallAvslut() {
+    return maxAntalDagarSedanSjukfallAvslut;
+  }
 
-    public LocalDate getAktivtDatum() {
-        return aktivtDatum;
-    }
-
+  public LocalDate getAktivtDatum() {
+    return aktivtDatum;
+  }
 }

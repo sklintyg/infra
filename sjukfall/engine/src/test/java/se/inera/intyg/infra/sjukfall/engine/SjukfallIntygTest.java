@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,90 +31,90 @@ import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.infra.sjukfall.testdata.SjukfallIntygGenerator;
 
-
-/**
- * Created by Magnus Ekstrand on 2016-02-16.
- */
+/** Created by Magnus Ekstrand on 2016-02-16. */
 @ExtendWith(MockitoExtension.class)
 class SjukfallIntygTest {
 
-    private static final String LOCATION_INTYGSDATA = "classpath:Sjukfall/Enhet/intygsdata.csv";
+  private static final String LOCATION_INTYGSDATA = "classpath:Sjukfall/Enhet/intygsdata.csv";
 
-    private static List<IntygData> intygDataList;
+  private static List<IntygData> intygDataList;
 
-    private final LocalDate activeDate = LocalDate.parse("2016-02-16");
+  private final LocalDate activeDate = LocalDate.parse("2016-02-16");
 
-    @BeforeAll
-    static void initTestData() throws IOException {
-        SjukfallIntygGenerator generator = new SjukfallIntygGenerator(LOCATION_INTYGSDATA);
-        intygDataList = generator.generate().get();
+  @BeforeAll
+  static void initTestData() throws IOException {
+    SjukfallIntygGenerator generator = new SjukfallIntygGenerator(LOCATION_INTYGSDATA);
+    intygDataList = generator.generate().get();
 
-        assertEquals(6, intygDataList.size(), "Expected 6 but was " + intygDataList.size());
-    }
+    assertEquals(6, intygDataList.size(), "Expected 6 but was " + intygDataList.size());
+  }
 
-    @Test
-    void testIntyg1() {
-        IntygData intygData = getIntygsData("intyg-1");
-        SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
+  @Test
+  void testIntyg1() {
+    IntygData intygData = getIntygsData("intyg-1");
+    SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
 
-        assertIntygsData(testee, "2016-02-01", "2016-02-10", false);
-    }
+    assertIntygsData(testee, "2016-02-01", "2016-02-10", false);
+  }
 
-    @Test
-    void testIntyg2() {
-        IntygData intygData = getIntygsData("intyg-2");
-        SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
+  @Test
+  void testIntyg2() {
+    IntygData intygData = getIntygsData("intyg-2");
+    SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
 
-        assertIntygsData(testee, "2016-02-12", "2016-02-20", true);
-    }
+    assertIntygsData(testee, "2016-02-12", "2016-02-20", true);
+  }
 
-    @Test
-    void testIntyg3() {
-        IntygData intygData = getIntygsData("intyg-3");
-        SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
+  @Test
+  void testIntyg3() {
+    IntygData intygData = getIntygsData("intyg-3");
+    SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
 
-        assertIntygsData(testee, "2016-02-01", "2016-02-20", true);
-    }
+    assertIntygsData(testee, "2016-02-01", "2016-02-20", true);
+  }
 
-    @Test
-    void testIntyg4() {
-        IntygData intygData = getIntygsData("intyg-4");
-        SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
+  @Test
+  void testIntyg4() {
+    IntygData intygData = getIntygsData("intyg-4");
+    SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
 
-        assertIntygsData(testee, "2016-02-01", "2016-02-25", false);
-    }
+    assertIntygsData(testee, "2016-02-01", "2016-02-25", false);
+  }
 
-    @Test
-    void testIntyg5() {
-        IntygData intygData = getIntygsData("intyg-5");
-        SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
+  @Test
+  void testIntyg5() {
+    IntygData intygData = getIntygsData("intyg-5");
+    SjukfallIntyg testee = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
 
-        assertIntygsData(testee, "2016-02-01", "2016-02-28", true);
-    }
+    assertIntygsData(testee, "2016-02-01", "2016-02-28", true);
+  }
 
-    @Test
-    void testIntyg6() {
-        IntygData intygData = getIntygsData("intyg-6");
-        SjukfallIntyg testee1 = new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
-        SjukfallIntyg testee2 = new SjukfallIntyg.SjukfallIntygBuilder(intygData, LocalDate.parse("2016-02-22"), 0).build();
-        SjukfallIntyg testee3 = new SjukfallIntyg.SjukfallIntygBuilder(intygData, LocalDate.parse("2016-02-23"), 0).build();
+  @Test
+  void testIntyg6() {
+    IntygData intygData = getIntygsData("intyg-6");
+    SjukfallIntyg testee1 =
+        new SjukfallIntyg.SjukfallIntygBuilder(intygData, activeDate, 0).build();
+    SjukfallIntyg testee2 =
+        new SjukfallIntyg.SjukfallIntygBuilder(intygData, LocalDate.parse("2016-02-22"), 0).build();
+    SjukfallIntyg testee3 =
+        new SjukfallIntyg.SjukfallIntygBuilder(intygData, LocalDate.parse("2016-02-23"), 0).build();
 
-        assertIntygsData(testee1, "2016-02-11", "2016-02-28", false);
-        assertIntygsData(testee2, "2016-02-11", "2016-02-28", true);
-        assertIntygsData(testee3, "2016-02-11", "2016-02-28", true);
-    }
+    assertIntygsData(testee1, "2016-02-11", "2016-02-28", false);
+    assertIntygsData(testee2, "2016-02-11", "2016-02-28", true);
+    assertIntygsData(testee3, "2016-02-11", "2016-02-28", true);
+  }
 
-    private IntygData getIntygsData(String intygsId) {
-        return intygDataList.stream()
-            .filter(e -> e.getIntygId().equalsIgnoreCase(intygsId))
-            .findAny()
-            .orElseThrow();
-    }
+  private IntygData getIntygsData(String intygsId) {
+    return intygDataList.stream()
+        .filter(e -> e.getIntygId().equalsIgnoreCase(intygsId))
+        .findAny()
+        .orElseThrow();
+  }
 
-    private static void assertIntygsData(SjukfallIntyg obj, String startDatum, String slutDatum, boolean aktivtIntyg) {
-        assertEquals(obj.getStartDatum(), LocalDate.parse(startDatum));
-        assertEquals(obj.getSlutDatum(), LocalDate.parse(slutDatum));
-        assertEquals(obj.isAktivtIntyg(), aktivtIntyg);
-    }
-
+  private static void assertIntygsData(
+      SjukfallIntyg obj, String startDatum, String slutDatum, boolean aktivtIntyg) {
+    assertEquals(obj.getStartDatum(), LocalDate.parse(startDatum));
+    assertEquals(obj.getSlutDatum(), LocalDate.parse(slutDatum));
+    assertEquals(obj.isAktivtIntyg(), aktivtIntyg);
+  }
 }

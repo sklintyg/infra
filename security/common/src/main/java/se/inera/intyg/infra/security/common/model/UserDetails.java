@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,74 +21,64 @@ package se.inera.intyg.infra.security.common.model;
 import java.io.Serializable;
 import java.util.Map;
 
-/**
- * Created by Magnus Ekstrand on 2015-08-27.
- */
+/** Created by Magnus Ekstrand on 2015-08-27. */
 public interface UserDetails extends Serializable {
 
-    String getFornamn();
-    String getEfternamn();
+  String getFornamn();
 
-    /**
-     * Returns the name to authenticate the user. Cannot return <code>null</code>.
-     *
-     * @return the name (never <code>null</code>)
-     */
-    String getNamn();
+  String getEfternamn();
 
-    /**
-     * Returns the personal identifier used to authenticate the user.
-     *
-     * @return the personal identifier
-     */
-    String getPersonId();
+  /**
+   * Returns the name to authenticate the user. Cannot return <code>null</code>.
+   *
+   * @return the name (never <code>null</code>)
+   */
+  String getNamn();
 
-    /**
-     * Gets the features the system has put on the user.
-     *
-     * @return the features
-     */
-    Map<String, Feature> getFeatures();
+  /**
+   * Returns the personal identifier used to authenticate the user.
+   *
+   * @return the personal identifier
+   */
+  String getPersonId();
 
-    /**
-     * Sets the system wide features on user.
-     */
-    void setFeatures(Map<String, Feature> features);
+  /**
+   * Gets the features the system has put on the user.
+   *
+   * @return the features
+   */
+  Map<String, Feature> getFeatures();
 
-    /**
-     * Returns the role granted to the user. Cannot return <code>null</code>.
-     *
-     * @return the role
-     */
-    Map<String, Role> getRoles();
+  /** Sets the system wide features on user. */
+  void setFeatures(Map<String, Feature> features);
 
-    /**
-     * Set the roles granted to a user.
-     */
-    void setRoles(Map<String, Role> roles);
+  /**
+   * Returns the role granted to the user. Cannot return <code>null</code>.
+   *
+   * @return the role
+   */
+  Map<String, Role> getRoles();
 
-    /**
-     * Returns the authorities (privileges) granted to the user. Cannot return <code>null</code>.
-     *
-     * @return the authorities, sorted by natural key (never <code>null</code>)
-     */
-    Map<String, Privilege> getAuthorities();
+  /** Set the roles granted to a user. */
+  void setRoles(Map<String, Role> roles);
 
-    /**
-     * Set the authorities (privileges) granted to a user.
-     */
-    void setAuthorities(Map<String, Privilege> authorities);
+  /**
+   * Returns the authorities (privileges) granted to the user. Cannot return <code>null</code>.
+   *
+   * @return the authorities, sorted by natural key (never <code>null</code>)
+   */
+  Map<String, Privilege> getAuthorities();
 
-    /**
-     * Get user's origin, i.e his/hers entrance to the system.
-     *
-     * @return the user's origin.
-     */
-    String getOrigin();
+  /** Set the authorities (privileges) granted to a user. */
+  void setAuthorities(Map<String, Privilege> authorities);
 
-    /**
-     * Set user's origin.
-     */
-    void setOrigin(String origin);
+  /**
+   * Get user's origin, i.e his/hers entrance to the system.
+   *
+   * @return the user's origin.
+   */
+  String getOrigin();
 
+  /** Set user's origin. */
+  void setOrigin(String origin);
 }

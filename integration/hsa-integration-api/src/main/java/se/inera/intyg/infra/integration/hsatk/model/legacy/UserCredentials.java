@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,51 +18,50 @@
  */
 package se.inera.intyg.infra.integration.hsatk.model.legacy;
 
-import se.inera.intyg.infra.integration.hsatk.model.HsaSystemRole;
-
 import java.util.ArrayList;
 import java.util.List;
+import se.inera.intyg.infra.integration.hsatk.model.HsaSystemRole;
 
 /**
  * Storage for user-related info from GetCredentials HSA response.
  *
- * A number of data fields from HSA that are related to the persons "medarbetaruppdrag" is returned on the
- * {@link se.riv.infrastructure.directory.v1.CredentialInformationType}, which we need to provide to callers of
- * the HSA services.
+ * <p>A number of data fields from HSA that are related to the persons "medarbetaruppdrag" is
+ * returned on the {@link se.riv.infrastructure.directory.v1.CredentialInformationType}, which we
+ * need to provide to callers of the HSA services.
  */
 public class UserCredentials {
 
-    private String personalPrescriptionCode;
-    private List<String> groupPrescriptionCode;
-    private List<HsaSystemRole> hsaSystemRole;
-    private List<String> paTitleCode;
+  private String personalPrescriptionCode;
+  private List<String> groupPrescriptionCode;
+  private List<HsaSystemRole> hsaSystemRole;
+  private List<String> paTitleCode;
 
-    public String getPersonalPrescriptionCode() {
-        return personalPrescriptionCode;
-    }
+  public String getPersonalPrescriptionCode() {
+    return personalPrescriptionCode;
+  }
 
-    public void setPersonalPrescriptionCode(String personalPrescriptionCode) {
-        this.personalPrescriptionCode = personalPrescriptionCode;
-    }
+  public void setPersonalPrescriptionCode(String personalPrescriptionCode) {
+    this.personalPrescriptionCode = personalPrescriptionCode;
+  }
 
-    public List<String> getGroupPrescriptionCode() {
-        if (groupPrescriptionCode == null) {
-            groupPrescriptionCode = new ArrayList<>();
-        }
-        return groupPrescriptionCode;
+  public List<String> getGroupPrescriptionCode() {
+    if (groupPrescriptionCode == null) {
+      groupPrescriptionCode = new ArrayList<>();
     }
+    return groupPrescriptionCode;
+  }
 
-    public List<HsaSystemRole> getHsaSystemRole() {
-        if (hsaSystemRole == null) {
-            hsaSystemRole = new ArrayList<>();
-        }
-        return hsaSystemRole;
+  public List<HsaSystemRole> getHsaSystemRole() {
+    if (hsaSystemRole == null) {
+      hsaSystemRole = new ArrayList<>();
     }
+    return hsaSystemRole;
+  }
 
-    public List<String> getPaTitleCode() {
-        if (paTitleCode == null) {
-            paTitleCode = new ArrayList<>();
-        }
-        return paTitleCode;
+  public List<String> getPaTitleCode() {
+    if (paTitleCode == null) {
+      paTitleCode = new ArrayList<>();
     }
+    return paTitleCode;
+  }
 }

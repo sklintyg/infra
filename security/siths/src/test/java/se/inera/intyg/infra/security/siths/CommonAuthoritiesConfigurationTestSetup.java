@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,26 +22,29 @@ import org.junit.jupiter.api.BeforeAll;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
 
-/**
- * Created by Magnus Ekstrand on 26/11/15.
- */
+/** Created by Magnus Ekstrand on 26/11/15. */
 public class CommonAuthoritiesConfigurationTestSetup {
 
-    protected static final String AUTHORITIES_CONFIGURATION_LOCATION = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
-    protected static final String FEATURES_CONFIGURATION_LOCATION = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
-    protected static final Integer DEFAULT_MAX_ALIASES_FOR_COLLECTIONS = 300;
+  protected static final String AUTHORITIES_CONFIGURATION_LOCATION =
+      "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+  protected static final String FEATURES_CONFIGURATION_LOCATION =
+      "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
+  protected static final Integer DEFAULT_MAX_ALIASES_FOR_COLLECTIONS = 300;
 
-    protected static final SecurityConfigurationLoader CONFIGURATION_LOADER = new SecurityConfigurationLoader(
-        AUTHORITIES_CONFIGURATION_LOCATION, FEATURES_CONFIGURATION_LOCATION, DEFAULT_MAX_ALIASES_FOR_COLLECTIONS);
-    protected static final CommonAuthoritiesResolver AUTHORITIES_RESOLVER = new CommonAuthoritiesResolver();
+  protected static final SecurityConfigurationLoader CONFIGURATION_LOADER =
+      new SecurityConfigurationLoader(
+          AUTHORITIES_CONFIGURATION_LOCATION,
+          FEATURES_CONFIGURATION_LOCATION,
+          DEFAULT_MAX_ALIASES_FOR_COLLECTIONS);
+  protected static final CommonAuthoritiesResolver AUTHORITIES_RESOLVER =
+      new CommonAuthoritiesResolver();
 
-    @BeforeAll
-    public static void setupAuthoritiesConfiguration() {
-        // Load configuration
-        CONFIGURATION_LOADER.afterPropertiesSet();
+  @BeforeAll
+  public static void setupAuthoritiesConfiguration() {
+    // Load configuration
+    CONFIGURATION_LOADER.afterPropertiesSet();
 
-        // Setup resolver class
-        AUTHORITIES_RESOLVER.setConfigurationLoader(CONFIGURATION_LOADER);
-    }
-
+    // Setup resolver class
+    AUTHORITIES_RESOLVER.setConfigurationLoader(CONFIGURATION_LOADER);
+  }
 }

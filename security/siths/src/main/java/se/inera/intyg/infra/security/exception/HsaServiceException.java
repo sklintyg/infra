@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,9 +22,9 @@ import org.springframework.security.core.AuthenticationException;
 
 public class HsaServiceException extends AuthenticationException {
 
-    private static final long serialVersionUID = -1932413969496764652L;
+  private static final long serialVersionUID = -1932413969496764652L;
 
-    public HsaServiceException(String hsaId, Throwable t) {
-        super("Building user HSA-ID " + hsaId + " failed", t);
-    }
+  public HsaServiceException(String hsaId, Throwable t) {
+    super("Building user HSA-ID " + hsaId + " failed", t);
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,9 +24,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-/**
- * Created by eriklupander on 2017-05-03.
- */
+/** Created by eriklupander on 2017-05-03. */
 @Configuration
 @ComponentScan("se.inera.intyg.infra.dynamiclink")
 @PropertySource(
@@ -34,9 +32,8 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
     ignoreResourceNotFound = false)
 public class TestConfig {
 
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertiesResolver() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
-
+  @Bean
+  public static PropertySourcesPlaceholderConfigurer propertiesResolver() {
+    return new PropertySourcesPlaceholderConfigurer();
+  }
 }

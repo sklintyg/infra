@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,17 +23,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
-
-/**
- * Created by marced on 19/02/16.
- */
+/** Created by marced on 19/02/16. */
 class LocalDateIntervalTest {
 
-    @Test
-    void testGetDurationInDays() {
-        assertEquals(1, new LocalDateInterval(LocalDate.parse("2016-01-01"), LocalDate.parse("2016-01-01")).getDurationInDays());
-        assertEquals(31, new LocalDateInterval(LocalDate.parse("2016-01-01"), LocalDate.parse("2016-01-31")).getDurationInDays());
-        assertEquals(3, new LocalDateInterval(LocalDate.parse("2016-02-28"), LocalDate.parse("2016-03-01")).getDurationInDays());
-        assertEquals(5, new LocalDateInterval(LocalDate.parse("2016-01-28"), LocalDate.parse("2016-02-01")).getDurationInDays());
-    }
+  @Test
+  void testGetDurationInDays() {
+    assertEquals(
+        1,
+        new LocalDateInterval(LocalDate.parse("2016-01-01"), LocalDate.parse("2016-01-01"))
+            .getDurationInDays());
+    assertEquals(
+        31,
+        new LocalDateInterval(LocalDate.parse("2016-01-01"), LocalDate.parse("2016-01-31"))
+            .getDurationInDays());
+    assertEquals(
+        3,
+        new LocalDateInterval(LocalDate.parse("2016-02-28"), LocalDate.parse("2016-03-01"))
+            .getDurationInDays());
+    assertEquals(
+        5,
+        new LocalDateInterval(LocalDate.parse("2016-01-28"), LocalDate.parse("2016-02-01"))
+            .getDurationInDays());
+  }
 }

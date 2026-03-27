@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,15 +21,41 @@ package se.inera.intyg.infra.pu.integration.api.model;
 import java.io.Serializable;
 import se.inera.intyg.schemas.contract.Personnummer;
 
+public record Person(
+    Personnummer personnummer,
+    boolean sekretessmarkering,
+    boolean avliden,
+    String fornamn,
+    String mellannamn,
+    String efternamn,
+    String postadress,
+    String postnummer,
+    String postort,
+    boolean testIndicator)
+    implements Serializable {
 
-public record Person(Personnummer personnummer, boolean sekretessmarkering, boolean avliden, String fornamn, String mellannamn,
-                     String efternamn, String postadress, String postnummer, String postort, boolean testIndicator) implements
-    Serializable {
+  private static final long serialVersionUID = 1L;
 
-    private static final long serialVersionUID = 1L;
-
-    public Person(Personnummer personnummer, boolean sekretessmarkering, boolean avliden, String fornamn, String mellannamn,
-        String efternamn, String postadress, String postnummer, String postort) {
-        this(personnummer, sekretessmarkering, avliden, fornamn, mellannamn, efternamn, postadress, postnummer, postort, false);
-    }
+  public Person(
+      Personnummer personnummer,
+      boolean sekretessmarkering,
+      boolean avliden,
+      String fornamn,
+      String mellannamn,
+      String efternamn,
+      String postadress,
+      String postnummer,
+      String postort) {
+    this(
+        personnummer,
+        sekretessmarkering,
+        avliden,
+        fornamn,
+        mellannamn,
+        efternamn,
+        postadress,
+        postnummer,
+        postort,
+        false);
+  }
 }

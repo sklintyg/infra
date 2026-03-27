@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,11 +20,9 @@ package se.inera.intyg.infra.xmldsig.model;
 
 public final class FakeSignatureConstants {
 
-    private FakeSignatureConstants() {
-    }
+  private FakeSignatureConstants() {}
 
-    public static final String FAKE_KEYSTORE_PASSWORD = "password";
-    public static final String FAKE_KEYSTORE_NAME = "keystore.jks";
-    public static final String FAKE_KEYSTORE_ALIAS = "1";
-
+  public static final String FAKE_KEYSTORE_PASSWORD = "password";
+  public static final String FAKE_KEYSTORE_NAME = "keystore.jks";
+  public static final String FAKE_KEYSTORE_ALIAS = "1";
 }

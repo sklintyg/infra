@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,12 +19,12 @@
 package se.inera.intyg.infra.integration.srs.stub;
 
 import com.google.common.io.ByteStreams;
-import java.io.IOException;
-import java.io.InputStream;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import java.io.IOException;
+import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -34,24 +34,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 public class StatisticsImageStub {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StatisticsImageStub.class);
+  private static final Logger LOG = LoggerFactory.getLogger(StatisticsImageStub.class);
 
-    @GET
-    @Path("/{filename}")
-    @Produces(MediaType.IMAGE_JPEG_VALUE)
-    @ResponseBody
-    public byte[] getImage(@PathParam("filename") String filename) {
-        byte[] bytes = null;
-        try {
-            Resource res = new ClassPathResource("statistik/" + filename + ".jpg");
-            LOG.info("SRS-statistics-stub is serving {}", res.getFilename());
-            InputStream is = res.getInputStream();
-            bytes = ByteStreams.toByteArray(is);
-            is.close();
-        } catch (IOException e) {
-            LOG.error("Failed to read file for " + filename, e);
-        }
-        return bytes;
+  @GET
+  @Path("/{filename}")
+  @Produces(MediaType.IMAGE_JPEG_VALUE)
+  @ResponseBody
+  public byte[] getImage(@PathParam("filename") String filename) {
+    byte[] bytes = null;
+    try {
+      Resource res = new ClassPathResource("statistik/" + filename + ".jpg");
+      LOG.info("SRS-statistics-stub is serving {}", res.getFilename());
+      InputStream is = res.getInputStream();
+      bytes = ByteStreams.toByteArray(is);
+      is.close();
+    } catch (IOException e) {
+      LOG.error("Failed to read file for " + filename, e);
     }
-
+    return bytes;
+  }
 }

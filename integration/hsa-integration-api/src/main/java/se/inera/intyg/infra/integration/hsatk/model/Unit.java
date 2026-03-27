@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,49 +27,45 @@ import lombok.Data;
 @Data
 public class Unit implements Serializable {
 
+  protected List<String> businessType = new ArrayList<>();
+  protected List<BusinessClassification> businessClassification = new ArrayList<>();
+  protected List<String> careType = new ArrayList<>();
+  protected String countyName;
+  protected String countyCode;
+  protected GeoCoordRt90 geographicalCoordinatesRt90;
+  protected GeoCoordSweref99 geographicalCoordinatesSweref99;
+  protected String municipalityName;
+  protected String municipalityCode;
+  protected String location;
+  protected LocalDateTime unitStartDate;
+  protected LocalDateTime unitEndDate;
+  protected Boolean feignedUnit;
+  protected String unitHsaId;
+  protected String unitName;
+  protected List<String> postalAddress = new ArrayList<>();
+  protected String postalCode;
+  protected String mail;
+  protected List<String> telephoneNumber = new ArrayList<>();
+  protected List<String> management = new ArrayList<>();
 
-    protected List<String> businessType = new ArrayList<>();
-    protected List<BusinessClassification> businessClassification = new ArrayList<>();
-    protected List<String> careType = new ArrayList<>();
-    protected String countyName;
-    protected String countyCode;
-    protected GeoCoordRt90 geographicalCoordinatesRt90;
-    protected GeoCoordSweref99 geographicalCoordinatesSweref99;
-    protected String municipalityName;
-    protected String municipalityCode;
-    protected String location;
-    protected LocalDateTime unitStartDate;
-    protected LocalDateTime unitEndDate;
-    protected Boolean feignedUnit;
-    protected String unitHsaId;
-    protected String unitName;
-    protected List<String> postalAddress = new ArrayList<>();
-    protected String postalCode;
-    protected String mail;
-    protected List<String> telephoneNumber = new ArrayList<>();
-    protected List<String> management = new ArrayList<>();
+  @Data
+  public static class GeoCoordRt90 implements Serializable {
 
-    @Data
-    public static class GeoCoordRt90 implements Serializable {
+    protected String xCoordinate;
+    protected String yCoordinate;
+  }
 
+  @Data
+  public static class GeoCoordSweref99 implements Serializable {
 
-        protected String xCoordinate;
-        protected String yCoordinate;
-    }
+    protected String nCoordinate;
+    protected String eCoordinate;
+  }
 
-    @Data
-    public static class GeoCoordSweref99 implements Serializable {
+  @Data
+  public static class BusinessClassification implements Serializable {
 
-
-        protected String nCoordinate;
-        protected String eCoordinate;
-    }
-
-    @Data
-    public static class BusinessClassification implements Serializable {
-
-
-        protected String businessClassificationName;
-        protected String businessClassificationCode;
-    }
+    protected String businessClassificationName;
+    protected String businessClassificationCode;
+  }
 }

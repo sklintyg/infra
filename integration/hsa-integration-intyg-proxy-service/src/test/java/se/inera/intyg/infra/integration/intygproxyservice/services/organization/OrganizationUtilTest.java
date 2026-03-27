@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,77 +32,86 @@ import org.junit.jupiter.api.Test;
 
 class OrganizationUtilTest {
 
-    @Nested
-    class IsActive {
+  @Nested
+  class IsActive {
 
-        @Test
-        void shouldReturnTrueIfOnlyFromAndFromIsBeforeNow() {
-            assertTrue(OrganizationUtil.isActive(LocalDateTime.now().minusDays(1), null));
-        }
-
-        @Test
-        void shouldReturnFalseIfOnlyFromAndFromIsAfterNow() {
-            assertFalse(OrganizationUtil.isActive(LocalDateTime.now().plusDays(1), null));
-        }
-
-        @Test
-        void shouldReturnTrueIfOnlyToAndToIsAfterNow() {
-            assertTrue(OrganizationUtil.isActive(null, LocalDateTime.now().plusDays(1)));
-        }
-
-        @Test
-        void shouldReturnFalseIfOnlyToAndToIsBeforeNow() {
-            assertFalse(OrganizationUtil.isActive(null, LocalDateTime.now().minusDays(1)));
-        }
-
-        @Test
-        void shouldReturnFalseIfIntervalAndToIsBeforeNow() {
-            assertFalse(OrganizationUtil.isActive(LocalDateTime.now().minusDays(3), LocalDateTime.now().minusDays(1)));
-        }
-
-        @Test
-        void shouldReturnFalseIfIntervalAndFromIsAfterNow() {
-            assertFalse(OrganizationUtil.isActive(LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(3)));
-        }
-
-        @Test
-        void shouldReturnTrueIfIntervalIsCorrect() {
-            assertTrue(OrganizationUtil.isActive(LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(3)));
-        }
-
-        @Test
-        void shouldReturnFalseIfLateInterval() {
-            assertFalse(OrganizationUtil.isActive(LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(3)));
-        }
-
-        @Test
-        void shouldReturnFalseIfEarlyInterval() {
-            assertFalse(OrganizationUtil.isActive(LocalDateTime.now().minusDays(2), LocalDateTime.now().minusDays(1)));
-        }
-
-        @Test
-        void shouldReturnTrueIfBothAreNull() {
-            assertTrue(OrganizationUtil.isActive(null, null));
-        }
+    @Test
+    void shouldReturnTrueIfOnlyFromAndFromIsBeforeNow() {
+      assertTrue(OrganizationUtil.isActive(LocalDateTime.now().minusDays(1), null));
     }
 
-    @Nested
-    class GetWorkplaceCode {
-
-        @Test
-        void shouldReturnDefaultIfEmptyList() {
-            assertEquals(DEFAULT_ARBETSPLATSKOD, getWorkplaceCode(Collections.emptyList()));
-        }
-
-
-        @Test
-        void shouldReturnDefaultIfNull() {
-            assertEquals(DEFAULT_ARBETSPLATSKOD, getWorkplaceCode(null));
-        }
-
-        @Test
-        void shouldReturnFirstCode() {
-            assertEquals("CODE1", getWorkplaceCode(List.of("CODE1", "CODE2")));
-        }
+    @Test
+    void shouldReturnFalseIfOnlyFromAndFromIsAfterNow() {
+      assertFalse(OrganizationUtil.isActive(LocalDateTime.now().plusDays(1), null));
     }
+
+    @Test
+    void shouldReturnTrueIfOnlyToAndToIsAfterNow() {
+      assertTrue(OrganizationUtil.isActive(null, LocalDateTime.now().plusDays(1)));
+    }
+
+    @Test
+    void shouldReturnFalseIfOnlyToAndToIsBeforeNow() {
+      assertFalse(OrganizationUtil.isActive(null, LocalDateTime.now().minusDays(1)));
+    }
+
+    @Test
+    void shouldReturnFalseIfIntervalAndToIsBeforeNow() {
+      assertFalse(
+          OrganizationUtil.isActive(
+              LocalDateTime.now().minusDays(3), LocalDateTime.now().minusDays(1)));
+    }
+
+    @Test
+    void shouldReturnFalseIfIntervalAndFromIsAfterNow() {
+      assertFalse(
+          OrganizationUtil.isActive(
+              LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(3)));
+    }
+
+    @Test
+    void shouldReturnTrueIfIntervalIsCorrect() {
+      assertTrue(
+          OrganizationUtil.isActive(
+              LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(3)));
+    }
+
+    @Test
+    void shouldReturnFalseIfLateInterval() {
+      assertFalse(
+          OrganizationUtil.isActive(
+              LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(3)));
+    }
+
+    @Test
+    void shouldReturnFalseIfEarlyInterval() {
+      assertFalse(
+          OrganizationUtil.isActive(
+              LocalDateTime.now().minusDays(2), LocalDateTime.now().minusDays(1)));
+    }
+
+    @Test
+    void shouldReturnTrueIfBothAreNull() {
+      assertTrue(OrganizationUtil.isActive(null, null));
+    }
+  }
+
+  @Nested
+  class GetWorkplaceCode {
+
+    @Test
+    void shouldReturnDefaultIfEmptyList() {
+      assertEquals(DEFAULT_ARBETSPLATSKOD, getWorkplaceCode(Collections.emptyList()));
+    }
+
+    @Test
+    void shouldReturnDefaultIfNull() {
+      assertEquals(DEFAULT_ARBETSPLATSKOD, getWorkplaceCode(null));
+    }
+
+    @Test
+    void shouldReturnFirstCode() {
+      assertEquals("CODE1", getWorkplaceCode(List.of("CODE1", "CODE2")));
+    }
+  }
 }

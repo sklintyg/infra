@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.person;
 
-import java.util.List;
 import jakarta.xml.ws.WebServiceException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,23 +34,19 @@ import se.inera.intyg.infra.integration.intygproxyservice.services.employee.GetE
 @RequiredArgsConstructor
 public class HsaLegacyIntegrationPersonService implements HsaPersonService {
 
-    private final GetEmployeeService getEmployeeService;
+  private final GetEmployeeService getEmployeeService;
 
-    @Override
-    public List<PersonInformation> getHsaPersonInfo(String personHsaId) {
-        try {
-            return getEmployeeService.get(
-                GetEmployeeRequestDTO.builder()
-                    .hsaId(personHsaId)
-                    .build()
-            );
-        } catch (Exception e) {
-            throw new WebServiceException(e.getMessage());
-        }
+  @Override
+  public List<PersonInformation> getHsaPersonInfo(String personHsaId) {
+    try {
+      return getEmployeeService.get(GetEmployeeRequestDTO.builder().hsaId(personHsaId).build());
+    } catch (Exception e) {
+      throw new WebServiceException(e.getMessage());
     }
+  }
 
-    @Override
-    public List<Commission> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, String unitHsaId) {
-        return null;
-    }
+  @Override
+  public List<Commission> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, String unitHsaId) {
+    return null;
+  }
 }

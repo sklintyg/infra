@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,19 +24,17 @@ import java.util.List;
 
 public class PilotList {
 
-    @JsonProperty
-    private List<Pilot> pilots;
+  @JsonProperty private List<Pilot> pilots;
 
-    public List<Pilot> getPilots() {
-        return pilots;
+  public List<Pilot> getPilots() {
+    return pilots;
+  }
+
+  public void setPilots(List<Pilot> pilots) {
+    if (pilots == null) {
+      this.pilots = Collections.emptyList();
+    } else {
+      this.pilots = pilots;
     }
-
-    public void setPilots(List<Pilot> pilots) {
-        if (pilots == null) {
-            this.pilots = Collections.emptyList();
-        } else {
-            this.pilots = pilots;
-        }
-    }
-
+  }
 }

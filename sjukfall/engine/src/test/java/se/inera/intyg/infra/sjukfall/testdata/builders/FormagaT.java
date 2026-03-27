@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,42 +21,38 @@ package se.inera.intyg.infra.sjukfall.testdata.builders;
 import java.time.LocalDate;
 import se.inera.intyg.infra.sjukfall.dto.Formaga;
 
-/**
- * Created by Magnus Ekstrand on 2016-02-10.
- */
+/** Created by Magnus Ekstrand on 2016-02-10. */
 public final class FormagaT {
 
-    public FormagaT() {
+  public FormagaT() {}
+
+  public static class FormagaBuilder implements Builder<Formaga> {
+
+    private LocalDate startdatum;
+    private LocalDate slutdatum;
+    private int nedsattning;
+
+    public FormagaBuilder() {}
+
+    public FormagaBuilder startdatum(LocalDate startdatum) {
+      this.startdatum = startdatum;
+      return this;
     }
 
-    public static class FormagaBuilder implements Builder<Formaga> {
-
-        private LocalDate startdatum;
-        private LocalDate slutdatum;
-        private int nedsattning;
-
-        public FormagaBuilder() {
-        }
-
-        public FormagaBuilder startdatum(LocalDate startdatum) {
-            this.startdatum = startdatum;
-            return this;
-        }
-
-        public FormagaBuilder slutdatum(LocalDate slutdatum) {
-            this.slutdatum = slutdatum;
-            return this;
-        }
-
-        public FormagaBuilder nedsattning(int nedsattning) {
-            this.nedsattning = nedsattning;
-            return this;
-        }
-
-        @Override
-        public Formaga build() {
-            Formaga formaga = new Formaga(startdatum, slutdatum, nedsattning);
-            return formaga;
-        }
+    public FormagaBuilder slutdatum(LocalDate slutdatum) {
+      this.slutdatum = slutdatum;
+      return this;
     }
+
+    public FormagaBuilder nedsattning(int nedsattning) {
+      this.nedsattning = nedsattning;
+      return this;
+    }
+
+    @Override
+    public Formaga build() {
+      Formaga formaga = new Formaga(startdatum, slutdatum, nedsattning);
+      return formaga;
+    }
+  }
 }

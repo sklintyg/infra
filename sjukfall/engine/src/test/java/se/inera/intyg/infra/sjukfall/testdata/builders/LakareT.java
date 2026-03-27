@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,39 +18,34 @@
  */
 package se.inera.intyg.infra.sjukfall.testdata.builders;
 
-
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 
-/**
- * Created by Magnus Ekstrand on 2016-02-10.
- */
+/** Created by Magnus Ekstrand on 2016-02-10. */
 public final class LakareT {
 
-    public LakareT() {
+  public LakareT() {}
+
+  public static class LakareBuilder implements Builder<Lakare> {
+
+    private String hsaId;
+    private String fullstandigtNamn;
+
+    public LakareBuilder() {}
+
+    public LakareBuilder hsaId(String hsaId) {
+      this.hsaId = hsaId;
+      return this;
     }
 
-    public static class LakareBuilder implements Builder<Lakare> {
-
-        private String hsaId;
-        private String fullstandigtNamn;
-
-        public LakareBuilder() {
-        }
-
-        public LakareBuilder hsaId(String hsaId) {
-            this.hsaId = hsaId;
-            return this;
-        }
-
-        public LakareBuilder fullstandigtNamn(String fullstandigtNamn) {
-            this.fullstandigtNamn = fullstandigtNamn;
-            return this;
-        }
-
-        @Override
-        public Lakare build() {
-            Lakare lakare = Lakare.create(hsaId, fullstandigtNamn);
-            return lakare;
-        }
+    public LakareBuilder fullstandigtNamn(String fullstandigtNamn) {
+      this.fullstandigtNamn = fullstandigtNamn;
+      return this;
     }
+
+    @Override
+    public Lakare build() {
+      Lakare lakare = Lakare.create(hsaId, fullstandigtNamn);
+      return lakare;
+    }
+  }
 }

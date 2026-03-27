@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -36,54 +36,53 @@ import se.inera.intyg.infra.integration.ia.cache.IaCacheConfiguration;
 
 public class IABannerServiceImpl implements IABannerService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(IABannerServiceImpl.class);
+  private static final Logger LOG = LoggerFactory.getLogger(IABannerServiceImpl.class);
 
-    @Autowired
-    @Qualifier("iaRestTemplate")
-    private RestTemplate restTemplate;
+  @Autowired
+  @Qualifier("iaRestTemplate") private RestTemplate restTemplate;
 
-    @Autowired
-    private Cache iaCache;
+  @Autowired private Cache iaCache;
 
-    @Value("${intygsadmin.url}")
-    private String iaUrl;
+  @Value("${intygsadmin.url}")
+  private String iaUrl;
 
-    @Override
-    public List<Banner> getCurrentBanners() {
-        List<Banner> banners = queryCache();
+  @Override
+  public List<Banner> getCurrentBanners() {
+    List<Banner> banners = queryCache();
 
-        LocalDateTime today = LocalDateTime.now();
+    LocalDateTime today = LocalDateTime.now();
 
-        return banners.stream()
-            .filter(banner -> banner.getDisplayFrom().isBefore(today) && banner.getDisplayTo().isAfter(today))
-            .collect(Collectors.toList());
+    return banners.stream()
+        .filter(
+            banner ->
+                banner.getDisplayFrom().isBefore(today) && banner.getDisplayTo().isAfter(today))
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<Banner> loadBanners(Application application) {
+    String url = iaUrl + "/actuator/banner/" + application.toString();
+
+    LOG.debug("Loading banner from {}", url);
+
+    Banner[] banners = restTemplate.getForObject(url, Banner[].class);
+
+    store(banners);
+
+    return Arrays.asList(banners);
+  }
+
+  private void store(Banner[] banners) {
+    iaCache.put(IaCacheConfiguration.CACHE_KEY, banners);
+  }
+
+  private List<Banner> queryCache() {
+    Banner[] banners = iaCache.get(IaCacheConfiguration.CACHE_KEY, Banner[].class);
+
+    if (banners == null) {
+      return new ArrayList<>();
     }
 
-    @Override
-    public List<Banner> loadBanners(Application application) {
-        String url = iaUrl + "/actuator/banner/" + application.toString();
-
-        LOG.debug("Loading banner from {}", url);
-
-        Banner[] banners = restTemplate
-            .getForObject(url, Banner[].class);
-
-        store(banners);
-
-        return Arrays.asList(banners);
-    }
-
-    private void store(Banner[] banners) {
-        iaCache.put(IaCacheConfiguration.CACHE_KEY, banners);
-    }
-
-    private List<Banner> queryCache() {
-        Banner[] banners = iaCache.get(IaCacheConfiguration.CACHE_KEY, Banner[].class);
-
-        if (banners == null) {
-            return new ArrayList<>();
-        }
-
-        return Arrays.asList(banners);
-    }
+    return Arrays.asList(banners);
+  }
 }

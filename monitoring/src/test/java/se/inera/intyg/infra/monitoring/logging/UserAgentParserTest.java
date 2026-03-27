@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,67 +29,63 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @SpringJUnitConfig(classes = UserAgentParser.class)
 class UserAgentParserTest {
 
-    @Autowired
-    private UserAgentParser parser = new UserAgentParser();
+  @Autowired private UserAgentParser parser = new UserAgentParser();
 
-    @Test
-    void testParserNullInput() {
-        final UserAgentInfo userAgentInfo = parser
-            .parse(null);
-        assertEquals(NO_USER_AGENT_STRING, userAgentInfo.getBrowserName());
-        assertEquals("0.0", userAgentInfo.getBrowserVersion());
-        assertEquals(UNKNOWN_OS, userAgentInfo.getOsFamily());
-    }
+  @Test
+  void testParserNullInput() {
+    final UserAgentInfo userAgentInfo = parser.parse(null);
+    assertEquals(NO_USER_AGENT_STRING, userAgentInfo.getBrowserName());
+    assertEquals("0.0", userAgentInfo.getBrowserVersion());
+    assertEquals(UNKNOWN_OS, userAgentInfo.getOsFamily());
+  }
 
-    @Test
-    void testParserEmptyInput() {
-        final UserAgentInfo userAgentInfo = parser
-            .parse("");
-        assertEquals("Other", userAgentInfo.getBrowserName());
-        assertEquals("0.0", userAgentInfo.getBrowserVersion());
-        assertEquals("Other", userAgentInfo.getOsFamily());
-    }
+  @Test
+  void testParserEmptyInput() {
+    final UserAgentInfo userAgentInfo = parser.parse("");
+    assertEquals("Other", userAgentInfo.getBrowserName());
+    assertEquals("0.0", userAgentInfo.getBrowserVersion());
+    assertEquals("Other", userAgentInfo.getOsFamily());
+  }
 
-    @Test
-    void testParserUnknownInput() {
-        final UserAgentInfo userAgentInfo = parser
-            .parse("this is not a known browser");
-        assertEquals("Other", userAgentInfo.getBrowserName());
-        assertEquals("0.0", userAgentInfo.getBrowserVersion());
-        assertEquals("Other", userAgentInfo.getOsFamily());
-    }
+  @Test
+  void testParserUnknownInput() {
+    final UserAgentInfo userAgentInfo = parser.parse("this is not a known browser");
+    assertEquals("Other", userAgentInfo.getBrowserName());
+    assertEquals("0.0", userAgentInfo.getBrowserVersion());
+    assertEquals("Other", userAgentInfo.getOsFamily());
+  }
 
-    @Test
-    void testParserWin7IE11() {
-        //User agent string taken from Virtualbox running IE11 on win7 image
-        final UserAgentInfo userAgentInfo = parser
-            .parse("Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko");
-        assertEquals("IE", userAgentInfo.getBrowserName());
-        assertEquals("11.0", userAgentInfo.getBrowserVersion());
-        assertEquals("Windows", userAgentInfo.getOsFamily());
-        assertEquals("7.0", userAgentInfo.getOsVersion());
-    }
+  @Test
+  void testParserWin7IE11() {
+    // User agent string taken from Virtualbox running IE11 on win7 image
+    final UserAgentInfo userAgentInfo =
+        parser.parse("Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko");
+    assertEquals("IE", userAgentInfo.getBrowserName());
+    assertEquals("11.0", userAgentInfo.getBrowserVersion());
+    assertEquals("Windows", userAgentInfo.getOsFamily());
+    assertEquals("7.0", userAgentInfo.getOsVersion());
+  }
 
-    @Test
-    void testParserWin10Edge() {
-        //User agent string taken from Virtualbox running Edge on win10 image
-        final UserAgentInfo userAgentInfo = parser
-            .parse(
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 Edge/16.16299");
-        assertEquals("Edge", userAgentInfo.getBrowserName());
-        assertEquals("16.16299", userAgentInfo.getBrowserVersion());
-        assertEquals("Windows", userAgentInfo.getOsFamily());
-        assertEquals("10.0", userAgentInfo.getOsVersion());
-    }
+  @Test
+  void testParserWin10Edge() {
+    // User agent string taken from Virtualbox running Edge on win10 image
+    final UserAgentInfo userAgentInfo =
+        parser.parse(
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 Edge/16.16299");
+    assertEquals("Edge", userAgentInfo.getBrowserName());
+    assertEquals("16.16299", userAgentInfo.getBrowserVersion());
+    assertEquals("Windows", userAgentInfo.getOsFamily());
+    assertEquals("10.0", userAgentInfo.getOsVersion());
+  }
 
-    @Test
-    void testParserChrome() {
-        //User agent string taken from my local MBP laptop with latest chrome installed
-        final UserAgentInfo userAgentInfo = parser
-            .parse(
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36");
-        assertEquals("Chrome", userAgentInfo.getBrowserName());
-        assertEquals("76.0", userAgentInfo.getBrowserVersion());
-        assertEquals("Mac OS X", userAgentInfo.getOsFamily());
-    }
+  @Test
+  void testParserChrome() {
+    // User agent string taken from my local MBP laptop with latest chrome installed
+    final UserAgentInfo userAgentInfo =
+        parser.parse(
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36");
+    assertEquals("Chrome", userAgentInfo.getBrowserName());
+    assertEquals("76.0", userAgentInfo.getBrowserVersion());
+    assertEquals("Mac OS X", userAgentInfo.getOsFamily());
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -34,93 +34,93 @@ import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.authorities.FeaturesConfiguration;
 
 /**
- * The security configuration is read from two seperate YAML files which are
- * injected into the constructor upon creating an object of this class.
- * <p>
- * The YAML files are parsed and the resulting configuration can be fetched
- * by calling the {@link SecurityConfigurationLoader#getAuthoritiesConfiguration()}
- * and {@link SecurityConfigurationLoader#getFeaturesConfiguration()} method.
+ * The security configuration is read from two seperate YAML files which are injected into the
+ * constructor upon creating an object of this class.
+ *
+ * <p>The YAML files are parsed and the resulting configuration can be fetched by calling the {@link
+ * SecurityConfigurationLoader#getAuthoritiesConfiguration()} and {@link
+ * SecurityConfigurationLoader#getFeaturesConfiguration()} method.
  */
 @Component("AuthoritiesConfigurationLoader")
-public class SecurityConfigurationLoader extends YamlPropertiesFactoryBean implements InitializingBean {
+public class SecurityConfigurationLoader extends YamlPropertiesFactoryBean
+    implements InitializingBean {
 
-    @Value("${max.aliases.for.collections:500}")
-    private Integer maxAliasesForCollections;
+  @Value("${max.aliases.for.collections:500}")
+  private Integer maxAliasesForCollections;
 
-    @Value("${authorities.configuration.file}")
-    private String authoritiesConfigurationFile;
+  @Value("${authorities.configuration.file}")
+  private String authoritiesConfigurationFile;
 
-    @Value("${features.configuration.file}")
-    private String featuresConfigurationFile;
+  @Value("${features.configuration.file}")
+  private String featuresConfigurationFile;
 
-    private AuthoritiesConfiguration authoritiesConfiguration;
-    private FeaturesConfiguration featuresConfiguration;
+  private AuthoritiesConfiguration authoritiesConfiguration;
+  private FeaturesConfiguration featuresConfiguration;
 
-    private SecurityConfigurationLoader() {
-        // Uses @Value injected authoritiesConfigurationFile
+  private SecurityConfigurationLoader() {
+    // Uses @Value injected authoritiesConfigurationFile
+  }
+
+  /**
+   * Constructor taking a path to the authorities configuration file.
+   *
+   * @param authoritiesConfigurationFile path to YAML configuration file
+   */
+  public SecurityConfigurationLoader(
+      String authoritiesConfigurationFile,
+      String featuresConfigurationFile,
+      Integer maxAliasesForCollections) {
+    Assert.notNull(authoritiesConfigurationFile, "Authorities configuration file must not be null");
+    Assert.notNull(featuresConfigurationFile, "Features configuration file must not be null");
+    Assert.notNull(
+        maxAliasesForCollections, "Configuration maxAliasesForCollections must not be null");
+    this.authoritiesConfigurationFile = authoritiesConfigurationFile;
+    this.featuresConfigurationFile = featuresConfigurationFile;
+    this.maxAliasesForCollections = maxAliasesForCollections;
+  }
+
+  /**
+   * Invoked by a BeanFactory after it has set all bean properties supplied (and satisfied
+   * BeanFactoryAware and ApplicationContextAware).
+   *
+   * <p>This method allows the bean instance to perform initialization only possible when all bean
+   * properties have been set and to throw an exception in the event of misconfiguration.
+   *
+   * @throws AuthoritiesException in the event of misconfiguration (such as failure to set an
+   *     essential property) or if initialization fails.
+   */
+  @Override
+  public void afterPropertiesSet() throws AuthoritiesException {
+    authoritiesConfiguration =
+        loadConfiguration(authoritiesConfigurationFile, AuthoritiesConfiguration.class);
+    featuresConfiguration =
+        loadConfiguration(featuresConfigurationFile, FeaturesConfiguration.class);
+  }
+
+  /** Gets the loaded authorities configuration. */
+  public AuthoritiesConfiguration getAuthoritiesConfiguration() {
+    return this.authoritiesConfiguration;
+  }
+
+  /** Gets the loaded features configuration. */
+  public FeaturesConfiguration getFeaturesConfiguration() {
+    return this.featuresConfiguration;
+  }
+
+  private Resource getResource(String location) {
+    final String url = ResourceUtils.isUrl(location) ? location : "file:" + location;
+    PathMatchingResourcePatternResolver r = new PathMatchingResourcePatternResolver();
+    return r.getResource(url);
+  }
+
+  private <T> T loadConfiguration(String location, Class<T> type) {
+    final var loaderOptions = new LoaderOptions();
+    loaderOptions.setMaxAliasesForCollections(maxAliasesForCollections);
+    Yaml yaml = new Yaml(loaderOptions);
+    try {
+      return yaml.loadAs(getResource(location).getInputStream(), type);
+    } catch (IOException e) {
+      throw new AuthoritiesException("Could not load configuration file: " + location, e);
     }
-
-    /**
-     * Constructor taking a path to the authorities configuration file.
-     *
-     * @param authoritiesConfigurationFile path to YAML configuration file
-     */
-    public SecurityConfigurationLoader(String authoritiesConfigurationFile, String featuresConfigurationFile,
-        Integer maxAliasesForCollections) {
-        Assert.notNull(authoritiesConfigurationFile, "Authorities configuration file must not be null");
-        Assert.notNull(featuresConfigurationFile, "Features configuration file must not be null");
-        Assert.notNull(maxAliasesForCollections, "Configuration maxAliasesForCollections must not be null");
-        this.authoritiesConfigurationFile = authoritiesConfigurationFile;
-        this.featuresConfigurationFile = featuresConfigurationFile;
-        this.maxAliasesForCollections = maxAliasesForCollections;
-    }
-
-    /**
-     * Invoked by a BeanFactory after it has set all bean properties supplied
-     * (and satisfied BeanFactoryAware and ApplicationContextAware).
-     * <p>
-     * This method allows the bean instance to perform initialization only
-     * possible when all bean properties have been set and to throw an
-     * exception in the event of misconfiguration.
-     *
-     * @throws AuthoritiesException in the event of misconfiguration (such
-     * as failure to set an essential property) or if initialization fails.
-     */
-    @Override
-    public void afterPropertiesSet() throws AuthoritiesException {
-        authoritiesConfiguration = loadConfiguration(authoritiesConfigurationFile, AuthoritiesConfiguration.class);
-        featuresConfiguration = loadConfiguration(featuresConfigurationFile, FeaturesConfiguration.class);
-    }
-
-    /**
-     * Gets the loaded authorities configuration.
-     */
-    public AuthoritiesConfiguration getAuthoritiesConfiguration() {
-        return this.authoritiesConfiguration;
-    }
-
-    /**
-     * Gets the loaded features configuration.
-     */
-    public FeaturesConfiguration getFeaturesConfiguration() {
-        return this.featuresConfiguration;
-    }
-
-    private Resource getResource(String location) {
-        final String url = ResourceUtils.isUrl(location) ? location : "file:" + location;
-        PathMatchingResourcePatternResolver r = new PathMatchingResourcePatternResolver();
-        return r.getResource(url);
-    }
-
-    private <T> T loadConfiguration(String location, Class<T> type) {
-        final var loaderOptions = new LoaderOptions();
-        loaderOptions.setMaxAliasesForCollections(maxAliasesForCollections);
-        Yaml yaml = new Yaml(loaderOptions);
-        try {
-            return yaml.loadAs(getResource(location).getInputStream(), type);
-        } catch (IOException e) {
-            throw new AuthoritiesException("Could not load configuration file: " + location, e);
-        }
-    }
-
+  }
 }

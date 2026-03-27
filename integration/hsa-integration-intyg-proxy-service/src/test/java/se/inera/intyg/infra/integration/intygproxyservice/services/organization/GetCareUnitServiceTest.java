@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services.organization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,139 +45,132 @@ import se.inera.intyg.infra.integration.intygproxyservice.services.organization.
 @ExtendWith(MockitoExtension.class)
 class GetCareUnitServiceTest {
 
-    private static final String ID = "ID";
+  private static final String ID = "ID";
 
-    @Mock
-    GetUnitService getUnitService;
+  @Mock GetUnitService getUnitService;
 
-    @Mock
-    GetHealthCareUnitMembersService getHealthCareUnitMembersService;
+  @Mock GetHealthCareUnitMembersService getHealthCareUnitMembersService;
 
-    @Mock
-    CareUnitConverter careUnitConverter;
+  @Mock CareUnitConverter careUnitConverter;
 
-    @InjectMocks
-    GetCareUnitService getCareUnitService;
+  @InjectMocks GetCareUnitService getCareUnitService;
 
-    private Commission c1;
-    private Unit unit;
-    private HealthCareUnitMembers members;
-    private Vardenhet convertedUnit;
+  private Commission c1;
+  private Unit unit;
+  private HealthCareUnitMembers members;
+  private Vardenhet convertedUnit;
+
+  @BeforeEach
+  void setup() {
+    c1 = new Commission();
+    convertedUnit = new Vardenhet();
+  }
+
+  @Test
+  void shouldReturnNullIfUnitNotFoundFromHsa() {
+    when(getUnitService.get(any())).thenReturn(null);
+
+    final var response = getCareUnitService.get(c1);
+
+    assertNull(response);
+  }
+
+  @Nested
+  class UnitAndMembersFound {
 
     @BeforeEach
     void setup() {
-        c1 = new Commission();
-        convertedUnit = new Vardenhet();
+      unit = new Unit();
+      unit.setUnitHsaId(ID);
+
+      members = new HealthCareUnitMembers();
+
+      when(getUnitService.get(any())).thenReturn(unit);
+
+      when(careUnitConverter.convert(any(), any(), any())).thenReturn(convertedUnit);
+
+      when(getHealthCareUnitMembersService.get(any())).thenReturn(members);
     }
 
     @Test
-    void shouldReturnNullIfUnitNotFoundFromHsa() {
-        when(getUnitService.get(any()))
-            .thenReturn(null);
+    void shouldSendCommissionToConverter() {
+      final var captor = ArgumentCaptor.forClass(Commission.class);
 
-        final var response = getCareUnitService.get(c1);
+      getCareUnitService.get(c1);
 
-        assertNull(response);
+      verify(careUnitConverter)
+          .convert(captor.capture(), any(Unit.class), any(HealthCareUnitMembers.class));
+      assertEquals(c1, captor.getValue());
     }
 
-    @Nested
-    class UnitAndMembersFound {
+    @Test
+    void shouldSendUnitFromHsaToConverter() {
+      final var captor = ArgumentCaptor.forClass(Unit.class);
 
-        @BeforeEach
-        void setup() {
-            unit = new Unit();
-            unit.setUnitHsaId(ID);
+      getCareUnitService.get(c1);
 
-            members = new HealthCareUnitMembers();
-
-            when(getUnitService.get(any()))
-                .thenReturn(unit);
-
-            when(careUnitConverter.convert(any(), any(), any()))
-                .thenReturn(convertedUnit);
-
-            when(getHealthCareUnitMembersService.get(any()))
-                .thenReturn(members);
-        }
-
-        @Test
-        void shouldSendCommissionToConverter() {
-            final var captor = ArgumentCaptor.forClass(Commission.class);
-
-            getCareUnitService.get(c1);
-
-            verify(careUnitConverter).convert(captor.capture(), any(Unit.class), any(HealthCareUnitMembers.class));
-            assertEquals(c1, captor.getValue());
-        }
-
-        @Test
-        void shouldSendUnitFromHsaToConverter() {
-            final var captor = ArgumentCaptor.forClass(Unit.class);
-
-            getCareUnitService.get(c1);
-
-            verify(careUnitConverter).convert(any(Commission.class), captor.capture(), any(HealthCareUnitMembers.class));
-            assertEquals(unit, captor.getValue());
-        }
-
-        @Test
-        void shouldSendMembersFromHsaToConverter() {
-            final var captor = ArgumentCaptor.forClass(HealthCareUnitMembers.class);
-
-            getCareUnitService.get(c1);
-
-            verify(careUnitConverter).convert(any(Commission.class), any(Unit.class), captor.capture());
-            assertEquals(members, captor.getValue());
-        }
-
-        @Test
-        void shouldReturnConvertedUnit() {
-            final var response = getCareUnitService.get(c1);
-
-            assertEquals(convertedUnit, response);
-        }
+      verify(careUnitConverter)
+          .convert(any(Commission.class), captor.capture(), any(HealthCareUnitMembers.class));
+      assertEquals(unit, captor.getValue());
     }
 
-    @Nested
-    class GetCareUnitWithUnitRequests {
+    @Test
+    void shouldSendMembersFromHsaToConverter() {
+      final var captor = ArgumentCaptor.forClass(HealthCareUnitMembers.class);
 
-        private final GetUnitRequestDTO unitRequest = GetUnitRequestDTO.builder().hsaId(ID).build();
-        private final GetHealthCareUnitMembersRequestDTO unitMembersRequest =
-            GetHealthCareUnitMembersRequestDTO.builder().hsaId(ID).build();
+      getCareUnitService.get(c1);
 
-        private Unit unit;
-        private HealthCareUnitMembers unitMembers;
-
-        @BeforeEach
-        void init() {
-            unit = new Unit();
-            unitMembers = new HealthCareUnitMembers();
-        }
-
-        @Test
-        void shouldThrowIllegalArgumentIfHsaIdIsEmptyString() {
-            assertThrows(IllegalArgumentException.class, () ->
-                getCareUnitService.get(""));
-        }
-
-        @Test
-        void shouldReturnVardenhet() {
-            final var expected = new Vardenhet(ID, "name");
-            when(getUnitService.get(unitRequest)).thenReturn(unit);
-            when(getHealthCareUnitMembersService.get(unitMembersRequest)).thenReturn(unitMembers);
-            when(careUnitConverter.convert(unit, unitMembers)).thenReturn(expected);
-
-            final var careUnit = getCareUnitService.get(ID);
-            assertEquals(ID, careUnit.getId());
-        }
-
-        @Test
-        void shouldReturnNullWhenUnitIsNull() {
-            when(getUnitService.get(unitRequest)).thenReturn(null);
-
-            final var careUnit = getCareUnitService.get(ID);
-            verifyNoInteractions(careUnitConverter);
-            assertNull(careUnit);
-        }
+      verify(careUnitConverter).convert(any(Commission.class), any(Unit.class), captor.capture());
+      assertEquals(members, captor.getValue());
     }
+
+    @Test
+    void shouldReturnConvertedUnit() {
+      final var response = getCareUnitService.get(c1);
+
+      assertEquals(convertedUnit, response);
+    }
+  }
+
+  @Nested
+  class GetCareUnitWithUnitRequests {
+
+    private final GetUnitRequestDTO unitRequest = GetUnitRequestDTO.builder().hsaId(ID).build();
+    private final GetHealthCareUnitMembersRequestDTO unitMembersRequest =
+        GetHealthCareUnitMembersRequestDTO.builder().hsaId(ID).build();
+
+    private Unit unit;
+    private HealthCareUnitMembers unitMembers;
+
+    @BeforeEach
+    void init() {
+      unit = new Unit();
+      unitMembers = new HealthCareUnitMembers();
+    }
+
+    @Test
+    void shouldThrowIllegalArgumentIfHsaIdIsEmptyString() {
+      assertThrows(IllegalArgumentException.class, () -> getCareUnitService.get(""));
+    }
+
+    @Test
+    void shouldReturnVardenhet() {
+      final var expected = new Vardenhet(ID, "name");
+      when(getUnitService.get(unitRequest)).thenReturn(unit);
+      when(getHealthCareUnitMembersService.get(unitMembersRequest)).thenReturn(unitMembers);
+      when(careUnitConverter.convert(unit, unitMembers)).thenReturn(expected);
+
+      final var careUnit = getCareUnitService.get(ID);
+      assertEquals(ID, careUnit.getId());
+    }
+
+    @Test
+    void shouldReturnNullWhenUnitIsNull() {
+      when(getUnitService.get(unitRequest)).thenReturn(null);
+
+      final var careUnit = getCareUnitService.get(ID);
+      verifyNoInteractions(careUnitConverter);
+      assertNull(careUnit);
+    }
+  }
 }

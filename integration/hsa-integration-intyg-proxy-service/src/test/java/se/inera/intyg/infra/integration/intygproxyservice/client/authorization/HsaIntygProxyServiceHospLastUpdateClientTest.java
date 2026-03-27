@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.client.authorization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,43 +44,41 @@ import se.inera.intyg.infra.integration.intygproxyservice.dto.authorization.GetH
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceHospLastUpdateClientTest {
 
-    @Mock
-    private RestClient restClient;
+  @Mock private RestClient restClient;
 
-    @InjectMocks
-    private HsaIntygProxyServiceHospLastUpdateClient hospLastUpdateClient;
+  @InjectMocks private HsaIntygProxyServiceHospLastUpdateClient hospLastUpdateClient;
 
-    private RequestHeadersUriSpec requestBodyUriSpec;
-    private ResponseSpec responseSpec;
+  private RequestHeadersUriSpec requestBodyUriSpec;
+  private ResponseSpec responseSpec;
 
-    @BeforeEach
-    void setUp() {
-        final var uri = "/api/from/configuration";
-        ReflectionTestUtils.setField(hospLastUpdateClient, "lastUpdateEndpoint", uri);
+  @BeforeEach
+  void setUp() {
+    final var uri = "/api/from/configuration";
+    ReflectionTestUtils.setField(hospLastUpdateClient, "lastUpdateEndpoint", uri);
 
-        requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
-        responseSpec = mock(RestClient.ResponseSpec.class);
+    requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
+    responseSpec = mock(RestClient.ResponseSpec.class);
 
-        MDC.put(TRACE_ID_KEY, "traceId");
-        MDC.put(SESSION_ID_KEY, "sessionId");
+    MDC.put(TRACE_ID_KEY, "traceId");
+    MDC.put(SESSION_ID_KEY, "sessionId");
 
-        when(restClient.get()).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.uri(uri)).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
-    }
+    when(restClient.get()).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.uri(uri)).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId"))
+        .thenReturn(requestBodyUriSpec);
+    when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
+  }
 
-    @Test
-    void shallReturnGetCitizenCertificatesResponse() {
-        final var expectedResponse = GetHospLastUpdateResponseDTO.builder()
-            .lastUpdate(LocalDateTime.now())
-            .build();
+  @Test
+  void shallReturnGetCitizenCertificatesResponse() {
+    final var expectedResponse =
+        GetHospLastUpdateResponseDTO.builder().lastUpdate(LocalDateTime.now()).build();
 
-        doReturn(expectedResponse).when(responseSpec).body(GetHospLastUpdateResponseDTO.class);
+    doReturn(expectedResponse).when(responseSpec).body(GetHospLastUpdateResponseDTO.class);
 
-        final var actualResponse = hospLastUpdateClient.get();
+    final var actualResponse = hospLastUpdateClient.get();
 
-        assertEquals(expectedResponse, actualResponse);
-    }
+    assertEquals(expectedResponse, actualResponse);
+  }
 }

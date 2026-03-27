@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.infra.integration.intygproxyservice.client;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,92 +46,80 @@ import se.inera.intyg.infra.pu.integration.intygproxyservice.dto.PersonResponseD
 @ExtendWith(MockitoExtension.class)
 class GetPersonIntygProxyServiceClientTest {
 
-    private static final String ENDPOINT = "endpoint";
-    private static final String TRACE_ID = "traceId";
-    private static final String SESSION_ID = "sessionId";
-    private final RestClient.RequestBodyUriSpec requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
-    private final RestClient.RequestBodySpec requestBodySpec = mock(RestClient.RequestBodySpec.class);
-    private final RestClient.ResponseSpec responseSpec = mock(RestClient.ResponseSpec.class);
+  private static final String ENDPOINT = "endpoint";
+  private static final String TRACE_ID = "traceId";
+  private static final String SESSION_ID = "sessionId";
+  private final RestClient.RequestBodyUriSpec requestBodyUriSpec =
+      mock(RestClient.RequestBodyUriSpec.class);
+  private final RestClient.RequestBodySpec requestBodySpec = mock(RestClient.RequestBodySpec.class);
+  private final RestClient.ResponseSpec responseSpec = mock(RestClient.ResponseSpec.class);
 
-    @Mock
-    private RestClient restClient;
+  @Mock private RestClient restClient;
 
-    @InjectMocks
-    private GetPersonIntygProxyServiceClient getPersonIntygProxyServiceClient;
+  @InjectMocks private GetPersonIntygProxyServiceClient getPersonIntygProxyServiceClient;
 
-    @BeforeEach
-    void setUp() {
-        ReflectionTestUtils.setField(getPersonIntygProxyServiceClient, "personEndpoint", ENDPOINT);
-        MDC.put(TRACE_ID_KEY, TRACE_ID);
-        MDC.put(SESSION_ID_KEY, SESSION_ID);
-    }
+  @BeforeEach
+  void setUp() {
+    ReflectionTestUtils.setField(getPersonIntygProxyServiceClient, "personEndpoint", ENDPOINT);
+    MDC.put(TRACE_ID_KEY, TRACE_ID);
+    MDC.put(SESSION_ID_KEY, SESSION_ID);
+  }
 
-    @Test
-    void shallReturnPersonResponse() {
-        final var request = PersonRequestDTO.builder()
-            .personId("personId")
-            .queryCache(true)
-            .build();
+  @Test
+  void shallReturnPersonResponse() {
+    final var request = PersonRequestDTO.builder().personId("personId").queryCache(true).build();
 
-        final var expectedResponse = PersonResponseDTO.builder()
-            .status(Status.FOUND)
-            .person(mock(Person.class))
-            .build();
+    final var expectedResponse =
+        PersonResponseDTO.builder().status(Status.FOUND).person(mock(Person.class)).build();
 
-        doReturn(requestBodyUriSpec).when(restClient).post();
-        doReturn(requestBodySpec).when(requestBodyUriSpec).uri(ENDPOINT);
-        doReturn(requestBodySpec).when(requestBodySpec).body(request);
-        doReturn(requestBodySpec).when(requestBodySpec).header(LOG_TRACE_ID_HEADER, TRACE_ID);
-        doReturn(requestBodySpec).when(requestBodySpec).header(LOG_SESSION_ID_HEADER, SESSION_ID);
-        doReturn(requestBodySpec).when(requestBodySpec).contentType(MediaType.APPLICATION_JSON);
-        doReturn(responseSpec).when(requestBodySpec).retrieve();
-        doReturn(expectedResponse).when(responseSpec).body(PersonResponseDTO.class);
+    doReturn(requestBodyUriSpec).when(restClient).post();
+    doReturn(requestBodySpec).when(requestBodyUriSpec).uri(ENDPOINT);
+    doReturn(requestBodySpec).when(requestBodySpec).body(request);
+    doReturn(requestBodySpec).when(requestBodySpec).header(LOG_TRACE_ID_HEADER, TRACE_ID);
+    doReturn(requestBodySpec).when(requestBodySpec).header(LOG_SESSION_ID_HEADER, SESSION_ID);
+    doReturn(requestBodySpec).when(requestBodySpec).contentType(MediaType.APPLICATION_JSON);
+    doReturn(responseSpec).when(requestBodySpec).retrieve();
+    doReturn(expectedResponse).when(responseSpec).body(PersonResponseDTO.class);
 
-        final var response = getPersonIntygProxyServiceClient.get(request);
+    final var response = getPersonIntygProxyServiceClient.get(request);
 
-        assertEquals(expectedResponse, response);
-    }
+    assertEquals(expectedResponse, response);
+  }
 
-    @Test
-    void shallSetHeadersCorrectly() {
-        final var request = PersonRequestDTO.builder()
-            .personId("personId")
-            .queryCache(true)
-            .build();
+  @Test
+  void shallSetHeadersCorrectly() {
+    final var request = PersonRequestDTO.builder().personId("personId").queryCache(true).build();
 
-        doReturn(requestBodyUriSpec).when(restClient).post();
-        doReturn(requestBodySpec).when(requestBodyUriSpec).uri(ENDPOINT);
-        doReturn(requestBodySpec).when(requestBodySpec).body(request);
-        doReturn(requestBodySpec).when(requestBodySpec).header(LOG_TRACE_ID_HEADER, TRACE_ID);
-        doReturn(requestBodySpec).when(requestBodySpec).header(LOG_SESSION_ID_HEADER, SESSION_ID);
-        doReturn(requestBodySpec).when(requestBodySpec).contentType(MediaType.APPLICATION_JSON);
-        doReturn(responseSpec).when(requestBodySpec).retrieve();
-        doReturn(mock(PersonResponseDTO.class)).when(responseSpec).body(PersonResponseDTO.class);
+    doReturn(requestBodyUriSpec).when(restClient).post();
+    doReturn(requestBodySpec).when(requestBodyUriSpec).uri(ENDPOINT);
+    doReturn(requestBodySpec).when(requestBodySpec).body(request);
+    doReturn(requestBodySpec).when(requestBodySpec).header(LOG_TRACE_ID_HEADER, TRACE_ID);
+    doReturn(requestBodySpec).when(requestBodySpec).header(LOG_SESSION_ID_HEADER, SESSION_ID);
+    doReturn(requestBodySpec).when(requestBodySpec).contentType(MediaType.APPLICATION_JSON);
+    doReturn(responseSpec).when(requestBodySpec).retrieve();
+    doReturn(mock(PersonResponseDTO.class)).when(responseSpec).body(PersonResponseDTO.class);
 
-        getPersonIntygProxyServiceClient.get(request);
+    getPersonIntygProxyServiceClient.get(request);
 
-        verify(requestBodySpec).header(LOG_TRACE_ID_HEADER, TRACE_ID);
-        verify(requestBodySpec).header(LOG_SESSION_ID_HEADER, SESSION_ID);
-    }
+    verify(requestBodySpec).header(LOG_TRACE_ID_HEADER, TRACE_ID);
+    verify(requestBodySpec).header(LOG_SESSION_ID_HEADER, SESSION_ID);
+  }
 
-    @Test
-    void shallSetContentTypeAsApplicationJson() {
-        final var request = PersonRequestDTO.builder()
-            .personId("personId")
-            .queryCache(true)
-            .build();
+  @Test
+  void shallSetContentTypeAsApplicationJson() {
+    final var request = PersonRequestDTO.builder().personId("personId").queryCache(true).build();
 
-        doReturn(requestBodyUriSpec).when(restClient).post();
-        doReturn(requestBodySpec).when(requestBodyUriSpec).uri(ENDPOINT);
-        doReturn(requestBodySpec).when(requestBodySpec).body(request);
-        doReturn(requestBodySpec).when(requestBodySpec).header(LOG_TRACE_ID_HEADER, TRACE_ID);
-        doReturn(requestBodySpec).when(requestBodySpec).header(LOG_SESSION_ID_HEADER, SESSION_ID);
-        doReturn(requestBodySpec).when(requestBodySpec).contentType(MediaType.APPLICATION_JSON);
-        doReturn(responseSpec).when(requestBodySpec).retrieve();
-        doReturn(mock(PersonResponseDTO.class)).when(responseSpec).body(PersonResponseDTO.class);
+    doReturn(requestBodyUriSpec).when(restClient).post();
+    doReturn(requestBodySpec).when(requestBodyUriSpec).uri(ENDPOINT);
+    doReturn(requestBodySpec).when(requestBodySpec).body(request);
+    doReturn(requestBodySpec).when(requestBodySpec).header(LOG_TRACE_ID_HEADER, TRACE_ID);
+    doReturn(requestBodySpec).when(requestBodySpec).header(LOG_SESSION_ID_HEADER, SESSION_ID);
+    doReturn(requestBodySpec).when(requestBodySpec).contentType(MediaType.APPLICATION_JSON);
+    doReturn(responseSpec).when(requestBodySpec).retrieve();
+    doReturn(mock(PersonResponseDTO.class)).when(responseSpec).body(PersonResponseDTO.class);
 
-        getPersonIntygProxyServiceClient.get(request);
+    getPersonIntygProxyServiceClient.get(request);
 
-        verify(requestBodySpec).contentType(MediaType.APPLICATION_JSON);
-    }
+    verify(requestBodySpec).contentType(MediaType.APPLICATION_JSON);
+  }
 }

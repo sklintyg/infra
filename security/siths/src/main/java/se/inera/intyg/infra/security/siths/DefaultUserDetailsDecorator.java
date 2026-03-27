@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -32,89 +32,97 @@ import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 
 /**
- * Provides a number of default implementations for decorating a IntygUser principal with various information extracted
- * from HSA models.
+ * Provides a number of default implementations for decorating a IntygUser principal with various
+ * information extracted from HSA models.
  *
- * Created by eriklupander on 2016-05-17.
+ * <p>Created by eriklupander on 2016-05-17.
  */
 public class DefaultUserDetailsDecorator {
 
-    private static final String SPACE = " ";
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultUserDetailsDecorator.class);
+  private static final String SPACE = " ";
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultUserDetailsDecorator.class);
 
-    private HsaAttributeExtractor hsaAttributeExtractor = new HsaAttributeExtractor();
+  private HsaAttributeExtractor hsaAttributeExtractor = new HsaAttributeExtractor();
 
-    public void decorateIntygUserWithAdditionalInfo(IntygUser intygUser, List<PersonInformation> hsaPersonInfo) {
+  public void decorateIntygUserWithAdditionalInfo(
+      IntygUser intygUser, List<PersonInformation> hsaPersonInfo) {
 
-        List<String> specialiseringar = hsaAttributeExtractor.extractSpecialiseringar(hsaPersonInfo);
-        List<String> legitimeradeYrkesgrupper = hsaAttributeExtractor.extractLegitimeradeYrkesgrupper(hsaPersonInfo);
-        List<String> befattningar = hsaAttributeExtractor.extractBefattningar(hsaPersonInfo);
-        List<PaTitle> befattningskoder = hsaAttributeExtractor.extractBefattningsKoder(hsaPersonInfo);
-        String titel = hsaAttributeExtractor.extractTitel(hsaPersonInfo);
+    List<String> specialiseringar = hsaAttributeExtractor.extractSpecialiseringar(hsaPersonInfo);
+    List<String> legitimeradeYrkesgrupper =
+        hsaAttributeExtractor.extractLegitimeradeYrkesgrupper(hsaPersonInfo);
+    List<String> befattningar = hsaAttributeExtractor.extractBefattningar(hsaPersonInfo);
+    List<PaTitle> befattningskoder = hsaAttributeExtractor.extractBefattningsKoder(hsaPersonInfo);
+    String titel = hsaAttributeExtractor.extractTitel(hsaPersonInfo);
 
-        intygUser.setSpecialiseringar(specialiseringar);
-        intygUser.setLegitimeradeYrkesgrupper(legitimeradeYrkesgrupper);
-        intygUser.setBefattningar(befattningar);
-        intygUser.setBefattningsKoder(befattningskoder);
-        intygUser.setTitel(titel);
+    intygUser.setSpecialiseringar(specialiseringar);
+    intygUser.setLegitimeradeYrkesgrupper(legitimeradeYrkesgrupper);
+    intygUser.setBefattningar(befattningar);
+    intygUser.setBefattningsKoder(befattningskoder);
+    intygUser.setTitel(titel);
+  }
+
+  public void decorateIntygUserWithAuthenticationMethod(
+      IntygUser intygUser, String authenticationScheme) {
+
+    if (authenticationScheme.endsWith(":fake")) {
+      intygUser.setAuthenticationMethod(AuthenticationMethod.FAKE);
+    } else {
+      intygUser.setAuthenticationMethod(AuthenticationMethod.SITHS);
+    }
+  }
+
+  public void decorateIntygUserWithDefaultVardenhet(IntygUser intygUser) {
+    setFirstVardenhetOnFirstVardgivareAsDefault(intygUser);
+    LOG.debug(
+        "Setting care unit '{}' as default unit on user '{}'",
+        intygUser.getValdVardenhet().getId(),
+        intygUser.getHsaId());
+  }
+
+  public void decorateIntygUserWithSystemRoles(
+      IntygUser intygUser, UserCredentials userCredentials) {
+    if (userCredentials != null && userCredentials.getHsaSystemRole() != null) {
+      intygUser.setSystemRoles(
+          userCredentials.getHsaSystemRole().stream()
+              .map(DefaultUserDetailsDecorator::hsaSystemRoleAsString)
+              .collect(Collectors.toList()));
+    }
+  }
+
+  public String compileName(String fornamn, String mellanOchEfterNamn) {
+
+    StringBuilder sb = new StringBuilder();
+
+    if (fornamn != null && !fornamn.isEmpty()) {
+      sb.append(fornamn);
     }
 
-    public void decorateIntygUserWithAuthenticationMethod(IntygUser intygUser, String authenticationScheme) {
-
-        if (authenticationScheme.endsWith(":fake")) {
-            intygUser.setAuthenticationMethod(AuthenticationMethod.FAKE);
-        } else {
-            intygUser.setAuthenticationMethod(AuthenticationMethod.SITHS);
-        }
+    if (mellanOchEfterNamn != null && !mellanOchEfterNamn.isEmpty()) {
+      if (!sb.isEmpty()) {
+        sb.append(SPACE);
+      }
+      sb.append(mellanOchEfterNamn);
     }
 
-    public void decorateIntygUserWithDefaultVardenhet(IntygUser intygUser) {
-        setFirstVardenhetOnFirstVardgivareAsDefault(intygUser);
-        LOG.debug("Setting care unit '{}' as default unit on user '{}'", intygUser.getValdVardenhet().getId(), intygUser.getHsaId());
+    return sb.toString();
+  }
+
+  private boolean setFirstVardenhetOnFirstVardgivareAsDefault(IntygUser intygUser) {
+    for (Vardgivare vg : intygUser.getVardgivare()) {
+      if (!vg.getVardenheter().isEmpty()) {
+        intygUser.setValdVardgivare(vg);
+        intygUser.setValdVardenhet(vg.getVardenheter().get(0));
+        return true;
+      }
     }
+    return false;
+  }
 
-    public void decorateIntygUserWithSystemRoles(IntygUser intygUser, UserCredentials userCredentials) {
-        if (userCredentials != null && userCredentials.getHsaSystemRole() != null) {
-            intygUser.setSystemRoles(userCredentials.getHsaSystemRole().stream()
-                .map(DefaultUserDetailsDecorator::hsaSystemRoleAsString)
-                .collect(Collectors.toList()));
-        }
+  private static String hsaSystemRoleAsString(HsaSystemRole systemRole) {
+    if (systemRole.getSystemId() == null || systemRole.getSystemId().trim().isEmpty()) {
+      return systemRole.getRole();
+    } else {
+      return systemRole.getSystemId() + ";" + systemRole.getRole();
     }
-
-    public String compileName(String fornamn, String mellanOchEfterNamn) {
-
-        StringBuilder sb = new StringBuilder();
-
-        if (fornamn != null && !fornamn.isEmpty()) {
-            sb.append(fornamn);
-        }
-
-        if (mellanOchEfterNamn != null && !mellanOchEfterNamn.isEmpty()) {
-            if (!sb.isEmpty()) {
-                sb.append(SPACE);
-            }
-            sb.append(mellanOchEfterNamn);
-        }
-
-        return sb.toString();
-    }
-
-    private boolean setFirstVardenhetOnFirstVardgivareAsDefault(IntygUser intygUser) {
-        for (Vardgivare vg : intygUser.getVardgivare()) {
-            if (!vg.getVardenheter().isEmpty()) {
-                intygUser.setValdVardgivare(vg);
-                intygUser.setValdVardenhet(vg.getVardenheter().get(0));
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static String hsaSystemRoleAsString(HsaSystemRole systemRole) {
-        if (systemRole.getSystemId() == null || systemRole.getSystemId().trim().isEmpty()) {
-            return systemRole.getRole();
-        } else {
-            return systemRole.getSystemId() + ";" + systemRole.getRole();
-        }
-    }
+  }
 }

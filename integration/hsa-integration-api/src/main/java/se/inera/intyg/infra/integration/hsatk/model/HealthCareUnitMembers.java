@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,18 +27,18 @@ import lombok.Data;
 @Data
 public class HealthCareUnitMembers implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    protected String healthCareUnitName;
-    protected String healthCareUnitPublicName;
-    protected String healthCareUnitHsaId;
-    protected LocalDateTime healthCareUnitStartDate;
-    protected LocalDateTime healthCareUnitEndDate;
-    protected List<String> healthCareUnitPrescriptionCode = new ArrayList<>();
-    protected List<String> telephoneNumber = new ArrayList<>();
-    protected List<String> postalAddress = new ArrayList<>();
-    protected String postalCode;
-    protected Boolean feignedHealthCareUnit;
-    protected Boolean archivedHealthCareUnit;
-    protected HealthCareProvider healthCareProvider;
-    protected List<HealthCareUnitMember> healthCareUnitMember = new ArrayList<>();
+  private static final long serialVersionUID = 1L;
+  protected String healthCareUnitName;
+  protected String healthCareUnitPublicName;
+  protected String healthCareUnitHsaId;
+  protected LocalDateTime healthCareUnitStartDate;
+  protected LocalDateTime healthCareUnitEndDate;
+  protected List<String> healthCareUnitPrescriptionCode = new ArrayList<>();
+  protected List<String> telephoneNumber = new ArrayList<>();
+  protected List<String> postalAddress = new ArrayList<>();
+  protected String postalCode;
+  protected Boolean feignedHealthCareUnit;
+  protected Boolean archivedHealthCareUnit;
+  protected HealthCareProvider healthCareProvider;
+  protected List<HealthCareUnitMember> healthCareUnitMember = new ArrayList<>();
 }

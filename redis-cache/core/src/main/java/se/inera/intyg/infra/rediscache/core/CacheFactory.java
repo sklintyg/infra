@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,19 +25,19 @@ import org.springframework.data.redis.cache.RedisCacheWriter;
 
 public class CacheFactory extends RedisCacheManager {
 
-    RedisCacheConfiguration defaultCacheConfiguration;
+  RedisCacheConfiguration defaultCacheConfiguration;
 
-    public CacheFactory(RedisCacheWriter cacheWriter,
-        RedisCacheConfiguration defaultCacheConfiguration) {
-        super(cacheWriter, defaultCacheConfiguration);
-        this.defaultCacheConfiguration = defaultCacheConfiguration;
-    }
+  public CacheFactory(
+      RedisCacheWriter cacheWriter, RedisCacheConfiguration defaultCacheConfiguration) {
+    super(cacheWriter, defaultCacheConfiguration);
+    this.defaultCacheConfiguration = defaultCacheConfiguration;
+  }
 
-    RedisCache createCache(String cacheName) {
-        return createRedisCache(cacheName, defaultCacheConfiguration);
-    }
+  RedisCache createCache(String cacheName) {
+    return createRedisCache(cacheName, defaultCacheConfiguration);
+  }
 
-    RedisCache createCache(String cacheName, RedisCacheConfiguration redisCacheConfiguration) {
-        return createRedisCache(cacheName, redisCacheConfiguration);
-    }
+  RedisCache createCache(String cacheName, RedisCacheConfiguration redisCacheConfiguration) {
+    return createRedisCache(cacheName, redisCacheConfiguration);
+  }
 }

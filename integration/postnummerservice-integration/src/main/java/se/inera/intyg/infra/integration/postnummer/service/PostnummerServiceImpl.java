@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,8 +18,8 @@
  */
 package se.inera.intyg.infra.integration.postnummer.service;
 
-import java.util.List;
 import jakarta.annotation.PostConstruct;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,29 +32,29 @@ import se.inera.intyg.infra.integration.postnummer.repository.PostnummerReposito
 @Service
 public class PostnummerServiceImpl implements PostnummerService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PostnummerRepositoryFactory.class);
+  private static final Logger LOG = LoggerFactory.getLogger(PostnummerRepositoryFactory.class);
 
-    @Value("${postnummer.file}")
-    private String sourceFile;
+  @Value("${postnummer.file}")
+  private String sourceFile;
 
-    @Autowired
-    private PostnummerRepositoryFactory postnummerRepositoryFactory;
+  @Autowired private PostnummerRepositoryFactory postnummerRepositoryFactory;
 
-    private PostnummerRepository postnummerRepository;
+  private PostnummerRepository postnummerRepository;
 
-    @PostConstruct
-    public void init() {
-        postnummerRepository = postnummerRepositoryFactory.createAndInitPostnummerRepository(sourceFile);
-    }
+  @PostConstruct
+  public void init() {
+    postnummerRepository =
+        postnummerRepositoryFactory.createAndInitPostnummerRepository(sourceFile);
+  }
 
-    @Override
-    public List<Omrade> getOmradeByPostnummer(String postnummer) {
-        LOG.debug("Lookup omrade by postnummer '{}'", postnummer);
-        return postnummerRepository.getOmradeByPostnummer(postnummer);
-    }
+  @Override
+  public List<Omrade> getOmradeByPostnummer(String postnummer) {
+    LOG.debug("Lookup omrade by postnummer '{}'", postnummer);
+    return postnummerRepository.getOmradeByPostnummer(postnummer);
+  }
 
-    @Override
-    public List<String> getKommunList() {
-        return postnummerRepository.getKommunList();
-    }
+  @Override
+  public List<String> getKommunList() {
+    return postnummerRepository.getKommunList();
+  }
 }

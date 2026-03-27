@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,36 +28,36 @@ import se.inera.intyg.infra.integration.postnummer.model.Omrade;
 @Component
 public class PostnummerRepositoryImpl implements PostnummerRepository {
 
-    private Map<String, List<Omrade>> postnummerRepository = new HashMap<String, List<Omrade>>();
-    private List<String> kommunList = new ArrayList<String>();
+  private Map<String, List<Omrade>> postnummerRepository = new HashMap<String, List<Omrade>>();
+  private List<String> kommunList = new ArrayList<String>();
 
-    @Override
-    public List<Omrade> getOmradeByPostnummer(String postnummer) {
-        return postnummerRepository.get(postnummer);
+  @Override
+  public List<Omrade> getOmradeByPostnummer(String postnummer) {
+    return postnummerRepository.get(postnummer);
+  }
+
+  @Override
+  public List<String> getKommunList() {
+    return kommunList;
+  }
+
+  @Override
+  public int nbrOfPostnummer() {
+    return postnummerRepository.size();
+  }
+
+  void addOmrade(Omrade omrade) {
+    String postnummer = omrade.getPostnummer();
+    if (postnummerRepository.containsKey(postnummer)) {
+      postnummerRepository.get(postnummer).add(omrade);
+    } else {
+      List<Omrade> omradeList = new ArrayList<Omrade>();
+      omradeList.add(omrade);
+      postnummerRepository.put(postnummer, omradeList);
     }
 
-    @Override
-    public List<String> getKommunList() {
-        return kommunList;
+    if (!kommunList.contains(omrade.getKommun())) {
+      kommunList.add(omrade.getKommun());
     }
-
-    @Override
-    public int nbrOfPostnummer() {
-        return postnummerRepository.size();
-    }
-
-    void addOmrade(Omrade omrade) {
-        String postnummer = omrade.getPostnummer();
-        if (postnummerRepository.containsKey(postnummer)) {
-            postnummerRepository.get(postnummer).add(omrade);
-        } else {
-            List<Omrade> omradeList = new ArrayList<Omrade>();
-            omradeList.add(omrade);
-            postnummerRepository.put(postnummer, omradeList);
-        }
-
-        if (!kommunList.contains(omrade.getKommun())) {
-            kommunList.add(omrade.getKommun());
-        }
-    }
+  }
 }

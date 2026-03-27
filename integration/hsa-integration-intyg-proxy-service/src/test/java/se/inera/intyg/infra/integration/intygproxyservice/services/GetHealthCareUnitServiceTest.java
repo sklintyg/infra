@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.integration.intygproxyservice.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,48 +36,36 @@ import se.inera.intyg.infra.integration.intygproxyservice.services.organization.
 @ExtendWith(MockitoExtension.class)
 class GetHealthCareUnitServiceTest {
 
-    private static final String HSA_ID = "hsaId";
-    @Mock
-    private HsaIntygProxyServiceHealthCareUnitClient healthCareUnitClient;
-    @InjectMocks
-    private GetHealthCareUnitService getHealthCareUnitService;
+  private static final String HSA_ID = "hsaId";
+  @Mock private HsaIntygProxyServiceHealthCareUnitClient healthCareUnitClient;
+  @InjectMocks private GetHealthCareUnitService getHealthCareUnitService;
 
-    @Test
-    void shouldThrowIfHsaIdIsNull() {
-        final var request = GetHealthCareUnitRequestDTO.builder()
-            .hsaId(null)
-            .build();
+  @Test
+  void shouldThrowIfHsaIdIsNull() {
+    final var request = GetHealthCareUnitRequestDTO.builder().hsaId(null).build();
 
-        assertThrows(IllegalArgumentException.class,
-            () -> getHealthCareUnitService.get(request));
-    }
+    assertThrows(IllegalArgumentException.class, () -> getHealthCareUnitService.get(request));
+  }
 
-    @Test
-    void shouldThrowIfHsaIdIsEmpty() {
-        final var request = GetHealthCareUnitRequestDTO.builder()
-            .hsaId("")
-            .build();
+  @Test
+  void shouldThrowIfHsaIdIsEmpty() {
+    final var request = GetHealthCareUnitRequestDTO.builder().hsaId("").build();
 
-        assertThrows(IllegalArgumentException.class,
-            () -> getHealthCareUnitService.get(request));
-    }
+    assertThrows(IllegalArgumentException.class, () -> getHealthCareUnitService.get(request));
+  }
 
-    @Test
-    void shouldReturnHealthCareUnit() {
-        final var request = GetHealthCareUnitRequestDTO.builder()
-            .hsaId(HSA_ID)
-            .build();
+  @Test
+  void shouldReturnHealthCareUnit() {
+    final var request = GetHealthCareUnitRequestDTO.builder().hsaId(HSA_ID).build();
 
-        final var expectedHealthCareUnit = new HealthCareUnit();
+    final var expectedHealthCareUnit = new HealthCareUnit();
 
-        when(healthCareUnitClient.getHealthCareUnit(request)).thenReturn(
-            HealthCareUnitResponseDTO.builder()
-                .healthCareUnit(expectedHealthCareUnit)
-                .build()
-        );
+    when(healthCareUnitClient.getHealthCareUnit(request))
+        .thenReturn(
+            HealthCareUnitResponseDTO.builder().healthCareUnit(expectedHealthCareUnit).build());
 
-        final var response = getHealthCareUnitService.get(request);
+    final var response = getHealthCareUnitService.get(request);
 
-        assertEquals(expectedHealthCareUnit, response);
-    }
+    assertEquals(expectedHealthCareUnit, response);
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.infra.xmldsig.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -26,17 +25,21 @@ import org.junit.jupiter.api.Test;
 
 class FakeSignatureServiceBlockedTest {
 
-    private static final String DIGEST = "digest";
-    private FakeSignatureServiceBlocked fakeSignatureServiceBlocked;
+  private static final String DIGEST = "digest";
+  private FakeSignatureServiceBlocked fakeSignatureServiceBlocked;
 
-    @BeforeEach
-    void setUp() {
-        fakeSignatureServiceBlocked = new FakeSignatureServiceBlocked();
-    }
+  @BeforeEach
+  void setUp() {
+    fakeSignatureServiceBlocked = new FakeSignatureServiceBlocked();
+  }
 
-    @Test
-    void shallThrowUnsupportedOperationException() {
-        assertThrows(UnsupportedOperationException.class, () -> fakeSignatureServiceBlocked.createSignature(DIGEST));
-        assertThrows(UnsupportedOperationException.class, () -> fakeSignatureServiceBlocked.getX509Certificate());
-    }
+  @Test
+  void shallThrowUnsupportedOperationException() {
+    assertThrows(
+        UnsupportedOperationException.class,
+        () -> fakeSignatureServiceBlocked.createSignature(DIGEST));
+    assertThrows(
+        UnsupportedOperationException.class,
+        () -> fakeSignatureServiceBlocked.getX509Certificate());
+  }
 }

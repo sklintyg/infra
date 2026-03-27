@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,58 +31,56 @@ import org.slf4j.MarkerFactory;
 
 public class MarkerFilter extends AbstractMatcherFilter<ILoggingEvent> {
 
-    /**
-     * The Monitoring marker.
-     */
-    public static final Marker MONITORING = MarkerFactory.getMarker("Monitoring");
+  /** The Monitoring marker. */
+  public static final Marker MONITORING = MarkerFactory.getMarker("Monitoring");
 
-    /**
-     * Validation marker.
-     */
-    public static final Marker VALIDATION = MarkerFactory.getMarker("Validation");
+  /** Validation marker. */
+  public static final Marker VALIDATION = MarkerFactory.getMarker("Validation");
 
+  List<Marker> markersToMatch = new ArrayList<>();
 
-    List<Marker> markersToMatch = new ArrayList<>();
+  @Override
+  public void start() {
+    if (!this.markersToMatch.isEmpty()) {
+      super.start();
+    } else {
+      addError("!!! no marker yet !!!");
+    }
+  }
 
-    @Override
-    public void start() {
-        if (!this.markersToMatch.isEmpty()) {
-            super.start();
-        } else {
-            addError("!!! no marker yet !!!");
-        }
+  @Override
+  public FilterReply decide(final ILoggingEvent event) {
+    if (!isStarted()) {
+      return FilterReply.NEUTRAL;
     }
 
-    @Override
-    public FilterReply decide(final ILoggingEvent event) {
-        if (!isStarted()) {
-            return FilterReply.NEUTRAL;
-        }
+    final Marker marker = event.getMarker();
+    return Objects.nonNull(marker) && this.markersToMatch.stream().anyMatch(m -> m.contains(marker))
+        ? getOnMatch()
+        : getOnMismatch();
+  }
 
-        final Marker marker = event.getMarker();
-        return Objects.nonNull(marker)
-            && this.markersToMatch.stream().anyMatch(m -> m.contains(marker)) ? getOnMatch() : getOnMismatch();
+  /**
+   * Allow multiple markers.
+   *
+   * @param name the marker name.
+   */
+  public void setMarker(final String name) {
+    if (!Strings.isNullOrEmpty(name)) {
+      this.markersToMatch.add(MarkerFactory.getMarker(name));
     }
+  }
 
-    /**
-     * Allow multiple markers.
-     *
-     * @param name the marker name.
-     */
-    public void setMarker(final String name) {
-        if (!Strings.isNullOrEmpty(name)) {
-            this.markersToMatch.add(MarkerFactory.getMarker(name));
-        }
+  /**
+   * Allow multiple markers.
+   *
+   * @param names comma separated list of names.
+   */
+  public void setMarkers(final String names) {
+    if (!Strings.isNullOrEmpty(names)) {
+      Splitter.on(",")
+          .split(names)
+          .forEach(n -> this.markersToMatch.add(MarkerFactory.getMarker(n.trim())));
     }
-
-    /**
-     * Allow multiple markers.
-     *
-     * @param names comma separated list of names.
-     */
-    public void setMarkers(final String names) {
-        if (!Strings.isNullOrEmpty(names)) {
-            Splitter.on(",").split(names).forEach(n -> this.markersToMatch.add(MarkerFactory.getMarker(n.trim())));
-        }
-    }
+  }
 }

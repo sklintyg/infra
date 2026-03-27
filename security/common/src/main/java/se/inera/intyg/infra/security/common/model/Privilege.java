@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,79 +23,78 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by Magnus Ekstrand on 19/11/15.
- */
+/** Created by Magnus Ekstrand on 19/11/15. */
 public class Privilege implements Serializable {
 
-    private static final long serialVersionUID = 7182651417178986967L;
+  private static final long serialVersionUID = 7182651417178986967L;
 
-    @JsonProperty
-    private String name;
+  @JsonProperty private String name;
 
-    @JsonProperty
-    private String desc;
+  @JsonProperty private String desc;
 
-    @JsonProperty
-    private List<String> intygstyper;
+  @JsonProperty private List<String> intygstyper;
 
-    @JsonProperty
-    private List<RequestOrigin> requestOrigins;
+  @JsonProperty private List<RequestOrigin> requestOrigins;
 
-    // ~ Getter and setter
-    // =======================================================================
+  // ~ Getter and setter
+  // =======================================================================
 
-    public String getName() {
-        return name;
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getDesc() {
+    return desc;
+  }
+
+  public void setDesc(String desc) {
+    this.desc = desc;
+  }
+
+  public List<String> getIntygstyper() {
+    return intygstyper;
+  }
+
+  public void setIntygstyper(List<String> intygstyper) {
+    if (intygstyper == null) {
+      this.intygstyper = Collections.emptyList();
+    } else {
+      this.intygstyper = intygstyper;
     }
+  }
 
-    public void setName(String name) {
-        this.name = name;
+  public List<RequestOrigin> getRequestOrigins() {
+    return requestOrigins;
+  }
+
+  public void setRequestOrigins(List<RequestOrigin> requestOrigins) {
+    if (requestOrigins == null) {
+      this.requestOrigins = Collections.emptyList();
+    } else {
+      this.requestOrigins = requestOrigins;
     }
+  }
 
-    public String getDesc() {
-        return desc;
-    }
+  // ~ API
+  // =======================================================================
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public List<String> getIntygstyper() {
-        return intygstyper;
-    }
-
-    public void setIntygstyper(List<String> intygstyper) {
-        if (intygstyper == null) {
-            this.intygstyper = Collections.emptyList();
-        } else {
-            this.intygstyper = intygstyper;
-        }
-    }
-
-    public List<RequestOrigin> getRequestOrigins() {
-        return requestOrigins;
-    }
-
-    public void setRequestOrigins(List<RequestOrigin> requestOrigins) {
-        if (requestOrigins == null) {
-            this.requestOrigins = Collections.emptyList();
-        } else {
-            this.requestOrigins = requestOrigins;
-        }
-    }
-
-    // ~ API
-    // =======================================================================
-
-    @Override
-    public String toString() {
-        return "\nPrivilege {"
-            + " name='" + name + '\''
-            + ", desc='" + desc + '\''
-            + ", intygstyper= " + intygstyper
-            + ", requestOrigins= " + requestOrigins
-            + "}";
-    }
-
+  @Override
+  public String toString() {
+    return "\nPrivilege {"
+        + " name='"
+        + name
+        + '\''
+        + ", desc='"
+        + desc
+        + '\''
+        + ", intygstyper= "
+        + intygstyper
+        + ", requestOrigins= "
+        + requestOrigins
+        + "}";
+  }
 }
