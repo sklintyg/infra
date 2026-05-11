@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
@@ -44,6 +45,7 @@ public class Unit implements Serializable {
   protected String unitName;
   protected List<String> postalAddress = new ArrayList<>();
   protected String postalCode;
+  protected Address address;
   protected String mail;
   protected List<String> telephoneNumber = new ArrayList<>();
   protected List<String> management = new ArrayList<>();
@@ -68,4 +70,7 @@ public class Unit implements Serializable {
     protected String businessClassificationName;
     protected String businessClassificationCode;
   }
+
+  @Builder
+  public record Address(String address, String zipCode, String city) {}
 }
